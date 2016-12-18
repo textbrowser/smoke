@@ -5,4 +5,10 @@
     <string name="please_type_a_message">Please type a message...</string>
     <string name="name">Name</string>
     <string name="chat">Chat</string>
+    <string name="listeners">Listeners</string>
+    <string name="neighbors">Neighbors</string>
+    <string name="ip_address">IP Address</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="_4710">4710</string>
 </resources>
