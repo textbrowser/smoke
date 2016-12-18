@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Smoke</string>
+    <string name="textview">TextView</string>
+    <string name="send">Send</string>
+    <string name="please_type_a_message">Please type a message...</string>
 </resources>
