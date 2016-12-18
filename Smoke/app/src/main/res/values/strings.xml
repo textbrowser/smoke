@@ -3,4 +3,5 @@
     <string name="textview">TextView</string>
     <string name="send">Send</string>
     <string name="please_type_a_message">Please type a message...</string>
+    <string name="name">Name</string>
 </resources>
