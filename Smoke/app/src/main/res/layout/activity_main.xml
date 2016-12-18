@@ -26,7 +26,6 @@
         android:layout_toEndOf="@+id/chat_messages"
         android:layout_above="@+id/chat_send_text"
         android:id="@+id/chat_participants"
-        android:background="@android:color/holo_blue_dark"
         android:drawSelectorOnTop="false"
         android:fadeScrollbars="true"
         android:layout_alignTop="@+id/chat_messages"

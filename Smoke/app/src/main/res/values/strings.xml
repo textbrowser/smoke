@@ -11,4 +11,8 @@
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="_4710">4710</string>
+    <string name="public_keys">Public Keys</string>
+    <string name="ipv4">IPV4</string>
+    <string name="ipv6">IPv6</string>
+    <string name="ipv6_scope_id">IPV6 Scope ID</string>
 </resources>
