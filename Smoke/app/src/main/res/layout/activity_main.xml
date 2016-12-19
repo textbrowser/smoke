@@ -17,7 +17,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/chat_send_text"
-        android:layout_toStartOf="@+id/chat_send_message"
+        android:layout_toStartOf="@+id/send_chat_message"
         android:layout_below="@+id/textView4" />
 
     <ListView
@@ -35,7 +35,7 @@
         android:text="@string/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/chat_send_message"
+        android:id="@+id/send_chat_message"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/chat_messages" />

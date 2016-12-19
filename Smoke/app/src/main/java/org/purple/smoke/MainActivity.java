@@ -13,14 +13,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button button = (Button) findViewById(R.id.clear_chat);
+        final Button button1 = (Button) findViewById(R.id.clear_chat);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final TextView textView = (TextView) findViewById(R.id.chat_messages);
 
                 textView.setText("");
                 }
             });
+
+        final Button button2 = (Button) findViewById(R.id.send_chat_message);
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final TextView textView1 = (TextView) findViewById(R.id.chat_messages);
+                final TextView textView2 = (TextView) findViewById(R.id.chat_send_text);
+
+                textView1.append("me: " + textView2.getText() + "\n");
+                textView2.setText("");
+            }
+        });
     }
 }
