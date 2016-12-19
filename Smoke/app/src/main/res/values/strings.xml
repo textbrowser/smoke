@@ -16,4 +16,6 @@
     <string name="ipv6">IPv6</string>
     <string name="refresh">Refresh</string>
     <string name="ipv6_scope_id">IPv6 Scope ID</string>
+    <string name="refresh_chat_participants">Refresh</string>
+    <string name="clear">Clear</string>
 </resources>

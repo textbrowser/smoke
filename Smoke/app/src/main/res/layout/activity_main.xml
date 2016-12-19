@@ -65,4 +65,22 @@
         android:layout_alignParentStart="true"
         android:textSize="30sp" />
 
+    <Button
+        android:text="@string/refresh_chat_participants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/refresh_chat_participants" />
+
+    <Button
+        android:text="@string/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/refresh_chat_participants"
+        android:layout_toLeftOf="@+id/chat_participants"
+        android:layout_toStartOf="@+id/chat_participants"
+        android:id="@+id/clear_chat" />
+
 </RelativeLayout>
