@@ -14,6 +14,6 @@
     <string name="public_keys">Public Keys</string>
     <string name="ipv4">IPV4</string>
     <string name="ipv6">IPv6</string>
-    <string name="ipv6_scope_id">IPv6 Scope ID</string>
     <string name="refresh">Refresh</string>
+    <string name="ipv6_scope_id">IPv6 Scope ID</string>
 </resources>

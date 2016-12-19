@@ -63,7 +63,7 @@
                     android:ems="10"
                     android:id="@+id/neighbors_scope_id"
                     android:layout_weight="0.01"
-                    android:hint="IPv6 Scope ID" />
+                    android:hint="@string/ipv6_scope_id" />
 
             </LinearLayout>
 
