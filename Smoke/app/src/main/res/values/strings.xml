@@ -1,1 +1,9 @@
-<resources></resources>
+<resources>
+    <string name="app_name">Smoke</string>
+    <string name="action_settings">Settings</string>
+    <string name="refresh">Refresh</string>
+    <string name="chat">Chat</string>
+    <string name="clear">Clear</string>
+    <string name="please_type_a_message">Please type a message...</string>
+    <string name="send">Send</string>
+</resources>
