@@ -1,57 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_settings"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.purple.smoke.Settings">
+    android:layout_height="match_parent">
 
-    <ScrollView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/activity_settings"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            tools:context="org.purple.smoke.Settings">
 
-            <TextView
-                android:text="@string/neighbors"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView"
-                android:textSize="30sp" />
-
-            <GridView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/neighbors" />
-
-            <LinearLayout
-                android:orientation="horizontal"
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Button
-                    android:text="@string/delete_neighbor"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/delete_neighbor"
-                    android:layout_weight="1"
-                    style="@style/Widget.AppCompat.Button.Colored" />
+                    android:orientation="vertical">
 
-                <Button
-                    android:text="@string/refresh_neighbors"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/refresh_neighbors"
-                    android:layout_weight="1"
-                    style="@style/Widget.AppCompat.Button.Colored" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+                    <TextView
+                        android:text="@string/neighbors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView"
+                        android:textSize="30sp" />
+
+                    <GridView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/neighbors" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:text="@string/delete_neighbor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/delete_neighbor"
+                            android:layout_weight="1"
+                            style="@style/Widget.AppCompat.Button.Colored" />
+
+                        <Button
+                            android:text="@string/refresh_neighbors"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/refresh_neighbors"
+                            android:layout_weight="1"
+                            style="@style/Widget.AppCompat.Button.Colored" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>
