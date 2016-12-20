@@ -1,5 +1,6 @@
 package org.purple.smoke;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -63,6 +64,9 @@ public class Main extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            final Intent intent = new Intent(Main.this, Settings.class);
+
+            startActivity(intent);
             return true;
         }
 

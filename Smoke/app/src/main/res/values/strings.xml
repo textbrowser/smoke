@@ -6,4 +6,7 @@
     <string name="clear">Clear</string>
     <string name="please_type_a_message">Please type a message...</string>
     <string name="send">Send</string>
+    <string name="neighbors">Neighbors</string>
+    <string name="refresh_neighbors">Refresh Neighbors</string>
+    <string name="delete_neighbor">Delete Neighbor</string>
 </resources>
