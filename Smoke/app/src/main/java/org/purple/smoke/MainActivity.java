@@ -1,38 +1,73 @@
 package org.purple.smoke;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        final Button button1 = (Button) findViewById(R.id.clear_chat);
+        final Button button1 = (Button) findViewById(R.id.clear_chat_messages);
 
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final TextView textView = (TextView) findViewById(R.id.chat_messages);
 
                 textView.setText("");
-                }
-            });
+            }
+        });
 
         final Button button2 = (Button) findViewById(R.id.send_chat_message);
 
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final TextView textView1 = (TextView) findViewById(R.id.chat_messages);
-                final TextView textView2 = (TextView) findViewById(R.id.chat_send_text);
+                final TextView textView1 = (TextView) findViewById(R.id.chat_message);
 
-                textView1.append("me: " + textView2.getText() + "\n");
-                textView2.setText("");
+                if(textView1.getText().toString().trim().isEmpty())
+                    return;
+
+                final TextView textView2 = (TextView) findViewById(R.id.chat_messages);
+
+                textView2.append("me: " + textView1.getText().toString().trim() + "\n");
+                textView1.setText("");
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(MainActivity.this, ScrollingActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
