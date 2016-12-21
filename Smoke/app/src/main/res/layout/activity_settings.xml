@@ -48,7 +48,8 @@
 
                     <GridView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content"
+                        android:id="@+id/neighbors" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -68,6 +69,37 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             style="@style/Widget.AppCompat.Button.Colored" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:layout_width="131dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:ems="10"
+                            android:id="@+id/neighbor_ip_address"
+                            android:hint="@string/ip_address" />
+
+                        <EditText
+                            android:layout_width="74dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:ems="10"
+                            android:id="@+id/neighbor_port"
+                            android:hint="@string/port" />
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:ems="10"
+                            android:id="@+id/neighbor_scope_id"
+                            android:layout_weight="1"
+                            android:hint="@string/ipv6_scope_id" />
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

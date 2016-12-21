@@ -9,4 +9,7 @@
     <string name="neighbors">Neighbors</string>
     <string name="refresh_neighbors">Refresh Neighbors</string>
     <string name="delete_neighbor">Delete Neighbor</string>
+    <string name="ipv6_scope_id">IPv6 Scope ID</string>
+    <string name="ip_address">IP Address</string>
+    <string name="port">Port</string>
 </resources>
