@@ -56,6 +56,8 @@ public class Settings extends AppCompatActivity {
         textView1.setVisibility(View.GONE);
         textView1 = (TextView) findViewById(R.id.neighbor_port);
         textView1.setText("4710");
+        textView1 = (TextView) findViewById(R.id.neighbor_ip_address);
+        textView1.requestFocus();
     }
 
     @Override
