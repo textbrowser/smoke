@@ -12,4 +12,6 @@
     <string name="ipv6_scope_id">IPv6 Scope ID</string>
     <string name="ip_address">IP Address</string>
     <string name="port">Port</string>
+    <string name="reset_fields">Reset Fields</string>
+    <string name="add_neighbor">Add Neighbor</string>
 </resources>

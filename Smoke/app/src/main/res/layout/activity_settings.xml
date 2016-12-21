@@ -101,6 +101,27 @@
                             android:layout_weight="1"
                             android:hint="@string/ipv6_scope_id" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:text="@string/add_neighbor"
+                            android:layout_width="170dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/add_neighbor"
+                            style="@style/Widget.AppCompat.Button.Colored" />
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/reset_neighbor_fields"
+                            android:text="@string/reset_fields"
+                            style="@style/Widget.AppCompat.Button.Colored" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </ScrollView>
         </RelativeLayout>
