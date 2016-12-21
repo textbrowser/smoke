@@ -107,7 +107,8 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:checkedButton="@+id/neighbor_ipv4"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:id="@+id/neighbors_ipv_radio_group">
 
                         <RadioButton
                             android:text="@string/ipv4"

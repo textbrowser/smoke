@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class Settings extends AppCompatActivity {
@@ -28,15 +29,33 @@ public class Settings extends AppCompatActivity {
 
                 radioButton1.setChecked(true);
                 textView1.setText("");
-                textView2.setText("");
+                textView2.setText("4710");
                 textView3.setText("");
                 textView1.requestFocus();
+            }
+        });
+
+        RadioGroup radioGroup1 = (RadioGroup) findViewById(R.id.neighbors_ipv_radio_group);
+
+        radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                final TextView textView1 = (TextView) findViewById(R.id.neighbor_scope_id);
+
+                if(checkedId == R.id.neighbor_ipv4) {
+                    textView1.setText("");
+                    textView1.setVisibility(View.GONE);
+                }
+                else
+                    textView1.setVisibility(View.VISIBLE);
             }
         });
 
         TextView textView1 = (TextView) findViewById(R.id.neighbor_scope_id);
 
         textView1.setVisibility(View.GONE);
+        textView1 = (TextView) findViewById(R.id.neighbor_port);
+        textView1.setText("4710");
     }
 
     @Override
