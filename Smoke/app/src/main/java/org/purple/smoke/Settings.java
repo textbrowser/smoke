@@ -33,6 +33,10 @@ public class Settings extends AppCompatActivity {
                 textView1.requestFocus();
             }
         });
+
+        TextView textView1 = (TextView) findViewById(R.id.neighbor_scope_id);
+
+        textView1.setVisibility(View.GONE);
     }
 
     @Override
