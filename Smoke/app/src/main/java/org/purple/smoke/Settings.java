@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class Settings extends AppCompatActivity {
@@ -20,10 +21,12 @@ public class Settings extends AppCompatActivity {
 
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                final RadioButton radioButton1 = (RadioButton) findViewById(R.id.neighbor_ipv4);
                 final TextView textView1 = (TextView) findViewById(R.id.neighbor_ip_address);
                 final TextView textView2 = (TextView) findViewById(R.id.neighbor_port);
                 final TextView textView3 = (TextView) findViewById(R.id.neighbor_scope_id);
 
+                radioButton1.setChecked(true);
                 textView1.setText("");
                 textView2.setText("");
                 textView3.setText("");

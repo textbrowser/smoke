@@ -102,6 +102,30 @@
                             android:hint="@string/ipv6_scope_id" />
                     </LinearLayout>
 
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:checkedButton="@+id/neighbor_ipv4"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:text="@string/ipv4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/neighbor_ipv4"
+                            android:layout_weight="1"
+                            android:checked="true" />
+
+                        <RadioButton
+                            android:text="@string/ipv6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/neighbor_ipv6"
+                            android:layout_weight="1" />
+
+                    </RadioGroup>
+
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
