@@ -16,4 +16,5 @@
     <string name="add_neighbor">Add Neighbor</string>
     <string name="ipv4">IPv4</string>
     <string name="ipv6">IPv6</string>
+    <string name="password">Password</string>
 </resources>

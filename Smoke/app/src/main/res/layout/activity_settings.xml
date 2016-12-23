@@ -38,8 +38,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:id="@+id/neighbors_layout">
+                    android:orientation="vertical">
 
                     <TextView
                         android:text="@string/neighbors"
@@ -155,6 +154,13 @@
                             android:text="@string/reset_fields"
                             style="@style/Widget.AppCompat.Button.Colored" />
                     </LinearLayout>
+
+                    <TextView
+                        android:text="@string/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/Password"
+                        android:textSize="30sp" />
 
                 </LinearLayout>
             </ScrollView>
