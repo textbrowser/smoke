@@ -38,7 +38,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:id="@+id/neighbors_layout">
 
                     <TextView
                         android:text="@string/neighbors"
@@ -61,14 +62,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            style="@style/Widget.AppCompat.Button.Colored" />
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:id="@+id/delete_neighbor" />
 
                         <Button
                             android:text="@string/refresh_neighbors"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            style="@style/Widget.AppCompat.Button.Colored" />
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:id="@+id/refresh_neighbors" />
                     </LinearLayout>
 
                     <LinearLayout

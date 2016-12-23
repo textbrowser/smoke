@@ -3,10 +3,12 @@ package org.purple.smoke;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -35,7 +37,15 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        RadioGroup radioGroup1 = (RadioGroup) findViewById(R.id.neighbors_ipv_radio_group);
+        Button button2 = (Button) findViewById(R.id.add_neighbor);
+
+        button2.setEnabled(false);
+        button2 = (Button) findViewById(R.id.delete_neighbor);
+        button2.setEnabled(false);
+        button2 = (Button) findViewById(R.id.refresh_neighbors);
+        button2.setEnabled(false);
+
+        final RadioGroup radioGroup1 = (RadioGroup) findViewById(R.id.neighbors_ipv_radio_group);
 
         radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
