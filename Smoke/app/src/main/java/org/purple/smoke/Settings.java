@@ -68,16 +68,14 @@ public class Settings extends AppCompatActivity {
 
         final RadioGroup radioGroup1 = (RadioGroup) findViewById(R.id.neighbors_ipv_radio_group);
 
-        radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 final TextView textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
 
                 if(checkedId == R.id.neighbors_ipv4) {
                     textView1.setText("");
                     textView1.setVisibility(View.GONE);
-                }
-                else
+                } else
                     textView1.setVisibility(View.VISIBLE);
             }
         });
@@ -91,7 +89,6 @@ public class Settings extends AppCompatActivity {
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
         textView1.setEnabled(false);
-        textView1.requestFocus();
     }
 
     @Override
@@ -108,8 +105,7 @@ public class Settings extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_chat) {
+        if(id == R.id.action_chat) {
             final Intent intent = new Intent(Settings.this, Main.class);
 
             startActivity(intent);
