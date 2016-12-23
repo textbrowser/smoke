@@ -84,7 +84,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName"
                             android:ems="10"
-                            android:id="@+id/neighbor_ip_address"
+                            android:id="@+id/neighbors_ip_address"
                             android:hint="@string/ip_address" />
 
                         <EditText
@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="number"
                             android:ems="10"
-                            android:id="@+id/neighbor_port"
+                            android:id="@+id/neighbors_port"
                             android:hint="@string/port" />
 
                         <EditText
@@ -100,7 +100,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName"
                             android:ems="10"
-                            android:id="@+id/neighbor_scope_id"
+                            android:id="@+id/neighbors_scope_id"
                             android:layout_weight="1"
                             android:hint="@string/ipv6_scope_id" />
                     </LinearLayout>
@@ -109,7 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:checkedButton="@+id/neighbor_ipv4"
+                        android:checkedButton="@+id/neighbors_ipv4"
                         android:orientation="horizontal"
                         android:id="@+id/neighbors_ipv_radio_group">
 
@@ -117,7 +117,7 @@
                             android:text="@string/ipv4"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/neighbor_ipv4"
+                            android:id="@+id/neighbors_ipv4"
                             android:layout_weight="1"
                             android:checked="true" />
 
@@ -125,7 +125,13 @@
                             android:text="@string/ipv6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/neighbor_ipv6"
+                            android:id="@+id/neighbors_ipv6"
+                            android:layout_weight="1" />
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/neighbors_transport"
                             android:layout_weight="1" />
 
                     </RadioGroup>
