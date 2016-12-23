@@ -45,6 +45,12 @@ public class Settings extends AppCompatActivity {
         button2 = (Button) findViewById(R.id.refresh_neighbors);
         button2.setEnabled(false);
 
+        RadioButton radioButton1 = (RadioButton) findViewById(R.id.neighbor_ipv4);
+
+        radioButton1.setEnabled(false);
+        radioButton1 = (RadioButton) findViewById(R.id.neighbor_ipv6);
+        radioButton1.setEnabled(false);
+
         final RadioGroup radioGroup1 = (RadioGroup) findViewById(R.id.neighbors_ipv_radio_group);
 
         radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -63,10 +69,13 @@ public class Settings extends AppCompatActivity {
 
         TextView textView1 = (TextView) findViewById(R.id.neighbor_scope_id);
 
+        textView1.setEnabled(false);
         textView1.setVisibility(View.GONE);
         textView1 = (TextView) findViewById(R.id.neighbor_port);
+        textView1.setEnabled(false);
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbor_ip_address);
+        textView1.setEnabled(false);
         textView1.requestFocus();
     }
 
