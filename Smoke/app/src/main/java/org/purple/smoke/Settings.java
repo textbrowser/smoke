@@ -106,7 +106,7 @@ public class Settings extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_chat) {
-            final Intent intent = new Intent(Settings.this, Main.class);
+            final Intent intent = new Intent(Settings.this, Chat.class);
 
             startActivity(intent);
             return true;
