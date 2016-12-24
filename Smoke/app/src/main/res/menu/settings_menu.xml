@@ -2,9 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.purple.smoke.Chat">
+    <item android:title="@string/authenticate"
+        android:id="@+id/action_authenticate" />
     <item
         android:id="@+id/action_chat"
         android:orderInCategory="100"
-        android:title="Chat"
+        android:title="@string/chat"
         app:showAsAction="never" />
 </menu>

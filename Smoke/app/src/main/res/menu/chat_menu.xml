@@ -2,6 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.purple.smoke.Chat">
+    <item android:title="@string/authenticate"
+        android:id="@+id/action_authenticate" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
