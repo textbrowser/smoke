@@ -162,6 +162,22 @@
                         android:id="@+id/Password"
                         android:textSize="30sp" />
 
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:ems="10"
+                        android:id="@+id/password1"
+                        android:hint="@string/password" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:ems="10"
+                        android:id="@+id/password2"
+                        android:hint="@string/password_confirmation" />
+
                 </LinearLayout>
             </ScrollView>
         </RelativeLayout>
