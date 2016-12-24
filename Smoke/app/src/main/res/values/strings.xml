@@ -18,4 +18,5 @@
     <string name="ipv6">IPv6</string>
     <string name="password">Password</string>
     <string name="password_confirmation">Password Confirmation</string>
+    <string name="set_password">Set Password</string>
 </resources>

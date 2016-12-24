@@ -178,6 +178,12 @@
                         android:id="@+id/password2"
                         android:hint="@string/password_confirmation" />
 
+                    <Button
+                        android:text="@string/set_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/set_password" />
+
                 </LinearLayout>
             </ScrollView>
         </RelativeLayout>
