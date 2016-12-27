@@ -105,7 +105,13 @@ public class Settings extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if(id == R.id.action_chat) {
+        if(id == R.id.action_authenticate) {
+            final Intent intent = new Intent(Settings.this, Authenticate.class);
+
+            startActivity(intent);
+            return true;
+        }
+        else if(id == R.id.action_chat) {
             final Intent intent = new Intent(Settings.this, Chat.class);
 
             startActivity(intent);

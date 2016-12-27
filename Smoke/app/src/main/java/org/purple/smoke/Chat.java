@@ -60,8 +60,13 @@ public class Chat extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if(id == R.id.action_authenticate) {
+            final Intent intent = new Intent(Chat.this, Authenticate.class);
+
+            startActivity(intent);
+            return true;
+        }
+        else if(id == R.id.action_settings) {
             final Intent intent = new Intent(Chat.this, Settings.class);
 
             startActivity(intent);
