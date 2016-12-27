@@ -28,6 +28,15 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:hint="Password" />
+
+        <Button
+            android:text="Authenticate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/authenticate" />
     </RelativeLayout>
 
     <android.support.design.widget.AppBarLayout
