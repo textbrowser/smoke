@@ -48,11 +48,11 @@ public class Settings extends AppCompatActivity {
                 final TextView textView1 = (TextView) findViewById(R.id.password1);
                 final TextView textView2 = (TextView) findViewById(R.id.password2);
 
-                if (textView1.getText() != textView2.getText() ||
+                if(!textView1.getText().toString().equals(textView2.getText().toString()) ||
                         textView1.getText().length() < 16) {
                     AlertDialog alertDialog = new AlertDialog.Builder(Settings.this).create();
 
-                    if (textView1.getText().length() < 16)
+                    if(textView1.getText().length() < 16)
                         alertDialog.setMessage("Each password must contain at least sixteen characters.");
                     else
                         alertDialog.setMessage("The provided passwords are not identical.");
@@ -120,6 +120,10 @@ public class Settings extends AppCompatActivity {
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
         textView1.setEnabled(false);
+        textView1 = (TextView) findViewById(R.id.password1);
+        textView1.setText("");
+        textView1 = (TextView) findViewById(R.id.password2);
+        textView1.setText("");
     }
 
     @Override
