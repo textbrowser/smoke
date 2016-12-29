@@ -1,5 +1,7 @@
 package org.purple.smoke;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,13 +41,42 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        Button button2 = (Button) findViewById(R.id.add_neighbor);
+        final Button button2 = (Button) findViewById(R.id.set_password);
 
-        button2.setEnabled(false);
-        button2 = (Button) findViewById(R.id.delete_neighbor);
-        button2.setEnabled(false);
-        button2 = (Button) findViewById(R.id.refresh_neighbors);
-        button2.setEnabled(false);
+        button2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final TextView textView1 = (TextView) findViewById(R.id.password1);
+                final TextView textView2 = (TextView) findViewById(R.id.password2);
+
+                if (textView1.getText() != textView2.getText() ||
+                        textView1.getText().length() < 16) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(Settings.this).create();
+
+                    if (textView1.getText().length() < 16)
+                        alertDialog.setMessage("Each password must contain at least sixteen characters.");
+                    else
+                        alertDialog.setMessage("The provided passwords are not identical.");
+
+                    alertDialog.setTitle("Error");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    alertDialog.show();
+                }
+            }
+        });
+
+        Button button3 = (Button) findViewById(R.id.add_neighbor);
+
+        button3.setEnabled(false);
+        button3 = (Button) findViewById(R.id.delete_neighbor);
+        button3.setEnabled(false);
+        button3 = (Button) findViewById(R.id.refresh_neighbors);
+        button3.setEnabled(false);
 
         RadioButton radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv4);
 
@@ -110,8 +141,7 @@ public class Settings extends AppCompatActivity {
 
             startActivity(intent);
             return true;
-        }
-        else if(id == R.id.action_chat) {
+        } else if(id == R.id.action_chat) {
             final Intent intent = new Intent(Settings.this, Chat.class);
 
             startActivity(intent);
