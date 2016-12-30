@@ -1,0 +1,7 @@
+GRADLE = ~/Desktop/android-studio/gradle/gradle-2.14.1/bin/gradle
+
+clean:
+	$(GRADLE) --settings-file Smoke/settings.gradle clean
+
+purge:
+	find . -name '*~*' -exec rm -f {} \;
