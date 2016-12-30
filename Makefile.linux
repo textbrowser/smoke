@@ -1,3 +1,6 @@
+ADB = ~/Android/Sdk/platform-tools/adb
+EMULATOR = ~/Android/Sdk/tools/emulator -netdelay none -netspeed full \
+	   -avd Nexus_5_API_25
 GRADLE = ~/Desktop/android-studio/gradle/gradle-2.14.1/bin/gradle
 
 all:
@@ -5,6 +8,16 @@ all:
 
 clean:
 	$(GRADLE) --build-file Smoke/build.gradle clean
+
+launch-emulator:
+	$(EMULATOR) &
+
+load-apk:
+	$(ADB) push ./Smoke/app/build/apk/smoke.apk \
+	/data/local/tmp/org.purple.smoke
+	$(ADB) shell pm install -r "/data/local/tmp/org.purple.smoke"
+	$(ADB) shell am start -n "org.purple.smoke/org.purple.smoke.Chat" \
+	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 
 purge:
 	find . -name '*~*' -exec rm -f {} \;

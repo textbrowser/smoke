@@ -14,5 +14,11 @@ clean:
 
 distclean: clean
 
+launch-emulator:
+	$(MAKE) -f $(MAKEFILE) launch-emulator
+
+load-apk:
+	$(MAKE) -f $(MAKEFILE) load-apk
+
 purge:
 	$(MAKE) -f $(MAKEFILE) purge
