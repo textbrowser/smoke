@@ -1,7 +1,10 @@
 GRADLE = ~/Desktop/android-studio/gradle/gradle-2.14.1/bin/gradle
 
+all:
+	$(GRADLE) --build-file Smoke/build.gradle build
+
 clean:
-	$(GRADLE) --settings-file Smoke/settings.gradle clean
+	$(GRADLE) --build-file Smoke/build.gradle clean
 
 purge:
 	find . -name '*~*' -exec rm -f {} \;
