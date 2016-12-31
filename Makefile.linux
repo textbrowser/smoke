@@ -9,6 +9,9 @@ all:
 clean:
 	$(GRADLE) --build-file Smoke/build.gradle clean
 
+kill-adb-server:
+	$(ADB) kill-server
+
 launch-emulator:
 	$(EMULATOR) &
 

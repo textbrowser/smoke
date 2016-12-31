@@ -12,7 +12,10 @@ all:
 clean:
 	$(MAKE) -f $(MAKEFILE) clean
 
-distclean: clean
+distclean: clean kill-adb-server
+
+kill-adb-server:
+	$(MAKE) -f $(MAKEFILE) kill-adb-server
 
 launch-emulator:
 	$(MAKE) -f $(MAKEFILE) launch-emulator
