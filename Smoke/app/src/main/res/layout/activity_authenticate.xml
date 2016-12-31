@@ -27,29 +27,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="17dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
+            android:id="@+id/password"
+            android:hint="@string/authenticate_password"
             android:layout_below="@+id/textView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/password"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:hint="Password" />
+            android:layout_alignParentEnd="true" />
 
         <Button
-            android:text="Authenticate"
+            android:text="@string/authenticate_authenticate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/authenticate"
             android:layout_below="@+id/password"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/authenticate" />
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

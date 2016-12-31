@@ -20,4 +20,6 @@
     <string name="password_confirmation">Password Confirmation</string>
     <string name="set_password">Set Password</string>
     <string name="authenticate">Authenticate</string>
+    <string name="authenticate_authenticate">Authenticate</string>
+    <string name="authenticate_password">Password</string>
 </resources>

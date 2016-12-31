@@ -62,15 +62,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            style="@style/Widget.AppCompat.Button.Colored"
-                            android:id="@+id/delete_neighbor" />
+                            android:id="@+id/delete_neighbor"
+                            style="@style/Widget.AppCompat.Button" />
 
                         <Button
                             android:text="@string/refresh_neighbors"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            style="@style/Widget.AppCompat.Button.Colored"
+                            style="@style/Widget.AppCompat.Button"
                             android:id="@+id/refresh_neighbors" />
                     </LinearLayout>
 
@@ -146,14 +146,14 @@
                             android:layout_width="170dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/add_neighbor"
-                            style="@style/Widget.AppCompat.Button.Colored" />
+                            style="@style/Widget.AppCompat.Button" />
 
                         <Button
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/reset_neighbor_fields"
                             android:text="@string/reset_fields"
-                            style="@style/Widget.AppCompat.Button.Colored" />
+                            style="@style/Widget.AppCompat.Button" />
                     </LinearLayout>
 
                     <TextView
