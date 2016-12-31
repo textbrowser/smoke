@@ -137,6 +137,7 @@ public class Settings extends AppCompatActivity {
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
         textView1.setEnabled(false);
         textView1 = (TextView) findViewById(R.id.password1);
+	textView1.requestFocus();
         textView1.setText("");
         textView1 = (TextView) findViewById(R.id.password2);
         textView1.setText("");
