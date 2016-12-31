@@ -101,11 +101,11 @@ public class Settings extends AppCompatActivity {
         spinner1.setEnabled(false);
 
         String array[] = new String[] {
-                "TCP", "UDP"
+	    "TCP", "UDP"
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>
-				(this, android.R.layout.simple_spinner_item, array);
+	    (this, android.R.layout.simple_spinner_item, array);
 
         spinner1.setAdapter(adapter);
 
