@@ -15,7 +15,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.purple.smoke.Database;
+
 public class Settings extends AppCompatActivity {
+    private Database m_databaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
