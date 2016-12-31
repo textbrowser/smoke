@@ -1,6 +1,5 @@
 ADB = ~/Android/Sdk/platform-tools/adb
-EMULATOR = ~/Android/Sdk/tools/emulator -netdelay none -netspeed full \
-	   -avd Nexus_5_API_25
+EMULATOR = ~/Android/Sdk/tools/emulator
 GRADLE = ~/Desktop/android-studio/gradle/gradle-2.14.1/bin/gradle
 
 all:
@@ -13,7 +12,8 @@ kill-adb-server:
 	$(ADB) kill-server
 
 launch-emulator:
-	$(EMULATOR) &
+	$(EMULATOR) -netdelay none -netspeed full -avd \
+	`$(EMULATOR) -list-avds | sort | tail -1` &
 
 load-apk:
 	$(ADB) push ./Smoke/app/build/apk/smoke.apk \
