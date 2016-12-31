@@ -104,8 +104,8 @@ public class Settings extends AppCompatActivity {
                 "TCP", "UDP"
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-	    (this, android.R.layout.simple_spinner_item, array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>
+				(this, android.R.layout.simple_spinner_item, array);
 
         spinner1.setAdapter(adapter);
 

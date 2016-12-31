@@ -16,177 +16,173 @@
             android:theme="?attr/actionBarTheme"
             android:minHeight="?attr/actionBarSize"
             android:id="@+id/toolbar" />
+
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="org.purple.smoke.Settings">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context="org.purple.smoke.Settings">
+            android:layout_height="match_parent">
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:text="@string/neighbors"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:textSize="30sp" />
 
-                    <TextView
-                        android:text="@string/neighbors"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="30sp" />
+                <GridView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/neighbors" />
 
-                    <GridView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/neighbors" />
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:text="@string/delete_neighbor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/delete_neighbor"
-                            style="@style/Widget.AppCompat.Button" />
-
-                        <Button
-                            android:text="@string/refresh_neighbors"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            style="@style/Widget.AppCompat.Button"
-                            android:id="@+id/refresh_neighbors" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <EditText
-                            android:layout_width="131dp"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:ems="10"
-                            android:id="@+id/neighbors_ip_address"
-                            android:hint="@string/ip_address" />
-
-                        <EditText
-                            android:layout_width="74dp"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:ems="10"
-                            android:id="@+id/neighbors_port"
-                            android:hint="@string/port" />
-
-                        <EditText
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:ems="10"
-                            android:id="@+id/neighbors_scope_id"
-                            android:layout_weight="1"
-                            android:hint="@string/ipv6_scope_id" />
-                    </LinearLayout>
-
-                    <RadioGroup
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:checkedButton="@+id/neighbors_ipv4"
-                        android:orientation="horizontal"
-                        android:id="@+id/neighbors_ipv_radio_group">
-
-                        <RadioButton
-                            android:text="@string/ipv4"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/neighbors_ipv4"
-                            android:layout_weight="1"
-                            android:checked="true" />
-
-                        <RadioButton
-                            android:text="@string/ipv6"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/neighbors_ipv6"
-                            android:layout_weight="1" />
-
-                        <Spinner
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/neighbors_transport"
-                            android:layout_weight="1" />
-
-                    </RadioGroup>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:text="@string/add_neighbor"
-                            android:layout_width="170dp"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/add_neighbor"
-                            style="@style/Widget.AppCompat.Button" />
-
-                        <Button
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/reset_neighbor_fields"
-                            android:text="@string/reset_fields"
-                            style="@style/Widget.AppCompat.Button" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:text="@string/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/Password"
-                        android:textSize="30sp" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:ems="10"
-                        android:id="@+id/password1"
-                        android:hint="@string/password" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:ems="10"
-                        android:id="@+id/password2"
-                        android:hint="@string/password_confirmation" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <Button
-                        android:text="@string/set_password"
+                        android:text="@string/delete_neighbor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/set_password" />
+                        android:layout_weight="1"
+                        android:id="@+id/delete_neighbor"
+                        style="@style/Widget.AppCompat.Button" />
 
+                    <Button
+                        android:text="@string/refresh_neighbors"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/Widget.AppCompat.Button"
+                        android:id="@+id/refresh_neighbors" />
                 </LinearLayout>
-            </ScrollView>
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:layout_width="131dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:ems="10"
+                        android:id="@+id/neighbors_ip_address"
+                        android:hint="@string/ip_address" />
+
+                    <EditText
+                        android:layout_width="74dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:ems="10"
+                        android:id="@+id/neighbors_port"
+                        android:hint="@string/port" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:ems="10"
+                        android:id="@+id/neighbors_scope_id"
+                        android:layout_weight="1"
+                        android:hint="@string/ipv6_scope_id" />
+                </LinearLayout>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:checkedButton="@+id/neighbors_ipv4"
+                    android:orientation="horizontal"
+                    android:id="@+id/neighbors_ipv_radio_group">
+
+                    <RadioButton
+                        android:text="@string/ipv4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/neighbors_ipv4"
+                        android:layout_weight="1"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:text="@string/ipv6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/neighbors_ipv6"
+                        android:layout_weight="1" />
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/neighbors_transport"
+                        android:layout_weight="1" />
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:text="@string/add_neighbor"
+                        android:layout_width="170dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/add_neighbor"
+                        style="@style/Widget.AppCompat.Button" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/reset_neighbor_fields"
+                        android:text="@string/reset_fields"
+                        style="@style/Widget.AppCompat.Button" />
+                </LinearLayout>
+
+                <TextView
+                    android:text="@string/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Password"
+                    android:textSize="30sp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:ems="10"
+                    android:id="@+id/password1"
+                    android:hint="@string/password" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:ems="10"
+                    android:id="@+id/password2"
+                    android:hint="@string/password_confirmation" />
+
+                <Button
+                    android:text="@string/set_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/set_password" />
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>
