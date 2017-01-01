@@ -27,7 +27,35 @@
 
 package org.purple.smoke;
 
-import javax.crypto.Cipher;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 public class Cryptography {
+    public static SecretKey generateDigestKey(byte[] salt, char[] password)
+	throws InvalidKeySpecException, NoSuchAlgorithmException {
+	final int iterations = 25000;
+	final int length = 512;
+
+	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
+	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+	    ("PBKDF2WithHmacSHA1");
+
+	return secretKeyFactory.generateSecret(keySpec);
+    }
+
+    public static SecretKey generateEncryptionKey(byte[] salt, char[] password)
+	throws InvalidKeySpecException, NoSuchAlgorithmException {
+	final int iterations = 25000;
+	final int length = 256;
+
+	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
+	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+	    ("PBKDF2WithHmacSHA1");
+
+	return secretKeyFactory.generateSecret(keySpec);
+    }
 }
