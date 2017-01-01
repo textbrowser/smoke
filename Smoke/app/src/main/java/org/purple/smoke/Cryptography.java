@@ -35,9 +35,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class Cryptography {
-    public static SecretKey generateDigestKey(byte[] salt, char[] password)
+    public static SecretKey generateDigestKey(final byte []salt,
+					      final char []password,
+					      final int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException {
-	final int iterations = 25000;
 	final int length = 512;
 
 	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
@@ -47,9 +48,10 @@ public class Cryptography {
 	return secretKeyFactory.generateSecret(keySpec);
     }
 
-    public static SecretKey generateEncryptionKey(byte[] salt, char[] password)
+    public static SecretKey generateEncryptionKey(final byte []salt,
+						  final char []password,
+						  final int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException {
-	final int iterations = 25000;
 	final int length = 256;
 
 	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);

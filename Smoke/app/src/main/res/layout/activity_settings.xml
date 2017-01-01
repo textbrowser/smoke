@@ -158,6 +158,28 @@
                     android:id="@+id/Password"
                     android:textSize="30sp" />
 
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:text="@string/iteration_count"
+                        android:layout_width="179dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView3"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:inputType=""
+                        android:ems="10"
+                        android:id="@+id/settings_iteration_count"
+                        android:text="@string/_1000"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
