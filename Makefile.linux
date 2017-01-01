@@ -5,7 +5,7 @@ EMULATOR = ~/Android/Sdk/tools/emulator
 GRADLE = ~/Desktop/android-studio/gradle/gradle-2.14.1/bin/gradle
 
 all:
-	$(GRADLE) --build-file Smoke/build.gradle assembleRelease
+	$(GRADLE) --build-file Smoke/build.gradle assembleDebug
 
 clean:
 	$(GRADLE) --build-file Smoke/build.gradle clean
