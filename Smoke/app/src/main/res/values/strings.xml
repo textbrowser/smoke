@@ -22,7 +22,7 @@
     <string name="authenticate">Authenticate</string>
     <string name="authenticate_authenticate">Authenticate</string>
     <string name="authenticate_password">Password</string>
-    <string name="_1000">1000</string>
     <string name="password_iteration_count">Iteration Count</string>
     <string name="iteration_count">Iteration Count</string>
+    <string name="_1000">1000</string>
 </resources>

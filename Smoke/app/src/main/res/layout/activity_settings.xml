@@ -173,11 +173,12 @@
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:inputType=""
+                        android:inputType="number"
                         android:ems="10"
-                        android:id="@+id/settings_iteration_count"
-                        android:text="@string/_1000"
-                        android:layout_weight="1" />
+                        android:id="@+id/iteration_count"
+                        android:layout_weight="1"
+                        android:text="@string/_1000" />
+
                 </LinearLayout>
 
                 <EditText
