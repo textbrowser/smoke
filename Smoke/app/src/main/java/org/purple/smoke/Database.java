@@ -41,6 +41,16 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+	String str;
+
+	/*
+	** Create the settings table.
+	*/
+
+	str = "CREATE TABLE settings (" +
+	    "name TEXT NOT NULL PRIMARY KEY, " +
+	    "value TEXT NOT NULL)";
+	db.execSQL(str);
     }
 
     @Override
