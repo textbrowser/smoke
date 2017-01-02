@@ -44,11 +44,42 @@ public class Database extends SQLiteOpenHelper {
 	String str;
 
 	/*
+	** Create the neighbors table.
+	*/
+
+	str = "CREATE TABLE neighbors (" +
+	    "ip_version TEXT NOT NULL, " +
+	    "local_ip_address TEXT NOT NULL, " +
+	    "local_ip_address_digest TEXT NOT NULL, " +
+	    "local_port TEXT NOT NULL, " +
+	    "local_port_digest TEXT NOT NULL, " +
+	    "remote_certificate TEXT NOT NULL, " +
+	    "remote_ip_address TEXT NOT NULL, " +
+	    "remote_ip_address_digest TEXT NOT NULL, " +
+	    "remote_port TEXT NOT NULL, " +
+	    "remote_port_digest TEXT NOT NULL, " +
+	    "remote_scope_id TEXT NOT NULL, " +
+	    "session_cipher TEXT NOT NULL, " +
+	    "status TEXT NOT NULL, " +
+	    "status_control TEXT NOT NULL, " +
+	    "transport TEXT NOT NULL, " +
+	    "transport_digest TEXT NOT NULL, " +
+	    "uptime TEXT NOT NULL, " +
+	    "user_defined_digest TEXT NOT NULL, " +
+	    "PRIMARY KEY (local_ip_address_digest, " +
+	    "local_port_digest, " +
+	    "remote_ip_address_digest, " +
+	    "remote_port_digest, " +
+	    "transport_digest))";
+	db.execSQL(str);
+
+	/*
 	** Create the settings table.
 	*/
 
 	str = "CREATE TABLE settings (" +
-	    "name TEXT NOT NULL PRIMARY KEY, " +
+	    "name TEXT NOT NULL, " +
+	    "name_digest TEXT NOT NULL PRIMARY KEY, " +
 	    "value TEXT NOT NULL)";
 	db.execSQL(str);
     }
