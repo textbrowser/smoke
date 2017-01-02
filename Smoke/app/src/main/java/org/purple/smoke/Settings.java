@@ -126,18 +126,16 @@ public class Settings extends AppCompatActivity {
         radioButton1.setEnabled(false);
 
         Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
-
-        spinner1.setEnabled(false);
-
         String array[] = new String[] {
 	    "TCP", "UDP"
         };
+
+        spinner1.setEnabled(false);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>
 	    (this, android.R.layout.simple_spinner_item, array);
 
         spinner1.setAdapter(adapter);
-	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	array = new String[] {
 	    "1000", "2500", "5000", "7500", "10000", "12500",
 	    "15000", "17500", "20000", "25000", "30000", "35000",
@@ -145,6 +143,7 @@ public class Settings extends AppCompatActivity {
 	};
 	adapter = new ArrayAdapter<>
 	    (this, android.R.layout.simple_spinner_item, array);
+	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(adapter);
 
         final RadioGroup radioGroup1 = (RadioGroup) findViewById
