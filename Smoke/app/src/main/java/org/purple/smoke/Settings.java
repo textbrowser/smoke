@@ -137,6 +137,15 @@ public class Settings extends AppCompatActivity {
 	    (this, android.R.layout.simple_spinner_item, array);
 
         spinner1.setAdapter(adapter);
+	spinner1 = (Spinner) findViewById(R.id.iteration_count);
+	array = new String[] {
+	    "1000", "2500", "5000", "7500", "10000", "12500",
+	    "15000", "17500", "20000", "25000", "30000", "35000",
+	    "40000", "45000", "50000"
+	};
+	adapter = new ArrayAdapter<>
+	    (this, android.R.layout.simple_spinner_item, array);
+	spinner1.setAdapter(adapter);
 
         final RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
