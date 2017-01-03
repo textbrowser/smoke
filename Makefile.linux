@@ -21,7 +21,7 @@ load-apk:
 	$(ADB) push ./Smoke/app/build/apk/smoke.apk \
 	/data/local/tmp/org.purple.smoke
 	$(ADB) shell pm install -r "/data/local/tmp/org.purple.smoke"
-	$(ADB) shell am start -n "org.purple.smoke/org.purple.smoke.Chat" \
+	$(ADB) shell am start -n "org.purple.smoke/org.purple.smoke.Settings" \
 	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 
 purge:
