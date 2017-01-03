@@ -53,10 +53,9 @@
                     android:layout_height="match_parent">
 
                     <Button
-                        android:text="@string/delete_neighbor"
+                        android:text="@string/delete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:id="@+id/delete_neighbor"
                         style="@style/Widget.AppCompat.Button" />
 
@@ -64,7 +63,6 @@
                         android:text="@string/refresh_neighbors"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         style="@style/Widget.AppCompat.Button"
                         android:id="@+id/refresh_neighbors" />
                 </LinearLayout>
@@ -137,14 +135,14 @@
                     android:layout_height="match_parent">
 
                     <Button
-                        android:text="@string/add_neighbor"
-                        android:layout_width="170dp"
+                        android:text="@string/add"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/add_neighbor"
                         style="@style/Widget.AppCompat.Button" />
 
                     <Button
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/reset_neighbor_fields"
                         android:text="@string/reset_fields"
@@ -177,10 +175,9 @@
 
                     <Button
                         android:text="@string/refresh_participants"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/refresh_participants"
-                        android:layout_weight="1"
                         style="@style/Widget.AppCompat.Button" />
                 </LinearLayout>
 

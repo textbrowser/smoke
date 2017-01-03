@@ -7,7 +7,6 @@
     <string name="please_type_a_message">Please type a message…</string>
     <string name="send">Send</string>
     <string name="neighbors">Neighbors</string>
-    <string name="refresh_neighbors">Refresh Neighbors</string>
     <string name="delete_neighbor">Delete Neighbor</string>
     <string name="ipv6_scope_id">IPv6 Scope ID</string>
     <string name="ip_address">IP Address</string>
@@ -24,8 +23,10 @@
     <string name="authenticate_password">Password</string>
     <string name="password_iteration_count">Iteration Count</string>
     <string name="iteration_count">Iteration Count</string>
-    <string name="_1000">1000</string>
     <string name="participants">Participants</string>
-    <string name="delete_participant">Delete Participant</string>
-    <string name="refresh_participants">Refresh Participants</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="delete_participant">Delete</string>
+    <string name="refresh_neighbors">Refresh</string>
+    <string name="refresh_participants">Refresh</string>
 </resources>
