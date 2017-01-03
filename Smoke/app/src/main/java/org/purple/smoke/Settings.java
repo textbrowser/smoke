@@ -205,10 +205,7 @@ public class Settings extends AppCompatActivity
 	** Create smoke.db and its tables.
 	*/
 
-	SQLiteDatabase db = m_databaseHelper.getWritableDatabase();
-
-	m_databaseHelper.onCreate(db);
-	db.close();
+	m_databaseHelper = new Database(this);
     }
 
     @Override
