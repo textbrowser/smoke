@@ -93,6 +93,7 @@ public class Database extends SQLiteOpenHelper
 	    "status TEXT NOT NULL, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
 	    "signature_public_key_digest))";
+	db.execSQL(str);
 
 	/*
 	** Create the settings table.
