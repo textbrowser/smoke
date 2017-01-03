@@ -45,33 +45,23 @@ public class Database extends SQLiteOpenHelper
     public String readSetting(final Cryptography cryptography,
 			      final String name)
     {
-	if(cryptography == null)
-	    return "";
-
+	Cursor cursor = null;
 	SQLiteDatabase db = this.getReadableDatabase();
 	String str = "";
 
-	if(db != null)
-	{
-	    Cursor cursor = db.rawQuery
-		("SELECT value FROM settings WHERE name = ?",
-		 new String[] {name});
+	cursor = db.rawQuery
+	    ("SELECT value FROM settings WHERE name = ?", new String[] {name});
 
-	    if(cursor.moveToFirst())
-		str = cursor.getString(0);
+	if(cursor.moveToFirst())
+	    str = cursor.getString(0);
 
-	    db.close();
-	}
-
+	db.close();
 	return str;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-	if(db == null)
-	    return;
-
 	String str;
 
 	/*
@@ -154,22 +144,14 @@ public class Database extends SQLiteOpenHelper
 			     final String name,
 			     final String value)
     {
-	if(cryptography == null)
-	    return;
-
 	SQLiteDatabase db = this.getWritableDatabase();
+	String a = null;
+	String b = null;
+	String c = null;
 
-	if(db != null)
-	{
-	    String n = null;
-	    String n_d = null;
-	    String v = null;
-
-	    db.rawQuery
-		("INSERT INTO settings (name, name_digest, value) " +
-		 "VALUES (?, ?, ?)",
-		 new String[] {n, n_d, v});
-	    db.close();
-	}
+	db.rawQuery
+	    ("INSERT INTO settings (name, name_digest, value) VALUES (?, ?, ?)",
+	     new String[] {a, b, c});
+	db.close();
     }
 }

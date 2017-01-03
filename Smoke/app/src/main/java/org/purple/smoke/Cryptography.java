@@ -27,7 +27,9 @@
 
 package org.purple.smoke;
 
+import android.util.Base64;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import javax.crypto.SecretKey;
@@ -62,5 +64,15 @@ public class Cryptography
 	    ("PBKDF2WithHmacSHA1");
 
 	return secretKeyFactory.generateSecret(keySpec);
+    }
+
+    public static String randomBytesAsBase64(final int length)
+    {
+	SecureRandom secureRandom = new SecureRandom();
+	byte bytes[] = new byte[length];
+
+	secureRandom.nextBytes(bytes);
+
+	return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 }
