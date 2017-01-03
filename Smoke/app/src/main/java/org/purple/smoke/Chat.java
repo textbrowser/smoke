@@ -37,66 +37,76 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Chat extends AppCompatActivity {
+public class Chat extends AppCompatActivity
+{
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         final Button button1 = (Button) findViewById(R.id.clear_chat_messages);
 
-        button1.setOnClickListener(new View.OnClickListener() {
-		public void onClick(View v) {
-		    final TextView textView = (TextView) findViewById
-			(R.id.chat_messages);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View v)
+	    {
+		final TextView textView = (TextView) findViewById
+		    (R.id.chat_messages);
 
-		    textView.setText("");
-		}
-	    });
+		textView.setText("");
+	    }
+	});
 
         final Button button2 = (Button) findViewById(R.id.send_chat_message);
 
-        button2.setOnClickListener(new View.OnClickListener() {
-		public void onClick(View v) {
-		    final TextView textView1 = (TextView) findViewById
-			(R.id.chat_message);
+        button2.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View v)
+	    {
+		final TextView textView1 = (TextView) findViewById
+		    (R.id.chat_message);
 
-		    if(textView1.getText().toString().trim().isEmpty())
-			return;
+		if(textView1.getText().toString().trim().isEmpty())
+		    return;
 
-		    final TextView textView2 = (TextView) findViewById
-			(R.id.chat_messages);
+		final TextView textView2 = (TextView) findViewById
+		    (R.id.chat_messages);
 
-		    textView2.append
-			("me: " + textView1.getText().toString().trim() + "\n");
-		    textView1.setText("");
-		}
-	    });
+		textView2.append
+		    ("me: " + textView1.getText().toString().trim() + "\n");
+		textView1.setText("");
+	    }
+	});
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.chat_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
 	int id = item.getItemId();
 
-        if(id == R.id.action_authenticate) {
+        if(id == R.id.action_authenticate)
+	{
             final Intent intent = new Intent(Chat.this, Authenticate.class);
 
             startActivity(intent);
             return true;
         }
-        else if(id == R.id.action_settings) {
+        else if(id == R.id.action_settings)
+	{
             final Intent intent = new Intent(Chat.this, Settings.class);
 
             startActivity(intent);

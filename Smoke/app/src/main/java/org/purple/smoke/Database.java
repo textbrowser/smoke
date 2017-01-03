@@ -31,23 +31,26 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class Database extends SQLiteOpenHelper {
+public class Database extends SQLiteOpenHelper
+{
     public static final String DATABASE_NAME = "smoke.db";
     public static final int DATABASE_VERSION = 1;
 
-    public Database(Context context) {
+    public Database(Context context)
+    {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db)
+    {
 	String str;
 
 	/*
 	** Create the neighbors table.
 	*/
 
-	str = "CREATE TABLE neighbors (" +
+	str = "CREATE TABLE IF NOT EXISTS neighbors (" +
 	    "ip_version TEXT NOT NULL, " +
 	    "local_ip_address TEXT NOT NULL, " +
 	    "local_ip_address_digest TEXT NOT NULL, " +
@@ -74,10 +77,28 @@ public class Database extends SQLiteOpenHelper {
 	db.execSQL(str);
 
 	/*
+	** Create the participants table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS participants (" +
+	    "name TEXT NOT NULL, " +
+	    "name_overridden TEXT NOT NULL, " +
+	    "encryption_public_key TEXT NOT NULL, " +
+	    "encryption_public_key_digest TEXT NOT NULL PRIMARY KEY, " +
+	    "forward_secrecy_magnet TEXT NOT NULL, " +
+	    "function_digest, " + // chat, e-mail, etc.
+	    "gemini_magnet TEXT NOT NULL, " +
+	    "signature_public_key TEXT NOT NULL, " +
+	    "signature_public_key_digest TEXT NOT NULL, " +
+	    "status TEXT NOT NULL, " +
+	    "PRIMARY KEY (encryption_public_key_digest, " +
+	    "signature_public_key_digest))";
+
+	/*
 	** Create the settings table.
 	*/
 
-	str = "CREATE TABLE settings (" +
+	str = "CREATE TABLE IF NOT EXISTS settings (" +
 	    "name TEXT NOT NULL, " +
 	    "name_digest TEXT NOT NULL PRIMARY KEY, " +
 	    "value TEXT NOT NULL)";
@@ -85,12 +106,18 @@ public class Database extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onDowngrade(SQLiteDatabase db,
+			    int oldVersion,
+			    int newVersion)
+    {
         onUpgrade(db, oldVersion, newVersion);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db,
+			  int oldVersion,
+			  int newVersion)
+    {
         onCreate(db);
     }
 }
