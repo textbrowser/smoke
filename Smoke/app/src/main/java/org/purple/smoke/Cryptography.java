@@ -38,6 +38,8 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class Cryptography
 {
+    private static SecureRandom s_secureRandom = new SecureRandom();
+
     public static SecretKey generateDigestKey(final byte []salt,
 					      final char []password,
 					      final int iterations)
@@ -68,11 +70,17 @@ public class Cryptography
 
     public static String randomBytesAsBase64(final int length)
     {
-	SecureRandom secureRandom = new SecureRandom();
 	byte bytes[] = new byte[length];
 
-	secureRandom.nextBytes(bytes);
-
+	s_secureRandom.nextBytes(bytes);
 	return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+    public static byte[] randomBytes(final int length)
+    {
+	byte bytes[] = new byte[length];
+
+	s_secureRandom.nextBytes(bytes);
+	return bytes;
     }
 }
