@@ -188,6 +188,12 @@ public class Settings extends AppCompatActivity
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
         textView1.setEnabled(false);
+	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
+	textView1.setEnabled(false);
+	textView1 = (TextView) findViewById(R.id.delete_participant);
+	textView1.setEnabled(false);
+	textView1 = (TextView) findViewById(R.id.refresh_participants);
+	textView1.setEnabled(false);
         textView1 = (TextView) findViewById(R.id.password1);
 	textView1.requestFocus();
         textView1.setText("");
