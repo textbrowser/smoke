@@ -28,22 +28,50 @@
 package org.purple.smoke;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class Database extends SQLiteOpenHelper
 {
-    public static final String DATABASE_NAME = "smoke.db";
-    public static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "smoke.db";
+    private static final int DATABASE_VERSION = 1;
 
     public Database(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    public String readSetting(final Cryptography cryptography,
+			      final String name)
+    {
+	if(cryptography == null)
+	    return "";
+
+	SQLiteDatabase db = this.getReadableDatabase();
+	String str = "";
+
+	if(db != null)
+	{
+	    Cursor cursor = db.rawQuery
+		("SELECT value FROM settings WHERE name = ?",
+		 new String[] {name});
+
+	    if(cursor.moveToFirst())
+		str = cursor.getString(0);
+
+	    db.close();
+	}
+
+	return str;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db)
     {
+	if(db == null)
+	    return;
+
 	String str;
 
 	/*
@@ -84,7 +112,7 @@ public class Database extends SQLiteOpenHelper
 	    "name TEXT NOT NULL, " +
 	    "name_overridden TEXT NOT NULL, " +
 	    "encryption_public_key TEXT NOT NULL, " +
-	    "encryption_public_key_digest TEXT NOT NULL PRIMARY KEY, " +
+	    "encryption_public_key_digest TEXT NOT NULL, " +
 	    "forward_secrecy_magnet TEXT NOT NULL, " +
 	    "function_digest, " + // chat, e-mail, etc.
 	    "gemini_magnet TEXT NOT NULL, " +
@@ -120,5 +148,28 @@ public class Database extends SQLiteOpenHelper
 			  int newVersion)
     {
         onCreate(db);
+    }
+
+    public void writeSetting(final Cryptography cryptography,
+			     final String name,
+			     final String value)
+    {
+	if(cryptography == null)
+	    return;
+
+	SQLiteDatabase db = this.getWritableDatabase();
+
+	if(db != null)
+	{
+	    String n = null;
+	    String n_d = null;
+	    String v = null;
+
+	    db.rawQuery
+		("INSERT INTO settings (name, name_digest, value) " +
+		 "VALUES (?, ?, ?)",
+		 new String[] {n, n_d, v});
+	    db.close();
+	}
     }
 }

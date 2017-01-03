@@ -45,12 +45,19 @@ import android.widget.TextView;
 
 public class Settings extends AppCompatActivity
 {
+    private Cryptography m_cryptography;
     private Database m_databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+	/*
+	** Create smoke.db and its tables.
+	*/
+
+	m_databaseHelper = new Database(getApplicationContext());
         setContentView(R.layout.activity_settings);
 
         final Button button1 = (Button) findViewById
@@ -200,12 +207,6 @@ public class Settings extends AppCompatActivity
         textView1.setText("");
         textView1 = (TextView) findViewById(R.id.password2);
         textView1.setText("");
-
-	/*
-	** Create smoke.db and its tables.
-	*/
-
-	m_databaseHelper = new Database(getApplicationContext());
     }
 
     @Override
@@ -229,6 +230,8 @@ public class Settings extends AppCompatActivity
             final Intent intent = new Intent(Settings.this, Authenticate.class);
 
             startActivity(intent);
+	    m_databaseHelper.writeSetting
+		(m_cryptography, "lastActivity", "Authenticate");
             return true;
         }
 	else if(id == R.id.action_chat)
@@ -236,6 +239,8 @@ public class Settings extends AppCompatActivity
             final Intent intent = new Intent(Settings.this, Chat.class);
 
             startActivity(intent);
+	    m_databaseHelper.writeSetting
+		(m_cryptography, "lastActivity", "Chat");
             return true;
         }
 
