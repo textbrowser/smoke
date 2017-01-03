@@ -24,5 +24,7 @@ load-apk:
 	$(ADB) shell am start -n "org.purple.smoke/org.purple.smoke.Settings" \
 	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 
+pull-database:
+
 purge:
 	find . -name '*~*' -exec rm -f {} \;

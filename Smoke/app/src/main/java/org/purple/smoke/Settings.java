@@ -205,7 +205,7 @@ public class Settings extends AppCompatActivity
 	** Create smoke.db and its tables.
 	*/
 
-	m_databaseHelper = new Database(this);
+	m_databaseHelper = new Database(getApplicationContext());
     }
 
     @Override

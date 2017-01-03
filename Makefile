@@ -23,5 +23,8 @@ launch-emulator:
 load-apk:
 	$(MAKE) -f $(MAKEFILE) load-apk
 
+pull-database:
+	$(MAKE) -f $(MAKEFILE) pull-database
+
 purge:
 	$(MAKE) -f $(MAKEFILE) purge
