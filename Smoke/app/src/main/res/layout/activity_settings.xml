@@ -152,10 +152,33 @@
                 </LinearLayout>
 
                 <TextView
+                    android:text="@string/participants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:textSize="30sp" />
+
+                <GridView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/participants" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:text="@string/delete_participant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/delete_participant" />
+                </LinearLayout>
+
+                <TextView
                     android:text="@string/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/Password"
                     android:textSize="30sp" />
 
                 <LinearLayout

@@ -25,4 +25,6 @@
     <string name="password_iteration_count">Iteration Count</string>
     <string name="iteration_count">Iteration Count</string>
     <string name="_1000">1000</string>
+    <string name="participants">Participants</string>
+    <string name="delete_participant">Delete Participant</string>
 </resources>
