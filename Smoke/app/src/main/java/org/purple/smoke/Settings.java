@@ -30,8 +30,9 @@ package org.purple.smoke;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -199,6 +200,15 @@ public class Settings extends AppCompatActivity
         textView1.setText("");
         textView1 = (TextView) findViewById(R.id.password2);
         textView1.setText("");
+
+	/*
+	** Create smoke.db and its tables.
+	*/
+
+	SQLiteDatabase db = m_databaseHelper.getWritableDatabase();
+
+	m_databaseHelper.onCreate(db);
+	db.close();
     }
 
     @Override
