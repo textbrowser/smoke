@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -52,18 +53,25 @@ public class Database extends SQLiteOpenHelper
 	if(db == null)
 	    return "";
 
-	Cursor cursor = null;
 	String str = "";
 
-	if(!secured)
-	    cursor = db.rawQuery
-		("SELECT value FROM settings WHERE name = ?",
-		 new String[] {name});
-
-	if(cursor != null && cursor.moveToFirst())
+	try
 	{
-	    str = cursor.getString(0);
-	    cursor.close();
+	    Cursor cursor = null;
+
+	    if(!secured)
+		cursor = db.rawQuery
+		    ("SELECT value FROM settings WHERE name = ?",
+		     new String[] {name});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		str = cursor.getString(0);
+		cursor.close();
+	    }
+	}
+	catch(SQLException exception)
+	{
 	}
 
 	db.close();
@@ -106,7 +114,14 @@ public class Database extends SQLiteOpenHelper
 	    "remote_ip_address_digest, " +
 	    "remote_port_digest, " +
 	    "transport_digest))";
-	db.execSQL(str);
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(SQLException exception)
+	{
+	}
 
 	/*
 	** Create the participants table.
@@ -125,7 +140,14 @@ public class Database extends SQLiteOpenHelper
 	    "status TEXT NOT NULL, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
 	    "signature_public_key_digest))";
-	db.execSQL(str);
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(SQLException exception)
+	{
+	}
 
 	/*
 	** Create the settings table.
@@ -135,7 +157,14 @@ public class Database extends SQLiteOpenHelper
 	    "name TEXT NOT NULL, " +
 	    "name_digest TEXT NOT NULL PRIMARY KEY, " +
 	    "value TEXT NOT NULL)";
-	db.execSQL(str);
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(SQLException exception)
+	{
+	}
     }
 
     @Override
@@ -183,7 +212,15 @@ public class Database extends SQLiteOpenHelper
 	values.put("name", a);
 	values.put("name_digest", b);
 	values.put("value", c);
-	db.insert("settings", null, values);
+
+	try
+	{
+	    db.replace("settings", null, values);
+	}
+	catch(SQLException exception)
+	{
+	}
+
 	db.close();
     }
 }
