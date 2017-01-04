@@ -277,7 +277,7 @@ public class Settings extends AppCompatActivity
 
             startActivity(intent);
 	    m_databaseHelper.writeSetting
-		(m_cryptography, "lastActivity", "Authenticate");
+		(m_cryptography, "lastActivity", "Authenticate", false);
             return true;
         }
 	else if(id == R.id.action_chat)
@@ -286,7 +286,7 @@ public class Settings extends AppCompatActivity
 
             startActivity(intent);
 	    m_databaseHelper.writeSetting
-		(m_cryptography, "lastActivity", "Chat");
+		(m_cryptography, "lastActivity", "Chat", false);
             return true;
         }
 

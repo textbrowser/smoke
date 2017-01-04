@@ -142,12 +142,20 @@ public class Database extends SQLiteOpenHelper
 
     public void writeSetting(final Cryptography cryptography,
 			     final String name,
-			     final String value)
+			     final String value,
+			     final boolean secured)
     {
 	SQLiteDatabase db = this.getWritableDatabase();
 	String a = null;
 	String b = null;
 	String c = null;
+
+	if(!secured)
+	{
+	    a = name;
+	    b = name;
+	    c = value;
+	}
 
 	db.rawQuery
 	    ("INSERT INTO settings (name, name_digest, value) VALUES (?, ?, ?)",
