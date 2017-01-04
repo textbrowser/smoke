@@ -42,18 +42,24 @@ public class Database extends SQLiteOpenHelper
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public String readSetting(final Cryptography cryptography,
-			      final String name)
+    public String readSetting(Cryptography cryptography,
+			      String name,
+			      boolean secured)
     {
 	Cursor cursor = null;
 	SQLiteDatabase db = this.getReadableDatabase();
 	String str = "";
 
-	cursor = db.rawQuery
-	    ("SELECT value FROM settings WHERE name = ?", new String[] {name});
+	if(!secured)
+	    cursor = db.rawQuery
+		("SELECT value FROM settings WHERE name = ?",
+		 new String[] {name});
 
-	if(cursor.moveToFirst())
+	if(cursor != null && cursor.moveToFirst())
+	{
 	    str = cursor.getString(0);
+	    cursor.close();
+	}
 
 	db.close();
 	return str;
@@ -140,10 +146,10 @@ public class Database extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public void writeSetting(final Cryptography cryptography,
-			     final String name,
-			     final String value,
-			     final boolean secured)
+    public void writeSetting(Cryptography cryptography,
+			     String name,
+			     String value,
+			     boolean secured)
     {
 	SQLiteDatabase db = this.getWritableDatabase();
 	String a = null;
@@ -158,7 +164,8 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	db.rawQuery
-	    ("INSERT INTO settings (name, name_digest, value) VALUES (?, ?, ?)",
+	    ("INSERT OR REPLACE INTO settings " +
+	     "(name, name_digest, value) VALUES (?, ?, ?)",
 	     new String[] {a, b, c});
 	db.close();
     }

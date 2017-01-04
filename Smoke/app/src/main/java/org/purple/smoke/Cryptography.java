@@ -40,9 +40,9 @@ public class Cryptography
 {
     private static SecureRandom s_secureRandom = new SecureRandom();
 
-    public static SecretKey generateEncryptionKey(final byte []salt,
-						  final char []password,
-						  final int iterations)
+    public static SecretKey generateEncryptionKey(byte []salt,
+						  char []password,
+						  int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
 	final int length = 256;
@@ -54,9 +54,9 @@ public class Cryptography
 	return secretKeyFactory.generateSecret(keySpec);
     }
 
-    public static SecretKey generateMacKey(final byte []salt,
-					   final char []password,
-					   final int iterations)
+    public static SecretKey generateMacKey(byte []salt,
+					   char []password,
+					   int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
 	final int length = 512;
@@ -68,7 +68,7 @@ public class Cryptography
 	return secretKeyFactory.generateSecret(keySpec);
     }
 
-    public static String randomBytesAsBase64(final int length)
+    public static String randomBytesAsBase64(int length)
     {
 	byte bytes[] = new byte[length];
 
@@ -76,7 +76,7 @@ public class Cryptography
 	return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
-    public static byte[] randomBytes(final int length)
+    public static byte[] randomBytes(int length)
     {
 	byte bytes[] = new byte[length];
 

@@ -31,7 +31,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -148,8 +147,14 @@ public class Settings extends AppCompatActivity
 			    (macSalt,
 			     textView1.getText().toString().toCharArray(),
 			     iterations);
+			m_databaseHelper.writeSetting
+			    (m_cryptography,
+			     "iterationCount",
+			     spinner.getSelectedItem().toString(),
+			     false);
 		    }
-		    catch(GeneralSecurityException exception)
+		    catch(GeneralSecurityException | NumberFormatException
+			  exception)
 		    {
 		    }
 
@@ -163,11 +168,7 @@ public class Settings extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-	/*
-	** Create smoke.db and its tables.
-	*/
-
+	m_cryptography = new Cryptography();
 	m_databaseHelper = new Database(getApplicationContext());
         setContentView(R.layout.activity_settings);
 
@@ -194,7 +195,7 @@ public class Settings extends AppCompatActivity
 
         spinner1.setEnabled(false);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 
         spinner1.setAdapter(adapter);
@@ -205,7 +206,7 @@ public class Settings extends AppCompatActivity
 	    "40000", "45000", "50000", "55000", "60000", "65000",
 	    "70000", "100000"
 	};
-	adapter = new ArrayAdapter<>
+	adapter = new ArrayAdapter<String>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(adapter);
@@ -253,6 +254,26 @@ public class Settings extends AppCompatActivity
         textView1 = (TextView) findViewById(R.id.password2);
         textView1.setText("");
 	prepareListeners();
+
+	/*
+	** Restore some settings.
+	*/
+
+	spinner1 = (Spinner) findViewById(R.id.iteration_count);
+	adapter = (ArrayAdapter<String>) spinner1.getAdapter();
+
+	int index = -1;
+
+	if(adapter != null)
+	    index = adapter.getPosition
+		(m_databaseHelper.readSetting(m_cryptography,
+					      "iterationCount",
+					      false));
+
+	if(index >= 0)
+	    spinner1.setSelection(index);
+	else
+	    spinner1.setSelection(0);
     }
 
     @Override
