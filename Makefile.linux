@@ -10,6 +10,9 @@ all:
 clean:
 	$(GRADLE) --build-file Smoke/build.gradle clean
 
+distclean: clean
+	rm -f smoke.db
+
 kill-adb-server:
 	$(ADB) kill-server
 

@@ -98,13 +98,15 @@ public class Settings extends AppCompatActivity
 			(Settings.this).create();
 
 		    if(textView1.getText().length() < 16)
-			alertDialog.setMessage("Each password must contain at least sixteen characters.");
+			alertDialog.setMessage("Each password must contain " +
+					       "at least sixteen characters.");
 		    else
-			alertDialog.setMessage("The provided passwords are not identical.");
+			alertDialog.setMessage("The provided passwords are " +
+					       "not identical.");
 
 		    alertDialog.setTitle("Error");
 		    alertDialog.setButton
-			(AlertDialog.BUTTON_NEUTRAL, "Fine",
+			(AlertDialog.BUTTON_NEUTRAL, "Dismiss",
 			 new DialogInterface.OnClickListener()
 			 {
 			     public void onClick(DialogInterface dialog,
@@ -127,7 +129,8 @@ public class Settings extends AppCompatActivity
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);
 		    dialog.setMessage
-			("Generating authentication and encryption keys...");
+			("Generating authentication and encryption " +
+			 "keys. Please be patient...");
 		    dialog.show();
 		    encryptionSalt = Cryptography.randomBytes(32);
 		    macSalt = Cryptography.randomBytes(64);

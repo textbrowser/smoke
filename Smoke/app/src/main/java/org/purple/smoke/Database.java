@@ -47,8 +47,12 @@ public class Database extends SQLiteOpenHelper
 			      String name,
 			      boolean secured)
     {
-	Cursor cursor = null;
 	SQLiteDatabase db = getReadableDatabase();
+
+	if(db == null)
+	    return "";
+
+	Cursor cursor = null;
 	String str = "";
 
 	if(!secured)
@@ -69,6 +73,9 @@ public class Database extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
+	if(db == null)
+	    return;
+
 	String str;
 
 	/*
@@ -153,6 +160,15 @@ public class Database extends SQLiteOpenHelper
 			     boolean secured)
     {
 	SQLiteDatabase db = getWritableDatabase();
+
+	if(db == null)
+	    return;
+
+	ContentValues values = new ContentValues();
+
+	if(values == null)
+	    return;
+
 	String a = "";
 	String b = "";
 	String c = "";
@@ -163,8 +179,6 @@ public class Database extends SQLiteOpenHelper
 	    b = name;
 	    c = value;
 	}
-
-	ContentValues values = new ContentValues();
 
 	values.put("name", a);
 	values.put("name_digest", b);
