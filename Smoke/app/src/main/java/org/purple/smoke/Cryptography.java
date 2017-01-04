@@ -40,12 +40,12 @@ public class Cryptography
 {
     private static SecureRandom s_secureRandom = new SecureRandom();
 
-    public static SecretKey generateDigestKey(final byte []salt,
-					      final char []password,
-					      final int iterations)
+    public static SecretKey generateEncryptionKey(final byte []salt,
+						  final char []password,
+						  final int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
-	final int length = 512;
+	final int length = 256;
 
 	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
 	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
@@ -54,12 +54,12 @@ public class Cryptography
 	return secretKeyFactory.generateSecret(keySpec);
     }
 
-    public static SecretKey generateEncryptionKey(final byte []salt,
-						  final char []password,
-						  final int iterations)
+    public static SecretKey generateMacKey(final byte []salt,
+					   final char []password,
+					   final int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
-	final int length = 256;
+	final int length = 512;
 
 	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
 	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
