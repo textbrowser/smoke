@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -47,7 +48,7 @@ public class Database extends SQLiteOpenHelper
 			      boolean secured)
     {
 	Cursor cursor = null;
-	SQLiteDatabase db = this.getReadableDatabase();
+	SQLiteDatabase db = getReadableDatabase();
 	String str = "";
 
 	if(!secured)
@@ -151,10 +152,10 @@ public class Database extends SQLiteOpenHelper
 			     String value,
 			     boolean secured)
     {
-	SQLiteDatabase db = this.getWritableDatabase();
-	String a = null;
-	String b = null;
-	String c = null;
+	SQLiteDatabase db = getWritableDatabase();
+	String a = "";
+	String b = "";
+	String c = "";
 
 	if(!secured)
 	{
@@ -163,10 +164,12 @@ public class Database extends SQLiteOpenHelper
 	    c = value;
 	}
 
-	db.rawQuery
-	    ("INSERT OR REPLACE INTO settings " +
-	     "(name, name_digest, value) VALUES (?, ?, ?)",
-	     new String[] {a, b, c});
+	ContentValues values = new ContentValues();
+
+	values.put("name", a);
+	values.put("name_digest", b);
+	values.put("value", c);
+	db.insert("settings", null, values);
 	db.close();
     }
 }

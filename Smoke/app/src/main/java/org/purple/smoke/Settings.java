@@ -197,6 +197,7 @@ public class Settings extends AppCompatActivity
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
+	int index = -1;
 
         spinner1.setAdapter(adapter);
 	array = new String[]
@@ -208,6 +209,10 @@ public class Settings extends AppCompatActivity
 	};
 	adapter = new ArrayAdapter<String>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
+	index = adapter.getPosition
+	    (m_databaseHelper.readSetting(m_cryptography,
+					  "iterationCount",
+					  false));
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(adapter);
 
@@ -260,20 +265,18 @@ public class Settings extends AppCompatActivity
 	*/
 
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
-	adapter = (ArrayAdapter<String>) spinner1.getAdapter();
-
-	int index = -1;
-
-	if(adapter != null)
-	    index = adapter.getPosition
-		(m_databaseHelper.readSetting(m_cryptography,
-					      "iterationCount",
-					      false));
 
 	if(index >= 0)
 	    spinner1.setSelection(index);
 	else
 	    spinner1.setSelection(0);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+	m_databaseHelper.close();
+	super.onDestroy();
     }
 
     @Override
