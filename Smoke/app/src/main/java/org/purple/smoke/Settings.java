@@ -167,6 +167,20 @@ public class Settings extends AppCompatActivity
 	});
     }
 
+    private void showAuthenticateActivity()
+    {
+	final Intent intent = new Intent(Settings.this, Authenticate.class);
+
+	startActivity(intent);
+    }
+
+    private void showChatActivity()
+    {
+	final Intent intent = new Intent(Settings.this, Chat.class);
+
+	startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -300,18 +314,14 @@ public class Settings extends AppCompatActivity
 
         if(id == R.id.action_authenticate)
 	{
-            final Intent intent = new Intent(Settings.this, Authenticate.class);
-
-            startActivity(intent);
+	    showAuthenticateActivity();
 	    m_databaseHelper.writeSetting
 		(m_cryptography, "lastActivity", "Authenticate", false);
-            return true;
-        }
+	    return true;
+	}
 	else if(id == R.id.action_chat)
 	{
-            final Intent intent = new Intent(Settings.this, Chat.class);
-
-            startActivity(intent);
+	    showChatActivity();
 	    m_databaseHelper.writeSetting
 		(m_cryptography, "lastActivity", "Chat", false);
             return true;
