@@ -196,7 +196,10 @@ public class Database extends SQLiteOpenHelper
 	ContentValues values = new ContentValues();
 
 	if(values == null)
+	{
+	    db.close();
 	    return;
+	}
 
 	String a = "";
 	String b = "";
@@ -208,6 +211,9 @@ public class Database extends SQLiteOpenHelper
 	    b = name;
 	    c = value;
 	}
+	else
+	{
+	}
 
 	values.put("name", a);
 	values.put("name_digest", b);
@@ -215,6 +221,10 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
+	    /*
+	    ** Content values should avoid SQL injections.
+	    */
+
 	    db.replace("settings", null, values);
 	}
 	catch(SQLException exception)
