@@ -121,11 +121,12 @@ public class Settings extends AppCompatActivity
 		}
 		else
 		{
-		    byte[] encryptionSalt;
-		    byte[] macSalt;
-		    ProgressDialog dialog = new ProgressDialog(Settings.this);
-		    SecretKey encryptionKey;
-		    SecretKey macKey;
+		    final ProgressDialog dialog = new ProgressDialog
+			(Settings.this);
+		    final Spinner spinner = (Spinner) findViewById
+			(R.id.iteration_count);
+		    final int iterations = Integer.parseInt
+			(spinner.getSelectedItem().toString());
 
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);
@@ -133,48 +134,71 @@ public class Settings extends AppCompatActivity
 			("Generating authentication and encryption " +
 			 "keys. Please be patient...");
 		    dialog.show();
-		    encryptionSalt = Cryptography.randomBytes(32);
-		    macSalt = Cryptography.randomBytes(64);
 
-		    try
+		    Thread thread = new Thread() /*
+						 ** A thread will allow us
+						 ** to display the fancy
+						 ** dialog.
+						 */
 		    {
-			Spinner spinner = (Spinner) findViewById
-			    (R.id.iteration_count);
-			int iterations = Integer.parseInt
-			    (spinner.getSelectedItem().toString());
+			@Override
+			public void run()
+			{
+			    SecretKey encryptionKey;
+			    SecretKey macKey;
+			    byte[] encryptionSalt;
+			    byte[] macSalt;
 
-			encryptionKey = Cryptography.generateEncryptionKey
-			    (encryptionSalt,
-			     textView1.getText().toString().toCharArray(),
-			     iterations);
-			macKey = Cryptography.generateMacKey
-			    (macSalt,
-			     textView1.getText().toString().toCharArray(),
-			     iterations);
-			m_databaseHelper.writeSetting
-			    (m_cryptography,
-			     "encryptionSalt",
-			     Base64.encodeToString(encryptionSalt,
-						   Base64.DEFAULT),
-			     false);
-			m_databaseHelper.writeSetting
-			    (m_cryptography,
-			     "iterationCount",
-			     spinner.getSelectedItem().toString(),
-			     false);
-			m_databaseHelper.writeSetting
-			    (m_cryptography,
-			     "macSalt",
-			     Base64.encodeToString(macSalt,
-						   Base64.DEFAULT),
-			     false);
-		    }
-		    catch(GeneralSecurityException | NumberFormatException
-			  exception)
-		    {
-		    }
+			    encryptionSalt = Cryptography.randomBytes(32);
+			    macSalt = Cryptography.randomBytes(64);
 
-		    dialog.dismiss();
+			    try
+			    {
+				encryptionKey = Cryptography.
+				    generateEncryptionKey
+				    (encryptionSalt,
+				     textView1.getText().toString().
+				     toCharArray(),
+				     iterations);
+				macKey = Cryptography.generateMacKey
+				    (macSalt,
+				     textView1.getText().toString().
+				     toCharArray(),
+				     iterations);
+				m_databaseHelper.writeSetting
+				    (m_cryptography,
+				     "encryptionSalt",
+				     Base64.encodeToString(encryptionSalt,
+							   Base64.DEFAULT),
+				     false);
+				m_databaseHelper.writeSetting
+				    (m_cryptography,
+				     "iterationCount",
+				     spinner.getSelectedItem().toString(),
+				     false);
+				m_databaseHelper.writeSetting
+				    (m_cryptography,
+				     "macSalt",
+				     Base64.encodeToString(macSalt,
+							   Base64.DEFAULT),
+				     false);
+			    }
+			    catch(GeneralSecurityException |
+				  NumberFormatException exception)
+			    {
+			    }
+
+			    Settings.this.runOnUiThread(new Runnable()
+			    {
+				public void run()
+				{
+				    dialog.dismiss();
+				}
+			    });
+			}
+		    };
+
+		    thread.start();
 		}
 	    }
 	});
