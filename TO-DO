@@ -1,7 +1,9 @@
 Completed Items
 
+1.     Remove UI-related references in Settings::prepareListeners()::...::run().
+2.     Replace the (final) iterations variable in Settings::prepareListeners()::...::run().
+
 Remaining Items
 
 1.     Logging class.
-2.     Remove UI-related references in Settings::prepareListeners()::...::run().
-3.     Replace the (final) iterations variable in Settings::prepareListeners()::...::run().
+
