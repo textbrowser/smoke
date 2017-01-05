@@ -33,6 +33,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -152,8 +153,20 @@ public class Settings extends AppCompatActivity
 			     iterations);
 			m_databaseHelper.writeSetting
 			    (m_cryptography,
+			     "encryptionSalt",
+			     Base64.encodeToString(encryptionSalt,
+						   Base64.DEFAULT),
+			     false);
+			m_databaseHelper.writeSetting
+			    (m_cryptography,
 			     "iterationCount",
 			     spinner.getSelectedItem().toString(),
+			     false);
+			m_databaseHelper.writeSetting
+			    (m_cryptography,
+			     "macSalt",
+			     Base64.encodeToString(macSalt,
+						   Base64.DEFAULT),
 			     false);
 		    }
 		    catch(GeneralSecurityException | NumberFormatException
