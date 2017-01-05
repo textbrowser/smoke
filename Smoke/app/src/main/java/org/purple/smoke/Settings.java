@@ -125,7 +125,7 @@ public class Settings extends AppCompatActivity
 			(Settings.this);
 		    final Spinner spinner = (Spinner) findViewById
 			(R.id.iteration_count);
-		    final int iterations = Integer.parseInt
+		    int iterationCount = Integer.parseInt
 			(spinner.getSelectedItem().toString());
 
 		    dialog.setCancelable(false);
@@ -135,12 +135,17 @@ public class Settings extends AppCompatActivity
 			 "keys. Please be patient...");
 		    dialog.show();
 
-		    Thread thread = new Thread() /*
-						 ** A thread will allow us
-						 ** to display the fancy
-						 ** dialog.
-						 */
+		    class SingleShot implements Runnable
 		    {
+			private String m_password;
+			private int m_iterationCount;
+
+			SingleShot(String password, int iterationCount)
+			{
+			    m_iterationCount = iterationCount;
+			    m_password = password;
+			}
+
 			@Override
 			public void run()
 			{
@@ -157,14 +162,12 @@ public class Settings extends AppCompatActivity
 				encryptionKey = Cryptography.
 				    generateEncryptionKey
 				    (encryptionSalt,
-				     textView1.getText().toString().
-				     toCharArray(),
-				     iterations);
+				     m_password.toCharArray(),
+				     m_iterationCount);
 				macKey = Cryptography.generateMacKey
 				    (macSalt,
-				     textView1.getText().toString().
-				     toCharArray(),
-				     iterations);
+				     m_password.toCharArray(),
+				     m_iterationCount);
 				m_databaseHelper.writeSetting
 				    (m_cryptography,
 				     "encryptionSalt",
@@ -174,7 +177,7 @@ public class Settings extends AppCompatActivity
 				m_databaseHelper.writeSetting
 				    (m_cryptography,
 				     "iterationCount",
-				     spinner.getSelectedItem().toString(),
+				     String.valueOf(m_iterationCount),
 				     false);
 				m_databaseHelper.writeSetting
 				    (m_cryptography,
@@ -196,7 +199,11 @@ public class Settings extends AppCompatActivity
 				}
 			    });
 			}
-		    };
+		    }
+
+		    Thread thread = new Thread
+			(new SingleShot(textView1.getText().toString(),
+					iterationCount));
 
 		    thread.start();
 		}
