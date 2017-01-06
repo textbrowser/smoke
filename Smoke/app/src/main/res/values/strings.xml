@@ -29,4 +29,6 @@
     <string name="delete_participant">Delete</string>
     <string name="refresh_neighbors">Refresh</string>
     <string name="refresh_participants">Refresh</string>
+    <string name="signature_algorithm">Signature Algorithm</string>
+    <string name="encryption_algorithm">Encryption Algorithm</string>
 </resources>
