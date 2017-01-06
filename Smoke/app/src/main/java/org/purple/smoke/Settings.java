@@ -27,9 +27,7 @@
 
 package org.purple.smoke;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -95,29 +93,15 @@ public class Settings extends AppCompatActivity
 		   equals(textView2.getText().toString()) ||
 		   textView1.getText().length() < 16)
 		{
-		    AlertDialog alertDialog = new AlertDialog.Builder
-			(Settings.this).create();
+		    String error = "";
 
 		    if(textView1.getText().length() < 16)
-			alertDialog.setMessage("Each password must contain " +
-					       "at least sixteen characters.");
+			error = "Each password must contain " +
+			    "at least sixteen characters.";
 		    else
-			alertDialog.setMessage("The provided passwords are " +
-					       "not identical.");
+			error = "The provided passwords are not identical.";
 
-		    alertDialog.setTitle("Error");
-		    alertDialog.setButton
-			(AlertDialog.BUTTON_NEUTRAL, "Dismiss",
-			 new DialogInterface.OnClickListener()
-			 {
-			     public void onClick(DialogInterface dialog,
-						 int which)
-			     {
-				 dialog.dismiss();
-			     }
-			 });
-
-		    alertDialog.show();
+		    Miscellaneous.showErrorDialog(Settings.this, error);
 		}
 		else
 		{
@@ -210,6 +194,13 @@ public class Settings extends AppCompatActivity
 					(m_encryptionKey);
 				    m_cryptography.setMacKey
 					(m_macKey);
+
+				    if(m_encryptionKey == null ||
+				       m_macKey == null)
+					Miscellaneous.showErrorDialog
+					    (Settings.this,
+					     "An error occurred while " +
+					     "generating the secret keys.");
 				}
 			    });
 			}

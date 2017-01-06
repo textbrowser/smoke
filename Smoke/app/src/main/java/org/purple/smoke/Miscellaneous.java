@@ -27,6 +27,27 @@
 
 package org.purple.smoke;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+
 class Miscellaneous
 {
+    public static void showErrorDialog(Context context, String error)
+    {
+	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_NEUTRAL, "Dismiss",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     dialog.dismiss();
+		 }
+	     });
+	alertDialog.setMessage(error);
+	alertDialog.setTitle("Error");
+	alertDialog.show();
+    }
 }
