@@ -38,6 +38,8 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class Cryptography
 {
+    private SecretKey m_encryptionKey = null;
+    private SecretKey m_macKey = null;
     private static SecureRandom s_secureRandom = new SecureRandom();
 
     public static SecretKey generateEncryptionKey(byte []salt,
@@ -96,5 +98,15 @@ public class Cryptography
 
 	s_secureRandom.nextBytes(bytes);
 	return bytes;
+    }
+
+    public void setEncryptionKey(SecretKey encryptionKey)
+    {
+	m_encryptionKey = encryptionKey;
+    }
+
+    public void setMacKey(SecretKey macKey)
+    {
+	m_macKey = macKey;
     }
 }

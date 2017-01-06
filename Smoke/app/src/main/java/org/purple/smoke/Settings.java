@@ -137,6 +137,8 @@ public class Settings extends AppCompatActivity
 
 		    class SingleShot implements Runnable
 		    {
+			private SecretKey m_encryptionKey = null;
+			private SecretKey m_macKey = null;
 			private String m_password;
 			private int m_iterationCount;
 
@@ -146,11 +148,19 @@ public class Settings extends AppCompatActivity
 			    m_password = password;
 			}
 
+			public SecretKey encryptionKey()
+			{
+			    return m_encryptionKey;
+			}
+
+			public SecretKey macKey()
+			{
+			    return m_macKey;
+			}
+
 			@Override
 			public void run()
 			{
-			    SecretKey encryptionKey;
-			    SecretKey macKey;
 			    byte[] encryptionSalt;
 			    byte[] macSalt;
 
@@ -159,12 +169,12 @@ public class Settings extends AppCompatActivity
 
 			    try
 			    {
-				encryptionKey = Cryptography.
+				m_encryptionKey = Cryptography.
 				    generateEncryptionKey
 				    (encryptionSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
-				macKey = Cryptography.generateMacKey
+				m_macKey = Cryptography.generateMacKey
 				    (macSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
@@ -196,6 +206,10 @@ public class Settings extends AppCompatActivity
 				public void run()
 				{
 				    dialog.dismiss();
+				    m_cryptography.setEncryptionKey
+					(m_encryptionKey);
+				    m_cryptography.setMacKey
+					(m_macKey);
 				}
 			    });
 			}
