@@ -90,6 +90,20 @@ public class Cryptography
 	return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
+    public static boolean memcmp(byte a[], byte b[])
+    {
+	if(a == null || b == null)
+	    return false;
+
+	int rc = 0;
+	int size = java.lang.Math.max(a.length, b.length);
+
+	for(int i = 0; i < size; i++)
+	    rc |= (i < a.length ? a[i] : 0) ^ (i < b.length ? b[i] : 0);
+
+	return rc == 0;
+    }
+
     public static byte[] randomBytes(int length)
     {
 	byte bytes[] = new byte[length];
@@ -110,7 +124,8 @@ public class Cryptography
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
 
 	    for(byte b[] : data)
-		messageDigest.update(b);
+		if(b != null)
+		    messageDigest.update(b);
 
 	    bytes = messageDigest.digest();
 	}
