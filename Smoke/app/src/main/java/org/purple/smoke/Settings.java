@@ -281,6 +281,22 @@ public class Settings extends AppCompatActivity
 					  false));
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(adapter);
+	array = new String[]
+	{
+	    "RSA"
+	};
+	adapter = new ArrayAdapter<String>
+	    (Settings.this, android.R.layout.simple_spinner_item, array);
+	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
+	spinner1.setAdapter(adapter);
+	array = new String[]
+	{
+	    "RSA"
+	};
+	adapter = new ArrayAdapter<String>
+	    (Settings.this, android.R.layout.simple_spinner_item, array);
+	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
+	spinner1.setAdapter(adapter);
 
         final RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fadeScrollbars="false">
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
@@ -25,11 +27,13 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="org.purple.smoke.Settings">
+        tools:context="org.purple.smoke.Settings"
+        android:fadeScrollbars="false">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fadeScrollbars="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -197,7 +201,7 @@
                         android:layout_width="179dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/textView3"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
                     <Spinner
                         android:layout_width="0dp"
@@ -210,31 +214,31 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:text="@string/encryption_algorithm"
+                        android:text="@string/encryption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/textView5"
-                        android:layout_weight="1" />
+                        android:layout_weight="3.52" />
 
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/encryption_algorithm" />
+                        android:id="@+id/pki_encryption_algorithm" />
 
                     <TextView
-                        android:text="@string/signature_algorithm"
+                        android:text="@string/signature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/textView6"
-                        android:layout_weight="1" />
+                        android:layout_weight="2.01" />
 
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/signature_algorithm" />
+                        android:id="@+id/pki_signature_algorithm" />
                 </LinearLayout>
 
                 <EditText
