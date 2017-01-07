@@ -188,7 +188,7 @@ public class Settings extends AppCompatActivity
 				if(saltedMacSalt != null)
 				    m_databaseHelper.writeSetting
 					(m_cryptography,
-					 "saltedMacSalt",
+					 "saltedPassword",
 					 Base64.encodeToString(saltedMacSalt,
 							       Base64.DEFAULT),
 					 false);
