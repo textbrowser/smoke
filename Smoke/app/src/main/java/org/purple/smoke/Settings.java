@@ -181,7 +181,8 @@ public class Settings extends AppCompatActivity
 				     false);
 
 				byte saltedMacSalt[] = Cryptography.
-				    sha512(m_macKey.getEncoded(),
+				    sha512(m_password.getBytes(),
+					   encryptionSalt,
 					   macSalt);
 
 				if(saltedMacSalt != null)
