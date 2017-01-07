@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -42,8 +43,8 @@ public class Cryptography
     private SecretKey m_macKey = null;
     private static SecureRandom s_secureRandom = new SecureRandom();
 
-    public static SecretKey generateEncryptionKey(byte []salt,
-						  char []password,
+    public static SecretKey generateEncryptionKey(byte salt[],
+						  char password[],
 						  int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
@@ -60,8 +61,8 @@ public class Cryptography
 	return secretKeyFactory.generateSecret(keySpec);
     }
 
-    public static SecretKey generateMacKey(byte []salt,
-					   char []password,
+    public static SecretKey generateMacKey(byte salt[],
+					   char password[],
 					   int iterations)
 	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
@@ -97,6 +98,26 @@ public class Cryptography
 	    return null;
 
 	s_secureRandom.nextBytes(bytes);
+	return bytes;
+    }
+
+    public static byte[] sha512(byte[] ... data)
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
+
+	    for(byte b[] : data)
+		messageDigest.update(b);
+
+	    bytes = messageDigest.digest();
+	}
+	catch(NoSuchAlgorithmException exception)
+	{
+	}
+
 	return bytes;
     }
 

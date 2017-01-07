@@ -145,8 +145,8 @@ public class Settings extends AppCompatActivity
 			@Override
 			public void run()
 			{
-			    byte[] encryptionSalt;
-			    byte[] macSalt;
+			    byte encryptionSalt[] = null;
+			    byte macSalt[] = null;
 
 			    encryptionSalt = Cryptography.randomBytes(32);
 			    macSalt = Cryptography.randomBytes(64);
@@ -179,6 +179,18 @@ public class Settings extends AppCompatActivity
 				     Base64.encodeToString(macSalt,
 							   Base64.DEFAULT),
 				     false);
+
+				byte saltedMacSalt[] = Cryptography.
+				    sha512(m_macKey.getEncoded(),
+					   macSalt);
+
+				if(saltedMacSalt != null)
+				    m_databaseHelper.writeSetting
+					(m_cryptography,
+					 "saltedMacSalt",
+					 Base64.encodeToString(saltedMacSalt,
+							       Base64.DEFAULT),
+					 false);
 			    }
 			    catch(GeneralSecurityException |
 				  NumberFormatException exception)
