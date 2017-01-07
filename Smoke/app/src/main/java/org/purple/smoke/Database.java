@@ -222,7 +222,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    /*
-	    ** Content values should avoid SQL injections.
+	    ** Content values should prevent SQL injections.
 	    */
 
 	    db.replace("settings", null, values);
