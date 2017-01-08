@@ -45,8 +45,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public String readSetting(Cryptography cryptography,
-			      String name,
-			      boolean secured)
+			      String name)
     {
 	SQLiteDatabase db = getReadableDatabase();
 
@@ -59,7 +58,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    Cursor cursor = null;
 
-	    if(!secured)
+	    if(cryptography == null)
 		cursor = db.rawQuery
 		    ("SELECT value FROM settings WHERE name = ?",
 		     new String[] {name});
@@ -185,8 +184,7 @@ public class Database extends SQLiteOpenHelper
 
     public void writeSetting(Cryptography cryptography,
 			     String name,
-			     String value,
-			     boolean secured)
+			     String value)
     {
 	SQLiteDatabase db = getWritableDatabase();
 
@@ -205,7 +203,7 @@ public class Database extends SQLiteOpenHelper
 	String b = "";
 	String c = "";
 
-	if(!secured)
+	if(cryptography == null)
 	{
 	    a = name;
 	    b = name;

@@ -30,16 +30,46 @@ package org.purple.smoke;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class Authenticate extends AppCompatActivity
 {
+    private void prepareListeners()
+    {
+        final Button button1 = (Button) findViewById
+	    (R.id.authenticate);
+
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View v)
+	    {
+		Database database = new Database(Authenticate.this);
+		byte encryptionSalt[] = null;
+		byte macSalt[] = null;
+		final TextView textView1 = (TextView)
+		    findViewById(R.id.password);
+
+		encryptionSalt = Base64.decode
+		    (database.readSetting(null, "encryptionSalt").getBytes(),
+		     Base64.DEFAULT);
+		macSalt = Base64.decode
+		    (database.readSetting(null, "macSalt").getBytes(),
+		     Base64.DEFAULT);
+	    }
+	});
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticate);
+	prepareListeners();
     }
 
     @Override

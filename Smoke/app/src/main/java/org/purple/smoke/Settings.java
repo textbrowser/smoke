@@ -163,22 +163,19 @@ public class Settings extends AppCompatActivity
 				     m_password.toCharArray(),
 				     m_iterationCount);
 				m_databaseHelper.writeSetting
-				    (m_cryptography,
+				    (null,
 				     "encryptionSalt",
 				     Base64.encodeToString(encryptionSalt,
-							   Base64.DEFAULT),
-				     false);
+							   Base64.DEFAULT));
 				m_databaseHelper.writeSetting
-				    (m_cryptography,
+				    (null,
 				     "iterationCount",
-				     String.valueOf(m_iterationCount),
-				     false);
+				     String.valueOf(m_iterationCount));
 				m_databaseHelper.writeSetting
-				    (m_cryptography,
+				    (null,
 				     "macSalt",
 				     Base64.encodeToString(macSalt,
-							   Base64.DEFAULT),
-				     false);
+							   Base64.DEFAULT));
 
 				byte saltedMacSalt[] = Cryptography.
 				    sha512(m_password.getBytes(),
@@ -187,11 +184,10 @@ public class Settings extends AppCompatActivity
 
 				if(saltedMacSalt != null)
 				    m_databaseHelper.writeSetting
-					(m_cryptography,
+					(null,
 					 "saltedPassword",
 					 Base64.encodeToString(saltedMacSalt,
-							       Base64.DEFAULT),
-					 false);
+							       Base64.DEFAULT));
 			    }
 			    catch(GeneralSecurityException |
 				  NumberFormatException exception)
@@ -289,9 +285,7 @@ public class Settings extends AppCompatActivity
 	adapter = new ArrayAdapter<String>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	index = adapter.getPosition
-	    (m_databaseHelper.readSetting(m_cryptography,
-					  "iterationCount",
-					  false));
+	    (m_databaseHelper.readSetting(null, "iterationCount"));
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(adapter);
 	array = new String[]
@@ -394,14 +388,14 @@ public class Settings extends AppCompatActivity
 	{
 	    showAuthenticateActivity();
 	    m_databaseHelper.writeSetting
-		(m_cryptography, "lastActivity", "Authenticate", false);
+		(null, "lastActivity", "Authenticate");
 	    return true;
 	}
 	else if(id == R.id.action_chat)
 	{
 	    showChatActivity();
 	    m_databaseHelper.writeSetting
-		(m_cryptography, "lastActivity", "Chat", false);
+		(null, "lastActivity", "Chat");
             return true;
         }
 
