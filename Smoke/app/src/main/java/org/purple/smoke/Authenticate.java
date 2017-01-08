@@ -67,7 +67,8 @@ public class Authenticate extends AppCompatActivity
 		     macSalt);
 		textView1.setText("");
 
-		if(!Cryptography.
+		if(saltedPassword == null ||
+		   !Cryptography.
 		   memcmp(database.readSetting(null,
 					       "saltedPassword").getBytes(),
 			  Base64.encode(saltedPassword, Base64.DEFAULT)))
@@ -75,9 +76,7 @@ public class Authenticate extends AppCompatActivity
 						  "Incorrect password.");
 		else
 		{
-		    State state = State.getInstance();
-
-		    state.setAuthenticated(true);
+		    State.getInstance().setAuthenticated(true);
 
 		    /*
 		    ** Disable some widgets.
