@@ -50,7 +50,7 @@ public class Authenticate extends AppCompatActivity
 	{
 	    public void onClick(View v)
 	    {
-		Database database = new Database(Authenticate.this);
+		Database database = Database.getInstance(Authenticate.this);
 		byte encryptionSalt[] = null;
 		byte macSalt[] = null;
 		byte saltedPassword[] = null;

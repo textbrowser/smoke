@@ -46,7 +46,7 @@ import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
-    private Cryptography m_cryptography;
+    private Cryptography m_cryptography = new Cryptography();
     private Database m_databaseHelper;
 
     private void prepareListeners()
@@ -242,8 +242,7 @@ public class Settings extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-	m_cryptography = new Cryptography();
-	m_databaseHelper = new Database(getApplicationContext());
+	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_settings);
 
         Button button3 = (Button) findViewById(R.id.add_neighbor);
@@ -363,7 +362,6 @@ public class Settings extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-	m_databaseHelper.close();
 	super.onDestroy();
     }
 

@@ -36,10 +36,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class Database extends SQLiteOpenHelper
 {
+    private static Database s_instance = null;
     private static final String DATABASE_NAME = "smoke.db";
     private static final int DATABASE_VERSION = 1;
 
-    public Database(Context context)
+    private Database(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -75,6 +76,14 @@ public class Database extends SQLiteOpenHelper
 
 	db.close();
 	return str;
+    }
+
+    public static synchronized Database getInstance(Context context)
+    {
+	if(s_instance == null)
+	    s_instance = new Database(context.getApplicationContext());
+
+	return s_instance;
     }
 
     @Override
