@@ -48,6 +48,7 @@ public class Settings extends AppCompatActivity
 {
     private Cryptography m_cryptography = new Cryptography();
     private Database m_databaseHelper = null;
+    private State m_state = State.getInstance();
 
     private void prepareListeners()
     {
@@ -121,9 +122,7 @@ public class Settings extends AppCompatActivity
 
 		    class SingleShot implements Runnable
 		    {
-			private SecretKey m_encryptionKey = null;
-			private SecretKey m_macKey = null;
-			private String m_password;
+			private String m_password = "";
 			private boolean m_error = false;
 			private int m_iterationCount = 1000;
 
@@ -133,19 +132,11 @@ public class Settings extends AppCompatActivity
 			    m_password = password;
 			}
 
-			public SecretKey encryptionKey()
-			{
-			    return m_encryptionKey;
-			}
-
-			public SecretKey macKey()
-			{
-			    return m_macKey;
-			}
-
 			@Override
 			public void run()
 			{
+			    SecretKey encryptionKey = null;
+			    SecretKey macKey = null;
 			    byte encryptionSalt[] = null;
 			    byte macSalt[] = null;
 
@@ -154,12 +145,12 @@ public class Settings extends AppCompatActivity
 
 			    try
 			    {
-				m_encryptionKey = Cryptography.
+				encryptionKey = Cryptography.
 				    generateEncryptionKey
 				    (encryptionSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
-				m_macKey = Cryptography.generateMacKey
+				macKey = Cryptography.generateMacKey
 				    (macSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
@@ -184,11 +175,15 @@ public class Settings extends AppCompatActivity
 					   macSalt);
 
 				if(saltedPassword != null)
+				{
 				    m_databaseHelper.writeSetting
 					(null,
 					 "saltedPassword",
 					 Base64.encodeToString(saltedPassword,
 							       Base64.DEFAULT));
+				    m_state.setEncryptionKey(encryptionKey);
+				    m_state.setMacKey(macKey);
+				}
 				else
 				    m_error = true;
 			    }
@@ -211,6 +206,8 @@ public class Settings extends AppCompatActivity
 					     "generating the secret keys.");
 				}
 			    });
+
+			    m_password = "";
 			}
 		    }
 

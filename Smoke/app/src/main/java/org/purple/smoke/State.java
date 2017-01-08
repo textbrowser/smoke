@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.os.Bundle;
+import javax.crypto.SecretKey;
 
 class State
 {
@@ -55,5 +56,15 @@ class State
     public synchronized void setAuthenticated(boolean state)
     {
 	s_bundle.putChar("is_authenticated", state ? '1' : '0');
+    }
+
+    public synchronized void setEncryptionKey(SecretKey encryptionKey)
+    {
+	s_bundle.putByteArray("encryption_key", encryptionKey.getEncoded());
+    }
+
+    public synchronized void setMacKey(SecretKey macKey)
+    {
+	s_bundle.putByteArray("mac_key", macKey.getEncoded());
     }
 }

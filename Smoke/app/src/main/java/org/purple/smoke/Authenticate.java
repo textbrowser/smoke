@@ -65,6 +65,7 @@ public class Authenticate extends AppCompatActivity
 		    (textView1.getText().toString().getBytes(),
 		     encryptionSalt,
 		     macSalt);
+		textView1.setText("");
 
 		if(!Cryptography.
 		   memcmp(database.readSetting(null,
@@ -77,6 +78,13 @@ public class Authenticate extends AppCompatActivity
 		    State state = State.getInstance();
 
 		    state.setAuthenticated(true);
+
+		    /*
+		    ** Disable some widgets.
+		    */
+
+		    button1.setEnabled(false);
+		    textView1.setEnabled(false);
 		}
 	    }
 	});
