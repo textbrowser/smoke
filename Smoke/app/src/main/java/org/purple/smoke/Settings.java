@@ -124,7 +124,8 @@ public class Settings extends AppCompatActivity
 			private SecretKey m_encryptionKey = null;
 			private SecretKey m_macKey = null;
 			private String m_password;
-			private int m_iterationCount;
+			private boolean m_error = false;
+			private int m_iterationCount = 1000;
 
 			SingleShot(String password, int iterationCount)
 			{
@@ -177,21 +178,24 @@ public class Settings extends AppCompatActivity
 				     Base64.encodeToString(macSalt,
 							   Base64.DEFAULT));
 
-				byte saltedMacSalt[] = Cryptography.
+				byte saltedPassword[] = Cryptography.
 				    sha512(m_password.getBytes(),
 					   encryptionSalt,
 					   macSalt);
 
-				if(saltedMacSalt != null)
+				if(saltedPassword != null)
 				    m_databaseHelper.writeSetting
 					(null,
 					 "saltedPassword",
-					 Base64.encodeToString(saltedMacSalt,
+					 Base64.encodeToString(saltedPassword,
 							       Base64.DEFAULT));
+				else
+				    m_error = true;
 			    }
 			    catch(GeneralSecurityException |
 				  NumberFormatException exception)
 			    {
+				m_error = true;
 			    }
 
 			    Settings.this.runOnUiThread(new Runnable()
@@ -199,13 +203,8 @@ public class Settings extends AppCompatActivity
 				public void run()
 				{
 				    dialog.dismiss();
-				    m_cryptography.setEncryptionKey
-					(m_encryptionKey);
-				    m_cryptography.setMacKey
-					(m_macKey);
 
-				    if(m_encryptionKey == null ||
-				       m_macKey == null)
+				    if(m_error)
 					Miscellaneous.showErrorDialog
 					    (Settings.this,
 					     "An error occurred while " +

@@ -51,6 +51,7 @@ public class Authenticate extends AppCompatActivity
 		Database database = new Database(Authenticate.this);
 		byte encryptionSalt[] = null;
 		byte macSalt[] = null;
+		byte saltedPassword[] = null;
 		final TextView textView1 = (TextView)
 		    findViewById(R.id.password);
 
@@ -60,6 +61,17 @@ public class Authenticate extends AppCompatActivity
 		macSalt = Base64.decode
 		    (database.readSetting(null, "macSalt").getBytes(),
 		     Base64.DEFAULT);
+		saltedPassword = Cryptography.sha512
+		    (textView1.getText().toString().getBytes(),
+		     encryptionSalt,
+		     macSalt);
+
+		if(!Cryptography.
+		   memcmp(database.readSetting(null,
+					       "saltedPassword").getBytes(),
+			  Base64.encode(saltedPassword, Base64.DEFAULT)))
+		    Miscellaneous.showErrorDialog(Authenticate.this,
+						  "Incorrect password.");
 	    }
 	});
     }
