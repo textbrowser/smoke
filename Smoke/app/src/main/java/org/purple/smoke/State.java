@@ -38,6 +38,9 @@ class State
     private State()
     {
 	s_bundle = new Bundle();
+	setAuthenticated(false);
+	setEncryptionKey(null);
+	setMacKey(null);
     }
 
     public static synchronized State getInstance()
@@ -60,11 +63,17 @@ class State
 
     public synchronized void setEncryptionKey(SecretKey encryptionKey)
     {
-	s_bundle.putByteArray("encryption_key", encryptionKey.getEncoded());
+	if(encryptionKey == null)
+	    s_bundle.putByteArray("encryption_key", new byte[0]);
+	else
+	    s_bundle.putByteArray("encryption_key", encryptionKey.getEncoded());
     }
 
     public synchronized void setMacKey(SecretKey macKey)
     {
-	s_bundle.putByteArray("mac_key", macKey.getEncoded());
+	if(macKey == null)
+	    s_bundle.putByteArray("mac_key", new byte[0]);
+	else
+	    s_bundle.putByteArray("mac_key", macKey.getEncoded());
     }
 }

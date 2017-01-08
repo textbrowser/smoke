@@ -52,10 +52,6 @@ public class Cryptography
 	final int length = 256;
 
 	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
-
-	if(keySpec == null)
-	    return null;
-
 	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
 	    ("PBKDF2WithHmacSHA1");
 
@@ -70,10 +66,6 @@ public class Cryptography
 	final int length = 512;
 
 	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
-
-	if(keySpec == null)
-	    return null;
-
 	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
 	    ("PBKDF2WithHmacSHA1");
 
@@ -83,9 +75,6 @@ public class Cryptography
     public static String randomBytesAsBase64(int length)
     {
 	byte bytes[] = new byte[length];
-
-	if(bytes == null)
-	    return "";
 
 	s_secureRandom.nextBytes(bytes);
 	return Base64.encodeToString(bytes, Base64.DEFAULT);
@@ -108,9 +97,6 @@ public class Cryptography
     public static byte[] randomBytes(int length)
     {
 	byte bytes[] = new byte[length];
-
-	if(bytes == null)
-	    return null;
 
 	s_secureRandom.nextBytes(bytes);
 	return bytes;

@@ -201,13 +201,6 @@ public class Database extends SQLiteOpenHelper
 	    return;
 
 	ContentValues values = new ContentValues();
-
-	if(values == null)
-	{
-	    db.close();
-	    return;
-	}
-
 	String a = "";
 	String b = "";
 	String c = "";
