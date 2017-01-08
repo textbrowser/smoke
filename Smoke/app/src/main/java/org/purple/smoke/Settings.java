@@ -47,7 +47,7 @@ import javax.crypto.SecretKey;
 public class Settings extends AppCompatActivity
 {
     private Cryptography m_cryptography = new Cryptography();
-    private Database m_databaseHelper;
+    private Database m_databaseHelper = null;
 
     private void prepareListeners()
     {

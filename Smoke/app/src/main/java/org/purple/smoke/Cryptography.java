@@ -41,7 +41,8 @@ public class Cryptography
 {
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
-    private static SecureRandom s_secureRandom = new SecureRandom();
+    private static final SecureRandom s_secureRandom =
+	new SecureRandom(); // Thread-safe.
 
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
@@ -121,6 +122,10 @@ public class Cryptography
 
 	try
 	{
+	    /*
+	    ** Thread-safe.
+	    */
+
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
 
 	    for(byte b[] : data)
