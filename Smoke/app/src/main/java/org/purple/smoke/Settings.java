@@ -247,18 +247,18 @@ public class Settings extends AppCompatActivity
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
         Button button1 = (Button) findViewById(R.id.add_neighbor);
 
-        button1.setEnabled(false);
+        button1.setEnabled(isAuthenticated);
         button1 = (Button) findViewById(R.id.delete_neighbor);
-        button1.setEnabled(false);
+        button1.setEnabled(isAuthenticated);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
-        button1.setEnabled(false);
+        button1.setEnabled(isAuthenticated);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
 
-        radioButton1.setEnabled(false);
+        radioButton1.setEnabled(isAuthenticated);
         radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv6);
-        radioButton1.setEnabled(false);
+        radioButton1.setEnabled(isAuthenticated);
 
         Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
         String array[] = new String[]
@@ -266,7 +266,7 @@ public class Settings extends AppCompatActivity
 	    "TCP", "UDP"
 	};
 
-        spinner1.setEnabled(false);
+        spinner1.setEnabled(isAuthenticated);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
@@ -327,19 +327,19 @@ public class Settings extends AppCompatActivity
 
         TextView textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
 
-        textView1.setEnabled(false);
+        textView1.setEnabled(isAuthenticated);
         textView1.setVisibility(View.GONE);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
-        textView1.setEnabled(false);
+        textView1.setEnabled(isAuthenticated);
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
-        textView1.setEnabled(false);
+        textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
-	textView1.setEnabled(false);
+	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.delete_participant);
-	textView1.setEnabled(false);
+	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.refresh_participants);
-	textView1.setEnabled(false);
+	textView1.setEnabled(isAuthenticated);
         textView1 = (TextView) findViewById(R.id.password1);
 	textView1.requestFocus();
         textView1.setText("");
