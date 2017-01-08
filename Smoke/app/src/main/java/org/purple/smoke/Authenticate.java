@@ -39,6 +39,8 @@ import android.widget.TextView;
 
 public class Authenticate extends AppCompatActivity
 {
+    private boolean m_isAuthenticated = false;
+
     private void prepareListeners()
     {
         final Button button1 = (Button) findViewById
@@ -72,6 +74,8 @@ public class Authenticate extends AppCompatActivity
 			  Base64.encode(saltedPassword, Base64.DEFAULT)))
 		    Miscellaneous.showErrorDialog(Authenticate.this,
 						  "Incorrect password.");
+		else
+		    m_isAuthenticated = true;
 	    }
 	});
     }
@@ -82,6 +86,11 @@ public class Authenticate extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticate);
 	prepareListeners();
+    }
+
+    public boolean isAuthenticated()
+    {
+	return m_isAuthenticated;
     }
 
     @Override
