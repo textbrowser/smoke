@@ -207,7 +207,9 @@ public class Settings extends AppCompatActivity
 				}
 			    });
 
+			    encryptionKey = null;
 			    m_password = "";
+			    macKey = null;
 			}
 		    }
 
