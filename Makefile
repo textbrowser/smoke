@@ -12,7 +12,7 @@ all:
 clean:
 	$(MAKE) -f $(MAKEFILE) clean
 
-distclean: clean kill-adb-server
+distclean:
 	$(MAKE) -f $(MAKEFILE) distclean
 
 kill-adb-server:

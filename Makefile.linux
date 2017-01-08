@@ -11,8 +11,7 @@ all:
 clean:
 	$(GRADLE) --build-file Smoke/build.gradle clean
 
-distclean: clean
-	$(GRADLE) --stop
+distclean: clean kill-adb-server kill-gradle-daemon
 	rm -f smoke.db
 
 kill-adb-server:
