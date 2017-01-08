@@ -48,7 +48,7 @@ public class Settings extends AppCompatActivity
 {
     private Cryptography m_cryptography = new Cryptography();
     private Database m_databaseHelper = null;
-    private State m_state = State.getInstance();
+    private final State m_state = State.getInstance();
 
     private void prepareListeners()
     {
@@ -267,7 +267,7 @@ public class Settings extends AppCompatActivity
 
         spinner1.setEnabled(false);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+        ArrayAdapter<String> adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	int index = -1;
 
@@ -279,7 +279,7 @@ public class Settings extends AppCompatActivity
 	    "40000", "45000", "50000", "55000", "60000", "65000",
 	    "70000", "100000"
 	};
-	adapter = new ArrayAdapter<String>
+	adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	index = adapter.getPosition
 	    (m_databaseHelper.readSetting(null, "iterationCount"));
@@ -289,7 +289,7 @@ public class Settings extends AppCompatActivity
 	{
 	    "RSA"
 	};
-	adapter = new ArrayAdapter<String>
+	adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
 	spinner1.setAdapter(adapter);
@@ -297,7 +297,7 @@ public class Settings extends AppCompatActivity
 	{
 	    "RSA"
 	};
-	adapter = new ArrayAdapter<String>
+	adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
 	spinner1.setAdapter(adapter);
