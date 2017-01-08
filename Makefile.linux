@@ -20,6 +20,9 @@ launch-emulator:
 	$(EMULATOR) -netdelay none -netspeed full -avd \
 	`$(EMULATOR) -list-avds | sort | tail -1` &
 
+list-files:
+	$(ADB) shell run-as org.purple.smoke ls -l /data/data/org.purple.smoke/databases
+
 load-apk:
 	$(ADB) push ./Smoke/app/build/apk/smoke.apk \
 	/data/local/tmp/org.purple.smoke
@@ -32,3 +35,7 @@ pull-database:
 
 purge:
 	find . -name '*~*' -exec rm -f {} \;
+
+remove-database:
+	$(ADB) shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db
+	$(ADB) shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db-journal

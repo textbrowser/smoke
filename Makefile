@@ -21,6 +21,9 @@ kill-adb-server:
 launch-emulator:
 	$(MAKE) -f $(MAKEFILE) launch-emulator
 
+list-files:
+	$(MAKE) -f $(MAKEFILE) list-files
+
 load-apk:
 	$(MAKE) -f $(MAKEFILE) load-apk
 
@@ -29,3 +32,6 @@ pull-database:
 
 purge:
 	$(MAKE) -f $(MAKEFILE) purge
+
+remove-database:
+	$(MAKE) -f $(MAKEFILE) remove-database

@@ -76,6 +76,8 @@ public class Authenticate extends AppCompatActivity
 						  "Incorrect password.");
 		else
 		    m_isAuthenticated = true;
+
+		database.close();
 	    }
 	});
     }
