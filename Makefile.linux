@@ -5,16 +5,21 @@ EMULATOR = ~/Android/Sdk/tools/emulator
 GRADLE = ~/Desktop/android-studio/gradle/gradle-2.14.1/bin/gradle
 
 all:
-	$(GRADLE) --build-file Smoke/build.gradle assembleDebug
+	$(GRADLE) --build-file Smoke/build.gradle assembleDebug \
+	--configure-on-demand --daemon --parallel
 
 clean:
 	$(GRADLE) --build-file Smoke/build.gradle clean
 
 distclean: clean
+	$(GRADLE) --stop
 	rm -f smoke.db
 
 kill-adb-server:
 	$(ADB) kill-server
+
+kill-gradle-daemon:
+	$(GRADLE) --stop
 
 launch-emulator:
 	$(EMULATOR) -netdelay none -netspeed full -avd \

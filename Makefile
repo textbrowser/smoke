@@ -18,6 +18,9 @@ distclean: clean kill-adb-server
 kill-adb-server:
 	$(MAKE) -f $(MAKEFILE) kill-adb-server
 
+kill-gradle-daemon:
+	$(MAKE) -f $(MAKEFILE) kill-gradle-daemon
+
 launch-emulator:
 	$(MAKE) -f $(MAKEFILE) launch-emulator
 

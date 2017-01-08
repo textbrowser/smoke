@@ -244,13 +244,14 @@ public class Settings extends AppCompatActivity
 	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_settings);
 
-        Button button3 = (Button) findViewById(R.id.add_neighbor);
+	boolean isAuthenticated = State.getInstance().isAuthenticated();
+        Button button1 = (Button) findViewById(R.id.add_neighbor);
 
-        button3.setEnabled(false);
-        button3 = (Button) findViewById(R.id.delete_neighbor);
-        button3.setEnabled(false);
-        button3 = (Button) findViewById(R.id.refresh_neighbors);
-        button3.setEnabled(false);
+        button1.setEnabled(false);
+        button1 = (Button) findViewById(R.id.delete_neighbor);
+        button1.setEnabled(false);
+        button1 = (Button) findViewById(R.id.refresh_neighbors);
+        button1.setEnabled(false);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
