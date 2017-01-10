@@ -140,4 +140,14 @@ public class Authenticate extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+	boolean isAuthenticated = State.getInstance().isAuthenticated();
+
+	menu.getItem(0).setEnabled(isAuthenticated);
+	menu.getItem(1).setEnabled(isAuthenticated);
+	return true;
+    }
 }
