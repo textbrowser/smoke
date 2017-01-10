@@ -95,6 +95,15 @@ public class Authenticate extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticate);
 	prepareListeners();
+
+	boolean isAuthenticated = State.getInstance().isAuthenticated();
+	final Button button1 = (Button) findViewById(R.id.authenticate);
+
+	button1.setEnabled(!isAuthenticated);
+
+	final TextView textView1 = (TextView) findViewById(R.id.password);
+
+	textView1.setEnabled(!isAuthenticated);
     }
 
     @Override

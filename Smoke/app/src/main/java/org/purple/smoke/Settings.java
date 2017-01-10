@@ -357,6 +357,10 @@ public class Settings extends AppCompatActivity
 	    spinner1.setSelection(index);
 	else
 	    spinner1.setSelection(0);
+
+	if(!State.getInstance().isAuthenticated())
+	    if(m_databaseHelper.accountPrepared())
+		showAuthenticateActivity();
     }
 
     @Override

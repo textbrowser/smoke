@@ -78,6 +78,16 @@ public class Database extends SQLiteOpenHelper
 	return str;
     }
 
+    public boolean accountPrepared()
+    {
+	if(!readSetting(null, "encryptionSalt").isEmpty() &&
+	   !readSetting(null, "macSalt").isEmpty() &&
+	   !readSetting(null, "saltedPassword").isEmpty())
+	    return true;
+	else
+	    return false;
+    }
+
     public static synchronized Database getInstance(Context context)
     {
 	if(s_instance == null)
