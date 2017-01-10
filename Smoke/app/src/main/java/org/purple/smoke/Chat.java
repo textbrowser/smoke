@@ -115,4 +115,14 @@ public class Chat extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+	boolean isAuthenticated = State.getInstance().isAuthenticated();
+
+	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
+	return true;
+    }
+
 }

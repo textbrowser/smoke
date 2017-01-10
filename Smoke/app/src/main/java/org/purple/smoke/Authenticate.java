@@ -146,8 +146,8 @@ public class Authenticate extends AppCompatActivity
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
 
-	menu.getItem(0).setEnabled(isAuthenticated);
-	menu.getItem(1).setEnabled(isAuthenticated);
+	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
+	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
 	return true;
     }
 }
