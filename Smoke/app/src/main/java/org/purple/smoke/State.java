@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.os.Bundle;
+import java.security.KeyPair;
 import javax.crypto.SecretKey;
 
 class State
@@ -75,5 +76,21 @@ class State
 	    s_bundle.putByteArray("mac_key", new byte[0]);
 	else
 	    s_bundle.putByteArray("mac_key", macKey.getEncoded());
+    }
+
+    public synchronized void setPKIEncryptionKey(KeyPair keyPair)
+    {
+	if(keyPair == null)
+	{
+	    s_bundle.putByteArray("pki_encryption_private_key", new byte[0]);
+	    s_bundle.putByteArray("pki_encryption_public_key", new byte[0]);
+	}
+	else
+	{
+	    s_bundle.putByteArray("pki_encryption_private_key",
+				  keyPair.getPrivate().getEncoded());
+	    s_bundle.putByteArray("pki_encryption_public_key",
+				  keyPair.getPublic().getEncoded());
+	}
     }
 }

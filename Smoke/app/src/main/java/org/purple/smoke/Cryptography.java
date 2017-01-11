@@ -41,8 +41,6 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class Cryptography
 {
-    private SecretKey m_encryptionKey = null;
-    private SecretKey m_macKey = null;
     private static final SecureRandom s_secureRandom =
 	new SecureRandom(); // Thread-safe.
 
@@ -138,15 +136,5 @@ public class Cryptography
 	}
 
 	return bytes;
-    }
-
-    public void setEncryptionKey(SecretKey encryptionKey)
-    {
-	m_encryptionKey = encryptionKey;
-    }
-
-    public void setMacKey(SecretKey macKey)
-    {
-	m_macKey = macKey;
     }
 }
