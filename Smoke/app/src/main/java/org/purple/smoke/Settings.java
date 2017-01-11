@@ -42,6 +42,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import java.security.GeneralSecurityException;
+import java.security.KeyPair;
 import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
@@ -108,10 +109,14 @@ public class Settings extends AppCompatActivity
 		{
 		    final ProgressDialog dialog = new ProgressDialog
 			(Settings.this);
-		    final Spinner spinner = (Spinner) findViewById
+		    final Spinner spinner1 = (Spinner) findViewById
 			(R.id.iteration_count);
+		    final Spinner spinner2 = (Spinner) findViewById
+			(R.id.pki_encryption_algorithm);
+		    final Spinner spinner3 = (Spinner) findViewById
+			(R.id.pki_signature_algorithm);
 		    int iterationCount = Integer.parseInt
-			(spinner.getSelectedItem().toString());
+			(spinner1.getSelectedItem().toString());
 
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);
@@ -122,19 +127,28 @@ public class Settings extends AppCompatActivity
 
 		    class SingleShot implements Runnable
 		    {
+			private String m_encryptionAlgorithm = "";
 			private String m_password = "";
+			private String m_signatureAlgorithm = "";
 			private boolean m_error = false;
 			private int m_iterationCount = 1000;
 
-			SingleShot(String password, int iterationCount)
+			SingleShot(String encryptionAlgorithm,
+				   String password,
+				   String signatureAlgorithm,
+				   int iterationCount)
 			{
+			    m_encryptionAlgorithm = encryptionAlgorithm;
 			    m_iterationCount = iterationCount;
 			    m_password = password;
+			    m_signatureAlgorithm = signatureAlgorithm;
 			}
 
 			@Override
 			public void run()
 			{
+			    KeyPair encryptionKeyPair = null;
+			    KeyPair signatureKeyPair = null;
 			    SecretKey encryptionKey = null;
 			    SecretKey macKey = null;
 			    byte encryptionSalt[] = null;
@@ -150,10 +164,21 @@ public class Settings extends AppCompatActivity
 				    (encryptionSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
+				encryptionKeyPair = Cryptography.
+				    generatePrivatePublicKeyPair
+				    (m_encryptionAlgorithm, 3072);
 				macKey = Cryptography.generateMacKey
 				    (macSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
+				signatureKeyPair = Cryptography.
+				    generatePrivatePublicKeyPair
+				    (m_signatureAlgorithm, 3072);
+
+				/*
+				** Record the data.
+				*/
+
 				m_databaseHelper.writeSetting
 				    (null,
 				     "encryptionSalt",
@@ -214,7 +239,9 @@ public class Settings extends AppCompatActivity
 		    }
 
 		    Thread thread = new Thread
-			(new SingleShot(textView1.getText().toString(),
+			(new SingleShot(spinner2.getSelectedItem().toString(),
+					textView1.getText().toString(),
+					spinner3.getSelectedItem().toString(),
 					iterationCount));
 
 		    thread.start();

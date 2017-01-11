@@ -28,6 +28,8 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -43,6 +45,17 @@ public class Cryptography
     private SecretKey m_macKey = null;
     private static final SecureRandom s_secureRandom =
 	new SecureRandom(); // Thread-safe.
+
+    public static KeyPair generatePrivatePublicKeyPair(String algorithm,
+						       int keySize)
+	throws NoSuchAlgorithmException
+    {
+	KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+	    getInstance(algorithm);
+
+	keyPairGenerator.initialize(keySize, s_secureRandom);
+	return keyPairGenerator.generateKeyPair();
+    }
 
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
