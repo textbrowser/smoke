@@ -121,8 +121,8 @@ public class Settings extends AppCompatActivity
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);
 		    dialog.setMessage
-			("Generating authentication and encryption " +
-			 "keys. Please be patient...");
+			("Generating confidential material. " +
+			 "Please be patient...");
 		    dialog.show();
 
 		    class SingleShot implements Runnable
@@ -208,6 +208,10 @@ public class Settings extends AppCompatActivity
 							       Base64.DEFAULT));
 				    m_state.setEncryptionKey(encryptionKey);
 				    m_state.setMacKey(macKey);
+				    m_state.setPKIEncryptionKey
+					(encryptionKeyPair);
+				    m_state.setPKISignatureKey
+					(signatureKeyPair);
 				}
 				else
 				    m_error = true;

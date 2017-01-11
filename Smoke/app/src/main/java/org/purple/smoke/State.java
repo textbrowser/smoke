@@ -93,4 +93,20 @@ class State
 				  keyPair.getPublic().getEncoded());
 	}
     }
+
+    public synchronized void setPKISignatureKey(KeyPair keyPair)
+    {
+	if(keyPair == null)
+	{
+	    s_bundle.putByteArray("pki_signature_private_key", new byte[0]);
+	    s_bundle.putByteArray("pki_signature_public_key", new byte[0]);
+	}
+	else
+	{
+	    s_bundle.putByteArray("pki_signature_private_key",
+				  keyPair.getPrivate().getEncoded());
+	    s_bundle.putByteArray("pki_signature_public_key",
+				  keyPair.getPublic().getEncoded());
+	}
+    }
 }
