@@ -8,3 +8,4 @@ Remaining Items
 1.     Logging class.
 2.     Reset option. Remove smoke.db.
 3.     Synchronized methods or containers?
+4.     Detect removal of smoke.db.
