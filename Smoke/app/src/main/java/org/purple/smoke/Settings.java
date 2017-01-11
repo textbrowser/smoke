@@ -232,7 +232,8 @@ public class Settings extends AppCompatActivity
 					Miscellaneous.showErrorDialog
 					    (Settings.this,
 					     "An error occurred while " +
-					     "generating the secret keys.");
+					     "generating the confidential " +
+					     "data.");
 				}
 			    });
 
