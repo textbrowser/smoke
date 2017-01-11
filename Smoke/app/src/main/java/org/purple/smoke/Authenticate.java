@@ -146,6 +146,13 @@ public class Authenticate extends AppCompatActivity
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
 
+	if(!Database.getInstance(Authenticate.this).accountPrepared())
+	    /*
+	    ** The database may have been modified or removed.
+	    */
+
+	    isAuthenticated = true;
+
 	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
 	return true;
