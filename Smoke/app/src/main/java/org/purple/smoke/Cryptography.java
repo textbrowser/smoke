@@ -113,15 +113,19 @@ public class Cryptography
 	return rc == 0;
     }
 
-    public static byte[] etm(byte data[], byte encryptionKey[], byte macKey[])
+    public static byte[] etm(String encryptionKey, String macKey, byte data[])
     {
 	byte bytes[] = null;
+	byte key1[] = null;
+	byte key2[] = null;
+
+	key1 = Base64.decode(encryptionKey, Base64.DEFAULT);
+	key2 = Base64.decode(macKey, Base64.DEFAULT);
 
 	try
 	{
 	    Cipher cipher = null;
-	    SecretKey eKey = new SecretKeySpec
-		(encryptionKey, 0, encryptionKey.length, "AES");
+	    SecretKey eKey = new SecretKeySpec(key1, 0, key1.length, "AES");
 	    byte iv[] = new byte[16];
 
 	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
