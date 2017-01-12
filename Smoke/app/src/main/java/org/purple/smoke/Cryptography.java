@@ -28,6 +28,8 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
@@ -35,9 +37,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Cryptography
 {
@@ -103,6 +111,34 @@ public class Cryptography
 	    rc |= (i < a.length ? a[i] : 0) ^ (i < b.length ? b[i] : 0);
 
 	return rc == 0;
+    }
+
+    public static byte[] etm(byte data[], byte encryptionKey[], byte macKey[])
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+	    SecretKey eKey = new SecretKeySpec
+		(encryptionKey, 0, encryptionKey.length, "AES");
+	    byte iv[] = new byte[16];
+
+	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	    s_secureRandom.nextBytes(iv);
+	    cipher.init(Cipher.ENCRYPT_MODE, eKey, new IvParameterSpec(iv));
+	    bytes = cipher.doFinal();
+	}
+	catch(BadPaddingException |
+	      IllegalBlockSizeException |
+	      InvalidAlgorithmParameterException |
+	      InvalidKeyException |
+	      NoSuchAlgorithmException |
+	      NoSuchPaddingException exception)
+	{
+	}
+
+	return bytes;
     }
 
     public static byte[] randomBytes(int length)
