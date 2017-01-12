@@ -40,6 +40,7 @@ import java.security.spec.KeySpec;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -125,13 +126,18 @@ public class Cryptography
 	try
 	{
 	    Cipher cipher = null;
+	    Mac mac = null;
 	    SecretKey eKey = new SecretKeySpec(key1, 0, key1.length, "AES");
+	    SecretKey mKey = new SecretKeySpec(key2, 0, key2.length, "SHA-512");
 	    byte iv[] = new byte[16];
 
 	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 	    s_secureRandom.nextBytes(iv);
 	    cipher.init(Cipher.ENCRYPT_MODE, eKey, new IvParameterSpec(iv));
-	    bytes = cipher.doFinal();
+	    bytes = cipher.doFinal(data);
+	    mac = Mac.getInstance("HmacSHA512");
+	    mac.init(mKey);
+	    bytes = mac.doFinal(bytes);
 	}
 	catch(BadPaddingException |
 	      IllegalBlockSizeException |
