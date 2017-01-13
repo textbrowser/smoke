@@ -105,6 +105,11 @@ public class Chat extends AppCompatActivity
             startActivity(intent);
             return true;
         }
+	else if(id == R.id.action_exit)
+	{
+	    finishAndRemoveTask();
+	    return true;
+	}
         else if(id == R.id.action_settings)
 	{
             final Intent intent = new Intent(Chat.this, Settings.class);

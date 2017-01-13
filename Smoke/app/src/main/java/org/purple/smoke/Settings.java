@@ -476,6 +476,11 @@ public class Settings extends AppCompatActivity
 		(null, "lastActivity", "Chat");
             return true;
         }
+	else if(id == R.id.action_exit)
+	{
+	    finishAndRemoveTask();
+	    return true;
+	}
 
         return super.onOptionsItemSelected(item);
     }

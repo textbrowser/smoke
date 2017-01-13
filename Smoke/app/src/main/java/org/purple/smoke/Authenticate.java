@@ -125,14 +125,19 @@ public class Authenticate extends AppCompatActivity
 
         if(id == R.id.action_chat)
 	{
-            final Intent intent = new Intent(Authenticate.this, Chat.class);
+	    final Intent intent = new Intent(Authenticate.this, Chat.class);
 
             startActivity(intent);
             return true;
         }
+	else if(id == R.id.action_exit)
+	{
+	    finishAndRemoveTask();
+	    return true;
+	}
         else if(id == R.id.action_settings)
 	{
-            final Intent intent = new Intent(Authenticate.this, Settings.class);
+	    final Intent intent = new Intent(Authenticate.this, Settings.class);
 
             startActivity(intent);
             return true;

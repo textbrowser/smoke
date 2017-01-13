@@ -2,6 +2,7 @@ Completed Items
 
 1.     Remove UI-related references in Settings::prepareListeners()::...::run().
 2.     Replace the (final) iterations variable in Settings::prepareListeners()::...::run().
+3.     Exit menus.
 
 Remaining Items
 
@@ -9,4 +10,4 @@ Remaining Items
 2.     Reset option. Remove smoke.db.
 3.     Synchronized methods or containers?
 4.     Detect removal of smoke.db.
-5.     Exit menus.
+5.     Create a BroadcastReceiver and notify all other activities on exit.
