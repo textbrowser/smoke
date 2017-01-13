@@ -31,4 +31,7 @@
     <string name="refresh_participants">Refresh</string>
     <string name="encryption">Encryption</string>
     <string name="signature">Signature</string>
+    <string name="authenticate_exit">Exit</string>
+    <string name="chat_exit">Exit</string>
+    <string name="settings_exit">Exit</string>
 </resources>

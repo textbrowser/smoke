@@ -4,7 +4,10 @@
         android:id="@+id/action_authenticate" />
     <item
         android:id="@+id/action_chat"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         android:title="@string/chat"
         app:showAsAction="never" />
+    <item android:title="@string/settings_exit"
+        android:id="@+id/exit"
+        android:orderInCategory="102" />
 </menu>

@@ -9,4 +9,7 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item android:title="@string/chat_exit"
+        android:id="@+id/exit"
+        android:orderInCategory="101" />
 </menu>
