@@ -52,7 +52,9 @@ public class Settings extends AppCompatActivity
 {
     private Cryptography m_cryptography = new Cryptography();
     private Database m_databaseHelper = null;
-    private final State m_state = State.getInstance();
+    private final State s_state = State.getInstance();
+    private final int s_pkiEncryptionKeySize = 3072;
+    private final int s_pkiSignatureKeySize = 3072;
 
     private void prepareListeners()
     {
@@ -170,14 +172,16 @@ public class Settings extends AppCompatActivity
 				     m_iterationCount);
 				encryptionKeyPair = Cryptography.
 				    generatePrivatePublicKeyPair
-				    (m_encryptionAlgorithm, 3072);
+				    (m_encryptionAlgorithm,
+				     s_pkiEncryptionKeySize);
 				macKey = Cryptography.generateMacKey
 				    (macSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
 				signatureKeyPair = Cryptography.
 				    generatePrivatePublicKeyPair
-				    (m_signatureAlgorithm, 3072);
+				    (m_signatureAlgorithm,
+				     s_pkiSignatureKeySize);
 
 				/*
 				** Prepare the Cryptography object's
@@ -233,11 +237,11 @@ public class Settings extends AppCompatActivity
 					 "saltedPassword",
 					 Base64.encodeToString(saltedPassword,
 							       Base64.DEFAULT));
-				    m_state.setEncryptionKey(encryptionKey);
-				    m_state.setMacKey(macKey);
-				    m_state.setPKIEncryptionKey
+				    s_state.setEncryptionKey(encryptionKey);
+				    s_state.setMacKey(macKey);
+				    s_state.setPKIEncryptionKey
 					(encryptionKeyPair);
-				    m_state.setPKISignatureKey
+				    s_state.setPKISignatureKey
 					(signatureKeyPair);
 				}
 				else
