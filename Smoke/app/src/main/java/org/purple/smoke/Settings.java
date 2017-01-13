@@ -239,7 +239,6 @@ public class Settings extends AppCompatActivity
 							   getEncoded(),
 							   Base64.DEFAULT));
 
-
 				byte saltedPassword[] = Cryptography.
 				    sha512(m_password.getBytes(),
 					   encryptionSalt,
