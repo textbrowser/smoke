@@ -52,11 +52,14 @@ public class Cryptography
 {
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
-    private static final SecureRandom s_secureRandom =
+    private final static SecureRandom s_secureRandom =
 	new SecureRandom(); // Thread-safe.
 
     public byte[] etm(byte data[])
     {
+	if(m_encryptionKey == null || m_macKey == null)
+	    return null;
+
 	byte bytes[] = null;
 
 	try
@@ -90,6 +93,9 @@ public class Cryptography
 
     public byte[] hash(byte data[])
     {
+	if(m_macKey == null)
+	    return null;
+
 	byte bytes[] = null;
 
 	try

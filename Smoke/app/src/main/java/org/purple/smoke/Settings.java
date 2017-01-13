@@ -224,6 +224,21 @@ public class Settings extends AppCompatActivity
 							   getPublic().
 							   getEncoded(),
 							   Base64.DEFAULT));
+				m_databaseHelper.writeSetting
+				    (m_cryptography,
+				     "pki_signature_private_key",
+				     Base64.encodeToString(signatureKeyPair.
+							   getPrivate().
+							   getEncoded(),
+							   Base64.DEFAULT));
+				m_databaseHelper.writeSetting
+				    (m_cryptography,
+				     "pki_signature_public_key",
+				     Base64.encodeToString(signatureKeyPair.
+							   getPublic().
+							   getEncoded(),
+							   Base64.DEFAULT));
+
 
 				byte saltedPassword[] = Cryptography.
 				    sha512(m_password.getBytes(),

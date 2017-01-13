@@ -38,9 +38,9 @@ import android.util.Base64;
 
 public class Database extends SQLiteOpenHelper
 {
+    private final static String DATABASE_NAME = "smoke.db";
+    private final static int DATABASE_VERSION = 1;
     private static Database s_instance = null;
-    private static final String DATABASE_NAME = "smoke.db";
-    private static final int DATABASE_VERSION = 1;
 
     private Database(Context context)
     {
@@ -259,7 +259,16 @@ public class Database extends SQLiteOpenHelper
 	** Content values should prevent SQL injections.
 	*/
 
-	db.replace("settings", null, values);
+	try
+	{
+	    db.replace("settings", null, values);
+	}
+	catch(SQLException exception)
+        {
+	    db.close();
+	    throw exception;
+	}
+
 	db.close();
     }
 }
