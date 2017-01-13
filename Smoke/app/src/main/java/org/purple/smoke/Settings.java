@@ -56,14 +56,28 @@ public class Settings extends AppCompatActivity
     private final int s_pkiEncryptionKeySize = 3072;
     private final int s_pkiSignatureKeySize = 3072;
 
+    private void addNeighbor()
+    {
+    }
+
     private void prepareListeners()
     {
-        final Button button1 = (Button) findViewById
+	final Button button1 = (Button) findViewById
+	    (R.id.add_neighbor);
+
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+	    }
+        });
+
+	final Button button2 = (Button) findViewById
 	    (R.id.reset_neighbor_fields);
 
-        button1.setOnClickListener(new View.OnClickListener()
+        button2.setOnClickListener(new View.OnClickListener()
 	{
-	    public void onClick(View v)
+	    public void onClick(View view)
 	    {
 		final RadioButton radioButton1 = (RadioButton) findViewById
 		    (R.id.neighbors_ipv4);
@@ -85,11 +99,11 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-        final Button button2 = (Button) findViewById(R.id.set_password);
+        final Button button3 = (Button) findViewById(R.id.set_password);
 
-        button2.setOnClickListener(new View.OnClickListener()
+        button3.setOnClickListener(new View.OnClickListener()
 	{
-	    public void onClick(View v)
+	    public void onClick(View view)
 	    {
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.password1);
@@ -478,7 +492,6 @@ public class Settings extends AppCompatActivity
         }
 	else if(id == R.id.action_exit)
 	{
-	    finishAndRemoveTask();
 	    return true;
 	}
 

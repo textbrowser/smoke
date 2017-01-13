@@ -46,7 +46,7 @@ public class Authenticate extends AppCompatActivity
 
         button1.setOnClickListener(new View.OnClickListener()
 	{
-	    public void onClick(View v)
+	    public void onClick(View view)
 	    {
 		Database database = Database.getInstance(Authenticate.this);
 		byte encryptionSalt[] = null;
@@ -132,7 +132,6 @@ public class Authenticate extends AppCompatActivity
         }
 	else if(id == R.id.action_exit)
 	{
-	    finishAndRemoveTask();
 	    return true;
 	}
         else if(id == R.id.action_settings)

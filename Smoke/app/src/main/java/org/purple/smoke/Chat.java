@@ -50,7 +50,7 @@ public class Chat extends AppCompatActivity
 
         button1.setOnClickListener(new View.OnClickListener()
 	{
-	    public void onClick(View v)
+	    public void onClick(View view)
 	    {
 		final TextView textView = (TextView) findViewById
 		    (R.id.chat_messages);
@@ -63,7 +63,7 @@ public class Chat extends AppCompatActivity
 
         button2.setOnClickListener(new View.OnClickListener()
 	{
-	    public void onClick(View v)
+	    public void onClick(View view)
 	    {
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.chat_message);
@@ -107,7 +107,6 @@ public class Chat extends AppCompatActivity
         }
 	else if(id == R.id.action_exit)
 	{
-	    finishAndRemoveTask();
 	    return true;
 	}
         else if(id == R.id.action_settings)
