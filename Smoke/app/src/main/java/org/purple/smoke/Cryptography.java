@@ -50,8 +50,64 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Cryptography
 {
+    private SecretKey m_encryptionKey = null;
+    private SecretKey m_macKey = null;
     private static final SecureRandom s_secureRandom =
 	new SecureRandom(); // Thread-safe.
+
+    public byte[] etm(byte data[])
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+	    Mac mac = null;
+	    byte iv[] = new byte[16];
+
+	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	    s_secureRandom.nextBytes(iv);
+	    cipher.init(Cipher.ENCRYPT_MODE,
+			m_encryptionKey,
+			new IvParameterSpec(iv));
+	    bytes = cipher.doFinal(data);
+	    mac = Mac.getInstance("HmacSHA512");
+	    mac.init(m_macKey);
+	    bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
+	}
+	catch(BadPaddingException |
+	      IllegalBlockSizeException |
+	      InvalidAlgorithmParameterException |
+	      InvalidKeyException |
+	      NoSuchAlgorithmException |
+	      NoSuchPaddingException exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
+    public byte[] hash(byte data[])
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    Mac mac = null;
+
+	    mac = Mac.getInstance("HmacSHA512");
+	    mac.init(m_macKey);
+	    bytes = mac.doFinal(data);
+	}
+	catch(InvalidKeyException |
+	      NoSuchAlgorithmException exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
@@ -114,43 +170,6 @@ public class Cryptography
 	return rc == 0;
     }
 
-    public static byte[] etm(String encryptionKey, String macKey, byte data[])
-    {
-	byte bytes[] = null;
-	byte key1[] = null;
-	byte key2[] = null;
-
-	key1 = Base64.decode(encryptionKey, Base64.DEFAULT);
-	key2 = Base64.decode(macKey, Base64.DEFAULT);
-
-	try
-	{
-	    Cipher cipher = null;
-	    Mac mac = null;
-	    SecretKey eKey = new SecretKeySpec(key1, 0, key1.length, "AES");
-	    SecretKey mKey = new SecretKeySpec(key2, 0, key2.length, "SHA-512");
-	    byte iv[] = new byte[16];
-
-	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-	    s_secureRandom.nextBytes(iv);
-	    cipher.init(Cipher.ENCRYPT_MODE, eKey, new IvParameterSpec(iv));
-	    bytes = cipher.doFinal(data);
-	    mac = Mac.getInstance("HmacSHA512");
-	    mac.init(mKey);
-	    bytes = mac.doFinal(bytes);
-	}
-	catch(BadPaddingException |
-	      IllegalBlockSizeException |
-	      InvalidAlgorithmParameterException |
-	      InvalidKeyException |
-	      NoSuchAlgorithmException |
-	      NoSuchPaddingException exception)
-	{
-	}
-
-	return bytes;
-    }
-
     public static byte[] randomBytes(int length)
     {
 	byte bytes[] = new byte[length];
@@ -182,5 +201,15 @@ public class Cryptography
 	}
 
 	return bytes;
+    }
+
+    public void setEncryptionKey(SecretKey key)
+    {
+	m_encryptionKey = key;
+    }
+
+    public void setMacKey(SecretKey key)
+    {
+	m_macKey = key;
     }
 }

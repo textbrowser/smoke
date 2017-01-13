@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -43,6 +44,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
@@ -151,6 +154,7 @@ public class Settings extends AppCompatActivity
 			    KeyPair signatureKeyPair = null;
 			    SecretKey encryptionKey = null;
 			    SecretKey macKey = null;
+			    byte bytes[] = null;
 			    byte encryptionSalt[] = null;
 			    byte macSalt[] = null;
 
@@ -176,6 +180,15 @@ public class Settings extends AppCompatActivity
 				    (m_signatureAlgorithm, 3072);
 
 				/*
+				** Prepare the Cryptography object's
+				** private keys.
+				*/
+
+				m_cryptography.setEncryptionKey
+				    (encryptionKey);
+				m_cryptography.setMacKey(macKey);
+
+				/*
 				** Record the data.
 				*/
 
@@ -192,6 +205,20 @@ public class Settings extends AppCompatActivity
 				    (null,
 				     "macSalt",
 				     Base64.encodeToString(macSalt,
+							   Base64.DEFAULT));
+				m_databaseHelper.writeSetting
+				    (m_cryptography,
+				     "pki_encryption_private_key",
+				     Base64.encodeToString(encryptionKeyPair.
+							   getPrivate().
+							   getEncoded(),
+							   Base64.DEFAULT));
+				m_databaseHelper.writeSetting
+				    (m_cryptography,
+				     "pki_encryption_public_key",
+				     Base64.encodeToString(encryptionKeyPair.
+							   getPublic().
+							   getEncoded(),
 							   Base64.DEFAULT));
 
 				byte saltedPassword[] = Cryptography.
@@ -216,8 +243,10 @@ public class Settings extends AppCompatActivity
 				else
 				    m_error = true;
 			    }
-			    catch(GeneralSecurityException |
-				  NumberFormatException exception)
+			    catch(InvalidKeySpecException |
+				  NoSuchAlgorithmException |
+				  NumberFormatException |
+				  SQLException exception)
 			    {
 				m_error = true;
 			    }
@@ -237,9 +266,7 @@ public class Settings extends AppCompatActivity
 				}
 			    });
 
-			    encryptionKey = null;
 			    m_password = "";
-			    macKey = null;
 			}
 		    }
 

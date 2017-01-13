@@ -33,6 +33,18 @@ import android.content.DialogInterface;
 
 class Miscellaneous
 {
+    public static byte[] joinByteArrays(byte a[], byte b[])
+    {
+	if(a == null || b == null)
+	    return null;
+
+	byte bytes[] = new byte[a.length + b.length];
+
+	System.arraycopy(a, 0, bytes, 0, a.length);
+	System.arraycopy(b, 0, bytes, a.length, b.length);
+	return bytes;
+    }
+
     public static void showErrorDialog(Context context, String error)
     {
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();

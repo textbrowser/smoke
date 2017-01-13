@@ -32,7 +32,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Base64;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -204,43 +206,60 @@ public class Database extends SQLiteOpenHelper
     public void writeSetting(Cryptography cryptography,
 			     String name,
 			     String value)
+	throws SQLException, SQLiteException
     {
 	SQLiteDatabase db = getWritableDatabase();
 
 	if(db == null)
 	    return;
 
-	ContentValues values = new ContentValues();
-	String a = "";
-	String b = "";
-	String c = "";
+	String a = name;
+	String b = name;
+	String c = value;
 
-	if(cryptography == null)
+	if(cryptography != null)
 	{
-	    a = name;
-	    b = name;
-	    c = value;
+	    byte bytes[] = null;
+
+	    bytes = cryptography.etm(a.getBytes());
+
+	    if(bytes != null)
+		a = Base64.encodeToString(bytes, Base64.DEFAULT);
+	    else
+		a = "";
+
+	    bytes = cryptography.hash(b.getBytes());
+
+	    if(bytes != null)
+		b = Base64.encodeToString(bytes, Base64.DEFAULT);
+	    else
+		b = "";
+
+	    bytes = cryptography.etm(c.getBytes());
+
+	    if(bytes != null)
+		c = Base64.encodeToString(bytes, Base64.DEFAULT);
+	    else
+		c = "";
+
+	    if(a.isEmpty() || b.isEmpty() || c.isEmpty())
+	    {
+		db.close();
+		throw new SQLiteException();
+	    }
 	}
-	else
-	{
-	}
+
+	ContentValues values = new ContentValues();
 
 	values.put("name", a);
 	values.put("name_digest", b);
 	values.put("value", c);
 
-	try
-	{
-	    /*
-	    ** Content values should prevent SQL injections.
-	    */
+	/*
+	** Content values should prevent SQL injections.
+	*/
 
-	    db.replace("settings", null, values);
-	}
-	catch(SQLException exception)
-	{
-	}
-
+	db.replace("settings", null, values);
 	db.close();
     }
 }
