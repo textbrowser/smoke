@@ -58,6 +58,30 @@ public class Settings extends AppCompatActivity
 
     private void addNeighbor()
     {
+	String ip_version = "";
+	final RadioGroup radioGroup1 = (RadioGroup) findViewById
+	    (R.id.neighbors_ipv_radio_group);
+	final Spinner spinner1 = (Spinner) findViewById
+	    (R.id.neighbors_transport);
+	final TextView textView1 = (TextView) findViewById
+	    (R.id.neighbors_ip_address);
+	final TextView textView2 = (TextView) findViewById
+	    (R.id.neighbors_port);
+	final TextView textView3 = (TextView) findViewById
+	    (R.id.neighbors_scope_id);
+
+	if(radioGroup1.getCheckedRadioButtonId() == R.id.neighbors_ipv4)
+	    ip_version = "IPv4";
+	else
+	    ip_version = "IPv6";
+
+	m_databaseHelper.writeNeighbor
+	    (m_cryptography,
+	     textView1.getText().toString(),
+	     textView2.getText().toString(),
+	     textView3.getText().toString(),
+	     ip_version,
+	     spinner1.getSelectedItem().toString());
     }
 
     private void prepareListeners()
@@ -69,6 +93,7 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		addNeighbor();
 	    }
         });
 

@@ -90,6 +90,19 @@ public class Database extends SQLiteOpenHelper
 	    return false;
     }
 
+    public boolean writeNeighbor(Cryptography cryptography,
+				 String ipAddress,
+				 String ipPort,
+				 String scopeId,
+				 String version,
+				 String transport)
+    {
+	if(cryptography == null)
+	    return false;
+
+	return true;
+    }
+
     public static synchronized Database getInstance(Context context)
     {
 	if(s_instance == null)
