@@ -11,3 +11,4 @@ Remaining Items
 3.     Synchronized methods or containers?
 4.     Detect removal of smoke.db.
 5.     Create a BroadcastReceiver and notify all other activities on exit.
+6.     Neighbor class.
