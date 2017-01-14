@@ -100,6 +100,27 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null)
 	    return false;
 
+	SQLiteDatabase db = getWritableDatabase();
+
+	if(db == null)
+	    return false;
+
+	ContentValues values = new ContentValues();
+
+	/*
+	** Content values should prevent SQL injections.
+	*/
+
+	try
+	{
+	    db.replace("neighbors", null, values);
+	}
+	catch(SQLException exception)
+        {
+	    db.close();
+	    return false;
+	}
+
 	return true;
     }
 
