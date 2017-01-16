@@ -35,6 +35,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
+import java.util.Vector;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -110,6 +111,25 @@ public class Database extends SQLiteOpenHelper
 	/*
 	** Content values should prevent SQL injections.
 	*/
+
+	try
+	{
+	    Vector<String> vector = new Vector<String> ();
+	    byte bytes[] = null;
+
+	    vector.add("ip_version");
+	    vector.add("local_ip_address");
+	    vector.add("local_ip_address_digest");
+
+	    for(int i = 0; i < vector.size(); i++)
+	    {
+	    }
+	}
+	catch(Exception exception)
+	{
+	    db.close();
+	    return false;
+	}
 
 	try
 	{
