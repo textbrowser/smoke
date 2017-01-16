@@ -35,7 +35,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -92,11 +92,11 @@ public class Database extends SQLiteOpenHelper
     }
 
     public boolean writeNeighbor(Cryptography cryptography,
-				 String ipAddress,
-				 String ipPort,
-				 String scopeId,
-				 String version,
-				 String transport)
+				 String remoteIpAddress,
+				 String remoteIpPort,
+				 String remoteIpScopeId,
+				 String transport,
+				 String version)
     {
 	if(cryptography == null)
 	    return false;
@@ -114,15 +114,52 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    Vector<String> vector = new Vector<String> ();
+	    ArrayList<String> array = new ArrayList<String> ();
 	    byte bytes[] = null;
 
-	    vector.add("ip_version");
-	    vector.add("local_ip_address");
-	    vector.add("local_ip_address_digest");
+	    array.add("ip_version");
+	    array.add("local_ip_address");
+	    array.add("local_ip_address_digest");
+	    array.add("local_port");
+	    array.add("local_port_digest");
+	    array.add("remote_certificate TEXT NOT NULL");
+	    array.add("remote_ip_address TEXT NOT NULL");
+	    array.add("remote_ip_address_digest TEXT NOT NULL");
+	    array.add("remote_port TEXT NOT NULL");
+            array.add("remote_port_digest TEXT NOT NULL");
+            array.add("remote_scope_id TEXT NOT NULL");
+            array.add("session_cipher TEXT NOT NULL");
+            array.add("status TEXT NOT NULL");
+            array.add("status_control TEXT NOT NULL");
+            array.add("transport TEXT NOT NULL");
+            array.add("transport_digest TEXT NOT NULL");
+            array.add("uptime TEXT NOT NULL");
+            array.add("user_defined_digest TEXT NOT NULL");
+            array.add("PRIMARY KEY (local_ip_address_digest");
+            array.add("local_port_digest");
+            array.add("remote_ip_address_digest");
+            array.add("remote_port_digest");
+            array.add("transport_digest");
 
-	    for(int i = 0; i < vector.size(); i++)
+	    for(int i = 0; i < array.size(); i++)
 	    {
+		if(array.get(i) == "ip_version")
+		    bytes = cryptography.etm(version.getBytes());
+		else if(array.get(i) == "remote_ip_address")
+		    bytes = cryptography.etm(remoteIpAddress.getBytes());
+		else if(array.get(i) == "remote_port")
+		    bytes = cryptography.etm(remoteIpPort.getBytes());
+		else if(array.get(i) == "remote_scope_id")
+		    bytes = cryptography.etm(remoteIpScopeId.getBytes());
+		else if(array.get(i) == "transport")
+		    bytes = cryptography.etm(transport.getBytes());
+
+		if(bytes == null)
+		    throw new Exception();
+
+		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+		values.put(array.get(i), str);
 	    }
 	}
 	catch(Exception exception)
