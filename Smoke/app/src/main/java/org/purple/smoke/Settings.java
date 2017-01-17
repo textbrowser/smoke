@@ -58,7 +58,7 @@ public class Settings extends AppCompatActivity
 
     private void addNeighbor()
     {
-	String ip_version = "";
+	String ipVersion = "";
 	final RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 	final Spinner spinner1 = (Spinner) findViewById
@@ -71,17 +71,20 @@ public class Settings extends AppCompatActivity
 	    (R.id.neighbors_scope_id);
 
 	if(radioGroup1.getCheckedRadioButtonId() == R.id.neighbors_ipv4)
-	    ip_version = "IPv4";
+	    ipVersion = "IPv4";
 	else
-	    ip_version = "IPv6";
+	    ipVersion = "IPv6";
 
-	m_databaseHelper.writeNeighbor
-	    (m_cryptography,
-	     textView1.getText().toString(),
-	     textView2.getText().toString(),
-	     textView3.getText().toString(),
-	     ip_version,
-	     spinner1.getSelectedItem().toString());
+	if(!m_databaseHelper.writeNeighbor(m_cryptography,
+					   textView1.getText().toString(),
+					   textView2.getText().toString(),
+					   textView3.getText().toString(),
+					   spinner1.getSelectedItem().
+					   toString(),
+					   ipVersion))
+	    Miscellaneous.showErrorDialog(Settings.this,
+					  "An error occurred while " +
+					  "saving the neighbor information.");
     }
 
     private void prepareListeners()

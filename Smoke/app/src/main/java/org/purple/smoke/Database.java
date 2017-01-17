@@ -122,40 +122,51 @@ public class Database extends SQLiteOpenHelper
 	    array.add("local_ip_address_digest");
 	    array.add("local_port");
 	    array.add("local_port_digest");
-	    array.add("remote_certificate TEXT NOT NULL");
-	    array.add("remote_ip_address TEXT NOT NULL");
-	    array.add("remote_ip_address_digest TEXT NOT NULL");
-	    array.add("remote_port TEXT NOT NULL");
-            array.add("remote_port_digest TEXT NOT NULL");
-            array.add("remote_scope_id TEXT NOT NULL");
-            array.add("session_cipher TEXT NOT NULL");
-            array.add("status TEXT NOT NULL");
-            array.add("status_control TEXT NOT NULL");
-            array.add("transport TEXT NOT NULL");
-            array.add("transport_digest TEXT NOT NULL");
-            array.add("uptime TEXT NOT NULL");
-            array.add("user_defined_digest TEXT NOT NULL");
-            array.add("PRIMARY KEY (local_ip_address_digest");
-            array.add("local_port_digest");
-            array.add("remote_ip_address_digest");
+	    array.add("remote_certificate");
+	    array.add("remote_ip_address");
+	    array.add("remote_ip_address_digest");
+	    array.add("remote_port");
             array.add("remote_port_digest");
+            array.add("remote_scope_id");
+            array.add("session_cipher");
+            array.add("status");
+            array.add("status_control");
+            array.add("transport");
             array.add("transport_digest");
+            array.add("uptime");
+            array.add("user_defined_digest");
 
 	    for(int i = 0; i < array.size(); i++)
 	    {
-		if(array.get(i) == "ip_version")
+		if(array.get(i).equals("ip_version"))
 		    bytes = cryptography.etm(version.getBytes());
-		else if(array.get(i) == "remote_ip_address")
+		else if(array.get(i).equals("local_ip_address_digest"))
+		    bytes = cryptography.hash(new String("").getBytes());
+		else if(array.get(i).equals("remote_ip_address"))
 		    bytes = cryptography.etm(remoteIpAddress.getBytes());
-		else if(array.get(i) == "remote_port")
+		else if(array.get(i).equals("remote_ip_address_digest"))
+		    bytes = cryptography.hash(remoteIpAddress.getBytes());
+		else if(array.get(i).equals("remote_port"))
 		    bytes = cryptography.etm(remoteIpPort.getBytes());
-		else if(array.get(i) == "remote_scope_id")
+		else if(array.get(i).equals("remote_port_digest"))
+		    bytes = cryptography.hash(remoteIpPort.getBytes());
+		else if(array.get(i).equals("remote_scope_id"))
 		    bytes = cryptography.etm(remoteIpScopeId.getBytes());
-		else if(array.get(i) == "transport")
+		else if(array.get(i).equals("transport"))
 		    bytes = cryptography.etm(transport.getBytes());
+		else if(array.get(i).equals("transport_digest"))
+		    bytes = cryptography.hash(transport.getBytes());
+		else if(array.get(i).equals("user_defined_digest"))
+		    bytes = cryptography.hash(new String("true").getBytes());
+		else
+		    bytes = cryptography.etm(new String("").getBytes());
 
 		if(bytes == null)
+		{
+		    writeLog("Database::writeNeighbor(): error with " +
+			     array.get(i) + " field.");
 		    throw new Exception();
+		}
 
 		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
 
@@ -196,6 +207,22 @@ public class Database extends SQLiteOpenHelper
 	    return;
 
 	String str;
+
+	/*
+	** Create the log table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS log (" +
+	    "event TEXT NOT NULL, " +
+	    "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(SQLException exception)
+	{
+	}
 
 	/*
 	** Create the neighbors table.
@@ -292,6 +319,28 @@ public class Database extends SQLiteOpenHelper
 			  int newVersion)
     {
         onCreate(db);
+    }
+
+    public void writeLog(String event)
+    {
+	SQLiteDatabase db = getWritableDatabase();
+
+	if(db == null)
+	    return;
+
+	ContentValues values = new ContentValues();
+
+	values.put("event", event);
+
+	try
+	{
+	    db.insert("log", null, values);
+	}
+	catch(SQLException exception)
+        {
+	}
+
+	db.close();
     }
 
     public void writeSetting(Cryptography cryptography,

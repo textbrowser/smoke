@@ -3,12 +3,12 @@ Completed Items
 1.     Remove UI-related references in Settings::prepareListeners()::...::run().
 2.     Replace the (final) iterations variable in Settings::prepareListeners()::...::run().
 3.     Exit menus.
+4.     Logging class. See Database::writeLog().
 
 Remaining Items
 
-1.     Logging class.
-2.     Reset option. Remove smoke.db.
-3.     Synchronized methods or containers?
-4.     Detect removal of smoke.db.
-5.     Create a BroadcastReceiver and notify all other activities on exit.
-6.     Neighbor class.
+1.     Reset option. Remove smoke.db.
+2.     Synchronized methods or containers?
+3.     Detect removal of smoke.db.
+4.     Create a BroadcastReceiver and notify all other activities on exit.
+5.     Neighbor class.
