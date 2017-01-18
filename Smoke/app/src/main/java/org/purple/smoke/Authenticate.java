@@ -27,7 +27,9 @@
 
 package org.purple.smoke;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -36,9 +38,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.SecretKey;
 
 public class Authenticate extends AppCompatActivity
 {
+    private final Cryptography s_cryptography = Cryptography.getInstance();
+    private final State s_state = State.getInstance();
+
     private void prepareListeners()
     {
         final Button button1 = (Button) findViewById
@@ -65,7 +73,6 @@ public class Authenticate extends AppCompatActivity
 		    (textView1.getText().toString().getBytes(),
 		     encryptionSalt,
 		     macSalt);
-		textView1.setText("");
 
 		if(saltedPassword == null ||
 		   !Cryptography.
@@ -76,14 +83,119 @@ public class Authenticate extends AppCompatActivity
 						  "Incorrect password.");
 		else
 		{
-		    State.getInstance().setAuthenticated(true);
+		    final ProgressDialog dialog = new ProgressDialog
+			(Authenticate.this);
+		    int iterationCount = Integer.parseInt
+			(database.readSetting(null, "iterationCount"));
 
-		    /*
-		    ** Disable some widgets.
-		    */
+		    dialog.setCancelable(false);
+		    dialog.setIndeterminate(true);
+		    dialog.setMessage
+			("Generating confidential data. " +
+			 "Please be patient...");
+		    dialog.show();
 
-		    button1.setEnabled(false);
-		    textView1.setEnabled(false);
+		    class SingleShot implements Runnable
+		    {
+			private String m_password = "";
+			private boolean m_error = false;
+			private byte m_encryptionSalt[] = null;
+			private byte m_macSalt[] = null;
+			private int m_iterationCount = 1000;
+
+			SingleShot(String password,
+				   byte encryptionSalt[],
+				   byte macSalt[],
+				   int iterationCount)
+			{
+			    m_encryptionSalt = encryptionSalt;
+			    m_iterationCount = iterationCount;
+			    m_macSalt = macSalt;
+			    m_password = password;
+			}
+
+			public boolean hasError()
+			{
+			    return m_error;
+			}
+
+			@Override
+			public void run()
+			{
+			    SecretKey encryptionKey = null;
+			    SecretKey macKey = null;
+
+			    try
+			    {
+				encryptionKey = Cryptography.
+				    generateEncryptionKey
+				    (m_encryptionSalt,
+				     m_password.toCharArray(),
+				     m_iterationCount);
+				macKey = Cryptography.generateMacKey
+				    (m_macSalt,
+				     m_password.toCharArray(),
+				     m_iterationCount);
+
+				if(encryptionKey != null && macKey != null)
+				{
+				    s_cryptography.setEncryptionKey
+					(encryptionKey);
+				    s_cryptography.setMacKey(macKey);
+				    s_state.setEncryptionKey(encryptionKey);
+				    s_state.setMacKey(macKey);
+				}
+				else
+				    m_error = true;
+			    }
+			    catch(InvalidKeySpecException |
+				  NoSuchAlgorithmException |
+				  NumberFormatException |
+				  SQLException exception)
+			    {
+				m_error = true;
+			    }
+
+			    Authenticate.this.runOnUiThread(new Runnable()
+			    {
+				public void run()
+				{
+				    dialog.dismiss();
+
+				    if(m_error)
+					Miscellaneous.showErrorDialog
+					    (Authenticate.this,
+					     "An error occurred while " +
+					     "generating the confidential " +
+					     "data.");
+				}
+			    });
+
+			    m_password = "";
+			}
+		    }
+
+		    SingleShot singleShot =
+			new SingleShot(textView1.getText().toString(),
+				       encryptionSalt,
+				       macSalt,
+				       iterationCount);
+		    Thread thread = new Thread(singleShot);
+
+		    thread.start();
+
+		    if(!singleShot.hasError())
+		    {
+			State.getInstance().setAuthenticated(true);
+
+			/*
+			** Disable some widgets.
+			*/
+
+			button1.setEnabled(false);
+			textView1.setEnabled(false);
+			textView1.setText("");
+		    }
 		}
 	    }
 	});

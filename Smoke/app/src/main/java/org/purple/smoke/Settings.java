@@ -50,7 +50,7 @@ import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
-    private Cryptography m_cryptography = new Cryptography();
+    private Cryptography s_cryptography = Cryptography.getInstance();
     private Database m_databaseHelper = null;
     private final State s_state = State.getInstance();
     private final int s_pkiEncryptionKeySize = 3072;
@@ -75,7 +75,7 @@ public class Settings extends AppCompatActivity
 	else
 	    ipVersion = "IPv6";
 
-	if(!m_databaseHelper.writeNeighbor(m_cryptography,
+	if(!m_databaseHelper.writeNeighbor(s_cryptography,
 					   textView1.getText().toString(),
 					   textView2.getText().toString(),
 					   textView3.getText().toString(),
@@ -230,9 +230,9 @@ public class Settings extends AppCompatActivity
 				** private keys.
 				*/
 
-				m_cryptography.setEncryptionKey
+				s_cryptography.setEncryptionKey
 				    (encryptionKey);
-				m_cryptography.setMacKey(macKey);
+				s_cryptography.setMacKey(macKey);
 
 				/*
 				** Record the data.
@@ -253,28 +253,28 @@ public class Settings extends AppCompatActivity
 				     Base64.encodeToString(macSalt,
 							   Base64.DEFAULT));
 				m_databaseHelper.writeSetting
-				    (m_cryptography,
+				    (s_cryptography,
 				     "pki_encryption_private_key",
 				     Base64.encodeToString(encryptionKeyPair.
 							   getPrivate().
 							   getEncoded(),
 							   Base64.DEFAULT));
 				m_databaseHelper.writeSetting
-				    (m_cryptography,
+				    (s_cryptography,
 				     "pki_encryption_public_key",
 				     Base64.encodeToString(encryptionKeyPair.
 							   getPublic().
 							   getEncoded(),
 							   Base64.DEFAULT));
 				m_databaseHelper.writeSetting
-				    (m_cryptography,
+				    (s_cryptography,
 				     "pki_signature_private_key",
 				     Base64.encodeToString(signatureKeyPair.
 							   getPrivate().
 							   getEncoded(),
 							   Base64.DEFAULT));
 				m_databaseHelper.writeSetting
-				    (m_cryptography,
+				    (s_cryptography,
 				     "pki_signature_public_key",
 				     Base64.encodeToString(signatureKeyPair.
 							   getPublic().

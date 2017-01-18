@@ -54,6 +54,7 @@ public class Cryptography
     private SecretKey m_macKey = null;
     private final static SecureRandom s_secureRandom =
 	new SecureRandom(); // Thread-safe.
+    private static Cryptography s_instance = null;
 
     public byte[] etm(byte data[])
     {
@@ -207,6 +208,14 @@ public class Cryptography
 	}
 
 	return bytes;
+    }
+
+    public static synchronized Cryptography getInstance()
+    {
+	if(s_instance == null)
+	    s_instance = new Cryptography();
+
+	return s_instance;
     }
 
     public void setEncryptionKey(SecretKey key)

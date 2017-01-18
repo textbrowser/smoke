@@ -12,3 +12,6 @@ Remaining Items
 3.     Detect removal of smoke.db.
 4.     Create a BroadcastReceiver and notify all other activities on exit.
 5.     Neighbor class.
+6.     Enable widgets after an initial password is accepted.
+7.     Decide if the State class requires cryptographic data.
+       Duplicates Cryptography.
