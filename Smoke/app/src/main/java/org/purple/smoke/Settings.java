@@ -389,7 +389,6 @@ public class Settings extends AppCompatActivity
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
-	int index = -1;
 
         spinner1.setAdapter(adapter);
 	array = new String[]
@@ -401,8 +400,10 @@ public class Settings extends AppCompatActivity
 	};
 	adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
-	index = adapter.getPosition
+
+	int index = adapter.getPosition
 	    (m_databaseHelper.readSetting(null, "iterationCount"));
+
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(adapter);
 	array = new String[]
