@@ -218,6 +218,12 @@ public class Cryptography
 	return s_instance;
     }
 
+    public void reset()
+    {
+	m_encryptionKey = null;
+	m_macKey = null;
+    }
+
     public void setEncryptionKey(SecretKey key)
     {
 	m_encryptionKey = key;

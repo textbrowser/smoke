@@ -142,11 +142,12 @@ public class Authenticate extends AppCompatActivity
 				    s_cryptography.setEncryptionKey
 					(encryptionKey);
 				    s_cryptography.setMacKey(macKey);
-				    s_state.setEncryptionKey(encryptionKey);
-				    s_state.setMacKey(macKey);
 				}
 				else
+				{
 				    m_error = true;
+				    s_cryptography.reset();
+				}
 			    }
 			    catch(InvalidKeySpecException |
 				  NoSuchAlgorithmException |
@@ -154,6 +155,7 @@ public class Authenticate extends AppCompatActivity
 				  SQLException exception)
 			    {
 				m_error = true;
+				s_cryptography.reset();
 			    }
 
 			    Authenticate.this.runOnUiThread(new Runnable()

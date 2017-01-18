@@ -194,8 +194,8 @@ public class Settings extends AppCompatActivity
 			@Override
 			public void run()
 			{
-			    KeyPair encryptionKeyPair = null;
-			    KeyPair signatureKeyPair = null;
+			    KeyPair chatEncryptionKeyPair = null;
+			    KeyPair chatSignatureKeyPair = null;
 			    SecretKey encryptionKey = null;
 			    SecretKey macKey = null;
 			    byte bytes[] = null;
@@ -207,23 +207,23 @@ public class Settings extends AppCompatActivity
 
 			    try
 			    {
+				chatEncryptionKeyPair = Cryptography.
+				    generatePrivatePublicKeyPair
+				    (m_encryptionAlgorithm,
+				     s_pkiEncryptionKeySize);
+				chatSignatureKeyPair = Cryptography.
+				    generatePrivatePublicKeyPair
+				    (m_signatureAlgorithm,
+				     s_pkiSignatureKeySize);
 				encryptionKey = Cryptography.
 				    generateEncryptionKey
 				    (encryptionSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
-				encryptionKeyPair = Cryptography.
-				    generatePrivatePublicKeyPair
-				    (m_encryptionAlgorithm,
-				     s_pkiEncryptionKeySize);
 				macKey = Cryptography.generateMacKey
 				    (macSalt,
 				     m_password.toCharArray(),
 				     m_iterationCount);
-				signatureKeyPair = Cryptography.
-				    generatePrivatePublicKeyPair
-				    (m_signatureAlgorithm,
-				     s_pkiSignatureKeySize);
 
 				/*
 				** Prepare the Cryptography object's
@@ -254,29 +254,31 @@ public class Settings extends AppCompatActivity
 							   Base64.DEFAULT));
 				m_databaseHelper.writeSetting
 				    (s_cryptography,
-				     "pki_encryption_private_key",
-				     Base64.encodeToString(encryptionKeyPair.
+				     "pki_chat_encryption_private_key",
+				     Base64.
+				     encodeToString(chatEncryptionKeyPair.
+						    getPrivate().
+						    getEncoded(),
+						    Base64.DEFAULT));
+				m_databaseHelper.writeSetting
+				    (s_cryptography,
+				     "pki_chat_encryption_public_key",
+				     Base64.
+				     encodeToString(chatEncryptionKeyPair.
+						    getPublic().
+						    getEncoded(),
+						    Base64.DEFAULT));
+				m_databaseHelper.writeSetting
+				    (s_cryptography,
+				     "pki_chat_signature_private_key",
+				     Base64.encodeToString(chatSignatureKeyPair.
 							   getPrivate().
 							   getEncoded(),
 							   Base64.DEFAULT));
 				m_databaseHelper.writeSetting
 				    (s_cryptography,
-				     "pki_encryption_public_key",
-				     Base64.encodeToString(encryptionKeyPair.
-							   getPublic().
-							   getEncoded(),
-							   Base64.DEFAULT));
-				m_databaseHelper.writeSetting
-				    (s_cryptography,
-				     "pki_signature_private_key",
-				     Base64.encodeToString(signatureKeyPair.
-							   getPrivate().
-							   getEncoded(),
-							   Base64.DEFAULT));
-				m_databaseHelper.writeSetting
-				    (s_cryptography,
-				     "pki_signature_public_key",
-				     Base64.encodeToString(signatureKeyPair.
+				     "pki_chat_signature_public_key",
+				     Base64.encodeToString(chatSignatureKeyPair.
 							   getPublic().
 							   getEncoded(),
 							   Base64.DEFAULT));
@@ -293,15 +295,12 @@ public class Settings extends AppCompatActivity
 					 "saltedPassword",
 					 Base64.encodeToString(saltedPassword,
 							       Base64.DEFAULT));
-				    s_state.setEncryptionKey(encryptionKey);
-				    s_state.setMacKey(macKey);
-				    s_state.setPKIEncryptionKey
-					(encryptionKeyPair);
-				    s_state.setPKISignatureKey
-					(signatureKeyPair);
 				}
 				else
+				{
 				    m_error = true;
+				    s_cryptography.reset();
+				}
 			    }
 			    catch(InvalidKeySpecException |
 				  NoSuchAlgorithmException |
@@ -309,6 +308,7 @@ public class Settings extends AppCompatActivity
 				  SQLException exception)
 			    {
 				m_error = true;
+				s_cryptography.reset();
 			    }
 
 			    Settings.this.runOnUiThread(new Runnable()

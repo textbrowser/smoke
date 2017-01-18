@@ -4,6 +4,9 @@ Completed Items
 2.     Replace the (final) iterations variable in Settings::prepareListeners()::...::run().
 3.     Exit menus.
 4.     Logging class. See Database::writeLog().
+5.     Decide if the State class requires cryptographic data.
+       Duplicates Cryptography. Removed methods from State.
+6.     Prepare for Chat, E-Mail, etc. public key pairs.
 
 Remaining Items
 
@@ -12,6 +15,4 @@ Remaining Items
 3.     Detect removal of smoke.db.
 4.     Create a BroadcastReceiver and notify all other activities on exit.
 5.     Neighbor class.
-6.     Enable widgets after an initial password is accepted.
-7.     Decide if the State class requires cryptographic data.
-       Duplicates Cryptography.
+6.     Enable Settings widgets after an initial password is accepted.

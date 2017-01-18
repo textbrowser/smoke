@@ -40,8 +40,6 @@ class State
     {
 	s_bundle = new Bundle();
 	setAuthenticated(false);
-	setEncryptionKey(null);
-	setMacKey(null);
     }
 
     public static synchronized State getInstance()
@@ -60,53 +58,5 @@ class State
     public synchronized void setAuthenticated(boolean state)
     {
 	s_bundle.putChar("is_authenticated", state ? '1' : '0');
-    }
-
-    public synchronized void setEncryptionKey(SecretKey encryptionKey)
-    {
-	if(encryptionKey == null)
-	    s_bundle.putByteArray("encryption_key", new byte[0]);
-	else
-	    s_bundle.putByteArray("encryption_key", encryptionKey.getEncoded());
-    }
-
-    public synchronized void setMacKey(SecretKey macKey)
-    {
-	if(macKey == null)
-	    s_bundle.putByteArray("mac_key", new byte[0]);
-	else
-	    s_bundle.putByteArray("mac_key", macKey.getEncoded());
-    }
-
-    public synchronized void setPKIEncryptionKey(KeyPair keyPair)
-    {
-	if(keyPair == null)
-	{
-	    s_bundle.putByteArray("pki_encryption_private_key", new byte[0]);
-	    s_bundle.putByteArray("pki_encryption_public_key", new byte[0]);
-	}
-	else
-	{
-	    s_bundle.putByteArray("pki_encryption_private_key",
-				  keyPair.getPrivate().getEncoded());
-	    s_bundle.putByteArray("pki_encryption_public_key",
-				  keyPair.getPublic().getEncoded());
-	}
-    }
-
-    public synchronized void setPKISignatureKey(KeyPair keyPair)
-    {
-	if(keyPair == null)
-	{
-	    s_bundle.putByteArray("pki_signature_private_key", new byte[0]);
-	    s_bundle.putByteArray("pki_signature_public_key", new byte[0]);
-	}
-	else
-	{
-	    s_bundle.putByteArray("pki_signature_private_key",
-				  keyPair.getPrivate().getEncoded());
-	    s_bundle.putByteArray("pki_signature_public_key",
-				  keyPair.getPublic().getEncoded());
-	}
     }
 }
