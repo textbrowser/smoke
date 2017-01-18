@@ -87,6 +87,45 @@ public class Settings extends AppCompatActivity
 					  "saving the neighbor information.");
     }
 
+    private void enableWidgets(boolean state)
+    {
+	Button button1;
+
+	button1 = (Button) findViewById(R.id.add_neighbor);
+	button1.setEnabled(state);
+
+	RadioButton radioButton1;
+
+	radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv4);
+	radioButton1.setEnabled(state);
+	radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv6);
+	radioButton1.setEnabled(state);
+
+	Spinner spinner1;
+
+	spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
+	spinner1.setEnabled(state);
+
+	TextView textView1;
+
+	textView1 = (TextView) findViewById(R.id.delete_neighbor);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.delete_participant);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
+	textView1.setEnabled(state);
+        textView1 = (TextView) findViewById(R.id.neighbors_port);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.refresh_neighbors);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.refresh_participants);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
+	textView1.setEnabled(state);
+    }
+
     private void prepareListeners()
     {
 	final Button button1 = (Button) findViewById
@@ -323,6 +362,12 @@ public class Settings extends AppCompatActivity
 					     "An error occurred while " +
 					     "generating the confidential " +
 					     "data.");
+				    else
+				    {
+					Settings.this.enableWidgets(true);
+					State.getInstance().setAuthenticated
+					    (true);
+				    }
 				}
 			    });
 
