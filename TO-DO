@@ -17,3 +17,4 @@ Remaining Items
 4.     Create a BroadcastReceiver and notify all other activities on exit.
 5.     Neighbor class.
 6.     Scroll bars on Spinner objects.
+7.     Display neighbors contents.
