@@ -48,8 +48,7 @@ public class Database extends SQLiteOpenHelper
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public String readSetting(Cryptography cryptography,
-			      String name)
+    public String readSetting(Cryptography cryptography, String name)
     {
 	SQLiteDatabase db = getReadableDatabase();
 
@@ -306,17 +305,13 @@ public class Database extends SQLiteOpenHelper
     }
 
     @Override
-    public void onDowngrade(SQLiteDatabase db,
-			    int oldVersion,
-			    int newVersion)
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         onUpgrade(db, oldVersion, newVersion);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db,
-			  int oldVersion,
-			  int newVersion)
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         onCreate(db);
     }
