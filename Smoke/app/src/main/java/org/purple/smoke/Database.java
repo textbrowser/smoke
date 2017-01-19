@@ -208,6 +208,22 @@ public class Database extends SQLiteOpenHelper
 	String str;
 
 	/*
+	** Create the congestion_control table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS congestion_control (" +
+	    "digest TEXT NOT NULL PRIMARY KEY, " +
+	    "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(SQLException exception)
+	{
+	}
+
+	/*
 	** Create the log table.
 	*/
 
