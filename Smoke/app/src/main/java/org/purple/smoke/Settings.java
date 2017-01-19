@@ -461,7 +461,7 @@ public class Settings extends AppCompatActivity
 	spinner1.setAdapter(adapter);
 	array = new String[]
 	{
-	    "RSA"
+	    "DSA", "RSA"
 	};
 	adapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
