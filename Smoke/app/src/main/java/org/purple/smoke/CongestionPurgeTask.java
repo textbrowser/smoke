@@ -34,5 +34,9 @@ public class CongestionPurgeTask extends TimerTask
     @Override
     public void run()
     {
+	Database database = Database.getInstance();
+
+	if(database == null)
+	    return;
     }
 }

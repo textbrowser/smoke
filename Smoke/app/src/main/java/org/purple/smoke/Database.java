@@ -191,6 +191,11 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public static synchronized Database getInstance()
+    {
+	return s_instance;
+    }
+
     public static synchronized Database getInstance(Context context)
     {
 	if(s_instance == null)
