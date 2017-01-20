@@ -27,34 +27,12 @@
 
 package org.purple.smoke;
 
-import java.util.Timer;
+import java.util.TimerTask;
 
-public class Kernel
+public class CongestionPurgeTask extends TimerTask
 {
-    private Timer m_congestionPurgeTimer = null;
-    private static Kernel s_instance = null;
-    private final static int s_congestionPurgeInterval = 15000;
-
-    private Kernel()
+    @Override
+    public void run()
     {
-	prepareTimers();
-    }
-
-    private static synchronized Kernel getInstance()
-    {
-	if(s_instance == null)
-	    s_instance = new Kernel();
-
-	return s_instance;
-    }
-
-    private void prepareTimers()
-    {
-	if(m_congestionPurgeTimer == null)
-	{
-	    m_congestionPurgeTimer = new Timer(true);
-	    m_congestionPurgeTimer.scheduleAtFixedRate
-		(new CongestionPurgeTask(), 0, s_congestionPurgeInterval);
-	}
     }
 }

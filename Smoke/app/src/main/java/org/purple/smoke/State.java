@@ -31,7 +31,7 @@ import android.os.Bundle;
 import java.security.KeyPair;
 import javax.crypto.SecretKey;
 
-class State
+public class State
 {
     private static Bundle s_bundle = null;
     private static State s_instance = null;

@@ -31,7 +31,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-class Miscellaneous
+public class Miscellaneous
 {
     public static byte[] joinByteArrays(byte a[], byte b[])
     {
