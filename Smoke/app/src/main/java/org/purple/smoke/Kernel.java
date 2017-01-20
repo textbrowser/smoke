@@ -29,4 +29,17 @@ package org.purple.smoke;
 
 class Kernel
 {
+    private static Kernel s_instance = null;
+
+    private Kernel()
+    {
+    }
+
+    private static synchronized Kernel getInstance()
+    {
+	if(s_instance == null)
+	    s_instance = new Kernel();
+
+	return s_instance;
+    }
 }
