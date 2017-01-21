@@ -27,37 +27,14 @@
 
 package org.purple.smoke;
 
-import java.util.Hashtable;
-import java.util.Timer;
-
-public class Kernel
+public class TcpNeighbor extends Neighbor
 {
-    private Hashtable<Integer, Neighbor> m_neighbors = null;
-    private Timer m_congestionPurgeTimer = null;
-    private static Kernel s_instance = null;
-    private final static int s_congestionPurgeInterval = 15000;
-
-    private Kernel()
+    public TcpNeighbor(String ipAddress,
+		       String ipPort,
+		       String scopeId,
+		       String transport,
+		       String version)
     {
-	m_neighbors = new Hashtable<Integer, Neighbor> ();
-	prepareTimers();
-    }
-
-    private static synchronized Kernel getInstance()
-    {
-	if(s_instance == null)
-	    s_instance = new Kernel();
-
-	return s_instance;
-    }
-
-    private void prepareTimers()
-    {
-	if(m_congestionPurgeTimer == null)
-	{
-	    m_congestionPurgeTimer = new Timer(true);
-	    m_congestionPurgeTimer.scheduleAtFixedRate
-		(new CongestionPurgeTask(), 0, s_congestionPurgeInterval);
-	}
+	super(ipAddress, ipPort, scopeId, transport, version);
     }
 }
