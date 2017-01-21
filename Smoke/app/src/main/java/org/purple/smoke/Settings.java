@@ -126,6 +126,10 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(state);
     }
 
+    private void populateNeighbors()
+    {
+    }
+
     private void prepareListeners()
     {
 	final Button button1 = (Button) findViewById
@@ -140,9 +144,20 @@ public class Settings extends AppCompatActivity
         });
 
 	final Button button2 = (Button) findViewById
+	    (R.id.refresh_neighbors);
+
+	button2.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		populateNeighbors();
+	    }
+        });
+
+	final Button button3 = (Button) findViewById
 	    (R.id.reset_neighbor_fields);
 
-        button2.setOnClickListener(new View.OnClickListener()
+        button3.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -166,9 +181,9 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-        final Button button3 = (Button) findViewById(R.id.set_password);
+        final Button button4 = (Button) findViewById(R.id.set_password);
 
-        button3.setOnClickListener(new View.OnClickListener()
+        button4.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
