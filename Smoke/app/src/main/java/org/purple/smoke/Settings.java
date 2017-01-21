@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -128,6 +129,7 @@ public class Settings extends AppCompatActivity
 
     private void populateNeighbors()
     {
+	GridView gridView = (GridView) findViewById(R.id.neighbors);
     }
 
     private void prepareListeners()
