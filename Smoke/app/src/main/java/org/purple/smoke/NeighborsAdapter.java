@@ -31,6 +31,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 import java.util.ArrayList;
 
 public class NeighborsAdapter extends BaseAdapter
@@ -65,13 +66,14 @@ public class NeighborsAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        if(convertView == null)
-	{
-        }
-	else
-	{
-	}
+	TextView textView = null;
 
-        return convertView;
+	if(convertView == null)
+            textView = new TextView(m_context);
+	else
+            textView = (TextView) convertView;
+
+        textView.setText(m_array.get(position));
+        return textView;
     }
 }

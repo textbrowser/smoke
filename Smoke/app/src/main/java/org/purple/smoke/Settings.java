@@ -36,6 +36,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -47,6 +48,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
@@ -129,7 +131,14 @@ public class Settings extends AppCompatActivity
 
     private void populateNeighbors()
     {
+	ArrayList<String> array = new ArrayList<String> ();
 	GridView gridView = (GridView) findViewById(R.id.neighbors);
+
+	gridView.setNumColumns(3);
+	array.add("Hello, this is a sentence.");
+	array.add("This is another longer sentence. Please test.");
+	array.add("And just a segment.");
+	gridView.setAdapter(new NeighborsAdapter(array, this));
     }
 
     private void prepareListeners()
@@ -433,6 +442,12 @@ public class Settings extends AppCompatActivity
         button1.setEnabled(isAuthenticated);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
         button1.setEnabled(isAuthenticated);
+
+	GridView gridView = (GridView) findViewById(R.id.neighbors);
+	ViewGroup.LayoutParams layoutParams = gridView.getLayoutParams();
+
+	layoutParams.height = 250; // Pixels.
+	gridView.setLayoutParams(layoutParams);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);

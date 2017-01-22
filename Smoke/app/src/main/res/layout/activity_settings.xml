@@ -32,7 +32,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fadeScrollbars="false">
+            android:fadeScrollbars="false"
+            android:id="@+id/scroll_view">
 
             <LinearLayout
                 android:layout_width="match_parent"
