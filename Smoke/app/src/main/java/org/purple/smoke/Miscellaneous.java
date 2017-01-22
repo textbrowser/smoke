@@ -63,7 +63,10 @@ public class Miscellaneous
 	alertDialog.show();
     }
 
-    public static void showPromptDialog(Context context, String prompt)
+    public static void showPromptDialog
+	(Context context,
+	 DialogInterface.OnCancelListener cancelListener,
+	 String prompt)
     {
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 
@@ -82,10 +85,11 @@ public class Miscellaneous
 	     {
 		 public void onClick(DialogInterface dialog, int which)
 		 {
-		     dialog.dismiss();
+		     dialog.cancel();
 		 }
 	     });
 	alertDialog.setMessage(prompt);
+	alertDialog.setOnCancelListener(cancelListener);
 	alertDialog.setTitle("Confirmation");
 	alertDialog.show();
     }
