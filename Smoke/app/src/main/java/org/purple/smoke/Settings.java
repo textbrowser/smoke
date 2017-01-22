@@ -206,9 +206,9 @@ public class Settings extends AppCompatActivity
 		final TextView textView2 = (TextView) findViewById
 		    (R.id.password2);
 
-		if(!textView1.getText().toString().
-		   equals(textView2.getText().toString()) ||
-		   textView1.getText().length() < 16)
+		if(textView1.getText().length() < 16 ||
+		   !textView1.getText().toString().
+		   equals(textView2.getText().toString()))
 		{
 		    String error = "";
 
