@@ -337,6 +337,29 @@ public class Database extends SQLiteOpenHelper
         onCreate(db);
     }
 
+    public void reset()
+    {
+	SQLiteDatabase db = getWritableDatabase();
+
+	if(db == null)
+	    return;
+
+	try
+	{
+	    db.rawQuery("PRAGMA secure_delete = TRUE", null);
+	    db.delete("congestion_control", null, null);
+	    db.delete("log", null, null);
+	    db.delete("neighbors", null, null);
+	    db.delete("participants", null, null);
+	    db.delete("settings", null, null);
+	}
+	catch(SQLException exception)
+	{
+	}
+
+	db.close();
+    }
+
     public void writeLog(String event)
     {
 	SQLiteDatabase db = getWritableDatabase();

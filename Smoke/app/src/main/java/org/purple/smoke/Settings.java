@@ -201,6 +201,7 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onCancel(DialogInterface dialog)
 	    {
+		m_databaseHelper.reset();
 		prepareCredentials();
 	    }
 	};
