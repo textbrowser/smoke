@@ -264,7 +264,6 @@ public class Settings extends AppCompatActivity
 			    KeyPair chatSignatureKeyPair = null;
 			    SecretKey encryptionKey = null;
 			    SecretKey macKey = null;
-			    byte bytes[] = null;
 			    byte encryptionSalt[] = null;
 			    byte macSalt[] = null;
 

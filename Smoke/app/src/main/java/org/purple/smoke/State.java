@@ -28,8 +28,6 @@
 package org.purple.smoke;
 
 import android.os.Bundle;
-import java.security.KeyPair;
-import javax.crypto.SecretKey;
 
 public class State
 {

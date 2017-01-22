@@ -140,7 +140,7 @@ public class Database extends SQLiteOpenHelper
 		if(array.get(i).equals("ip_version"))
 		    bytes = cryptography.etm(version.getBytes());
 		else if(array.get(i).equals("local_ip_address_digest"))
-		    bytes = cryptography.hash(new String("").getBytes());
+		    bytes = cryptography.hash("".getBytes());
 		else if(array.get(i).equals("remote_ip_address"))
 		    bytes = cryptography.etm(remoteIpAddress.getBytes());
 		else if(array.get(i).equals("remote_ip_address_digest"))
@@ -156,9 +156,9 @@ public class Database extends SQLiteOpenHelper
 		else if(array.get(i).equals("transport_digest"))
 		    bytes = cryptography.hash(transport.getBytes());
 		else if(array.get(i).equals("user_defined_digest"))
-		    bytes = cryptography.hash(new String("true").getBytes());
+		    bytes = cryptography.hash("true".getBytes());
 		else
-		    bytes = cryptography.etm(new String("").getBytes());
+		    bytes = cryptography.etm("".getBytes());
 
 		if(bytes == null)
 		{
