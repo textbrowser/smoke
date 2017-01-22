@@ -135,9 +135,10 @@ public class Settings extends AppCompatActivity
 	GridView gridView = (GridView) findViewById(R.id.neighbors);
 
 	gridView.setNumColumns(3);
-	array.add("Hello, this is a sentence.");
-	array.add("This is another longer sentence. Please test.");
-	array.add("And just a segment.");
+
+	for(int i = 0; i < 25; i++)
+	    array.add(i + "");
+
 	gridView.setAdapter(new NeighborsAdapter(array, this));
     }
 
@@ -448,6 +449,7 @@ public class Settings extends AppCompatActivity
 
 	layoutParams.height = 250; // Pixels.
 	gridView.setLayoutParams(layoutParams);
+	gridView.setScrollbarFadingEnabled(false);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
