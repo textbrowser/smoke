@@ -33,38 +33,6 @@ import android.content.DialogInterface;
 
 public class Miscellaneous
 {
-    private static boolean s_confirmed = false;
-
-    public static boolean showPromptDialog(Context context, String prompt)
-    {
-	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-
-	alertDialog.setButton
-	    (AlertDialog.BUTTON_NEGATIVE, "No",
-	     new DialogInterface.OnClickListener()
-	     {
-		 public void onClick(DialogInterface dialog, int which)
-		 {
-		     s_confirmed = false;
-		     dialog.dismiss();
-		 }
-	     });
-	alertDialog.setButton
-	    (AlertDialog.BUTTON_POSITIVE, "Yes",
-	     new DialogInterface.OnClickListener()
-	     {
-		 public void onClick(DialogInterface dialog, int which)
-		 {
-		     s_confirmed = true;
-		     dialog.dismiss();
-		 }
-	     });
-	alertDialog.setMessage(prompt);
-	alertDialog.setTitle("Confirmation");
-	alertDialog.show();
-	return false;
-    }
-
     public static byte[] joinByteArrays(byte a[], byte b[])
     {
 	if(a == null || b == null)
@@ -92,6 +60,33 @@ public class Miscellaneous
 	     });
 	alertDialog.setMessage(error);
 	alertDialog.setTitle("Error");
+	alertDialog.show();
+    }
+
+    public static void showPromptDialog(Context context, String prompt)
+    {
+	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_NEGATIVE, "No",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     dialog.dismiss();
+		 }
+	     });
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_POSITIVE, "Yes",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     dialog.dismiss();
+		 }
+	     });
+	alertDialog.setMessage(prompt);
+	alertDialog.setTitle("Confirmation");
 	alertDialog.show();
     }
 }
