@@ -89,7 +89,10 @@ public class Miscellaneous
 		 }
 	     });
 	alertDialog.setMessage(prompt);
-	alertDialog.setOnCancelListener(cancelListener);
+	alertDialog.setOnCancelListener(cancelListener); /*
+							 ** We cannot wait
+							 ** for a response.
+							 */
 	alertDialog.setTitle("Confirmation");
 	alertDialog.show();
     }
