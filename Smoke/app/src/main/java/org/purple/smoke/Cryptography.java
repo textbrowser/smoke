@@ -57,7 +57,7 @@ public class Cryptography
 
     public byte[] etm(byte data[])
     {
-	if(m_encryptionKey == null || m_macKey == null)
+	if(data == null || m_encryptionKey == null || m_macKey == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -111,6 +111,16 @@ public class Cryptography
 	{
 	    bytes = null;
 	}
+
+	return bytes;
+    }
+
+    public byte[] mtd(byte data[])
+    {
+	if(data == null)
+	    return null;
+
+	byte bytes[] = null;
 
 	return bytes;
     }

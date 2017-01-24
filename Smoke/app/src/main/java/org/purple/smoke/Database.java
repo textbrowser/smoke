@@ -61,6 +61,47 @@ public class Database extends SQLiteOpenHelper
 	ArrayList<NeighborElement> arrayList =
 	    new ArrayList<NeighborElement> ();
 
+	try
+	{
+	    Cursor cursor = null;
+
+	    cursor = db.rawQuery
+		("SELECT ip_version, " +
+		 "local_ip_address, " +
+		 "local_port, " +
+		 "remote_certificate, " +
+		 "remote_ip_address, " +
+		 "remote_port, " +
+		 "remote_scope_id, " +
+		 "session_cipher, " +
+		 "status, " +
+		 "status_control, " +
+		 "transport, " +
+		 "uptime, " +
+		 "user_defined " +
+		 "FROM neighbors", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		while(!cursor.isAfterLast())
+		{
+		    NeighborElement neighborElement = new NeighborElement();
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+		    }
+
+		    arrayList.add(neighborElement);
+		}
+
+		cursor.close();
+	    }
+	}
+	catch(SQLiteException exception)
+	{
+	}
+
+	db.close();
 	return arrayList;
     }
 

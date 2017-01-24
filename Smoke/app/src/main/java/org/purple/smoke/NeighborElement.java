@@ -43,4 +43,8 @@ public class NeighborElement
     public String m_uptime;
     public String m_userDefined;
     public int m_oid;
+
+    public NeighborElement()
+    {
+    }
 }
