@@ -197,23 +197,23 @@ public class Database extends SQLiteOpenHelper
 		if(arrayList.get(i).equals("ip_version"))
 		    bytes = cryptography.etm(version.getBytes());
 		else if(arrayList.get(i).equals("local_ip_address_digest"))
-		    bytes = cryptography.hash("".getBytes());
+		    bytes = cryptography.hmac("".getBytes());
 		else if(arrayList.get(i).equals("remote_ip_address"))
 		    bytes = cryptography.etm(remoteIpAddress.getBytes());
 		else if(arrayList.get(i).equals("remote_ip_address_digest"))
-		    bytes = cryptography.hash(remoteIpAddress.getBytes());
+		    bytes = cryptography.hmac(remoteIpAddress.getBytes());
 		else if(arrayList.get(i).equals("remote_port"))
 		    bytes = cryptography.etm(remoteIpPort.getBytes());
 		else if(arrayList.get(i).equals("remote_port_digest"))
-		    bytes = cryptography.hash(remoteIpPort.getBytes());
+		    bytes = cryptography.hmac(remoteIpPort.getBytes());
 		else if(arrayList.get(i).equals("remote_scope_id"))
 		    bytes = cryptography.etm(remoteIpScopeId.getBytes());
 		else if(arrayList.get(i).equals("transport"))
 		    bytes = cryptography.etm(transport.getBytes());
 		else if(arrayList.get(i).equals("transport_digest"))
-		    bytes = cryptography.hash(transport.getBytes());
+		    bytes = cryptography.hmac(transport.getBytes());
 		else if(arrayList.get(i).equals("user_defined_digest"))
-		    bytes = cryptography.hash("true".getBytes());
+		    bytes = cryptography.hmac("true".getBytes());
 		else
 		    bytes = cryptography.etm("".getBytes());
 
@@ -464,7 +464,7 @@ public class Database extends SQLiteOpenHelper
 	    else
 		a = "";
 
-	    bytes = cryptography.hash(b.getBytes());
+	    bytes = cryptography.hmac(b.getBytes());
 
 	    if(bytes != null)
 		b = Base64.encodeToString(bytes, Base64.DEFAULT);

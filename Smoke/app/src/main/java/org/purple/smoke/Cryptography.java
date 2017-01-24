@@ -53,6 +53,9 @@ public class Cryptography
     private SecretKey m_macKey = null;
     private final static SecureRandom s_secureRandom =
 	new SecureRandom(); // Thread-safe.
+    private final static String MAC_ALGORITHM = "HmacSHA512";
+    private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
+	"AES/CBC/PKCS5Padding";
     private static Cryptography s_instance = null;
 
     public byte[] etm(byte data[])
@@ -68,13 +71,13 @@ public class Cryptography
 	    Mac mac = null;
 	    byte iv[] = new byte[16];
 
-	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
 	    cipher.init(Cipher.ENCRYPT_MODE,
 			m_encryptionKey,
 			new IvParameterSpec(iv));
 	    bytes = cipher.doFinal(data);
-	    mac = Mac.getInstance("HmacSHA512");
+	    mac = Mac.getInstance(MAC_ALGORITHM);
 	    mac.init(m_macKey);
 	    bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
 	}
@@ -91,7 +94,7 @@ public class Cryptography
 	return bytes;
     }
 
-    public byte[] hash(byte data[])
+    public byte[] hmac(byte data[])
     {
 	if(m_macKey == null)
 	    return null;
@@ -102,7 +105,7 @@ public class Cryptography
 	{
 	    Mac mac = null;
 
-	    mac = Mac.getInstance("HmacSHA512");
+	    mac = Mac.getInstance(MAC_ALGORITHM);
 	    mac.init(m_macKey);
 	    bytes = mac.doFinal(data);
 	}
@@ -126,7 +129,7 @@ public class Cryptography
 	{
 	    Cipher cipher = null;
 
-	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    cipher.init(Cipher.DECRYPT_MODE, m_encryptionKey);
 	}
 	catch(InvalidKeyException |
