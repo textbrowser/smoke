@@ -53,6 +53,11 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null)
 	    return null;
 
+	SQLiteDatabase db = getReadableDatabase();
+
+	if(db == null)
+	    return null;
+
 	ArrayList<NeighborElement> arrayList =
 	    new ArrayList<NeighborElement> ();
 
