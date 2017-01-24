@@ -117,10 +117,24 @@ public class Cryptography
 
     public byte[] mtd(byte data[])
     {
-	if(data == null)
+	if(data == null || m_encryptionKey == null || m_macKey == null)
 	    return null;
 
 	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+
+	    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	    cipher.init(Cipher.DECRYPT_MODE, m_encryptionKey);
+	}
+	catch(InvalidKeyException |
+	      NoSuchAlgorithmException |
+	      NoSuchPaddingException exception)
+	{
+	    bytes = null;
+	}
 
 	return bytes;
     }
