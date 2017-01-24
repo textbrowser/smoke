@@ -134,15 +134,11 @@ public class Settings extends AppCompatActivity
 
     private void populateNeighbors()
     {
-	ArrayList<String> array = new ArrayList<String> ();
+	ArrayList<NeighborElement> arrayList =
+	    new ArrayList<NeighborElement> ();
 	GridView gridView = (GridView) findViewById(R.id.neighbors);
 
-	gridView.setNumColumns(10);
-
-	for(int i = 0; i < 25; i++)
-	    array.add(i + "");
-
-	gridView.setAdapter(new NeighborsAdapter(array, this));
+	gridView.setAdapter(new NeighborsAdapter(arrayList, this));
     }
 
     private void prepareListeners()
@@ -494,10 +490,10 @@ public class Settings extends AppCompatActivity
 
         spinner1.setEnabled(isAuthenticated);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 
-        spinner1.setAdapter(adapter);
+        spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
 	    "1000", "2500", "5000", "7500", "10000", "12500",
@@ -505,30 +501,30 @@ public class Settings extends AppCompatActivity
 	    "40000", "45000", "50000", "55000", "60000", "65000",
 	    "70000", "100000"
 	};
-	adapter = new ArrayAdapter<>
+	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 
-	int index = adapter.getPosition
+	int index = arrayAdapter.getPosition
 	    (m_databaseHelper.readSetting(null, "iterationCount"));
 
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
-	spinner1.setAdapter(adapter);
+	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
 	    "RSA"
 	};
-	adapter = new ArrayAdapter<>
+	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
-	spinner1.setAdapter(adapter);
+	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
 	    "DSA", "RSA"
 	};
-	adapter = new ArrayAdapter<>
+	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
-	spinner1.setAdapter(adapter);
+	spinner1.setAdapter(arrayAdapter);
 
         final RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);

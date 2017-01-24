@@ -48,6 +48,17 @@ public class Database extends SQLiteOpenHelper
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    public ArrayList<NeighborElement> readNeighbors(Cryptography cryptography)
+    {
+	if(cryptography == null)
+	    return null;
+
+	ArrayList<NeighborElement> arrayList =
+	    new ArrayList<NeighborElement> ();
+
+	return arrayList;
+    }
+
     public String readSetting(Cryptography cryptography, String name)
     {
 	SQLiteDatabase db = getReadableDatabase();
@@ -113,49 +124,49 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    ArrayList<String> array = new ArrayList<String> ();
+	    ArrayList<String> arrayList = new ArrayList<String> ();
 	    byte bytes[] = null;
 
-	    array.add("ip_version");
-	    array.add("local_ip_address");
-	    array.add("local_ip_address_digest");
-	    array.add("local_port");
-	    array.add("local_port_digest");
-	    array.add("remote_certificate");
-	    array.add("remote_ip_address");
-	    array.add("remote_ip_address_digest");
-	    array.add("remote_port");
-            array.add("remote_port_digest");
-            array.add("remote_scope_id");
-            array.add("session_cipher");
-            array.add("status");
-            array.add("status_control");
-            array.add("transport");
-            array.add("transport_digest");
-            array.add("uptime");
-            array.add("user_defined_digest");
+	    arrayList.add("ip_version");
+	    arrayList.add("local_ip_address");
+	    arrayList.add("local_ip_address_digest");
+	    arrayList.add("local_port");
+	    arrayList.add("local_port_digest");
+	    arrayList.add("remote_certificate");
+	    arrayList.add("remote_ip_address");
+	    arrayList.add("remote_ip_address_digest");
+	    arrayList.add("remote_port");
+            arrayList.add("remote_port_digest");
+            arrayList.add("remote_scope_id");
+            arrayList.add("session_cipher");
+            arrayList.add("status");
+            arrayList.add("status_control");
+            arrayList.add("transport");
+            arrayList.add("transport_digest");
+            arrayList.add("uptime");
+            arrayList.add("user_defined_digest");
 
-	    for(int i = 0; i < array.size(); i++)
+	    for(int i = 0; i < arrayList.size(); i++)
 	    {
-		if(array.get(i).equals("ip_version"))
+		if(arrayList.get(i).equals("ip_version"))
 		    bytes = cryptography.etm(version.getBytes());
-		else if(array.get(i).equals("local_ip_address_digest"))
+		else if(arrayList.get(i).equals("local_ip_address_digest"))
 		    bytes = cryptography.hash("".getBytes());
-		else if(array.get(i).equals("remote_ip_address"))
+		else if(arrayList.get(i).equals("remote_ip_address"))
 		    bytes = cryptography.etm(remoteIpAddress.getBytes());
-		else if(array.get(i).equals("remote_ip_address_digest"))
+		else if(arrayList.get(i).equals("remote_ip_address_digest"))
 		    bytes = cryptography.hash(remoteIpAddress.getBytes());
-		else if(array.get(i).equals("remote_port"))
+		else if(arrayList.get(i).equals("remote_port"))
 		    bytes = cryptography.etm(remoteIpPort.getBytes());
-		else if(array.get(i).equals("remote_port_digest"))
+		else if(arrayList.get(i).equals("remote_port_digest"))
 		    bytes = cryptography.hash(remoteIpPort.getBytes());
-		else if(array.get(i).equals("remote_scope_id"))
+		else if(arrayList.get(i).equals("remote_scope_id"))
 		    bytes = cryptography.etm(remoteIpScopeId.getBytes());
-		else if(array.get(i).equals("transport"))
+		else if(arrayList.get(i).equals("transport"))
 		    bytes = cryptography.etm(transport.getBytes());
-		else if(array.get(i).equals("transport_digest"))
+		else if(arrayList.get(i).equals("transport_digest"))
 		    bytes = cryptography.hash(transport.getBytes());
-		else if(array.get(i).equals("user_defined_digest"))
+		else if(arrayList.get(i).equals("user_defined_digest"))
 		    bytes = cryptography.hash("true".getBytes());
 		else
 		    bytes = cryptography.etm("".getBytes());
@@ -163,13 +174,13 @@ public class Database extends SQLiteOpenHelper
 		if(bytes == null)
 		{
 		    writeLog("Database::writeNeighbor(): error with " +
-			     array.get(i) + " field.");
+			     arrayList.get(i) + " field.");
 		    throw new Exception();
 		}
 
 		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-		values.put(array.get(i), str);
+		values.put(arrayList.get(i), str);
 	    }
 	}
 	catch(Exception exception)
