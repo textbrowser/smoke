@@ -29,4 +29,18 @@ package org.purple.smoke;
 
 public class NeighborElement
 {
+    public String m_ipVersion;
+    public String m_localIpAddress;
+    public String m_localPort;
+    public String m_remoteCertificate;
+    public String m_remoteIpAddress;
+    public String m_remotePort;
+    public String m_remoteScopeId;
+    public String m_sessionCipher;
+    public String m_status;
+    public String m_statusControl;
+    public String m_digest;
+    public String m_uptime;
+    public String m_userDefined;
+    public int m_oid;
 }
