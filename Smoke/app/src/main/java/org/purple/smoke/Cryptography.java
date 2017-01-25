@@ -79,6 +79,10 @@ public class Cryptography
 
     public byte[] etm(byte data[])
     {
+	/*
+	** Encrypt-then-MAC.
+	*/
+
 	if(data == null || m_encryptionKey == null || m_macKey == null)
 	    return null;
 
@@ -136,14 +140,22 @@ public class Cryptography
 
     public byte[] mtd(byte data[])
     {
+	/*
+	** MAC-then-decrypt.
+	*/
+
 	if(data == null || m_encryptionKey == null || m_macKey == null)
 	    return null;
 
 	try
 	{
+	    /*
+	    ** Verify the computed digest with the provided digest.
+	    */
+
 	    Mac mac = null;
-	    byte digest1[] = null;
-	    byte digest2[] = null;
+	    byte digest1[] = null; // Provided Digest
+	    byte digest2[] = null; // Computed Digest
 
 	    digest1 = Arrays.copyOfRange
 		(data, data.length - 512 / 8, data.length);
