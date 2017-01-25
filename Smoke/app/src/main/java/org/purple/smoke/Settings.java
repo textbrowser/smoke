@@ -135,10 +135,11 @@ public class Settings extends AppCompatActivity
     private void populateNeighbors()
     {
 	ArrayList<NeighborElement> arrayList =
-	    new ArrayList<NeighborElement> ();
+	    m_databaseHelper.readNeighbors(s_cryptography);
 	GridView gridView = (GridView) findViewById(R.id.neighbors);
 
-	gridView.setAdapter(new NeighborsAdapter(arrayList, this));
+	gridView.setNumColumns(1);
+	gridView.setAdapter(new NeighborsAdapter(arrayList, Settings.this));
     }
 
     private void prepareListeners()

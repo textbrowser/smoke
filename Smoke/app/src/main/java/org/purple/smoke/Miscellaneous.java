@@ -42,7 +42,7 @@ public class Miscellaneous
 
 	System.arraycopy(a, 0, bytes, 0, a.length);
 	System.arraycopy(b, 0, bytes, a.length, b.length);
-	return bytes;
+	return bytes; // a + b
     }
 
     public static void showErrorDialog(Context context, String error)

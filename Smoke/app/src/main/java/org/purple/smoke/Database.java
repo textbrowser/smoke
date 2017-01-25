@@ -58,8 +58,7 @@ public class Database extends SQLiteOpenHelper
 	if(db == null)
 	    return null;
 
-	ArrayList<NeighborElement> arrayList =
-	    new ArrayList<NeighborElement> ();
+	ArrayList<NeighborElement> arrayList = null;
 
 	try
 	{
@@ -77,21 +76,50 @@ public class Database extends SQLiteOpenHelper
 		 "status, " +
 		 "status_control, " +
 		 "transport, " +
-		 "uptime, " +
-		 "user_defined " +
+		 "uptime " +
 		 "FROM neighbors", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
+		arrayList = new ArrayList<NeighborElement> ();
+
 		while(!cursor.isAfterLast())
 		{
 		    NeighborElement neighborElement = new NeighborElement();
 
 		    for(int i = 0; i < cursor.getColumnCount(); i++)
 		    {
+			String str = cursor.getString(i);
+			byte bytes[] = Base64.decode(str.getBytes(),
+						     Base64.DEFAULT);
+
+			bytes = cryptography.mtd(bytes);
+
+			if(bytes == null)
+			{
+			    writeLog("Database::readNeighbors(): " +
+				     "error on column " +
+				     cursor.getColumnName(i) + ".");
+			    break;
+			}
+
+			try
+			{
+			    if(i == 0)
+				neighborElement.m_ipVersion =
+				    new String(bytes, "UTF-8");
+			    else if(i == 1)
+				neighborElement.m_localIpAddress =
+				    new String(bytes, "UTF-8");
+			}
+			catch(Exception exception)
+			{
+			    break;
+			}
 		    }
 
 		    arrayList.add(neighborElement);
+		    cursor.moveToNext();
 		}
 
 		cursor.close();

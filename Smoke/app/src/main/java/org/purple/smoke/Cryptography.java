@@ -37,6 +37,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -51,17 +52,37 @@ public class Cryptography
 {
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
-    private final static SecureRandom s_secureRandom =
-	new SecureRandom(); // Thread-safe.
     private final static String MAC_ALGORITHM = "HmacSHA512";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS5Padding";
     private static Cryptography s_instance = null;
+    private static SecureRandom s_secureRandom = null;
+
+    private static void prepareSecureRandom()
+    {
+	if(s_secureRandom != null)
+	    return;
+
+	try
+	{
+	    /*
+	    ** Thread-safe?
+	    */
+
+	    s_secureRandom = SecureRandom.getInstance("SHA1PRNG");
+	}
+	catch(Exception exception)
+	{
+	    s_secureRandom = new SecureRandom(); // Thread-safe?
+	}
+    }
 
     public byte[] etm(byte data[])
     {
 	if(data == null || m_encryptionKey == null || m_macKey == null)
 	    return null;
+
+	prepareSecureRandom();
 
 	byte bytes[] = null;
 
@@ -79,14 +100,10 @@ public class Cryptography
 	    bytes = cipher.doFinal(data);
 	    mac = Mac.getInstance(MAC_ALGORITHM);
 	    mac.init(m_macKey);
+	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	    bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
 	}
-	catch(BadPaddingException |
-	      IllegalBlockSizeException |
-	      InvalidAlgorithmParameterException |
-	      InvalidKeyException |
-	      NoSuchAlgorithmException |
-	      NoSuchPaddingException exception)
+	catch(Exception exception)
 	{
 	    bytes = null;
 	}
@@ -109,8 +126,7 @@ public class Cryptography
 	    mac.init(m_macKey);
 	    bytes = mac.doFinal(data);
 	}
-	catch(InvalidKeyException |
-	      NoSuchAlgorithmException exception)
+	catch(Exception exception)
 	{
 	    bytes = null;
 	}
@@ -123,18 +139,41 @@ public class Cryptography
 	if(data == null || m_encryptionKey == null || m_macKey == null)
 	    return null;
 
+	try
+	{
+	    Mac mac = null;
+	    byte digest1[] = null;
+	    byte digest2[] = null;
+
+	    digest1 = Arrays.copyOfRange
+		(data, data.length - 512 / 8, data.length);
+	    mac = Mac.getInstance(MAC_ALGORITHM);
+	    mac.init(m_macKey);
+	    digest2 = mac.doFinal(Arrays.copyOf(data, data.length - 512 / 8));
+
+	    if(!memcmp(digest1, digest2))
+		return null;
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
 	byte bytes[] = null;
 
 	try
 	{
 	    Cipher cipher = null;
+	    byte iv[] = Arrays.copyOf(data, 16);
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
-	    cipher.init(Cipher.DECRYPT_MODE, m_encryptionKey);
+	    cipher.init(Cipher.DECRYPT_MODE,
+			m_encryptionKey,
+			new IvParameterSpec(iv));
+	    bytes = cipher.doFinal
+		(Arrays.copyOfRange(data, 16, data.length - 512 / 8));
 	}
-	catch(InvalidKeyException |
-	      NoSuchAlgorithmException |
-	      NoSuchPaddingException exception)
+	catch(Exception exception)
 	{
 	    bytes = null;
 	}
@@ -146,6 +185,8 @@ public class Cryptography
 						       int keySize)
 	throws NoSuchAlgorithmException
     {
+	prepareSecureRandom();
+
 	KeyPairGenerator keyPairGenerator = KeyPairGenerator.
 	    getInstance(algorithm);
 
@@ -183,6 +224,8 @@ public class Cryptography
 
     public static String randomBytesAsBase64(int length)
     {
+	prepareSecureRandom();
+
 	byte bytes[] = new byte[length];
 
 	s_secureRandom.nextBytes(bytes);
@@ -205,6 +248,8 @@ public class Cryptography
 
     public static byte[] randomBytes(int length)
     {
+	prepareSecureRandom();
+
 	byte bytes[] = new byte[length];
 
 	s_secureRandom.nextBytes(bytes);
@@ -229,7 +274,7 @@ public class Cryptography
 
 	    bytes = messageDigest.digest();
 	}
-	catch(NoSuchAlgorithmException exception)
+	catch(Exception exception)
 	{
 	}
 

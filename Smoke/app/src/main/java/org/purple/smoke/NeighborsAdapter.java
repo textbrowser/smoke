@@ -36,8 +36,8 @@ import java.util.ArrayList;
 
 public class NeighborsAdapter extends BaseAdapter
 {
-    ArrayList<NeighborElement> m_arrayList;
-    Context m_context;
+    ArrayList<NeighborElement> m_arrayList = null;
+    Context m_context = null;
 
     public NeighborsAdapter(ArrayList<NeighborElement> arrayList,
 			    Context context)
@@ -49,12 +49,24 @@ public class NeighborsAdapter extends BaseAdapter
     @Override
     public Object getItem(int position)
     {
-	return null;
+	if(m_arrayList == null)
+	    return "";
+
+	if(position >= 0 && position < m_arrayList.size())
+	{
+	    if(position == 0)
+		return m_arrayList.get(position).m_ipVersion;
+	}
+
+	return "";
     }
 
     @Override
     public int getCount()
     {
+	if(m_arrayList == null)
+	    return 0;
+
 	return m_arrayList.size();
     }
 
@@ -74,6 +86,7 @@ public class NeighborsAdapter extends BaseAdapter
 	else
             textView = (TextView) convertView;
 
+	textView.setText(getItem(position).toString());
         return textView;
     }
 }
