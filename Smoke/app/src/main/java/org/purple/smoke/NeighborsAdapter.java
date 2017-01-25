@@ -56,6 +56,26 @@ public class NeighborsAdapter extends BaseAdapter
 	{
 	    if(position == 0)
 		return m_arrayList.get(position).m_ipVersion;
+	    else if(position == 1)
+		return m_arrayList.get(position).m_localIpAddress;
+	    else if(position == 2)
+		return m_arrayList.get(position).m_localPort;
+	    else if(position == 3)
+		return m_arrayList.get(position).m_remoteCertificate;
+	    else if(position == 4)
+		return m_arrayList.get(position).m_remoteIpAddress;
+	    else if(position == 5)
+		return m_arrayList.get(position).m_remoteScopeId;
+	    else if(position == 6)
+		return m_arrayList.get(position).m_sessionCipher;
+	    else if(position == 7)
+		return m_arrayList.get(position).m_status;
+	    else if(position == 8)
+		return m_arrayList.get(position).m_statusControl;
+	    else if(position == 9)
+		return m_arrayList.get(position).m_transport;
+	    else if(position == 10)
+		return m_arrayList.get(position).m_uptime;
 	}
 
 	return "";

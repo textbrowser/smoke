@@ -39,9 +39,8 @@ public class NeighborElement
     public String m_sessionCipher = "";
     public String m_status = "";
     public String m_statusControl = "";
-    public String m_digest = "";
+    public String m_transport = "";
     public String m_uptime = "";
-    public String m_userDefined = "";
     public int m_oid = -1;
 
     public NeighborElement()
