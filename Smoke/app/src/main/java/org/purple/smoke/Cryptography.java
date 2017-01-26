@@ -58,7 +58,7 @@ public class Cryptography
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
 
-    private static void prepareSecureRandom()
+    private static synchronized void prepareSecureRandom()
     {
 	if(s_secureRandom != null)
 	    return;

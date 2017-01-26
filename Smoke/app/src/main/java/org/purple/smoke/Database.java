@@ -76,7 +76,8 @@ public class Database extends SQLiteOpenHelper
 		 "status, " +
 		 "status_control, " +
 		 "transport, " +
-		 "uptime " +
+		 "uptime, " +
+		 "OID " +
 		 "FROM neighbors", null);
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -156,6 +157,9 @@ public class Database extends SQLiteOpenHelper
 			    case 11:
 				neighborElement.m_uptime =
 				    new String(bytes, "UTF-8");
+				break;
+			    case 12:
+				neighborElement.m_oid = cursor.getInt(i);
 				break;
 			    }
 			}

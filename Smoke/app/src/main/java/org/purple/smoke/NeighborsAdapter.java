@@ -80,6 +80,8 @@ public class NeighborsAdapter extends BaseAdapter
 		return m_arrayList.get(position).m_transport;
 	    case 11:
 		return m_arrayList.get(position).m_uptime;
+	    case 12:
+		return m_arrayList.get(position).m_oid;
 	    }
 	}
 
