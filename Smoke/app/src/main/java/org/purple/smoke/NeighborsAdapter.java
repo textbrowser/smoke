@@ -32,12 +32,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import java.lang.Math;
 import java.util.ArrayList;
 
 public class NeighborsAdapter extends BaseAdapter
 {
-    ArrayList<NeighborElement> m_arrayList = null;
-    Context m_context = null;
+    private ArrayList<NeighborElement> m_arrayList = null;
+    private Context m_context = null;
+    public static final int NUMBER_OF_COLUMNS = 12;
 
     public NeighborsAdapter(ArrayList<NeighborElement> arrayList,
 			    Context context)
@@ -52,36 +54,36 @@ public class NeighborsAdapter extends BaseAdapter
 	if(m_arrayList == null)
 	    return "";
 
-	if(position >= 0 && position < m_arrayList.size())
+	if(position >= 0 && position < getCount())
 	{
+	    int index = (int) Math.floor(position / NUMBER_OF_COLUMNS);
+
 	    switch(position)
 	    {
 	    case 0:
-		return m_arrayList.get(position).m_ipVersion;
-	    case 1:
-		return m_arrayList.get(position).m_localIpAddress;
-	    case 2:
-		return m_arrayList.get(position).m_localPort;
-	    case 3:
-		return m_arrayList.get(position).m_remoteCertificate;
-	    case 4:
-		return m_arrayList.get(position).m_remoteIpAddress;
-	    case 5:
-		return m_arrayList.get(position).m_remotePort;
-	    case 6:
-		return m_arrayList.get(position).m_remoteScopeId;
-	    case 7:
-		return m_arrayList.get(position).m_sessionCipher;
-	    case 8:
-		return m_arrayList.get(position).m_status;
-	    case 9:
-		return m_arrayList.get(position).m_statusControl;
-	    case 10:
-		return m_arrayList.get(position).m_transport;
-	    case 11:
-		return m_arrayList.get(position).m_uptime;
-	    case 12:
-		return m_arrayList.get(position).m_oid;
+                return m_arrayList.get(index).m_statusControl;
+            case 1:
+                return m_arrayList.get(index).m_status;
+            case 2:
+                return m_arrayList.get(index).m_remoteIpAddress;
+            case 3:
+                return m_arrayList.get(index).m_remotePort;
+            case 4:
+                return m_arrayList.get(index).m_remoteScopeId;
+            case 5:
+                return m_arrayList.get(index).m_localIpAddress;
+            case 6:
+                return m_arrayList.get(index).m_localPort;
+            case 7:
+                return m_arrayList.get(index).m_ipVersion;
+            case 8:
+                return m_arrayList.get(index).m_transport;
+            case 9:
+                return m_arrayList.get(index).m_sessionCipher;
+            case 10:
+                return m_arrayList.get(index).m_uptime;
+            case 11:
+                return m_arrayList.get(index).m_oid + "";
 	    }
 	}
 
@@ -94,13 +96,13 @@ public class NeighborsAdapter extends BaseAdapter
 	if(m_arrayList == null)
 	    return 0;
 
-	return m_arrayList.size();
+	return NUMBER_OF_COLUMNS * m_arrayList.size();
     }
 
     @Override
     public long getItemId(int position)
     {
-	return 0;
+	return position;
     }
 
     @Override

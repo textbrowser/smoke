@@ -112,63 +112,46 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			}
 
-			try
+			switch(i)
 			{
-			    switch(i)
-			    {
-			    case 0:
-				neighborElement.m_ipVersion =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 1:
-				neighborElement.m_localIpAddress =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 2:
-				neighborElement.m_localPort =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 3:
-				neighborElement.m_remoteCertificate =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 4:
-				neighborElement.m_remoteIpAddress =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 5:
-				neighborElement.m_remotePort =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 6:
-				neighborElement.m_remoteScopeId =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 7:
-				neighborElement.m_sessionCipher =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 8:
-				neighborElement.m_status =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 9:
-				neighborElement.m_statusControl =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 10:
-				neighborElement.m_transport =
-				    new String(bytes, "UTF-8");
-				break;
-			    case 11:
-				neighborElement.m_uptime =
-				    new String(bytes, "UTF-8");
-				break;
-			    }
-			}
-			catch(Exception exception)
-			{
-			    error = true;
+			case 0:
+			    neighborElement.m_ipVersion = new String(bytes);
+			    break;
+			case 1:
+			    neighborElement.m_localIpAddress =
+				new String(bytes);
+			    break;
+			case 2:
+			    neighborElement.m_localPort = new String(bytes);
+			    break;
+			case 3:
+			    neighborElement.m_remoteCertificate =
+				new String(bytes);
+			    break;
+			case 4:
+			    neighborElement.m_remoteIpAddress =
+				new String(bytes);
+			    break;
+			case 5:
+			    neighborElement.m_remotePort = new String(bytes);
+			    break;
+			case 6:
+			    neighborElement.m_remoteScopeId = new String(bytes);
+			    break;
+			case 7:
+			    neighborElement.m_sessionCipher = new String(bytes);
+			    break;
+			case 8:
+			    neighborElement.m_status = new String(bytes);
+			    break;
+			case 9:
+			    neighborElement.m_statusControl = new String(bytes);
+			    break;
+			case 10:
+			    neighborElement.m_transport = new String(bytes);
+			    break;
+			case 11:
+			    neighborElement.m_uptime = new String(bytes);
 			    break;
 			}
 		    }

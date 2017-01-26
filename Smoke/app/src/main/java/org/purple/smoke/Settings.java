@@ -138,7 +138,7 @@ public class Settings extends AppCompatActivity
 	    m_databaseHelper.readNeighbors(s_cryptography);
 	GridView gridView = (GridView) findViewById(R.id.neighbors);
 
-	gridView.setNumColumns(1);
+	gridView.setNumColumns(NeighborsAdapter.NUMBER_OF_COLUMNS);
 	gridView.setAdapter(new NeighborsAdapter(arrayList, Settings.this));
     }
 
