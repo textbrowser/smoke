@@ -86,6 +86,7 @@ public class Database extends SQLiteOpenHelper
 		while(!cursor.isAfterLast())
 		{
 		    NeighborElement neighborElement = new NeighborElement();
+		    boolean error = false;
 
 		    for(int i = 0; i < cursor.getColumnCount(); i++)
 		    {
@@ -97,6 +98,7 @@ public class Database extends SQLiteOpenHelper
 
 			if(bytes == null)
 			{
+			    error = true;
 			    writeLog("Database::readNeighbors(): " +
 				     "error on column " +
 				     cursor.getColumnName(i) + ".");
@@ -111,14 +113,23 @@ public class Database extends SQLiteOpenHelper
 			    else if(i == 1)
 				neighborElement.m_localIpAddress =
 				    new String(bytes, "UTF-8");
+			    else if(i == 2)
+				neighborElement.m_localPort =
+				    new String(bytes, "UTF-8");
+			    else if(i == 3)
+				neighborElement.m_remoteCertificate =
+				    new String(bytes, "UTF-8");
 			}
 			catch(Exception exception)
 			{
+			    error = true;
 			    break;
 			}
 		    }
 
-		    arrayList.add(neighborElement);
+		    if(!error)
+			arrayList.add(neighborElement);
+
 		    cursor.moveToNext();
 		}
 
