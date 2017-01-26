@@ -91,6 +91,12 @@ public class Database extends SQLiteOpenHelper
 
 		    for(int i = 0; i < cursor.getColumnCount(); i++)
 		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    neighborElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
 			String str = cursor.getString(i);
 			byte bytes[] = Base64.decode(str.getBytes(),
 						     Base64.DEFAULT);
@@ -157,9 +163,6 @@ public class Database extends SQLiteOpenHelper
 			    case 11:
 				neighborElement.m_uptime =
 				    new String(bytes, "UTF-8");
-				break;
-			    case 12:
-				neighborElement.m_oid = cursor.getInt(i);
 				break;
 			    }
 			}
