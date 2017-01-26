@@ -47,12 +47,12 @@
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
 
-                <GridView
-                    android:layout_height="wrap_content"
-                    android:id="@+id/neighbors"
-                    android:scrollbars="horizontal|vertical"
-                    android:nestedScrollingEnabled="true"
-                    android:layout_width="320dp" />
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/neighbors">
+
+                </TableLayout>
 
                 <LinearLayout
                     android:orientation="horizontal"

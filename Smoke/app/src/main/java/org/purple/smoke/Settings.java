@@ -40,7 +40,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -136,10 +135,6 @@ public class Settings extends AppCompatActivity
     {
 	ArrayList<NeighborElement> arrayList =
 	    m_databaseHelper.readNeighbors(s_cryptography);
-	GridView gridView = (GridView) findViewById(R.id.neighbors);
-
-	gridView.setNumColumns(NeighborsAdapter.NUMBER_OF_COLUMNS);
-	gridView.setAdapter(new NeighborsAdapter(arrayList, Settings.this));
     }
 
     private void prepareListeners()
@@ -468,13 +463,6 @@ public class Settings extends AppCompatActivity
         button1.setEnabled(isAuthenticated);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
         button1.setEnabled(isAuthenticated);
-
-	GridView gridView = (GridView) findViewById(R.id.neighbors);
-	ViewGroup.LayoutParams layoutParams = gridView.getLayoutParams();
-
-	layoutParams.height = 250; // Pixels.
-	gridView.setLayoutParams(layoutParams);
-	gridView.setScrollbarFadingEnabled(false);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
