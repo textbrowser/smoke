@@ -54,28 +54,31 @@ public class NeighborsAdapter extends BaseAdapter
 
 	if(position >= 0 && position < m_arrayList.size())
 	{
-	    if(position == 0)
+	    switch(position)
+	    {
+	    case 0:
 		return m_arrayList.get(position).m_ipVersion;
-	    else if(position == 1)
+	    case 1:
 		return m_arrayList.get(position).m_localIpAddress;
-	    else if(position == 2)
+	    case 2:
 		return m_arrayList.get(position).m_localPort;
-	    else if(position == 3)
+	    case 3:
 		return m_arrayList.get(position).m_remoteCertificate;
-	    else if(position == 4)
+	    case 4:
 		return m_arrayList.get(position).m_remoteIpAddress;
-	    else if(position == 5)
+	    case 5:
 		return m_arrayList.get(position).m_remoteScopeId;
-	    else if(position == 6)
+	    case 6:
 		return m_arrayList.get(position).m_sessionCipher;
-	    else if(position == 7)
+	    case 7:
 		return m_arrayList.get(position).m_status;
-	    else if(position == 8)
+	    case 8:
 		return m_arrayList.get(position).m_statusControl;
-	    else if(position == 9)
+	    case 9:
 		return m_arrayList.get(position).m_transport;
-	    else if(position == 10)
+	    case 10:
 		return m_arrayList.get(position).m_uptime;
+	    }
 	}
 
 	return "";

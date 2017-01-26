@@ -107,18 +107,25 @@ public class Database extends SQLiteOpenHelper
 
 			try
 			{
-			    if(i == 0)
+			    switch(i)
+			    {
+			    case 0:
 				neighborElement.m_ipVersion =
 				    new String(bytes, "UTF-8");
-			    else if(i == 1)
+				break;
+			    case 1:
 				neighborElement.m_localIpAddress =
 				    new String(bytes, "UTF-8");
-			    else if(i == 2)
+				break;
+			    case 2:
 				neighborElement.m_localPort =
 				    new String(bytes, "UTF-8");
-			    else if(i == 3)
+				break;
+			    case 3:
 				neighborElement.m_remoteCertificate =
 				    new String(bytes, "UTF-8");
+				break;
+			    }
 			}
 			catch(Exception exception)
 			{
