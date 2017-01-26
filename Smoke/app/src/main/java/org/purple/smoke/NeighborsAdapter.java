@@ -67,16 +67,18 @@ public class NeighborsAdapter extends BaseAdapter
 	    case 4:
 		return m_arrayList.get(position).m_remoteIpAddress;
 	    case 5:
-		return m_arrayList.get(position).m_remoteScopeId;
+		return m_arrayList.get(position).m_remotePort;
 	    case 6:
-		return m_arrayList.get(position).m_sessionCipher;
+		return m_arrayList.get(position).m_remoteScopeId;
 	    case 7:
-		return m_arrayList.get(position).m_status;
+		return m_arrayList.get(position).m_sessionCipher;
 	    case 8:
-		return m_arrayList.get(position).m_statusControl;
+		return m_arrayList.get(position).m_status;
 	    case 9:
-		return m_arrayList.get(position).m_transport;
+		return m_arrayList.get(position).m_statusControl;
 	    case 10:
+		return m_arrayList.get(position).m_transport;
+	    case 11:
 		return m_arrayList.get(position).m_uptime;
 	    }
 	}

@@ -125,6 +125,38 @@ public class Database extends SQLiteOpenHelper
 				neighborElement.m_remoteCertificate =
 				    new String(bytes, "UTF-8");
 				break;
+			    case 4:
+				neighborElement.m_remoteIpAddress =
+				    new String(bytes, "UTF-8");
+				break;
+			    case 5:
+				neighborElement.m_remotePort =
+				    new String(bytes, "UTF-8");
+				break;
+			    case 6:
+				neighborElement.m_remoteScopeId =
+				    new String(bytes, "UTF-8");
+				break;
+			    case 7:
+				neighborElement.m_sessionCipher =
+				    new String(bytes, "UTF-8");
+				break;
+			    case 8:
+				neighborElement.m_status =
+				    new String(bytes, "UTF-8");
+				break;
+			    case 9:
+				neighborElement.m_statusControl =
+				    new String(bytes, "UTF-8");
+				break;
+			    case 10:
+				neighborElement.m_transport =
+				    new String(bytes, "UTF-8");
+				break;
+			    case 11:
+				neighborElement.m_uptime =
+				    new String(bytes, "UTF-8");
+				break;
 			    }
 			}
 			catch(Exception exception)
