@@ -162,6 +162,7 @@ public class Settings extends AppCompatActivity
 		     android.R.layout.simple_spinner_item,
 		     array);
 		spinner.setAdapter(arrayAdapter);
+		spinner.setId(arrayList.get(i).m_oid);
 
 		TextView textView = new TextView(Settings.this);
 
