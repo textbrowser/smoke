@@ -497,7 +497,7 @@ public class Database extends SQLiteOpenHelper
 
 	ContentValues values = new ContentValues();
 
-	values.put("event", event);
+	values.put("event", event.trim());
 
 	try
 	{
