@@ -22,3 +22,4 @@ Remaining Items
 9.     Kernel.
 10.    Virtual keyboard.
 11.    Spinner objects in the neighbors table bleed.
+12.    Determine gradle's version in the make files.
