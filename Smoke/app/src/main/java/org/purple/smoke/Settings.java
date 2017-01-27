@@ -31,6 +31,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -165,6 +166,12 @@ public class Settings extends AppCompatActivity
 		spinner.setId(arrayList.get(i).m_oid);
 
 		TextView textView = new TextView(Settings.this);
+
+		if(arrayList.get(i).m_status.equals("connected"))
+		    textView.setBackgroundColor
+			(Color.parseColor("lightgreen"));
+		else
+		    textView.setBackgroundColor(Color.rgb(240, 128, 128));
 
 		textView.setText(arrayList.get(i).m_remoteIpAddress + ":" +
 				 arrayList.get(i).m_remotePort);
