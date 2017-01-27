@@ -12,6 +12,9 @@ all:
 clean:
 	$(MAKE) -f $(MAKEFILE) clean
 
+clear-smoke:
+	$(MAKE) -f $(MAKEFILE) clear-smoke
+
 distclean:
 	$(MAKE) -f $(MAKEFILE) distclean
 
@@ -38,3 +41,6 @@ purge:
 
 remove-database:
 	$(MAKE) -f $(MAKEFILE) remove-database
+
+stop-smoke:
+	$(MAKE) -f $(MAKEFILE) stop-smoke

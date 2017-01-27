@@ -11,6 +11,9 @@ all:
 clean:
 	$(GRADLE) --build-file Smoke/build.gradle clean
 
+clear-smoke:
+	$(ADB) shell pm clear org.purple.smoke
+
 distclean: clean kill-adb-server kill-gradle-daemon
 	rm -f smoke.db
 
@@ -43,3 +46,6 @@ purge:
 remove-database:
 	$(ADB) shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db
 	$(ADB) shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db-journal
+
+stop-smoke:
+	$(ADB) shell am force-stop org.purple.smoke
