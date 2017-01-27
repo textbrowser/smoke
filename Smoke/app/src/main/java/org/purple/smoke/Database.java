@@ -522,7 +522,7 @@ public class Database extends SQLiteOpenHelper
 
 	String a = name.trim();
 	String b = name.trim();
-	String c = value.trim();
+	String c = value; // Do not trim.
 
 	if(cryptography != null)
 	{

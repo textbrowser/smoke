@@ -153,7 +153,8 @@ public class Settings extends AppCompatActivity
 		Spinner spinner = new Spinner(Settings.this);
 		String array[] = new String[]
 		    {
-			"Connect", "Delete", "Disconnect"
+			"Connect", "Delete", "Disconnect",
+			"Reset SSL/TLS Credentials"
 		    };
 
 		arrayAdapter = new ArrayAdapter<>
