@@ -34,4 +34,6 @@
     <string name="authenticate_exit">Exit</string>
     <string name="chat_exit">Exit</string>
     <string name="settings_exit">Exit</string>
+    <string name="remote">Remote</string>
+    <string name="control">Control</string>
 </resources>

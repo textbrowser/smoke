@@ -47,11 +47,31 @@
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
 
-                <android.support.v4.widget.NestedScrollView
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:text="@string/control"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/neighbors_column_1"
+                        android:layout_weight="0.31" />
+
+                    <TextView
+                        android:text="@string/remote"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView9"
+                        android:layout_weight="0.31" />
+                </LinearLayout>
+
+                <android.support.v4.widget.NestedScrollView
                     android:layout_height="100dp"
-                    android:layout_marginEnd="10dp"
-                    android:fadeScrollbars="false">
+                    android:fadeScrollbars="false"
+                    android:layout_width="match_parent"
+                    android:layout_marginEnd="10dp">
 
                     <TableLayout
                         android:layout_width="match_parent"
@@ -66,13 +86,6 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
-                    <Button
-                        android:text="@string/delete"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/delete_neighbor"
-                        style="@style/Widget.AppCompat.Button" />
 
                     <Button
                         android:text="@string/refresh_neighbors"

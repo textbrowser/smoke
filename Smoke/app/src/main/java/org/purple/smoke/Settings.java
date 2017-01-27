@@ -115,8 +115,6 @@ public class Settings extends AppCompatActivity
 
 	TextView textView1;
 
-	textView1 = (TextView) findViewById(R.id.delete_neighbor);
-	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.delete_participant);
 	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
@@ -496,8 +494,6 @@ public class Settings extends AppCompatActivity
         Button button1 = (Button) findViewById(R.id.add_neighbor);
 
         button1.setEnabled(isAuthenticated);
-        button1 = (Button) findViewById(R.id.delete_neighbor);
-        button1.setEnabled(isAuthenticated);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
         button1.setEnabled(isAuthenticated);
 
@@ -615,6 +611,8 @@ public class Settings extends AppCompatActivity
 
 	if(spinner1.getAdapter().getCount() > 1)
 	    spinner1.setSelection(1); // RSA
+
+	populateNeighbors();
     }
 
     @Override
