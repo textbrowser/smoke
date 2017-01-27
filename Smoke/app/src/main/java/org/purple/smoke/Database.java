@@ -520,9 +520,9 @@ public class Database extends SQLiteOpenHelper
 	if(db == null)
 	    return;
 
-	String a = name;
-	String b = name;
-	String c = value;
+	String a = name.trim();
+	String b = name.trim();
+	String c = value.trim();
 
 	if(cryptography != null)
 	{
