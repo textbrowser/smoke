@@ -43,6 +43,8 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
@@ -135,6 +137,18 @@ public class Settings extends AppCompatActivity
     {
 	ArrayList<NeighborElement> arrayList =
 	    m_databaseHelper.readNeighbors(s_cryptography);
+	final TableLayout tableLayout = (TableLayout) findViewById
+	    (R.id.neighbors);
+
+	for(int i = 0; i < arrayList.size(); i++)
+	{
+	    TableRow row = new TableRow(this);
+	    TableRow.LayoutParams layoutParams = new
+		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+
+	    row.setLayoutParams(layoutParams);
+	    tableLayout.addView(row, i);
+	}
     }
 
     private void prepareListeners()
