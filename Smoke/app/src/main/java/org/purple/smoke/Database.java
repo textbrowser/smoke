@@ -263,23 +263,26 @@ public class Database extends SQLiteOpenHelper
 	    for(int i = 0; i < arrayList.size(); i++)
 	    {
 		if(arrayList.get(i).equals("ip_version"))
-		    bytes = cryptography.etm(version.getBytes());
+		    bytes = cryptography.etm(version.trim().getBytes());
 		else if(arrayList.get(i).equals("local_ip_address_digest"))
 		    bytes = cryptography.hmac("".getBytes());
+		else if(arrayList.get(i).equals("local_port_digest"))
+		    bytes = cryptography.hmac("".getBytes());
 		else if(arrayList.get(i).equals("remote_ip_address"))
-		    bytes = cryptography.etm(remoteIpAddress.getBytes());
+		    bytes = cryptography.etm(remoteIpAddress.trim().getBytes());
 		else if(arrayList.get(i).equals("remote_ip_address_digest"))
-		    bytes = cryptography.hmac(remoteIpAddress.getBytes());
+		    bytes = cryptography.hmac(remoteIpAddress.trim().
+					      getBytes());
 		else if(arrayList.get(i).equals("remote_port"))
-		    bytes = cryptography.etm(remoteIpPort.getBytes());
+		    bytes = cryptography.etm(remoteIpPort.trim().getBytes());
 		else if(arrayList.get(i).equals("remote_port_digest"))
-		    bytes = cryptography.hmac(remoteIpPort.getBytes());
+		    bytes = cryptography.hmac(remoteIpPort.trim().getBytes());
 		else if(arrayList.get(i).equals("remote_scope_id"))
-		    bytes = cryptography.etm(remoteIpScopeId.getBytes());
+		    bytes = cryptography.etm(remoteIpScopeId.trim().getBytes());
 		else if(arrayList.get(i).equals("transport"))
-		    bytes = cryptography.etm(transport.getBytes());
+		    bytes = cryptography.etm(transport.trim().getBytes());
 		else if(arrayList.get(i).equals("transport_digest"))
-		    bytes = cryptography.hmac(transport.getBytes());
+		    bytes = cryptography.hmac(transport.trim().getBytes());
 		else if(arrayList.get(i).equals("user_defined_digest"))
 		    bytes = cryptography.hmac("true".getBytes());
 		else
