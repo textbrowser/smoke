@@ -152,10 +152,10 @@ public class Settings extends AppCompatActivity
 		ArrayAdapter<String> arrayAdapter = null;
 		Spinner spinner = new Spinner(Settings.this);
 		String array[] = new String[]
-		    {
-			"Connect", "Delete", "Disconnect",
-			"Reset SSL/TLS Credentials"
-		    };
+		{
+		    "Connect", "Delete", "Disconnect",
+		    "Reset SSL/TLS Credentials"
+		};
 
 		arrayAdapter = new ArrayAdapter<>
 		    (Settings.this,
