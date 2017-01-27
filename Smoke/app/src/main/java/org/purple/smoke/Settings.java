@@ -140,15 +140,38 @@ public class Settings extends AppCompatActivity
 	final TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.neighbors);
 
-	for(int i = 0; i < arrayList.size(); i++)
-	{
-	    TableRow row = new TableRow(this);
-	    TableRow.LayoutParams layoutParams = new
-		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+	tableLayout.removeAllViews();
 
-	    row.setLayoutParams(layoutParams);
-	    tableLayout.addView(row, i);
-	}
+	if(arrayList != null)
+	    for(int i = 0; i < arrayList.size(); i++)
+	    {
+		TableRow row = new TableRow(Settings.this);
+		TableRow.LayoutParams layoutParams = new
+		    TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+
+		row.setLayoutParams(layoutParams);
+
+		ArrayAdapter<String> arrayAdapter = null;
+		Spinner spinner = new Spinner(Settings.this);
+		String array[] = new String[]
+		    {
+			"Connect", "Delete", "Disconnect"
+		    };
+
+		arrayAdapter = new ArrayAdapter<>
+		    (Settings.this,
+		     android.R.layout.simple_spinner_item,
+		     array);
+		spinner.setAdapter(arrayAdapter);
+
+		TextView textView = new TextView(Settings.this);
+
+		textView.setText(arrayList.get(i).m_remoteIpAddress + ":" +
+				 arrayList.get(i).m_remotePort);
+		row.addView(spinner);
+		row.addView(textView);
+		tableLayout.addView(row, i);
+	    }
     }
 
     private void prepareListeners()
