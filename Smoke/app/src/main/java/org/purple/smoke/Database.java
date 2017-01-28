@@ -215,6 +215,31 @@ public class Database extends SQLiteOpenHelper
 	    return false;
     }
 
+    public boolean deleteEntry(String oid, String table)
+    {
+	SQLiteDatabase db = getWritableDatabase();
+
+	if(db == null)
+	    return false;
+
+	try
+	{
+	    if(db.delete(table, "WHERE OID = ?", new String[] {oid}) == 0)
+	    {
+		db.close();
+		return false;
+	    }
+	}
+	catch(SQLException exception)
+	{
+	    db.close();
+	    return false;
+	}
+
+	db.close();
+	return true;
+    }
+
     public boolean writeNeighbor(Cryptography cryptography,
 				 String remoteIpAddress,
 				 String remoteIpPort,
@@ -308,7 +333,11 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    db.replace("neighbors", null, values);
+	    if(db.replace("neighbors", null, values) == -1)
+	    {
+		db.close();
+		return false;
+	    }
 	}
 	catch(SQLException exception)
         {
