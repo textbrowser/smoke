@@ -180,6 +180,8 @@ public class Settings extends AppCompatActivity
 			       deleteEntry(String.valueOf(parent.getId()),
 					   "neighbors"))
 				populateNeighbors();
+
+			    parent.setSelection(0);
 			}
 
 			@Override
