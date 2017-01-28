@@ -35,7 +35,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
+import android.util.Patterns;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -281,6 +283,17 @@ public class Database extends SQLiteOpenHelper
             arrayList.add("transport_digest");
             arrayList.add("uptime");
             arrayList.add("user_defined_digest");
+
+	    Matcher matcher = Patterns.IP_ADDRESS.matcher
+		(remoteIpAddress.trim());
+
+	    if(!matcher.matches())
+	    {
+		if(version.toLowerCase().equals("ipv4"))
+		    remoteIpAddress = "0.0.0.0";
+		else
+		    remoteIpAddress = "0:0:0:0:0:ffff:0:0";
+	    }
 
 	    for(int i = 0; i < arrayList.size(); i++)
 	    {
