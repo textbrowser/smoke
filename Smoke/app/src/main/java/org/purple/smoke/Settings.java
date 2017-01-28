@@ -197,7 +197,8 @@ public class Settings extends AppCompatActivity
 		    textView.setBackgroundColor(Color.rgb(240, 128, 128));
 
 		textView.setText(arrayList.get(i).m_remoteIpAddress + ":" +
-				 arrayList.get(i).m_remotePort);
+				 arrayList.get(i).m_remotePort + ":" +
+				 arrayList.get(i).m_transport);
 		row.addView(spinner);
 		row.addView(textView);
 		tableLayout.addView(row, i);
