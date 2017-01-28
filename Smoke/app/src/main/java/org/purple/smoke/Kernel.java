@@ -34,8 +34,8 @@ public class Kernel
 {
     private Hashtable<Integer, Neighbor> m_neighbors = null;
     private Timer m_congestionPurgeTimer = null;
-    private static Kernel s_instance = null;
     private final static int s_congestionPurgeInterval = 15000;
+    private static Kernel s_instance = null;
 
     private Kernel()
     {

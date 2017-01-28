@@ -45,8 +45,9 @@ import javax.crypto.SecretKey;
 
 public class Authenticate extends AppCompatActivity
 {
-    private final Cryptography s_cryptography = Cryptography.getInstance();
-    private final State s_state = State.getInstance();
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
+    private final static State s_state = State.getInstance();
 
     private void prepareListeners()
     {
