@@ -428,6 +428,10 @@ public class Settings extends AppCompatActivity
 					Base64.DEFAULT));
 		    m_databaseHelper.writeSetting
 			(s_cryptography,
+			 "pki_chat_signature_algorithm",
+			 m_signatureAlgorithm);
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
 			 "pki_chat_signature_private_key",
 			 Base64.encodeToString(chatSignatureKeyPair.
 					       getPrivate().

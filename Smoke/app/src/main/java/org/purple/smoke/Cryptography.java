@@ -30,13 +30,19 @@ package org.purple.smoke;
 import android.util.Base64;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -208,6 +214,30 @@ public class Cryptography
 	return keyPairGenerator.generateKeyPair();
     }
 
+    public static KeyPair generatePrivatePublicKeyPair(byte privateBytes[],
+						       byte publicBytes[])
+    {
+	try
+	{
+	    EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
+		(privateBytes);
+	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
+	    KeyFactory generator = KeyFactory.getInstance("RSA");
+	    PrivateKey privateKey = generator.generatePrivate(privateKeySpec);
+	    PublicKey publicKey = generator.generatePublic(publicKeySpec);
+
+	    return new KeyPair(publicKey, privateKey);
+	}
+	catch(Exception exception)
+	{
+	    Database.getInstance().writeLog
+		("Cryptography::generatePrivatePublicKeyPair(): " +
+		 "exception raised.");
+	}
+
+	return null;
+    }
+
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
 						  int iterations)
@@ -305,6 +335,8 @@ public class Cryptography
 
     public void reset()
     {
+	m_chatEncryptionKeyPair = null;
+	m_chatSignatureKeyPair = null;
 	m_encryptionKey = null;
 	m_macKey = null;
     }
@@ -314,9 +346,23 @@ public class Cryptography
 	m_chatEncryptionKeyPair = keyPair;
     }
 
+    public void setChatEncryptionKeyPair(byte privateBytes[],
+					 byte publicBytes[])
+    {
+	m_chatEncryptionKeyPair = generatePrivatePublicKeyPair
+	    (privateBytes, publicBytes);
+    }
+
     public void setChatSignatureKeyPair(KeyPair keyPair)
     {
 	m_chatSignatureKeyPair = keyPair;
+    }
+
+    public void setChatSignatureKeyPair(byte privateBytes[],
+					byte publicBytes[])
+    {
+	m_chatSignatureKeyPair = generatePrivatePublicKeyPair
+	    (privateBytes, publicBytes);
     }
 
     public void setEncryptionKey(SecretKey key)

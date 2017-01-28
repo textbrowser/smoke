@@ -50,6 +50,11 @@ public class Database extends SQLiteOpenHelper
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    private Database()
+    {
+	super(null, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
     public ArrayList<NeighborElement> readNeighbors(Cryptography cryptography)
     {
 	if(cryptography == null)
@@ -192,10 +197,32 @@ public class Database extends SQLiteOpenHelper
 		cursor = db.rawQuery
 		    ("SELECT value FROM settings WHERE name = ?",
 		     new String[] {name});
+	    else
+	    {
+		byte bytes[] = cryptography.hmac(name.getBytes());
+
+		if(bytes != null)
+		    cursor = db.rawQuery
+			("SELECT value FROM settings WHERE name_digest = ?",
+			 new String[] {Base64.encodeToString(bytes,
+							     Base64.DEFAULT)});
+	    }
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		str = cursor.getString(0);
+		if(cryptography == null)
+		    str = cursor.getString(0);
+		else
+		{
+		    byte bytes[] = Base64.decode
+			(cursor.getString(0).getBytes(), Base64.DEFAULT);
+
+		    bytes = cryptography.mtd(bytes);
+
+		    if(bytes != null)
+			str = new String(bytes);
+		}
+
 		cursor.close();
 	    }
 	}
@@ -360,7 +387,7 @@ public class Database extends SQLiteOpenHelper
 
     public static synchronized Database getInstance()
     {
-	return s_instance;
+	return s_instance; // Should never be null.
     }
 
     public static synchronized Database getInstance(Context context)

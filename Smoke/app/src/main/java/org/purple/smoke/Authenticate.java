@@ -124,8 +124,6 @@ public class Authenticate extends AppCompatActivity
 			@Override
 			public void run()
 			{
-			    KeyPair chatEncryptionKeyPair = null;
-			    KeyPair chatSignatureKeyPair = null;
 			    SecretKey encryptionKey = null;
 			    SecretKey macKey = null;
 
@@ -143,13 +141,25 @@ public class Authenticate extends AppCompatActivity
 
 				if(encryptionKey != null && macKey != null)
 				{
-				    s_cryptography.setChatEncryptionKeyPair
-					(chatEncryptionKeyPair);
-				    s_cryptography.setChatSignatureKeyPair
-					(chatSignatureKeyPair);
 				    s_cryptography.setEncryptionKey
 					(encryptionKey);
 				    s_cryptography.setMacKey(macKey);
+
+				    byte privateBytes[] = Base64.decode
+					(Database.getInstance().
+					 readSetting(s_cryptography,
+						     "pki_chat_encryption_" +
+						     "private_key").
+					 getBytes(), Base64.DEFAULT);
+				    byte publicBytes[] = Base64.decode
+					(Database.getInstance().
+					 readSetting(s_cryptography,
+						     "pki_chat_encryption_" +
+						     "public_key").
+					 getBytes(), Base64.DEFAULT);
+
+				    s_cryptography.setChatEncryptionKeyPair
+					(privateBytes, publicBytes);
 				}
 				else
 				{
