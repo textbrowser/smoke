@@ -8,6 +8,5 @@
         android:title="@string/chat"
         app:showAsAction="never" />
     <item android:title="@string/settings_exit"
-        android:id="@+id/exit"
         android:orderInCategory="102" />
 </menu>

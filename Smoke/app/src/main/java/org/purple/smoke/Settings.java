@@ -38,7 +38,6 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -49,7 +48,6 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -59,9 +57,10 @@ import javax.crypto.SecretKey;
 public class Settings extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
     private final static int s_pkiEncryptionKeySize = 3072;
     private final static int s_pkiSignatureKeySize = 3072;
-    private static Cryptography s_cryptography = Cryptography.getInstance();
 
     private void addNeighbor()
     {

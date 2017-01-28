@@ -39,7 +39,7 @@ public class Kernel
 
     private Kernel()
     {
-	m_neighbors = new Hashtable<Integer, Neighbor> ();
+	m_neighbors = new Hashtable<> ();
 	prepareTimers();
     }
 

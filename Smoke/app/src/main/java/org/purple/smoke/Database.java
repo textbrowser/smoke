@@ -89,7 +89,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		arrayList = new ArrayList<NeighborElement> ();
+		arrayList = new ArrayList<> ();
 
 		while(!cursor.isAfterLast())
 		{
@@ -228,6 +228,7 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(SQLException exception)
 	{
+	    str = "";
 	}
 
 	db.close();
@@ -236,12 +237,9 @@ public class Database extends SQLiteOpenHelper
 
     public boolean accountPrepared()
     {
-	if(!readSetting(null, "encryptionSalt").isEmpty() &&
-	   !readSetting(null, "macSalt").isEmpty() &&
-	   !readSetting(null, "saltedPassword").isEmpty())
-	    return true;
-	else
-	    return false;
+	return !readSetting(null, "encryptionSalt").isEmpty() &&
+	    !readSetting(null, "macSalt").isEmpty() &&
+	    !readSetting(null, "saltedPassword").isEmpty();
     }
 
     public boolean deleteEntry(String oid, String table)
@@ -289,7 +287,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    ArrayList<String> arrayList = new ArrayList<String> ();
+	    ArrayList<String> arrayList = new ArrayList<> ();
 	    byte bytes[] = null;
 
 	    arrayList.add("ip_version");
@@ -579,7 +577,7 @@ public class Database extends SQLiteOpenHelper
     public void writeSetting(Cryptography cryptography,
 			     String name,
 			     String value)
-	throws SQLException, SQLiteException
+	throws SQLException
     {
 	SQLiteDatabase db = getWritableDatabase();
 

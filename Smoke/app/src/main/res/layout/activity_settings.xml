@@ -32,8 +32,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fadeScrollbars="false"
-            android:id="@+id/scroll_view">
+            android:fadeScrollbars="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,14 +55,12 @@
                         android:text="@string/control"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/neighbors_column_1"
                         android:layout_weight="0.31" />
 
                     <TextView
                         android:text="@string/remote"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView9"
                         android:layout_weight="0.31" />
                 </LinearLayout>
 
@@ -71,8 +68,7 @@
                     android:layout_height="100dp"
                     android:fadeScrollbars="false"
                     android:layout_width="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:id="@+id/neighbors_scrollview">
+                    android:layout_marginEnd="10dp">
 
                     <TableLayout
                         android:layout_width="match_parent"
@@ -182,14 +178,8 @@
                     android:text="@string/participants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView2"
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
-
-                <GridView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/participants" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -227,7 +217,6 @@
                         android:text="@string/iteration_count"
                         android:layout_width="179dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView3"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -247,7 +236,6 @@
                         android:text="@string/encryption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView5"
                         android:layout_weight="3.52" />
 
                     <Spinner
@@ -259,7 +247,6 @@
                         android:text="@string/signature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView6"
                         android:layout_weight="2.01" />
 
                     <Spinner
