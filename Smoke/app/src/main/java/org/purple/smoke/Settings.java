@@ -39,6 +39,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -164,6 +166,27 @@ public class Settings extends AppCompatActivity
 		     array);
 		spinner.setAdapter(arrayAdapter);
 		spinner.setId(arrayList.get(i).m_oid);
+		spinner.setOnItemSelectedListener
+		    (new OnItemSelectedListener()
+		    {
+			@Override
+			public void onItemSelected(AdapterView<?> parent,
+						   View view,
+						   int position,
+						   long id)
+			{
+			    if(position == 1 && // Delete
+			       m_databaseHelper.
+			       deleteEntry(String.valueOf(parent.getId()),
+					   "neighbors"))
+				populateNeighbors();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent)
+			{
+			}
+		    });
 
 		TextView textView = new TextView(Settings.this);
 
@@ -621,7 +644,8 @@ public class Settings extends AppCompatActivity
 	if(spinner1.getAdapter().getCount() > 1)
 	    spinner1.setSelection(1); // RSA
 
-	populateNeighbors();
+	if(isAuthenticated)
+	    populateNeighbors();
     }
 
     @Override

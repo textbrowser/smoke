@@ -224,11 +224,8 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    if(db.delete(table, "WHERE OID = ?", new String[] {oid}) == 0)
-	    {
-		db.close();
-		return false;
-	    }
+	    db.execSQL
+		("DELETE FROM " + table + " WHERE OID = ?", new String[] {oid});
 	}
 	catch(SQLException exception)
 	{
@@ -503,7 +500,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    db.rawQuery("PRAGMA secure_delete = TRUE", null);
+	    db.execSQL("PRAGMA secure_delete = TRUE");
 	    db.delete("congestion_control", null, null);
 	    db.delete("log", null, null);
 	    db.delete("neighbors", null, null);
