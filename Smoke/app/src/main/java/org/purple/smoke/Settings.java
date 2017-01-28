@@ -58,11 +58,10 @@ import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
-    private Cryptography s_cryptography = Cryptography.getInstance();
     private Database m_databaseHelper = null;
-    private final State s_state = State.getInstance();
-    private final int s_pkiEncryptionKeySize = 3072;
-    private final int s_pkiSignatureKeySize = 3072;
+    private final static int s_pkiEncryptionKeySize = 3072;
+    private final static int s_pkiSignatureKeySize = 3072;
+    private static Cryptography s_cryptography = Cryptography.getInstance();
 
     private void addNeighbor()
     {
@@ -382,10 +381,13 @@ public class Settings extends AppCompatActivity
 			 m_iterationCount);
 
 		    /*
-		    ** Prepare the Cryptography object's
-		    ** private keys.
+		    ** Prepare the Cryptography object's data.
 		    */
 
+		    s_cryptography.setChatEncryptionKeyPair
+			(chatEncryptionKeyPair);
+		    s_cryptography.setChatSignatureKeyPair
+			(chatSignatureKeyPair);
 		    s_cryptography.setEncryptionKey
 			(encryptionKey);
 		    s_cryptography.setMacKey(macKey);

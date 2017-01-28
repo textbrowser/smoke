@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKey;
@@ -122,6 +123,8 @@ public class Authenticate extends AppCompatActivity
 			@Override
 			public void run()
 			{
+			    KeyPair chatEncryptionKeyPair = null;
+			    KeyPair chatSignatureKeyPair = null;
 			    SecretKey encryptionKey = null;
 			    SecretKey macKey = null;
 
@@ -139,6 +142,10 @@ public class Authenticate extends AppCompatActivity
 
 				if(encryptionKey != null && macKey != null)
 				{
+				    s_cryptography.setChatEncryptionKeyPair
+					(chatEncryptionKeyPair);
+				    s_cryptography.setChatSignatureKeyPair
+					(chatSignatureKeyPair);
 				    s_cryptography.setEncryptionKey
 					(encryptionKey);
 				    s_cryptography.setMacKey(macKey);

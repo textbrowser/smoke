@@ -50,6 +50,8 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class Cryptography
 {
+    private KeyPair m_chatEncryptionKeyPair = null;
+    private KeyPair m_chatSignatureKeyPair = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
     private final static String MAC_ALGORITHM = "HmacSHA512";
@@ -305,6 +307,16 @@ public class Cryptography
     {
 	m_encryptionKey = null;
 	m_macKey = null;
+    }
+
+    public void setChatEncryptionKeyPair(KeyPair keyPair)
+    {
+	m_chatEncryptionKeyPair = keyPair;
+    }
+
+    public void setChatSignatureKeyPair(KeyPair keyPair)
+    {
+	m_chatSignatureKeyPair = keyPair;
     }
 
     public void setEncryptionKey(SecretKey key)
