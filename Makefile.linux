@@ -30,7 +30,7 @@ launch-emulator:
 list-files:
 	$(ADB) shell run-as org.purple.smoke ls -l /data/data/org.purple.smoke/databases
 
-load-apk:
+load-apk: all
 	$(ADB) push ./Smoke/app/build/apk/smoke.apk \
 	/data/local/tmp/org.purple.smoke
 	$(ADB) shell pm install -r "/data/local/tmp/org.purple.smoke"
