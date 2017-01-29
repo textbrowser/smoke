@@ -107,6 +107,7 @@ public class Chat extends AppCompatActivity
         }
 	else if(id == R.id.action_exit)
 	{
+	    State.getInstance().setFinished(true);
 	    return true;
 	}
         else if(id == R.id.action_settings)

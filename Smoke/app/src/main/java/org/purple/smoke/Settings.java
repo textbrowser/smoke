@@ -526,7 +526,7 @@ public class Settings extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_settings);
 
@@ -692,6 +692,7 @@ public class Settings extends AppCompatActivity
         }
 	else if(id == R.id.action_exit)
 	{
+	    State.getInstance().setFinished(true);
 	    return true;
 	}
 

@@ -252,7 +252,7 @@ public class Authenticate extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticate);
 	prepareListeners();
 
@@ -292,6 +292,7 @@ public class Authenticate extends AppCompatActivity
         }
 	else if(id == R.id.action_exit)
 	{
+	    State.getInstance().setFinished(true);
 	    return true;
 	}
         else if(id == R.id.action_settings)
