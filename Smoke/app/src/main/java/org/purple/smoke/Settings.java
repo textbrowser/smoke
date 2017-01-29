@@ -275,6 +275,9 @@ public class Settings extends AppCompatActivity
 		final TextView textView2 = (TextView) findViewById
 		    (R.id.password2);
 
+		textView1.setSelectAllOnFocus(true);
+		textView2.setSelectAllOnFocus(true);
+
 		if(textView1.getText().length() < 16 ||
 		   !textView1.getText().toString().
 		   equals(textView2.getText().toString()))
@@ -288,6 +291,7 @@ public class Settings extends AppCompatActivity
 			error = "The provided passwords are not identical.";
 
 		    Miscellaneous.showErrorDialog(Settings.this, error);
+		    textView1.requestFocus();
 		    return;
 		}
 
@@ -619,6 +623,14 @@ public class Settings extends AppCompatActivity
 
 	TextView textView1;
 
+	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
+	textView1.setVisibility
+	    (s_cryptography.chatEncryptionKeyPair() == null ?
+	     View.GONE : View.VISIBLE);
+	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
+	textView1.setVisibility
+	    (s_cryptography.chatSignatureKeyPair() == null ?
+	     View.GONE : View.VISIBLE);
 	textView1 = (TextView) findViewById(R.id.name);
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);

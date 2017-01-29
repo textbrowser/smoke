@@ -305,13 +305,13 @@
                     android:text="@string/chat_encryption_key_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/chat_encryption_key" />
+                    android:id="@+id/chat_encryption_key_data" />
 
                 <TextView
                     android:text="@string/chat_signature_key_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/chat_signature_key" />
+                    android:id="@+id/chat_signature_key_data" />
 
                 <Button
                     android:text="@string/export"

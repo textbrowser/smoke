@@ -64,6 +64,7 @@ public class Authenticate extends AppCompatActivity
 		final TextView textView1 = (TextView)
 		    findViewById(R.id.password);
 
+		textView1.setSelectAllOnFocus(true);
 		encryptionSalt = Base64.decode
 		    (database.readSetting(null, "encryptionSalt").getBytes(),
 		     Base64.DEFAULT);
@@ -80,8 +81,11 @@ public class Authenticate extends AppCompatActivity
 		   memcmp(database.readSetting(null,
 					       "saltedPassword").getBytes(),
 			  Base64.encode(saltedPassword, Base64.DEFAULT)))
+		{
 		    Miscellaneous.showErrorDialog(Authenticate.this,
 						  "Incorrect password.");
+		    textView1.requestFocus();
+		}
 		else
 		{
 		    final ProgressDialog dialog = new ProgressDialog
