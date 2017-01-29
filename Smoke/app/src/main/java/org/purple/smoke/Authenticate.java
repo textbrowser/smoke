@@ -179,6 +179,15 @@ public class Authenticate extends AppCompatActivity
 					 getBytes(), Base64.DEFAULT);
 				    s_cryptography.setChatSignatureKeyPair
 					(algorithm, privateBytes, publicBytes);
+
+				    if(s_cryptography.
+				       chatEncryptionKeyPair() == null ||
+				       s_cryptography.
+				       chatSignatureKeyPair() == null)
+				    {
+					m_error = true;
+					s_cryptography.reset();
+				    }
 				}
 				else
 				{

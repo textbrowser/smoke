@@ -80,6 +80,16 @@ public class Cryptography
 	}
     }
 
+    public KeyPair chatEncryptionKeyPair()
+    {
+	return m_chatEncryptionKeyPair;
+    }
+
+    public KeyPair chatSignatureKeyPair()
+    {
+	return m_chatSignatureKeyPair;
+    }
+
     public byte[] etm(byte data[])
     {
 	/*
