@@ -261,6 +261,7 @@ public class Settings extends AppCompatActivity
 	    {
 		m_databaseHelper.reset();
 		prepareCredentials();
+		populateNeighbors();
 	    }
 	};
 
