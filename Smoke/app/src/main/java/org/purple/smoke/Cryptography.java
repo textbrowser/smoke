@@ -102,6 +102,7 @@ public class Cryptography
 	String str = "";
 
 	str = "Algorithm: " + algorithm + "\n" +
+	    "Fingerprint: " + publicKeyFingerPrint(key) + "\n" +
 	    "Format: " + key.getFormat();
 
 	if(algorithm == "DSA" || algorithm == "RSA")
@@ -131,6 +132,37 @@ public class Cryptography
 	    catch(Exception exception)
 	    {
 	    }
+
+	return str;
+    }
+
+    public String publicKeyFingerPrint(PublicKey publicKey)
+    {
+	String fingerprint =
+	    "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc" +
+	    "83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd4" +
+	    "7417a81a538327af927da3e";
+	String str = "";
+
+	if(publicKey != null)
+	{
+	    byte bytes[] = sha512(publicKey.getEncoded());
+
+	    if(bytes != null)
+		fingerprint = Miscellaneous.byteArrayAsHexString(bytes);
+	}
+
+	try
+	{
+	    for(int i = 0; i < fingerprint.length(); i += 2)
+		if(i < fingerprint.length() - 2)
+		    str += fingerprint.substring(i, i + 2) + ":";
+		else
+		    str += fingerprint.substring(i, i + 2);
+	}
+	catch(Exception exception)
+	{
+	}
 
 	return str;
     }

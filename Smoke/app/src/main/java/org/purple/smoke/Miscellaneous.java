@@ -33,6 +33,19 @@ import android.content.DialogInterface;
 
 public class Miscellaneous
 {
+    public static String byteArrayAsHexString(byte bytes[])
+    {
+	if(bytes == null)
+	    return "";
+
+	String str = "";
+
+	for(int i = 0; i < bytes.length; i++)
+	    str += String.format("%02x", bytes[i]);
+
+	return str;
+    }
+
     public static byte[] joinByteArrays(byte a[], byte b[])
     {
 	if(a == null || b == null)
