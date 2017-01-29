@@ -90,6 +90,14 @@ public class Cryptography
 	return m_chatSignatureKeyPair;
     }
 
+    public String fancyOutput(PublicKey key)
+    {
+	if(key == null)
+	    return "";
+
+	return "";
+    }
+
     public byte[] etm(byte data[])
     {
 	/*
