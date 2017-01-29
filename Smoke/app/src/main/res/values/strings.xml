@@ -32,4 +32,10 @@
     <string name="settings_exit">Exit</string>
     <string name="remote">Remote</string>
     <string name="control">Control</string>
+    <string name="private_data">Private Data</string>
+    <string name="name">Name</string>
+    <string name="name_name">Name</string>
+    <string name="export">Export</string>
+    <string name="chat_signature_key_data">Chat Signature Key Data</string>
+    <string name="chat_encryption_key_data">Chat Encryption Key Data</string>
 </resources>

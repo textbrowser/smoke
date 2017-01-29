@@ -65,7 +65,7 @@
                 </LinearLayout>
 
                 <android.support.v4.widget.NestedScrollView
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:fadeScrollbars="false"
                     android:layout_width="match_parent"
                     android:layout_marginEnd="10dp">
@@ -269,6 +269,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/set_password" />
+
+                <TextView
+                    android:text="@string/private_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:textSize="25sp"
+                    android:textStyle="normal|bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:ems="10"
+                    android:id="@+id/name"
+                    android:hint="@string/name_name"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:text="@string/chat_encryption_key_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/chat_encryption_key" />
+
+                <TextView
+                    android:text="@string/chat_signature_key_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/chat_signature_key" />
+
+                <Button
+                    android:text="@string/export"
+                    android:layout_width="98dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/export" />
 
             </LinearLayout>
         </ScrollView>
