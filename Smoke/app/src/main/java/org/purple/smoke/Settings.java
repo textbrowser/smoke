@@ -101,6 +101,10 @@ public class Settings extends AppCompatActivity
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.export);
+	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.save_name);
+	button1.setEnabled(state);
 
 	RadioButton radioButton1;
 
@@ -116,6 +120,8 @@ public class Settings extends AppCompatActivity
 
 	TextView textView1;
 
+	textView1 = (TextView) findViewById(R.id.name);
+	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 	textView1.setEnabled(state);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
@@ -128,6 +134,24 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
 	textView1.setEnabled(state);
+    }
+
+    private void populateFancyKeyData()
+    {
+	TextView textView1;
+
+	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
+	textView1.setText
+	    ("Chat Encryption Key\n" +
+	     s_cryptography.fancyOutput(s_cryptography.
+					chatEncryptionKeyPair()));
+	textView1.setVisibility(View.VISIBLE);
+	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
+	textView1.setText
+	    ("Chat Signature Key\n" +
+	     s_cryptography.fancyOutput(s_cryptography.
+					chatSignatureKeyPair()));
+	textView1.setVisibility(View.VISIBLE);
     }
 
     private void populateNeighbors()
@@ -261,7 +285,6 @@ public class Settings extends AppCompatActivity
 	    {
 		m_databaseHelper.reset();
 		prepareCredentials();
-		populateNeighbors();
 	    }
 	};
 
@@ -495,6 +518,8 @@ public class Settings extends AppCompatActivity
 			    textView1.requestFocus();
 			    textView1.setText("");
 			    textView2.setText("");
+			    populateFancyKeyData();
+			    populateNeighbors();
 			}
 		    }
 		});
@@ -674,7 +699,10 @@ public class Settings extends AppCompatActivity
 	    spinner1.setSelection(1); // RSA
 
 	if(isAuthenticated)
+	{
+	    populateFancyKeyData();
 	    populateNeighbors();
+	}
     }
 
     @Override

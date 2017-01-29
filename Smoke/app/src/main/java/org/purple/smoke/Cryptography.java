@@ -36,6 +36,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.interfaces.DSAPublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -90,12 +92,47 @@ public class Cryptography
 	return m_chatSignatureKeyPair;
     }
 
-    public String fancyOutput(PublicKey key)
+    public String fancyOutput(KeyPair keyPair)
     {
-	if(key == null)
+	if(keyPair == null || keyPair.getPublic() == null)
 	    return "";
 
-	return "";
+	PublicKey key = keyPair.getPublic();
+	String algorithm = key.getAlgorithm();
+	String str = "";
+
+	str = "Algorithm: " + algorithm + "\n" +
+	    "Format: " + key.getFormat();
+
+	if(algorithm == "DSA" || algorithm == "RSA")
+	    try
+	    {
+		KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+
+		if(algorithm == "DSA")
+		{
+		    DSAPublicKey dsaPublicKey = (DSAPublicKey)
+			keyPair.getPublic();
+
+		    if(dsaPublicKey != null)
+			str += "\n" +
+			    "Size: " + dsaPublicKey.getY().bitLength();
+		}
+		else if(algorithm == "RSA")
+		{
+		    RSAPublicKey rsaPublicKey = (RSAPublicKey)
+			keyPair.getPublic();
+
+		    if(rsaPublicKey != null)
+			str += "\n" +
+			    "Size: " + rsaPublicKey.getModulus().bitLength();
+		}
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	return str;
     }
 
     public byte[] etm(byte data[])
