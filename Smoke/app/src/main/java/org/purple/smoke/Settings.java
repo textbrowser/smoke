@@ -681,15 +681,13 @@ public class Settings extends AppCompatActivity
         if(id == R.id.action_authenticate)
 	{
 	    showAuthenticateActivity();
-	    m_databaseHelper.writeSetting
-		(null, "lastActivity", "Authenticate");
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Authenticate");
 	    return true;
 	}
 	else if(id == R.id.action_chat)
 	{
 	    showChatActivity();
-	    m_databaseHelper.writeSetting
-		(null, "lastActivity", "Chat");
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
             return true;
         }
 	else if(id == R.id.action_exit)
