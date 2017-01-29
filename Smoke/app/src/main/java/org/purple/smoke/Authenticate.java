@@ -158,7 +158,27 @@ public class Authenticate extends AppCompatActivity
 					 getBytes(), Base64.DEFAULT);
 
 				    s_cryptography.setChatEncryptionKeyPair
-					(privateBytes, publicBytes);
+					("RSA", privateBytes, publicBytes);
+
+				    String algorithm = Database.getInstance().
+					readSetting(s_cryptography,
+						    "pki_chat_signature_" +
+						    "algorithm");
+
+				    privateBytes = Base64.decode
+					(Database.getInstance().
+					 readSetting(s_cryptography,
+						     "pki_chat_signature_" +
+						     "private_key").
+					 getBytes(), Base64.DEFAULT);
+				    publicBytes = Base64.decode
+					(Database.getInstance().
+					 readSetting(s_cryptography,
+						     "pki_chat_signature_" +
+						     "public_key").
+					 getBytes(), Base64.DEFAULT);
+				    s_cryptography.setChatSignatureKeyPair
+					(algorithm, privateBytes, publicBytes);
 				}
 				else
 				{

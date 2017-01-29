@@ -209,7 +209,8 @@ public class Cryptography
 	return keyPairGenerator.generateKeyPair();
     }
 
-    public static KeyPair generatePrivatePublicKeyPair(byte privateBytes[],
+    public static KeyPair generatePrivatePublicKeyPair(String algorithm,
+						       byte privateBytes[],
 						       byte publicBytes[])
     {
 	try
@@ -217,7 +218,7 @@ public class Cryptography
 	    EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		(privateBytes);
 	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
-	    KeyFactory generator = KeyFactory.getInstance("RSA");
+	    KeyFactory generator = KeyFactory.getInstance(algorithm);
 	    PrivateKey privateKey = generator.generatePrivate(privateKeySpec);
 	    PublicKey publicKey = generator.generatePublic(publicKeySpec);
 
@@ -342,11 +343,12 @@ public class Cryptography
 	m_chatEncryptionKeyPair = keyPair;
     }
 
-    public void setChatEncryptionKeyPair(byte privateBytes[],
+    public void setChatEncryptionKeyPair(String algorithm,
+					 byte privateBytes[],
 					 byte publicBytes[])
     {
 	m_chatEncryptionKeyPair = generatePrivatePublicKeyPair
-	    (privateBytes, publicBytes);
+	    (algorithm, privateBytes, publicBytes);
     }
 
     public void setChatSignatureKeyPair(KeyPair keyPair)
@@ -354,11 +356,12 @@ public class Cryptography
 	m_chatSignatureKeyPair = keyPair;
     }
 
-    public void setChatSignatureKeyPair(byte privateBytes[],
+    public void setChatSignatureKeyPair(String algorithm,
+					byte privateBytes[],
 					byte publicBytes[])
     {
 	m_chatSignatureKeyPair = generatePrivatePublicKeyPair
-	    (privateBytes, publicBytes);
+	    (algorithm, privateBytes, publicBytes);
     }
 
     public void setEncryptionKey(SecretKey key)
