@@ -608,8 +608,20 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-        TextView textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
+	/*
+	** Enable widgets.
+	*/
 
+	button1 = (Button) findViewById(R.id.export);
+	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.save_name);
+	button1.setEnabled(isAuthenticated);
+
+	TextView textView1;
+
+	textView1 = (TextView) findViewById(R.id.name);
+	textView1.setEnabled(isAuthenticated);
+	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(isAuthenticated);
         textView1.setVisibility(View.GONE);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
