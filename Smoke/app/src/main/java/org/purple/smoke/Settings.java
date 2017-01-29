@@ -116,8 +116,6 @@ public class Settings extends AppCompatActivity
 
 	TextView textView1;
 
-	textView1 = (TextView) findViewById(R.id.delete_participant);
-	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 	textView1.setEnabled(state);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
@@ -620,8 +618,6 @@ public class Settings extends AppCompatActivity
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
         textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
-	textView1.setEnabled(isAuthenticated);
-	textView1 = (TextView) findViewById(R.id.delete_participant);
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.refresh_participants);
 	textView1.setEnabled(isAuthenticated);

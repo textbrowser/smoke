@@ -187,13 +187,6 @@
                     android:layout_height="match_parent">
 
                     <Button
-                        android:text="@string/delete_participant"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/delete_participant"
-                        style="@style/Widget.AppCompat.Button" />
-
-                    <Button
                         android:text="@string/refresh_participants"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
