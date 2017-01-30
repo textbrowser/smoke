@@ -39,9 +39,12 @@ import android.widget.TextView;
 
 public class Chat extends AppCompatActivity
 {
+    private Database m_databaseHelper = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+	m_databaseHelper = Database.getInstance(getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -98,20 +101,15 @@ public class Chat extends AppCompatActivity
 
 	int id = item.getItemId();
 
-        if(id == R.id.action_authenticate)
-	{
-            final Intent intent = new Intent(Chat.this, Authenticate.class);
-
-            startActivity(intent);
-            return true;
-        }
-	else if(id == R.id.action_exit)
+	if(id == R.id.action_exit)
 	{
 	    State.getInstance().setFinished(true);
 	    return true;
 	}
         else if(id == R.id.action_settings)
 	{
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+
             final Intent intent = new Intent(Chat.this, Settings.class);
 
             startActivity(intent);
@@ -125,6 +123,13 @@ public class Chat extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
+
+	if(!m_databaseHelper.accountPrepared())
+	    /*
+	    ** The database may have been modified or removed.
+	    */
+
+	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	return true;

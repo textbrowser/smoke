@@ -554,8 +554,8 @@ public class Settings extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
+	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -727,16 +727,10 @@ public class Settings extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if(id == R.id.action_authenticate)
+	if(id == R.id.action_chat)
 	{
-	    showAuthenticateActivity();
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Authenticate");
-	    return true;
-	}
-	else if(id == R.id.action_chat)
-	{
-	    showChatActivity();
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+	    showChatActivity();
             return true;
         }
 	else if(id == R.id.action_exit)
@@ -752,6 +746,13 @@ public class Settings extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
+
+	if(!m_databaseHelper.accountPrepared())
+	    /*
+	    ** The database may have been modified or removed.
+	    */
+
+	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	return true;

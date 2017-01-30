@@ -44,6 +44,7 @@ import javax.crypto.SecretKey;
 
 public class Authenticate extends AppCompatActivity
 {
+    private Database m_databaseHelper = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static State s_state = State.getInstance();
@@ -57,7 +58,6 @@ public class Authenticate extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		Database database = Database.getInstance(Authenticate.this);
 		byte encryptionSalt[] = null;
 		byte macSalt[] = null;
 		byte saltedPassword[] = null;
@@ -66,10 +66,11 @@ public class Authenticate extends AppCompatActivity
 
 		textView1.setSelectAllOnFocus(true);
 		encryptionSalt = Base64.decode
-		    (database.readSetting(null, "encryptionSalt").getBytes(),
+		    (m_databaseHelper.
+		     readSetting(null, "encryptionSalt").getBytes(),
 		     Base64.DEFAULT);
 		macSalt = Base64.decode
-		    (database.readSetting(null, "macSalt").getBytes(),
+		    (m_databaseHelper.readSetting(null, "macSalt").getBytes(),
 		     Base64.DEFAULT);
 		saltedPassword = Cryptography.sha512
 		    (textView1.getText().toString().getBytes(),
@@ -78,8 +79,9 @@ public class Authenticate extends AppCompatActivity
 
 		if(saltedPassword == null ||
 		   !Cryptography.
-		   memcmp(database.readSetting(null,
-					       "saltedPassword").getBytes(),
+		   memcmp(m_databaseHelper.readSetting(null,
+						       "saltedPassword").
+			  getBytes(),
 			  Base64.encode(saltedPassword, Base64.DEFAULT)))
 		{
 		    Miscellaneous.showErrorDialog(Authenticate.this,
@@ -91,7 +93,8 @@ public class Authenticate extends AppCompatActivity
 		    final ProgressDialog dialog = new ProgressDialog
 			(Authenticate.this);
 		    int iterationCount = Integer.parseInt
-			(database.readSetting(null, "iterationCount"));
+			(m_databaseHelper.
+			 readSetting(null, "iterationCount"));
 
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);
@@ -149,13 +152,13 @@ public class Authenticate extends AppCompatActivity
 				    s_cryptography.setMacKey(macKey);
 
 				    byte privateBytes[] = Base64.decode
-					(Database.getInstance().
+					(m_databaseHelper.
 					 readSetting(s_cryptography,
 						     "pki_chat_encryption_" +
 						     "private_key").
 					 getBytes(), Base64.DEFAULT);
 				    byte publicBytes[] = Base64.decode
-					(Database.getInstance().
+					(m_databaseHelper.
 					 readSetting(s_cryptography,
 						     "pki_chat_encryption_" +
 						     "public_key").
@@ -164,19 +167,19 @@ public class Authenticate extends AppCompatActivity
 				    s_cryptography.setChatEncryptionKeyPair
 					("RSA", privateBytes, publicBytes);
 
-				    String algorithm = Database.getInstance().
+				    String algorithm = m_databaseHelper.
 					readSetting(s_cryptography,
 						    "pki_chat_signature_" +
 						    "algorithm");
 
 				    privateBytes = Base64.decode
-					(Database.getInstance().
+					(m_databaseHelper.
 					 readSetting(s_cryptography,
 						     "pki_chat_signature_" +
 						     "private_key").
 					 getBytes(), Base64.DEFAULT);
 				    publicBytes = Base64.decode
-					(Database.getInstance().
+					(m_databaseHelper.
 					 readSetting(s_cryptography,
 						     "pki_chat_signature_" +
 						     "public_key").
@@ -247,15 +250,38 @@ public class Authenticate extends AppCompatActivity
 			button1.setEnabled(false);
 			textView1.setEnabled(false);
 			textView1.setText("");
+
+			String str = m_databaseHelper.readSetting
+			    (null, "lastActivity");
+
+			if(str.equals("Chat"))
+			    showChatActivity();
+			else if(str.equals("Settings"))
+			    showSettingsActivity();
 		    }
 		}
 	    }
 	});
     }
 
+    private void showChatActivity()
+    {
+	final Intent intent = new Intent(Authenticate.this, Chat.class);
+
+	startActivity(intent);
+    }
+
+    private void showSettingsActivity()
+    {
+	final Intent intent = new Intent(Authenticate.this, Settings.class);
+
+	startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+	m_databaseHelper = Database.getInstance(getApplicationContext());
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticate);
 	prepareListeners();
@@ -289,9 +315,8 @@ public class Authenticate extends AppCompatActivity
 
         if(id == R.id.action_chat)
 	{
-	    final Intent intent = new Intent(Authenticate.this, Chat.class);
-
-            startActivity(intent);
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+	    showChatActivity();
             return true;
         }
 	else if(id == R.id.action_exit)
@@ -301,9 +326,8 @@ public class Authenticate extends AppCompatActivity
 	}
         else if(id == R.id.action_settings)
 	{
-	    final Intent intent = new Intent(Authenticate.this, Settings.class);
-
-            startActivity(intent);
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+	    showSettingsActivity();
             return true;
         }
 
@@ -315,7 +339,7 @@ public class Authenticate extends AppCompatActivity
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
 
-	if(!Database.getInstance(Authenticate.this).accountPrepared())
+	if(!m_databaseHelper.accountPrepared())
 	    /*
 	    ** The database may have been modified or removed.
 	    */
