@@ -145,7 +145,7 @@ public class Cryptography
 	    "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc" +
 	    "83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd4" +
 	    "7417a81a538327af927da3e";
-	String str = "";
+	StringBuffer stringBuffer = new StringBuffer();
 
 	if(publicKey != null)
 	{
@@ -159,15 +159,16 @@ public class Cryptography
 	{
 	    for(int i = 0; i < fingerprint.length(); i += 2)
 		if(i < fingerprint.length() - 2)
-		    str += fingerprint.substring(i, i + 2) + ":";
+		    stringBuffer.append(fingerprint.substring(i, i + 2)).
+			append(":");
 		else
-		    str += fingerprint.substring(i, i + 2);
+		    stringBuffer.append(fingerprint.substring(i, i + 2));
 	}
 	catch(Exception exception)
 	{
 	}
 
-	return str;
+	return stringBuffer.toString();
     }
 
     public byte[] etm(byte data[])
