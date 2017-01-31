@@ -38,12 +38,12 @@ public class Miscellaneous
 	if(bytes == null)
 	    return "";
 
-	String str = "";
+	StringBuffer stringBuffer = new StringBuffer();
 
 	for(int i = 0; i < bytes.length; i++)
-	    str += String.format("%02x", bytes[i]);
+	    stringBuffer.append(String.format("%02x", bytes[i]));
 
-	return str;
+	return stringBuffer.toString();
     }
 
     public static byte[] joinByteArrays(byte a[], byte b[])

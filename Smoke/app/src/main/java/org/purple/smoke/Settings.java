@@ -97,7 +97,7 @@ public class Settings extends AppCompatActivity
 
     private void enableWidgets(boolean state)
     {
-	Button button1;
+	Button button1 = null;
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setEnabled(state);
@@ -106,19 +106,19 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.save_name);
 	button1.setEnabled(state);
 
-	RadioButton radioButton1;
+	RadioButton radioButton1 = null;
 
 	radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv4);
 	radioButton1.setEnabled(state);
 	radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv6);
 	radioButton1.setEnabled(state);
 
-	Spinner spinner1;
+	Spinner spinner1 = null;
 
 	spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
 	spinner1.setEnabled(state);
 
-	TextView textView1;
+	TextView textView1 = null;
 
 	textView1 = (TextView) findViewById(R.id.name);
 	textView1.setEnabled(state);
@@ -138,19 +138,23 @@ public class Settings extends AppCompatActivity
 
     private void populateFancyKeyData()
     {
-	TextView textView1;
+	StringBuffer stringBuffer = new StringBuffer();
+	TextView textView1 = null;
 
-	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
-	textView1.setText
-	    ("Chat Encryption Key\n" +
-	     s_cryptography.fancyOutput(s_cryptography.
+	stringBuffer.append("Chat Encryption Key\n");
+	stringBuffer.append
+	    (s_cryptography.fancyOutput(s_cryptography.
 					chatEncryptionKeyPair()));
+	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
+	textView1.setText(stringBuffer);
 	textView1.setVisibility(View.VISIBLE);
-	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
-	textView1.setText
-	    ("Chat Signature Key\n" +
-	     s_cryptography.fancyOutput(s_cryptography.
+	stringBuffer.delete(0, stringBuffer.length());
+	stringBuffer.append("Chat Signature Key\n");
+	stringBuffer.append
+	    (s_cryptography.fancyOutput(s_cryptography.
 					chatSignatureKeyPair()));
+	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
+	textView1.setText(stringBuffer);
 	textView1.setVisibility(View.VISIBLE);
     }
 
