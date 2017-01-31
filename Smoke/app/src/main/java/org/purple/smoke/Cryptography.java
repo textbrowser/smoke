@@ -97,13 +97,18 @@ public class Cryptography
 	if(keyPair == null || keyPair.getPublic() == null)
 	    return "";
 
-	PublicKey key = keyPair.getPublic();
-	String algorithm = key.getAlgorithm();
-	String str = "";
+	PublicKey publicKey = keyPair.getPublic();
+	String algorithm = publicKey.getAlgorithm();
+	StringBuffer stringBuffer = new StringBuffer();
 
-	str = "Algorithm: " + algorithm + "\n" +
-	    "Fingerprint: " + publicKeyFingerPrint(key) + "\n" +
-	    "Format: " + key.getFormat();
+	stringBuffer.append("Algorithm: ");
+	stringBuffer.append(algorithm);
+	stringBuffer.append("\n");
+	stringBuffer.append("Fingerprint: ");
+	stringBuffer.append(publicKeyFingerPrint(publicKey));
+	stringBuffer.append("\n");
+	stringBuffer.append("Format: ");
+	stringBuffer.append(publicKey.getFormat());
 
 	if(algorithm == "DSA" || algorithm == "RSA")
 	    try
@@ -112,28 +117,26 @@ public class Cryptography
 
 		if(algorithm == "DSA")
 		{
-		    DSAPublicKey dsaPublicKey = (DSAPublicKey)
-			keyPair.getPublic();
+		    DSAPublicKey dsaPublicKey = (DSAPublicKey) publicKey;
 
 		    if(dsaPublicKey != null)
-			str += "\n" +
-			    "Size: " + dsaPublicKey.getY().bitLength();
+			stringBuffer.append("\n").append("Size: ").
+			    append(dsaPublicKey.getY().bitLength());
 		}
 		else if(algorithm == "RSA")
 		{
-		    RSAPublicKey rsaPublicKey = (RSAPublicKey)
-			keyPair.getPublic();
+		    RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
 
 		    if(rsaPublicKey != null)
-			str += "\n" +
-			    "Size: " + rsaPublicKey.getModulus().bitLength();
+			stringBuffer.append("\n").append("Size: ").
+			    append(rsaPublicKey.getModulus().bitLength());
 		}
 	    }
 	    catch(Exception exception)
 	    {
 	    }
 
-	return str;
+	return stringBuffer.toString();
     }
 
     public String publicKeyFingerPrint(PublicKey publicKey)

@@ -77,8 +77,12 @@ public class Chat extends AppCompatActivity
 		final TextView textView2 = (TextView) findViewById
 		    (R.id.chat_messages);
 
-		textView2.append
-		    ("me: " + textView1.getText().toString().trim() + "\n");
+		StringBuffer stringBuffer = new StringBuffer();
+
+		stringBuffer.append("me: ");
+		stringBuffer.append(textView1.getText().toString().trim());
+		stringBuffer.append("\n");
+		textView2.append(stringBuffer);
 		textView1.setText("");
 	    }
 	});
