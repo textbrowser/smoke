@@ -113,9 +113,14 @@ public class Database extends SQLiteOpenHelper
 			if(bytes == null)
 			{
 			    error = true;
-			    writeLog("Database::readNeighbors(): " +
-				     "error on column " +
-				     cursor.getColumnName(i) + ".");
+
+			    StringBuffer stringBuffer = new StringBuffer();
+
+			    stringBuffer.append("Database::readNeighbors(): ");
+			    stringBuffer.append("error on column ");
+			    stringBuffer.append(cursor.getColumnName(i));
+			    stringBuffer.append(".");
+			    writeLog(stringBuffer.toString());
 			    break;
 			}
 
@@ -251,8 +256,12 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    db.execSQL
-		("DELETE FROM " + table + " WHERE OID = ?", new String[] {oid});
+	    StringBuffer stringBuffer = new StringBuffer();
+
+	    stringBuffer.append("DELETE FROM ");
+	    stringBuffer.append(table);
+	    stringBuffer.append(" WHERE OID = ?");
+	    db.execSQL(stringBuffer.toString(), new String[] {oid});
 	}
 	catch(SQLException exception)
 	{
@@ -350,8 +359,13 @@ public class Database extends SQLiteOpenHelper
 
 		if(bytes == null)
 		{
-		    writeLog("Database::writeNeighbor(): error with " +
-			     arrayList.get(i) + " field.");
+		    StringBuffer stringBuffer = new StringBuffer();
+
+		    stringBuffer.append
+			("Database::writeNeighbor(): error with ");
+		    stringBuffer.append(arrayList.get(i));
+		    stringBuffer.append(" field.");
+		    writeLog(stringBuffer.toString());
 		    throw new Exception();
 		}
 
