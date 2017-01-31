@@ -11,6 +11,8 @@ Completed Items
 8.     Display neighbors contents.
 9.     Display information pertaining to the owner's public keys.
 10.    Determine gradle's version in the make files.
+11.    Spinner objects in the neighbors table bleed. The table will expand
+       as necessary.
 
 Remaining Items
 
@@ -22,4 +24,3 @@ Remaining Items
 6.     Scroll bars on Spinner objects.
 7.     Kernel.
 8.     Virtual keyboard.
-9.     Spinner objects in the neighbors table bleed.
