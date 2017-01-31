@@ -226,9 +226,14 @@ public class Settings extends AppCompatActivity
 		else
 		    textView.setBackgroundColor(Color.rgb(240, 128, 128));
 
-		textView.setText(arrayList.get(i).m_remoteIpAddress + ":" +
-				 arrayList.get(i).m_remotePort + ":" +
-				 arrayList.get(i).m_transport);
+		StringBuffer stringBuffer = new StringBuffer();
+
+		stringBuffer.append(arrayList.get(i).m_remoteIpAddress);
+		stringBuffer.append(":");
+		stringBuffer.append(arrayList.get(i).m_remotePort);
+		stringBuffer.append(":");
+		stringBuffer.append(arrayList.get(i).m_transport);
+		textView.setText(stringBuffer);
 		row.addView(spinner);
 		row.addView(textView);
 		tableLayout.addView(row, i);
