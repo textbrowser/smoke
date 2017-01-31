@@ -2,7 +2,7 @@
 
 ADB = ~/Android/Sdk/platform-tools/adb
 EMULATOR = ~/Android/Sdk/tools/emulator
-GRADLE = ~/Desktop/android-studio/gradle/gradle-2.14.1/bin/gradle
+GRADLE = $(shell ls -d ~/Desktop/android-studio/gradle/gradle*/bin/gradle | sort -dru | head -1)
 
 all:
 	$(GRADLE) --build-file Smoke/build.gradle assembleDebug \

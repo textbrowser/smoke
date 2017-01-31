@@ -10,6 +10,7 @@ Completed Items
 7.     Enable Settings widgets after an initial password is accepted.
 8.     Display neighbors contents.
 9.     Display information pertaining to the owner's public keys.
+10.    Determine gradle's version in the make files.
 
 Remaining Items
 
@@ -22,4 +23,3 @@ Remaining Items
 7.     Kernel.
 8.     Virtual keyboard.
 9.     Spinner objects in the neighbors table bleed.
-10.    Determine gradle's version in the make files.
