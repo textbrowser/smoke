@@ -154,6 +154,10 @@ public class Settings extends AppCompatActivity
 	textView1.setVisibility(View.VISIBLE);
     }
 
+    private void populateName()
+    {
+    }
+
     private void populateNeighbors()
     {
 	ArrayList<NeighborElement> arrayList =
@@ -701,6 +705,7 @@ public class Settings extends AppCompatActivity
 	if(isAuthenticated)
 	{
 	    populateFancyKeyData();
+	    populateName();
 	    populateNeighbors();
 	}
     }
