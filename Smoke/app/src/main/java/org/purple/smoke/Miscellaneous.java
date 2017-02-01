@@ -54,6 +54,9 @@ public class Miscellaneous
 	    if(b != null)
 		length += b.length;
 
+	if(length == 0)
+	    return null;
+
 	byte bytes[] = new byte[length];
 	int i = 0;
 
