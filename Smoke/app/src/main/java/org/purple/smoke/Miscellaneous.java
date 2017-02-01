@@ -46,16 +46,25 @@ public class Miscellaneous
 	return stringBuffer.toString();
     }
 
-    public static byte[] joinByteArrays(byte a[], byte b[])
+    public static byte[] joinByteArrays(byte[] ... data)
     {
-	if(a == null || b == null)
-	    return null;
+	int length = 0;
 
-	byte bytes[] = new byte[a.length + b.length];
+	for(byte b[] : data)
+	    if(b != null)
+		length += b.length;
 
-	System.arraycopy(a, 0, bytes, 0, a.length);
-	System.arraycopy(b, 0, bytes, a.length, b.length);
-	return bytes; // a + b
+	byte bytes[] = new byte[length];
+	int i = 0;
+
+	for(byte b[] : data)
+	    if(b != null)
+	    {
+		System.arraycopy(b, 0, bytes, i, b.length);
+		i += b.length;
+	    }
+
+	return bytes; // data[0] + data[1] + ... + data[n - 1]
     }
 
     public static void showErrorDialog(Context context, String error)

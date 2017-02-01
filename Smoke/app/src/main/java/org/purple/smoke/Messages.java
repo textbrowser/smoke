@@ -40,7 +40,27 @@ public class Messages
 	if(cryptography == null || receiverEncryptionKey == null)
 	    return "";
 
+	/*
+	** Create random encryption and mac keys.
+	*/
+
+	byte encryptionKey[] = cryptography.randomBytes(32); // AES
+	byte macKey[] = cryptography.randomBytes(64); // SHA-512
+
+	if(encryptionKey == null || macKey == null)
+	    return "";
+
 	StringBuffer stringBuffer = new StringBuffer();
+
+	stringBuffer.append(message);
+	stringBuffer.append(String.valueOf(sequence));
+	stringBuffer.append(timestamp);
+
+	byte bytes[] = cryptography.encrypt
+	    (stringBuffer.toString().getBytes(), encryptionKey);
+
+	if(bytes == null)
+	    return "";
 
 	return stringBuffer.toString();
     }

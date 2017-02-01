@@ -50,6 +50,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Cryptography
 {
@@ -58,6 +59,7 @@ public class Cryptography
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
     private final static String MAC_ALGORITHM = "HmacSHA512";
+    private final static String SYMMETRIC_CIPHER = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS5Padding";
     private static Cryptography s_instance = null;
@@ -375,6 +377,36 @@ public class Cryptography
 	    rc |= (i < a.length ? a[i] : 0) ^ (i < b.length ? b[i] : 0);
 
 	return rc == 0;
+    }
+
+    public static byte[] encrypt(byte data[], byte key[])
+    {
+	if(data == null || key == null)
+	    return null;
+
+	prepareSecureRandom();
+
+	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+	    SecretKey secretKey = new SecretKeySpec(key, SYMMETRIC_CIPHER);
+	    byte iv[] = new byte[16];
+
+	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+	    s_secureRandom.nextBytes(iv);
+	    cipher.init(Cipher.ENCRYPT_MODE,
+			secretKey,
+			new IvParameterSpec(iv));
+	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
     }
 
     public static byte[] randomBytes(int length)
