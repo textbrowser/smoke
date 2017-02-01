@@ -46,22 +46,28 @@ public class Messages
 	** Create random encryption and mac keys.
 	*/
 
-	byte encryptionKey[] = cryptography.randomBytes(32); // AES
-	byte macKey[] = cryptography.randomBytes(64); // SHA-512
+	byte encryptionKeyBytes[] = cryptography.randomBytes(32); // AES
+	byte macKeyBytes[] = cryptography.randomBytes(64); // SHA-512
 
-	if(encryptionKey == null || macKey == null)
+	if(encryptionKeyBytes == null || macKeyBytes == null)
 	    return null;
 
 	/*
 	** [ Private Key Data ]
 	** [ Message Data ]
-	** [ Digest of [ Private Key Data ] || [ Message Data ]]
+	** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
 	** [ Destination (Digest) ]
+	*/
+
+	byte keyBytes[] = null;
+
+	/*
+	** [ Message Data ]
 	*/
 
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();
 	ObjectOutputStream output = null;
-	byte bytes[] = null;
+	byte messageBytes[] = null;
 
 	try
 	{
@@ -70,11 +76,11 @@ public class Messages
 	    output.writeObject(sequence);
 	    output.writeObject(timestamp);
 	    output.flush();
-	    bytes = stream.toByteArray();
+	    messageBytes = stream.toByteArray();
 	}
 	catch(Exception exception)
 	{
-	    bytes = null;
+	    messageBytes = null;
 	}
 	finally
 	{
@@ -88,11 +94,25 @@ public class Messages
 	    }
 	}
 
-	byte messageBytes[] = cryptography.encrypt(bytes, encryptionKey);
+	messageBytes = cryptography.encrypt(messageBytes, encryptionKeyBytes);
 
 	if(messageBytes == null)
 	    return null;
 
-	return null;
+	/*
+	** [ Digest ]
+	*/
+
+	byte macBytes[] = cryptography.hmac
+	    (Miscellaneous.joinByteArrays(keyBytes, messageBytes), macKeyBytes);
+
+	/*
+	** [ Destination ]
+	*/
+
+	byte destinationBytes[] = null;
+
+	return Miscellaneous.joinByteArrays
+	    (keyBytes, messageBytes, macBytes, destinationBytes);
     }
 }

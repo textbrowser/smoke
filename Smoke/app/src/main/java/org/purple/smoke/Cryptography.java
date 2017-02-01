@@ -58,8 +58,9 @@ public class Cryptography
     private KeyPair m_chatSignatureKeyPair = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
-    private final static String MAC_ALGORITHM = "HmacSHA512";
-    private final static String SYMMETRIC_CIPHER = "AES";
+    private final static String HASH_ALGORITHM = "SHA-512";
+    private final static String HMAC_ALGORITHM = "HmacSHA512";
+    private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS5Padding";
     private static Cryptography s_instance = null;
@@ -198,7 +199,7 @@ public class Cryptography
 			m_encryptionKey,
 			new IvParameterSpec(iv));
 	    bytes = cipher.doFinal(data);
-	    mac = Mac.getInstance(MAC_ALGORITHM);
+	    mac = Mac.getInstance(HMAC_ALGORITHM);
 	    mac.init(m_macKey);
 	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	    bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
@@ -222,7 +223,7 @@ public class Cryptography
 	{
 	    Mac mac = null;
 
-	    mac = Mac.getInstance(MAC_ALGORITHM);
+	    mac = Mac.getInstance(HMAC_ALGORITHM);
 	    mac.init(m_macKey);
 	    bytes = mac.doFinal(data);
 	}
@@ -255,7 +256,7 @@ public class Cryptography
 
 	    digest1 = Arrays.copyOfRange
 		(data, data.length - 512 / 8, data.length);
-	    mac = Mac.getInstance(MAC_ALGORITHM);
+	    mac = Mac.getInstance(HMAC_ALGORITHM);
 	    mac.init(m_macKey);
 	    digest2 = mac.doFinal(Arrays.copyOf(data, data.length - 512 / 8));
 
@@ -379,9 +380,9 @@ public class Cryptography
 	return rc == 0;
     }
 
-    public static byte[] encrypt(byte data[], byte key[])
+    public static byte[] encrypt(byte data[], byte keyBytes[])
     {
-	if(data == null || key == null)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	prepareSecureRandom();
@@ -391,7 +392,8 @@ public class Cryptography
 	try
 	{
 	    Cipher cipher = null;
-	    SecretKey secretKey = new SecretKeySpec(key, SYMMETRIC_CIPHER);
+	    SecretKey secretKey = new SecretKeySpec
+		(keyBytes, SYMMETRIC_ALGORITHM);
 	    byte iv[] = new byte[16];
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
@@ -400,6 +402,30 @@ public class Cryptography
 			secretKey,
 			new IvParameterSpec(iv));
 	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
+    public static byte[] hmac(byte data[], byte keyBytes[])
+    {
+	if(keyBytes == null)
+	    return null;
+
+	byte bytes[] = null;
+
+	try
+	{
+	    Mac mac = null;
+	    SecretKey key = new SecretKeySpec(keyBytes, HASH_ALGORITHM);
+
+	    mac = Mac.getInstance(HMAC_ALGORITHM);
+	    mac.init(key);
+	    bytes = mac.doFinal(data);
 	}
 	catch(Exception exception)
 	{
