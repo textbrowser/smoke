@@ -29,4 +29,16 @@ package org.purple.smoke;
 
 public class Messages
 {
+    public static String chatMessage(Cryptography cryptography,
+				     String message,
+				     String timestamp,
+				     int sequence)
+    {
+	if(cryptography == null)
+	    return "";
+
+	StringBuffer stringBuffer = new StringBuffer();
+
+	return stringBuffer.toString();
+    }
 }
