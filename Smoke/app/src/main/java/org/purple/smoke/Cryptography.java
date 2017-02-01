@@ -401,7 +401,7 @@ public class Cryptography
 	    cipher.init(Cipher.ENCRYPT_MODE,
 			secretKey,
 			new IvParameterSpec(iv));
-	    bytes = cipher.doFinal();
+	    bytes = cipher.doFinal(data);
 	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	}
 	catch(Exception exception)
