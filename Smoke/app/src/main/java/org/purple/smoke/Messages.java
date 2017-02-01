@@ -27,18 +27,20 @@
 
 package org.purple.smoke;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.security.PublicKey;
 
 public class Messages
 {
-    public static String chatMessage(Cryptography cryptography,
+    public static byte[] chatMessage(Cryptography cryptography,
 				     PublicKey receiverEncryptionKey,
 				     String message,
 				     String timestamp,
 				     int sequence)
     {
 	if(cryptography == null || receiverEncryptionKey == null)
-	    return "";
+	    return null;
 
 	/*
 	** Create random encryption and mac keys.
@@ -48,20 +50,49 @@ public class Messages
 	byte macKey[] = cryptography.randomBytes(64); // SHA-512
 
 	if(encryptionKey == null || macKey == null)
-	    return "";
+	    return null;
 
-	StringBuffer stringBuffer = new StringBuffer();
+	/*
+	** [ Private Key Data ]
+	** [ Message Data ]
+	** [ Digest of [ Private Key Data ] || [ Message Data ]]
+	** [ Destination (Digest) ]
+	*/
 
-	stringBuffer.append(message);
-	stringBuffer.append(String.valueOf(sequence));
-	stringBuffer.append(timestamp);
+	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	ObjectOutputStream output = null;
+	byte bytes[] = null;
 
-	byte bytes[] = cryptography.encrypt
-	    (stringBuffer.toString().getBytes(), encryptionKey);
+	try
+	{
+	    output = new ObjectOutputStream(stream);
+	    output.writeObject(message);
+	    output.writeObject(sequence);
+	    output.writeObject(timestamp);
+	    output.flush();
+	    bytes = stream.toByteArray();
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+	finally
+	{
+	    try
+	    {
+		output.close();
+		stream.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	}
 
-	if(bytes == null)
-	    return "";
+	byte messageBytes[] = cryptography.encrypt(bytes, encryptionKey);
 
-	return stringBuffer.toString();
+	if(messageBytes == null)
+	    return null;
+
+	return null;
     }
 }
