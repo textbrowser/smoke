@@ -101,6 +101,10 @@ public class Chat extends AppCompatActivity
 		    textView2.append(bytes.length + "");
 	    }
 	});
+
+	TextView textView1 = (TextView) findViewById(R.id.chat_message);
+
+	textView1.requestFocus();
     }
 
     @Override
