@@ -182,7 +182,7 @@ public class Cryptography
 
     public byte[] hmac(byte data[])
     {
-	if(m_macKey == null)
+	if(data == null || m_macKey == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -401,6 +401,7 @@ public class Cryptography
 	    cipher.init(Cipher.ENCRYPT_MODE,
 			secretKey,
 			new IvParameterSpec(iv));
+	    bytes = cipher.doFinal();
 	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	}
 	catch(Exception exception)
@@ -413,7 +414,7 @@ public class Cryptography
 
     public static byte[] hmac(byte data[], byte keyBytes[])
     {
-	if(keyBytes == null)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	byte bytes[] = null;

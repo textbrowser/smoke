@@ -40,6 +40,8 @@ import android.widget.TextView;
 public class Chat extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,13 +79,26 @@ public class Chat extends AppCompatActivity
 		final TextView textView2 = (TextView) findViewById
 		    (R.id.chat_messages);
 
+		String str = textView1.getText().toString().trim();
+		String timestamp = "";
 		StringBuffer stringBuffer = new StringBuffer();
+		int sequence = 1;
 
 		stringBuffer.append("me: ");
-		stringBuffer.append(textView1.getText().toString().trim());
+		stringBuffer.append(str);
 		stringBuffer.append("\n");
 		textView2.append(stringBuffer);
 		textView1.setText("");
+
+		byte bytes[] = Messages.chatMessage
+		    (s_cryptography,
+		     s_cryptography.chatEncryptionKeyPair().getPublic(),
+		     str,
+		     timestamp,
+		     sequence);
+
+		if(bytes != null)
+		    textView2.append(bytes.length + "");
 	    }
 	});
     }
