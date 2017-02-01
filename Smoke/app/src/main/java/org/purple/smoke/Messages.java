@@ -27,14 +27,17 @@
 
 package org.purple.smoke;
 
+import java.security.PublicKey;
+
 public class Messages
 {
     public static String chatMessage(Cryptography cryptography,
+				     PublicKey receiverEncryptionKey,
 				     String message,
 				     String timestamp,
 				     int sequence)
     {
-	if(cryptography == null)
+	if(cryptography == null || receiverEncryptionKey == null)
 	    return "";
 
 	StringBuffer stringBuffer = new StringBuffer();
