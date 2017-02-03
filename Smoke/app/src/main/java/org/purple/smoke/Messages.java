@@ -29,12 +29,14 @@ package org.purple.smoke;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 
 public class Messages
 {
     public static byte[] chatMessage(Cryptography cryptography,
 				     PublicKey receiverEncryptionKey,
+				     PrivateKey receiverSignatureKey,
 				     String message,
 				     String timestamp,
 				     int sequence)
@@ -71,10 +73,13 @@ public class Messages
 
 	try
 	{
+	    byte signature[] = null;
+
 	    output = new ObjectOutputStream(stream);
 	    output.writeObject(message);
 	    output.writeObject(sequence);
 	    output.writeObject(timestamp);
+	    output.writeObject(signature);
 	    output.flush();
 	    messageBytes = stream.toByteArray();
 	}
