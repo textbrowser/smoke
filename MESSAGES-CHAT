@@ -1,0 +1,22 @@
+[PKI] (1)
+{
+	AES Key
+	SHA-512 Key
+}
+
+[AES] (2)
+{
+	Message (0)
+	Sequence (1)
+	Timestamp (2)
+	Sender (3)
+	[PKI Signature] (4)
+	{
+		[PKI] || [AES] (0 ... 3)
+	}
+}
+
+[SHA-512 HMAC] (3)
+{
+	[PKI] || [AES]
+}
