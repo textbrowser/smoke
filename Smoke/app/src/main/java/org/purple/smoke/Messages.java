@@ -36,7 +36,6 @@ public class Messages
 {
     public static byte[] chatMessage(Cryptography cryptography,
 				     PublicKey receiverEncryptionKey,
-				     PrivateKey receiverSignatureKey,
 				     String message,
 				     String timestamp,
 				     int sequence)

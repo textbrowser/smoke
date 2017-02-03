@@ -93,7 +93,6 @@ public class Chat extends AppCompatActivity
 		byte bytes[] = Messages.chatMessage
 		    (s_cryptography,
 		     s_cryptography.chatEncryptionKeyPair().getPublic(),
-		     s_cryptography.chatSignatureKeyPair().getPrivate(),
 		     str,
 		     timestamp,
 		     sequence);
