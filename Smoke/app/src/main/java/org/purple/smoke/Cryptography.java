@@ -466,6 +466,16 @@ public class Cryptography
 	return bytes;
     }
 
+    public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
+    {
+	if(data == null || publicKey == null)
+	    return null;
+
+	byte bytes[] = null;
+
+	return bytes;
+    }
+
     public static byte[] randomBytes(int length)
     {
 	prepareSecureRandom();

@@ -31,9 +31,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -98,7 +99,8 @@ public class Chat extends AppCompatActivity
 		     sequence);
 
 		if(bytes != null)
-		    textView2.append(bytes.length + "");
+		    textView2.append(Base64.encodeToString(bytes,
+							   Base64.DEFAULT));
 	    }
 	});
 

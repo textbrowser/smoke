@@ -43,36 +43,43 @@ public class Messages
 	if(cryptography == null || receiverPublicKey == null)
 	    return null;
 
-	/*
-	** Create random encryption and mac keys.
-	*/
-
-	byte encryptionKeyBytes[] = cryptography.randomBytes(32); // AES
-	byte macKeyBytes[] = cryptography.randomBytes(64); // SHA-512
-
-	if(encryptionKeyBytes == null || macKeyBytes == null)
-	    return null;
-
-	/*
-	** [ Private Key Data ]
-	** [ Message Data ]
-	** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
-	** [ Destination (Digest) ]
-	*/
-
-	byte keyBytes[] = null;
-
-	/*
-	** [ Message Data ]
-	*/
-
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();
 	ObjectOutputStream output = null;
-	byte messageBytes[] = null;
 
 	try
 	{
 	    output = new ObjectOutputStream(stream);
+
+	    /*
+	    ** Create random encryption and mac keys.
+	    */
+
+	    byte encryptionKeyBytes[] = cryptography.randomBytes(32); // AES
+	    byte macKeyBytes[] = cryptography.randomBytes(64); // SHA-512
+
+	    if(encryptionKeyBytes == null || macKeyBytes == null)
+		return null;
+
+	    /*
+	    ** [ Private Key Data ]
+	    ** [ Message Data ]
+	    ** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
+	    ** [ Destination (Digest) ]
+	    */
+
+	    /*
+	    ** [ Private Key Data ]
+	    */
+
+	    byte keyBytes[] = cryptography.pkiEncrypt
+		(receiverPublicKey,
+		 Miscellaneous.joinByteArrays(encryptionKeyBytes, macKeyBytes));
+
+	    /*
+	    ** [ Message Data ]
+	    */
+
+	    output.reset();
 	    output.writeObject(message);
 	    output.writeObject(sequence);
 	    output.writeObject(timestamp);
@@ -83,18 +90,49 @@ public class Messages
 	    */
 
 	    byte signature[] = cryptography.signViaChat
-		(Miscellaneous.joinByteArrays(keyBytes, stream.toByteArray()));
+		(Miscellaneous.joinByteArrays(encryptionKeyBytes,
+					      macKeyBytes,
+					      stream.toByteArray()));
 
 	    if(signature == null)
-		throw new Exception();
+		return null;
 
 	    output.writeObject(signature);
 	    output.flush();
-	    messageBytes = stream.toByteArray();
+
+	    byte messageBytes[] = cryptography.encrypt
+		(stream.toByteArray(), encryptionKeyBytes);
+
+	    if(messageBytes == null)
+		return null;
+
+	    /*
+	    ** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
+	    */
+
+	    byte macBytes[] = cryptography.hmac
+		(Miscellaneous.joinByteArrays(keyBytes, messageBytes),
+		 macKeyBytes);
+
+	    if(macKeyBytes == null)
+		return null;
+
+	    /*
+	    ** [ Destination ]
+	    */
+
+	    byte destinationBytes[] = new byte[64]; // Not used.
+
+	    output.reset();
+	    output.writeObject(keyBytes);
+	    output.writeObject(messageBytes);
+	    output.writeObject(macBytes);
+	    output.writeObject(destinationBytes);
+	    output.flush();
 	}
 	catch(Exception exception)
 	{
-	    messageBytes = null;
+	    return null;
 	}
 	finally
 	{
@@ -108,28 +146,6 @@ public class Messages
 	    }
 	}
 
-	messageBytes = cryptography.encrypt(messageBytes, encryptionKeyBytes);
-
-	if(messageBytes == null)
-	    return null;
-
-	/*
-	** [ Digest ]
-	*/
-
-	byte macBytes[] = cryptography.hmac
-	    (Miscellaneous.joinByteArrays(keyBytes, messageBytes), macKeyBytes);
-
-	if(macKeyBytes == null)
-	    return null;
-
-	/*
-	** [ Destination ]
-	*/
-
-	byte destinationBytes[] = new byte[64]; // Not used.
-
-	return Miscellaneous.joinByteArrays
-	    (keyBytes, messageBytes, macBytes, destinationBytes);
+	return stream.toByteArray();
     }
 }
