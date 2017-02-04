@@ -78,6 +78,10 @@ public class Messages
 	    output.writeObject(timestamp);
 	    output.flush();
 
+	    /*
+	    ** Produce a signature of [ Private Key Data ] || [ Message Data ].
+	    */
+
 	    byte signature[] = cryptography.signViaChat
 		(Miscellaneous.joinByteArrays(keyBytes, stream.toByteArray()));
 
