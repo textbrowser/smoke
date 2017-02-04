@@ -61,6 +61,8 @@ public class Cryptography
     private SecretKey m_macKey = null;
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
+    private final static String PKI_DSA_SIGNATURE_ALGORITHM = "SHA1WithDSA";
+    private final static String PKI_RSA_SIGNATURE_ALGORITHM = "SHA256WithRSA";
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS5Padding";
@@ -281,9 +283,9 @@ public class Cryptography
 	try
 	{
 	    if(m_chatSignatureKeyPair.getPrivate().getAlgorithm() == "DSA")
-		signature = Signature.getInstance("SHA1WithDSA");
+		signature = Signature.getInstance(PKI_DSA_SIGNATURE_ALGORITHM);
 	    else
-		signature = Signature.getInstance("SHA256WithRSA");
+		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
 
 	    signature.initSign(m_chatSignatureKeyPair.getPrivate());
 	    signature.update(data);
@@ -417,6 +419,35 @@ public class Cryptography
 	    rc |= (i < a.length ? a[i] : 0) ^ (i < b.length ? b[i] : 0);
 
 	return rc == 0;
+    }
+
+    public static boolean verifySignature(PublicKey publicKey,
+					  byte bytes[],
+					  byte data[])
+    {
+	if(bytes == null || data == null || publicKey == null)
+	    return false;
+
+	Signature signature = null;
+	boolean ok = false;
+
+	try
+	{
+	    if(publicKey.getAlgorithm() == "DSA")
+		signature = Signature.getInstance(PKI_DSA_SIGNATURE_ALGORITHM);
+	    else
+		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
+
+	    signature.initVerify(publicKey);
+	    signature.update(data);
+	    ok = signature.verify(bytes);
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+
+	return ok;
     }
 
     public static byte[] encrypt(byte data[], byte keyBytes[])
