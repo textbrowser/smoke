@@ -91,6 +91,11 @@ public class Chat extends AppCompatActivity
 		textView2.append(stringBuffer);
 		textView1.setText("");
 
+		/*
+		** Iterate through selected people, if possible.
+		** Otherwise, use checked items.
+		*/
+
 		byte bytes[] = Messages.chatMessage
 		    (s_cryptography,
 		     s_cryptography.chatEncryptionKeyPair().getPublic(),
