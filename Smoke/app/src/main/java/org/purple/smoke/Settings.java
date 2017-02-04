@@ -143,16 +143,16 @@ public class Settings extends AppCompatActivity
 
 	stringBuffer.append("Chat Encryption Key\n");
 	stringBuffer.append
-	    (s_cryptography.fancyOutput(s_cryptography.
-					chatEncryptionKeyPair()));
+	    (s_cryptography.fancyKeyInformationOutput(s_cryptography.
+						      chatEncryptionKeyPair()));
 	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
 	textView1.setText(stringBuffer);
 	textView1.setVisibility(View.VISIBLE);
 	stringBuffer.delete(0, stringBuffer.length());
 	stringBuffer.append("Chat Signature Key\n");
 	stringBuffer.append
-	    (s_cryptography.fancyOutput(s_cryptography.
-					chatSignatureKeyPair()));
+	    (s_cryptography.fancyKeyInformationOutput(s_cryptography.
+						      chatSignatureKeyPair()));
 	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
 	textView1.setText(stringBuffer);
 	textView1.setVisibility(View.VISIBLE);

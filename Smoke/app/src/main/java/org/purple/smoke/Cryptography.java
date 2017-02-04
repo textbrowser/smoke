@@ -98,7 +98,7 @@ public class Cryptography
 	return m_chatSignatureKeyPair;
     }
 
-    public String fancyOutput(KeyPair keyPair)
+    public String fancyKeyInformationOutput(KeyPair keyPair)
     {
 	if(keyPair == null || keyPair.getPublic() == null)
 	    return "";
