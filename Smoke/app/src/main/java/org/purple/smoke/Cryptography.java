@@ -143,6 +143,15 @@ public class Cryptography
 	return stringBuffer.toString();
     }
 
+    public byte[] chatEncryptionKeyDigest()
+    {
+	if(m_chatSignatureKeyPair == null ||
+	   m_chatSignatureKeyPair.getPublic() == null)
+	    return null;
+
+	return sha512(m_chatSignatureKeyPair.getPublic().getEncoded());
+    }
+
     public byte[] etm(byte data[])
     {
 	/*

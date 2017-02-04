@@ -79,10 +79,17 @@ public class Messages
 	    ** [ Message Data ]
 	    */
 
+	    byte senderPublicKeyDigest[] = cryptography.
+		chatEncryptionKeyDigest();
+
+	    if(senderPublicKeyDigest == null)
+		return null;
+
 	    output.reset();
 	    output.writeObject(message);
 	    output.writeObject(sequence);
 	    output.writeObject(timestamp);
+	    output.writeObject(senderPublicKeyDigest);
 	    output.flush();
 
 	    /*

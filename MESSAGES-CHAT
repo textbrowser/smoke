@@ -1,4 +1,4 @@
-[PKI] (1)
+[PK] (1)
 {
 	AES Key
 	SHA-512 Key
@@ -9,14 +9,14 @@
 	Message (0)
 	Sequence (1)
 	Timestamp (2)
-	Sender (3)
-	[PKI Signature] (4)
+	Sender's Public Encryption Key SHA-512 Digest (3)
+	[PK Signature] (4)
 	{
-		[PKI] || [AES] (0 ... 3)
+		[PK] || [AES] (0 ... 3)
 	}
 }
 
 [SHA-512 HMAC] (3)
 {
-	[PKI] || [AES]
+	[PK] || [AES]
 }
