@@ -62,7 +62,7 @@ public class Cryptography
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
     private final static String PKI_DSA_SIGNATURE_ALGORITHM = "SHA1WithDSA";
-    private final static String PKI_RSA_SIGNATURE_ALGORITHM = "SHA256WithRSA";
+    private final static String PKI_RSA_SIGNATURE_ALGORITHM = "SHA512WithRSA";
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS5Padding";
