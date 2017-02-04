@@ -258,6 +258,16 @@ public class Cryptography
 	return bytes;
     }
 
+    public byte[] signViaChat(byte data[])
+    {
+	if(data == null || m_chatSignatureKeyPair == null)
+	    return null;
+
+	byte bytes[] = null;
+
+	return bytes;
+    }
+
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
 	throws NoSuchAlgorithmException

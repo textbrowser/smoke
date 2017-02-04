@@ -72,12 +72,18 @@ public class Messages
 
 	try
 	{
-	    byte signature[] = null;
-
 	    output = new ObjectOutputStream(stream);
 	    output.writeObject(message);
 	    output.writeObject(sequence);
 	    output.writeObject(timestamp);
+	    output.flush();
+
+	    byte signature[] = cryptography.signViaChat
+		(Miscellaneous.joinByteArrays(keyBytes, stream.toByteArray()));
+
+	    if(signature == null)
+		throw new Exception();
+
 	    output.writeObject(signature);
 	    output.flush();
 	    messageBytes = stream.toByteArray();
