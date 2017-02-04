@@ -260,7 +260,9 @@ public class Cryptography
 
     public byte[] signViaChat(byte data[])
     {
-	if(data == null || m_chatSignatureKeyPair == null)
+	if(data == null ||
+	   m_chatSignatureKeyPair == null ||
+	   m_chatSignatureKeyPair.getPrivate() == null)
 	    return null;
 
 	byte bytes[] = null;
