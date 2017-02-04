@@ -36,6 +36,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Signature;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.EncodedKeySpec;
@@ -265,7 +266,24 @@ public class Cryptography
 	   m_chatSignatureKeyPair.getPrivate() == null)
 	    return null;
 
+	Signature signature = null;
 	byte bytes[] = null;
+
+	try
+	{
+	    if(m_chatSignatureKeyPair.getPrivate().getAlgorithm() == "DSA")
+		signature = Signature.getInstance("SHA1WithDSA");
+	    else
+		signature = Signature.getInstance("SHA256WithRSA");
+
+	    signature.initSign(m_chatSignatureKeyPair.getPrivate());
+	    signature.update(data);
+	    bytes = signature.sign();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
 
 	return bytes;
     }

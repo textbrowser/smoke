@@ -35,12 +35,12 @@ import java.security.PublicKey;
 public class Messages
 {
     public static byte[] chatMessage(Cryptography cryptography,
-				     PublicKey receiverEncryptionKey,
+				     PublicKey receiverPublicKey,
 				     String message,
 				     String timestamp,
 				     int sequence)
     {
-	if(cryptography == null || receiverEncryptionKey == null)
+	if(cryptography == null || receiverPublicKey == null)
 	    return null;
 
 	/*
@@ -116,11 +116,14 @@ public class Messages
 	byte macBytes[] = cryptography.hmac
 	    (Miscellaneous.joinByteArrays(keyBytes, messageBytes), macKeyBytes);
 
+	if(macKeyBytes == null)
+	    return null;
+
 	/*
 	** [ Destination ]
 	*/
 
-	byte destinationBytes[] = null;
+	byte destinationBytes[] = new byte[64]; // Not used.
 
 	return Miscellaneous.joinByteArrays
 	    (keyBytes, messageBytes, macBytes, destinationBytes);
