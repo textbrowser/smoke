@@ -48,7 +48,8 @@
         android:layout_below="@+id/clear_chat_messages"
         android:layout_above="@+id/chat_message"
         android:layout_toStartOf="@+id/refresh_chat_participants"
-        android:fadeScrollbars="false">
+        android:fadeScrollbars="false"
+        android:id="@+id/chat_scrollview">
 
         <TextView
             android:layout_width="match_parent"

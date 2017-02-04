@@ -36,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class Chat extends AppCompatActivity
@@ -104,8 +105,22 @@ public class Chat extends AppCompatActivity
 		     sequence);
 
 		if(bytes != null)
+		{
 		    textView2.append(Base64.encodeToString(bytes,
 							   Base64.DEFAULT));
+
+		    final ScrollView scrollView = (ScrollView)
+			findViewById(R.id.chat_scrollview);
+
+		    scrollView.post(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+			}
+		    });
+		}
 	    }
 	});
 
