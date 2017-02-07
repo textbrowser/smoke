@@ -247,12 +247,11 @@ public class Authenticate extends AppCompatActivity
 			}
 		    }
 
-		    SingleShot singleShot =
-			new SingleShot(textView1.getText().toString(),
-				       encryptionSalt,
-				       macSalt,
-				       iterationCount);
-		    Thread thread = new Thread(singleShot);
+		    Thread thread = new Thread
+			(new SingleShot(textView1.getText().toString(),
+					encryptionSalt,
+					macSalt,
+					iterationCount));
 
 		    thread.start();
 		}
