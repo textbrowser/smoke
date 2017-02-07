@@ -32,6 +32,7 @@ import java.util.Timer;
 
 public class Kernel
 {
+    private Cryptography m_cryptography = null;
     private Hashtable<Integer, Neighbor> m_neighbors = null;
     private Timer m_congestionPurgeTimer = null;
     private final static int s_congestionPurgeInterval = 15000;
@@ -39,17 +40,10 @@ public class Kernel
 
     private Kernel()
     {
+	m_cryptography = Cryptography.getInstance();
 	m_neighbors = new Hashtable<> ();
 	prepareNeighbors();
 	prepareTimers();
-    }
-
-    private static synchronized Kernel getInstance()
-    {
-	if(s_instance == null)
-	    s_instance = new Kernel();
-
-	return s_instance;
     }
 
     private void prepareNeighbors()
@@ -64,5 +58,13 @@ public class Kernel
 	    m_congestionPurgeTimer.scheduleAtFixedRate
 		(new CongestionPurgeTask(), 0, s_congestionPurgeInterval);
 	}
+    }
+
+    public static synchronized Kernel getInstance()
+    {
+	if(s_instance == null)
+	    s_instance = new Kernel();
+
+	return s_instance;
     }
 }

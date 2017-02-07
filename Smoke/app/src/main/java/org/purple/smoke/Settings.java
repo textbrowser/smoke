@@ -533,6 +533,7 @@ public class Settings extends AppCompatActivity
 			    textView2.setText("");
 			    populateFancyKeyData();
 			    populateNeighbors();
+			    startKernel();
 			}
 		    }
 		});
@@ -562,6 +563,11 @@ public class Settings extends AppCompatActivity
 	final Intent intent = new Intent(Settings.this, Chat.class);
 
 	startActivity(intent);
+    }
+
+    private void startKernel()
+    {
+	Kernel.getInstance();
     }
 
     @Override
@@ -716,6 +722,7 @@ public class Settings extends AppCompatActivity
 	    populateFancyKeyData();
 	    populateName();
 	    populateNeighbors();
+	    startKernel();
 	}
     }
 

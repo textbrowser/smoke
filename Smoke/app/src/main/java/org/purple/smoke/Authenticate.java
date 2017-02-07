@@ -121,11 +121,6 @@ public class Authenticate extends AppCompatActivity
 			    m_password = password;
 			}
 
-			public boolean hasError()
-			{
-			    return m_error;
-			}
-
 			@Override
 			public void run()
 			{
@@ -222,6 +217,29 @@ public class Authenticate extends AppCompatActivity
 					     "An error occurred while " +
 					     "generating the confidential " +
 					     "data.");
+				    else
+				    {
+					Kernel.getInstance();
+					State.getInstance().
+					    setAuthenticated(true);
+
+					/*
+					** Disable some widgets.
+					*/
+
+					button1.setEnabled(false);
+					textView1.setEnabled(false);
+					textView1.setText("");
+
+					String str = m_databaseHelper.
+					    readSetting
+					    (null, "lastActivity");
+
+					if(str.equals("Chat"))
+					    showChatActivity();
+					else if(str.equals("Settings"))
+					    showSettingsActivity();
+				    }
 				}
 			    });
 
@@ -237,27 +255,6 @@ public class Authenticate extends AppCompatActivity
 		    Thread thread = new Thread(singleShot);
 
 		    thread.start();
-
-		    if(!singleShot.hasError())
-		    {
-			State.getInstance().setAuthenticated(true);
-
-			/*
-			** Disable some widgets.
-			*/
-
-			button1.setEnabled(false);
-			textView1.setEnabled(false);
-			textView1.setText("");
-
-			String str = m_databaseHelper.readSetting
-			    (null, "lastActivity");
-
-			if(str.equals("Chat"))
-			    showChatActivity();
-			else if(str.equals("Settings"))
-			    showSettingsActivity();
-		    }
 		}
 	    }
 	});
