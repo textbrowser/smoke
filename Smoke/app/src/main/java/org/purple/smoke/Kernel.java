@@ -40,6 +40,7 @@ public class Kernel
     private Kernel()
     {
 	m_neighbors = new Hashtable<> ();
+	prepareNeighbors();
 	prepareTimers();
     }
 
@@ -49,6 +50,10 @@ public class Kernel
 	    s_instance = new Kernel();
 
 	return s_instance;
+    }
+
+    private void prepareNeighbors()
+    {
     }
 
     private void prepareTimers()
