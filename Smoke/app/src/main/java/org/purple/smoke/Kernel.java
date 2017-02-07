@@ -67,4 +67,17 @@ public class Kernel
 
 	return s_instance;
     }
+
+    public synchronized void start()
+    {
+    }
+
+    public synchronized void stop()
+    {
+	if(m_congestionPurgeTimer != null)
+	{
+	    m_congestionPurgeTimer.cancel();
+	    m_congestionPurgeTimer.purge();
+	}
+    }
 }
