@@ -567,10 +567,7 @@ public class Settings extends AppCompatActivity
 
     private void startKernel()
     {
-	Kernel kernel = Kernel.getInstance();
-
-	kernel.stop();
-	kernel.start();
+	Kernel.getInstance().restart();
     }
 
     @Override
@@ -725,7 +722,6 @@ public class Settings extends AppCompatActivity
 	    populateFancyKeyData();
 	    populateName();
 	    populateNeighbors();
-	    startKernel();
 	}
     }
 
