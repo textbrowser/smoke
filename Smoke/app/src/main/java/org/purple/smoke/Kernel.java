@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Timer;
 
@@ -42,12 +43,41 @@ public class Kernel
     {
 	m_cryptography = Cryptography.getInstance();
 	m_neighbors = new Hashtable<> ();
-	prepareNeighbors();
 	prepareTimers();
     }
 
     private void prepareNeighbors()
     {
+	ArrayList<NeighborElement> neighbors =
+	    Database.getInstance().readNeighbors(m_cryptography);
+
+	if(neighbors == null)
+	    return;
+
+	m_neighbors.clear();
+
+	for(int i = 0; i < neighbors.size(); i++)
+	{
+	    NeighborElement neighborElement = neighbors.get(i);
+
+	    if(neighborElement == null)
+		continue;
+
+	    Neighbor neighbor = null;
+
+	    if(neighborElement.m_transport.equals("TCP"))
+		neighbor = new TcpNeighbor
+		    (neighborElement.m_remoteIpAddress,
+		     neighborElement.m_remotePort,
+		     neighborElement.m_remoteScopeId,
+		     neighborElement.m_ipVersion,
+		     neighborElement.m_oid);
+
+	    if(neighbor == null)
+		continue;
+
+	    m_neighbors.put(neighbors.get(i).m_oid, neighbor);
+	}
     }
 
     private void prepareTimers()
@@ -70,6 +100,8 @@ public class Kernel
 
     public synchronized void restart()
     {
+	prepareNeighbors();
+
 	if(m_congestionPurgeTimer != null)
 	{
 	    m_congestionPurgeTimer.cancel();

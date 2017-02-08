@@ -32,10 +32,9 @@ public class TcpNeighbor extends Neighbor
     public TcpNeighbor(String ipAddress,
 		       String ipPort,
 		       String scopeId,
-		       String transport,
 		       String version,
 		       int oid)
     {
-	super(ipAddress, ipPort, scopeId, transport, version, oid);
+	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
     }
 }

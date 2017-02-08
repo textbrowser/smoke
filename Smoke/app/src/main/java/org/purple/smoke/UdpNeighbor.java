@@ -32,10 +32,9 @@ public class UdpNeighbor extends Neighbor
     public UdpNeighbor(String ipAddress,
 		       String ipPort,
 		       String scopeId,
-		       String transport,
 		       String version,
 		       int oid)
     {
-	super(ipAddress, ipPort, scopeId, transport, version, oid);
+	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
     }
 }
