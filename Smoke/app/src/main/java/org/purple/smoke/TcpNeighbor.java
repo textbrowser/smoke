@@ -27,8 +27,6 @@
 
 package org.purple.smoke;
 
-import java.lang.Integer;
-import java.net.Socket;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -65,13 +63,12 @@ public class TcpNeighbor extends Neighbor
 
 	try
 	{
-	    Socket socket = new Socket(m_ipAddress, Integer.parseInt(m_ipPort));
-
-	    m_socket = (SSLSocket) sslSocketFactory.
-		createSocket(socket,
-			     m_ipAddress,
-			     Integer.parseInt(m_ipPort),
-			     true);
+	    m_socket = (SSLSocket) sslSocketFactory.createSocket
+		(m_ipAddress, Integer.parseInt(m_ipPort));
+	    m_socket.setEnabledProtocols
+		(new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
+	    m_socket.setUseClientMode(true);
+	    m_socket.startHandshake();
 	}
 	catch(Exception exception)
 	{
