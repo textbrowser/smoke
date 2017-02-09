@@ -40,15 +40,6 @@ public class UdpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
-
-	try
-	{
-	    m_socket = new DatagramSocket();
-	}
-	catch(Exception exception)
-	{
-	    m_socket = null;
-	}
     }
 
     public boolean connected()
@@ -58,5 +49,34 @@ public class UdpNeighbor extends Neighbor
 
     public void connect()
     {
+	if(connected())
+	    return;
+	else if(m_socket != null)
+	    return;
+
+	try
+	{
+	    m_socket = new DatagramSocket();
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+    }
+
+    public void disconnect()
+    {
+	try
+	{
+	    if(m_socket != null)
+		m_socket.close();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_socket = null;
+	}
     }
 }

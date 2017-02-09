@@ -567,7 +567,7 @@ public class Settings extends AppCompatActivity
 
     private void startKernel()
     {
-	Kernel.getInstance().restart();
+	Kernel.getInstance();
     }
 
     @Override

@@ -30,13 +30,16 @@ package org.purple.smoke;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class Kernel
 {
     private Cryptography m_cryptography = null;
     private Hashtable<Integer, Neighbor> m_neighbors = null;
     private Timer m_congestionPurgeTimer = null;
+    private Timer m_neighborsTimer = null;
     private final static int s_congestionPurgeInterval = 15000;
+    private final static int s_neighborsInterval = 10000;
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -46,28 +49,48 @@ public class Kernel
 	prepareTimers();
     }
 
-    private void prepareNeighbors()
+    private class NeighborsTask extends TimerTask
+    {
+	@Override
+	public void run()
+	{
+	    prepareNeighbors();
+	}
+    }
+
+    private synchronized void prepareNeighbors()
     {
 	/*
 	** Remove null neighbors.
 	*/
 
-	for(int i = m_neighbors.size() - 1; i >= 0; i--)
-	{
-	    Neighbor neighbor = m_neighbors.get(i);
-
-	    if(neighbor == null)
-	    {
-		m_neighbors.remove(i);
-		continue;
-	    }
-	}
+	for(Hashtable.Entry<Integer, Neighbor> entry: m_neighbors.entrySet())
+	    if(entry.getValue() == null)
+		m_neighbors.remove(entry.getKey());
 
 	ArrayList<NeighborElement> neighbors =
 	    Database.getInstance().readNeighbors(m_cryptography);
+	int count = Database.getInstance().count("neighbors");
 
-	if(neighbors == null)
+	if(count == 0 || neighbors == null)
+	{
+	    /*
+	    ** The neighbors database table may be empty.
+	    ** Remove all neighbors objects.
+	    */
+
+	    if(count == 0)
+	    {
+		for(Hashtable.Entry<Integer, Neighbor> entry:
+			m_neighbors.entrySet())
+		    if(entry.getValue() != null)
+			entry.getValue().disconnect();
+
+		m_neighbors.clear();
+	    }
+
 	    return;
+	}
 
 	for(int i = 0; i < neighbors.size(); i++)
 	{
@@ -76,10 +99,13 @@ public class Kernel
 	    if(neighborElement == null)
 		continue;
 	    else if(m_neighbors.contains(neighborElement.m_oid))
-		/*
-		** Ignore the duplicate.
-		*/
+	    {
+		if(neighborElement.m_status.toLowerCase() == "deleted")
+		    m_neighbors.remove(neighborElement.m_oid);
 
+		continue;
+	    }
+	    else if(neighborElement.m_status.toLowerCase() == "deleted")
 		continue;
 
 	    Neighbor neighbor = null;
@@ -114,6 +140,13 @@ public class Kernel
 	    m_congestionPurgeTimer.scheduleAtFixedRate
 		(new CongestionPurgeTask(), 0, s_congestionPurgeInterval);
 	}
+
+	if(m_neighborsTimer == null)
+	{
+	    m_neighborsTimer = new Timer(true);
+	    m_neighborsTimer.scheduleAtFixedRate
+		(new NeighborsTask(), 0, s_neighborsInterval);
+	}
     }
 
     public static synchronized Kernel getInstance()
@@ -122,20 +155,5 @@ public class Kernel
 	    s_instance = new Kernel();
 
 	return s_instance;
-    }
-
-    public synchronized void restart()
-    {
-	prepareNeighbors();
-
-	if(m_congestionPurgeTimer != null)
-	{
-	    m_congestionPurgeTimer.cancel();
-	    m_congestionPurgeTimer.purge();
-	}
-
-	m_congestionPurgeTimer = new Timer(true);
-	m_congestionPurgeTimer.scheduleAtFixedRate
-	    (new CongestionPurgeTask(), 0, s_congestionPurgeInterval);
     }
 }

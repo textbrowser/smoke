@@ -54,4 +54,8 @@ public class Neighbor
     public void connect()
     {
     }
+
+    public void disconnect()
+    {
+    }
 }

@@ -219,7 +219,7 @@ public class Authenticate extends AppCompatActivity
 					     "data.");
 				    else
 				    {
-					Kernel.getInstance().restart();
+					Kernel.getInstance();
 					State.getInstance().
 					    setAuthenticated(true);
 

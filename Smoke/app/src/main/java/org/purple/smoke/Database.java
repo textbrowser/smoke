@@ -397,6 +397,39 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public int count(String table)
+    {
+	SQLiteDatabase db = getReadableDatabase();
+
+	if(db == null)
+	    return -1;
+
+	int c = 0;
+
+	try
+	{
+	    Cursor cursor = null;
+	    StringBuffer stringBuffer = new StringBuffer();
+
+	    stringBuffer.append("SELECT COUNT(*) FROM ");
+	    stringBuffer.append(table);
+	    cursor = db.rawQuery(stringBuffer.toString(), null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		c = cursor.getInt(0);
+		cursor.close();
+	    }
+	}
+	catch(SQLException exception)
+	{
+	    c = -1;
+	}
+
+	db.close();
+	return c;
+    }
+
     public static synchronized Database getInstance()
     {
 	return s_instance; // Should never be null.

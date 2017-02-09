@@ -74,4 +74,20 @@ public class TcpNeighbor extends Neighbor
 	{
 	}
     }
+
+    public void disconnect()
+    {
+	try
+	{
+	    if(m_socket != null)
+		m_socket.close();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_socket = null;
+	}
+    }
 }
