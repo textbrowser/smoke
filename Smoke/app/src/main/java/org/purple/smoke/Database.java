@@ -456,6 +456,35 @@ public class Database extends SQLiteOpenHelper
 	return s_instance;
     }
 
+    public void neighborControlStatus(Cryptography cryptography,
+				      String controlStatus,
+				      String oid)
+    {
+	if(cryptography == null)
+	    return;
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("status_control",
+		 Base64.encodeToString(cryptography.
+				       etm(controlStatus.trim().getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	}
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db)
     {

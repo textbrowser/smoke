@@ -68,7 +68,6 @@ public class TcpNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	    m_socket = null; // Most likely not required.
-	    return;
 	}
 	finally
 	{

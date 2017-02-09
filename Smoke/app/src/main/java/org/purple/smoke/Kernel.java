@@ -98,7 +98,7 @@ public class Kernel
 
 	    if(neighborElement == null)
 		continue;
-	    else if(m_neighbors.contains(neighborElement.m_oid))
+	    else if(m_neighbors.containsKey(neighborElement.m_oid))
 	    {
 		Neighbor neighbor = m_neighbors.get(neighborElement.m_oid);
 		String statusControl = neighborElement.m_statusControl.
@@ -154,7 +154,7 @@ public class Kernel
 		    equals("disconnect"))
 		neighbor.disconnect();
 
-	    m_neighbors.put(neighbors.get(i).m_oid, neighbor);
+	    m_neighbors.put(neighborElement.m_oid, neighbor);
 	}
     }
 

@@ -184,6 +184,7 @@ public class Settings extends AppCompatActivity
 		Spinner spinner = new Spinner(Settings.this);
 		String array[] = new String[]
 		{
+		    "Action",
 		    "Connect", "Delete", "Disconnect",
 		    "Reset SSL/TLS Credentials"
 		};
@@ -203,11 +204,21 @@ public class Settings extends AppCompatActivity
 						   int position,
 						   long id)
 			{
-			    if(position == 1 && // Delete
+			    if(position == 1) // Connect
+			       m_databaseHelper.neighborControlStatus
+				   (s_cryptography,
+				    "connect",
+				    String.valueOf(parent.getId()));
+			    else if(position == 2 && // Delete
 			       m_databaseHelper.
 			       deleteEntry(String.valueOf(parent.getId()),
 					   "neighbors"))
 				populateNeighbors();
+			    else if(position == 3) // Disconnect
+				m_databaseHelper.neighborControlStatus
+				    (s_cryptography,
+				     "disconnect",
+				     String.valueOf(parent.getId()));
 
 			    parent.setSelection(0);
 			}
