@@ -504,8 +504,7 @@ public class Settings extends AppCompatActivity
 		}
 		catch(InvalidKeySpecException |
 		      NoSuchAlgorithmException |
-		      NumberFormatException |
-		      SQLException exception)
+		      NumberFormatException exception)
 		{
 		    m_error = true;
 		    s_cryptography.reset();

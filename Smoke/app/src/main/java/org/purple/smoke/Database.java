@@ -41,6 +41,7 @@ import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
 {
+    private SQLiteDatabase m_db = null;
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
     private static Database s_instance = null;
@@ -48,11 +49,13 @@ public class Database extends SQLiteOpenHelper
     private Database(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	m_db = getWritableDatabase();
     }
 
     private Database()
     {
 	super(null, DATABASE_NAME, null, DATABASE_VERSION);
+	m_db = getWritableDatabase();
     }
 
     public ArrayList<NeighborElement> readNeighbors(Cryptography cryptography)
@@ -60,18 +63,15 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null)
 	    return null;
 
-	SQLiteDatabase db = getReadableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return null;
 
 	ArrayList<NeighborElement> arrayList = null;
+	Cursor cursor = null;
 
 	try
 	{
-	    Cursor cursor = null;
-
-	    cursor = db.rawQuery
+	    cursor = m_db.rawQuery
 		("SELECT ip_version, " +
 		 "local_ip_address, " +
 		 "local_port, " +
@@ -173,33 +173,36 @@ public class Database extends SQLiteOpenHelper
 
 		    cursor.moveToNext();
 		}
-
-		cursor.close();
 	    }
 	}
-	catch(SQLiteException exception)
+	catch(Exception exception)
 	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
 	}
 
-	db.close();
 	return arrayList;
     }
 
     public String readSetting(Cryptography cryptography, String name)
     {
-	SQLiteDatabase db = getReadableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return "";
 
+	Cursor cursor = null;
 	String str = "";
 
 	try
 	{
-	    Cursor cursor = null;
-
 	    if(cryptography == null)
-		cursor = db.rawQuery
+		cursor = m_db.rawQuery
 		    ("SELECT value FROM settings WHERE name = ?",
 		     new String[] {name});
 	    else
@@ -207,14 +210,13 @@ public class Database extends SQLiteOpenHelper
 		byte bytes[] = cryptography.hmac(name.getBytes());
 
 		if(bytes != null)
-		    cursor = db.rawQuery
+		    cursor = m_db.rawQuery
 			("SELECT value FROM settings WHERE name_digest = ?",
 			 new String[] {Base64.encodeToString(bytes,
 							     Base64.DEFAULT)});
 	    }
 
 	    if(cursor != null && cursor.moveToFirst())
-	    {
 		if(cryptography == null)
 		    str = cursor.getString(0);
 		else
@@ -227,16 +229,17 @@ public class Database extends SQLiteOpenHelper
 		    if(bytes != null)
 			str = new String(bytes);
 		}
-
-		cursor.close();
-	    }
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	    str = "";
 	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
 
-	db.close();
 	return str;
     }
 
@@ -249,10 +252,10 @@ public class Database extends SQLiteOpenHelper
 
     public boolean deleteEntry(String oid, String table)
     {
-	SQLiteDatabase db = getWritableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return false;
+
+	boolean ok = true;
 
 	try
 	{
@@ -261,16 +264,17 @@ public class Database extends SQLiteOpenHelper
 	    stringBuffer.append("DELETE FROM ");
 	    stringBuffer.append(table);
 	    stringBuffer.append(" WHERE OID = ?");
-	    db.execSQL(stringBuffer.toString(), new String[] {oid});
+	    m_db.execSQL(stringBuffer.toString(), new String[] {oid});
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
-	    db.close();
-	    return false;
+	    ok = false;
+	}
+	finally
+	{
 	}
 
-	db.close();
-	return true;
+	return ok;
     }
 
     public boolean writeNeighbor(Cryptography cryptography,
@@ -283,12 +287,23 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null)
 	    return false;
 
-	SQLiteDatabase db = getWritableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return false;
 
-	ContentValues values = new ContentValues();
+	ContentValues values = null;
+	boolean ok = true;
+
+	try
+	{
+	    values = new ContentValues();
+	}
+	catch(Exception exception)
+	{
+	    ok = false;
+	}
+
+	if(!ok)
+	    return ok;
 
 	/*
 	** Content values should prevent SQL injections.
@@ -376,57 +391,55 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
-	    db.close();
-	    return false;
+	    ok = false;
 	}
 
 	try
 	{
-	    if(db.replace("neighbors", null, values) == -1)
-	    {
-		db.close();
-		return false;
-	    }
+	    if(ok)
+		if(m_db.replace("neighbors", null, values) == -1)
+		    ok = false;
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
         {
-	    db.close();
-	    return false;
+	    ok = false;
+	}
+	finally
+	{
 	}
 
-	return true;
+	return ok;
     }
 
     public int count(String table)
     {
-	SQLiteDatabase db = getReadableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return -1;
 
+	Cursor cursor = null;
 	int c = 0;
 
 	try
 	{
-	    Cursor cursor = null;
 	    StringBuffer stringBuffer = new StringBuffer();
 
 	    stringBuffer.append("SELECT COUNT(*) FROM ");
 	    stringBuffer.append(table);
-	    cursor = db.rawQuery(stringBuffer.toString(), null);
+	    cursor = m_db.rawQuery(stringBuffer.toString(), null);
 
 	    if(cursor != null && cursor.moveToFirst())
-	    {
 		c = cursor.getInt(0);
-		cursor.close();
-	    }
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	    c = -1;
 	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
 
-	db.close();
 	return c;
     }
 
@@ -463,7 +476,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    db.execSQL(str);
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	}
 
@@ -479,7 +492,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    db.execSQL(str);
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	}
 
@@ -516,7 +529,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    db.execSQL(str);
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	}
 
@@ -542,7 +555,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    db.execSQL(str);
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	}
 
@@ -559,7 +572,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    db.execSQL(str);
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	}
     }
@@ -578,115 +591,100 @@ public class Database extends SQLiteOpenHelper
 
     public void reset()
     {
-	SQLiteDatabase db = getWritableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return;
 
 	try
 	{
-	    db.execSQL("PRAGMA secure_delete = TRUE");
-	    db.delete("congestion_control", null, null);
-	    db.delete("log", null, null);
-	    db.delete("neighbors", null, null);
-	    db.delete("participants", null, null);
-	    db.delete("settings", null, null);
+	    m_db.execSQL("PRAGMA secure_delete = TRUE");
+	    m_db.delete("congestion_control", null, null);
+	    m_db.delete("log", null, null);
+	    m_db.delete("neighbors", null, null);
+	    m_db.delete("participants", null, null);
+	    m_db.delete("settings", null, null);
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
 	{
 	}
-
-	db.close();
+	finally
+	{
+	}
     }
 
     public void writeLog(String event)
     {
-	SQLiteDatabase db = getWritableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return;
-
-	ContentValues values = new ContentValues();
-
-	values.put("event", event.trim());
 
 	try
 	{
-	    db.insert("log", null, values);
+	    ContentValues values = new ContentValues();
+
+	    values.put("event", event.trim());
+	    m_db.insert("log", null, values);
 	}
-	catch(SQLException exception)
+	catch(Exception exception)
         {
 	}
-
-	db.close();
+	finally
+	{
+	}
     }
 
     public void writeSetting(Cryptography cryptography,
 			     String name,
 			     String value)
-	throws SQLException
     {
-	SQLiteDatabase db = getWritableDatabase();
-
-	if(db == null)
+	if(m_db == null)
 	    return;
-
-	String a = name.trim();
-	String b = name.trim();
-	String c = value; // Do not trim.
-
-	if(cryptography != null)
-	{
-	    byte bytes[] = null;
-
-	    bytes = cryptography.etm(a.getBytes());
-
-	    if(bytes != null)
-		a = Base64.encodeToString(bytes, Base64.DEFAULT);
-	    else
-		a = "";
-
-	    bytes = cryptography.hmac(b.getBytes());
-
-	    if(bytes != null)
-		b = Base64.encodeToString(bytes, Base64.DEFAULT);
-	    else
-		b = "";
-
-	    bytes = cryptography.etm(c.getBytes());
-
-	    if(bytes != null)
-		c = Base64.encodeToString(bytes, Base64.DEFAULT);
-	    else
-		c = "";
-
-	    if(a.isEmpty() || b.isEmpty() || c.isEmpty())
-	    {
-		db.close();
-		throw new SQLiteException();
-	    }
-	}
-
-	ContentValues values = new ContentValues();
-
-	values.put("name", a);
-	values.put("name_digest", b);
-	values.put("value", c);
-
-	/*
-	** Content values should prevent SQL injections.
-	*/
 
 	try
 	{
-	    db.replace("settings", null, values);
-	}
-	catch(SQLException exception)
-        {
-	    db.close();
-	    throw exception;
-	}
+	    String a = name.trim();
+	    String b = name.trim();
+	    String c = value; // Do not trim.
 
-	db.close();
+	    if(cryptography != null)
+	    {
+		byte bytes[] = null;
+
+		bytes = cryptography.etm(a.getBytes());
+
+		if(bytes != null)
+		    a = Base64.encodeToString(bytes, Base64.DEFAULT);
+		else
+		    a = "";
+
+		bytes = cryptography.hmac(b.getBytes());
+
+		if(bytes != null)
+		    b = Base64.encodeToString(bytes, Base64.DEFAULT);
+		else
+		    b = "";
+
+		bytes = cryptography.etm(c.getBytes());
+
+		if(bytes != null)
+		    c = Base64.encodeToString(bytes, Base64.DEFAULT);
+		else
+		    c = "";
+
+		if(a.isEmpty() || b.isEmpty() || c.isEmpty())
+		    throw new SQLiteException();
+	    }
+
+	    ContentValues values = new ContentValues();
+
+	    values.put("name", a);
+	    values.put("name_digest", b);
+	    values.put("value", c);
+	    m_db.replace("settings", null, values);
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	}
     }
 }
