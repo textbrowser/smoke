@@ -29,14 +29,14 @@ package org.purple.smoke;
 
 public class Neighbor
 {
-    private int m_oid = -1;
+    protected int m_oid = -1;
 
-    public Neighbor(String ipAddress,
-		    String ipPort,
-		    String scopeId,
-		    String transport,
-		    String version,
-		    int oid)
+    protected Neighbor(String ipAddress,
+		       String ipPort,
+		       String scopeId,
+		       String transport,
+		       String version,
+		       int oid)
     {
 	m_oid = oid;
     }
