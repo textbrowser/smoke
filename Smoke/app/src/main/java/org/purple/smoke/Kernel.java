@@ -74,13 +74,13 @@ public class Kernel
 
 	if(count == 0 || neighbors == null)
 	{
-	    /*
-	    ** The neighbors database table may be empty.
-	    ** Remove all neighbors objects.
-	    */
-
 	    if(count == 0)
 	    {
+		/*
+		** The neighbors database table is empty.
+		** Remove all neighbors objects.
+		*/
+
 		for(Hashtable.Entry<Integer, Neighbor> entry:
 			m_neighbors.entrySet())
 		    if(entry.getValue() != null)
