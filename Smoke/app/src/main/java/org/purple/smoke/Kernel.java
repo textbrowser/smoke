@@ -100,12 +100,32 @@ public class Kernel
 		continue;
 	    else if(m_neighbors.contains(neighborElement.m_oid))
 	    {
-		if(neighborElement.m_status.toLowerCase() == "deleted")
+		Neighbor neighbor = m_neighbors.get(neighborElement.m_oid);
+		String statusControl = neighborElement.m_statusControl.
+		    toLowerCase();
+
+		if(statusControl.equals("connect"))
+		{
+		    if(neighbor != null)
+			neighbor.connect();
+		}
+		else if(statusControl.equals("delete"))
+		{
+		    if(neighbor != null)
+			neighbor.disconnect();
+
 		    m_neighbors.remove(neighborElement.m_oid);
+		}
+		else if(statusControl.equals("disconnect"))
+		{
+		    if(neighbor != null)
+			neighbor.disconnect();
+		}
 
 		continue;
 	    }
-	    else if(neighborElement.m_status.toLowerCase() == "deleted")
+	    else if(neighborElement.m_statusControl.toLowerCase().
+		    equals("delete"))
 		continue;
 
 	    Neighbor neighbor = null;
@@ -127,6 +147,12 @@ public class Kernel
 
 	    if(neighbor == null)
 		continue;
+	    else if(neighborElement.m_statusControl.toLowerCase().
+		    equals("connect"))
+		neighbor.connect();
+	    else if(neighborElement.m_statusControl.toLowerCase().
+		    equals("disconnect"))
+		neighbor.disconnect();
 
 	    m_neighbors.put(neighbors.get(i).m_oid, neighbor);
 	}

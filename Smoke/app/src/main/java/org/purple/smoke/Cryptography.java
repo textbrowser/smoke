@@ -116,12 +116,12 @@ public class Cryptography
 	stringBuffer.append("Format: ");
 	stringBuffer.append(publicKey.getFormat());
 
-	if(algorithm == "DSA" || algorithm == "RSA")
+	if(algorithm.equals("DSA") || algorithm.equals("RSA"))
 	    try
 	    {
 		KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
 
-		if(algorithm == "DSA")
+		if(algorithm.equals("DSA"))
 		{
 		    DSAPublicKey dsaPublicKey = (DSAPublicKey) publicKey;
 
@@ -129,7 +129,7 @@ public class Cryptography
 			stringBuffer.append("\n").append("Size: ").
 			    append(dsaPublicKey.getY().bitLength());
 		}
-		else if(algorithm == "RSA")
+		else if(algorithm.equals("RSA"))
 		{
 		    RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
 
@@ -282,7 +282,7 @@ public class Cryptography
 
 	try
 	{
-	    if(m_chatSignatureKeyPair.getPrivate().getAlgorithm() == "DSA")
+	    if(m_chatSignatureKeyPair.getPrivate().getAlgorithm().equals("DSA"))
 		signature = Signature.getInstance(PKI_DSA_SIGNATURE_ALGORITHM);
 	    else
 		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
@@ -433,7 +433,7 @@ public class Cryptography
 
 	try
 	{
-	    if(publicKey.getAlgorithm() == "DSA")
+	    if(publicKey.getAlgorithm().equals("DSA"))
 		signature = Signature.getInstance(PKI_DSA_SIGNATURE_ALGORITHM);
 	    else
 		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
