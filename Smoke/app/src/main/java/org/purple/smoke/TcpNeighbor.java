@@ -27,8 +27,12 @@
 
 package org.purple.smoke;
 
+import java.net.Socket;
+
 public class TcpNeighbor extends Neighbor
 {
+    private Socket m_socket = null;
+
     public TcpNeighbor(String ipAddress,
 		       String ipPort,
 		       String scopeId,
@@ -36,5 +40,23 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
+
+	try
+	{
+	    m_socket = new Socket();
+	}
+	catch(Exception exception)
+	{
+	    m_socket = null;
+	}
+    }
+
+    public boolean connected()
+    {
+	return m_socket != null && m_socket.isConnected();
+    }
+
+    public void connect()
+    {
     }
 }

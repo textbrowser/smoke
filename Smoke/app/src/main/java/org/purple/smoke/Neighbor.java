@@ -41,8 +41,17 @@ public class Neighbor
 	m_oid = oid;
     }
 
+    public boolean connected()
+    {
+	return false;
+    }
+
     public int oid()
     {
 	return m_oid;
+    }
+
+    public void connect()
+    {
     }
 }

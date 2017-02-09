@@ -48,19 +48,38 @@ public class Kernel
 
     private void prepareNeighbors()
     {
+	/*
+	** Removed null neighbors.
+	*/
+
+	for(int i = m_neighbors.size() - 1; i >= 0; i--)
+	{
+	    Neighbor neighbor = m_neighbors.get(i);
+
+	    if(neighbor == null)
+	    {
+		m_neighbors.remove(i);
+		continue;
+	    }
+	}
+
 	ArrayList<NeighborElement> neighbors =
 	    Database.getInstance().readNeighbors(m_cryptography);
 
 	if(neighbors == null)
 	    return;
 
-	m_neighbors.clear();
-
 	for(int i = 0; i < neighbors.size(); i++)
 	{
 	    NeighborElement neighborElement = neighbors.get(i);
 
 	    if(neighborElement == null)
+		continue;
+	    else if(m_neighbors.contains(neighborElement.m_oid))
+		/*
+		** Ignore the duplicate.
+		*/
+
 		continue;
 
 	    Neighbor neighbor = null;

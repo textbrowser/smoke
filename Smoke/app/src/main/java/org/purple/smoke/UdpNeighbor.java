@@ -27,8 +27,12 @@
 
 package org.purple.smoke;
 
+import java.net.DatagramSocket;
+
 public class UdpNeighbor extends Neighbor
 {
+    private DatagramSocket m_socket;
+
     public UdpNeighbor(String ipAddress,
 		       String ipPort,
 		       String scopeId,
@@ -36,5 +40,23 @@ public class UdpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
+
+	try
+	{
+	    m_socket = new DatagramSocket();
+	}
+	catch(Exception exception)
+	{
+	    m_socket = null;
+	}
+    }
+
+    public boolean connected()
+    {
+	return m_socket != null && m_socket.isConnected();
+    }
+
+    public void connect()
+    {
     }
 }
