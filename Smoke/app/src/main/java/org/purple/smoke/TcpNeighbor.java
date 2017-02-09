@@ -52,6 +52,8 @@ public class TcpNeighbor extends Neighbor
     {
 	if(connected())
 	    return;
+	else if(m_socket != null)
+	    return;
 
 	SSLSocketFactory sslSocketFactory =
 	    (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -65,20 +67,11 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    m_socket = null; // Most likely not required.
+	    return;
 	}
 	finally
 	{
-	    try
-	    {
-		if(m_socket != null)
-		    m_socket.close();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    m_socket = null;
-	    return;
 	}
     }
 }
