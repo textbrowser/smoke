@@ -49,7 +49,7 @@ public class Kernel
     private void prepareNeighbors()
     {
 	/*
-	** Removed null neighbors.
+	** Remove null neighbors.
 	*/
 
 	for(int i = m_neighbors.size() - 1; i >= 0; i--)
