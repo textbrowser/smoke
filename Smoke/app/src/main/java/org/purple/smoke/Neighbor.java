@@ -29,6 +29,10 @@ package org.purple.smoke;
 
 public class Neighbor
 {
+    protected String m_ipAddress;
+    protected String m_ipPort;
+    protected String m_scopeId;
+    protected String m_version;
     protected int m_oid = -1;
 
     protected Neighbor(String ipAddress,
@@ -38,7 +42,11 @@ public class Neighbor
 		       String version,
 		       int oid)
     {
+	m_ipAddress = ipAddress;
+	m_ipPort = ipPort;
 	m_oid = oid;
+	m_scopeId = scopeId;
+	m_version = version;
     }
 
     public boolean connected()

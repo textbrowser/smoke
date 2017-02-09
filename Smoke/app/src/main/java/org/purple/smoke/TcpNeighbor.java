@@ -27,6 +27,8 @@
 
 package org.purple.smoke;
 
+import java.lang.Integer;
+import java.net.Socket;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -63,7 +65,13 @@ public class TcpNeighbor extends Neighbor
 
 	try
 	{
-	    m_socket = (SSLSocket) sslSocketFactory.createSocket();
+	    Socket socket = new Socket(m_ipAddress, Integer.parseInt(m_ipPort));
+
+	    m_socket = (SSLSocket) sslSocketFactory.
+		createSocket(socket,
+			     m_ipAddress,
+			     Integer.parseInt(m_ipPort),
+			     true);
 	}
 	catch(Exception exception)
 	{
