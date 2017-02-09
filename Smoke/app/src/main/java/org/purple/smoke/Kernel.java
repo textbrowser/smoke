@@ -72,6 +72,13 @@ public class Kernel
 		     neighborElement.m_remoteScopeId,
 		     neighborElement.m_ipVersion,
 		     neighborElement.m_oid);
+	    else if(neighborElement.m_transport.equals("UDP"))
+		neighbor = new UdpNeighbor
+		    (neighborElement.m_remoteIpAddress,
+		     neighborElement.m_remotePort,
+		     neighborElement.m_remoteScopeId,
+		     neighborElement.m_ipVersion,
+		     neighborElement.m_oid);
 
 	    if(neighbor == null)
 		continue;

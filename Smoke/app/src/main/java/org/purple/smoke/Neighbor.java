@@ -40,4 +40,9 @@ public class Neighbor
     {
 	m_oid = oid;
     }
+
+    public int oid()
+    {
+	return m_oid;
+    }
 }
