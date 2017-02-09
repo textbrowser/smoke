@@ -27,11 +27,12 @@
 
 package org.purple.smoke;
 
-import java.net.Socket;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 public class TcpNeighbor extends Neighbor
 {
-    private Socket m_socket = null;
+    private SSLSocket m_socket = null;
 
     public TcpNeighbor(String ipAddress,
 		       String ipPort,
@@ -40,15 +41,6 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
-
-	try
-	{
-	    m_socket = new Socket();
-	}
-	catch(Exception exception)
-	{
-	    m_socket = null;
-	}
     }
 
     public boolean connected()
@@ -58,5 +50,35 @@ public class TcpNeighbor extends Neighbor
 
     public void connect()
     {
+	if(connected())
+	    return;
+
+	SSLSocketFactory sslSocketFactory =
+	    (SSLSocketFactory) SSLSocketFactory.getDefault();
+
+	if(sslSocketFactory == null)
+	    return;
+
+	try
+	{
+	    m_socket = (SSLSocket) sslSocketFactory.createSocket();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    try
+	    {
+		if(m_socket != null)
+		    m_socket.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    m_socket = null;
+	    return;
+	}
     }
 }
