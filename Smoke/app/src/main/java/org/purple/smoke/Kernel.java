@@ -122,6 +122,20 @@ public class Kernel
 			neighbor.disconnect();
 		}
 
+		if(neighbor != null)
+		{
+		    if(neighbor.connected())
+			Database.getInstance().saveNeighborStatus
+			    (m_cryptography,
+			     "connected",
+			     String.valueOf(neighborElement.m_oid));
+		    else
+			Database.getInstance().saveNeighborStatus
+			    (m_cryptography,
+			     "disconnected",
+			     String.valueOf(neighborElement.m_oid));
+		}
+
 		continue;
 	    }
 	    else if(neighborElement.m_statusControl.toLowerCase().

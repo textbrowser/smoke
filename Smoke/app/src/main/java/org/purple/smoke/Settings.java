@@ -233,7 +233,7 @@ public class Settings extends AppCompatActivity
 
 		if(arrayList.get(i).m_status.equals("connected"))
 		    textView.setBackgroundColor
-			(Color.parseColor("lightgreen"));
+			(Color.rgb(144, 238, 144)); // Light Green
 		else
 		    textView.setBackgroundColor(Color.rgb(240, 128, 128));
 

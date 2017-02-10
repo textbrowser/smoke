@@ -640,6 +640,35 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void saveNeighborStatus(Cryptography cryptography,
+				   String status,
+				   String oid)
+    {
+	if(cryptography == null)
+	    return;
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("status",
+		 Base64.encodeToString(cryptography.
+				       etm(status.trim().getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	}
+    }
+
     public void writeLog(String event)
     {
 	if(m_db == null)
