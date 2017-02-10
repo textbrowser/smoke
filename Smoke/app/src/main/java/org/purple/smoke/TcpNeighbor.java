@@ -66,7 +66,8 @@ public class TcpNeighbor extends Neighbor
 	try
 	{
 	    SSLContext sslContext = SSLContext.getInstance("TLS");
-	    TrustManager trustManagers[] = new TrustManager[] {
+	    TrustManager trustManagers[] = new TrustManager[]
+	    {
 		new X509TrustManager()
 		{
 		    public X509Certificate[] getAcceptedIssuers()
@@ -83,7 +84,8 @@ public class TcpNeighbor extends Neighbor
 			(X509Certificate[] chain, String authType)
 		    {
 		    }
-		}};
+		}
+	    };
 
 	    sslContext.init(null, trustManagers, null);
 	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket();
