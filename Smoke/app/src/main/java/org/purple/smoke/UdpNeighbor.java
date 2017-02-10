@@ -32,6 +32,7 @@ import java.net.DatagramSocket;
 public class UdpNeighbor extends Neighbor
 {
     private DatagramSocket m_socket;
+    private Object m_socketMutex = null;
 
     public UdpNeighbor(String ipAddress,
 		       String ipPort,
@@ -40,27 +41,43 @@ public class UdpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
+	m_socketMutex = new Object();
     }
 
     public boolean connected()
     {
-	return m_socket != null && m_socket.isConnected();
+	synchronized(m_socketMutex)
+	{
+	    return m_socket != null && m_socket.isConnected();
+	}
     }
 
     public void connect()
     {
 	if(connected())
 	    return;
-	else if(m_socket != null)
-	    return;
+	else
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null)
+		    return;
+	    }
+	}
 
 	try
 	{
-	    m_socket = new DatagramSocket();
+	    synchronized(m_socketMutex)
+	    {
+		m_socket = new DatagramSocket();
+	    }
 	}
 	catch(Exception exception)
 	{
-	    return;
+	    synchronized(m_socketMutex)
+	    {
+		m_socket = null;
+	    }
 	}
     }
 
@@ -68,15 +85,21 @@ public class UdpNeighbor extends Neighbor
     {
 	try
 	{
-	    if(m_socket != null)
-		m_socket.close();
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null)
+		    m_socket.close();
+	    }
 	}
 	catch(Exception exception)
 	{
 	}
 	finally
 	{
-	    m_socket = null;
+	    synchronized(m_socketMutex)
+	    {
+		m_socket = null;
+	    }
 	}
     }
 }

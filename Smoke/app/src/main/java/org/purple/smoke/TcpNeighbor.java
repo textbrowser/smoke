@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
@@ -122,7 +123,18 @@ public class TcpNeighbor extends Neighbor
 	{
 	    synchronized(m_socketMutex)
 	    {
-		m_socket = null; // Most likely not required.
+		try
+		{
+		    if(m_socket != null)
+			m_socket.close();
+		}
+		catch(IOException ioException)
+		{
+		}
+		finally
+		{
+		    m_socket = null;
+		}
 	    }
 	}
 	finally
