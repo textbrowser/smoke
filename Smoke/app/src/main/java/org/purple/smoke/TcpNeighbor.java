@@ -89,12 +89,12 @@ public class TcpNeighbor extends Neighbor
 		    }
 
 		    public void checkClientTrusted
-			(X509Certificate[] chain, String authType)
+			(X509Certificate chain[], String authType)
 		    {
 		    }
 
 		    public void checkServerTrusted
-			(X509Certificate[] chain, String authType)
+			(X509Certificate chain[], String authType)
 		    {
 		    }
 		}
