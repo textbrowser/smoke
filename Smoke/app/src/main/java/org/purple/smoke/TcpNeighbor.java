@@ -39,6 +39,8 @@ public class TcpNeighbor extends Neighbor
     private Object m_socketMutex = null;
     private SSLSocket m_socket = null;
     private final static int s_connectionTimeout = 2500;
+    private final static int s_soLingerTimeout = 10;
+    private final static int s_soTimeout = 10000;
 
     public TcpNeighbor(String ipAddress,
 		       String ipPort,
@@ -110,7 +112,8 @@ public class TcpNeighbor extends Neighbor
 		m_socket.setEnabledProtocols
 		    (new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
 		m_socket.setKeepAlive(true);
-		m_socket.setSoLinger(true, 10);
+		m_socket.setSoLinger(true, s_soLingerTimeout);
+		m_socket.setSoTimeout(s_soTimeout);
 		m_socket.setUseClientMode(true);
 		m_socket.startHandshake();
 	    }
