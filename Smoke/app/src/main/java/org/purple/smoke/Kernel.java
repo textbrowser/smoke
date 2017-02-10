@@ -67,8 +67,8 @@ public class Kernel
 	if(count == 0 || neighbors == null)
 	{
 	    /*
-	    ** The neighbors database table is empty.
-	    ** Remove all neighbors objects.
+	    ** Disconnect all existing sockets.
+	    ** Remove null neighbors.
 	    */
 
 	    for(Hashtable.Entry<Integer, Neighbor> entry:
