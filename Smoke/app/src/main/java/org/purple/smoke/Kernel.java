@@ -91,6 +91,30 @@ public class Kernel
 		    m_neighbors.entrySet())
 		if(entry.getValue() == null)
 		    m_neighbors.remove(entry.getKey());
+		else
+		{
+		    /*
+		    ** Remove neighbor objects which do not exist in the
+		    ** database.
+		    */
+
+		    boolean found = false;
+		    int oid = entry.getValue().m_oid;
+
+		    for(int i = 0; i < neighbors.size(); i++)
+			if(neighbors.get(i) != null &&
+			   neighbors.get(i).m_oid == oid)
+			{
+			    found = true;
+			    break;
+			}
+
+		    if(!found)
+		    {
+			entry.getValue().disconnect();
+			m_neighbors.remove(entry.getKey());
+		    }
+		}
 
 	for(int i = 0; i < neighbors.size(); i++)
 	{
