@@ -33,7 +33,8 @@ import java.util.TimerTask;
 
 public class Neighbor
 {
-    private static final int s_timerInterval = 90000;
+    private static final int s_silence = 90000;
+    private static final int s_timerInterval = 15000;
     private Timer m_timer = null;
     protected Date m_lastTimeReadWrite = null;
     protected String m_ipAddress;
@@ -55,7 +56,7 @@ public class Neighbor
     {
 	Date now = new Date();
 
-	if(now.getTime() - m_lastTimeReadWrite.getTime() > s_timerInterval)
+	if(now.getTime() - m_lastTimeReadWrite.getTime() > s_silence)
 	    disconnect();
     }
 
