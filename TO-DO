@@ -28,3 +28,4 @@ Remaining Items
 10.    ECDSA, ECPublicKey.
 11.    EPKS.
 12.    Retain first-contact server certificate.
+13.    Introduce termination logic on critical TCP read/write errors.
