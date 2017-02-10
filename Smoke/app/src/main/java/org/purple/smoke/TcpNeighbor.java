@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.net.InetSocketAddress;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
@@ -36,6 +37,7 @@ import javax.net.ssl.X509TrustManager;
 public class TcpNeighbor extends Neighbor
 {
     private SSLSocket m_socket = null;
+    private final static int s_connectionTimeout = 2500;
 
     public TcpNeighbor(String ipAddress,
 		       String ipPort,
@@ -81,8 +83,10 @@ public class TcpNeighbor extends Neighbor
 		}};
 
 	    sslContext.init(null, trustManagers, null);
-	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket
-		(m_ipAddress, Integer.parseInt(m_ipPort));
+	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket();
+	    m_socket.connect
+		(new InetSocketAddress(m_ipAddress, Integer.parseInt(m_ipPort)),
+		 s_connectionTimeout);
 	    m_socket.setEnabledProtocols
 		(new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
 	    m_socket.setUseClientMode(true);
