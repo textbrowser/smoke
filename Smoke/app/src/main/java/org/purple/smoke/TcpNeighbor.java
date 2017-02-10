@@ -109,6 +109,7 @@ public class TcpNeighbor extends Neighbor
 		     s_connectionTimeout);
 		m_socket.setEnabledProtocols
 		    (new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
+		m_socket.setKeepAlive(true);
 		m_socket.setSoLinger(true, 10);
 		m_socket.setUseClientMode(true);
 		m_socket.startHandshake();
