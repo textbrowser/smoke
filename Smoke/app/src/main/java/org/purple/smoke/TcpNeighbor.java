@@ -27,8 +27,11 @@
 
 package org.purple.smoke;
 
+import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class TcpNeighbor extends Neighbor
 {
@@ -55,15 +58,30 @@ public class TcpNeighbor extends Neighbor
 	else if(m_socket != null)
 	    return;
 
-	SSLSocketFactory sslSocketFactory =
-	    (SSLSocketFactory) SSLSocketFactory.getDefault();
-
-	if(sslSocketFactory == null)
-	    return;
-
 	try
 	{
-	    m_socket = (SSLSocket) sslSocketFactory.createSocket
+	    SSLContext sslContext = SSLContext.getInstance("TLS");
+	    TrustManager trustManagers[] = new TrustManager[] {
+		new X509TrustManager()
+		{
+		    public X509Certificate[] getAcceptedIssuers()
+		    {
+			return new X509Certificate[0];
+		    }
+
+		    public void checkClientTrusted
+			(X509Certificate[] chain, String authType)
+		    {
+		    }
+
+		    public void checkServerTrusted
+			(X509Certificate[] chain, String authType)
+		    {
+		    }
+		}};
+
+	    sslContext.init(null, trustManagers, null);
+	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket
 		(m_ipAddress, Integer.parseInt(m_ipPort));
 	    m_socket.setEnabledProtocols
 		(new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
