@@ -50,7 +50,10 @@ public class TcpNeighbor extends Neighbor
 
     public boolean connected()
     {
-	return m_socket != null && m_socket.isConnected();
+	return m_socket != null &&
+	    m_socket.isConnected() &&
+	    m_socket.getSession() != null &&
+	    m_socket.getSession().isValid();
     }
 
     public void connect()
