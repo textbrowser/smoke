@@ -58,7 +58,7 @@ public class Kernel
 	}
     }
 
-    private synchronized void prepareNeighbors()
+    private void prepareNeighbors()
     {
 	/*
 	** Remove null neighbors.

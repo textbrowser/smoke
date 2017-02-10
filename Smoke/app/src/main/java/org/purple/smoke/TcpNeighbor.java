@@ -36,6 +36,7 @@ import javax.net.ssl.X509TrustManager;
 
 public class TcpNeighbor extends Neighbor
 {
+    private Object m_socketMutex = null;
     private SSLSocket m_socket = null;
     private final static int s_connectionTimeout = 2500;
 
@@ -46,22 +47,32 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
+	m_socketMutex = new Object();
     }
 
     public boolean connected()
     {
-	return m_socket != null &&
-	    m_socket.isConnected() &&
-	    m_socket.getSession() != null &&
-	    m_socket.getSession().isValid();
+	synchronized(m_socketMutex)
+	{
+	    return m_socket != null &&
+		m_socket.isConnected() &&
+		m_socket.getSession() != null &&
+		m_socket.getSession().isValid();
+	}
     }
 
     public void connect()
     {
 	if(connected())
 	    return;
-	else if(m_socket != null)
-	    return;
+	else
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null)
+		    return;
+	    }
+	}
 
 	try
 	{
@@ -88,18 +99,26 @@ public class TcpNeighbor extends Neighbor
 	    };
 
 	    sslContext.init(null, trustManagers, null);
-	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket();
-	    m_socket.connect
-		(new InetSocketAddress(m_ipAddress, Integer.parseInt(m_ipPort)),
-		 s_connectionTimeout);
-	    m_socket.setEnabledProtocols
-		(new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
-	    m_socket.setUseClientMode(true);
-	    m_socket.startHandshake();
+	    synchronized(m_socketMutex)
+	    {
+		m_socket = (SSLSocket) sslContext.getSocketFactory().
+		    createSocket();
+		m_socket.connect
+		    (new InetSocketAddress(m_ipAddress,
+					   Integer.parseInt(m_ipPort)),
+		     s_connectionTimeout);
+		m_socket.setEnabledProtocols
+		    (new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
+		m_socket.setUseClientMode(true);
+		m_socket.startHandshake();
+	    }
 	}
 	catch(Exception exception)
 	{
-	    m_socket = null; // Most likely not required.
+	    synchronized(m_socketMutex)
+	    {
+		m_socket = null; // Most likely not required.
+	    }
 	}
 	finally
 	{
@@ -110,15 +129,21 @@ public class TcpNeighbor extends Neighbor
     {
 	try
 	{
-	    if(m_socket != null)
-		m_socket.close();
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null)
+		    m_socket.close();
+	    }
 	}
 	catch(Exception exception)
 	{
 	}
 	finally
 	{
-	    m_socket = null;
+	    synchronized(m_socketMutex)
+	    {
+		m_socket = null;
+	    }
 	}
     }
 }

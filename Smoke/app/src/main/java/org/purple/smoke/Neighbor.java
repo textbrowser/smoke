@@ -37,10 +37,10 @@ public class Neighbor
     private static final int s_timerInterval = 15000;
     private Timer m_timer = null;
     protected Date m_lastTimeReadWrite = null;
-    protected String m_ipAddress;
-    protected String m_ipPort;
-    protected String m_scopeId;
-    protected String m_version;
+    protected String m_ipAddress = "";
+    protected String m_ipPort = "";
+    protected String m_scopeId = "";
+    protected String m_version = "";
     protected int m_oid = -1;
 
     private class NeighborTask extends TimerTask
@@ -52,11 +52,18 @@ public class Neighbor
 	}
     }
 
-    private synchronized void terminate()
+    private void terminate()
     {
 	Date now = new Date();
+	boolean disconnect = false;
 
-	if(now.getTime() - m_lastTimeReadWrite.getTime() > s_silence)
+	synchronized(m_lastTimeReadWrite)
+	{
+	    disconnect = now.getTime() - m_lastTimeReadWrite.getTime() >
+		s_silence;
+	}
+
+	if(disconnect)
 	    disconnect();
     }
 

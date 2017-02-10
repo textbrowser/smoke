@@ -57,6 +57,10 @@ public class Cryptography
 {
     private KeyPair m_chatEncryptionKeyPair = null;
     private KeyPair m_chatSignatureKeyPair = null;
+    private Object m_chatEncryptionKeyPairMutex = null;
+    private Object m_chatSignatureKeyPairMutex = null;
+    private Object m_encryptionKeyMutex = null;
+    private Object m_macKeyMutex = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
     private final static String HASH_ALGORITHM = "SHA-512";
@@ -68,6 +72,14 @@ public class Cryptography
 	"AES/CBC/PKCS5Padding";
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
+
+    private Cryptography()
+    {
+	m_chatEncryptionKeyPairMutex = new Object();
+	m_chatSignatureKeyPairMutex = new Object();
+	m_encryptionKeyMutex = new Object();
+	m_macKeyMutex = new Object();
+    }
 
     private static synchronized void prepareSecureRandom()
     {
@@ -90,12 +102,18 @@ public class Cryptography
 
     public KeyPair chatEncryptionKeyPair()
     {
-	return m_chatEncryptionKeyPair;
+	synchronized(m_chatEncryptionKeyPairMutex)
+	{
+	    return m_chatEncryptionKeyPair;
+	}
     }
 
     public KeyPair chatSignatureKeyPair()
     {
-	return m_chatSignatureKeyPair;
+	synchronized(m_chatSignatureKeyPairMutex)
+	{
+	    return m_chatSignatureKeyPair;
+	}
     }
 
     public String fancyKeyInformationOutput(KeyPair keyPair)
@@ -147,11 +165,14 @@ public class Cryptography
 
     public byte[] chatEncryptionKeyDigest()
     {
-	if(m_chatSignatureKeyPair == null ||
-	   m_chatSignatureKeyPair.getPublic() == null)
-	    return null;
+	synchronized(m_chatEncryptionKeyPairMutex)
+	{
+	    if(m_chatEncryptionKeyPair == null ||
+	       m_chatEncryptionKeyPair.getPublic() == null)
+		return null;
 
-	return sha512(m_chatSignatureKeyPair.getPublic().getEncoded());
+	    return sha512(m_chatEncryptionKeyPair.getPublic().getEncoded());
+	}
     }
 
     public byte[] etm(byte data[])
@@ -160,8 +181,11 @@ public class Cryptography
 	** Encrypt-then-MAC.
 	*/
 
-	if(data == null || m_encryptionKey == null || m_macKey == null)
-	    return null;
+	synchronized(m_macKeyMutex)
+	{
+	    if(data == null || m_encryptionKey == null || m_macKey == null)
+		return null;
+	}
 
 	prepareSecureRandom();
 
@@ -173,16 +197,25 @@ public class Cryptography
 	    Mac mac = null;
 	    byte iv[] = new byte[16];
 
-	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
-	    cipher.init(Cipher.ENCRYPT_MODE,
-			m_encryptionKey,
-			new IvParameterSpec(iv));
-	    bytes = cipher.doFinal(data);
-	    mac = Mac.getInstance(HMAC_ALGORITHM);
-	    mac.init(m_macKey);
+
+	    synchronized(m_encryptionKeyMutex)
+	    {
+		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+		cipher.init(Cipher.ENCRYPT_MODE,
+			    m_encryptionKey,
+			    new IvParameterSpec(iv));
+		bytes = cipher.doFinal(data);
+	    }
+
 	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
-	    bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
+
+	    synchronized(m_macKeyMutex)
+	    {
+		mac = Mac.getInstance(HMAC_ALGORITHM);
+		mac.init(m_macKey);
+		bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -194,8 +227,11 @@ public class Cryptography
 
     public byte[] hmac(byte data[])
     {
-	if(data == null || m_macKey == null)
-	    return null;
+	synchronized(m_macKeyMutex)
+	{
+	    if(data == null || m_macKey == null)
+		return null;
+	}
 
 	byte bytes[] = null;
 
@@ -203,9 +239,12 @@ public class Cryptography
 	{
 	    Mac mac = null;
 
-	    mac = Mac.getInstance(HMAC_ALGORITHM);
-	    mac.init(m_macKey);
-	    bytes = mac.doFinal(data);
+	    synchronized(m_macKeyMutex)
+	    {
+		mac = Mac.getInstance(HMAC_ALGORITHM);
+		mac.init(m_macKey);
+		bytes = mac.doFinal(data);
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -221,8 +260,11 @@ public class Cryptography
 	** MAC-then-decrypt.
 	*/
 
-	if(data == null || m_encryptionKey == null || m_macKey == null)
-	    return null;
+	synchronized(m_macKeyMutex)
+	{
+	    if(data == null || m_encryptionKey == null || m_macKey == null)
+		return null;
+	}
 
 	try
 	{
@@ -236,9 +278,14 @@ public class Cryptography
 
 	    digest1 = Arrays.copyOfRange
 		(data, data.length - 512 / 8, data.length);
-	    mac = Mac.getInstance(HMAC_ALGORITHM);
-	    mac.init(m_macKey);
-	    digest2 = mac.doFinal(Arrays.copyOf(data, data.length - 512 / 8));
+
+	    synchronized(m_macKeyMutex)
+	    {
+		mac = Mac.getInstance(HMAC_ALGORITHM);
+		mac.init(m_macKey);
+		digest2 = mac.doFinal
+		    (Arrays.copyOf(data, data.length - 512 / 8));
+	    }
 
 	    if(!memcmp(digest1, digest2))
 		return null;
@@ -255,12 +302,15 @@ public class Cryptography
 	    Cipher cipher = null;
 	    byte iv[] = Arrays.copyOf(data, 16);
 
-	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
-	    cipher.init(Cipher.DECRYPT_MODE,
-			m_encryptionKey,
-			new IvParameterSpec(iv));
-	    bytes = cipher.doFinal
-		(Arrays.copyOfRange(data, 16, data.length - 512 / 8));
+	    synchronized(m_encryptionKeyMutex)
+	    {
+		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+		cipher.init(Cipher.DECRYPT_MODE,
+			    m_encryptionKey,
+			    new IvParameterSpec(iv));
+		bytes = cipher.doFinal
+		    (Arrays.copyOfRange(data, 16, data.length - 512 / 8));
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -272,24 +322,33 @@ public class Cryptography
 
     public byte[] signViaChat(byte data[])
     {
-	if(data == null ||
-	   m_chatSignatureKeyPair == null ||
-	   m_chatSignatureKeyPair.getPrivate() == null)
-	    return null;
+	synchronized(m_chatSignatureKeyPairMutex)
+	{
+	    if(data == null ||
+	       m_chatSignatureKeyPair == null ||
+	       m_chatSignatureKeyPair.getPrivate() == null)
+		return null;
+	}
 
 	Signature signature = null;
 	byte bytes[] = null;
 
 	try
 	{
-	    if(m_chatSignatureKeyPair.getPrivate().getAlgorithm().equals("DSA"))
-		signature = Signature.getInstance(PKI_DSA_SIGNATURE_ALGORITHM);
-	    else
-		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
+	    synchronized(m_chatSignatureKeyPairMutex)
+	    {
+		if(m_chatSignatureKeyPair.getPrivate().getAlgorithm().
+		   equals("DSA"))
+		    signature = Signature.getInstance
+			(PKI_DSA_SIGNATURE_ALGORITHM);
+		else
+		    signature = Signature.getInstance
+			(PKI_RSA_SIGNATURE_ALGORITHM);
 
-	    signature.initSign(m_chatSignatureKeyPair.getPrivate());
-	    signature.update(data);
-	    bytes = signature.sign();
+		signature.initSign(m_chatSignatureKeyPair.getPrivate());
+		signature.update(data);
+		bytes = signature.sign();
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -562,45 +621,78 @@ public class Cryptography
 
     public void reset()
     {
-	m_chatEncryptionKeyPair = null;
-	m_chatSignatureKeyPair = null;
-	m_encryptionKey = null;
-	m_macKey = null;
+	synchronized(m_chatEncryptionKeyPairMutex)
+	{
+	    m_chatEncryptionKeyPair = null;
+	}
+
+	synchronized(m_chatSignatureKeyPairMutex)
+	{
+	    m_chatSignatureKeyPair = null;
+	}
+
+	synchronized(m_encryptionKeyMutex)
+	{
+	    m_encryptionKey = null;
+	}
+
+	synchronized(m_macKeyMutex)
+	{
+	    m_macKey = null;
+	}
     }
 
     public void setChatEncryptionKeyPair(KeyPair keyPair)
     {
-	m_chatEncryptionKeyPair = keyPair;
+	synchronized(m_chatEncryptionKeyPairMutex)
+	{
+	    m_chatEncryptionKeyPair = keyPair;
+	}
     }
 
     public void setChatEncryptionKeyPair(String algorithm,
 					 byte privateBytes[],
 					 byte publicBytes[])
     {
-	m_chatEncryptionKeyPair = generatePrivatePublicKeyPair
-	    (algorithm, privateBytes, publicBytes);
+	synchronized(m_chatEncryptionKeyPairMutex)
+	{
+	    m_chatEncryptionKeyPair = generatePrivatePublicKeyPair
+		(algorithm, privateBytes, publicBytes);
+	}
     }
 
     public void setChatSignatureKeyPair(KeyPair keyPair)
     {
-	m_chatSignatureKeyPair = keyPair;
+	synchronized(m_chatSignatureKeyPairMutex)
+	{
+	    m_chatSignatureKeyPair = keyPair;
+	}
     }
 
     public void setChatSignatureKeyPair(String algorithm,
 					byte privateBytes[],
 					byte publicBytes[])
     {
-	m_chatSignatureKeyPair = generatePrivatePublicKeyPair
-	    (algorithm, privateBytes, publicBytes);
+	synchronized(m_chatSignatureKeyPairMutex)
+	{
+	    m_chatSignatureKeyPair = generatePrivatePublicKeyPair
+		(algorithm, privateBytes, publicBytes);
+	}
     }
 
     public void setEncryptionKey(SecretKey key)
     {
-	m_encryptionKey = key;
+	synchronized(m_encryptionKeyMutex)
+	{
+	    m_encryptionKey = key;
+	}
     }
 
     public void setMacKey(SecretKey key)
     {
-	m_macKey = key;
+	synchronized(m_macKeyMutex)
+	{
+	    m_macKey = key;
+	}
     }
 }
