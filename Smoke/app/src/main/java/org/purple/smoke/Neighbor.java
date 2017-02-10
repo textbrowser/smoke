@@ -27,13 +27,37 @@
 
 package org.purple.smoke;
 
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Neighbor
 {
+    private static final int s_timerInterval = 90000;
+    private Timer m_timer = null;
+    protected Date m_lastTimeReadWrite = null;
     protected String m_ipAddress;
     protected String m_ipPort;
     protected String m_scopeId;
     protected String m_version;
     protected int m_oid = -1;
+
+    private class NeighborTask extends TimerTask
+    {
+	@Override
+	public void run()
+	{
+	    terminate();
+	}
+    }
+
+    private synchronized void terminate()
+    {
+	Date now = new Date();
+
+	if(now.getTime() - m_lastTimeReadWrite.getTime() > s_timerInterval)
+	    disconnect();
+    }
 
     protected Neighbor(String ipAddress,
 		       String ipPort,
@@ -44,8 +68,11 @@ public class Neighbor
     {
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
+	m_lastTimeReadWrite = new Date();
 	m_oid = oid;
 	m_scopeId = scopeId;
+	m_timer = new Timer(true);
+	m_timer.scheduleAtFixedRate(new NeighborTask(), 0, s_timerInterval);
 	m_version = version;
     }
 
