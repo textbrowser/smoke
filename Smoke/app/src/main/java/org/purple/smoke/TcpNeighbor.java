@@ -38,9 +38,9 @@ public class TcpNeighbor extends Neighbor
 {
     private Object m_socketMutex = null;
     private SSLSocket m_socket = null;
-    private final static int s_connectionTimeout = 2500;
+    private final static int s_connectionTimeout = 10000; // 10 Seconds
     private final static int s_soLingerTimeout = 10;
-    private final static int s_soTimeout = 10000;
+    private final static int s_soTimeout = 10000; // 10 Seconds
 
     public TcpNeighbor(String ipAddress,
 		       String ipPort,
