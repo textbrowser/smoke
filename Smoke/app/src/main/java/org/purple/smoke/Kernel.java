@@ -60,37 +60,37 @@ public class Kernel
 
     private void prepareNeighbors()
     {
-	/*
-	** Remove null neighbors.
-	*/
-
-	for(Hashtable.Entry<Integer, Neighbor> entry: m_neighbors.entrySet())
-	    if(entry.getValue() == null)
-		m_neighbors.remove(entry.getKey());
-
 	ArrayList<NeighborElement> neighbors =
 	    Database.getInstance().readNeighbors(m_cryptography);
 	int count = Database.getInstance().count("neighbors");
 
 	if(count == 0 || neighbors == null)
 	{
-	    if(count == 0)
-	    {
-		/*
-		** The neighbors database table is empty.
-		** Remove all neighbors objects.
-		*/
+	    /*
+	    ** The neighbors database table is empty.
+	    ** Remove all neighbors objects.
+	    */
 
-		for(Hashtable.Entry<Integer, Neighbor> entry:
-			m_neighbors.entrySet())
-		    if(entry.getValue() != null)
+	    for(Hashtable.Entry<Integer, Neighbor> entry:
+		    m_neighbors.entrySet())
+		if(entry.getValue() != null)
+		{
+		    if(count == 0)
 			entry.getValue().disconnect();
+		}
+		else if(entry.getValue() == null)
+		    m_neighbors.remove(entry.getKey());
 
+	    if(count == 0)
 		m_neighbors.clear();
-	    }
 
 	    return;
 	}
+	else
+	    for(Hashtable.Entry<Integer, Neighbor> entry:
+		    m_neighbors.entrySet())
+		if(entry.getValue() == null)
+		    m_neighbors.remove(entry.getKey());
 
 	for(int i = 0; i < neighbors.size(); i++)
 	{

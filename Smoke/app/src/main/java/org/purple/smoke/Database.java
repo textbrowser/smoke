@@ -491,6 +491,8 @@ public class Database extends SQLiteOpenHelper
 	if(db == null)
 	    return;
 
+	db.execSQL("PRAGMA secure_delete = ON");
+
 	String str;
 
 	/*
@@ -625,7 +627,6 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.execSQL("PRAGMA secure_delete = TRUE");
 	    m_db.delete("congestion_control", null, null);
 	    m_db.delete("log", null, null);
 	    m_db.delete("neighbors", null, null);
@@ -634,6 +635,7 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
+	    writeLog("Database::reset() failure.");
 	}
 	finally
 	{
