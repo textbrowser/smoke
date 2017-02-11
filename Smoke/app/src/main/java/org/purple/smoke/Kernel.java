@@ -134,7 +134,8 @@ public class Kernel
 		if(statusControl.equals("connect"))
 		{
 		    if(neighbor != null)
-			neighbor.connect();
+			if(!neighbor.connected())
+			    m_neighbors.remove(neighborElement.m_oid);
 		}
 		else if(statusControl.equals("delete") ||
 			statusControl.equals("disconnect"))
