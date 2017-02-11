@@ -76,7 +76,10 @@ public class Kernel
 		if(entry.getValue() != null)
 		{
 		    if(count == 0)
+		    {
 			entry.getValue().disconnect();
+			m_neighbors.remove(entry.getKey());
+		    }
 		}
 		else if(entry.getValue() == null)
 		    m_neighbors.remove(entry.getKey());
@@ -133,17 +136,13 @@ public class Kernel
 		    if(neighbor != null)
 			neighbor.connect();
 		}
-		else if(statusControl.equals("delete"))
+		else if(statusControl.equals("delete") ||
+			statusControl.equals("disconnect"))
 		{
 		    if(neighbor != null)
 			neighbor.disconnect();
 
 		    m_neighbors.remove(neighborElement.m_oid);
-		}
-		else if(statusControl.equals("disconnect"))
-		{
-		    if(neighbor != null)
-			neighbor.disconnect();
 		}
 
 		if(neighbor != null)
@@ -163,7 +162,9 @@ public class Kernel
 		continue;
 	    }
 	    else if(neighborElement.m_statusControl.toLowerCase().
-		    equals("delete"))
+		    equals("delete") ||
+		    neighborElement.m_statusControl.toLowerCase().
+		    equals("disconnect"))
 		continue;
 
 	    Neighbor neighbor = null;
@@ -185,13 +186,8 @@ public class Kernel
 
 	    if(neighbor == null)
 		continue;
-	    else if(neighborElement.m_statusControl.toLowerCase().
-		    equals("connect"))
-		neighbor.connect();
-	    else if(neighborElement.m_statusControl.toLowerCase().
-		    equals("disconnect"))
-		neighbor.disconnect();
 
+	    neighbor.connect();
 	    m_neighbors.put(neighborElement.m_oid, neighbor);
 	}
     }
