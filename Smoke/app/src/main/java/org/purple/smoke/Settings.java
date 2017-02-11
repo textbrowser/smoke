@@ -244,7 +244,18 @@ public class Settings extends AppCompatActivity
 		stringBuffer.append(arrayList.get(i).m_remotePort);
 		stringBuffer.append(":");
 		stringBuffer.append(arrayList.get(i).m_transport);
+
+		if(!arrayList.get(i).m_localIpAddress.isEmpty() &&
+		   !arrayList.get(i).m_localPort.isEmpty())
+		{
+		    stringBuffer.append("\n");
+		    stringBuffer.append(arrayList.get(i).m_localIpAddress);
+		    stringBuffer.append(":");
+		    stringBuffer.append(arrayList.get(i).m_localPort);
+		}
+
 		textView.setText(stringBuffer);
+		textView.setTextSize(13);
 		row.addView(spinner);
 		row.addView(textView);
 		tableLayout.addView(row, i);
