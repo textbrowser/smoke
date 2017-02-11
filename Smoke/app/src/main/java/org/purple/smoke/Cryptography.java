@@ -181,9 +181,18 @@ public class Cryptography
 	** Encrypt-then-MAC.
 	*/
 
+	if(data == null)
+	    return null;
+
+	synchronized(m_encryptionKeyMutex)
+	{
+	    if(m_encryptionKey == null)
+		return null;
+	}
+
 	synchronized(m_macKeyMutex)
 	{
-	    if(data == null || m_encryptionKey == null || m_macKey == null)
+	    if(m_macKey == null)
 		return null;
 	}
 
@@ -195,23 +204,28 @@ public class Cryptography
 	{
 	    Cipher cipher = null;
 	    Mac mac = null;
-	    byte iv[] = new byte[16];
 
-	    s_secureRandom.nextBytes(iv);
-
-	    synchronized(m_encryptionKeyMutex)
+	    synchronized(m_encryptionKey)
 	    {
+		if(m_encryptionKey == null)
+		    return null;
+
+		byte iv[] = new byte[16];
+
+		s_secureRandom.nextBytes(iv);
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		cipher.init(Cipher.ENCRYPT_MODE,
 			    m_encryptionKey,
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal(data);
+		bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	    }
-
-	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
 
 	    synchronized(m_macKeyMutex)
 	    {
+		if(m_macKey == null)
+		    return null;
+
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
 		bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
@@ -231,27 +245,24 @@ public class Cryptography
 	{
 	    if(data == null || m_macKey == null)
 		return null;
-	}
 
-	byte bytes[] = null;
+	    byte bytes[] = null;
 
-	try
-	{
-	    Mac mac = null;
-
-	    synchronized(m_macKeyMutex)
+	    try
 	    {
+		Mac mac = null;
+
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
 		bytes = mac.doFinal(data);
 	    }
-	}
-	catch(Exception exception)
-	{
-	    bytes = null;
-	}
+	    catch(Exception exception)
+	    {
+		bytes = null;
+	    }
 
-	return bytes;
+	    return bytes;
+	}
     }
 
     public byte[] mtd(byte data[])
@@ -260,9 +271,18 @@ public class Cryptography
 	** MAC-then-decrypt.
 	*/
 
+	if(data == null)
+	    return null;
+
+	synchronized(m_encryptionKeyMutex)
+	{
+	    if(m_encryptionKey == null)
+		return null;
+	}
+
 	synchronized(m_macKeyMutex)
 	{
-	    if(data == null || m_encryptionKey == null || m_macKey == null)
+	    if(m_macKey == null)
 		return null;
 	}
 
@@ -276,11 +296,13 @@ public class Cryptography
 	    byte digest1[] = null; // Provided Digest
 	    byte digest2[] = null; // Computed Digest
 
-	    digest1 = Arrays.copyOfRange
-		(data, data.length - 512 / 8, data.length);
-
 	    synchronized(m_macKeyMutex)
 	    {
+		if(m_macKey == null)
+		    return null;
+
+		digest1 = Arrays.copyOfRange
+		    (data, data.length - 512 / 8, data.length);
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
 		digest2 = mac.doFinal
@@ -300,10 +322,14 @@ public class Cryptography
 	try
 	{
 	    Cipher cipher = null;
-	    byte iv[] = Arrays.copyOf(data, 16);
 
 	    synchronized(m_encryptionKeyMutex)
 	    {
+		if(m_encryptionKey == null)
+		    return null;
+
+		byte iv[] = Arrays.copyOf(data, 16);
+
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE,
 			    m_encryptionKey,
@@ -328,14 +354,11 @@ public class Cryptography
 	       m_chatSignatureKeyPair == null ||
 	       m_chatSignatureKeyPair.getPrivate() == null)
 		return null;
-	}
 
-	Signature signature = null;
-	byte bytes[] = null;
+	    Signature signature = null;
+	    byte bytes[] = null;
 
-	try
-	{
-	    synchronized(m_chatSignatureKeyPairMutex)
+	    try
 	    {
 		if(m_chatSignatureKeyPair.getPrivate().getAlgorithm().
 		   equals("DSA"))
@@ -349,13 +372,13 @@ public class Cryptography
 		signature.update(data);
 		bytes = signature.sign();
 	    }
-	}
-	catch(Exception exception)
-	{
-	    return null;
-	}
+	    catch(Exception exception)
+	    {
+		return null;
+	    }
 
-	return bytes;
+	    return bytes;
+	}
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
