@@ -47,7 +47,7 @@ public class TcpNeighbor extends Neighbor
     private Timer m_keepAliveTimer = null;
     private TrustManager m_trustManagers[] = null;
     private final static int s_connectionTimeout = 10000; // 10 Seconds
-    private final static int s_keepAliverInterval = 2500; // 2.5 Seconds
+    private final static int s_keepAliveInterval = 2500; // 2.5 Seconds
     private final static int s_soTimeout = 10000; // 10 Seconds
 
     private class KeepAliveTask extends TimerTask
@@ -89,7 +89,7 @@ public class TcpNeighbor extends Neighbor
 	    (m_ipAddress, Integer.parseInt(m_ipPort));
 	m_keepAliveTimer = new Timer(true);
 	m_keepAliveTimer.scheduleAtFixedRate
-	    (new KeepAliveTask(), 0, s_keepAliverInterval);
+	    (new KeepAliveTask(), 0, s_keepAliveInterval);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
 	m_socketMutex = new Object();
 	m_trustManagers = new TrustManager[]
