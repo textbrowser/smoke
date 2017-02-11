@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.net.ssl.SSLContext;
@@ -41,40 +42,39 @@ import javax.net.ssl.X509TrustManager;
 public class TcpNeighbor extends Neighbor
 {
     private InetSocketAddress m_inetSocketAddress = null;
-    private Object m_socketMutex = null;
     private SSLSocket m_socket = null;
     private String m_protocols[] = null;
-    private Timer m_keepAliveTimer = null;
     private TrustManager m_trustManagers[] = null;
     private final static int s_connectionTimeout = 10000; // 10 Seconds
-    private final static int s_keepAliveInterval = 2500; // 2.5 Seconds
     private final static int s_soTimeout = 10000; // 10 Seconds
 
-    private class KeepAliveTask extends TimerTask
+    protected void sendCapabilities()
     {
-	@Override
-	public void run()
+	if(!connected())
+	    return;
+
+	try
 	{
-	    try
+	    synchronized(m_socketMutex)
 	    {
-		synchronized(m_socketMutex)
-		{
-		    if(m_socket == null)
-			return;
+		if(m_socket == null)
+		    return;
 
-		    OutputStream outputStream = m_socket.getOutputStream();
+		OutputStream outputStream = m_socket.getOutputStream();
 
-		    if(outputStream == null)
-			throw new Exception();
-
-		    outputStream.write(0);
-		    outputStream.flush();
-		}
+		outputStream.write(getCapabilities().getBytes());
 	    }
-	    catch(Exception exception)
+
+	    synchronized(m_lastTimeReadWrite)
 	    {
-		disconnect();
+		m_lastTimeReadWrite = new Date();
 	    }
+	}
+	catch(Exception exception)
+	{
+	    Database.getInstance().writeLog
+		("TcpNeighbor::sendCapabilities(): " +
+		 exception.getMessage() + ".");
 	}
     }
 
@@ -87,11 +87,7 @@ public class TcpNeighbor extends Neighbor
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
 	m_inetSocketAddress = new InetSocketAddress
 	    (m_ipAddress, Integer.parseInt(m_ipPort));
-	m_keepAliveTimer = new Timer(true);
-	m_keepAliveTimer.scheduleAtFixedRate
-	    (new KeepAliveTask(), 0, s_keepAliveInterval);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
-	m_socketMutex = new Object();
 	m_trustManagers = new TrustManager[]
 	{
 	    new X509TrustManager()

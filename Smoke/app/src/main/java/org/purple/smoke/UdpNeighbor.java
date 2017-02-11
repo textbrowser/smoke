@@ -32,7 +32,10 @@ import java.net.DatagramSocket;
 public class UdpNeighbor extends Neighbor
 {
     private DatagramSocket m_socket;
-    private Object m_socketMutex = null;
+
+    protected void sendCapabilities()
+    {
+    }
 
     public UdpNeighbor(String ipAddress,
 		       String ipPort,
@@ -41,7 +44,6 @@ public class UdpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
-	m_socketMutex = new Object();
     }
 
     public boolean connected()

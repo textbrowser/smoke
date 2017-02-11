@@ -27,20 +27,26 @@
 
 package org.purple.smoke;
 
+import android.util.Base64;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
-public class Neighbor
+public abstract class Neighbor
 {
-    private static final int s_silence = 90000;
-    private static final int s_timerInterval = 15000;
+    private static final int s_silence = 90000; // 90 Seconds
+    private static final int s_timerInterval = 15000; // 15 Seconds
     private Timer m_timer = null;
+    private UUID m_uuid = null;
     protected Date m_lastTimeReadWrite = null;
+    protected Object m_socketMutex = null;
+    protected String m_echoMode = "full";
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_scopeId = "";
     protected String m_version = "";
+    protected int m_laneWidth = 100000;
     protected int m_oid = -1;
 
     private class NeighborTask extends TimerTask
@@ -48,6 +54,7 @@ public class Neighbor
 	@Override
 	public void run()
 	{
+	    sendCapabilities();
 	    terminate();
 	}
     }
@@ -79,10 +86,50 @@ public class Neighbor
 	m_lastTimeReadWrite = new Date();
 	m_oid = oid;
 	m_scopeId = scopeId;
+	m_socketMutex = new Object();
 	m_timer = new Timer(true);
-	m_timer.scheduleAtFixedRate(new NeighborTask(), 0, s_timerInterval);
+	m_uuid = UUID.randomUUID();
 	m_version = version;
+
+	/*
+	** Start timers.
+	*/
+
+	m_timer.scheduleAtFixedRate(new NeighborTask(), 0, s_timerInterval);
     }
+
+    protected String getCapabilities()
+    {
+	StringBuffer message = new StringBuffer();
+
+	message.append(m_uuid.toString());
+	message.append("\n");
+	message.append(String.valueOf(m_laneWidth));
+	message.append("\n");
+	message.append(m_echoMode);
+
+	StringBuffer results = new StringBuffer();
+
+	results.append("POST HTTP/1.1\r\n");
+	results.append("Content-Type: application/x-www-form-urlencoded\r\n");
+	results.append("Content-Length: %1\r\n");
+	results.append("\r\n");
+	results.append("type=0014&content=%2\r\n");
+	results.append("\r\n\r\n");
+
+	String base64 = Base64.encodeToString
+	    (message.toString().getBytes(), Base64.DEFAULT);
+	int indexOf = results.indexOf("%1");
+	int length = base64.length() +
+	    "type=0014&content=\r\n\r\n\r\n".length();
+
+	results = results.replace(indexOf, indexOf + 2, String.valueOf(length));
+	indexOf = results.indexOf("%2");
+	results = results.replace(indexOf, indexOf + 2, base64);
+	return results.toString();
+    }
+
+    protected abstract void sendCapabilities();
 
     public String getLocalIp()
     {
