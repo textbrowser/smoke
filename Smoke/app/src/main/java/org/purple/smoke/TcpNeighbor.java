@@ -114,6 +114,17 @@ public class TcpNeighbor extends Neighbor
 	};
     }
 
+    public String getLocalIp()
+    {
+	synchronized(m_socketMutex)
+	{
+	    if(m_socket == null)
+		return super.getLocalIp();
+	    else
+		return m_socket.getLocalAddress().getHostAddress();
+	}
+    }
+
     public boolean connected()
     {
 	synchronized(m_socketMutex)
@@ -122,6 +133,17 @@ public class TcpNeighbor extends Neighbor
 		!m_socket.isClosed() &&
 		m_socket.getSession() != null &&
 		m_socket.getSession().isValid();
+	}
+    }
+
+    public int getLocalPort()
+    {
+	synchronized(m_socketMutex)
+	{
+	    if(m_socket == null)
+		return super.getLocalPort();
+	    else
+		return m_socket.getLocalPort();
 	}
     }
 

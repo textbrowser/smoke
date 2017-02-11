@@ -642,6 +642,51 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void saveNeighborLocalIpInformation(Cryptography cryptography,
+					       String ipAddress,
+					       String ipPort,
+					       String oid)
+    {
+	if(cryptography == null)
+	    return;
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("local_ip_address",
+		 Base64.encodeToString(cryptography.
+				       etm(ipAddress.trim().getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("local_ip_address_digest",
+		 Base64.encodeToString(cryptography.
+				       hmac(ipAddress.trim().getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("local_port",
+		 Base64.encodeToString(cryptography.
+				       etm(ipPort.trim().getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("local_port_digest",
+		 Base64.encodeToString(cryptography.
+				       etm(ipPort.trim().getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	}
+    }
+
     public void saveNeighborStatus(Cryptography cryptography,
 				   String status,
 				   String oid)

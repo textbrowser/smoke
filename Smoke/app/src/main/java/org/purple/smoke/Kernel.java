@@ -147,16 +147,32 @@ public class Kernel
 
 		if(neighbor != null)
 		{
+		    Database database = Database.getInstance();
+
 		    if(neighbor.connected())
-			Database.getInstance().saveNeighborStatus
+		    {
+			database.saveNeighborLocalIpInformation
+			    (m_cryptography,
+			     neighbor.getLocalIp(),
+			     String.valueOf(neighbor.getLocalPort()),
+			     String.valueOf(neighborElement.m_oid));
+			database.saveNeighborStatus
 			    (m_cryptography,
 			     "connected",
 			     String.valueOf(neighborElement.m_oid));
+		    }
 		    else
-			Database.getInstance().saveNeighborStatus
+		    {
+			database.saveNeighborLocalIpInformation
+			    (m_cryptography,
+			     "",
+			     "",
+			     String.valueOf(neighborElement.m_oid));
+			database.saveNeighborStatus
 			    (m_cryptography,
 			     "disconnected",
 			     String.valueOf(neighborElement.m_oid));
+		    }
 		}
 
 		continue;

@@ -84,9 +84,22 @@ public class Neighbor
 	m_version = version;
     }
 
+    public String getLocalIp()
+    {
+	if(m_version.equals("IPv4"))
+	    return "0.0.0.0";
+	else
+	    return "::";
+    }
+
     public boolean connected()
     {
 	return false;
+    }
+
+    public int getLocalPort()
+    {
+	return 0;
     }
 
     public int oid()
