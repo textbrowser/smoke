@@ -80,6 +80,22 @@ public class TcpNeighbor extends Neighbor
 		    synchronized(m_stringBuffer)
 		    {
 			m_stringBuffer.append(new String(bytes, 0, bytesRead));
+
+			/*
+			** Detect our end-of-message delimiter and record
+			** the message in some database table.
+			*/
+
+			int indexOf = m_stringBuffer.indexOf(s_eom);
+
+			if(indexOf >= 0)
+			{
+			    String buffer = m_stringBuffer.
+				substring(0, indexOf + s_eom.length());
+
+			    m_stringBuffer = m_stringBuffer.delete
+				(0, buffer.length());
+			}
 		    }
 	    }
 	    catch(Exception exception)
