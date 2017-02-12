@@ -49,6 +49,7 @@ public abstract class Neighbor
     protected int m_laneWidth = 100000;
     protected int m_oid = -1;
     protected static final String s_eom = "\r\n\r\n\r\n";
+    protected static final int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
 
     private class NeighborTask extends TimerTask
     {
