@@ -50,7 +50,7 @@ public class UdpNeighbor extends Neighbor
     {
 	synchronized(m_socketMutex)
 	{
-	    return m_socket != null && m_socket.isConnected();
+	    return m_socket != null && !m_socket.isClosed();
 	}
     }
 
@@ -76,10 +76,6 @@ public class UdpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
-	    synchronized(m_socketMutex)
-	    {
-		m_socket = null;
-	    }
 	}
     }
 
@@ -95,13 +91,6 @@ public class UdpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    synchronized(m_socketMutex)
-	    {
-		m_socket = null;
-	    }
 	}
     }
 }

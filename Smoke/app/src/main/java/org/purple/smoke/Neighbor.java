@@ -138,9 +138,6 @@ public abstract class Neighbor
 	{
 	    return "";
 	}
-	finally
-	{
-	}
     }
 
     protected abstract void sendCapabilities();

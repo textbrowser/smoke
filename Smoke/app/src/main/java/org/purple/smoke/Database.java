@@ -270,9 +270,6 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ok = false;
 	}
-	finally
-	{
-	}
 
 	return ok;
     }
@@ -404,9 +401,6 @@ public class Database extends SQLiteOpenHelper
         {
 	    ok = false;
 	}
-	finally
-	{
-	}
 
 	return ok;
     }
@@ -478,9 +472,6 @@ public class Database extends SQLiteOpenHelper
 	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
 	}
 	catch(Exception exception)
-	{
-	}
-	finally
 	{
 	}
     }
@@ -637,9 +628,6 @@ public class Database extends SQLiteOpenHelper
 	{
 	    writeLog("Database::reset() failure.");
 	}
-	finally
-	{
-	}
     }
 
     public void saveNeighborLocalIpInformation(Cryptography cryptography,
@@ -682,9 +670,6 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
 	{
 	}
-	finally
-	{
-	}
     }
 
     public void saveNeighborStatus(Cryptography cryptography,
@@ -711,9 +696,6 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
 	{
 	}
-	finally
-	{
-	}
     }
 
     public void writeLog(String event)
@@ -730,9 +712,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
         {
-	}
-	finally
-	{
 	}
     }
 
@@ -787,9 +766,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
         {
-	}
-	finally
-	{
 	}
     }
 }

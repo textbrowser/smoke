@@ -236,9 +236,6 @@ public class TcpNeighbor extends Neighbor
 		("TcpNeighbor::connect(): " + exception.getMessage() + ".");
 	    disconnect();
 	}
-	finally
-	{
-	}
     }
 
     public void disconnect()
@@ -265,9 +262,6 @@ public class TcpNeighbor extends Neighbor
 	{
 	    Database.getInstance().writeLog
 		("TcpNeighbor::disconnect(): error.");
-	}
-	finally
-	{
 	}
     }
 }
