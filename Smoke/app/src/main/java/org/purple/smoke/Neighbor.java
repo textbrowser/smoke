@@ -100,33 +100,45 @@ public abstract class Neighbor
 
     protected String getCapabilities()
     {
-	StringBuffer message = new StringBuffer();
+	try
+	{
+	    StringBuffer message = new StringBuffer();
 
-	message.append(m_uuid.toString());
-	message.append("\n");
-	message.append(String.valueOf(m_laneWidth));
-	message.append("\n");
-	message.append(m_echoMode);
+	    message.append(m_uuid.toString());
+	    message.append("\n");
+	    message.append(String.valueOf(m_laneWidth));
+	    message.append("\n");
+	    message.append(m_echoMode);
 
-	StringBuffer results = new StringBuffer();
+	    StringBuffer results = new StringBuffer();
 
-	results.append("POST HTTP/1.1\r\n");
-	results.append("Content-Type: application/x-www-form-urlencoded\r\n");
-	results.append("Content-Length: %1\r\n");
-	results.append("\r\n");
-	results.append("type=0014&content=%2\r\n");
-	results.append("\r\n\r\n");
+	    results.append("POST HTTP/1.1\r\n");
+	    results.append
+		("Content-Type: application/x-www-form-urlencoded\r\n");
+	    results.append("Content-Length: %1\r\n");
+	    results.append("\r\n");
+	    results.append("type=0014&content=%2\r\n");
+	    results.append("\r\n\r\n");
 
-	String base64 = Base64.encodeToString
-	    (message.toString().getBytes(), Base64.DEFAULT);
-	int indexOf = results.indexOf("%1");
-	int length = base64.length() +
-	    "type=0014&content=\r\n\r\n\r\n".length();
+	    String base64 = Base64.encodeToString
+		(message.toString().getBytes(), Base64.DEFAULT);
+	    int indexOf = results.indexOf("%1");
+	    int length = base64.length() +
+		"type=0014&content=\r\n\r\n\r\n".length();
 
-	results = results.replace(indexOf, indexOf + 2, String.valueOf(length));
-	indexOf = results.indexOf("%2");
-	results = results.replace(indexOf, indexOf + 2, base64);
-	return results.toString();
+	    results = results.replace
+		(indexOf, indexOf + 2, String.valueOf(length));
+	    indexOf = results.indexOf("%2");
+	    results = results.replace(indexOf, indexOf + 2, base64);
+	    return results.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    return "";
+	}
     }
 
     protected abstract void sendCapabilities();
