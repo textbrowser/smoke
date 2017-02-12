@@ -241,9 +241,12 @@ public class Cryptography
 
     public byte[] hmac(byte data[])
     {
+	if(data == null)
+	    return null;
+
 	synchronized(m_macKeyMutex)
 	{
-	    if(data == null || m_macKey == null)
+	    if(m_macKey == null)
 		return null;
 
 	    byte bytes[] = null;
@@ -296,13 +299,14 @@ public class Cryptography
 	    byte digest1[] = null; // Provided Digest
 	    byte digest2[] = null; // Computed Digest
 
+	    digest1 = Arrays.copyOfRange
+		(data, data.length - 512 / 8, data.length);
+
 	    synchronized(m_macKeyMutex)
 	    {
 		if(m_macKey == null)
 		    return null;
 
-		digest1 = Arrays.copyOfRange
-		    (data, data.length - 512 / 8, data.length);
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
 		digest2 = mac.doFinal
@@ -348,10 +352,12 @@ public class Cryptography
 
     public byte[] signViaChat(byte data[])
     {
+	if(data == null)
+	    return null;
+
 	synchronized(m_chatSignatureKeyPairMutex)
 	{
-	    if(data == null ||
-	       m_chatSignatureKeyPair == null ||
+	    if(m_chatSignatureKeyPair == null ||
 	       m_chatSignatureKeyPair.getPrivate() == null)
 		return null;
 
