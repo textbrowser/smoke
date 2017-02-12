@@ -76,7 +76,7 @@ public class TcpNeighbor extends Neighbor
 		    bytesRead = inputStream.read(bytes);
 		}
 
-		if(bytes != null)
+		if(bytes != null && bytesRead > 0)
 		    synchronized(m_stringBuffer)
 		    {
 			m_stringBuffer.append(new String(bytes, 0, bytesRead));
