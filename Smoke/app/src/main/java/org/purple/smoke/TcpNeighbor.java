@@ -114,11 +114,11 @@ public class TcpNeighbor extends Neighbor
     {
 	synchronized(m_socketMutex)
 	{
-	    if(m_socket == null || m_socket.isClosed())
-		return super.getLocalIp();
-	    else
+	    if(m_socket != null && !m_socket.isClosed())
 		return m_socket.getLocalAddress().getHostAddress();
 	}
+
+	return super.getLocalIp();
     }
 
     public boolean connected()
@@ -136,11 +136,11 @@ public class TcpNeighbor extends Neighbor
     {
 	synchronized(m_socketMutex)
 	{
-	    if(m_socket == null || m_socket.isClosed())
-		return super.getLocalPort();
-	    else
+	    if(m_socket != null && !m_socket.isClosed())
 		return m_socket.getLocalPort();
 	}
+
+	return super.getLocalPort();
     }
 
     public void connect()
