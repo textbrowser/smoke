@@ -134,10 +134,10 @@ public abstract class Neighbor
 	}
 	catch(Exception exception)
 	{
+	    return "";
 	}
 	finally
 	{
-	    return "";
 	}
     }
 

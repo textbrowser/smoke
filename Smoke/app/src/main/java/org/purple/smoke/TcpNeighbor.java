@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.security.cert.X509Certificate;
@@ -44,9 +45,51 @@ public class TcpNeighbor extends Neighbor
     private InetSocketAddress m_inetSocketAddress = null;
     private SSLSocket m_socket = null;
     private String m_protocols[] = null;
+    private StringBuffer m_stringBuffer = null;
+    private Timer m_readSocketTimer = null;
     private TrustManager m_trustManagers[] = null;
     private final static int s_connectionTimeout = 10000; // 10 Seconds
-    private final static int s_soTimeout = 10000; // 10 Seconds
+    private final static int s_readSocketInterval = 1500; // 1.5 Seconds
+    private final static int s_soTimeout = 2500; // 10 Seconds
+
+    private class ReadSocketTask extends TimerTask
+    {
+	@Override
+	public void run()
+	{
+	    if(!connected())
+		return;
+
+	    try
+	    {
+		byte bytes[] = null;
+		int bytesRead = 0;
+
+		synchronized(m_socketMutex)
+		{
+		    if(m_socket == null)
+			return;
+
+		    InputStream inputStream = m_socket.getInputStream();
+
+		    bytes = new byte[16384]; 
+		    bytesRead = inputStream.read(bytes);
+		}
+
+		if(bytes != null)
+		    synchronized(m_stringBuffer)
+		    {
+			m_stringBuffer.append(new String(bytes, 0, bytesRead));
+		    }
+	    }
+	    catch(Exception exception)
+	    {
+		Database.getInstance().writeLog
+		    ("ReadSocketTask::run(): " +
+		     exception.getMessage() + ".");
+	    }
+	}
+    }
 
     protected void sendCapabilities()
     {
@@ -75,6 +118,7 @@ public class TcpNeighbor extends Neighbor
 	    Database.getInstance().writeLog
 		("TcpNeighbor::sendCapabilities(): " +
 		 exception.getMessage() + ".");
+	    disconnect();
 	}
     }
 
@@ -88,6 +132,8 @@ public class TcpNeighbor extends Neighbor
 	m_inetSocketAddress = new InetSocketAddress
 	    (m_ipAddress, Integer.parseInt(m_ipPort));
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
+	m_readSocketTimer = new Timer();
+	m_stringBuffer = new StringBuffer();
 	m_trustManagers = new TrustManager[]
 	{
 	    new X509TrustManager()
@@ -161,6 +207,12 @@ public class TcpNeighbor extends Neighbor
 		m_socket.setEnabledProtocols(m_protocols);
 		m_socket.setSoTimeout(s_soTimeout);
 	    }
+
+	    synchronized(m_readSocketTimer)
+	    {
+		m_readSocketTimer.scheduleAtFixedRate
+		    (new ReadSocketTask(), 0, s_readSocketInterval);
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -175,6 +227,12 @@ public class TcpNeighbor extends Neighbor
 
     public void disconnect()
     {
+	synchronized(m_readSocketTimer)
+	{
+	    m_readSocketTimer.cancel();
+	    m_readSocketTimer.purge();
+	}
+
 	try
 	{
 	    synchronized(m_socketMutex)
