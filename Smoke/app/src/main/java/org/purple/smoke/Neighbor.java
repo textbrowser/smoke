@@ -139,10 +139,9 @@ public abstract class Neighbor
 	    return "::";
     }
 
-    public boolean connected()
-    {
-	return false;
-    }
+    public abstract boolean connected();
+    public abstract void connect();
+    public abstract void disconnect();
 
     public int getLocalPort()
     {
@@ -152,13 +151,5 @@ public abstract class Neighbor
     public int oid()
     {
 	return m_oid;
-    }
-
-    public void connect()
-    {
-    }
-
-    public void disconnect()
-    {
     }
 }
