@@ -114,7 +114,7 @@ public class TcpNeighbor extends Neighbor
     {
 	synchronized(m_socketMutex)
 	{
-	    if(m_socket == null)
+	    if(m_socket == null || m_socket.isClosed())
 		return super.getLocalIp();
 	    else
 		return m_socket.getLocalAddress().getHostAddress();
@@ -136,7 +136,7 @@ public class TcpNeighbor extends Neighbor
     {
 	synchronized(m_socketMutex)
 	{
-	    if(m_socket == null)
+	    if(m_socket == null || m_socket.isClosed())
 		return super.getLocalPort();
 	    else
 		return m_socket.getLocalPort();
