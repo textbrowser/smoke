@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -62,8 +63,7 @@ public class TcpNeighbor extends Neighbor
 
 	    try
 	    {
-		byte bytes[] = null;
-		int bytesRead = 0;
+		ByteArrayOutputStream byteArrayOutputStream = null;
 
 		synchronized(m_socketMutex)
 		{
@@ -71,15 +71,25 @@ public class TcpNeighbor extends Neighbor
 			return;
 
 		    InputStream inputStream = m_socket.getInputStream();
+		    byte bytes[] = new byte[1024];
 
-		    bytes = new byte[16384]; 
-		    bytesRead = inputStream.read(bytes);
+		    byteArrayOutputStream = new ByteArrayOutputStream();
+
+		    for(int i = 0; (i = inputStream.read(bytes)) != -1;)
+		    {
+			byteArrayOutputStream.write(bytes, 0, i);
+
+			if(byteArrayOutputStream.size() > s_maximumBytes)
+			    break;
+		    }
 		}
 
-		if(bytes != null && bytesRead > 0)
+		if(byteArrayOutputStream != null &&
+		   byteArrayOutputStream.size() > 0)
 		    synchronized(m_stringBuffer)
 		    {
-			m_stringBuffer.append(new String(bytes, 0, bytesRead));
+			m_stringBuffer.append
+			    (new String(byteArrayOutputStream.toByteArray()));
 
 			/*
 			** Detect our end-of-message delimiter and record
@@ -88,14 +98,18 @@ public class TcpNeighbor extends Neighbor
 
 			int indexOf = m_stringBuffer.indexOf(s_eom);
 
-			if(indexOf >= 0)
+			while(indexOf >= 0)
 			{
 			    String buffer = m_stringBuffer.
 				substring(0, indexOf + s_eom.length());
 
 			    m_stringBuffer = m_stringBuffer.delete
 				(0, buffer.length());
+			    indexOf = m_stringBuffer.indexOf(s_eom);
 			}
+
+			if(m_stringBuffer.length() > s_maximumBytes)
+			    m_stringBuffer.setLength(s_maximumBytes);
 		    }
 	    }
 	    catch(Exception exception)

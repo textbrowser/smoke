@@ -31,7 +31,7 @@ import java.net.DatagramSocket;
 
 public class UdpNeighbor extends Neighbor
 {
-    private DatagramSocket m_socket;
+    private DatagramSocket m_socket = null;
 
     protected void sendCapabilities()
     {
@@ -58,14 +58,6 @@ public class UdpNeighbor extends Neighbor
     {
 	if(connected())
 	    return;
-	else
-	{
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null)
-		    return;
-	    }
-	}
 
 	try
 	{

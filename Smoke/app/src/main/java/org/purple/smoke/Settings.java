@@ -35,6 +35,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -239,6 +240,13 @@ public class Settings extends AppCompatActivity
 
 		StringBuffer stringBuffer = new StringBuffer();
 
+		stringBuffer.append("Control: ");
+		stringBuffer.append
+		    (arrayList.get(i).m_statusControl.substring(0, 1).
+		     toUpperCase());
+		stringBuffer.append(arrayList.get(i).m_statusControl.
+				    substring(1));
+		stringBuffer.append("\n");
 		stringBuffer.append(arrayList.get(i).m_remoteIpAddress);
 		stringBuffer.append(":");
 		stringBuffer.append(arrayList.get(i).m_remotePort);
@@ -254,6 +262,7 @@ public class Settings extends AppCompatActivity
 		    stringBuffer.append(arrayList.get(i).m_localPort);
 		}
 
+		textView.setGravity(Gravity.CENTER_VERTICAL);
 		textView.setText(stringBuffer);
 		textView.setTextSize(13);
 		row.addView(spinner);
