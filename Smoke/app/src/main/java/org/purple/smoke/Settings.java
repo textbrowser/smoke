@@ -53,15 +53,35 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private Timer m_timer = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int s_pkiEncryptionKeySize = 3072;
     private final static int s_pkiSignatureKeySize = 3072;
+    private final static int s_timerInterval = 7500; // 7.5 Seconds
+
+    private class SettingsTask extends TimerTask
+    {
+	@Override
+	public void run()
+	{
+	    Settings.this.runOnUiThread(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    populateNeighbors();
+		}
+	    });
+	}
+    }
 
     private void addNeighbor()
     {
@@ -271,6 +291,11 @@ public class Settings extends AppCompatActivity
 		    stringBuffer.append(arrayList.get(i).m_localPort);
 		}
 
+		stringBuffer.append("\n");
+		stringBuffer.append("In: ");
+		stringBuffer.append(arrayList.get(i).m_bytesRead);
+		stringBuffer.append(" Out: ");
+		stringBuffer.append(arrayList.get(i).m_bytesWritten);
 		textView.setGravity(Gravity.CENTER_VERTICAL);
 		textView.setText(stringBuffer);
 		textView.setTextSize(13);
@@ -552,6 +577,7 @@ public class Settings extends AppCompatActivity
 
 		Settings.this.runOnUiThread(new Runnable()
 		{
+		    @Override
 		    public void run()
 		    {
 			dialog.dismiss();
@@ -571,8 +597,8 @@ public class Settings extends AppCompatActivity
 			    textView1.setText("");
 			    textView2.setText("");
 			    populateFancyKeyData();
-			    populateNeighbors();
 			    startKernel();
+			    startTimers();
 			}
 		    }
 		});
@@ -609,10 +635,16 @@ public class Settings extends AppCompatActivity
 	Kernel.getInstance();
     }
 
+    private void startTimers()
+    {
+	m_timer.scheduleAtFixedRate(new SettingsTask(), 0, s_timerInterval);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
 	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_timer = new Timer();
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
@@ -760,7 +792,8 @@ public class Settings extends AppCompatActivity
 	{
 	    populateFancyKeyData();
 	    populateName();
-	    populateNeighbors();
+	    startKernel();
+	    startTimers();
 	}
     }
 
@@ -768,6 +801,8 @@ public class Settings extends AppCompatActivity
     protected void onDestroy()
     {
 	super.onDestroy();
+	m_timer.cancel();
+	m_timer.purge();
     }
 
     @Override

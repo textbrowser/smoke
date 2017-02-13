@@ -406,6 +406,8 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.hmac(remoteIpPort.trim().getBytes());
 		else if(arrayList.get(i).equals("remote_scope_id"))
 		    bytes = cryptography.etm(remoteIpScopeId.trim().getBytes());
+		else if(arrayList.get(i).equals("status"))
+		    bytes = cryptography.etm("disconnected".getBytes());
 		else if(arrayList.get(i).equals("status_control"))
 		    bytes = cryptography.etm("Disconnect".getBytes());
 		else if(arrayList.get(i).equals("transport"))
@@ -767,6 +769,54 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void saveNeighborStatistics(Cryptography cryptography,
+				       long bytesRead,
+				       long bytesWritten,
+				       int oid)
+    {
+	if(cryptography == null)
+	    return;
+
+	SQLiteDatabase db = null;
+
+	try
+	{
+	    db = getWritableDatabase();
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("bytes_read",
+		 Base64.
+		 encodeToString(cryptography.
+				etm(String.valueOf(bytesRead).getBytes()),
+				Base64.DEFAULT));
+	    values.put
+		("bytes_written",
+		 Base64.
+		 encodeToString(cryptography.
+				etm(String.valueOf(bytesWritten).getBytes()),
+				Base64.DEFAULT));
+	    db.update
+		("neighbors", values, "oid = ?",
+		 new String[] {String.valueOf(oid)});
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    db.close();
+	}
+    }
+
     public void saveNeighborStatus(Cryptography cryptography,
 				   String status,
 				   String oid)
@@ -788,6 +838,18 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    ContentValues values = new ContentValues();
+
+	    if(!status.equals("connected"))
+	    {
+		values.put
+		    ("bytes_read",
+		     Base64.encodeToString(cryptography.etm("0".getBytes()),
+					   Base64.DEFAULT));
+		values.put
+		    ("bytes_written",
+		     Base64.encodeToString(cryptography.etm("0".getBytes()),
+					   Base64.DEFAULT));
+	    }
 
 	    values.put
 		("status",

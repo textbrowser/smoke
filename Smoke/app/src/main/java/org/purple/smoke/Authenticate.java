@@ -207,6 +207,7 @@ public class Authenticate extends AppCompatActivity
 
 			    Authenticate.this.runOnUiThread(new Runnable()
 			    {
+				@Override
 				public void run()
 				{
 				    dialog.dismiss();

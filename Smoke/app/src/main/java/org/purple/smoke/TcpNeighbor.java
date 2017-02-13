@@ -50,8 +50,8 @@ public class TcpNeighbor extends Neighbor
     private Timer m_readSocketTimer = null;
     private TrustManager m_trustManagers[] = null;
     private final static int s_connectionTimeout = 10000; // 10 Seconds
-    private final static int s_readSocketInterval = 1500; // 1.5 Seconds
-    private final static int s_soTimeout = 2500; // 2.5 Seconds
+    private final static int s_readSocketInterval = 500; // 0.5 Seconds
+    private final static int s_soTimeout = 250; // 250 Milliseconds
 
     private class ReadSocketTask extends TimerTask
     {
@@ -64,6 +64,7 @@ public class TcpNeighbor extends Neighbor
 	    try
 	    {
 		ByteArrayOutputStream byteArrayOutputStream = null;
+		long bytesRead = 0;
 
 		synchronized(m_socketMutex)
 		{
@@ -71,18 +72,22 @@ public class TcpNeighbor extends Neighbor
 			return;
 
 		    InputStream inputStream = m_socket.getInputStream();
-		    byte bytes[] = new byte[1024];
+		    byte bytes[] = new byte[64 * 1024];
 
 		    byteArrayOutputStream = new ByteArrayOutputStream();
 
-		    for(int i = 0; (i = inputStream.read(bytes)) != -1;)
+		    int i = inputStream.read(bytes);
+
+		    if(i > 0)
 		    {
 			byteArrayOutputStream.write(bytes, 0, i);
-			m_bytesRead += i;
-
-			if(byteArrayOutputStream.size() > s_maximumBytes)
-			    break;
+			bytesRead += i;
 		    }
+		}
+
+		synchronized(m_bytesReadMutex)
+		{
+		    m_bytesRead += bytesRead;
 		}
 
 		if(byteArrayOutputStream != null &&
@@ -126,16 +131,22 @@ public class TcpNeighbor extends Neighbor
 
 	try
 	{
+	    String capabilities = "";
+
 	    synchronized(m_socketMutex)
 	    {
 		if(m_socket == null)
 		    return;
 
 		OutputStream outputStream = m_socket.getOutputStream();
-		String capabilities = getCapabilities();
 
+		capabilities = getCapabilities();
 		outputStream.write(capabilities.getBytes());
 		outputStream.flush();
+	    }
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
 		m_bytesWritten += capabilities.length();
 	    }
 
@@ -236,6 +247,7 @@ public class TcpNeighbor extends Neighbor
 		    createSocket();
 		m_socket.connect(m_inetSocketAddress, s_connectionTimeout);
 		m_socket.setEnabledProtocols(m_protocols);
+		m_socket.setReceiveBufferSize(32 * 1024 * 1024);
 		m_socket.setSoTimeout(s_soTimeout);
 	    }
 

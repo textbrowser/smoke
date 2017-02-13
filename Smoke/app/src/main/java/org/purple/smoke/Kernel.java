@@ -38,8 +38,8 @@ public class Kernel
     private Hashtable<Integer, Neighbor> m_neighbors = null;
     private Timer m_congestionPurgeTimer = null;
     private Timer m_neighborsTimer = null;
-    private final static int s_congestionPurgeInterval = 15000;
-    private final static int s_neighborsInterval = 10000;
+    private final static int s_congestionPurgeInterval = 15000; // 15 Seconds
+    private final static int s_neighborsInterval = 5000; // 5 Seconds
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -102,7 +102,7 @@ public class Kernel
 		    */
 
 		    boolean found = false;
-		    int oid = entry.getValue().m_oid;
+		    int oid = entry.getValue().oid();
 
 		    for(int i = 0; i < neighbors.size(); i++)
 			if(neighbors.get(i) != null &&
@@ -142,8 +142,6 @@ public class Kernel
 		{
 		    if(neighbor != null)
 			neighbor.disconnect();
-
-		    m_neighbors.remove(neighborElement.m_oid);
 		}
 
 		if(neighbor != null)

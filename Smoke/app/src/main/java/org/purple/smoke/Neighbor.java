@@ -37,9 +37,13 @@ public abstract class Neighbor
 {
     private static final int s_silence = 90000; // 90 Seconds
     private static final int s_timerInterval = 15000; // 15 Seconds
+    private int m_oid = -1;
+    private Object m_oidMutex = null;
     private Timer m_timer = null;
     private UUID m_uuid = null;
     protected Date m_lastTimeReadWrite = null;
+    protected Object m_bytesReadMutex = null;
+    protected Object m_bytesWrittenMutex = null;
     protected Object m_socketMutex = null;
     protected String m_echoMode = "full";
     protected String m_ipAddress = "";
@@ -47,7 +51,6 @@ public abstract class Neighbor
     protected String m_scopeId = "";
     protected String m_version = "";
     protected int m_laneWidth = 100000;
-    protected int m_oid = -1;
     protected long m_bytesRead = 0;
     protected long m_bytesWritten = 0;
     protected static final String s_eom = "\r\n\r\n\r\n";
@@ -58,9 +61,35 @@ public abstract class Neighbor
 	@Override
 	public void run()
 	{
+	    saveStatistics();
 	    sendCapabilities();
 	    terminate();
 	}
+    }
+
+    private void saveStatistics()
+    {
+	int oid = 0;
+	long bytesRead = 0;
+	long bytesWritten = 0;
+
+	synchronized(m_bytesReadMutex)
+	{
+	    bytesRead = m_bytesRead;
+	}
+
+	synchronized(m_bytesWrittenMutex)
+	{
+	    bytesWritten = m_bytesWritten;
+	}
+
+	synchronized(m_oidMutex)
+	{
+	    oid = m_oid;
+	}
+
+	Database.getInstance().saveNeighborStatistics
+	    (Cryptography.getInstance(), bytesRead, bytesWritten, oid);
     }
 
     private void terminate()
@@ -85,10 +114,13 @@ public abstract class Neighbor
 		       String version,
 		       int oid)
     {
+	m_bytesReadMutex = new Object();
+	m_bytesWrittenMutex = new Object();
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
 	m_lastTimeReadWrite = new Date();
 	m_oid = oid;
+	m_oidMutex = new Object();
 	m_scopeId = scopeId;
 	m_socketMutex = new Object();
 	m_timer = new Timer(true);
@@ -163,6 +195,9 @@ public abstract class Neighbor
 
     public int oid()
     {
-	return m_oid;
+	synchronized(m_oidMutex)
+	{
+	    return m_oid;
+	}
     }
 }
