@@ -31,3 +31,4 @@ Remaining Items
 13.    Introduce termination logic on critical TCP read/write errors.
 14.    Inbound and outbound content database tables.
 15.    Display remote server's certificate information.
+16.    SQLite secure delete.

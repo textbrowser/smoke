@@ -29,6 +29,8 @@ package org.purple.smoke;
 
 public class NeighborElement
 {
+    public String m_bytesRead = "";
+    public String m_bytesWritten = "";
     public String m_ipVersion = "";
     public String m_localIpAddress = "";
     public String m_localPort = "";

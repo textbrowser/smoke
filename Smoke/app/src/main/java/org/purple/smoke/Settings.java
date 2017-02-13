@@ -241,11 +241,20 @@ public class Settings extends AppCompatActivity
 		StringBuffer stringBuffer = new StringBuffer();
 
 		stringBuffer.append("Control: ");
-		stringBuffer.append
-		    (arrayList.get(i).m_statusControl.substring(0, 1).
-		     toUpperCase());
-		stringBuffer.append(arrayList.get(i).m_statusControl.
-				    substring(1));
+
+		try
+		{
+		    stringBuffer.append
+			(arrayList.get(i).m_statusControl.substring(0, 1).
+			 toUpperCase());
+		    stringBuffer.append(arrayList.get(i).m_statusControl.
+					substring(1));
+		}
+		catch(Exception exception)
+		{
+		    stringBuffer.append("Disconnect");
+		}
+
 		stringBuffer.append("\n");
 		stringBuffer.append(arrayList.get(i).m_remoteIpAddress);
 		stringBuffer.append(":");

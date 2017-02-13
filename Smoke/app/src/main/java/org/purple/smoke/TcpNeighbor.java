@@ -51,7 +51,7 @@ public class TcpNeighbor extends Neighbor
     private TrustManager m_trustManagers[] = null;
     private final static int s_connectionTimeout = 10000; // 10 Seconds
     private final static int s_readSocketInterval = 1500; // 1.5 Seconds
-    private final static int s_soTimeout = 2500; // 10 Seconds
+    private final static int s_soTimeout = 2500; // 2.5 Seconds
 
     private class ReadSocketTask extends TimerTask
     {
@@ -78,6 +78,7 @@ public class TcpNeighbor extends Neighbor
 		    for(int i = 0; (i = inputStream.read(bytes)) != -1;)
 		    {
 			byteArrayOutputStream.write(bytes, 0, i);
+			m_bytesRead += i;
 
 			if(byteArrayOutputStream.size() > s_maximumBytes)
 			    break;
@@ -114,9 +115,6 @@ public class TcpNeighbor extends Neighbor
 	    }
 	    catch(Exception exception)
 	    {
-		Database.getInstance().writeLog
-		    ("ReadSocketTask::run(): " +
-		     exception.getMessage() + ".");
 	    }
 	}
     }
@@ -134,8 +132,11 @@ public class TcpNeighbor extends Neighbor
 		    return;
 
 		OutputStream outputStream = m_socket.getOutputStream();
+		String capabilities = getCapabilities();
 
-		outputStream.write(getCapabilities().getBytes());
+		outputStream.write(capabilities.getBytes());
+		outputStream.flush();
+		m_bytesWritten += capabilities.length();
 	    }
 
 	    synchronized(m_lastTimeReadWrite)
