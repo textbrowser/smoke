@@ -39,4 +39,5 @@
     <string name="chat_signature_key_data">Chat Signature Key Data</string>
     <string name="chat_encryption_key_data">Chat Encryption Key Data</string>
     <string name="save">Save</string>
+    <string name="automatic_refresh">Automatic Refresh</string>
 </resources>

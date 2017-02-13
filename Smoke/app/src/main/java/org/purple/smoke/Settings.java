@@ -43,6 +43,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -638,6 +639,12 @@ public class Settings extends AppCompatActivity
     private void startTimers()
     {
 	m_timer.scheduleAtFixedRate(new SettingsTask(), 0, s_timerInterval);
+    }
+
+    private void stopTimers()
+    {
+	m_timer.cancel();
+	m_timer.purge();
     }
 
     @Override
