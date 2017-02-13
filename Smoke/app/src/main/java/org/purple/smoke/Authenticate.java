@@ -277,8 +277,8 @@ public class Authenticate extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-	m_databaseHelper = Database.getInstance(getApplicationContext());
 	super.onCreate(savedInstanceState);
+	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_authenticate);
 	prepareListeners();
 

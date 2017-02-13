@@ -643,9 +643,9 @@ public class Settings extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_timer = new Timer();
-	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
