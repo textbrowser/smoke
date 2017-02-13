@@ -133,7 +133,8 @@ public class Chat extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.chat_menu, menu);
+
+	getMenuInflater().inflate(R.menu.chat_menu, menu);
         return true;
     }
 
@@ -146,12 +147,7 @@ public class Chat extends AppCompatActivity
 
 	int id = item.getItemId();
 
-	if(id == R.id.action_exit)
-	{
-	    State.getInstance().setFinished(true);
-	    return true;
-	}
-        else if(id == R.id.action_settings)
+        if(id == R.id.action_settings)
 	{
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 

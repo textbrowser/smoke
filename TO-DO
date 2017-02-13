@@ -14,6 +14,10 @@ Completed Items
 11.    Spinner objects in the neighbors table bleed. The table will expand
        as necessary.
 
+Ignored / Impossible Items.
+
+1.     Android exit.
+
 Remaining Items
 
 1.     Reset option. Remove smoke.db.

@@ -3,9 +3,6 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         android:id="@+id/action_settings" />
-    <item android:title="@string/authenticate_exit"
-        android:id="@+id/action_exit"
-        android:orderInCategory="101" />
     <item android:title="@string/chat"
         android:id="@+id/action_chat" />
 </menu>

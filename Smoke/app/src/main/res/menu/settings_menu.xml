@@ -7,6 +7,4 @@
         android:orderInCategory="101"
         android:title="@string/chat"
         app:showAsAction="never" />
-    <item android:title="@string/settings_exit"
-        android:orderInCategory="102" />
 </menu>

@@ -295,6 +295,7 @@ public class Authenticate extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.authenticate_menu, menu);
         return true;
     }
@@ -314,11 +315,6 @@ public class Authenticate extends AppCompatActivity
 	    showChatActivity();
             return true;
         }
-	else if(id == R.id.action_exit)
-	{
-	    State.getInstance().setFinished(true);
-	    return true;
-	}
         else if(id == R.id.action_settings)
 	{
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
