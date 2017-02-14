@@ -35,11 +35,11 @@ import java.util.TimerTask;
 public class Kernel
 {
     private Cryptography m_cryptography = null;
-    private Hashtable<Integer, Neighbor> m_neighbors = null;
+    private Hashtable<Integer, Object> m_neighbors = null;
     private Timer m_congestionPurgeTimer = null;
     private Timer m_neighborsTimer = null;
     private final static int s_congestionPurgeInterval = 15000; // 15 Seconds
-    private final static int s_neighborsInterval = 5000; // 5 Seconds
+    private final static int s_neighborsInterval = 10000; // 10 Seconds
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -71,53 +71,33 @@ public class Kernel
 	    ** Remove null neighbors.
 	    */
 
-	    for(Hashtable.Entry<Integer, Neighbor> entry:
-		    m_neighbors.entrySet())
-		if(entry.getValue() != null)
-		{
-		    if(count == 0)
-		    {
-			entry.getValue().disconnect();
-			m_neighbors.remove(entry.getKey());
-		    }
-		}
-		else if(entry.getValue() == null)
-		    m_neighbors.remove(entry.getKey());
-
 	    if(count == 0)
 		m_neighbors.clear();
 
 	    return;
 	}
 	else
-	    for(Hashtable.Entry<Integer, Neighbor> entry:
-		    m_neighbors.entrySet())
-		if(entry.getValue() == null)
-		    m_neighbors.remove(entry.getKey());
-		else
-		{
-		    /*
-		    ** Remove neighbor objects which do not exist in the
-		    ** database.
-		    */
+	    for(Hashtable.Entry<Integer, Object> entry:m_neighbors.entrySet())
+	    {
+		/*
+		** Remove neighbor objects which do not exist in the
+		** database.
+		*/
 
-		    boolean found = false;
-		    int oid = entry.getValue().oid();
+		boolean found = false;
+		int oid = entry.getKey();
 
-		    for(int i = 0; i < neighbors.size(); i++)
-			if(neighbors.get(i) != null &&
-			   neighbors.get(i).m_oid == oid)
-			{
-			    found = true;
-			    break;
-			}
-
-		    if(!found)
+		for(int i = 0; i < neighbors.size(); i++)
+		    if(neighbors.get(i) != null &&
+		       neighbors.get(i).m_oid == oid)
 		    {
-			entry.getValue().disconnect();
-			m_neighbors.remove(entry.getKey());
+			found = true;
+			break;
 		    }
-		}
+
+		if(!found)
+		    m_neighbors.remove(entry.getKey());
+	    }
 
 	for(int i = 0; i < neighbors.size(); i++)
 	{
@@ -126,79 +106,7 @@ public class Kernel
 	    if(neighborElement == null)
 		continue;
 	    else if(m_neighbors.containsKey(neighborElement.m_oid))
-	    {
-		Neighbor neighbor = m_neighbors.get(neighborElement.m_oid);
-		String statusControl = neighborElement.m_statusControl.
-		    toLowerCase();
-
-		if(statusControl.equals("connect"))
-		{
-		    if(neighbor != null)
-			if(!neighbor.connected())
-			    m_neighbors.remove(neighborElement.m_oid);
-		}
-		else if(statusControl.equals("delete") ||
-			statusControl.equals("disconnect"))
-		{
-		    /*
-		    ** Remove the object from m_neighbors.
-		    */
-
-		    if(neighbor != null)
-		    {
-			neighbor.disconnect();
-
-			if(!neighbor.connected())
-			    m_neighbors.remove(neighborElement.m_oid);
-		    }
-		    else
-			m_neighbors.remove(neighborElement.m_oid);
-		}
-
-		Database database = Database.getInstance();
-
-		if(neighbor != null)
-		{
-		    if(neighbor.connected())
-		    {
-			database.saveNeighborLocalIpInformation
-			    (m_cryptography,
-			     neighbor.getLocalIp(),
-			     String.valueOf(neighbor.getLocalPort()),
-			     String.valueOf(neighborElement.m_oid));
-			database.saveNeighborStatus
-			    (m_cryptography,
-			     "connected",
-			     String.valueOf(neighborElement.m_oid));
-		    }
-		    else
-		    {
-			database.saveNeighborLocalIpInformation
-			    (m_cryptography,
-			     "",
-			     "",
-			     String.valueOf(neighborElement.m_oid));
-			database.saveNeighborStatus
-			    (m_cryptography,
-			     "disconnected",
-			     String.valueOf(neighborElement.m_oid));
-		    }
-		}
-		else
-		{
-		    database.saveNeighborLocalIpInformation
-			(m_cryptography,
-			 "",
-			 "",
-			 String.valueOf(neighborElement.m_oid));
-		    database.saveNeighborStatus
-			(m_cryptography,
-			 "disconnected",
-			 String.valueOf(neighborElement.m_oid));
-		}
-
 		continue;
-	    }
 	    else if(neighborElement.m_statusControl.toLowerCase().
 		    equals("delete") ||
 		    neighborElement.m_statusControl.toLowerCase().
@@ -243,8 +151,7 @@ public class Kernel
 	    if(neighbor == null)
 		continue;
 
-	    neighbor.connect();
-	    m_neighbors.put(neighborElement.m_oid, neighbor);
+	    m_neighbors.put(neighborElement.m_oid, new Object());
 	}
     }
 

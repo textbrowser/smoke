@@ -36,7 +36,7 @@ import java.util.UUID;
 public abstract class Neighbor
 {
     private static final int s_silence = 90000; // 90 Seconds
-    private static final int s_timerInterval = 15000; // 15 Seconds
+    private static final int s_timerInterval = 10000; // 10 Seconds
     private int m_oid = -1;
     private Object m_oidMutex = null;
     private Timer m_timer = null;
@@ -61,6 +61,20 @@ public abstract class Neighbor
 	@Override
 	public void run()
 	{
+	    int oid = 0;
+
+	    synchronized(m_oidMutex)
+	    {
+		oid = m_oid;
+	    }
+
+	    if(Database.getInstance().
+	       readNeighborStatusControl(Cryptography.getInstance(), oid).
+	       equals("connect"))
+		connect();
+	    else
+		disconnect();
+
 	    saveStatistics();
 	    sendCapabilities();
 	    terminate();
@@ -88,8 +102,26 @@ public abstract class Neighbor
 	    oid = m_oid;
 	}
 
-	Database.getInstance().saveNeighborStatistics
+	Database database = Database.getInstance();
+
+	database.saveNeighborStatistics
 	    (Cryptography.getInstance(), bytesRead, bytesWritten, oid);
+	database.saveNeighborLocalIpInformation
+	    (Cryptography.getInstance(),
+	     getLocalIp(),
+	     String.valueOf(getLocalPort()),
+	     String.valueOf(oid));
+
+	if(connected())
+	    database.saveNeighborStatus
+		(Cryptography.getInstance(),
+		 "connected",
+		 String.valueOf(oid));
+	else
+	    database.saveNeighborStatus
+		(Cryptography.getInstance(),
+		 "disconnected",
+		 String.valueOf(oid));
     }
 
     private void terminate()
@@ -174,30 +206,10 @@ public abstract class Neighbor
 	}
     }
 
+    protected abstract String getLocalIp();
+    protected abstract boolean connected();
+    protected abstract int getLocalPort();
+    protected abstract void connect();
+    protected abstract void disconnect();
     protected abstract void sendCapabilities();
-
-    public String getLocalIp()
-    {
-	if(m_version.equals("IPv4"))
-	    return "0.0.0.0";
-	else
-	    return "::";
-    }
-
-    public abstract boolean connected();
-    public abstract void connect();
-    public abstract void disconnect();
-
-    public int getLocalPort()
-    {
-	return 0;
-    }
-
-    public int oid()
-    {
-	synchronized(m_oidMutex)
-	{
-	    return m_oid;
-	}
-    }
 }

@@ -78,11 +78,19 @@ public class TcpNeighbor extends Neighbor
 
 		    int i = inputStream.read(bytes);
 
-		    if(i > 0)
+		    if(i < 0)
+			bytesRead = -1;
+		    else if(i > 0)
 		    {
 			byteArrayOutputStream.write(bytes, 0, i);
 			bytesRead += i;
 		    }
+		}
+
+		if(bytesRead < 0)
+		{
+		    disconnect();
+		    return;
 		}
 
 		synchronized(m_bytesReadMutex)
@@ -124,6 +132,31 @@ public class TcpNeighbor extends Neighbor
 	}
     }
 
+    protected String getLocalIp()
+    {
+	synchronized(m_socketMutex)
+	{
+	    if(m_socket != null && !m_socket.isClosed())
+		return m_socket.getLocalAddress().getHostAddress();
+	}
+
+	if(m_version.equals("IPv4"))
+	    return "0.0.0.0";
+	else
+	    return "::";
+    }
+
+    protected int getLocalPort()
+    {
+	synchronized(m_socketMutex)
+	{
+	    if(m_socket != null && !m_socket.isClosed())
+		return m_socket.getLocalPort();
+	}
+
+	return 0;
+    }
+
     protected void sendCapabilities()
     {
 	if(!connected())
@@ -157,9 +190,6 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
-	    Database.getInstance().writeLog
-		("TcpNeighbor::sendCapabilities(): " +
-		 exception.getMessage() + ".");
 	    disconnect();
 	}
     }
@@ -175,6 +205,8 @@ public class TcpNeighbor extends Neighbor
 	    (m_ipAddress, Integer.parseInt(m_ipPort));
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
 	m_readSocketTimer = new Timer();
+	m_readSocketTimer.scheduleAtFixedRate
+	    (new ReadSocketTask(), 0, s_readSocketInterval);
 	m_stringBuffer = new StringBuffer();
 	m_trustManagers = new TrustManager[]
 	{
@@ -198,17 +230,6 @@ public class TcpNeighbor extends Neighbor
 	};
     }
 
-    public String getLocalIp()
-    {
-	synchronized(m_socketMutex)
-	{
-	    if(m_socket != null && !m_socket.isClosed())
-		return m_socket.getLocalAddress().getHostAddress();
-	}
-
-	return super.getLocalIp();
-    }
-
     public boolean connected()
     {
 	synchronized(m_socketMutex)
@@ -220,17 +241,6 @@ public class TcpNeighbor extends Neighbor
 	}
     }
 
-    public int getLocalPort()
-    {
-	synchronized(m_socketMutex)
-	{
-	    if(m_socket != null && !m_socket.isClosed())
-		return m_socket.getLocalPort();
-	}
-
-	return super.getLocalPort();
-    }
-
     public void connect()
     {
 	if(connected())
@@ -240,6 +250,9 @@ public class TcpNeighbor extends Neighbor
 	{
 	    synchronized(m_socketMutex)
 	    {
+		if(m_socket != null)
+		    return;
+
 		SSLContext sslContext = SSLContext.getInstance("TLS");
 
 		sslContext.init(null, m_trustManagers, null);
@@ -250,34 +263,20 @@ public class TcpNeighbor extends Neighbor
 		m_socket.setReceiveBufferSize(32 * 1024 * 1024);
 		m_socket.setSoTimeout(s_soTimeout);
 	    }
-
-	    synchronized(m_readSocketTimer)
-	    {
-		m_readSocketTimer.scheduleAtFixedRate
-		    (new ReadSocketTask(), 0, s_readSocketInterval);
-	    }
 	}
 	catch(Exception exception)
 	{
-	    Database.getInstance().writeLog
-		("TcpNeighbor::connect(): " + exception.getMessage() + ".");
 	    disconnect();
 	}
     }
 
     public void disconnect()
     {
-	synchronized(m_readSocketTimer)
-	{
-	    m_readSocketTimer.cancel();
-	    m_readSocketTimer.purge();
-	}
-
 	try
 	{
 	    synchronized(m_socketMutex)
 	    {
-		if(m_socket != null && !m_socket.isClosed())
+		if(m_socket != null)
 		{
 		    m_socket.getInputStream().close();
 		    m_socket.getOutputStream().close();
@@ -289,6 +288,23 @@ public class TcpNeighbor extends Neighbor
 	{
 	    Database.getInstance().writeLog
 		("TcpNeighbor::disconnect(): error.");
+	}
+	finally
+	{
+	    synchronized(m_bytesReadMutex)
+	    {
+		m_bytesRead = 0;
+	    }
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
+		m_bytesWritten = 0;
+	    }
+
+	    synchronized(m_socketMutex)
+	    {
+		m_socket = null;
+	    }
 	}
     }
 }

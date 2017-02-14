@@ -40,67 +40,92 @@ public class Miscellaneous
 	if(bytes == null)
 	    return "";
 
-	StringBuffer stringBuffer = new StringBuffer();
+	try
+	{
+	    StringBuffer stringBuffer = new StringBuffer();
 
-	for(int i = 0; i < bytes.length; i++)
-	    stringBuffer.append(String.format("%02x", bytes[i]));
+	    for(int i = 0; i < bytes.length; i++)
+		stringBuffer.append(String.format("%02x", bytes[i]));
 
-	return stringBuffer.toString();
+	    return stringBuffer.toString();
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
     }
 
     public static String formattedDigitalInformation(String bytes)
     {
-	DecimalFormat decimalFormat = new DecimalFormat("0.00");
-	StringBuffer stringBuffer = new StringBuffer();
-	long v = Integer.decode(bytes).longValue();
+	try
+	{
+	    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+	    StringBuffer stringBuffer = new StringBuffer();
+	    long v = Integer.decode(bytes).longValue();
 
-	if(v < 1024)
-	{
-	    stringBuffer.append(decimalFormat.format(v));
-	    stringBuffer.append(" B");
-	}
-	else if(v < 1024 * 1024)
-	{
-	    stringBuffer.append(decimalFormat.format(v / (1.0 * 1024)));
-	    stringBuffer.append(" KiB");
-	}
-	else if(v < 1024 * 1024 * 1024)
-	{
-	    stringBuffer.append(decimalFormat.format(v / (1.0 * 1024 * 1024)));
-	    stringBuffer.append(" MiB");
-	}
-	else
-	{
-	    stringBuffer.append
-		(decimalFormat.format(v / (1.0 * 1024 * 1024 * 1024)));
-	    stringBuffer.append(" GiB");
-	}
+	    if(v < 1024)
+	    {
+		stringBuffer.append(decimalFormat.format(v));
+		stringBuffer.append(" B");
+	    }
+	    else if(v < 1024 * 1024)
+	    {
+		stringBuffer.append(decimalFormat.format(v / (1.0 * 1024)));
+		stringBuffer.append(" KiB");
+	    }
+	    else if(v < 1024 * 1024 * 1024)
+	    {
+		stringBuffer.append
+		    (decimalFormat.format(v / (1.0 * 1024 * 1024)));
+		stringBuffer.append(" MiB");
+	    }
+	    else
+	    {
+		stringBuffer.append
+		    (decimalFormat.format(v / (1.0 * 1024 * 1024 * 1024)));
+		stringBuffer.append(" GiB");
+	    }
 
-	return stringBuffer.toString();
+	    return stringBuffer.toString();
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
     }
 
     public static byte[] joinByteArrays(byte[] ... data)
     {
-	int length = 0;
-
-	for(byte b[] : data)
-	    if(b != null)
-		length += b.length;
-
-	if(length == 0)
+	if(data == null)
 	    return null;
 
-	byte bytes[] = new byte[length];
-	int i = 0;
+	try
+	{
+	    int length = 0;
 
-	for(byte b[] : data)
-	    if(b != null)
-	    {
-		System.arraycopy(b, 0, bytes, i, b.length);
-		i += b.length;
-	    }
+	    for(byte b[] : data)
+		if(b != null)
+		    length += b.length;
 
-	return bytes; // data[0] + data[1] + ... + data[n - 1]
+	    if(length == 0)
+		return null;
+
+	    byte bytes[] = new byte[length];
+	    int i = 0;
+
+	    for(byte b[] : data)
+		if(b != null)
+		{
+		    System.arraycopy(b, 0, bytes, i, b.length);
+		    i += b.length;
+		}
+
+	    return bytes; // data[0] + data[1] + ... + data[n - 1]
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static void showErrorDialog(Context context, String error)

@@ -33,6 +33,19 @@ public class UdpNeighbor extends Neighbor
 {
     private DatagramSocket m_socket = null;
 
+    protected String getLocalIp()
+    {
+	if(m_version.equals("IPv4"))
+	    return "0.0.0.0";
+	else
+	    return "::";
+    }
+
+    protected int getLocalPort()
+    {
+	return 0;
+    }
+
     protected void sendCapabilities()
     {
     }

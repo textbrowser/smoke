@@ -114,9 +114,8 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			String str = cursor.getString(i);
-			byte bytes[] = Base64.decode(str.getBytes(),
-						     Base64.DEFAULT);
+			byte bytes[] = Base64.decode
+			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
 
 			bytes = cryptography.mtd(bytes);
 
@@ -205,6 +204,48 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return arrayList;
+    }
+
+    public String readNeighborStatusControl(Cryptography cryptography, int oid)
+    {
+	if(cryptography == null)
+	    return null;
+
+	prepareDb();
+
+	if(m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	String status = "";
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT status_control FROM neighbors WHERE OID = ?",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+
+		bytes = cryptography.mtd(bytes);
+
+		if(bytes != null)
+		    status = new String(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return status;
     }
 
     public String readSetting(Cryptography cryptography, String name)
