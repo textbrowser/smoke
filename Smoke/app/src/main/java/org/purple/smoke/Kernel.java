@@ -140,14 +140,25 @@ public class Kernel
 		else if(statusControl.equals("delete") ||
 			statusControl.equals("disconnect"))
 		{
+		    /*
+		    ** Remove the object from m_neighbors.
+		    */
+
 		    if(neighbor != null)
+		    {
 			neighbor.disconnect();
+
+			if(!neighbor.connected())
+			    m_neighbors.remove(neighborElement.m_oid);
+		    }
+		    else
+			m_neighbors.remove(neighborElement.m_oid);
 		}
+
+		Database database = Database.getInstance();
 
 		if(neighbor != null)
 		{
-		    Database database = Database.getInstance();
-
 		    if(neighbor.connected())
 		    {
 			database.saveNeighborLocalIpInformation
@@ -173,6 +184,18 @@ public class Kernel
 			     String.valueOf(neighborElement.m_oid));
 		    }
 		}
+		else
+		{
+		    database.saveNeighborLocalIpInformation
+			(m_cryptography,
+			 "",
+			 "",
+			 String.valueOf(neighborElement.m_oid));
+		    database.saveNeighborStatus
+			(m_cryptography,
+			 "disconnected",
+			 String.valueOf(neighborElement.m_oid));
+		}
 
 		continue;
 	    }
@@ -180,7 +203,25 @@ public class Kernel
 		    equals("delete") ||
 		    neighborElement.m_statusControl.toLowerCase().
 		    equals("disconnect"))
+	    {
+		if(neighborElement.m_statusControl.toLowerCase().
+		   equals("disconnect"))
+		{
+		    Database database = Database.getInstance();
+
+		    database.saveNeighborLocalIpInformation
+			(m_cryptography,
+			 "",
+			 "",
+			 String.valueOf(neighborElement.m_oid));
+		    database.saveNeighborStatus
+			(m_cryptography,
+			 "disconnected",
+			 String.valueOf(neighborElement.m_oid));
+		}
+
 		continue;
+	    }
 
 	    Neighbor neighbor = null;
 
