@@ -44,6 +44,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -411,6 +412,31 @@ public class Settings extends AppCompatActivity
 		    prepareCredentials();
 	    }
 	});
+
+	final CheckBox checkBox1 = (CheckBox) findViewById
+	    (R.id.automatic_refresh);
+
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView,boolean isChecked)
+		{
+		    if(isChecked)
+		    {
+			m_databaseHelper.writeSetting
+			    (null, "automatic_neighbors_refresh", "true");
+			startTimers();
+		    }
+		    else
+		    {
+			m_databaseHelper.writeSetting
+			    (null, "automatic_neighbors_refresh", "false");
+			stopTimers();
+		    }
+		}
+	    });
     }
 
     private void prepareCredentials()
@@ -599,7 +625,12 @@ public class Settings extends AppCompatActivity
 			    textView2.setText("");
 			    populateFancyKeyData();
 			    startKernel();
-			    startTimers();
+
+			    if(m_databaseHelper.
+			       readSetting(null,
+					   "automatic_neighbors_refresh").
+			       equals("true"))
+				startTimers();
 			}
 		    }
 		});
@@ -638,13 +669,18 @@ public class Settings extends AppCompatActivity
 
     private void startTimers()
     {
+	m_timer = new Timer();
 	m_timer.scheduleAtFixedRate(new SettingsTask(), 0, s_timerInterval);
     }
 
     private void stopTimers()
     {
-	m_timer.cancel();
-	m_timer.purge();
+	if(m_timer != null)
+	{
+	    m_timer.cancel();
+	    m_timer.purge();
+	    m_timer = null;
+	}
     }
 
     @Override
@@ -652,7 +688,6 @@ public class Settings extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
-	m_timer = new Timer();
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -661,6 +696,13 @@ public class Settings extends AppCompatActivity
         button1.setEnabled(isAuthenticated);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
         button1.setEnabled(isAuthenticated);
+
+	CheckBox checkBox1 = (CheckBox) findViewById
+	    (R.id.automatic_refresh);
+
+	if(m_databaseHelper.
+	   readSetting(null, "automatic_neighbors_refresh").equals("true"))
+	    checkBox1.setChecked(true);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
@@ -800,7 +842,11 @@ public class Settings extends AppCompatActivity
 	    populateFancyKeyData();
 	    populateName();
 	    startKernel();
-	    startTimers();
+
+	    if(m_databaseHelper.
+	       readSetting(null,
+			   "automatic_neighbors_refresh").equals("true"))
+		startTimers();
 	}
     }
 
@@ -808,8 +854,12 @@ public class Settings extends AppCompatActivity
     protected void onDestroy()
     {
 	super.onDestroy();
-	m_timer.cancel();
-	m_timer.purge();
+
+	if(m_timer != null)
+	{
+	    m_timer.cancel();
+	    m_timer.purge();
+	}
     }
 
     @Override
