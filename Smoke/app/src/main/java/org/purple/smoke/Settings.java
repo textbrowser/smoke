@@ -295,9 +295,14 @@ public class Settings extends AppCompatActivity
 
 		stringBuffer.append("\n");
 		stringBuffer.append("In: ");
-		stringBuffer.append(arrayList.get(i).m_bytesRead);
+		stringBuffer.append
+		    (Miscellaneous.
+		     formattedDigitalInformation(arrayList.get(i).m_bytesRead));
 		stringBuffer.append(" Out: ");
-		stringBuffer.append(arrayList.get(i).m_bytesWritten);
+		stringBuffer.append
+		    (Miscellaneous.
+		     formattedDigitalInformation(arrayList.get(i).
+						 m_bytesWritten));
 		textView.setGravity(Gravity.CENTER_VERTICAL);
 		textView.setText(stringBuffer);
 		textView.setTextSize(13);

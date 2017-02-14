@@ -30,6 +30,8 @@ package org.purple.smoke;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import java.lang.Integer;
+import java.text.DecimalFormat;
 
 public class Miscellaneous
 {
@@ -42,6 +44,40 @@ public class Miscellaneous
 
 	for(int i = 0; i < bytes.length; i++)
 	    stringBuffer.append(String.format("%02x", bytes[i]));
+
+	return stringBuffer.toString();
+    }
+
+    public static String formattedDigitalInformation(String bytes)
+    {
+	DecimalFormat decimalFormat = new DecimalFormat("0.00");
+	StringBuffer stringBuffer = new StringBuffer();
+	long v = Integer.decode(bytes).longValue();
+
+	if(v < 1024)
+	{
+	    stringBuffer.append(decimalFormat.format(v));
+	    stringBuffer.append(" B");
+	}
+	else if(v < 1024 * 1024)
+	{
+	    stringBuffer.append
+		(decimalFormat.format(100 * v / (1.0 * 1024 * 1024)));
+	    stringBuffer.append(" KiB");
+	}
+	else if(v < 1024 * 1024 * 1024)
+	{
+	    stringBuffer.append
+		(decimalFormat.format(100 * v / (1.0 * 1024 * 1024 * 1024)));
+	    stringBuffer.append(" MiB");
+	}
+	else
+	{
+	    stringBuffer.append
+		(decimalFormat.
+		 format(100 * v / (1.0 * 1024 * 1024 * 1024 * 1024)));
+	    stringBuffer.append(" GiB");
+	}
 
 	return stringBuffer.toString();
     }
