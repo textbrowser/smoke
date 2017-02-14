@@ -61,21 +61,18 @@ public class Miscellaneous
 	}
 	else if(v < 1024 * 1024)
 	{
-	    stringBuffer.append
-		(decimalFormat.format(100 * v / (1.0 * 1024 * 1024)));
+	    stringBuffer.append(decimalFormat.format(v / (1.0 * 1024)));
 	    stringBuffer.append(" KiB");
 	}
 	else if(v < 1024 * 1024 * 1024)
 	{
-	    stringBuffer.append
-		(decimalFormat.format(100 * v / (1.0 * 1024 * 1024 * 1024)));
+	    stringBuffer.append(decimalFormat.format(v / (1.0 * 1024 * 1024)));
 	    stringBuffer.append(" MiB");
 	}
 	else
 	{
 	    stringBuffer.append
-		(decimalFormat.
-		 format(100 * v / (1.0 * 1024 * 1024 * 1024 * 1024)));
+		(decimalFormat.format(v / (1.0 * 1024 * 1024 * 1024)));
 	    stringBuffer.append(" GiB");
 	}
 
