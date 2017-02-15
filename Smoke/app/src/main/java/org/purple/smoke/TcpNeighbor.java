@@ -286,8 +286,6 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
-	    Database.getInstance().writeLog
-		("TcpNeighbor::disconnect(): error.");
 	}
 	finally
 	{
@@ -303,7 +301,8 @@ public class TcpNeighbor extends Neighbor
 
 	    synchronized(m_socketMutex)
 	    {
-		m_socket = null;
+		if(m_socket != null && m_socket.isClosed())
+		    m_socket = null;
 	    }
 	}
     }

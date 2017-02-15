@@ -550,6 +550,18 @@ public class Database extends SQLiteOpenHelper
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db)
+    {
+	try
+	{
+	    db.execSQL("PRAGMA secure_delete = True", null);
+        }
+	catch(Exception exception)
+	{
+	}
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db)
     {
 	String str = "";
