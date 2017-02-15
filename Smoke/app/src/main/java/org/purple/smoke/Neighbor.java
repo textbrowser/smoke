@@ -68,12 +68,19 @@ public abstract class Neighbor
 		oid = m_oid;
 	    }
 
-	    if(Database.getInstance().
-	       readNeighborStatusControl(Cryptography.getInstance(), oid).
-	       equals("connect"))
+	    String statusControl = Database.getInstance().
+		readNeighborStatusControl(Cryptography.getInstance(), oid);
+
+	    if(statusControl.equals("connect"))
 		connect();
-	    else
+	    else if(statusControl.equals("disconnect"))
 		disconnect();
+	    else
+	    {
+		abort();
+		disconnect();
+		return;
+	    }
 
 	    saveStatistics();
 	    sendCapabilities();
@@ -212,4 +219,10 @@ public abstract class Neighbor
     protected abstract void connect();
     protected abstract void disconnect();
     protected abstract void sendCapabilities();
+
+    protected synchronized void abort()
+    {
+	m_timer.cancel();
+	m_timer.purge();
+    }
 }

@@ -241,6 +241,14 @@ public class TcpNeighbor extends Neighbor
 	}
     }
 
+    public void abort()
+    {
+	super.abort();
+	m_readSocketTimer.cancel();
+	m_readSocketTimer.purge();
+	disconnect();
+    }
+
     public void connect()
     {
 	if(connected())

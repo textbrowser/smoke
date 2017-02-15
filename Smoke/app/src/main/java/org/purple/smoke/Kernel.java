@@ -35,7 +35,7 @@ import java.util.TimerTask;
 public class Kernel
 {
     private Cryptography m_cryptography = null;
-    private Hashtable<Integer, Object> m_neighbors = null;
+    private Hashtable<Integer, Neighbor> m_neighbors = null;
     private Timer m_congestionPurgeTimer = null;
     private Timer m_neighborsTimer = null;
     private final static int s_congestionPurgeInterval = 15000; // 15 Seconds
@@ -72,12 +72,19 @@ public class Kernel
 	    */
 
 	    if(count == 0)
+	    {
+		for(Hashtable.Entry<Integer, Neighbor> entry:
+			m_neighbors.entrySet())
+		    if(entry.getValue() != null)
+			entry.getValue().abort();
+
 		m_neighbors.clear();
+	    }
 
 	    return;
 	}
 	else
-	    for(Hashtable.Entry<Integer, Object> entry:m_neighbors.entrySet())
+	    for(Hashtable.Entry<Integer, Neighbor> entry:m_neighbors.entrySet())
 	    {
 		/*
 		** Remove neighbor objects which do not exist in the
@@ -96,7 +103,12 @@ public class Kernel
 		    }
 
 		if(!found)
+		{
+		    if(entry.getValue() != null)
+			entry.getValue().abort();
+
 		    m_neighbors.remove(entry.getKey());
+		}
 	    }
 
 	for(int i = 0; i < neighbors.size(); i++)
@@ -151,7 +163,7 @@ public class Kernel
 	    if(neighbor == null)
 		continue;
 
-	    m_neighbors.put(neighborElement.m_oid, new Object());
+	    m_neighbors.put(neighborElement.m_oid, neighbor);
 	}
     }
 
