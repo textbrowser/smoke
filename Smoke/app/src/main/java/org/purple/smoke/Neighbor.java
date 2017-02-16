@@ -77,6 +77,10 @@ public abstract class Neighbor
 		disconnect();
 	    else
 	    {
+		/*
+		** Abort!
+		*/
+
 		abort();
 		disconnect();
 		return;
@@ -84,7 +88,7 @@ public abstract class Neighbor
 
 	    saveStatistics();
 	    sendCapabilities();
-	    terminate();
+	    terminateOnSilence();
 	}
     }
 
@@ -131,7 +135,7 @@ public abstract class Neighbor
 		 String.valueOf(oid));
     }
 
-    private void terminate()
+    private void terminateOnSilence()
     {
 	Date now = new Date();
 	boolean disconnect = false;
