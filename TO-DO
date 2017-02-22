@@ -16,6 +16,7 @@ Completed Items
 12.    Neighbors periodic refresh.
 13.    Retrieve/store user name.
 14.    Introduce termination logic on critical TCP read/write errors.
+15.    Wrap neighbor text.
 
 Ignored / Impossible Items.
 
@@ -41,4 +42,3 @@ Remaining Items
 15.    Display remote server's certificate information.
 16.    SQLite secure delete.
 17.    Socket channels. A lot of work.
-18.    Wrap neighbor text.

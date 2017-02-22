@@ -39,6 +39,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -315,8 +316,12 @@ public class Settings extends AppCompatActivity
 		     formattedDigitalInformation(arrayList.get(i).
 						 m_bytesWritten));
 		textView.setGravity(Gravity.CENTER_VERTICAL);
+		textView.setLayoutParams
+		    (new TableRow.
+		     LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
 		textView.setText(stringBuffer);
 		textView.setTextSize(13);
+		textView.setWidth(500);
 		row.addView(spinner);
 		row.addView(textView);
 		tableLayout.addView(row, i);
