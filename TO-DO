@@ -20,13 +20,14 @@ Completed Items
 Ignored / Impossible Items.
 
 1.     Android exit.
+2.     Create a BroadcastReceiver and notify all other activities on exit.
 
 Remaining Items
 
 1.     Reset option. Remove smoke.db.
 2.     Synchronized methods or containers?
 3.     Detect removal of smoke.db.
-4.     Create a BroadcastReceiver and notify all other activities on exit.
+4.     Source-level string translations.
 5.     Neighbor class.
 6.     Scroll bars on Spinner objects.
 7.     Kernel.
@@ -40,4 +41,3 @@ Remaining Items
 15.    Display remote server's certificate information.
 16.    SQLite secure delete.
 17.    Socket channels. A lot of work.
-18.    Source-level string translations.
