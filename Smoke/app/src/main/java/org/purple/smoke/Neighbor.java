@@ -124,10 +124,16 @@ public abstract class Neighbor
 	     String.valueOf(oid));
 
 	if(connected())
+	{
+	    database.saveNeighborSessionCipher
+		(Cryptography.getInstance(),
+		 getSessionCipher(),
+		 String.valueOf(oid));
 	    database.saveNeighborStatus
 		(Cryptography.getInstance(),
 		 "connected",
 		 String.valueOf(oid));
+	}
 	else
 	    database.saveNeighborStatus
 		(Cryptography.getInstance(),
@@ -218,6 +224,7 @@ public abstract class Neighbor
     }
 
     protected abstract String getLocalIp();
+    protected abstract String getSessionCipher();
     protected abstract boolean connected();
     protected abstract int getLocalPort();
     protected abstract void connect();

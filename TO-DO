@@ -41,3 +41,4 @@ Remaining Items
 15.    Display remote server's certificate information.
 16.    SQLite secure delete.
 17.    Socket channels. A lot of work.
+18.    Wrap neighbor text.

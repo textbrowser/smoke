@@ -146,6 +146,19 @@ public class TcpNeighbor extends Neighbor
 	    return "::";
     }
 
+    protected String getSessionCipher()
+    {
+	synchronized(m_socketMutex)
+	{
+	    if(m_socket != null &&
+	       m_socket.getSession() != null &&
+	       m_socket.getSession().isValid())
+		return m_socket.getSession().getCipherSuite();
+	}
+
+	return "";
+    }
+
     protected int getLocalPort()
     {
 	synchronized(m_socketMutex)

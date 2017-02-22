@@ -758,6 +758,34 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void saveNeighborSessionCipher(Cryptography cryptography,
+					  String sessionCipher,
+					  String oid)
+    {
+	if(cryptography == null)
+	    return;
+
+	prepareDb();
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("session_cipher",
+		 Base64.encodeToString(cryptography.
+				       etm(sessionCipher.trim().getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     public void saveNeighborStatistics(Cryptography cryptography,
 				       long bytesRead,
 				       long bytesWritten,
@@ -821,6 +849,10 @@ public class Database extends SQLiteOpenHelper
 		values.put
 		    ("bytes_written",
 		     Base64.encodeToString(cryptography.etm("0".getBytes()),
+					   Base64.DEFAULT));
+		values.put
+		    ("session_cipher",
+		     Base64.encodeToString(cryptography.etm("".getBytes()),
 					   Base64.DEFAULT));
 	    }
 

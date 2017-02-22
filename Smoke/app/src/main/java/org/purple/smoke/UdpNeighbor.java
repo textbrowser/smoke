@@ -41,6 +41,11 @@ public class UdpNeighbor extends Neighbor
 	    return "::";
     }
 
+    protected String getSessionCipher()
+    {
+	return "";
+    }
+
     protected int getLocalPort()
     {
 	return 0;

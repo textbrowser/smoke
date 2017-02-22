@@ -297,6 +297,13 @@ public class Settings extends AppCompatActivity
 		    stringBuffer.append(arrayList.get(i).m_localPort);
 		}
 
+		if(!arrayList.get(i).m_sessionCipher.isEmpty())
+		{
+		    stringBuffer.append("\n");
+		    stringBuffer.append("Session Cipher: ");
+		    stringBuffer.append(arrayList.get(i).m_sessionCipher);
+		}
+
 		stringBuffer.append("\n");
 		stringBuffer.append("In: ");
 		stringBuffer.append
