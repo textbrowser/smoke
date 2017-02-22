@@ -183,6 +183,10 @@ public class Settings extends AppCompatActivity
 
     private void populateName()
     {
+	final TextView textView1 = (TextView) findViewById
+	    (R.id.name);
+
+	textView1.setText(m_databaseHelper.readSetting(s_cryptography, "name"));
     }
 
     private void populateNeighbors()
@@ -373,9 +377,25 @@ public class Settings extends AppCompatActivity
 	    }
 	};
 
-        final Button button4 = (Button) findViewById(R.id.set_password);
+	final Button button4 = (Button) findViewById(R.id.save_name);
 
-        button4.setOnClickListener(new View.OnClickListener()
+	button4.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		final TextView textView1 = (TextView) findViewById
+		    (R.id.name);
+
+		m_databaseHelper.writeSetting
+		    (s_cryptography,
+		     "name",
+		     textView1.getText().toString());
+	    }
+	});
+
+	final Button button5 = (Button) findViewById(R.id.set_password);
+
+        button5.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
