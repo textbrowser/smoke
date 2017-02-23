@@ -19,7 +19,7 @@ Completed Items
 15.    Wrap neighbor text.
 16.    Synchronized methods or containers? Both.
 
-Ignored / Impossible Items.
+Ignored / Impossible Items
 
 1.     Android exit.
 2.     Create a BroadcastReceiver and notify all other activities on exit.
