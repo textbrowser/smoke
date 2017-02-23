@@ -714,10 +714,14 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public void saveNeighborLocalIpInformation(Cryptography cryptography,
-					       String ipAddress,
-					       String ipPort,
-					       String oid)
+    public void saveNeighborInformation(Cryptography cryptography,
+					String bytesRead,
+					String bytesWritten,
+					String ipAddress,
+					String ipPort,
+					String sessionCipher,
+					String status,
+					String oid)
     {
 	if(cryptography == null)
 	    return;
@@ -731,6 +735,24 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
+	    if(!status.equals("connected"))
+	    {
+		bytesRead = "0";
+		bytesWritten = "0";
+		ipAddress = "";
+		ipPort = "0";
+		sessionCipher = "";
+	    }
+
+	    values.put
+		("bytes_read",
+		 Base64.encodeToString(cryptography.etm(bytesRead.getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("bytes_written",
+		 Base64.encodeToString(cryptography.etm(bytesWritten.
+							getBytes()),
+				       Base64.DEFAULT));
 	    values.put
 		("local_ip_address",
 		 Base64.encodeToString(cryptography.
@@ -751,111 +773,11 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.
 				       etm(ipPort.trim().getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
-    public void saveNeighborSessionCipher(Cryptography cryptography,
-					  String sessionCipher,
-					  String oid)
-    {
-	if(cryptography == null)
-	    return;
-
-	prepareDb();
-
-	if(m_db == null)
-	    return;
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
 	    values.put
 		("session_cipher",
-		 Base64.encodeToString(cryptography.
-				       etm(sessionCipher.trim().getBytes()),
+		 Base64.encodeToString(cryptography.etm(sessionCipher.
+							getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
-    public void saveNeighborStatistics(Cryptography cryptography,
-				       long bytesRead,
-				       long bytesWritten,
-				       int oid)
-    {
-	if(cryptography == null)
-	    return;
-
-	prepareDb();
-
-	if(m_db == null)
-	    return;
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
-	    values.put
-		("bytes_read",
-		 Base64.
-		 encodeToString(cryptography.
-				etm(String.valueOf(bytesRead).getBytes()),
-				Base64.DEFAULT));
-	    values.put
-		("bytes_written",
-		 Base64.
-		 encodeToString(cryptography.
-				etm(String.valueOf(bytesWritten).getBytes()),
-				Base64.DEFAULT));
-	    m_db.update
-		("neighbors", values, "oid = ?",
-		 new String[] {String.valueOf(oid)});
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
-    public void saveNeighborStatus(Cryptography cryptography,
-				   String status,
-				   String oid)
-    {
-	if(cryptography == null)
-	    return;
-
-	prepareDb();
-
-	if(m_db == null)
-	    return;
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
-	    if(!status.equals("connected"))
-	    {
-		values.put
-		    ("bytes_read",
-		     Base64.encodeToString(cryptography.etm("0".getBytes()),
-					   Base64.DEFAULT));
-		values.put
-		    ("bytes_written",
-		     Base64.encodeToString(cryptography.etm("0".getBytes()),
-					   Base64.DEFAULT));
-		values.put
-		    ("session_cipher",
-		     Base64.encodeToString(cryptography.etm("".getBytes()),
-					   Base64.DEFAULT));
-	    }
-
 	    values.put
 		("status",
 		 Base64.encodeToString(cryptography.

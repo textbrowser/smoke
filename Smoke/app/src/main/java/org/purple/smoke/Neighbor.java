@@ -115,30 +115,15 @@ public abstract class Neighbor
 
 	Database database = Database.getInstance();
 
-	database.saveNeighborStatistics
-	    (Cryptography.getInstance(), bytesRead, bytesWritten, oid);
-	database.saveNeighborLocalIpInformation
+	database.saveNeighborInformation
 	    (Cryptography.getInstance(),
+	     String.valueOf(bytesRead),
+	     String.valueOf(bytesWritten),
 	     getLocalIp(),
 	     String.valueOf(getLocalPort()),
+	     getSessionCipher(),
+	     connected() ? "connected" : "disconnected",
 	     String.valueOf(oid));
-
-	if(connected())
-	{
-	    database.saveNeighborSessionCipher
-		(Cryptography.getInstance(),
-		 getSessionCipher(),
-		 String.valueOf(oid));
-	    database.saveNeighborStatus
-		(Cryptography.getInstance(),
-		 "connected",
-		 String.valueOf(oid));
-	}
-	else
-	    database.saveNeighborStatus
-		(Cryptography.getInstance(),
-		 "disconnected",
-		 String.valueOf(oid));
     }
 
     private void terminateOnSilence()

@@ -126,19 +126,15 @@ public class Kernel
 	    {
 		if(neighborElement.m_statusControl.toLowerCase().
 		   equals("disconnect"))
-		{
-		    Database database = Database.getInstance();
-
-		    database.saveNeighborLocalIpInformation
+		    Database.getInstance().saveNeighborInformation
 			(m_cryptography,
+			 "0",
+			 "0",
 			 "",
+			 "0",
 			 "",
-			 String.valueOf(neighborElement.m_oid));
-		    database.saveNeighborStatus
-			(m_cryptography,
 			 "disconnected",
 			 String.valueOf(neighborElement.m_oid));
-		}
 
 		continue;
 	    }
