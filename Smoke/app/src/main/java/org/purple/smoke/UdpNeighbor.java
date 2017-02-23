@@ -27,14 +27,24 @@
 
 package org.purple.smoke;
 
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.util.Date;
 
 public class UdpNeighbor extends Neighbor
 {
     private DatagramSocket m_socket = null;
+    private InetSocketAddress m_inetSocketAddress = null;
 
     protected String getLocalIp()
     {
+	synchronized(m_socketMutex)
+	{
+	    if(m_socket != null && m_socket.getLocalAddress() != null)
+		return m_socket.getLocalAddress().getHostAddress();
+	}
+
 	if(m_version.equals("IPv4"))
 	    return "0.0.0.0";
 	else
@@ -48,11 +58,54 @@ public class UdpNeighbor extends Neighbor
 
     protected int getLocalPort()
     {
+	synchronized(m_socketMutex)
+	{
+	    if(m_socket != null && !m_socket.isClosed())
+		return m_socket.getLocalPort();
+	}
+
 	return 0;
     }
 
     protected void sendCapabilities()
     {
+	if(!connected())
+	    return;
+
+	try
+	{
+	    String capabilities = "";
+
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket == null)
+		    return;
+
+		capabilities = getCapabilities();
+
+		DatagramPacket datagramPacket = new DatagramPacket
+		    (capabilities.getBytes(),
+		     capabilities.getBytes().length,
+		     m_inetSocketAddress.getAddress(),
+		     Integer.parseInt(m_ipPort));
+
+		m_socket.send(datagramPacket);
+	    }
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
+		m_bytesWritten += capabilities.length();
+	    }
+
+	    synchronized(m_lastTimeReadWrite)
+	    {
+		m_lastTimeReadWrite = new Date();
+	    }
+	}
+	catch(Exception exception)
+	{
+	    disconnect();
+	}
     }
 
     public UdpNeighbor(String ipAddress,
@@ -62,6 +115,8 @@ public class UdpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
+	m_inetSocketAddress = new InetSocketAddress
+	    (m_ipAddress, Integer.parseInt(m_ipPort));
     }
 
     public boolean connected()
@@ -82,10 +137,12 @@ public class UdpNeighbor extends Neighbor
 	    synchronized(m_socketMutex)
 	    {
 		m_socket = new DatagramSocket();
+		m_socket.connect(m_inetSocketAddress);
 	    }
 	}
 	catch(Exception exception)
 	{
+	    disconnect();
 	}
     }
 
@@ -101,6 +158,14 @@ public class UdpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	}
+	finally
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null && m_socket.isClosed())
+		    m_socket = null;
+	    }
 	}
     }
 }
