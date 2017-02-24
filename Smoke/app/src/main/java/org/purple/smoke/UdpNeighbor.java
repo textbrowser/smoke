@@ -149,14 +149,6 @@ public class UdpNeighbor extends Neighbor
 	return 0;
     }
 
-    protected void abort()
-    {
-	super.abort();
-	m_readSocketTimer.cancel();
-	m_readSocketTimer.purge();
-	disconnect();
-    }
-
     protected void sendCapabilities()
     {
 	if(!connected())
@@ -218,6 +210,14 @@ public class UdpNeighbor extends Neighbor
 	{
 	    return m_socket != null && !m_socket.isClosed();
 	}
+    }
+
+    public void abort()
+    {
+	super.abort();
+	m_readSocketTimer.cancel();
+	m_readSocketTimer.purge();
+	disconnect();
     }
 
     public void connect()

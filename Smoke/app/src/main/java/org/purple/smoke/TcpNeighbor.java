@@ -168,14 +168,6 @@ public class TcpNeighbor extends Neighbor
 	return 0;
     }
 
-    protected void abort()
-    {
-	super.abort();
-	m_readSocketTimer.cancel();
-	m_readSocketTimer.purge();
-	disconnect();
-    }
-
     protected void sendCapabilities()
     {
 	if(!connected())
@@ -258,6 +250,14 @@ public class TcpNeighbor extends Neighbor
 		m_socket.getSession() != null &&
 		m_socket.getSession().isValid();
 	}
+    }
+
+    public void abort()
+    {
+	super.abort();
+	m_readSocketTimer.cancel();
+	m_readSocketTimer.purge();
+	disconnect();
     }
 
     public void connect()
