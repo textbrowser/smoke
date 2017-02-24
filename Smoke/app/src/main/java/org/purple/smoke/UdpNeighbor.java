@@ -229,6 +229,9 @@ public class UdpNeighbor extends Neighbor
 	{
 	    synchronized(m_socketMutex)
 	    {
+		if(m_socket != null)
+		    return;
+
 		m_socket = new DatagramSocket();
 		m_socket.connect(m_inetSocketAddress);
 		m_socket.setSoTimeout(s_soTimeout);
