@@ -117,14 +117,19 @@ public abstract class Neighbor
 	    oid = m_oid;
 	}
 
+	String localIp = getLocalIp();
+	String localPort = String.valueOf(getLocalPort());
+	String sessionCiper = getSessionCipher();
+	boolean connected = connected();
+
 	Database.getInstance().saveNeighborInformation
 	    (Cryptography.getInstance(),
 	     String.valueOf(bytesRead),
 	     String.valueOf(bytesWritten),
-	     getLocalIp(),
-	     String.valueOf(getLocalPort()),
-	     getSessionCipher(),
-	     connected() ? "connected" : "disconnected",
+	     localIp,
+	     localPort,
+	     sessionCiper,
+	     connected ? "connected" : "disconnected",
 	     String.valueOf(oid));
     }
 
