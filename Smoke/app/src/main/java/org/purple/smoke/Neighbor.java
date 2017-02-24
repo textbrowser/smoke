@@ -113,9 +113,7 @@ public abstract class Neighbor
 	    oid = m_oid;
 	}
 
-	Database database = Database.getInstance();
-
-	database.saveNeighborInformation
+	Database.getInstance().saveNeighborInformation
 	    (Cryptography.getInstance(),
 	     String.valueOf(bytesRead),
 	     String.valueOf(bytesWritten),

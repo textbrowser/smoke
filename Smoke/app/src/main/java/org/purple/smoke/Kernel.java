@@ -68,7 +68,6 @@ public class Kernel
 	{
 	    /*
 	    ** Disconnect all existing sockets.
-	    ** Remove null neighbors.
 	    */
 
 	    if(count == 0)
