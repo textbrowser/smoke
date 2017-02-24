@@ -842,7 +842,7 @@ public class Settings extends AppCompatActivity
         textView1.setEnabled(isAuthenticated);
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
-	textview.requestFocus();
+	textView1.requestFocus();
         textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
 	textView1.setEnabled(isAuthenticated);
