@@ -73,48 +73,50 @@ public class Kernel
 	    */
 
 	    if(count == 0)
-	    {
-		for(Hashtable.Entry<Integer, Neighbor> entry:
-			m_neighbors.entrySet())
-		    if(entry.getValue() != null)
-			entry.getValue().abort();
+		synchronized(m_neighbors)
+		{
+		    for(Hashtable.Entry<Integer, Neighbor> entry:
+			    m_neighbors.entrySet())
+			if(entry.getValue() != null)
+			    entry.getValue().abort();
 
-		m_neighbors.clear();
-	    }
+		    m_neighbors.clear();
+		}
 
 	    return;
 	}
 	else
-	{
-	    Iterator<Integer> iterator = m_neighbors.keySet().iterator();
-
-	    while(iterator.hasNext())
+	    synchronized(m_neighbors)
 	    {
-		/*
-		** Remove neighbor objects which do not exist in the
-		** database.
-		*/
+		Iterator<Integer> iterator = m_neighbors.keySet().iterator();
 
-		boolean found = false;
-		int oid = iterator.next();
-
-		for(int i = 0; i < neighbors.size(); i++)
-		    if(neighbors.get(i) != null &&
-		       neighbors.get(i).m_oid == oid)
-		    {
-			found = true;
-			break;
-		    }
-
-		if(!found)
+		while(iterator.hasNext())
 		{
-		    if(m_neighbors.get(oid) != null)
-			m_neighbors.get(oid).abort();
+		    /*
+		    ** Remove neighbor objects which do not exist in the
+		    ** database.
+		    */
 
-		    iterator.remove();
+		    boolean found = false;
+		    int oid = iterator.next();
+
+		    for(int i = 0; i < neighbors.size(); i++)
+			if(neighbors.get(i) != null &&
+			   neighbors.get(i).m_oid == oid)
+			{
+			    found = true;
+			    break;
+			}
+
+		    if(!found)
+		    {
+			if(m_neighbors.get(oid) != null)
+			    m_neighbors.get(oid).abort();
+
+			iterator.remove();
+		    }
 		}
 	    }
-	}
 
 	for(int i = 0; i < neighbors.size(); i++)
 	{
@@ -122,26 +124,33 @@ public class Kernel
 
 	    if(neighborElement == null)
 		continue;
-	    else if(m_neighbors.containsKey(neighborElement.m_oid))
-		continue;
-	    else if(neighborElement.m_statusControl.toLowerCase().
-		    equals("delete") ||
-		    neighborElement.m_statusControl.toLowerCase().
-		    equals("disconnect"))
+	    else
 	    {
-		if(neighborElement.m_statusControl.toLowerCase().
-		   equals("disconnect"))
-		    Database.getInstance().saveNeighborInformation
-			(m_cryptography,
-			 "0",
-			 "0",
-			 "",
-			 "0",
-			 "",
-			 "disconnected",
-			 String.valueOf(neighborElement.m_oid));
+		synchronized(m_neighbors)
+		{
+		    if(m_neighbors.containsKey(neighborElement.m_oid))
+			continue;
+		}
 
-		continue;
+		if(neighborElement.m_statusControl.toLowerCase().
+		   equals("delete") ||
+		   neighborElement.m_statusControl.toLowerCase().
+		   equals("disconnect"))
+		{
+		    if(neighborElement.m_statusControl.toLowerCase().
+		       equals("disconnect"))
+			Database.getInstance().saveNeighborInformation
+			    (m_cryptography,
+			     "0",
+			     "0",
+			     "",
+			     "0",
+			     "",
+			     "disconnected",
+			     String.valueOf(neighborElement.m_oid));
+
+		    continue;
+		}
 	    }
 
 	    Neighbor neighbor = null;
@@ -183,7 +192,10 @@ public class Kernel
 	    if(neighbor == null)
 		continue;
 
-	    m_neighbors.put(neighborElement.m_oid, neighbor);
+	    synchronized(m_neighbors)
+	    {
+		m_neighbors.put(neighborElement.m_oid, neighbor);
+	    }
 	}
     }
 
@@ -210,5 +222,19 @@ public class Kernel
 	    s_instance = new Kernel();
 
 	return s_instance;
+    }
+
+    public void echo(String message, int oid)
+    {
+	if(message.isEmpty())
+	    return;
+
+	synchronized(m_neighbors)
+	{
+	    for(Hashtable.Entry<Integer, Neighbor> entry:m_neighbors.entrySet())
+		if(entry.getValue() != null &&
+		   entry.getValue().getOid() != oid)
+		    entry.getValue().send(message);
+	}
     }
 }

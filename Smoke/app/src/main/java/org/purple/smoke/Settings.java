@@ -842,13 +842,13 @@ public class Settings extends AppCompatActivity
         textView1.setEnabled(isAuthenticated);
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
+	textview.requestFocus();
         textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.refresh_participants);
 	textView1.setEnabled(isAuthenticated);
         textView1 = (TextView) findViewById(R.id.password1);
-	textView1.requestFocus();
         textView1.setText("");
         textView1 = (TextView) findViewById(R.id.password2);
         textView1.setText("");

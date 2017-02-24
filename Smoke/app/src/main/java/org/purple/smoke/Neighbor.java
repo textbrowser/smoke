@@ -228,4 +228,19 @@ public abstract class Neighbor
 	m_timer.cancel();
 	m_timer.purge();
     }
+
+    protected void echo(String message)
+    {
+	synchronized(m_oidMutex)
+	{
+	    Kernel.getInstance().echo(message, m_oid);
+	}
+    }
+
+    public abstract void send(String message);
+
+    public synchronized int getOid()
+    {
+	return m_oid;
+    }
 }

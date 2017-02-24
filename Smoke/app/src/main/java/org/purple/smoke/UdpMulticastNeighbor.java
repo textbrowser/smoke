@@ -104,6 +104,7 @@ public class UdpMulticastNeighbor extends Neighbor
 			    String buffer = m_stringBuffer.
 				substring(0, indexOf + s_eom.length());
 
+			    echo(buffer);
 			    m_stringBuffer = m_stringBuffer.delete
 				(0, buffer.length());
 			    indexOf = m_stringBuffer.indexOf(s_eom);
@@ -281,5 +282,9 @@ public class UdpMulticastNeighbor extends Neighbor
 		    m_socket = null;
 	    }
 	}
+    }
+
+    public void send(String message)
+    {
     }
 }
