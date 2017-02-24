@@ -31,11 +31,21 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class UdpNeighbor extends Neighbor
 {
     private DatagramSocket m_socket = null;
     private InetSocketAddress m_inetSocketAddress = null;
+
+    private class ReadSocketTask extends TimerTask
+    {
+	@Override
+	public void run()
+	{
+	}
+    }
 
     protected String getLocalIp()
     {
@@ -117,6 +127,9 @@ public class UdpNeighbor extends Neighbor
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
 	m_inetSocketAddress = new InetSocketAddress
 	    (m_ipAddress, Integer.parseInt(m_ipPort));
+	m_readSocketTimer = new Timer();
+	m_readSocketTimer.scheduleAtFixedRate
+	    (new ReadSocketTask(), 0, s_readSocketInterval);
     }
 
     public boolean connected()
@@ -125,6 +138,14 @@ public class UdpNeighbor extends Neighbor
 	{
 	    return m_socket != null && !m_socket.isClosed();
 	}
+    }
+
+    public void abort()
+    {
+	super.abort();
+	m_readSocketTimer.cancel();
+	m_readSocketTimer.purge();
+	disconnect();
     }
 
     public void connect()
@@ -138,6 +159,7 @@ public class UdpNeighbor extends Neighbor
 	    {
 		m_socket = new DatagramSocket();
 		m_socket.connect(m_inetSocketAddress);
+		m_socket.setSoTimeout(s_soTimeout);
 	    }
 	}
 	catch(Exception exception)

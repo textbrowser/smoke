@@ -46,12 +46,8 @@ public class TcpNeighbor extends Neighbor
     private InetSocketAddress m_inetSocketAddress = null;
     private SSLSocket m_socket = null;
     private String m_protocols[] = null;
-    private StringBuffer m_stringBuffer = null;
-    private Timer m_readSocketTimer = null;
     private TrustManager m_trustManagers[] = null;
     private final static int s_connectionTimeout = 10000; // 10 Seconds
-    private final static int s_readSocketInterval = 500; // 0.5 Seconds
-    private final static int s_soTimeout = 250; // 250 Milliseconds
 
     private class ReadSocketTask extends TimerTask
     {
