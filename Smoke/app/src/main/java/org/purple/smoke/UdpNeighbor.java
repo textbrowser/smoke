@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.io.ByteArrayOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -44,6 +45,77 @@ public class UdpNeighbor extends Neighbor
 	@Override
 	public void run()
 	{
+	    if(!connected())
+		return;
+
+	    try
+	    {
+		ByteArrayOutputStream byteArrayOutputStream = null;
+		int bytesRead = 0;
+
+		synchronized(m_socketMutex)
+		{
+		    if(m_socket == null)
+			return;
+
+		    DatagramPacket datagramPacket = null;
+		    byte bytes[] = new byte[64 * 1024];
+
+		    byteArrayOutputStream = new ByteArrayOutputStream();
+		    datagramPacket = new DatagramPacket(bytes, bytes.length);
+		    m_socket.receive(datagramPacket);
+
+		    if(datagramPacket.getLength() > 0)
+			byteArrayOutputStream.write
+			    (datagramPacket.getData(),
+			     0,
+			     datagramPacket.getLength());
+
+		    bytesRead += datagramPacket.getLength();
+		}
+
+		if(bytesRead < 0)
+		{
+		    disconnect();
+		    return;
+		}
+
+		synchronized(m_bytesReadMutex)
+		{
+		    m_bytesRead += bytesRead;
+		}
+
+		if(byteArrayOutputStream != null &&
+		   byteArrayOutputStream.size() > 0)
+		    synchronized(m_stringBuffer)
+		    {
+			m_stringBuffer.append
+			    (new String(byteArrayOutputStream.toByteArray()));
+
+			/*
+			** Detect our end-of-message delimiter and record
+			** the message in some database table.
+			*/
+
+			int indexOf = m_stringBuffer.indexOf(s_eom);
+
+			while(indexOf >= 0)
+			{
+			    String buffer = m_stringBuffer.
+				substring(0, indexOf + s_eom.length());
+
+			    m_stringBuffer = m_stringBuffer.delete
+				(0, buffer.length());
+			    indexOf = m_stringBuffer.indexOf(s_eom);
+			}
+
+			if(m_stringBuffer.length() > s_maximumBytes)
+			    m_stringBuffer.setLength(s_maximumBytes);
+		    }
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
     }
 
