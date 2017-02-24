@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -83,7 +84,10 @@ public class Kernel
 	    return;
 	}
 	else
-	    for(Hashtable.Entry<Integer, Neighbor> entry:m_neighbors.entrySet())
+	{
+	    Iterator<Integer> iterator = m_neighbors.keySet().iterator();
+
+	    while(iterator.hasNext())
 	    {
 		/*
 		** Remove neighbor objects which do not exist in the
@@ -91,7 +95,7 @@ public class Kernel
 		*/
 
 		boolean found = false;
-		int oid = entry.getKey();
+		int oid = iterator.next();
 
 		for(int i = 0; i < neighbors.size(); i++)
 		    if(neighbors.get(i) != null &&
@@ -103,12 +107,13 @@ public class Kernel
 
 		if(!found)
 		{
-		    if(entry.getValue() != null)
-			entry.getValue().abort();
+		    if(m_neighbors.get(oid) != null)
+			m_neighbors.get(oid).abort();
 
-		    m_neighbors.remove(entry.getKey());
+		    iterator.remove();
 		}
 	    }
+	}
 
 	for(int i = 0; i < neighbors.size(); i++)
 	{
