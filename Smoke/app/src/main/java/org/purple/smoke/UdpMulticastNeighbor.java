@@ -29,16 +29,16 @@ package org.purple.smoke;
 
 import java.io.ByteArrayOutputStream;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class UdpNeighbor extends Neighbor
+public class UdpMulticastNeighbor extends Neighbor
 {
-    private DatagramSocket m_socket = null;
     private InetAddress m_inetAddress = null;
+    private MulticastSocket m_socket = null;
 
     private class ReadSocketTask extends TimerTask
     {
@@ -121,16 +121,7 @@ public class UdpNeighbor extends Neighbor
 
     protected String getLocalIp()
     {
-	synchronized(m_socketMutex)
-	{
-	    if(m_socket != null && m_socket.getLocalAddress() != null)
-		return m_socket.getLocalAddress().getHostAddress();
-	}
-
-	if(m_version.equals("IPv4"))
-	    return "0.0.0.0";
-	else
-	    return "::";
+	return m_ipAddress;
     }
 
     protected String getSessionCipher()
@@ -190,11 +181,11 @@ public class UdpNeighbor extends Neighbor
 	}
     }
 
-    public UdpNeighbor(String ipAddress,
-		       String ipPort,
-		       String scopeId,
-		       String version,
-		       int oid)
+    public UdpMulticastNeighbor(String ipAddress,
+				String ipPort,
+				String scopeId,
+				String version,
+				int oid)
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
 
@@ -242,8 +233,9 @@ public class UdpNeighbor extends Neighbor
 		else if(m_socket != null)
 		    return;
 
-		m_socket = new DatagramSocket();
-		m_socket.connect(m_inetAddress, Integer.parseInt(m_ipPort));
+		m_socket = new MulticastSocket(Integer.parseInt(m_ipPort));
+		m_socket.joinGroup(m_inetAddress);
+		m_socket.setLoopbackMode(true);
 		m_socket.setSoTimeout(s_soTimeout);
 	    }
 	}
@@ -260,7 +252,12 @@ public class UdpNeighbor extends Neighbor
 	    synchronized(m_socketMutex)
 	    {
 		if(m_socket != null)
+		{
+		    if(m_inetAddress != null)
+			m_socket.leaveGroup(m_inetAddress);
+
 		    m_socket.close();
+		}
 	    }
 	}
 	catch(Exception exception)

@@ -20,6 +20,7 @@ Completed Items
 16.    Synchronized methods or containers? Both.
 17.    Neighbor class.
 18.    UDP sockets.
+19.    UDP multicast.
 
 Ignored / Impossible Items
 
@@ -42,5 +43,4 @@ Remaining Items
 12.    Inbound and outbound content database tables.
 13.    Display remote server's certificate information.
 14.    SQLite secure delete.
-15.    UDP multicast.
-16.    Buzz-like page.
+15.    Buzz-like page.

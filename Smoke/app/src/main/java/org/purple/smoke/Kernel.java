@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -153,12 +154,31 @@ public class Kernel
 		     neighborElement.m_ipVersion,
 		     neighborElement.m_oid);
 	    else if(neighborElement.m_transport.equals("UDP"))
-		neighbor = new UdpNeighbor
-		    (neighborElement.m_remoteIpAddress,
-		     neighborElement.m_remotePort,
-		     neighborElement.m_remoteScopeId,
-		     neighborElement.m_ipVersion,
-		     neighborElement.m_oid);
+	    {
+		try
+		{
+		    InetAddress inetAddress = InetAddress.getByName
+			(neighborElement.m_remoteIpAddress);
+
+		    if(inetAddress.isMulticastAddress())
+			neighbor = new UdpMulticastNeighbor
+			    (neighborElement.m_remoteIpAddress,
+			     neighborElement.m_remotePort,
+			     neighborElement.m_remoteScopeId,
+			     neighborElement.m_ipVersion,
+			     neighborElement.m_oid);
+		    else
+			neighbor = new UdpNeighbor
+			    (neighborElement.m_remoteIpAddress,
+			     neighborElement.m_remotePort,
+			     neighborElement.m_remoteScopeId,
+			     neighborElement.m_ipVersion,
+			     neighborElement.m_oid);
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
 
 	    if(neighbor == null)
 		continue;
