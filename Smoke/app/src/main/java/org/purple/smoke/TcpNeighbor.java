@@ -280,7 +280,6 @@ public class TcpNeighbor extends Neighbor
 		    createSocket();
 		m_socket.connect(m_inetSocketAddress, s_connectionTimeout);
 		m_socket.setEnabledProtocols(m_protocols);
-		m_socket.setSoLinger(true, 0);
 		m_socket.setSoTimeout(s_soTimeout);
 		m_socket.setTcpNoDelay(true);
 	    }
