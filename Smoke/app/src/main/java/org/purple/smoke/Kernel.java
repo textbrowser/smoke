@@ -197,6 +197,8 @@ public class Kernel
 		m_neighbors.put(neighborElement.m_oid, neighbor);
 	    }
 	}
+
+	Runtime.getRuntime().runFinalization();
     }
 
     private void prepareTimers()
