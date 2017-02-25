@@ -58,7 +58,7 @@ public abstract class Neighbor
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
     protected final static int s_readSocketInterval = 500; // 0.5 Seconds
-    protected final static int s_soTimeout = 250; // 250 Milliseconds
+    protected final static int s_soTimeout = 200; // 250 Milliseconds
 
     private class NeighborTask extends TimerTask
     {
