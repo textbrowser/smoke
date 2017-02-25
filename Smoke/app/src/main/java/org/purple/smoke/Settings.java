@@ -298,6 +298,14 @@ public class Settings extends AppCompatActivity
 		    stringBuffer.append(arrayList.get(i).m_localPort);
 		}
 
+		if(!arrayList.get(i).m_remoteCertificate.isEmpty())
+		{
+		    stringBuffer.append("\n");
+		    stringBuffer.append
+			("Remote Certificate's Public Key Fingerprint: ");
+		    stringBuffer.append(arrayList.get(i).m_remoteCertificate);
+		}
+
 		if(!arrayList.get(i).m_sessionCipher.isEmpty())
 		{
 		    stringBuffer.append("\n");

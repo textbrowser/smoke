@@ -719,6 +719,7 @@ public class Database extends SQLiteOpenHelper
 					String bytesWritten,
 					String ipAddress,
 					String ipPort,
+					String peerCertificate,
 					String sessionCipher,
 					String status,
 					String oid)
@@ -741,6 +742,7 @@ public class Database extends SQLiteOpenHelper
 		bytesWritten = "0";
 		ipAddress = "";
 		ipPort = "0";
+		peerCertificate = "";
 		sessionCipher = "";
 	    }
 
@@ -772,6 +774,11 @@ public class Database extends SQLiteOpenHelper
 		("local_port_digest",
 		 Base64.encodeToString(cryptography.
 				       etm(ipPort.trim().getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("remote_certificate",
+		 Base64.encodeToString(cryptography.
+				       etm(peerCertificate.trim().getBytes()),
 				       Base64.DEFAULT));
 	    values.put
 		("session_cipher",

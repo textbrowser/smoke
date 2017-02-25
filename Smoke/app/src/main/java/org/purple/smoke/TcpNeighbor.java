@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Timer;
@@ -143,6 +144,30 @@ public class TcpNeighbor extends Neighbor
 	    return "0.0.0.0";
 	else
 	    return "::";
+    }
+
+    protected String getPeerCertificateString()
+    {
+	try
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null && m_socket.getSession() != null)
+		{
+		    Certificate peerCertificates[] = m_socket.getSession().
+			getPeerCertificates();
+
+		    if(peerCertificates != null && peerCertificates.length > 0)
+			return Cryptography.publicKeyFingerPrint
+			    (peerCertificates[0].getPublicKey());
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
     }
 
     protected String getSessionCipher()

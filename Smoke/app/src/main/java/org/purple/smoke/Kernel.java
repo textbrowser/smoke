@@ -146,6 +146,7 @@ public class Kernel
 			     "",
 			     "0",
 			     "",
+			     "",
 			     "disconnected",
 			     String.valueOf(neighborElement.m_oid));
 

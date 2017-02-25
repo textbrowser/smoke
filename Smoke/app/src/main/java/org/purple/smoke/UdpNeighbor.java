@@ -134,11 +134,6 @@ public class UdpNeighbor extends Neighbor
 	    return "::";
     }
 
-    protected String getSessionCipher()
-    {
-	return "";
-    }
-
     protected int getLocalPort()
     {
 	synchronized(m_socketMutex)

@@ -119,6 +119,7 @@ public abstract class Neighbor
 
 	String localIp = getLocalIp();
 	String localPort = String.valueOf(getLocalPort());
+	String peerCertificate = getPeerCertificateString();
 	String sessionCiper = getSessionCipher();
 	boolean connected = connected();
 
@@ -128,6 +129,7 @@ public abstract class Neighbor
 	     String.valueOf(bytesWritten),
 	     localIp,
 	     localPort,
+	     peerCertificate,
 	     sessionCiper,
 	     connected ? "connected" : "disconnected",
 	     String.valueOf(oid));
@@ -215,8 +217,17 @@ public abstract class Neighbor
 	}
     }
 
+    protected String getPeerCertificateString()
+    {
+	return "";
+    }
+
+    protected String getSessionCipher()
+    {
+	return "";
+    }
+
     protected abstract String getLocalIp();
-    protected abstract String getSessionCipher();
     protected abstract boolean connected();
     protected abstract int getLocalPort();
     protected abstract void connect();

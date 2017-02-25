@@ -125,11 +125,6 @@ public class UdpMulticastNeighbor extends Neighbor
 	return m_ipAddress;
     }
 
-    protected String getSessionCipher()
-    {
-	return "";
-    }
-
     protected int getLocalPort()
     {
 	synchronized(m_socketMutex)
