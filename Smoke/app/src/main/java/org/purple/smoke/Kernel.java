@@ -30,16 +30,15 @@ package org.purple.smoke;
 import android.util.SparseArray;
 import java.net.InetAddress;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Kernel
 {
     private Cryptography m_cryptography = null;
+    private ScheduledExecutorService m_neighborsScheduler = null;
     private SparseArray<Neighbor> m_neighbors = null;
-    private Timer m_congestionPurgeTimer = null;
-    private Timer m_neighborsTimer = null;
-    private final static int s_congestionPurgeInterval = 15000; // 15 Seconds
     private final static int s_neighborsInterval = 10000; // 10 Seconds
     private static Kernel s_instance = null;
 
@@ -47,16 +46,7 @@ public class Kernel
     {
 	m_cryptography = Cryptography.getInstance();
 	m_neighbors = new SparseArray<> ();
-	prepareTimers();
-    }
-
-    private class NeighborsTask extends TimerTask
-    {
-	@Override
-	public void run()
-	{
-	    prepareNeighbors();
-	}
+	prepareSchedulers();
     }
 
     private void prepareNeighbors()
@@ -202,20 +192,20 @@ public class Kernel
 	Runtime.getRuntime().runFinalization();
     }
 
-    private void prepareTimers()
+    private void prepareSchedulers()
     {
-	if(m_congestionPurgeTimer == null)
+	if(m_neighborsScheduler == null)
 	{
-	    m_congestionPurgeTimer = new Timer(true);
-	    m_congestionPurgeTimer.scheduleAtFixedRate
-		(new CongestionPurgeTask(), 0, s_congestionPurgeInterval);
-	}
-
-	if(m_neighborsTimer == null)
-	{
-	    m_neighborsTimer = new Timer(true);
-	    m_neighborsTimer.scheduleAtFixedRate
-		(new NeighborsTask(), 0, s_neighborsInterval);
+	    m_neighborsScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_neighborsScheduler.scheduleAtFixedRate
+	    (new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    prepareNeighbors();
+		}
+	    }, 0, s_neighborsInterval, TimeUnit.MILLISECONDS);
 	}
     }
 
