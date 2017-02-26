@@ -29,7 +29,6 @@ package org.purple.smoke;
 
 import android.util.SparseArray;
 import java.net.InetAddress;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,7 +36,7 @@ import java.util.TimerTask;
 public class Kernel
 {
     private Cryptography m_cryptography = null;
-    private Hashtable<Integer, Neighbor> m_neighbors = null;
+    private SparseArray<Neighbor> m_neighbors = null;
     private Timer m_congestionPurgeTimer = null;
     private Timer m_neighborsTimer = null;
     private final static int s_congestionPurgeInterval = 15000; // 15 Seconds
@@ -47,7 +46,7 @@ public class Kernel
     private Kernel()
     {
 	m_cryptography = Cryptography.getInstance();
-	m_neighbors = new Hashtable<> ();
+	m_neighbors = new SparseArray<> ();
 	prepareTimers();
     }
 
@@ -75,10 +74,13 @@ public class Kernel
 	    if(count == 0)
 		synchronized(m_neighbors)
 		{
-		    for(Hashtable.Entry<Integer, Neighbor> entry:
-			    m_neighbors.entrySet())
-			if(entry.getValue() != null)
-			    entry.getValue().abort();
+		    for(int i = 0; i < m_neighbors.size(); i++)
+		    {
+			int j = m_neighbors.keyAt(i);
+
+			if(m_neighbors.get(j) != null)
+			    m_neighbors.get(j).abort();
+		    }
 
 		    m_neighbors.clear();
 		}
@@ -88,9 +90,7 @@ public class Kernel
 	else
 	    synchronized(m_neighbors)
 	    {
-		Iterator<Integer> iterator = m_neighbors.keySet().iterator();
-
-		while(iterator.hasNext())
+		for(int i = m_neighbors.size() - 1; i >= 0; i--)
 		{
 		    /*
 		    ** Remove neighbor objects which do not exist in the
@@ -98,11 +98,11 @@ public class Kernel
 		    */
 
 		    boolean found = false;
-		    int oid = iterator.next();
+		    int oid = m_neighbors.keyAt(i);
 
-		    for(int i = 0; i < neighbors.size(); i++)
-			if(neighbors.get(i) != null &&
-			   neighbors.get(i).m_oid == oid)
+		    for(int j = 0; j < neighbors.size(); j++)
+			if(neighbors.get(j) != null &&
+			   neighbors.get(j).m_oid == oid)
 			{
 			    found = true;
 			    break;
@@ -113,7 +113,7 @@ public class Kernel
 			if(m_neighbors.get(oid) != null)
 			    m_neighbors.get(oid).abort();
 
-			iterator.remove();
+			m_neighbors.remove(oid);
 		    }
 		}
 	    }
@@ -128,7 +128,7 @@ public class Kernel
 	    {
 		synchronized(m_neighbors)
 		{
-		    if(m_neighbors.containsKey(neighborElement.m_oid))
+		    if(m_neighbors.get(neighborElement.m_oid) != null)
 			continue;
 		}
 
@@ -195,7 +195,7 @@ public class Kernel
 
 	    synchronized(m_neighbors)
 	    {
-		m_neighbors.put(neighborElement.m_oid, neighbor);
+		m_neighbors.append(neighborElement.m_oid, neighbor);
 	    }
 	}
 
@@ -234,10 +234,14 @@ public class Kernel
 
 	synchronized(m_neighbors)
 	{
-	    for(Hashtable.Entry<Integer, Neighbor> entry:m_neighbors.entrySet())
-		if(entry.getValue() != null &&
-		   entry.getValue().getOid() != oid)
-		    entry.getValue().send(message);
+	    for(int i = 0; i < m_neighbors.size(); i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null &&
+		   m_neighbors.get(j).getOid() != oid)
+		    m_neighbors.get(j).send(message);
+	    }
 	}
     }
 }
