@@ -75,6 +75,7 @@ public class Kernel
 		    m_neighbors.clear();
 		}
 
+	    Runtime.getRuntime().runFinalization();
 	    return;
 	}
 	else
