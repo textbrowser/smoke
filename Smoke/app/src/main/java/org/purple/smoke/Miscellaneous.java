@@ -44,8 +44,8 @@ public class Miscellaneous
 	{
 	    StringBuffer stringBuffer = new StringBuffer();
 
-	    for(int i = 0; i < bytes.length; i++)
-		stringBuffer.append(String.format("%02x", bytes[i]));
+	    for(byte b : bytes)
+		stringBuffer.append(String.format("%02x", b));
 
 	    return stringBuffer.toString();
 	}

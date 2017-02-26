@@ -52,13 +52,13 @@ public abstract class Neighbor
     protected String m_version = "";
     protected StringBuffer m_stringBuffer = null;
     protected Timer m_readSocketTimer = null;
-    protected int m_laneWidth = 100000;
-    protected long m_bytesRead = 0;
-    protected long m_bytesWritten = 0;
     protected final static String s_eom = "\r\n\r\n\r\n";
+    protected final static int s_laneWidth = 100000;
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
     protected final static int s_readSocketInterval = 500; // 0.5 Seconds
     protected final static int s_soTimeout = 200; // 250 Milliseconds
+    protected long m_bytesRead = 0;
+    protected long m_bytesWritten = 0;
 
     private class NeighborTask extends TimerTask
     {
@@ -185,7 +185,7 @@ public abstract class Neighbor
 
 	    message.append(m_uuid.toString());
 	    message.append("\n");
-	    message.append(String.valueOf(m_laneWidth));
+	    message.append(String.valueOf(s_laneWidth));
 	    message.append("\n");
 	    message.append(m_echoMode);
 
