@@ -35,6 +35,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,7 +56,6 @@ import android.widget.TextView;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.crypto.SecretKey;
@@ -192,16 +192,21 @@ public class Settings extends AppCompatActivity
 
     private void populateNeighbors()
     {
-	ArrayList<NeighborElement> arrayList =
+	SparseArray<NeighborElement> sparseArray =
 	    m_databaseHelper.readNeighbors(s_cryptography);
 	final TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.neighbors);
 
 	tableLayout.removeAllViews();
 
-	if(arrayList != null)
-	    for(int i = 0; i < arrayList.size(); i++)
+	if(sparseArray != null)
+	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
+		NeighborElement neighborElement = sparseArray.get(i);
+
+		if(neighborElement == null)
+		    continue;
+
 		TableRow row = new TableRow(Settings.this);
 		TableRow.LayoutParams layoutParams = new
 		    TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -222,7 +227,7 @@ public class Settings extends AppCompatActivity
 		     android.R.layout.simple_spinner_item,
 		     array);
 		spinner.setAdapter(arrayAdapter);
-		spinner.setId(arrayList.get(i).m_oid);
+		spinner.setId(neighborElement.m_oid);
 		spinner.setOnItemSelectedListener
 		    (new OnItemSelectedListener()
 		    {
@@ -259,7 +264,7 @@ public class Settings extends AppCompatActivity
 
 		TextView textView = new TextView(Settings.this);
 
-		if(arrayList.get(i).m_status.equals("connected"))
+		if(neighborElement.m_status.equals("connected"))
 		    textView.setBackgroundColor
 			(Color.rgb(144, 238, 144)); // Light Green
 		else
@@ -272,9 +277,9 @@ public class Settings extends AppCompatActivity
 		try
 		{
 		    stringBuffer.append
-			(arrayList.get(i).m_statusControl.substring(0, 1).
+			(neighborElement.m_statusControl.substring(0, 1).
 			 toUpperCase());
-		    stringBuffer.append(arrayList.get(i).m_statusControl.
+		    stringBuffer.append(neighborElement.m_statusControl.
 					substring(1));
 		}
 		catch(Exception exception)
@@ -283,45 +288,45 @@ public class Settings extends AppCompatActivity
 		}
 
 		stringBuffer.append("\n");
-		stringBuffer.append(arrayList.get(i).m_remoteIpAddress);
+		stringBuffer.append(neighborElement.m_remoteIpAddress);
 		stringBuffer.append(":");
-		stringBuffer.append(arrayList.get(i).m_remotePort);
+		stringBuffer.append(neighborElement.m_remotePort);
 		stringBuffer.append(":");
-		stringBuffer.append(arrayList.get(i).m_transport);
+		stringBuffer.append(neighborElement.m_transport);
 
-		if(!arrayList.get(i).m_localIpAddress.isEmpty() &&
-		   !arrayList.get(i).m_localPort.isEmpty())
+		if(!neighborElement.m_localIpAddress.isEmpty() &&
+		   !neighborElement.m_localPort.isEmpty())
 		{
 		    stringBuffer.append("\n");
-		    stringBuffer.append(arrayList.get(i).m_localIpAddress);
+		    stringBuffer.append(neighborElement.m_localIpAddress);
 		    stringBuffer.append(":");
-		    stringBuffer.append(arrayList.get(i).m_localPort);
+		    stringBuffer.append(neighborElement.m_localPort);
 		}
 
-		if(!arrayList.get(i).m_remoteCertificate.isEmpty())
+		if(!neighborElement.m_remoteCertificate.isEmpty())
 		{
 		    stringBuffer.append("\n");
 		    stringBuffer.append
 			("Remote Certificate's Public Key Fingerprint: ");
-		    stringBuffer.append(arrayList.get(i).m_remoteCertificate);
+		    stringBuffer.append(neighborElement.m_remoteCertificate);
 		}
 
-		if(!arrayList.get(i).m_sessionCipher.isEmpty())
+		if(!neighborElement.m_sessionCipher.isEmpty())
 		{
 		    stringBuffer.append("\n");
 		    stringBuffer.append("Session Cipher: ");
-		    stringBuffer.append(arrayList.get(i).m_sessionCipher);
+		    stringBuffer.append(neighborElement.m_sessionCipher);
 		}
 
 		stringBuffer.append("\n");
 		stringBuffer.append("In: ");
 		stringBuffer.append
 		    (Miscellaneous.
-		     formattedDigitalInformation(arrayList.get(i).m_bytesRead));
+		     formattedDigitalInformation(neighborElement.m_bytesRead));
 		stringBuffer.append(" Out: ");
 		stringBuffer.append
 		    (Miscellaneous.
-		     formattedDigitalInformation(arrayList.get(i).
+		     formattedDigitalInformation(neighborElement.
 						 m_bytesWritten));
 		textView.setGravity(Gravity.CENTER_VERTICAL);
 		textView.setLayoutParams

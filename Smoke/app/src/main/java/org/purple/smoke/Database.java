@@ -36,7 +36,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
 import android.util.Patterns;
-import java.util.ArrayList;
+import android.util.SparseArray;
 import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
@@ -63,7 +63,7 @@ public class Database extends SQLiteOpenHelper
 	    }
     }
 
-    public ArrayList<NeighborElement> readNeighbors(Cryptography cryptography)
+    public SparseArray<NeighborElement> readNeighbors(Cryptography cryptography)
     {
 	if(cryptography == null)
 	    return null;
@@ -73,8 +73,9 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return null;
 
-	ArrayList<NeighborElement> arrayList = null;
+	SparseArray<NeighborElement> sparseArray = null;
 	Cursor cursor = null;
+	int index = -1;
 
 	try
 	{
@@ -99,7 +100,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		arrayList = new ArrayList<> ();
+		sparseArray = new SparseArray<> ();
 
 		while(!cursor.isAfterLast())
 		{
@@ -184,7 +185,10 @@ public class Database extends SQLiteOpenHelper
 		    }
 
 		    if(!error)
-			arrayList.add(neighborElement);
+		    {
+			index += 1;
+			sparseArray.append(index, neighborElement);
+		    }
 
 		    cursor.moveToNext();
 		}
@@ -192,10 +196,10 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
-	    if(arrayList != null)
-		arrayList.clear();
+	    if(sparseArray != null)
+		sparseArray.clear();
 
-	    arrayList = null;
+	    sparseArray = null;
 	}
 	finally
 	{
@@ -203,7 +207,7 @@ public class Database extends SQLiteOpenHelper
 		cursor.close();
 	}
 
-	return arrayList;
+	return sparseArray;
     }
 
     public String readNeighborStatusControl(Cryptography cryptography, int oid)
@@ -371,29 +375,29 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    ArrayList<String> arrayList = new ArrayList<> ();
+	    SparseArray<String> sparseArray = new SparseArray<> ();
 	    byte bytes[] = null;
 
-	    arrayList.add("bytes_read");
-	    arrayList.add("bytes_written");
-	    arrayList.add("ip_version");
-	    arrayList.add("local_ip_address");
-	    arrayList.add("local_ip_address_digest");
-	    arrayList.add("local_port");
-	    arrayList.add("local_port_digest");
-	    arrayList.add("remote_certificate");
-	    arrayList.add("remote_ip_address");
-	    arrayList.add("remote_ip_address_digest");
-	    arrayList.add("remote_port");
-            arrayList.add("remote_port_digest");
-            arrayList.add("remote_scope_id");
-            arrayList.add("session_cipher");
-            arrayList.add("status");
-            arrayList.add("status_control");
-            arrayList.add("transport");
-            arrayList.add("transport_digest");
-            arrayList.add("uptime");
-            arrayList.add("user_defined_digest");
+	    sparseArray.append(0, "bytes_read");
+	    sparseArray.append(1, "bytes_written");
+	    sparseArray.append(2, "ip_version");
+	    sparseArray.append(3, "local_ip_address");
+	    sparseArray.append(4, "local_ip_address_digest");
+	    sparseArray.append(5, "local_port");
+	    sparseArray.append(6, "local_port_digest");
+	    sparseArray.append(7, "remote_certificate");
+	    sparseArray.append(8, "remote_ip_address");
+	    sparseArray.append(9, "remote_ip_address_digest");
+	    sparseArray.append(10, "remote_port");
+            sparseArray.append(11, "remote_port_digest");
+            sparseArray.append(12, "remote_scope_id");
+            sparseArray.append(13, "session_cipher");
+            sparseArray.append(14, "status");
+            sparseArray.append(15, "status_control");
+            sparseArray.append(16, "transport");
+            sparseArray.append(17, "transport_digest");
+            sparseArray.append(18, "uptime");
+            sparseArray.append(19, "user_defined_digest");
 
 	    Matcher matcher = Patterns.IP_ADDRESS.matcher
 		(remoteIpAddress.trim());
@@ -406,34 +410,34 @@ public class Database extends SQLiteOpenHelper
 		    remoteIpAddress = "0:0:0:0:0:ffff:0:0";
 	    }
 
-	    for(int i = 0; i < arrayList.size(); i++)
+	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
-		if(arrayList.get(i).equals("ip_version"))
+		if(sparseArray.get(i).equals("ip_version"))
 		    bytes = cryptography.etm(version.trim().getBytes());
-		else if(arrayList.get(i).equals("local_ip_address_digest"))
+		else if(sparseArray.get(i).equals("local_ip_address_digest"))
 		    bytes = cryptography.hmac("".getBytes());
-		else if(arrayList.get(i).equals("local_port_digest"))
+		else if(sparseArray.get(i).equals("local_port_digest"))
 		    bytes = cryptography.hmac("".getBytes());
-		else if(arrayList.get(i).equals("remote_ip_address"))
+		else if(sparseArray.get(i).equals("remote_ip_address"))
 		    bytes = cryptography.etm(remoteIpAddress.trim().getBytes());
-		else if(arrayList.get(i).equals("remote_ip_address_digest"))
+		else if(sparseArray.get(i).equals("remote_ip_address_digest"))
 		    bytes = cryptography.hmac(remoteIpAddress.trim().
 					      getBytes());
-		else if(arrayList.get(i).equals("remote_port"))
+		else if(sparseArray.get(i).equals("remote_port"))
 		    bytes = cryptography.etm(remoteIpPort.trim().getBytes());
-		else if(arrayList.get(i).equals("remote_port_digest"))
+		else if(sparseArray.get(i).equals("remote_port_digest"))
 		    bytes = cryptography.hmac(remoteIpPort.trim().getBytes());
-		else if(arrayList.get(i).equals("remote_scope_id"))
+		else if(sparseArray.get(i).equals("remote_scope_id"))
 		    bytes = cryptography.etm(remoteIpScopeId.trim().getBytes());
-		else if(arrayList.get(i).equals("status"))
+		else if(sparseArray.get(i).equals("status"))
 		    bytes = cryptography.etm("disconnected".getBytes());
-		else if(arrayList.get(i).equals("status_control"))
+		else if(sparseArray.get(i).equals("status_control"))
 		    bytes = cryptography.etm("Disconnect".getBytes());
-		else if(arrayList.get(i).equals("transport"))
+		else if(sparseArray.get(i).equals("transport"))
 		    bytes = cryptography.etm(transport.trim().getBytes());
-		else if(arrayList.get(i).equals("transport_digest"))
+		else if(sparseArray.get(i).equals("transport_digest"))
 		    bytes = cryptography.hmac(transport.trim().getBytes());
-		else if(arrayList.get(i).equals("user_defined_digest"))
+		else if(sparseArray.get(i).equals("user_defined_digest"))
 		    bytes = cryptography.hmac("true".getBytes());
 		else
 		    bytes = cryptography.etm("".getBytes());
@@ -444,7 +448,7 @@ public class Database extends SQLiteOpenHelper
 
 		    stringBuffer.append
 			("Database::writeNeighbor(): error with ");
-		    stringBuffer.append(arrayList.get(i));
+		    stringBuffer.append(sparseArray.get(i));
 		    stringBuffer.append(" field.");
 		    writeLog(stringBuffer.toString());
 		    throw new Exception();
@@ -452,7 +456,7 @@ public class Database extends SQLiteOpenHelper
 
 		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-		values.put(arrayList.get(i), str);
+		values.put(sparseArray.get(i), str);
 	    }
 	}
 	catch(Exception exception)

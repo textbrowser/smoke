@@ -27,8 +27,8 @@
 
 package org.purple.smoke;
 
+import android.util.SparseArray;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Timer;
@@ -62,7 +62,7 @@ public class Kernel
 
     private void prepareNeighbors()
     {
-	ArrayList<NeighborElement> neighbors =
+	SparseArray<NeighborElement> neighbors =
 	    Database.getInstance().readNeighbors(m_cryptography);
 	int count = Database.getInstance().count("neighbors");
 
