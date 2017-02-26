@@ -32,93 +32,14 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class UdpMulticastNeighbor extends Neighbor
 {
     private InetAddress m_inetAddress = null;
     private MulticastSocket m_socket = null;
-
-    private class ReadSocketTask extends TimerTask
-    {
-	@Override
-	public void run()
-	{
-	    if(!connected())
-		return;
-
-	    try
-	    {
-		ByteArrayOutputStream byteArrayOutputStream = null;
-		int bytesRead = 0;
-
-		synchronized(m_socketMutex)
-		{
-		    if(m_socket == null)
-			return;
-
-		    DatagramPacket datagramPacket = null;
-		    byte bytes[] = new byte[64 * 1024];
-
-		    byteArrayOutputStream = new ByteArrayOutputStream();
-		    datagramPacket = new DatagramPacket(bytes, bytes.length);
-		    m_socket.receive(datagramPacket);
-
-		    if(datagramPacket.getLength() > 0)
-			byteArrayOutputStream.write
-			    (datagramPacket.getData(),
-			     0,
-			     datagramPacket.getLength());
-
-		    bytesRead += datagramPacket.getLength();
-		}
-
-		if(bytesRead < 0)
-		{
-		    disconnect();
-		    return;
-		}
-
-		synchronized(m_bytesReadMutex)
-		{
-		    m_bytesRead += bytesRead;
-		}
-
-		if(byteArrayOutputStream != null &&
-		   byteArrayOutputStream.size() > 0)
-		    synchronized(m_stringBuffer)
-		    {
-			m_stringBuffer.append
-			    (new String(byteArrayOutputStream.toByteArray()));
-
-			/*
-			** Detect our end-of-message delimiter and record
-			** the message in some database table.
-			*/
-
-			int indexOf = m_stringBuffer.indexOf(s_eom);
-
-			while(indexOf >= 0)
-			{
-			    String buffer = m_stringBuffer.
-				substring(0, indexOf + s_eom.length());
-
-			    echo(buffer);
-			    m_stringBuffer = m_stringBuffer.delete
-				(0, buffer.length());
-			    indexOf = m_stringBuffer.indexOf(s_eom);
-			}
-
-			if(m_stringBuffer.length() > s_maximumBytes)
-			    m_stringBuffer.setLength(s_maximumBytes);
-		    }
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	}
-    }
 
     protected String getLocalIp()
     {
@@ -194,9 +115,89 @@ public class UdpMulticastNeighbor extends Neighbor
 	    m_ipAddress = null;
 	}
 
-	m_readSocketTimer = new Timer();
-	m_readSocketTimer.scheduleAtFixedRate
-	    (new ReadSocketTask(), 0, s_readSocketInterval);
+	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
+	m_readSocketScheduler.scheduleAtFixedRate
+	    (new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    if(!connected())
+			return;
+
+		    try
+		    {
+			ByteArrayOutputStream byteArrayOutputStream = null;
+			int bytesRead = 0;
+
+			synchronized(m_socketMutex)
+			{
+			    if(m_socket == null)
+				return;
+
+			    DatagramPacket datagramPacket = null;
+			    byte bytes[] = new byte[64 * 1024];
+
+			    byteArrayOutputStream = new ByteArrayOutputStream();
+			    datagramPacket = new DatagramPacket
+				(bytes, bytes.length);
+			    m_socket.receive(datagramPacket);
+
+			    if(datagramPacket.getLength() > 0)
+				byteArrayOutputStream.write
+				    (datagramPacket.getData(),
+				     0,
+				     datagramPacket.getLength());
+
+			    bytesRead += datagramPacket.getLength();
+			}
+
+			if(bytesRead < 0)
+			{
+			    disconnect();
+			    return;
+			}
+
+			synchronized(m_bytesReadMutex)
+			{
+			    m_bytesRead += bytesRead;
+			}
+
+			if(byteArrayOutputStream != null &&
+			   byteArrayOutputStream.size() > 0)
+			    synchronized(m_stringBuffer)
+			{
+			    m_stringBuffer.append
+				(new String(byteArrayOutputStream.
+					    toByteArray()));
+
+			    /*
+			    ** Detect our end-of-message delimiter and record
+			    ** the message in some database table.
+			    */
+
+			    int indexOf = m_stringBuffer.indexOf(s_eom);
+
+			    while(indexOf >= 0)
+			    {
+				String buffer = m_stringBuffer.
+				    substring(0, indexOf + s_eom.length());
+
+				echo(buffer);
+				m_stringBuffer = m_stringBuffer.delete
+				    (0, buffer.length());
+				indexOf = m_stringBuffer.indexOf(s_eom);
+			    }
+
+			    if(m_stringBuffer.length() > s_maximumBytes)
+				m_stringBuffer.setLength(s_maximumBytes);
+			}
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 0, s_readSocketInterval, TimeUnit.MILLISECONDS);
     }
 
     public boolean connected()
@@ -210,8 +211,16 @@ public class UdpMulticastNeighbor extends Neighbor
     public void abort()
     {
 	super.abort();
-	m_readSocketTimer.cancel();
-	m_readSocketTimer.purge();
+	m_readSocketScheduler.shutdown();
+
+	try
+	{
+	    m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
+	}
+	catch(Exception exception)
+	{
+	}
+
 	disconnect();
     }
 

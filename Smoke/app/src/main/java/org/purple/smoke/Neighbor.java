@@ -29,14 +29,15 @@ package org.purple.smoke;
 
 import android.util.Base64;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public abstract class Neighbor
 {
     private Object m_oidMutex = null;
-    private Timer m_timer = null;
+    private ScheduledExecutorService m_scheduler = null;
     private UUID m_uuid = null;
     private final static int s_silence = 90000; // 90 Seconds
     private final static int s_timerInterval = 10000; // 10 Seconds
@@ -45,13 +46,13 @@ public abstract class Neighbor
     protected Object m_bytesReadMutex = null;
     protected Object m_bytesWrittenMutex = null;
     protected Object m_socketMutex = null;
+    protected ScheduledExecutorService m_readSocketScheduler = null;
     protected String m_echoMode = "full";
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_scopeId = "";
     protected String m_version = "";
     protected StringBuffer m_stringBuffer = null;
-    protected Timer m_readSocketTimer = null;
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_laneWidth = 100000;
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
@@ -59,42 +60,6 @@ public abstract class Neighbor
     protected final static int s_soTimeout = 200; // 250 Milliseconds
     protected long m_bytesRead = 0;
     protected long m_bytesWritten = 0;
-
-    private class NeighborTask extends TimerTask
-    {
-	@Override
-	public void run()
-	{
-	    int oid = 0;
-
-	    synchronized(m_oidMutex)
-	    {
-		oid = m_oid;
-	    }
-
-	    String statusControl = Database.getInstance().
-		readNeighborStatusControl(Cryptography.getInstance(), oid);
-
-	    if(statusControl.equals("connect"))
-		connect();
-	    else if(statusControl.equals("disconnect"))
-		disconnect();
-	    else
-	    {
-		/*
-		** Abort!
-		*/
-
-		abort();
-		disconnect();
-		return;
-	    }
-
-	    saveStatistics();
-	    sendCapabilities();
-	    terminateOnSilence();
-	}
-    }
 
     private void saveStatistics()
     {
@@ -164,17 +129,53 @@ public abstract class Neighbor
 	m_lastTimeReadWrite = new Date();
 	m_oid = oid;
 	m_oidMutex = new Object();
+	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
 	m_socketMutex = new Object();
-	m_timer = new Timer(true);
 	m_uuid = UUID.randomUUID();
 	m_version = version;
 
 	/*
-	** Start timers.
+	** Start schedules.
 	*/
 
-	m_timer.scheduleAtFixedRate(new NeighborTask(), 0, s_timerInterval);
+	m_scheduler.scheduleAtFixedRate
+	    (new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    int oid = 0;
+
+		    synchronized(m_oidMutex)
+		    {
+			oid = m_oid;
+		    }
+
+		    String statusControl = Database.getInstance().
+			readNeighborStatusControl(Cryptography.getInstance(),
+						  oid);
+
+		    if(statusControl.equals("connect"))
+			connect();
+		    else if(statusControl.equals("disconnect"))
+			disconnect();
+		    else
+		    {
+			/*
+			** Abort!
+			*/
+
+			abort();
+			disconnect();
+			return;
+		    }
+
+		    saveStatistics();
+		    sendCapabilities();
+		    terminateOnSilence();
+		}
+	    }, 0, s_timerInterval, TimeUnit.MILLISECONDS);
     }
 
     protected String getCapabilities()
@@ -236,8 +237,15 @@ public abstract class Neighbor
 
     protected synchronized void abort()
     {
-	m_timer.cancel();
-	m_timer.purge();
+	m_scheduler.shutdown();
+
+	try
+	{
+	    m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     protected void echo(String message)
