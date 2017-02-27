@@ -197,24 +197,57 @@ public class Settings extends AppCompatActivity
 	final TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.neighbors);
 
-	tableLayout.removeAllViews();
+	if(sparseArray == null || sparseArray.size() == 0)
+	{
+	    tableLayout.removeAllViews();
+	    return;
+	}
 
-	if(sparseArray != null)
-	    for(int i = 0; i < sparseArray.size(); i++)
+	StringBuffer stringBuffer = new StringBuffer();
+
+	for(int i = 0; i < sparseArray.size(); i++)
+	{
+	    NeighborElement neighborElement = sparseArray.get(i);
+
+	    if(neighborElement == null)
+		continue;
+
+	    Spinner spinner = null;
+	    TableRow row = null;
+	    TextView textView = null;
+
+	    for(int j = 0; j < tableLayout.getChildCount(); j++)
 	    {
-		NeighborElement neighborElement = sparseArray.get(i);
+		TableRow r = (TableRow) tableLayout.getChildAt(j);
+		TextView t = (TextView) r.getChildAt(1);
 
-		if(neighborElement == null)
+		if(t == null)
 		    continue;
 
-		TableRow row = new TableRow(Settings.this);
+		stringBuffer.setLength(0);
+		stringBuffer.append(neighborElement.m_remoteIpAddress);
+		stringBuffer.append(":");
+		stringBuffer.append(neighborElement.m_remotePort);
+		stringBuffer.append(":");
+		stringBuffer.append(neighborElement.m_transport);
+
+		if(t.getText().toString().contains(stringBuffer.toString()))
+		{
+		    textView = t;
+		    break;
+		}
+	    }
+
+	    if(textView == null)
+	    {
 		TableRow.LayoutParams layoutParams = new
 		    TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 
+		row = new TableRow(Settings.this);
 		row.setLayoutParams(layoutParams);
+		spinner = new Spinner(Settings.this);
 
 		ArrayAdapter<String> arrayAdapter = null;
-		Spinner spinner = new Spinner(Settings.this);
 		String array[] = new String[]
 		{
 		    "Action",
@@ -238,14 +271,14 @@ public class Settings extends AppCompatActivity
 						   long id)
 			{
 			    if(position == 1) // Connect
-			       m_databaseHelper.neighborControlStatus
-				   (s_cryptography,
-				    "connect",
-				    String.valueOf(parent.getId()));
+				m_databaseHelper.neighborControlStatus
+				    (s_cryptography,
+				     "connect",
+				     String.valueOf(parent.getId()));
 			    else if(position == 2 && // Delete
-			       m_databaseHelper.
-			       deleteEntry(String.valueOf(parent.getId()),
-					   "neighbors"))
+				    m_databaseHelper.
+				    deleteEntry(String.valueOf(parent.getId()),
+						"neighbors"))
 				populateNeighbors();
 			    else if(position == 3) // Disconnect
 				m_databaseHelper.neighborControlStatus
@@ -262,83 +295,85 @@ public class Settings extends AppCompatActivity
 			}
 		    });
 
-		TextView textView = new TextView(Settings.this);
+		textView = new TextView(Settings.this);
+	    }
 
-		if(neighborElement.m_status.equals("connected"))
-		    textView.setBackgroundColor
-			(Color.rgb(144, 238, 144)); // Light Green
-		else
-		    textView.setBackgroundColor(Color.rgb(240, 128, 128));
+	    if(neighborElement.m_status.equals("connected"))
+		textView.setBackgroundColor
+		    (Color.rgb(144, 238, 144)); // Light Green
+	    else
+		textView.setBackgroundColor(Color.rgb(240, 128, 128));
 
-		StringBuffer stringBuffer = new StringBuffer();
+	    stringBuffer.setLength(0);
+	    stringBuffer.append("Control: ");
 
-		stringBuffer.append("Control: ");
-
-		try
-		{
-		    stringBuffer.append
-			(neighborElement.m_statusControl.substring(0, 1).
-			 toUpperCase());
-		    stringBuffer.append(neighborElement.m_statusControl.
-					substring(1));
-		}
-		catch(Exception exception)
-		{
-		    stringBuffer.append("Disconnect");
-		}
-
-		stringBuffer.append("\n");
-		stringBuffer.append(neighborElement.m_remoteIpAddress);
-		stringBuffer.append(":");
-		stringBuffer.append(neighborElement.m_remotePort);
-		stringBuffer.append(":");
-		stringBuffer.append(neighborElement.m_transport);
-
-		if(!neighborElement.m_localIpAddress.isEmpty() &&
-		   !neighborElement.m_localPort.isEmpty())
-		{
-		    stringBuffer.append("\n");
-		    stringBuffer.append(neighborElement.m_localIpAddress);
-		    stringBuffer.append(":");
-		    stringBuffer.append(neighborElement.m_localPort);
-		}
-
-		if(!neighborElement.m_remoteCertificate.isEmpty())
-		{
-		    stringBuffer.append("\n");
-		    stringBuffer.append
-			("Remote Certificate's Public Key Fingerprint: ");
-		    stringBuffer.append(neighborElement.m_remoteCertificate);
-		}
-
-		if(!neighborElement.m_sessionCipher.isEmpty())
-		{
-		    stringBuffer.append("\n");
-		    stringBuffer.append("Session Cipher: ");
-		    stringBuffer.append(neighborElement.m_sessionCipher);
-		}
-
-		stringBuffer.append("\n");
-		stringBuffer.append("In: ");
+	    try
+	    {
 		stringBuffer.append
-		    (Miscellaneous.
-		     formattedDigitalInformation(neighborElement.m_bytesRead));
-		stringBuffer.append(" Out: ");
+		    (neighborElement.m_statusControl.substring(0, 1).
+		     toUpperCase());
+		stringBuffer.append(neighborElement.m_statusControl.
+				    substring(1));
+	    }
+	    catch(Exception exception)
+	    {
+		stringBuffer.append("Disconnect");
+	    }
+
+	    stringBuffer.append("\n");
+	    stringBuffer.append(neighborElement.m_remoteIpAddress);
+	    stringBuffer.append(":");
+	    stringBuffer.append(neighborElement.m_remotePort);
+	    stringBuffer.append(":");
+	    stringBuffer.append(neighborElement.m_transport);
+
+	    if(!neighborElement.m_localIpAddress.isEmpty() &&
+	       !neighborElement.m_localPort.isEmpty())
+	    {
+		stringBuffer.append("\n");
+		stringBuffer.append(neighborElement.m_localIpAddress);
+		stringBuffer.append(":");
+		stringBuffer.append(neighborElement.m_localPort);
+	    }
+
+	    if(!neighborElement.m_remoteCertificate.isEmpty())
+	    {
+		stringBuffer.append("\n");
 		stringBuffer.append
-		    (Miscellaneous.
-		     formattedDigitalInformation(neighborElement.
-						 m_bytesWritten));
-		textView.setGravity(Gravity.CENTER_VERTICAL);
-		textView.setLayoutParams
-		    (new TableRow.
-		     LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
-		textView.setText(stringBuffer);
-		textView.setTextSize(13);
-		textView.setWidth(500);
+		    ("Remote Certificate's Public Key Fingerprint: ");
+		stringBuffer.append(neighborElement.m_remoteCertificate);
+	    }
+
+	    if(!neighborElement.m_sessionCipher.isEmpty())
+	    {
+		stringBuffer.append("\n");
+		stringBuffer.append("Session Cipher: ");
+		stringBuffer.append(neighborElement.m_sessionCipher);
+	    }
+
+	    stringBuffer.append("\n");
+	    stringBuffer.append("In: ");
+	    stringBuffer.append
+		(Miscellaneous.
+		 formattedDigitalInformation(neighborElement.m_bytesRead));
+	    stringBuffer.append(" Out: ");
+	    stringBuffer.append
+		(Miscellaneous.
+		 formattedDigitalInformation(neighborElement.m_bytesWritten));
+	    textView.setGravity(Gravity.CENTER_VERTICAL);
+	    textView.setLayoutParams
+		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
+	    textView.setText(stringBuffer);
+	    textView.setTextSize(13);
+	    textView.setWidth(500);
+
+	    if(row != null)
+	    {
 		row.addView(spinner);
 		row.addView(textView);
 		tableLayout.addView(row, i);
 	    }
+	}
     }
 
     private void prepareListeners()
