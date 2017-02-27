@@ -248,12 +248,21 @@ public class Settings extends AppCompatActivity
 		spinner = new Spinner(Settings.this);
 
 		ArrayAdapter<String> arrayAdapter = null;
-		String array[] = new String[]
-		{
-		    "Action",
-		    "Connect", "Delete", "Disconnect",
-		    "Reset SSL/TLS Credentials"
-		};
+		String array[] = null;
+
+		if(neighborElement.m_transport.equals("TCP"))
+		    array = new String[]
+		    {
+			"Action",
+			"Connect", "Delete", "Disconnect",
+			"Reset SSL/TLS Credentials"
+		    };
+		else
+		    array = new String[]
+		    {
+			"Action",
+			"Connect", "Delete", "Disconnect"
+		    };
 
 		arrayAdapter = new ArrayAdapter<>
 		    (Settings.this,
