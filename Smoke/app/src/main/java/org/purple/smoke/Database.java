@@ -553,6 +553,40 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void neighborRecordCertificate(Cryptography cryptography,
+					  String oid,
+					  byte certificate[])
+    {
+	if(cryptography == null)
+	    return;
+
+	prepareDb();
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    if(certificate == null)
+		values.put
+		    ("remote_certificate",
+		     Base64.encodeToString(cryptography.etm("".getBytes()),
+					   Base64.DEFAULT));
+	    else
+		values.put
+		    ("remote_certificate",
+		     Base64.encodeToString(cryptography.etm(certificate),
+					   Base64.DEFAULT));
+
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db)
     {

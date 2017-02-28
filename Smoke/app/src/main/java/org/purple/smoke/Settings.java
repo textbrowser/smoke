@@ -300,6 +300,11 @@ public class Settings extends AppCompatActivity
 				    (s_cryptography,
 				     "disconnect",
 				     String.valueOf(parent.getId()));
+			    else if(position == 4) // Reset SSL/TLS Credentials
+				m_databaseHelper.neighborRecordCertificate
+				    (s_cryptography,
+				     String.valueOf(parent.getId()),
+				     null);
 
 			    parent.setSelection(0);
 			}
