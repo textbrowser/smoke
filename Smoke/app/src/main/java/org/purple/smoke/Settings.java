@@ -244,6 +244,7 @@ public class Settings extends AppCompatActivity
 		    TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 
 		row = new TableRow(Settings.this);
+		row.setId(neighborElement.m_oid);
 		row.setLayoutParams(layoutParams);
 		spinner = new Spinner(Settings.this);
 
@@ -288,7 +289,12 @@ public class Settings extends AppCompatActivity
 				    m_databaseHelper.
 				    deleteEntry(String.valueOf(parent.getId()),
 						"neighbors"))
-				populateNeighbors();
+			    {
+				TableRow row = (TableRow) findViewById
+				    (parent.getId());
+
+				tableLayout.removeView(row);
+			    }
 			    else if(position == 3) // Disconnect
 				m_databaseHelper.neighborControlStatus
 				    (s_cryptography,
