@@ -104,6 +104,17 @@ public class TcpNeighbor extends Neighbor
 	return "";
     }
 
+    protected boolean connected()
+    {
+	synchronized(m_socketMutex)
+	{
+	    return m_socket != null &&
+		!m_socket.isClosed() &&
+		m_socket.getSession() != null &&
+		m_socket.getSession().isValid();
+	}
+    }
+
     protected int getLocalPort()
     {
 	synchronized(m_socketMutex)
@@ -113,6 +124,43 @@ public class TcpNeighbor extends Neighbor
 	}
 
 	return 0;
+    }
+
+    protected void disconnect()
+    {
+	try
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null)
+		{
+		    m_socket.getInputStream().close();
+		    m_socket.getOutputStream().close();
+		    m_socket.close();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    synchronized(m_bytesReadMutex)
+	    {
+		m_bytesRead = 0;
+	    }
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
+		m_bytesWritten = 0;
+	    }
+
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null && m_socket.isClosed())
+		    m_socket = null;
+	    }
+	}
     }
 
     protected void sendCapabilities()
@@ -267,17 +315,6 @@ public class TcpNeighbor extends Neighbor
 	};
     }
 
-    public boolean connected()
-    {
-	synchronized(m_socketMutex)
-	{
-	    return m_socket != null &&
-		!m_socket.isClosed() &&
-		m_socket.getSession() != null &&
-		m_socket.getSession().isValid();
-	}
-    }
-
     public void abort()
     {
 	super.abort();
@@ -320,43 +357,6 @@ public class TcpNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	    disconnect();
-	}
-    }
-
-    public void disconnect()
-    {
-	try
-	{
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null)
-		{
-		    m_socket.getInputStream().close();
-		    m_socket.getOutputStream().close();
-		    m_socket.close();
-		}
-	    }
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    synchronized(m_bytesReadMutex)
-	    {
-		m_bytesRead = 0;
-	    }
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten = 0;
-	    }
-
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null && m_socket.isClosed())
-		    m_socket = null;
-	    }
 	}
     }
 

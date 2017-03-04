@@ -55,6 +55,14 @@ public class UdpNeighbor extends Neighbor
 	    return "::";
     }
 
+    protected boolean connected()
+    {
+	synchronized(m_socketMutex)
+	{
+	    return m_socket != null && !m_socket.isClosed();
+	}
+    }
+
     protected int getLocalPort()
     {
 	synchronized(m_socketMutex)
@@ -64,6 +72,39 @@ public class UdpNeighbor extends Neighbor
 	}
 
 	return 0;
+    }
+
+    public void disconnect()
+    {
+	try
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null)
+		    m_socket.close();
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    synchronized(m_bytesReadMutex)
+	    {
+		m_bytesRead = 0;
+	    }
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
+		m_bytesWritten = 0;
+	    }
+
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket != null && m_socket.isClosed())
+		    m_socket = null;
+	    }
+	}
     }
 
     protected void sendCapabilities()
@@ -209,14 +250,6 @@ public class UdpNeighbor extends Neighbor
 	    }, 0, s_readSocketInterval, TimeUnit.MILLISECONDS);
     }
 
-    public boolean connected()
-    {
-	synchronized(m_socketMutex)
-	{
-	    return m_socket != null && !m_socket.isClosed();
-	}
-    }
-
     public void abort()
     {
 	super.abort();
@@ -255,39 +288,6 @@ public class UdpNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	    disconnect();
-	}
-    }
-
-    public void disconnect()
-    {
-	try
-	{
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null)
-		    m_socket.close();
-	    }
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    synchronized(m_bytesReadMutex)
-	    {
-		m_bytesRead = 0;
-	    }
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten = 0;
-	    }
-
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null && m_socket.isClosed())
-		    m_socket = null;
-	    }
 	}
     }
 
