@@ -53,18 +53,9 @@ public class State
 	return s_bundle.getChar("is_authenticated") == '1';
     }
 
-    public synchronized boolean isFinished()
-    {
-	return s_bundle.getChar("is_finished") == '1';
-    }
-
     public synchronized void setAuthenticated(boolean state)
     {
 	s_bundle.putChar("is_authenticated", state ? '1' : '0');
     }
 
-    public synchronized void setFinished(boolean state)
-    {
-	s_bundle.putChar("is_finished", state ? '1' : '0');
-    }
 }
