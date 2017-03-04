@@ -542,6 +542,31 @@ public class Settings extends AppCompatActivity
 		    }
 		}
 	    });
+
+	final CheckBox checkBox2 = (CheckBox) findViewById
+	    (R.id.neighbor_details);
+
+	checkBox2.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView,boolean isChecked)
+		{
+		    if(isChecked)
+		    {
+			m_databaseHelper.writeSetting
+			    (null, "neighbor_details", "true");
+			startTimers();
+		    }
+		    else
+		    {
+			m_databaseHelper.writeSetting
+			    (null, "neighbor_details", "false");
+			stopTimers();
+		    }
+		}
+	    });
     }
 
     private void prepareCredentials()

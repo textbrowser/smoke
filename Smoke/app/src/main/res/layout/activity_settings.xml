@@ -93,7 +93,7 @@
                         android:layout_weight="0.09" />
 
                     <CheckBox
-                        android:id="@+id/checkBox"
+                        android:id="@+id/neighbor_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.09"
