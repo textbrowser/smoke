@@ -38,7 +38,10 @@ public abstract class Neighbor
 {
     private Object m_oidMutex = null;
     private ScheduledExecutorService m_scheduler = null;
+    private String m_echoMode = "full";
+    private String m_scopeId = "";
     private UUID m_uuid = null;
+    private final static int s_laneWidth = 100000;
     private final static int s_silence = 90000; // 90 Seconds
     private final static int s_timerInterval = 10000; // 10 Seconds
     private int m_oid = -1;
@@ -47,14 +50,11 @@ public abstract class Neighbor
     protected Object m_bytesWrittenMutex = null;
     protected Object m_socketMutex = null;
     protected ScheduledExecutorService m_readSocketScheduler = null;
-    protected String m_echoMode = "full";
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
-    protected String m_scopeId = "";
     protected String m_version = "";
     protected StringBuffer m_stringBuffer = null;
     protected final static String s_eom = "\r\n\r\n\r\n";
-    protected final static int s_laneWidth = 100000;
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
     protected final static int s_readSocketInterval = 500; // 0.5 Seconds
     protected final static int s_soTimeout = 200; // 250 Milliseconds

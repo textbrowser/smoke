@@ -54,8 +54,8 @@ public class Messages
 	    ** Create random encryption and mac keys.
 	    */
 
-	    byte encryptionKeyBytes[] = cryptography.randomBytes(32); // AES
-	    byte macKeyBytes[] = cryptography.randomBytes(64); // SHA-512
+	    byte encryptionKeyBytes[] = Cryptography.randomBytes(32); // AES
+	    byte macKeyBytes[] = Cryptography.randomBytes(64); // SHA-512
 
 	    if(encryptionKeyBytes == null || macKeyBytes == null)
 		return null;
@@ -71,7 +71,7 @@ public class Messages
 	    ** [ Private Key Data ]
 	    */
 
-	    byte keyBytes[] = cryptography.pkiEncrypt
+	    byte keyBytes[] = Cryptography.pkiEncrypt
 		(receiverPublicKey,
 		 Miscellaneous.joinByteArrays(encryptionKeyBytes, macKeyBytes));
 
@@ -107,7 +107,7 @@ public class Messages
 	    output.writeObject(signature);
 	    output.flush();
 
-	    byte messageBytes[] = cryptography.encrypt
+	    byte messageBytes[] = Cryptography.encrypt
 		(stream.toByteArray(), encryptionKeyBytes);
 
 	    if(messageBytes == null)
@@ -117,7 +117,7 @@ public class Messages
 	    ** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
 	    */
 
-	    byte macBytes[] = cryptography.hmac
+	    byte macBytes[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(keyBytes, messageBytes),
 		 macKeyBytes);
 
