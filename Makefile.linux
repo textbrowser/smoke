@@ -2,14 +2,14 @@
 
 ADB = ~/Android/Sdk/platform-tools/adb
 EMULATOR = ~/Android/Sdk/tools/emulator
-GRADLE = $(shell ls -d ~/Desktop/android-studio/gradle/gradle*/bin/gradle | sort -dru | head -1)
+GRADLEW = ./Smoke/gradlew
 
 all:
-	$(GRADLE) --build-file Smoke/build.gradle assembleDebug \
+	$(GRADLEW) --build-file Smoke/build.gradle assembleDebug \
 	--configure-on-demand --daemon --parallel
 
 clean:
-	$(GRADLE) --build-file Smoke/build.gradle clean
+	$(GRADLEW) --build-file Smoke/build.gradle clean
 
 clear-smoke:
 	$(ADB) shell pm clear org.purple.smoke
@@ -21,7 +21,7 @@ kill-adb-server:
 	$(ADB) kill-server
 
 kill-gradle-daemon:
-	$(GRADLE) --stop
+	$(GRADLEW) --stop
 
 launch-emulator:
 	$(EMULATOR) -netdelay none -netspeed full -avd \

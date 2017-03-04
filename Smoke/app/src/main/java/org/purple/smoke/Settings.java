@@ -834,6 +834,13 @@ public class Settings extends AppCompatActivity
 	   readSetting(null, "automatic_neighbors_refresh").equals("true"))
 	    checkBox1.setChecked(true);
 
+	CheckBox checkBox2 = (CheckBox) findViewById
+	    (R.id.neighbor_details);
+
+	if(m_databaseHelper.
+	   readSetting(null, "neighbor_details").equals("true"))
+	    checkBox2.setChecked(true);
+
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
 
