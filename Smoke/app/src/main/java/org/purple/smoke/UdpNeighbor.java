@@ -33,7 +33,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class UdpNeighbor extends Neighbor

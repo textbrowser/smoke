@@ -29,7 +29,6 @@ package org.purple.smoke;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 
 public class Messages

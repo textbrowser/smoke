@@ -137,8 +137,6 @@ public class Cryptography
 	if(algorithm.equals("DSA") || algorithm.equals("RSA"))
 	    try
 	    {
-		KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-
 		if(algorithm.equals("DSA"))
 		{
 		    DSAPublicKey dsaPublicKey = (DSAPublicKey) publicKey;

@@ -33,7 +33,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Date;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class UdpMulticastNeighbor extends Neighbor

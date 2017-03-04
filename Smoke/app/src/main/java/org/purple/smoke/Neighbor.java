@@ -139,43 +139,45 @@ public abstract class Neighbor
 	** Start schedules.
 	*/
 
-	m_scheduler.scheduleAtFixedRate
-	    (new Runnable()
+	m_scheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
 	    {
-		@Override
-		public void run()
+		int oid = 0;
+
+		synchronized(m_oidMutex)
 		{
-		    int oid = 0;
-
-		    synchronized(m_oidMutex)
-		    {
-			oid = m_oid;
-		    }
-
-		    String statusControl = Database.getInstance().
-			readNeighborStatusControl(Cryptography.getInstance(),
-						  oid);
-
-		    if(statusControl.equals("connect"))
-			connect();
-		    else if(statusControl.equals("disconnect"))
-			disconnect();
-		    else
-		    {
-			/*
-			** Abort!
-			*/
-
-			abort();
-			disconnect();
-			return;
-		    }
-
-		    saveStatistics();
-		    sendCapabilities();
-		    terminateOnSilence();
+		    oid = m_oid;
 		}
-	    }, 0, s_timerInterval, TimeUnit.MILLISECONDS);
+
+		String statusControl = Database.getInstance().
+		    readNeighborStatusControl(Cryptography.getInstance(),
+					      oid);
+
+		switch(statusControl)
+		{
+		case "connect":
+		    connect();
+		    break;
+		case "disconnect":
+		    disconnect();
+		    break;
+		default:
+		    /*
+		    ** Abort!
+		    */
+
+		    abort();
+		    disconnect();
+		    return;
+		}
+
+		saveStatistics();
+		sendCapabilities();
+		terminateOnSilence();
+	    }
+	}, 0, s_timerInterval, TimeUnit.MILLISECONDS);
     }
 
     protected String getCapabilities()
