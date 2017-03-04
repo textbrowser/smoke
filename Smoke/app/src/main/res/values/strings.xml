@@ -40,4 +40,5 @@
     <string name="chat_encryption_key_data">Chat Encryption Key Data</string>
     <string name="save">Save</string>
     <string name="automatic_refresh">Automatic Refresh</string>
+    <string name="details">Details</string>
 </resources>

@@ -92,6 +92,13 @@
                         android:id="@+id/automatic_refresh"
                         android:layout_weight="0.09" />
 
+                    <CheckBox
+                        android:id="@+id/checkBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.09"
+                        android:text="@string/details" />
+
                     <Button
                         android:text="@string/refresh_neighbors"
                         android:layout_width="wrap_content"
