@@ -46,6 +46,7 @@ public abstract class Neighbor
     private final static int s_timerInterval = 10000; // 10 Seconds
     private int m_oid = -1;
     protected Date m_lastTimeReadWrite = null;
+    protected Date m_startTime = null;
     protected Object m_bytesReadMutex = null;
     protected Object m_bytesWrittenMutex = null;
     protected Object m_lastTimeReadWriteMutex = null;
@@ -67,6 +68,7 @@ public abstract class Neighbor
 	int oid = 0;
 	long bytesRead = 0;
 	long bytesWritten = 0;
+	long uptime = 0;
 
 	synchronized(m_bytesReadMutex)
 	{
@@ -81,6 +83,11 @@ public abstract class Neighbor
 	synchronized(m_oidMutex)
 	{
 	    oid = m_oid;
+	}
+
+	synchronized(m_startTime)
+	{
+	    uptime = new Date().getTime() - m_startTime.getTime();
 	}
 
 	String localIp = getLocalIp();
@@ -98,6 +105,7 @@ public abstract class Neighbor
 	     peerCertificate,
 	     sessionCiper,
 	     connected ? "connected" : "disconnected",
+	     String.valueOf(uptime),
 	     String.valueOf(oid));
     }
 
@@ -134,6 +142,7 @@ public abstract class Neighbor
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
 	m_socketMutex = new Object();
+	m_startTime = new Date();
 	m_uuid = UUID.randomUUID();
 	m_version = version;
 

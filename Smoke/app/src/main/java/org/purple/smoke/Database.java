@@ -792,6 +792,7 @@ public class Database extends SQLiteOpenHelper
 					String peerCertificate,
 					String sessionCipher,
 					String status,
+					String uptime,
 					String oid)
     {
 	if(cryptography == null)
@@ -859,6 +860,11 @@ public class Database extends SQLiteOpenHelper
 		("status",
 		 Base64.encodeToString(cryptography.
 				       etm(status.trim().getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("update",
+		 Base64.encodeToString(cryptography.
+				       etm(uptime.trim().getBytes()),
 				       Base64.DEFAULT));
 	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
 	}
