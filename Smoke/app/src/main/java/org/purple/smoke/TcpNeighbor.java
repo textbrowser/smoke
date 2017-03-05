@@ -187,7 +187,7 @@ public class TcpNeighbor extends Neighbor
 		m_bytesWritten += capabilities.length();
 	    }
 
-	    synchronized(m_lastTimeReadWrite)
+	    synchronized(m_lastTimeReadWriteMutex)
 	    {
 		m_lastTimeReadWrite = new Date();
 	    }
@@ -227,6 +227,8 @@ public class TcpNeighbor extends Neighbor
 			{
 			    if(m_socket == null)
 				return;
+			    else
+				m_socket.setSoTimeout(s_soTimeout);
 
 			    InputStream inputStream = m_socket.getInputStream();
 			    byte bytes[] = new byte[64 * 1024];
@@ -336,6 +338,11 @@ public class TcpNeighbor extends Neighbor
 
 	try
 	{
+	    synchronized(m_lastTimeReadWriteMutex)
+	    {
+		m_lastTimeReadWrite = new Date();
+	    }
+
 	    synchronized(m_socketMutex)
 	    {
 		if(m_socket != null)
@@ -348,12 +355,13 @@ public class TcpNeighbor extends Neighbor
 		    createSocket();
 		m_socket.connect(m_inetSocketAddress, s_connectionTimeout);
 		m_socket.setEnabledProtocols(m_protocols);
-		m_socket.setSoTimeout(s_soTimeout);
+		m_socket.setSoTimeout(10000); // SSL/TLS process.
 		m_socket.setTcpNoDelay(true);
 	    }
 	}
 	catch(Exception exception)
 	{
+	    Database.getInstance().writeLog(exception.getMessage());
 	    disconnect();
 	}
     }
@@ -381,7 +389,7 @@ public class TcpNeighbor extends Neighbor
 		m_bytesWritten += message.length();
 	    }
 
-	    synchronized(m_lastTimeReadWrite)
+	    synchronized(m_lastTimeReadWriteMutex)
 	    {
 		m_lastTimeReadWrite = new Date();
 	    }

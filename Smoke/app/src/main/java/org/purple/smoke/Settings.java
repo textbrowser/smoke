@@ -55,35 +55,20 @@ import android.widget.TextView;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
-    private Timer m_timer = null;
+    private ScheduledExecutorService m_scheduler = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int s_pkiEncryptionKeySize = 3072;
     private final static int s_pkiSignatureKeySize = 3072;
     private final static int s_timerInterval = 7500; // 7.5 Seconds
-
-    private class SettingsTask extends TimerTask
-    {
-	@Override
-	public void run()
-	{
-	    Settings.this.runOnUiThread(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    populateNeighbors();
-		}
-	    });
-	}
-    }
 
     private void addNeighbor()
     {
@@ -796,17 +781,47 @@ public class Settings extends AppCompatActivity
 
     private void startTimers()
     {
-	m_timer = new Timer();
-	m_timer.scheduleAtFixedRate(new SettingsTask(), 0, s_timerInterval);
+	if(m_scheduler == null)
+	{
+	    m_scheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_scheduler.scheduleAtFixedRate
+		(new Runnable()
+		{
+		    private Runnable runnable = new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    populateNeighbors();
+			}
+		    };
+
+		    @Override
+		    public void run()
+		    {
+			Settings.this.runOnUiThread(runnable);
+		    }
+		}, 0, s_timerInterval, TimeUnit.MILLISECONDS);
+        }
     }
 
     private void stopTimers()
     {
-	if(m_timer != null)
+	if(m_scheduler == null)
+	    return;
+
+	m_scheduler.shutdown();
+
+	try
 	{
-	    m_timer.cancel();
-	    m_timer.purge();
-	    m_timer = null;
+	    m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_scheduler = null;
 	}
     }
 
@@ -995,12 +1010,7 @@ public class Settings extends AppCompatActivity
     protected void onDestroy()
     {
 	super.onDestroy();
-
-	if(m_timer != null)
-	{
-	    m_timer.cancel();
-	    m_timer.purge();
-	}
+	stopTimers();
     }
 
     @Override

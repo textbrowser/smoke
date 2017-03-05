@@ -48,6 +48,7 @@ public abstract class Neighbor
     protected Date m_lastTimeReadWrite = null;
     protected Object m_bytesReadMutex = null;
     protected Object m_bytesWrittenMutex = null;
+    protected Object m_lastTimeReadWriteMutex = null;
     protected Object m_socketMutex = null;
     protected ScheduledExecutorService m_readSocketScheduler = null;
     protected String m_ipAddress = "";
@@ -57,7 +58,7 @@ public abstract class Neighbor
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
     protected final static int s_readSocketInterval = 500; // 0.5 Seconds
-    protected final static int s_soTimeout = 200; // 250 Milliseconds
+    protected final static int s_soTimeout = 200; // 200 Milliseconds
     protected long m_bytesRead = 0;
     protected long m_bytesWritten = 0;
 
@@ -105,7 +106,7 @@ public abstract class Neighbor
 	Date now = new Date();
 	boolean disconnect = false;
 
-	synchronized(m_lastTimeReadWrite)
+	synchronized(m_lastTimeReadWriteMutex)
 	{
 	    disconnect = now.getTime() - m_lastTimeReadWrite.getTime() >
 		s_silence;
@@ -127,6 +128,7 @@ public abstract class Neighbor
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
 	m_lastTimeReadWrite = new Date();
+	m_lastTimeReadWriteMutex = new Object();
 	m_oid = oid;
 	m_oidMutex = new Object();
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();

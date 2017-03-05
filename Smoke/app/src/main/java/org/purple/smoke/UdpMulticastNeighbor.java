@@ -289,5 +289,38 @@ public class UdpMulticastNeighbor extends Neighbor
 
     public void send(String message)
     {
+	if(!connected())
+	    return;
+
+	try
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket == null)
+		    return;
+
+		DatagramPacket datagramPacket = new DatagramPacket
+		    (message.getBytes(),
+		     message.getBytes().length,
+		     m_inetAddress,
+		     Integer.parseInt(m_ipPort));
+
+		m_socket.send(datagramPacket);
+	    }
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
+		m_bytesWritten += message.length();
+	    }
+
+	    synchronized(m_lastTimeReadWriteMutex)
+	    {
+		m_lastTimeReadWrite = new Date();
+	    }
+	}
+	catch(Exception exception)
+	{
+	    disconnect();
+	}
     }
 }
