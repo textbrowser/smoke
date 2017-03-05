@@ -40,8 +40,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -55,6 +55,7 @@ import android.widget.TextView;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.text.DecimalFormat;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -374,10 +375,12 @@ public class Settings extends AppCompatActivity
 
 	    try
 	    {
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
 		stringBuffer.append
-		    (String.valueOf(Integer.
-				    parseInt(neighborElement.m_uptime) /
-				    60000.0));
+		    (decimalFormat.format(Integer.
+					  parseInt(neighborElement.m_uptime) /
+					  60000.0));
 	    }
 	    catch(Exception exception)
 	    {
