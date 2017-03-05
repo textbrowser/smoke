@@ -92,9 +92,18 @@ public class Authenticate extends AppCompatActivity
 		{
 		    final ProgressDialog dialog = new ProgressDialog
 			(Authenticate.this);
-		    int iterationCount = Integer.parseInt
-			(m_databaseHelper.
-			 readSetting(null, "iterationCount"));
+		    int iterationCount = 1000;
+
+		    try
+		    {
+			iterationCount = Integer.parseInt
+			    (m_databaseHelper.
+			     readSetting(null, "iterationCount"));
+		    }
+		    catch(Exception exception)
+		    {
+			iterationCount = 1000;
+		    }
 
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);

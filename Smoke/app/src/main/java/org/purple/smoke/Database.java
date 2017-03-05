@@ -815,6 +815,7 @@ public class Database extends SQLiteOpenHelper
 		ipPort = "0";
 		peerCertificate = "";
 		sessionCipher = "";
+		uptime = "0";
 	    }
 
 	    values.put
@@ -862,7 +863,7 @@ public class Database extends SQLiteOpenHelper
 				       etm(status.trim().getBytes()),
 				       Base64.DEFAULT));
 	    values.put
-		("update",
+		("uptime",
 		 Base64.encodeToString(cryptography.
 				       etm(uptime.trim().getBytes()),
 				       Base64.DEFAULT));

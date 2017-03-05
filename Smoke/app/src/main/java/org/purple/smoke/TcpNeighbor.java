@@ -206,8 +206,19 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
-	m_inetSocketAddress = new InetSocketAddress
-	    (m_ipAddress, Integer.parseInt(m_ipPort));
+
+	int port = 4710;
+
+	try
+	{
+	    port = Integer.parseInt(m_ipPort);
+	}
+	catch(Exception exception)
+	{
+	    port = 4710;
+	}
+
+	m_inetSocketAddress = new InetSocketAddress(m_ipAddress, port);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_readSocketScheduler.scheduleAtFixedRate

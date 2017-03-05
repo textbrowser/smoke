@@ -369,6 +369,22 @@ public class Settings extends AppCompatActivity
 	    stringBuffer.append
 		(Miscellaneous.
 		 formattedDigitalInformation(neighborElement.m_bytesWritten));
+	    stringBuffer.append("\n");
+	    stringBuffer.append("Uptime: ");
+
+	    try
+	    {
+		stringBuffer.append
+		    (String.valueOf(Integer.
+				    parseInt(neighborElement.m_uptime) /
+				    60000.0));
+	    }
+	    catch(Exception exception)
+	    {
+		stringBuffer.append("0.00");
+	    }
+
+	    stringBuffer.append(" Minutes");
 	    textView.setGravity(Gravity.CENTER_VERTICAL);
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
@@ -564,8 +580,17 @@ public class Settings extends AppCompatActivity
 	    (R.id.password1);
 	final TextView textView2 = (TextView) findViewById
 	    (R.id.password2);
-	int iterationCount = Integer.parseInt
-	    (spinner1.getSelectedItem().toString());
+	int iterationCount = 1000;
+
+	try
+	{
+	    iterationCount = Integer.parseInt
+		(spinner1.getSelectedItem().toString());
+	}
+	catch(Exception exception)
+	{
+	    iterationCount = 1000;
+	}
 
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
