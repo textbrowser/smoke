@@ -242,12 +242,17 @@ public class Kernel
 	if(message.trim().isEmpty())
 	    return;
 
-	synchronized(m_neighbors)
-	{
-	    for(int i = 0; i < m_neighbors.size(); i++)
-		if(m_neighbors.get(i) != null)
+	SparseArray<NeighborElement> neighbors =
+	    m_databaseHelper.readNeighbors(m_cryptography);
+
+	if(neighbors != null)
+	    for(int i = 0; i < neighbors.size(); i++)
+	    {
+		NeighborElement neighborElement = neighbors.get(i);
+
+		if(neighborElement != null)
 		    m_databaseHelper.enqueueOutboundMessage
-			(message, m_neighbors.get(i).getOid());
-	}
+			(message, neighborElement.m_oid);
+	    }
     }
 }

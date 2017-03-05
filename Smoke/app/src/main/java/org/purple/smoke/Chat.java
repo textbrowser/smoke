@@ -106,8 +106,8 @@ public class Chat extends AppCompatActivity
 
 		if(bytes != null)
 		{
-		    textView2.append(Base64.encodeToString(bytes,
-							   Base64.DEFAULT));
+		    Kernel.getInstance().enqueueMessage
+			(Base64.encodeToString(bytes, Base64.DEFAULT));
 
 		    final ScrollView scrollView = (ScrollView)
 			findViewById(R.id.chat_scrollview);
