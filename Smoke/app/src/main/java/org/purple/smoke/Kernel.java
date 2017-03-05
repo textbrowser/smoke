@@ -205,7 +205,7 @@ public class Kernel
 		{
 		    prepareNeighbors();
 		}
-	    }, 0, s_neighborsInterval, TimeUnit.MILLISECONDS);
+	    }, 1500, s_neighborsInterval, TimeUnit.MILLISECONDS);
 	}
     }
 
