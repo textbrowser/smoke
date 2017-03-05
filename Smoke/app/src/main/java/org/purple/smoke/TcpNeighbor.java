@@ -48,6 +48,7 @@ public class TcpNeighbor extends Neighbor
     private String m_protocols[] = null;
     private TrustManager m_trustManagers[] = null;
     private final static int s_connectionTimeout = 10000; // 10 Seconds
+    private final static int s_handshakeTimeout = 10000; // 10 Seconds
 
     protected String getLocalIp()
     {
@@ -355,7 +356,7 @@ public class TcpNeighbor extends Neighbor
 		    createSocket();
 		m_socket.connect(m_inetSocketAddress, s_connectionTimeout);
 		m_socket.setEnabledProtocols(m_protocols);
-		m_socket.setSoTimeout(10000); // SSL/TLS process.
+		m_socket.setSoTimeout(s_handshakeTimeout); // SSL/TLS process.
 		m_socket.setTcpNoDelay(true);
 	    }
 	}
