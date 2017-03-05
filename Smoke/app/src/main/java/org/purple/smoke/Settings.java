@@ -202,6 +202,8 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 
+	CheckBox checkBox = (CheckBox) findViewById
+	    (R.id.neighbor_details);
 	StringBuffer stringBuffer = new StringBuffer();
 
 	for(int i = 0; i < sparseArray.size(); i++)
@@ -355,19 +357,22 @@ public class Settings extends AppCompatActivity
 		stringBuffer.append(neighborElement.m_localPort);
 	    }
 
-	    if(!neighborElement.m_remoteCertificate.isEmpty())
+	    if(checkBox.isChecked())
 	    {
-		stringBuffer.append("\n");
-		stringBuffer.append
-		    ("Remote Certificate's Public Key Fingerprint: ");
-		stringBuffer.append(neighborElement.m_remoteCertificate);
-	    }
+		if(!neighborElement.m_remoteCertificate.isEmpty())
+		{
+		    stringBuffer.append("\n");
+		    stringBuffer.append
+			("Remote Certificate's Public Key Fingerprint: ");
+		    stringBuffer.append(neighborElement.m_remoteCertificate);
+		}
 
-	    if(!neighborElement.m_sessionCipher.isEmpty())
-	    {
-		stringBuffer.append("\n");
-		stringBuffer.append("Session Cipher: ");
-		stringBuffer.append(neighborElement.m_sessionCipher);
+		if(!neighborElement.m_sessionCipher.isEmpty())
+		{
+		    stringBuffer.append("\n");
+		    stringBuffer.append("Session Cipher: ");
+		    stringBuffer.append(neighborElement.m_sessionCipher);
+		}
 	    }
 
 	    stringBuffer.append("\n");
@@ -553,17 +558,11 @@ public class Settings extends AppCompatActivity
 		    (CompoundButton buttonView,boolean isChecked)
 		{
 		    if(isChecked)
-		    {
 			m_databaseHelper.writeSetting
 			    (null, "neighbor_details", "true");
-			startTimers();
-		    }
 		    else
-		    {
 			m_databaseHelper.writeSetting
 			    (null, "neighbor_details", "false");
-			stopTimers();
-		    }
 		}
 	    });
     }
@@ -747,8 +746,7 @@ public class Settings extends AppCompatActivity
 			else
 			{
 			    Settings.this.enableWidgets(true);
-			    State.getInstance().setAuthenticated
-				(true);
+			    State.getInstance().setAuthenticated(true);
 			    textView1.requestFocus();
 			    textView1.setText("");
 			    textView2.setText("");
@@ -832,6 +830,8 @@ public class Settings extends AppCompatActivity
 	if(m_databaseHelper.
 	   readSetting(null, "automatic_neighbors_refresh").equals("true"))
 	    checkBox1.setChecked(true);
+	else
+	    checkBox1.setChecked(false);
 
 	CheckBox checkBox2 = (CheckBox) findViewById
 	    (R.id.neighbor_details);
@@ -941,14 +941,21 @@ public class Settings extends AppCompatActivity
         textView1.setEnabled(isAuthenticated);
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
-	textView1.requestFocus();
-        textView1.setEnabled(isAuthenticated);
+
+	if(isAuthenticated)
+	    textView1.requestFocus();
+
+	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.refresh_participants);
 	textView1.setEnabled(isAuthenticated);
-        textView1 = (TextView) findViewById(R.id.password1);
-        textView1.setText("");
+	textView1 = (TextView) findViewById(R.id.password1);
+
+	if(!isAuthenticated)
+	    textView1.requestFocus();
+
+	textView1.setText("");
         textView1 = (TextView) findViewById(R.id.password2);
         textView1.setText("");
 	prepareListeners();
@@ -979,9 +986,7 @@ public class Settings extends AppCompatActivity
 	    populateName();
 	    startKernel();
 
-	    if(m_databaseHelper.
-	       readSetting(null,
-			   "automatic_neighbors_refresh").equals("true"))
+	    if(checkBox1.isChecked())
 		startTimers();
 	}
     }
