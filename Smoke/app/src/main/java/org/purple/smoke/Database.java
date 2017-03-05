@@ -524,6 +524,26 @@ public class Database extends SQLiteOpenHelper
 	return s_instance;
     }
 
+    public void enqueueOutboundMessage(String message, int oid)
+    {
+	if(message.trim().isEmpty())
+	    return;
+
+	prepareDb();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("message", message);
+	    values.put("neighbor_oid", oid);
+	    m_db.insert("outbound_queue", null, values);
+	}
+	catch(Exception exception)
+        {
+	}
+    }
+
     public void neighborControlStatus(Cryptography cryptography,
 				      String controlStatus,
 				      String oid)
@@ -665,6 +685,19 @@ public class Database extends SQLiteOpenHelper
 	    "remote_ip_address_digest, " +
 	    "remote_port_digest, " +
 	    "transport_digest))";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	str = "CREATE TABLE IF NOT EXISTS outbound_queue (" +
+	    "message TEXT NOT NULL, " +
+	    "neighbor_oid INTEGER NOT NULL, " +
+	    "PRIMARY KEY (message, neighbor_oid))";
 
 	try
 	{
@@ -836,27 +869,20 @@ public class Database extends SQLiteOpenHelper
 
     public void writeLog(String event)
     {
-	SQLiteDatabase db = null;
+	prepareDb();
 
-	try
-	{
-	    db = getWritableDatabase();
-	}
-	catch(Exception exception)
-	{
+	if(m_db == null)
 	    return;
-	}
 
 	try
 	{
 	    ContentValues values = new ContentValues();
 
 	    values.put("event", event.trim());
-	    db.insert("log", null, values);
+	    m_db.insert("log", null, values);
 	}
 	catch(Exception exception)
         {
-	    db.close();
 	}
     }
 

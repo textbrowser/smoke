@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class Kernel
 {
     private Cryptography m_cryptography = null;
+    private Database m_databaseHelper = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private SparseArray<Neighbor> m_neighbors = null;
     private final static int s_neighborsInterval = 10000; // 10 Seconds
@@ -44,6 +45,7 @@ public class Kernel
     private Kernel()
     {
 	m_cryptography = Cryptography.getInstance();
+	m_databaseHelper = Database.getInstance();
 	m_neighbors = new SparseArray<> ();
 	prepareSchedulers();
     }
@@ -51,8 +53,8 @@ public class Kernel
     private void prepareNeighbors()
     {
 	SparseArray<NeighborElement> neighbors =
-	    Database.getInstance().readNeighbors(m_cryptography);
-	int count = Database.getInstance().count("neighbors");
+	    m_databaseHelper.readNeighbors(m_cryptography);
+	int count = m_databaseHelper.count("neighbors");
 
 	if(count == 0 || neighbors == null)
 	{
@@ -129,7 +131,7 @@ public class Kernel
 		{
 		    if(neighborElement.m_statusControl.toLowerCase().
 		       equals("disconnect"))
-			Database.getInstance().saveNeighborInformation
+			m_databaseHelper.saveNeighborInformation
 			    (m_cryptography,
 			     "0",
 			     "0",
@@ -219,7 +221,7 @@ public class Kernel
 
     public void echo(String message, int oid)
     {
-	if(message.isEmpty())
+	if(message.trim().isEmpty())
 	    return;
 
 	synchronized(m_neighbors)
@@ -232,6 +234,20 @@ public class Kernel
 		   m_neighbors.get(j).getOid() != oid)
 		    m_neighbors.get(j).send(message);
 	    }
+	}
+    }
+
+    public void enqueueMessage(String message)
+    {
+	if(message.trim().isEmpty())
+	    return;
+
+	synchronized(m_neighbors)
+	{
+	    for(int i = 0; i < m_neighbors.size(); i++)
+		if(m_neighbors.get(i) != null)
+		    m_databaseHelper.enqueueOutboundMessage
+			(message, m_neighbors.get(i).getOid());
 	}
     }
 }
