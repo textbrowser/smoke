@@ -36,6 +36,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
 import android.util.Patterns;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
@@ -189,6 +190,50 @@ public class Database extends SQLiteOpenHelper
 			sparseArray.append(index, neighborElement);
 		    }
 
+		    cursor.moveToNext();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(sparseArray != null)
+		sparseArray.clear();
+
+	    sparseArray = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return sparseArray;
+    }
+
+    public SparseIntArray readNeighborOids()
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return null;
+
+	SparseIntArray sparseArray = null;
+	Cursor cursor = null;
+	int index = -1;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT OID FROM neighbors", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		sparseArray = new SparseIntArray();
+
+		while(!cursor.isAfterLast())
+		{
+		    index += 1;
+		    sparseArray.append(index, cursor.getInt(0));
 		    cursor.moveToNext();
 		}
 	    }
