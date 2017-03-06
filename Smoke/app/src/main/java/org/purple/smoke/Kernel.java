@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import java.net.InetAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -243,17 +244,11 @@ public class Kernel
 	if(message.trim().isEmpty())
 	    return;
 
-	SparseArray<NeighborElement> neighbors =
-	    m_databaseHelper.readNeighbors(m_cryptography);
+	SparseIntArray neighbors = m_databaseHelper.readNeighborOids();
 
 	if(neighbors != null)
 	    for(int i = 0; i < neighbors.size(); i++)
-	    {
-		NeighborElement neighborElement = neighbors.get(i);
-
-		if(neighborElement != null)
-		    m_databaseHelper.enqueueOutboundMessage
-			(message, neighborElement.m_oid);
-	    }
+		m_databaseHelper.enqueueOutboundMessage
+		    (message, neighbors.get(i));
     }
 }
