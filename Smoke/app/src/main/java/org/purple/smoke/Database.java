@@ -73,8 +73,8 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return null;
 
-	SparseArray<NeighborElement> sparseArray = null;
 	Cursor cursor = null;
+	SparseArray<NeighborElement> sparseArray = null;
 	int index = -1;
 
 	try
@@ -217,14 +217,13 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return null;
 
-	SparseIntArray sparseArray = null;
 	Cursor cursor = null;
+	SparseIntArray sparseArray = null;
 	int index = -1;
 
 	try
 	{
-	    cursor = m_db.rawQuery
-		("SELECT OID FROM neighbors", null);
+	    cursor = m_db.rawQuery("SELECT OID FROM neighbors", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
