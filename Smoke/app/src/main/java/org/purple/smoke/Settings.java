@@ -152,19 +152,28 @@ public class Settings extends AppCompatActivity
 
 	stringBuffer.append("Chat Encryption Key\n");
 	stringBuffer.append
-	    (s_cryptography.fancyKeyInformationOutput(s_cryptography.
-						      chatEncryptionKeyPair()));
+	    (s_cryptography.
+	     fancyKeyInformationOutput(s_cryptography.chatEncryptionKeyPair()));
 	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
 	textView1.setText(stringBuffer);
-	textView1.setVisibility(View.VISIBLE);
+
+	if(s_cryptography.chatEncryptionKeyPair() == null)
+	    textView1.setVisibility(View.INVISIBLE);
+	else
+	    textView1.setVisibility(View.VISIBLE);
+
 	stringBuffer.delete(0, stringBuffer.length());
 	stringBuffer.append("Chat Signature Key\n");
 	stringBuffer.append
-	    (s_cryptography.fancyKeyInformationOutput(s_cryptography.
-						      chatSignatureKeyPair()));
+	    (s_cryptography.
+	     fancyKeyInformationOutput(s_cryptography.chatSignatureKeyPair()));
 	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
 	textView1.setText(stringBuffer);
-	textView1.setVisibility(View.VISIBLE);
+
+	if(s_cryptography.chatSignatureKeyPair() == null)
+	    textView1.setVisibility(View.INVISIBLE);
+	else
+	    textView1.setVisibility(View.VISIBLE);
     }
 
     private void populateName()
@@ -434,9 +443,12 @@ public class Settings extends AppCompatActivity
 	    public void onCancel(DialogInterface dialog)
 	    {
 		m_databaseHelper.resetAndDrop();
-		populateFancyKeyData();
-		populateName();
-		populateNeighbors();
+		s_cryptography.reset();
+
+		final Intent intent = getIntent();
+
+		finish();
+		startActivity(intent);
 	    }
 	};
 
@@ -787,6 +799,9 @@ public class Settings extends AppCompatActivity
 			{
 			    Settings.this.enableWidgets(true);
 			    State.getInstance().setAuthenticated(true);
+			    spinner1.setSelection(0);
+			    spinner2.setSelection(0);
+			    spinner3.setSelection(1); // RSA
 			    textView1.requestFocus();
 			    textView1.setText("");
 			    textView2.setText("");
@@ -813,6 +828,10 @@ public class Settings extends AppCompatActivity
 			    iterationCount));
 
 	thread.start();
+    }
+
+    private void resetWidgets()
+    {
     }
 
     private void showAuthenticateActivity()

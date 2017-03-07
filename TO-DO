@@ -25,6 +25,8 @@ Completed Items
 21.    Neighbor details should be optional.
 22.    Database method for retrieving neighbor OIDs.
 23.    Outbound database table.
+24.    Reset spinners after credentials are initialized.
+25.    Reset option. Remove smoke.db. Reset widget states.
 
 Ignored / Impossible Items
 
@@ -34,7 +36,7 @@ Ignored / Impossible Items
 
 Remaining Items
 
-1.     Reset option. Remove smoke.db. Reset widget states.
+1.     SipHash (https://en.wikipedia.org/wiki/SipHash).
 2.     Socket channels. A lot of work.
 3.     Detect removal of smoke.db.
 4.     Source-level string translations.
@@ -47,4 +49,3 @@ Remaining Items
 11.    Inbound database tables.
 12.    SQLite secure delete.
 13.    Buzz-like page.
-14.    SipHash (https://en.wikipedia.org/wiki/SipHash).
