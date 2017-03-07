@@ -428,10 +428,33 @@ public class Settings extends AppCompatActivity
 	    }
         });
 
-	final Button button3 = (Button) findViewById
-	    (R.id.reset_neighbor_fields);
+	final DialogInterface.OnCancelListener listener1 =
+	    new DialogInterface.OnCancelListener()
+	{
+	    public void onCancel(DialogInterface dialog)
+	    {
+	    }
+	};
+
+	final Button button3 = (Button) findViewById(R.id.reset);
 
         button3.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		Miscellaneous.
+		    showPromptDialog(Settings.this,
+				     listener1,
+				     "Are you sure that you " +
+				     "wish to reset Smoke? All " +
+				     "private data will be lost.");
+	    }
+	});
+
+	final Button button4 = (Button) findViewById
+	    (R.id.reset_neighbor_fields);
+
+        button4.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -455,19 +478,9 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	final DialogInterface.OnCancelListener listener =
-	    new DialogInterface.OnCancelListener()
-	{
-	    public void onCancel(DialogInterface dialog)
-	    {
-		m_databaseHelper.reset();
-		prepareCredentials();
-	    }
-	};
+	final Button button5 = (Button) findViewById(R.id.save_name);
 
-	final Button button4 = (Button) findViewById(R.id.save_name);
-
-	button4.setOnClickListener(new View.OnClickListener()
+	button5.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -481,9 +494,19 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	final Button button5 = (Button) findViewById(R.id.set_password);
+	final DialogInterface.OnCancelListener listener2 =
+	    new DialogInterface.OnCancelListener()
+	{
+	    public void onCancel(DialogInterface dialog)
+	    {
+		m_databaseHelper.reset();
+		prepareCredentials();
+	    }
+	};
 
-        button5.setOnClickListener(new View.OnClickListener()
+	final Button button6 = (Button) findViewById(R.id.set_password);
+
+        button6.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -515,7 +538,7 @@ public class Settings extends AppCompatActivity
 		if(State.getInstance().isAuthenticated())
 		    Miscellaneous.
 			showPromptDialog(Settings.this,
-					 listener,
+					 listener2,
 					 "Are you sure that you " +
 					 "wish to create new " +
 					 "credentials? Existing " +

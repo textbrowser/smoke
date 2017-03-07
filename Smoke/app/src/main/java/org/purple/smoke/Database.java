@@ -863,6 +863,7 @@ public class Database extends SQLiteOpenHelper
 	    m_db.delete("congestion_control", null, null);
 	    m_db.delete("log", null, null);
 	    m_db.delete("neighbors", null, null);
+	    m_db.delete("outbound_queue", null, null);
 	    m_db.delete("participants", null, null);
 	    m_db.delete("settings", null, null);
 	}
