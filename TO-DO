@@ -47,3 +47,4 @@ Remaining Items
 11.    Inbound database tables.
 12.    SQLite secure delete.
 13.    Buzz-like page.
+14.    SipHash (https://en.wikipedia.org/wiki/SipHash).
