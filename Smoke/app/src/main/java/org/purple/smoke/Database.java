@@ -738,6 +738,10 @@ public class Database extends SQLiteOpenHelper
 	{
 	}
 
+	/*
+	** Create the outbound_queue table.
+	*/
+
 	str = "CREATE TABLE IF NOT EXISTS outbound_queue (" +
 	    "message TEXT NOT NULL, " +
 	    "neighbor_oid INTEGER NOT NULL, " +
