@@ -33,12 +33,13 @@ Ignored / Impossible Items
 1.     Android exit.
 2.     Create a BroadcastReceiver and notify all other activities on exit.
 3.     Scroll bars on Spinner objects.
+4.     Detect removal of smoke.db.
 
 Remaining Items
 
 1.     SipHash (https://en.wikipedia.org/wiki/SipHash).
 2.     Socket channels. A lot of work.
-3.     Detect removal of smoke.db.
+3 .    Buzz-like page.
 4.     Source-level string translations.
 5.     Kernel.
 6.     Virtual keyboard.
@@ -48,4 +49,3 @@ Remaining Items
 10.    Retain first-contact server certificate.
 11.    Inbound database tables.
 12.    SQLite secure delete.
-13.    Buzz-like page.
