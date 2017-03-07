@@ -24,11 +24,13 @@ Completed Items
 20.    Display remote server's certificate information. Public key fingerprint.
 21.    Neighbor details should be optional.
 22.    Database method for retrieving neighbor OIDs.
+23.    Outbound database table.
 
 Ignored / Impossible Items
 
 1.     Android exit.
 2.     Create a BroadcastReceiver and notify all other activities on exit.
+3.     Scroll bars on Spinner objects.
 
 Remaining Items
 
@@ -36,13 +38,12 @@ Remaining Items
 2.     Socket channels. A lot of work.
 3.     Detect removal of smoke.db.
 4.     Source-level string translations.
-5.     Scroll bars on Spinner objects.
-6.     Kernel.
-7.     Virtual keyboard.
-8.     Participant import.
-9.     ECDSA, ECPublicKey.
-10.    EPKS.
-11.    Retain first-contact server certificate.
-12.    Inbound and outbound content database tables.
-13.    SQLite secure delete.
-14.    Buzz-like page.
+5.     Kernel.
+6.     Virtual keyboard.
+7.     Participant import.
+8.     ECDSA, ECPublicKey.
+9.     EPKS.
+10.    Retain first-contact server certificate.
+11.    Inbound database tables.
+12.    SQLite secure delete.
+13.    Buzz-like page.
