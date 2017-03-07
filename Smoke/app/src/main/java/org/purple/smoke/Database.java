@@ -210,6 +210,46 @@ public class Database extends SQLiteOpenHelper
 	return sparseArray;
     }
 
+    public SparseArray<String> readOutboundMessage(int oid)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	SparseArray<String> sparseArray = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT message, OID FROM outbound_queue " +
+		 "WHERE neighbor_oid = ? ORDER BY OID",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		sparseArray = new SparseArray<> ();
+		sparseArray.append(0, cursor.getString(0));
+		sparseArray.append(1, String.valueOf(cursor.getInt(0)));
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(sparseArray != null)
+		sparseArray.clear();
+
+	    sparseArray = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return sparseArray;
+    }
+
     public SparseIntArray readNeighborOids()
     {
 	prepareDb();

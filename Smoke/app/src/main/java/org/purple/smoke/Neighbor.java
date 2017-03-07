@@ -199,7 +199,7 @@ public abstract class Neighbor
 	    public void run()
 	    {
 		/*
-		** Retrieve the latest message.
+		** Retrieve the first message.
 		*/
 
 		/*
