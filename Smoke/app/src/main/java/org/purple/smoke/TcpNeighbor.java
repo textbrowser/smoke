@@ -378,23 +378,27 @@ public class TcpNeighbor extends Neighbor
 	}
     }
 
-    public void send(String message)
+    public boolean send(String message)
     {
+	boolean ok = false;
+
 	if(!connected())
-	    return;
+	    return ok;
 
 	try
 	{
 	    synchronized(m_socketMutex)
 	    {
 		if(m_socket == null)
-		    return;
+		    return ok;
 
 		OutputStream outputStream = m_socket.getOutputStream();
 
 		outputStream.write(message.getBytes());
 		outputStream.flush();
 	    }
+
+	    ok = true;
 
 	    synchronized(m_bytesWrittenMutex)
 	    {
@@ -410,5 +414,7 @@ public class TcpNeighbor extends Neighbor
 	{
 	    disconnect();
 	}
+
+	return ok;
     }
 }

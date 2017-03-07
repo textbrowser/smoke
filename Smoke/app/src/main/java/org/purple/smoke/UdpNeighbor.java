@@ -295,17 +295,19 @@ public class UdpNeighbor extends Neighbor
 	}
     }
 
-    public void send(String message)
+    public boolean send(String message)
     {
+	boolean ok = false;
+
 	if(!connected())
-	    return;
+	    return ok;
 
 	try
 	{
 	    synchronized(m_socketMutex)
 	    {
 		if(m_socket == null)
-		    return;
+		    return ok;
 
 		DatagramPacket datagramPacket = new DatagramPacket
 		    (message.getBytes(),
@@ -315,6 +317,8 @@ public class UdpNeighbor extends Neighbor
 
 		m_socket.send(datagramPacket);
 	    }
+
+	    ok = true;
 
 	    synchronized(m_bytesWrittenMutex)
 	    {
@@ -330,5 +334,7 @@ public class UdpNeighbor extends Neighbor
 	{
 	    disconnect();
 	}
+
+	return ok;
     }
 }

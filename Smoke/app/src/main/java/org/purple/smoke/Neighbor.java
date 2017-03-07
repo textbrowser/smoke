@@ -38,10 +38,12 @@ public abstract class Neighbor
 {
     private Object m_oidMutex = null;
     private ScheduledExecutorService m_scheduler = null;
+    private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_echoMode = "full";
     private String m_scopeId = "";
     private UUID m_uuid = null;
     private final static int s_laneWidth = 100000;
+    private final static int s_sendOutboundTimerInterval = 1500; // 1.5 Seconds
     private final static int s_silence = 90000; // 90 Seconds
     private final static int s_timerInterval = 10000; // 10 Seconds
     private int m_oid = -1;
@@ -141,6 +143,7 @@ public abstract class Neighbor
 	m_oidMutex = new Object();
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
+	m_sendOutboundScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_socketMutex = new Object();
 	m_startTime = new Date();
 	m_uuid = UUID.randomUUID();
@@ -189,6 +192,21 @@ public abstract class Neighbor
 		terminateOnSilence();
 	    }
 	}, 0, s_timerInterval, TimeUnit.MILLISECONDS);
+
+	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		/*
+		** Retrieve the latest message.
+		*/
+
+		/*
+		** If the message was sent successfully, remove it.
+		*/
+	    }
+	}, 0, s_sendOutboundTimerInterval, TimeUnit.MILLISECONDS);
     }
 
     protected String getCapabilities()
@@ -259,6 +277,16 @@ public abstract class Neighbor
 	catch(Exception exception)
 	{
 	}
+
+	m_sendOutboundScheduler.shutdown();
+
+	try
+	{
+	    m_sendOutboundScheduler.awaitTermination(60, TimeUnit.SECONDS);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     protected void echo(String message)
@@ -269,7 +297,7 @@ public abstract class Neighbor
 	}
     }
 
-    public abstract void send(String message);
+    public abstract boolean send(String message);
 
     public synchronized int getOid()
     {
