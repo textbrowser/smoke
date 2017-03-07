@@ -433,6 +433,10 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onCancel(DialogInterface dialog)
 	    {
+		m_databaseHelper.resetAndDrop();
+		populateFancyKeyData();
+		populateName();
+		populateNeighbors();
 	    }
 	};
 

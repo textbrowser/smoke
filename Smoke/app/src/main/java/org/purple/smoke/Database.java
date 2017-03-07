@@ -873,6 +873,36 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void resetAndDrop()
+    {
+	reset();
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    String str = "DROP TABLE IF EXISTS congestion_control";
+
+	    m_db.execSQL(str);
+	    str = "DROP TABLE IF EXISTS log";
+	    m_db.execSQL(str);
+	    str = "DROP TABLE IF EXISTS neighbors";
+	    m_db.execSQL(str);
+	    str = "DROP TABLE IF EXISTS outbound_queue";
+	    m_db.execSQL(str);
+	    str = "DROP TABLE IF EXISTS participants";
+	    m_db.execSQL(str);
+	    str = "DROP TABLE IF EXISTS settings";
+	    m_db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	onCreate(m_db);
+    }
+
     public void saveNeighborInformation(Cryptography cryptography,
 					String bytesRead,
 					String bytesWritten,

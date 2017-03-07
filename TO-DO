@@ -34,7 +34,7 @@ Ignored / Impossible Items
 
 Remaining Items
 
-1.     Reset option. Remove smoke.db.
+1.     Reset option. Remove smoke.db. Reset widget states.
 2.     Socket channels. A lot of work.
 3.     Detect removal of smoke.db.
 4.     Source-level string translations.
