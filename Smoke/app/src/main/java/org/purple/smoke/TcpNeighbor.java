@@ -373,7 +373,6 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
-	    Database.getInstance().writeLog(exception.getMessage());
 	    disconnect();
 	}
     }

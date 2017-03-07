@@ -231,7 +231,7 @@ public class Database extends SQLiteOpenHelper
 	    {
 		sparseArray = new SparseArray<> ();
 		sparseArray.append(0, cursor.getString(0));
-		sparseArray.append(1, String.valueOf(cursor.getInt(0)));
+		sparseArray.append(1, String.valueOf(cursor.getInt(1)));
 	    }
 	}
 	catch(Exception exception)

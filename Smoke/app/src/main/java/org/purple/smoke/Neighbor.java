@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+import android.util.SparseArray;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -47,6 +48,8 @@ public abstract class Neighbor
     private final static int s_silence = 90000; // 90 Seconds
     private final static int s_timerInterval = 10000; // 10 Seconds
     private int m_oid = -1;
+    protected Cryptography m_cryptography = null;
+    protected Database m_databaseHelper = null;
     protected Date m_lastTimeReadWrite = null;
     protected Date m_startTime = null;
     protected Object m_bytesReadMutex = null;
@@ -98,8 +101,8 @@ public abstract class Neighbor
 	String sessionCiper = getSessionCipher();
 	boolean connected = connected();
 
-	Database.getInstance().saveNeighborInformation
-	    (Cryptography.getInstance(),
+	m_databaseHelper.saveNeighborInformation
+	    (m_cryptography,
 	     String.valueOf(bytesRead),
 	     String.valueOf(bytesWritten),
 	     localIp,
@@ -135,6 +138,8 @@ public abstract class Neighbor
     {
 	m_bytesReadMutex = new Object();
 	m_bytesWrittenMutex = new Object();
+	m_cryptography = Cryptography.getInstance();
+	m_databaseHelper = Database.getInstance();
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
 	m_lastTimeReadWrite = new Date();
@@ -158,16 +163,15 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
-		int oid = 0;
+		int oid = -1;
 
 		synchronized(m_oidMutex)
 		{
 		    oid = m_oid;
 		}
 
-		String statusControl = Database.getInstance().
-		    readNeighborStatusControl(Cryptography.getInstance(),
-					      oid);
+		String statusControl = m_databaseHelper.
+		    readNeighborStatusControl(m_cryptography, oid);
 
 		switch(statusControl)
 		{
@@ -202,9 +206,24 @@ public abstract class Neighbor
 		** Retrieve the first message.
 		*/
 
+		int oid = -1;
+
+		synchronized(m_oidMutex)
+		{
+		    oid = m_oid;
+		}
+
+		SparseArray<String> sparseArray =
+		    m_databaseHelper.readOutboundMessage(oid);
+
 		/*
-		** If the message was sent successfully, remove it.
+		** If the message is sent successfully, remove it.
 		*/
+
+		if(sparseArray != null)
+		    if(send(sparseArray.get(0)))
+			m_databaseHelper.deleteEntry
+			    (sparseArray.get(1), "outbound_queue");
 	    }
 	}, 0, s_sendOutboundTimerInterval, TimeUnit.MILLISECONDS);
     }
