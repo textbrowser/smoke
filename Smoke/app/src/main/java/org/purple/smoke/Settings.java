@@ -147,33 +147,44 @@ public class Settings extends AppCompatActivity
 
     private void populateFancyKeyData()
     {
-	StringBuffer stringBuffer = new StringBuffer();
+	StringBuffer stringBuffer = null;
 	TextView textView1 = null;
 
-	stringBuffer.append("Chat Encryption Key\n");
-	stringBuffer.append
-	    (s_cryptography.
-	     fancyKeyInformationOutput(s_cryptography.chatEncryptionKeyPair()));
-	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
-	textView1.setText(stringBuffer);
-
-	if(s_cryptography.chatEncryptionKeyPair() == null)
+	if(s_cryptography.chatEncryptionKeyPair() == null ||
+	   s_cryptography.chatEncryptionKeyPair().getPublic() == null)
 	    textView1.setVisibility(View.INVISIBLE);
 	else
+	{
+	    stringBuffer = new StringBuffer();
+	    stringBuffer.append("Chat Encryption Key\n");
+	    stringBuffer.append
+		(s_cryptography.
+		 fancyKeyInformationOutput(s_cryptography.
+					   chatEncryptionKeyPair()));
+	    textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
+	    textView1.setText(stringBuffer);
 	    textView1.setVisibility(View.VISIBLE);
+	}
 
-	stringBuffer.delete(0, stringBuffer.length());
-	stringBuffer.append("Chat Signature Key\n");
-	stringBuffer.append
-	    (s_cryptography.
-	     fancyKeyInformationOutput(s_cryptography.chatSignatureKeyPair()));
-	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
-	textView1.setText(stringBuffer);
-
-	if(s_cryptography.chatSignatureKeyPair() == null)
+	if(s_cryptography.chatSignatureKeyPair() == null ||
+	   s_cryptography.chatSignatureKeyPair().getPublic() == null)
 	    textView1.setVisibility(View.INVISIBLE);
 	else
+	{
+	    if(stringBuffer == null)
+		stringBuffer = new StringBuffer();
+	    else
+		stringBuffer.delete(0, stringBuffer.length());
+
+	    stringBuffer.append("Chat Signature Key\n");
+	    stringBuffer.append
+		(s_cryptography.
+		 fancyKeyInformationOutput(s_cryptography.
+					   chatSignatureKeyPair()));
+	    textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
+	    textView1.setText(stringBuffer);
 	    textView1.setVisibility(View.VISIBLE);
+	}
     }
 
     private void populateName()
