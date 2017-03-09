@@ -33,8 +33,8 @@ package org.purple.smoke;
 
 public class SipHash
 {
-    private final static long s_v0 = 0x736f6d6570736575L;
-    private final static long s_v1 = 0x646f72616e646f6dL;
-    private final static long s_v2 = 0x6c7967656e657261L;
-    private final static long s_v3 = 0x7465646279746573L;
+    private final static long c0 = 0x736f6d6570736575L;
+    private final static long c1 = 0x646f72616e646f6dL;
+    private final static long c2 = 0x6c7967656e657261L;
+    private final static long c3 = 0x7465646279746573L;
 }
