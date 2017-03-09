@@ -301,10 +301,16 @@
                     android:id="@+id/chat_encryption_key_data" />
 
                 <TextView
-                    android:text="@string/chat_signature_key_data"
+                    android:id="@+id/chat_signature_key_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/chat_signature_key_data" />
+                    android:text="@string/chat_signature_key_data" />
+
+                <TextView
+                    android:id="@+id/siphash_identity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/siphash_identity" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
