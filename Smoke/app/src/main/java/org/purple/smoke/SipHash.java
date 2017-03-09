@@ -37,4 +37,29 @@ public class SipHash
     private final static long c1 = 0x646f72616e646f6dL;
     private final static long c2 = 0x6c7967656e657261L;
     private final static long c3 = 0x7465646279746573L;
+    private long m_v0 = 0;
+    private long m_v1 = 0;
+    private long m_v2 = 0;
+    private long m_v3 = 0;
+
+    private long byteArrayToLong(byte bytes[])
+    {
+	if(bytes == null || bytes.length != 8)
+	    return 0;
+
+	long value = 0;
+
+	for(int i = 0; i < bytes.length; i++)
+	    value |= (((long) bytes[i]) & 0xff) << (8 * i);
+
+	return value;
+    }
+
+    public void SipHash(byte key[])
+    {
+	if(key == null)
+	    return;
+	else if(key.length != 16) // 128-bit key.
+	    return;
+    }
 }
