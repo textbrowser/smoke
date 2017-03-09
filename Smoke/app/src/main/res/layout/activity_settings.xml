@@ -294,29 +294,6 @@
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:weightSum="1">
-
-                    <EditText
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:ems="10"
-                        android:id="@+id/name"
-                        android:hint="@string/name_name"
-                        android:textSize="14sp"
-                        android:layout_weight="0.98" />
-
-                    <Button
-                        android:text="@string/save"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/save_name" />
-                </LinearLayout>
-
                 <TextView
                     android:text="@string/chat_encryption_key_data"
                     android:layout_width="match_parent"
@@ -333,13 +310,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/export"
-                        style="@style/Widget.AppCompat.Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/export" />
 
                     <Button
                         android:id="@+id/reset"

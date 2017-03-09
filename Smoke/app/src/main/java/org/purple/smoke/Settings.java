@@ -110,10 +110,6 @@ public class Settings extends AppCompatActivity
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setEnabled(state);
-	button1 = (Button) findViewById(R.id.export);
-	button1.setEnabled(state);
-	button1 = (Button) findViewById(R.id.save_name);
-	button1.setEnabled(state);
 
 	RadioButton radioButton1 = null;
 
@@ -129,8 +125,6 @@ public class Settings extends AppCompatActivity
 
 	TextView textView1 = null;
 
-	textView1 = (TextView) findViewById(R.id.name);
-	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 	textView1.setEnabled(state);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
@@ -150,6 +144,8 @@ public class Settings extends AppCompatActivity
 	StringBuffer stringBuffer = null;
 	TextView textView1 = null;
 
+	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
+
 	if(s_cryptography.chatEncryptionKeyPair() == null ||
 	   s_cryptography.chatEncryptionKeyPair().getPublic() == null)
 	    textView1.setVisibility(View.INVISIBLE);
@@ -161,10 +157,11 @@ public class Settings extends AppCompatActivity
 		(s_cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
 					   chatEncryptionKeyPair()));
-	    textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
 	    textView1.setText(stringBuffer);
 	    textView1.setVisibility(View.VISIBLE);
 	}
+
+	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
 
 	if(s_cryptography.chatSignatureKeyPair() == null ||
 	   s_cryptography.chatSignatureKeyPair().getPublic() == null)
@@ -181,18 +178,9 @@ public class Settings extends AppCompatActivity
 		(s_cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
 					   chatSignatureKeyPair()));
-	    textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
 	    textView1.setText(stringBuffer);
 	    textView1.setVisibility(View.VISIBLE);
 	}
-    }
-
-    private void populateName()
-    {
-	final TextView textView1 = (TextView) findViewById
-	    (R.id.name);
-
-	textView1.setText(m_databaseHelper.readSetting(s_cryptography, "name"));
     }
 
     private void populateNeighbors()
@@ -505,22 +493,6 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	final Button button5 = (Button) findViewById(R.id.save_name);
-
-	button5.setOnClickListener(new View.OnClickListener()
-	{
-	    public void onClick(View view)
-	    {
-		final TextView textView1 = (TextView) findViewById
-		    (R.id.name);
-
-		m_databaseHelper.writeSetting
-		    (s_cryptography,
-		     "name",
-		     textView1.getText().toString());
-	    }
-	});
-
 	final DialogInterface.OnCancelListener listener2 =
 	    new DialogInterface.OnCancelListener()
 	{
@@ -531,9 +503,9 @@ public class Settings extends AppCompatActivity
 	    }
 	};
 
-	final Button button6 = (Button) findViewById(R.id.set_password);
+	final Button button5 = (Button) findViewById(R.id.set_password);
 
-        button6.setOnClickListener(new View.OnClickListener()
+        button5.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -1017,11 +989,6 @@ public class Settings extends AppCompatActivity
 	** Enable widgets.
 	*/
 
-	button1 = (Button) findViewById(R.id.export);
-	button1.setEnabled(isAuthenticated);
-	button1 = (Button) findViewById(R.id.save_name);
-	button1.setEnabled(isAuthenticated);
-
 	TextView textView1;
 
 	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
@@ -1032,8 +999,6 @@ public class Settings extends AppCompatActivity
 	textView1.setVisibility
 	    (s_cryptography.chatSignatureKeyPair() == null ?
 	     View.GONE : View.VISIBLE);
-	textView1 = (TextView) findViewById(R.id.name);
-	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(isAuthenticated);
         textView1.setVisibility(View.GONE);
@@ -1083,7 +1048,6 @@ public class Settings extends AppCompatActivity
 	if(isAuthenticated)
 	{
 	    populateFancyKeyData();
-	    populateName();
 	    startKernel();
 
 	    if(checkBox1.isChecked())
