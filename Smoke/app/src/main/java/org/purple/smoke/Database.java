@@ -724,6 +724,23 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	/*
+	** Create the inbound_queue table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS inbound_queue (" +
+	    "message TEXT NOT NULL, " +
+	    "neighbor_oid INTEGER NOT NULL, " +
+	    "PRIMARY KEY (message, neighbor_oid))";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	/*
 	** Create the log table.
 	*/
 

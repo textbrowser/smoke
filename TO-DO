@@ -27,6 +27,7 @@ Completed Items
 23.    Outbound database table.
 24.    Reset spinners after credentials are initialized.
 25.    Reset option. Remove smoke.db. Reset widget states.
+26.    Inbound database table.
 
 Ignored / Impossible Items
 
@@ -47,5 +48,4 @@ Remaining Items
 8.     ECDSA, ECPublicKey.
 9.     EPKS.
 10.    Retain first-contact server certificate.
-11.    Inbound database tables.
-12.    SQLite secure delete.
+11.    SQLite secure delete.
