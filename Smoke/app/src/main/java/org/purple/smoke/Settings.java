@@ -813,10 +813,6 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
-    private void resetWidgets()
-    {
-    }
-
     private void showAuthenticateActivity()
     {
 	final Intent intent = new Intent(Settings.this, Authenticate.class);

@@ -120,7 +120,7 @@ public class Messages
 		(Miscellaneous.joinByteArrays(keyBytes, messageBytes),
 		 macKeyBytes);
 
-	    if(macKeyBytes == null)
+	    if(macBytes == null)
 		return null;
 
 	    /*
