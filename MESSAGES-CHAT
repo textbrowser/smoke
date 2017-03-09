@@ -6,13 +6,13 @@
 
 [AES] (2)
 {
-	Message (0)
-	Sequence (1)
-	Timestamp (2)
-	Sender's Public Encryption Key SHA-512 Digest (3)
-	[PK Signature] (4)
+	Message (1)
+	Sequence (2)
+	Timestamp (3)
+	Sender's Public Encryption Key SHA-512 Digest (4)
+	[PK Signature] (5)
 	{
-		[PK] || [AES] (0 ... 3)
+		[PK] || [AES] (1 ... 4)
 	}
 }
 

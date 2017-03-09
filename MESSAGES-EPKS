@@ -1,0 +1,13 @@
+[AES] (1)
+{
+	Key Type (1)
+	Dispatcher's Public Key (2)
+	Dispatcher's Public Key Signature (3)
+	Dispatcher's Signature Public Key (4)
+	Dispatcher's Signature Public Key Signature (5)
+}
+
+[SHA-512 HMAC] (2)
+{
+	[AES]
+}
