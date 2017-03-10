@@ -33,6 +33,8 @@ package org.purple.smoke;
 
 public class SipHash
 {
+    private final static int s_cRounds = 2;
+    private final static int s_dRounds = 4;
     private final static long c0 = 0x736f6d6570736575L;
     private final static long c1 = 0x646f72616e646f6dL;
     private final static long c2 = 0x6c7967656e657261L;
@@ -57,7 +59,7 @@ public class SipHash
 
     private long rotl(long x, long b)
     {
-	return (x << b) | x >>> (64 - b);
+	return (x << b) | (x >>> (64 - b));
     }
 
     private void round()
@@ -103,12 +105,12 @@ public class SipHash
 	{
 	    long m = 0;
 
-	    for(int j = 0; j < 8 && j < data.length; i++, j++)
+	    for(int j = 0; i < data.length && j < 8; i++, j++)
 		m |= (((long) data[i]) & 0xff) << (8 * j);
 
 	    m_v3 ^= m;
 
-	    for(int j = 0; j < 2; j++)
+	    for(int j = 0; j < s_cRounds; j++)
 		round();
 
 	    m_v0 ^= m;
@@ -140,7 +142,7 @@ public class SipHash
 
 	m_v3 ^= b;
 
-	for(int i = 0; i < 2; i++)
+	for(int i = 0; i < s_cRounds; i++)
 	    round();
 
 	m_v0 ^= b;
@@ -151,7 +153,7 @@ public class SipHash
 
 	m_v2 ^= 0xff;
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < s_dRounds; i++)
 	    round();
 
 	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;

@@ -55,6 +55,29 @@ public class Miscellaneous
 	}
     }
 
+    public static String byteArrayAsHexStringDelimited(byte bytes[],
+						       char delimiter)
+    {
+	String string = byteArrayAsHexString(bytes);
+	StringBuffer stringBuffer = new StringBuffer();
+
+	try
+	{
+	    for(int i = 0; i < string.length(); i += 2)
+	    {
+		stringBuffer.append(string.charAt(i));
+		stringBuffer.append(string.charAt(i + 1));
+		stringBuffer.append(delimiter);
+	    }
+
+	    return stringBuffer.substring(0, stringBuffer.length() - 1);
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
+    }
+
     public static String formattedDigitalInformation(String bytes)
     {
 	try
@@ -126,6 +149,16 @@ public class Miscellaneous
 	{
 	    return null;
 	}
+    }
+
+    public static byte[] longToByteArray(long value)
+    {
+	byte bytes[] = new byte[8];
+
+	for(int i = 0; i < 8; i++)
+	    bytes[i] = (byte) ((value >>> 8 * i) & 0xff);
+
+	return bytes;
     }
 
     public static void showErrorDialog(Context context, String error)

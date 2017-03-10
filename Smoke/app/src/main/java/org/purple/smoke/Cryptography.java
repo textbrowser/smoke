@@ -592,6 +592,32 @@ public class Cryptography
 	return bytes;
     }
 
+    public static byte[] md5(byte[] ... data)
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    /*
+	    ** Thread-safe.
+	    */
+
+	    MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+
+	    for(byte b[] : data)
+		if(b != null)
+		    messageDigest.update(b);
+
+	    bytes = messageDigest.digest();
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
     public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
     {
 	if(data == null || publicKey == null)

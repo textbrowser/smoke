@@ -181,6 +181,46 @@ public class Settings extends AppCompatActivity
 	    textView1.setText(stringBuffer);
 	    textView1.setVisibility(View.VISIBLE);
 	}
+
+	textView1 = (TextView) findViewById(R.id.siphash_identity);
+
+	if(stringBuffer == null)
+	    textView1.setVisibility(View.INVISIBLE);
+	else
+	{
+	    stringBuffer.delete(0, stringBuffer.length());
+	    stringBuffer.append("SipHash Chat Identity\n");
+
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(s_cryptography.chatEncryptionKeyPair().getPublic().
+		 getEncoded(),
+		 s_cryptography.chatSignatureKeyPair().getPublic().
+		 getEncoded());
+
+	    if(bytes != null)
+	    {
+		SipHash sipHash = new SipHash();
+		byte key[] = s_cryptography.md5(bytes); /*
+							** Use the MD-5 digest
+							** of the public keys
+							** as the input key to
+							** SipHash.
+							*/
+
+		stringBuffer.append
+		    (Miscellaneous.
+		     byteArrayAsHexStringDelimited(Miscellaneous.
+						   longToByteArray(sipHash.
+								   hmac(bytes,
+									key)),
+						   ':'));
+	    }
+	    else
+		stringBuffer.append("00:00:00:00:00:00:00:00");
+
+	    textView1.setText(stringBuffer);
+	    textView1.setVisibility(View.VISIBLE);
+	}
     }
 
     private void populateNeighbors()
@@ -985,16 +1025,8 @@ public class Settings extends AppCompatActivity
 	** Enable widgets.
 	*/
 
-	TextView textView1;
+	TextView textView1 = null;
 
-	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
-	textView1.setVisibility
-	    (s_cryptography.chatEncryptionKeyPair() == null ?
-	     View.GONE : View.VISIBLE);
-	textView1 = (TextView) findViewById(R.id.chat_signature_key_data);
-	textView1.setVisibility
-	    (s_cryptography.chatSignatureKeyPair() == null ?
-	     View.GONE : View.VISIBLE);
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(isAuthenticated);
         textView1.setVisibility(View.GONE);
@@ -1041,9 +1073,10 @@ public class Settings extends AppCompatActivity
 	if(spinner1.getAdapter().getCount() > 1)
 	    spinner1.setSelection(1); // RSA
 
+	populateFancyKeyData();
+
 	if(isAuthenticated)
 	{
-	    populateFancyKeyData();
 	    startKernel();
 
 	    if(checkBox1.isChecked())
