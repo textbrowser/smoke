@@ -70,7 +70,11 @@ public class Miscellaneous
 		stringBuffer.append(delimiter);
 	    }
 
-	    return stringBuffer.substring(0, stringBuffer.length() - 1);
+	    if(stringBuffer.length() > 0 &&
+	       stringBuffer.charAt(stringBuffer.length() - 1) == delimiter)
+		return stringBuffer.substring(0, stringBuffer.length() - 1);
+	    else
+		return stringBuffer.toString();
 	}
 	catch(Exception exception)
 	{
