@@ -42,24 +42,122 @@ public class SipHash
     private long m_v2 = 0;
     private long m_v3 = 0;
 
-    private long byteArrayToLong(byte bytes[])
+    private long byteArrayToLong(byte bytes[], int offset)
     {
-	if(bytes == null || bytes.length != 8)
+	if(bytes == null || (bytes.length - offset) < 8)
 	    return 0;
 
 	long value = 0;
 
-	for(int i = 0; i < bytes.length; i++)
-	    value |= (((long) bytes[i]) & 0xff) << (8 * i);
+	for(int i = 0; i < 8; i++)
+	    value |= (((long) bytes[i + offset]) & 0xff) << (8 * i);
 
 	return value;
     }
 
-    public void SipHash(byte key[])
+    private long rotl(long x, long b)
     {
-	if(key == null)
-	    return;
-	else if(key.length != 16) // 128-bit key.
-	    return;
+	return (x << b) | x >>> (64 - b);
+    }
+
+    private void round()
+    {
+	m_v0 += m_v1;
+	m_v1 = rotl(m_v1, 13);
+	m_v1 ^= m_v0;
+	m_v0 = rotl(m_v0, 32);
+	m_v2 += m_v3;
+	m_v3 = rotl(m_v3, 16);
+	m_v3 ^= m_v2;
+	m_v2 += m_v1;
+	m_v1 = rotl(m_v1, 17);
+	m_v1 ^= m_v2;
+	m_v2 = rotl(m_v2, 32);
+	m_v0 += m_v3;
+	m_v3 = rotl(m_v3, 21);
+	m_v3 ^= m_v0;
+    }
+
+    public long hmac(byte data[], byte key[])
+    {
+	if(data == null || key == null || key.length != 16) // 128-bit key.
+	    return 0;
+
+	/*
+	** Initialization
+	*/
+
+	long k0 = byteArrayToLong(key, 0);
+	long k1 = byteArrayToLong(key, 8);
+
+	m_v0 = k0 ^ c0;
+	m_v1 = k1 ^ c1;
+	m_v2 = k0 ^ c2;
+	m_v3 = k1 ^ c3;
+
+	/*
+	** Compression
+	*/
+
+	for(int i = 0; i < data.length;)
+	{
+	    long m = 0;
+
+	    for(int j = 0; j < 8 && j < data.length; i++, j++)
+		m |= (((long) data[i]) & 0xff) << (8 * j);
+
+	    m_v3 ^= m;
+
+	    for(int j = 0; j < 2; j++)
+		round();
+
+	    m_v0 ^= m;
+	}
+
+	int left = data.length & 7;
+	long b = ((long) data.length) << 56;
+
+	switch(left)
+	{
+	case 7:
+	    b |= ((long) data[6]) << 48;
+	case 6:
+	    b |= ((long) data[5]) << 40;
+	case 5:
+	    b |= ((long) data[4]) << 32;
+	case 4:
+	    b |= ((long) data[3]) << 24;
+	case 3:
+	    b |= ((long) data[2]) << 16;
+	case 2:
+	    b |= ((long) data[1]) << 8;
+	case 1:
+	    b |= ((long) data[0]);
+	    break;
+	case 0:
+	    break;
+	}
+
+	m_v3 ^= b;
+
+	for(int i = 0; i < 2; i++)
+	    round();
+
+	m_v0 ^= b;
+
+	/*
+	** Finalization
+	*/
+
+	m_v2 ^= 0xff;
+
+	for(int i = 0; i < 4; i++)
+	    round();
+
+	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;
+    }
+
+    public void SipHash()
+    {
     }
 }
