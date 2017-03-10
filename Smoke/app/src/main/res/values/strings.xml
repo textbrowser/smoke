@@ -43,4 +43,6 @@
     <string name="details">Details</string>
     <string name="reset">Reset</string>
     <string name="siphash_identity">SipHash Identity</string>
+    <string name="epks">EPKS</string>
+    <string name="public_data">Public Data</string>
 </resources>
