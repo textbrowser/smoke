@@ -385,6 +385,19 @@ public class Cryptography
 	}
     }
 
+    public static byte[] pbkdf2(byte salt[],
+				char password[],
+				int iterations,
+				int length)
+	throws InvalidKeySpecException, NoSuchAlgorithmException
+    {
+	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
+	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+	    ("PBKDF2WithHmacSHA1");
+
+	return secretKeyFactory.generateSecret(keySpec).getEncoded();
+    }
+
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
 	throws NoSuchAlgorithmException
