@@ -53,6 +53,11 @@ public class State
 	return s_bundle.getChar("is_authenticated") == '1';
     }
 
+    public synchronized void reset()
+    {
+	s_bundle.clear();
+    }
+
     public synchronized void setAuthenticated(boolean state)
     {
 	s_bundle.putChar("is_authenticated", state ? '1' : '0');

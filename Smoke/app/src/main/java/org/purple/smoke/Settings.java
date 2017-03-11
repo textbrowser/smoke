@@ -110,6 +110,18 @@ public class Settings extends AppCompatActivity
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.add_participant);
+	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.epks);
+	button1.setEnabled(state);
+        button1 = (Button) findViewById(R.id.refresh_neighbors);
+        button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.refresh_participants);
+	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.reset_neighbor_fields);
+	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.reset_participants_fields);
+	button1.setEnabled(state);
 
 	RadioButton radioButton1 = null;
 
@@ -128,14 +140,12 @@ public class Settings extends AppCompatActivity
 	textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 	textView1.setEnabled(state);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
-	textView1.setEnabled(state);
+	textView1.setEnabled(false);
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
+        textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.participant_name);
 	textView1.setEnabled(state);
-	textView1 = (TextView) findViewById(R.id.refresh_neighbors);
-	textView1.setEnabled(state);
-	textView1 = (TextView) findViewById(R.id.refresh_participants);
-	textView1.setEnabled(state);
-	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
+	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
 	textView1.setEnabled(state);
     }
 
@@ -481,6 +491,7 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onCancel(DialogInterface dialog)
 	    {
+		State.getInstance().reset();
 		m_databaseHelper.resetAndDrop();
 		s_cryptography.reset();
 
@@ -929,8 +940,18 @@ public class Settings extends AppCompatActivity
         Button button1 = (Button) findViewById(R.id.add_neighbor);
 
         button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.add_participant);
+	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.epks);
+	button1.setEnabled(isAuthenticated);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
         button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.refresh_participants);
+	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.reset_neighbor_fields);
+	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.reset_participants_fields);
+	button1.setEnabled(isAuthenticated);
 
 	CheckBox checkBox1 = (CheckBox) findViewById
 	    (R.id.automatic_refresh);
@@ -1039,9 +1060,9 @@ public class Settings extends AppCompatActivity
 	    textView1.requestFocus();
 
 	textView1.setEnabled(isAuthenticated);
-	textView1 = (TextView) findViewById(R.id.reset_neighbor_fields);
+	textView1 = (TextView) findViewById(R.id.participant_name);
 	textView1.setEnabled(isAuthenticated);
-	textView1 = (TextView) findViewById(R.id.refresh_participants);
+	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.password1);
 
