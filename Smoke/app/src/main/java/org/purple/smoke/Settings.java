@@ -106,6 +106,19 @@ public class Settings extends AppCompatActivity
 
     private void addParticipant()
     {
+	final TextView textView1 = (TextView) findViewById
+	    (R.id.participant_name);
+	final TextView textView2 = (TextView) findViewById
+	    (R.id.participant_siphash_id);
+
+	if(!m_databaseHelper.writeParticipant(s_cryptography,
+					      textView1.getText().toString(),
+					      textView2.getText().toString()))
+	    Miscellaneous.showErrorDialog
+		(Settings.this,
+		 "An error occurred while saving the participant information.");
+	else
+	    populateParticipants();
     }
 
     private void enableWidgets(boolean state)
@@ -464,6 +477,10 @@ public class Settings extends AppCompatActivity
 		tableLayout.addView(row, i);
 	    }
 	}
+    }
+
+    private void populateParticipants()
+    {
     }
 
     private void prepareListeners()

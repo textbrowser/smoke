@@ -561,6 +561,91 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
+    public boolean writeParticipant(Cryptography cryptography,
+				    String name,
+				    String sipHashId)
+    {
+	if(cryptography == null)
+	    return false;
+
+	prepareDb();
+
+	if(m_db == null)
+	    return false;
+
+	ContentValues values = null;
+	boolean ok = true;
+
+	try
+	{
+	    values = new ContentValues();
+	}
+	catch(Exception exception)
+	{
+	    ok = false;
+	}
+
+	if(!ok)
+	    return ok;
+
+	/*
+	** Content values should prevent SQL injections.
+	*/
+
+	try
+	{
+	    SparseArray<String> sparseArray = new SparseArray<> ();
+	    byte bytes[] = null;
+
+	    sparseArray.append(0, "name");
+	    sparseArray.append(1, "siphash_id");
+	    sparseArray.append(2, "siphash_id_digest");
+
+	    for(int i = 0; i < sparseArray.size(); i++)
+	    {
+		if(sparseArray.get(i).equals("name"))
+		    bytes = cryptography.etm(name.trim().getBytes());
+		else if(sparseArray.get(i).equals("siphash_id"))
+		    bytes = cryptography.etm(sipHashId.trim().getBytes());
+		else
+		    bytes = cryptography.hmac(sipHashId.trim().getBytes());
+
+		if(bytes == null)
+		{
+		    StringBuffer stringBuffer = new StringBuffer();
+
+		    stringBuffer.append
+			("Database::writeParticipant(): error with ");
+		    stringBuffer.append(sparseArray.get(i));
+		    stringBuffer.append(" field.");
+		    writeLog(stringBuffer.toString());
+		    throw new Exception();
+		}
+
+		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+		values.put(sparseArray.get(i), str);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    ok = false;
+	}
+
+	try
+	{
+	    if(ok)
+		if(m_db.replace("siphashs", null, values) == -1)
+		    ok = false;
+	}
+	catch(Exception exception)
+        {
+	    ok = false;
+	}
+
+	return ok;
+    }
+
     public int count(String table)
     {
 	prepareDb();
