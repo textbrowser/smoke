@@ -104,6 +104,10 @@ public class Settings extends AppCompatActivity
 	    populateNeighbors();
     }
 
+    private void addParticipant()
+    {
+    }
+
     private void enableWidgets(boolean state)
     {
 	Button button1 = null;
@@ -464,8 +468,7 @@ public class Settings extends AppCompatActivity
 
     private void prepareListeners()
     {
-	final Button button1 = (Button) findViewById
-	    (R.id.add_neighbor);
+	Button button1 = (Button) findViewById(R.id.add_neighbor);
 
 	button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -475,10 +478,17 @@ public class Settings extends AppCompatActivity
 	    }
         });
 
-	final Button button2 = (Button) findViewById
-	    (R.id.refresh_neighbors);
+	button1 = (Button) findViewById(R.id.add_participant);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		addParticipant();
+	    }
+        });
 
-	button2.setOnClickListener(new View.OnClickListener()
+	button1 = (Button) findViewById(R.id.refresh_neighbors);
+	button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -502,9 +512,8 @@ public class Settings extends AppCompatActivity
 	    }
 	};
 
-	final Button button3 = (Button) findViewById(R.id.reset);
-
-        button3.setOnClickListener(new View.OnClickListener()
+	button1 = (Button) findViewById(R.id.reset);
+        button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -517,10 +526,8 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	final Button button4 = (Button) findViewById
-	    (R.id.reset_neighbor_fields);
-
-        button4.setOnClickListener(new View.OnClickListener()
+	button1 = (Button) findViewById(R.id.reset_neighbor_fields);
+        button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -554,9 +561,8 @@ public class Settings extends AppCompatActivity
 	    }
 	};
 
-	final Button button5 = (Button) findViewById(R.id.set_password);
-
-        button5.setOnClickListener(new View.OnClickListener()
+	button1 = (Button) findViewById(R.id.set_password);
+        button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -599,15 +605,14 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	final CheckBox checkBox1 = (CheckBox) findViewById
-	    (R.id.automatic_refresh);
+	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 
 	checkBox1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
 		public void onCheckedChanged
-		    (CompoundButton buttonView,boolean isChecked)
+		    (CompoundButton buttonView, boolean isChecked)
 		{
 		    if(isChecked)
 		    {
@@ -624,15 +629,13 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	final CheckBox checkBox2 = (CheckBox) findViewById
-	    (R.id.neighbor_details);
-
-	checkBox2.setOnCheckedChangeListener
+	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
+	checkBox1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
 		public void onCheckedChanged
-		    (CompoundButton buttonView,boolean isChecked)
+		    (CompoundButton buttonView, boolean isChecked)
 		{
 		    if(isChecked)
 			m_databaseHelper.writeSetting
