@@ -227,6 +227,49 @@
                         style="@style/Widget.AppCompat.Button" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/participant_name"
+                        android:layout_width="152dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/name"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/participant_siphash_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/siphash_id"
+                        android:inputType="textPersonName" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/add_participant"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add" />
+
+                    <Button
+                        android:id="@+id/reset_participants_fields"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="117dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reset_fields" />
+                </LinearLayout>
+
                 <TextView
                     android:text="@string/password"
                     android:layout_width="match_parent"

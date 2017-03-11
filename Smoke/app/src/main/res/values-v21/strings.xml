@@ -3,4 +3,6 @@
     <string name="password">Password</string>
     <string name="authenticate">Authenticate</string>
     <string name="chat">Chat</string>
+    <string name="add">Add</string>
+    <string name="reset_fields">Reset Fields</string>
 </resources>

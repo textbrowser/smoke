@@ -33,8 +33,6 @@
     <string name="remote">Remote</string>
     <string name="control">Control</string>
     <string name="private_data">Private Data</string>
-    <string name="name">Name</string>
-    <string name="name_name">Name</string>
     <string name="export">Export</string>
     <string name="chat_signature_key_data">Chat Signature Key Data</string>
     <string name="chat_encryption_key_data">Chat Encryption Key Data</string>
@@ -45,4 +43,6 @@
     <string name="siphash_identity">SipHash Identity</string>
     <string name="epks">EPKS</string>
     <string name="public_data">Public Data</string>
+    <string name="siphash_id">SipHash ID</string>
+    <string name="name">Name</string>
 </resources>
