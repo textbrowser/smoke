@@ -57,12 +57,12 @@ public class Cryptography
 {
     private KeyPair m_chatEncryptionKeyPair = null;
     private KeyPair m_chatSignatureKeyPair = null;
-    private Object m_chatEncryptionKeyPairMutex = null;
-    private Object m_chatSignatureKeyPairMutex = null;
-    private Object m_encryptionKeyMutex = null;
-    private Object m_macKeyMutex = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
+    private final Object m_chatEncryptionKeyPairMutex = new Object();
+    private final Object m_chatSignatureKeyPairMutex = new Object();
+    private final Object m_encryptionKeyMutex = new Object();
+    private final Object m_macKeyMutex = new Object();
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
     private final static String PKI_DSA_SIGNATURE_ALGORITHM = "SHA1WithDSA";
@@ -75,10 +75,6 @@ public class Cryptography
 
     private Cryptography()
     {
-	m_chatEncryptionKeyPairMutex = new Object();
-	m_chatSignatureKeyPairMutex = new Object();
-	m_encryptionKeyMutex = new Object();
-	m_macKeyMutex = new Object();
     }
 
     private static synchronized void prepareSecureRandom()

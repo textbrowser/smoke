@@ -39,11 +39,11 @@ public abstract class Neighbor
 {
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
-    private String m_echoMode = "full";
     private String m_scopeId = "";
     private UUID m_uuid = null;
     private final Date m_startTime = new Date();
     private final Object m_oidMutex = new Object();
+    private final String m_echoMode = "full";
     private final static int s_laneWidth = 100000;
     private final static int s_sendOutboundTimerInterval = 1500; // 1.5 Seconds
     private final static int s_silence = 90000; // 90 Seconds
@@ -56,11 +56,11 @@ public abstract class Neighbor
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
-    protected StringBuffer m_stringBuffer = null;
     protected final Object m_bytesReadMutex = new Object();
     protected final Object m_bytesWrittenMutex = new Object();
     protected final Object m_lastTimeReadWriteMutex = new Object();
     protected final Object m_socketMutex = new Object();
+    protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
     protected final static int s_readSocketInterval = 500; // 0.5 Seconds

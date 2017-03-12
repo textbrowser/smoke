@@ -64,7 +64,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	return 0;
     }
 
-    public void disconnect()
+    protected void disconnect()
     {
 	try
 	{
@@ -132,7 +132,7 @@ public class UdpMulticastNeighbor extends Neighbor
 		m_bytesWritten += capabilities.length();
 	    }
 
-	    synchronized(m_lastTimeReadWrite)
+	    synchronized(m_lastTimeReadWriteMutex)
 	    {
 		m_lastTimeReadWrite = new Date();
 	    }
@@ -229,8 +229,7 @@ public class UdpMulticastNeighbor extends Neighbor
 				    substring(0, indexOf + s_eom.length());
 
 				echo(buffer);
-				m_stringBuffer = m_stringBuffer.delete
-				    (0, buffer.length());
+				m_stringBuffer.delete(0, buffer.length());
 				indexOf = m_stringBuffer.indexOf(s_eom);
 			    }
 

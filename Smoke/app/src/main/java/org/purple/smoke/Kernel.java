@@ -39,7 +39,7 @@ public class Kernel
     private Cryptography m_cryptography = null;
     private Database m_databaseHelper = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
-    private SparseArray<Neighbor> m_neighbors = null;
+    private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static int s_neighborsInterval = 10000; // 10 Seconds
     private static Kernel s_instance = null;
 
@@ -47,7 +47,6 @@ public class Kernel
     {
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
-	m_neighbors = new SparseArray<> ();
 	prepareSchedulers();
     }
 

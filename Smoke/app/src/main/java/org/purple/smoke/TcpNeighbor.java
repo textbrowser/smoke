@@ -206,7 +206,6 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
-	m_stringBuffer = new StringBuffer(); // See run() below.
 
 	int port = 4710;
 
@@ -291,8 +290,7 @@ public class TcpNeighbor extends Neighbor
 				    substring(0, indexOf + s_eom.length());
 
 				echo(buffer);
-				m_stringBuffer = m_stringBuffer.delete
-				    (0, buffer.length());
+				m_stringBuffer.delete(0, buffer.length());
 				indexOf = m_stringBuffer.indexOf(s_eom);
 			    }
 

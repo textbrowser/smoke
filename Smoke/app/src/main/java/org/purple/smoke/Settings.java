@@ -993,7 +993,7 @@ public class Settings extends AppCompatActivity
 	    m_scheduler.scheduleAtFixedRate
 		(new Runnable()
 		{
-		    private Runnable runnable = new Runnable()
+		    private final Runnable runnable = new Runnable()
 		    {
 			@Override
 			public void run()
