@@ -597,18 +597,42 @@ public class Database extends SQLiteOpenHelper
 	    SparseArray<String> sparseArray = new SparseArray<> ();
 	    byte bytes[] = null;
 
+	    name = name.trim();
+
+	    if(name.isEmpty())
+		name = "unknown";
+
 	    sparseArray.append(0, "name");
 	    sparseArray.append(1, "siphash_id");
 	    sparseArray.append(2, "siphash_id_digest");
+	    sparseArray.append(3, "stream");
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
 		if(sparseArray.get(i).equals("name"))
-		    bytes = cryptography.etm(name.trim().getBytes());
+		    bytes = cryptography.etm(name.getBytes());
 		else if(sparseArray.get(i).equals("siphash_id"))
 		    bytes = cryptography.etm(sipHashId.trim().getBytes());
-		else
+		else if(sparseArray.get(i).equals("siphash_id_digest"))
 		    bytes = cryptography.hmac(sipHashId.trim().getBytes());
+		else
+		{
+		    byte salt[] = Cryptography.sha512
+			(sipHashId.trim().getBytes());
+		    byte temporary[] = Cryptography.
+			pbkdf2(salt,
+			       sipHashId.toCharArray(),
+			       1000, // Iteration Count
+			       768); // 8 * (32 + 64) Bits
+
+		    if(temporary != null)
+			bytes = cryptography.etm
+			    (cryptography.
+			     pbkdf2(salt,
+				    new String(temporary).toCharArray(),
+				    1000, // Iteration Count
+				    768)); // 8 * (32 + 64) Bits
+		}
 
 		if(bytes == null)
 		{
@@ -939,6 +963,24 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
 	{
 	}
+
+	/*
+	** Create the siphashs table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS siphashs (" +
+	    "name TEXT NOT NULL, " +
+	    "siphash_id TEXT NOT NULL, " +
+	    "siphash_id_digest TEXT NOT NULL PRIMARY KEY, " +
+	    "stream TEXT NOT NULL)";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     @Override
@@ -968,6 +1010,7 @@ public class Database extends SQLiteOpenHelper
 	    m_db.delete("outbound_queue", null, null);
 	    m_db.delete("participants", null, null);
 	    m_db.delete("settings", null, null);
+	    m_db.delete("siphashs", null, null);
 	}
 	catch(Exception exception)
 	{

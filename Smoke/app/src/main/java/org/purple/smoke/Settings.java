@@ -106,19 +106,85 @@ public class Settings extends AppCompatActivity
 
     private void addParticipant()
     {
+	String string = "";
+	StringBuffer stringBuffer = new StringBuffer();
+	final ProgressDialog dialog = new ProgressDialog(Settings.this);
 	final TextView textView1 = (TextView) findViewById
 	    (R.id.participant_name);
 	final TextView textView2 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
 
-	if(!m_databaseHelper.writeParticipant(s_cryptography,
-					      textView1.getText().toString(),
-					      textView2.getText().toString()))
+	dialog.setCancelable(false);
+	dialog.setIndeterminate(true);
+	dialog.setMessage("Generating key material. Please be patient...");
+	dialog.show();
+	string = textView2.getText().toString().replace(":", "");
+
+	for(int i = 0; i < string.length(); i += 2)
+	{
+	    stringBuffer.append(string.charAt(i));
+	    stringBuffer.append(string.charAt(i + 1));
+	    stringBuffer.append(":");
+	}
+
+	if(stringBuffer.length() > 0 &&
+	   stringBuffer.charAt(stringBuffer.length() - 1) == ':')
+	    string = stringBuffer.substring(0, stringBuffer.length() - 1);
+	else
+	    string = stringBuffer.toString();
+
+	if(string.length() != 23)
+	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "An error occurred while saving the participant information.");
-	else
-	    populateParticipants();
+		 "An SiPHash ID must be of the form 01:02:03:04:05:06:07:08.");
+	    return;
+	}
+
+	class SingleShot implements Runnable
+	{
+	    private String m_name = "";
+	    private String m_siphashId = "";
+	    private boolean m_error = false;
+
+	    SingleShot(String name, String sipHashId)
+	    {
+		m_name = name;
+		m_siphashId = sipHashId;
+	    }
+
+	    @Override
+	    public void run()
+	    {
+		if(!m_databaseHelper.writeParticipant(s_cryptography,
+						      m_name,
+						      m_siphashId))
+		    m_error = true;
+
+		Settings.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			dialog.dismiss();
+
+			if(m_error)
+			    Miscellaneous.showErrorDialog
+				(Settings.this,
+				 "An error occurred while " +
+				 "to save the SipHash ID.");
+		    else
+			populateParticipants();
+		    }
+		});
+	    }
+	}
+
+	Thread thread = new Thread
+	    (new SingleShot(textView1.getText().toString(),
+			    stringBuffer.toString()));
+
+	thread.start();
     }
 
     private void enableWidgets(boolean state)
