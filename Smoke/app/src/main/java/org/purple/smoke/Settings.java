@@ -634,6 +634,22 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
+	button1 = (Button) findViewById(R.id.reset_participants_fields);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		final TextView textView1 = (TextView) findViewById
+		    (R.id.participant_name);
+		final TextView textView2 = (TextView) findViewById
+		    (R.id.participant_siphash_id);
+
+		textView1.setText("");
+		textView2.setText("");
+		textView1.requestFocus();
+	    }
+	});
+
 	final DialogInterface.OnCancelListener listener2 =
 	    new DialogInterface.OnCancelListener()
 	{
