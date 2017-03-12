@@ -144,7 +144,9 @@ public class Messages
 	{
 	    try
 	    {
-		output.close();
+		if(output != null)
+		    output.close();
+
 		stream.close();
 	    }
 	    catch(Exception exception)

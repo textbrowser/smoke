@@ -203,7 +203,7 @@ public class Cryptography
 	    Cipher cipher = null;
 	    Mac mac = null;
 
-	    synchronized(m_encryptionKey)
+	    synchronized(m_encryptionKeyMutex)
 	    {
 		if(m_encryptionKey == null)
 		    return null;

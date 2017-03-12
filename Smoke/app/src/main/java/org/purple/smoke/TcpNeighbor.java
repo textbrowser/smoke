@@ -206,6 +206,7 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
+	m_stringBuffer = new StringBuffer(); // See run() below.
 
 	int port = 4710;
 
@@ -304,7 +305,6 @@ public class TcpNeighbor extends Neighbor
 		    }
 		}
 	    }, 0, s_readSocketInterval, TimeUnit.MILLISECONDS);
-	m_stringBuffer = new StringBuffer();
 	m_trustManagers = new TrustManager[]
 	{
 	    new X509TrustManager()
