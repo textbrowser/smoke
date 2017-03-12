@@ -159,7 +159,7 @@ public class SipHash
 	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;
     }
 
-    public void SipHash()
+    public SipHash()
     {
     }
 }

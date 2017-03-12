@@ -293,12 +293,12 @@ public class Settings extends AppCompatActivity
 	    if(bytes != null)
 	    {
 		SipHash sipHash = new SipHash();
-		byte key[] = s_cryptography.md5(bytes); /*
-							** Use the MD-5 digest
-							** of the public keys
-							** as the input key to
-							** SipHash.
-							*/
+		byte key[] = Cryptography.md5(bytes); /*
+						      ** Use the MD-5 digest
+						      ** of the public keys
+						      ** as the input key to
+						      ** SipHash.
+						      */
 
 		stringBuffer.append
 		    (Miscellaneous.

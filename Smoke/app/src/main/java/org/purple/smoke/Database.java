@@ -627,7 +627,7 @@ public class Database extends SQLiteOpenHelper
 
 		    if(temporary != null)
 			bytes = cryptography.etm
-			    (cryptography.
+			    (Cryptography.
 			     pbkdf2(salt,
 				    new String(temporary).toCharArray(),
 				    1000, // Iteration Count
