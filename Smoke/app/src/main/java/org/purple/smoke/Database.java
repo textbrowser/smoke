@@ -210,6 +210,98 @@ public class Database extends SQLiteOpenHelper
 	return sparseArray;
     }
 
+    public SparseArray<SipHashIdElement> readSipHashIds
+	(Cryptography cryptography)
+    {
+	if(cryptography == null)
+	    return null;
+
+	prepareDb();
+
+	if(m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	SparseArray<SipHashIdElement> sparseArray = null;
+	int index = -1;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "name, " +
+		 "siphash_id " +
+		 "FROM siphash_ids", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		sparseArray = new SparseArray<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
+		    boolean error = false;
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			byte bytes[] = Base64.decode
+			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
+
+			bytes = cryptography.mtd(bytes);
+
+			if(bytes == null)
+			{
+			    error = true;
+
+			    StringBuffer stringBuffer = new StringBuffer();
+
+			    stringBuffer.append("Database::readSipHashIds(): ");
+			    stringBuffer.append("error on column ");
+			    stringBuffer.append(cursor.getColumnName(i));
+			    stringBuffer.append(".");
+			    writeLog(stringBuffer.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    sipHashIdElement.m_name = new String(bytes);
+			    break;
+			case 1:
+			    sipHashIdElement.m_sipHashId = new String(bytes);
+			    break;
+			default:
+			    break;
+			}
+		    }
+
+		    if(!error)
+		    {
+			index += 1;
+			sparseArray.append(index, sipHashIdElement);
+		    }
+
+		    cursor.moveToNext();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(sparseArray != null)
+		sparseArray.clear();
+
+	    sparseArray = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return sparseArray;
+    }
+
     public SparseArray<String> readOutboundMessage(int oid)
     {
 	prepareDb();
@@ -659,7 +751,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    if(ok)
-		if(m_db.replace("siphashs", null, values) == -1)
+		if(m_db.replace("siphash_ids", null, values) == -1)
 		    ok = false;
 	}
 	catch(Exception exception)
@@ -965,10 +1057,10 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	/*
-	** Create the siphashs table.
+	** Create the siphash_ids table.
 	*/
 
-	str = "CREATE TABLE IF NOT EXISTS siphashs (" +
+	str = "CREATE TABLE IF NOT EXISTS siphash_ids (" +
 	    "name TEXT NOT NULL, " +
 	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL PRIMARY KEY, " +
@@ -1010,7 +1102,7 @@ public class Database extends SQLiteOpenHelper
 	    m_db.delete("outbound_queue", null, null);
 	    m_db.delete("participants", null, null);
 	    m_db.delete("settings", null, null);
-	    m_db.delete("siphashs", null, null);
+	    m_db.delete("siphash_ids", null, null);
 	}
 	catch(Exception exception)
 	{
