@@ -31,6 +31,7 @@ public class SipHashIdElement
 {
     public String m_name = "";
     public String m_sipHashId = "";
+    public int m_oid = -1;
 
     public SipHashIdElement()
     {

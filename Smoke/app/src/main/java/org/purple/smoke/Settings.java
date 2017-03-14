@@ -572,6 +572,7 @@ public class Settings extends AppCompatActivity
 		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Settings.this);
 
+	    row.setId(sipHashIdElement.m_oid);
 	    row.setLayoutParams(layoutParams);
 
 	    for(int j = 0; j < 2; j++)

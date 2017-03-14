@@ -231,7 +231,8 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery
 		("SELECT " +
 		 "name, " +
-		 "siphash_id " +
+		 "siphash_id, " +
+		 "OID " +
 		 "FROM siphash_ids", null);
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -245,6 +246,12 @@ public class Database extends SQLiteOpenHelper
 
 		    for(int i = 0; i < cursor.getColumnCount(); i++)
 		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    sipHashIdElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
 			byte bytes[] = Base64.decode
 			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
 
