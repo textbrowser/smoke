@@ -189,8 +189,7 @@ public class Settings extends AppCompatActivity
 	}
 
 	Thread thread = new Thread
-	    (new SingleShot(textView1.getText().toString(),
-			    stringBuffer.toString()));
+	    (new SingleShot(textView1.getText().toString(), string));
 
 	thread.start();
     }
