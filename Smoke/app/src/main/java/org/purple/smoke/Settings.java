@@ -121,7 +121,7 @@ public class Settings extends AppCompatActivity
 	    {
 		stringBuffer.append(string.charAt(i));
 		stringBuffer.append(string.charAt(i + 1));
-		stringBuffer.append(":");
+		stringBuffer.append(':');
 	    }
 	}
 	catch(Exception exception)
@@ -624,6 +624,15 @@ public class Settings extends AppCompatActivity
 	    public void onClick(View view)
 	    {
 		populateNeighbors();
+	    }
+        });
+
+	button1 = (Button) findViewById(R.id.refresh_participants);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		populateParticipants();
 	    }
         });
 
