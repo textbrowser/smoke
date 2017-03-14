@@ -115,11 +115,17 @@ public class Settings extends AppCompatActivity
 
 	string = textView2.getText().toString().replace(":", "");
 
-	for(int i = 0; i < string.length(); i += 2)
+	try
 	{
-	    stringBuffer.append(string.charAt(i));
-	    stringBuffer.append(string.charAt(i + 1));
-	    stringBuffer.append(":");
+	    for(int i = 0; i < string.length(); i += 2)
+	    {
+		stringBuffer.append(string.charAt(i));
+		stringBuffer.append(string.charAt(i + 1));
+		stringBuffer.append(":");
+	    }
+	}
+	catch(Exception exception)
+	{
 	}
 
 	if(stringBuffer.length() > 0 &&
