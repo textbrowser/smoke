@@ -67,6 +67,8 @@ public class Settings extends AppCompatActivity
     private ScheduledExecutorService m_scheduler = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static int TEXTVIEW_TEXT_SIZE = 13;
+    private final static int TEXTVIEW_WIDTH = 500;
     private final static int s_pkiEncryptionKeySize = 3072;
     private final static int s_pkiSignatureKeySize = 3072;
     private final static int s_timerInterval = 7500; // 7.5 Seconds
@@ -540,8 +542,8 @@ public class Settings extends AppCompatActivity
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
 	    textView.setText(stringBuffer);
-	    textView.setTextSize(13);
-	    textView.setWidth(500);
+	    textView.setTextSize(TEXTVIEW_TEXT_SIZE);
+	    textView.setWidth(TEXTVIEW_WIDTH);
 
 	    if(row != null)
 	    {
@@ -589,7 +591,7 @@ public class Settings extends AppCompatActivity
 		else
 		    textView.setText(sipHashIdElement.m_sipHashId);
 
-		textView.setTextSize(13);
+		textView.setTextSize(TEXTVIEW_TEXT_SIZE);
 		row.addView(textView);
 	    }
 
