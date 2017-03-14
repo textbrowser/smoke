@@ -35,6 +35,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.SparseArray;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -574,13 +576,13 @@ public class Settings extends AppCompatActivity
 		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Settings.this);
 
-	    row.setId(sipHashIdElement.m_oid);
 	    row.setLayoutParams(layoutParams);
 
 	    for(int j = 0; j < 2; j++)
 	    {
 		TextView textView = new TextView(Settings.this);
 
+		textView.setId(sipHashIdElement.m_oid);
 		textView.setLayoutParams
 		    (new TableRow.LayoutParams(0,
 					       LayoutParams.WRAP_CONTENT,
@@ -592,6 +594,7 @@ public class Settings extends AppCompatActivity
 		    textView.setText(sipHashIdElement.m_sipHashId);
 
 		textView.setTextSize(TEXTVIEW_TEXT_SIZE);
+		registerForContextMenu(textView);
 		row.addView(textView);
 	    }
 
@@ -1315,5 +1318,14 @@ public class Settings extends AppCompatActivity
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu,
+				    View v,
+				    ContextMenuInfo menuInfo)
+    {
+	super.onCreateContextMenu(menu, v, menuInfo);
+	menu.add(0, v.getId(), 0, "Delete");
     }
 }
