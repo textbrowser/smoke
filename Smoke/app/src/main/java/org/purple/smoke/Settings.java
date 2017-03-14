@@ -1262,6 +1262,8 @@ public class Settings extends AppCompatActivity
 
 	if(isAuthenticated)
 	{
+	    populateNeighbors();
+	    populateParticipants();
 	    startKernel();
 
 	    if(checkBox1.isChecked())
