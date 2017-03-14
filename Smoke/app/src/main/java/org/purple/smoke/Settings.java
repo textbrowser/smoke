@@ -142,7 +142,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "An SipHash ID must be of the form 01:02:03:04:05:06:07:08.");
+		 "A SipHash ID must be of the form 01:02:03:04:05:06:07:08.");
 	    return;
 	}
 
