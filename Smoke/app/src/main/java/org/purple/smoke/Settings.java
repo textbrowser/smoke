@@ -108,16 +108,11 @@ public class Settings extends AppCompatActivity
     {
 	String string = "";
 	StringBuffer stringBuffer = new StringBuffer();
-	final ProgressDialog dialog = new ProgressDialog(Settings.this);
 	final TextView textView1 = (TextView) findViewById
 	    (R.id.participant_name);
 	final TextView textView2 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
 
-	dialog.setCancelable(false);
-	dialog.setIndeterminate(true);
-	dialog.setMessage("Generating key material. Please be patient...");
-	dialog.show();
 	string = textView2.getText().toString().replace(":", "");
 
 	for(int i = 0; i < string.length(); i += 2)
@@ -137,9 +132,16 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "An SiPHash ID must be of the form 01:02:03:04:05:06:07:08.");
+		 "An SipHash ID must be of the form 01:02:03:04:05:06:07:08.");
 	    return;
 	}
+
+	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+
+	dialog.setCancelable(false);
+	dialog.setIndeterminate(true);
+	dialog.setMessage("Generating key material. Please be patient...");
+	dialog.show();
 
 	class SingleShot implements Runnable
 	{
@@ -173,8 +175,8 @@ public class Settings extends AppCompatActivity
 				(Settings.this,
 				 "An error occurred while " +
 				 "to save the SipHash ID.");
-		    else
-			populateParticipants();
+			else
+			    populateParticipants();
 		    }
 		});
 	    }
@@ -547,6 +549,46 @@ public class Settings extends AppCompatActivity
 
     private void populateParticipants()
     {
+	SparseArray<SipHashIdElement> sparseArray =
+	    m_databaseHelper.readSipHashIds(s_cryptography);
+	final TableLayout tableLayout = (TableLayout) findViewById
+	    (R.id.participants);
+
+	tableLayout.removeAllViews();
+
+	for(int i = 0; i < sparseArray.size(); i++)
+	{
+	    SipHashIdElement sipHashIdElement = sparseArray.get(i);
+
+	    if(sipHashIdElement == null)
+		continue;
+
+	    TableRow.LayoutParams layoutParams = new
+		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+	    TableRow row = new TableRow(Settings.this);
+
+	    row.setLayoutParams(layoutParams);
+
+	    for(int j = 0; j < 2; j++)
+	    {
+		TextView textView = new TextView(Settings.this);
+
+		textView.setLayoutParams
+		    (new TableRow.LayoutParams(0,
+					       LayoutParams.WRAP_CONTENT,
+					       1));
+
+		if(j == 0)
+		    textView.setText(sipHashIdElement.m_name);
+		else
+		    textView.setText(sipHashIdElement.m_sipHashId);
+
+		textView.setTextSize(13);
+		row.addView(textView);
+	    }
+
+	    tableLayout.addView(row, i);
+	}
     }
 
     private void prepareListeners()
