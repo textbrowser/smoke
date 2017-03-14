@@ -44,6 +44,7 @@ public class Database extends SQLiteOpenHelper
     private SQLiteDatabase m_db = null;
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
+    private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 1000;
     private static Database s_instance = null;
 
     private Database(Context context)
@@ -714,7 +715,7 @@ public class Database extends SQLiteOpenHelper
 		    byte temporary[] = Cryptography.
 			pbkdf2(salt,
 			       sipHashId.toCharArray(),
-			       1000, // Iteration Count
+			       SIPHASH_STREAM_CREATION_ITERATION_COUNT,
 			       768); // 8 * (32 + 64) Bits
 
 		    if(temporary != null)
@@ -722,7 +723,7 @@ public class Database extends SQLiteOpenHelper
 			    (Cryptography.
 			     pbkdf2(salt,
 				    new String(temporary).toCharArray(),
-				    1000, // Iteration Count
+				    SIPHASH_STREAM_CREATION_ITERATION_COUNT,
 				    768)); // 8 * (32 + 64) Bits
 		}
 
