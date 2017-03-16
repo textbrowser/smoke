@@ -565,6 +565,9 @@ public class Settings extends AppCompatActivity
 
 	tableLayout.removeAllViews();
 
+	if(sparseArray == null)
+	    return;
+
 	for(int i = 0; i < sparseArray.size(); i++)
 	{
 	    SipHashIdElement sipHashIdElement = sparseArray.get(i);
@@ -1276,6 +1279,22 @@ public class Settings extends AppCompatActivity
     {
 	super.onDestroy();
 	stopTimers();
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+	switch(item.getItemId())
+	{
+	default:
+	    if(m_databaseHelper.
+	       deleteEntry(String.valueOf(item.getItemId()), "siphash_ids"))
+		populateParticipants();
+
+	    break;
+	}
+
+	return true;
     }
 
     @Override
