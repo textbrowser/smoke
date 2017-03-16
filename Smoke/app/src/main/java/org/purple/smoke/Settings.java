@@ -590,6 +590,7 @@ public class Settings extends AppCompatActivity
 		    (new TableRow.LayoutParams(0,
 					       LayoutParams.WRAP_CONTENT,
 					       1));
+		textView.setTag(sipHashIdElement.m_sipHashId);
 
 		if(j == 0)
 		    textView.setText(sipHashIdElement.m_name);
@@ -1347,6 +1348,6 @@ public class Settings extends AppCompatActivity
 				    ContextMenuInfo menuInfo)
     {
 	super.onCreateContextMenu(menu, v, menuInfo);
-	menu.add(0, v.getId(), 0, "Delete");
+	menu.add(0, v.getId(), 0, "Delete (" + v.getTag() + ")");
     }
 }
