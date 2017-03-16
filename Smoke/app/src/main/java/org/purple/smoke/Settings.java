@@ -1308,6 +1308,10 @@ public class Settings extends AppCompatActivity
 	    }
 	};
 
+	/*
+	** Regular expression?
+	*/
+
 	Miscellaneous.showPromptDialog
 	    (Settings.this,
 	     listener,
