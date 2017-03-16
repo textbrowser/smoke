@@ -1285,16 +1285,36 @@ public class Settings extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
-	switch(item.getItemId())
+	final int itemId = item.getItemId();
+
+	/*
+	** Prepare a listener.
+	*/
+
+	final DialogInterface.OnCancelListener listener =
+	    new DialogInterface.OnCancelListener()
 	{
-	default:
-	    if(m_databaseHelper.
-	       deleteEntry(String.valueOf(item.getItemId()), "siphash_ids"))
-		populateParticipants();
+	    public void onCancel(DialogInterface dialog)
+	    {
+		switch(itemId)
+	        {
+		default:
+		    if(m_databaseHelper.deleteEntry(String.valueOf(itemId),
+						    "siphash_ids"))
+			populateParticipants();
 
-	    break;
-	}
+		    break;
+		}
+	    }
+	};
 
+	Miscellaneous.showPromptDialog
+	    (Settings.this,
+	     listener,
+	     "Are you sure that you " +
+	     "wish to delete the participant " +
+	     item.getTitle().toString().replace("Delete (", "").
+	     replace(")", "") + "?");
 	return true;
     }
 
