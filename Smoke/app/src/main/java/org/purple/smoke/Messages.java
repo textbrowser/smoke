@@ -74,6 +74,9 @@ public class Messages
 		(receiverPublicKey,
 		 Miscellaneous.joinByteArrays(encryptionKeyBytes, macKeyBytes));
 
+	    if(keyBytes == null)
+		return null;
+
 	    /*
 	    ** [ Message Data ]
 	    */
@@ -95,7 +98,7 @@ public class Messages
 	    ** Produce a signature of [ Private Key Data ] || [ Message Data ].
 	    */
 
-	    byte signature[] = cryptography.signViaChat
+	    byte signature[] = cryptography.signViaChatSignature
 		(Miscellaneous.joinByteArrays(encryptionKeyBytes,
 					      macKeyBytes,
 					      stream.toByteArray()));
@@ -135,6 +138,98 @@ public class Messages
 	    output.writeObject(macBytes);
 	    output.writeObject(destinationBytes);
 	    output.flush();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+	finally
+	{
+	    try
+	    {
+		if(output != null)
+		    output.close();
+
+		stream.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	}
+
+	return stream.toByteArray();
+    }
+
+    public static byte[] epksMessage(Cryptography cryptography,
+				     String keyType,
+				     byte keyStream[])
+    {
+	if(cryptography == null || keyStream == null)
+	    return null;
+
+	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	ObjectOutputStream output = null;
+
+	try
+	{
+	    output = new ObjectOutputStream(stream);
+	    output.reset();
+
+	    /*
+	    ** [ Key Type ]
+	    */
+
+	    output.writeObject(keyType);
+
+	    PublicKey publicKey = null;
+	    byte bytes[] = null;
+
+	    if(keyType.equals("chat"))
+	    {
+		/*
+		** [ Public Key ]
+		*/
+
+		publicKey = cryptography.chatEncryptionPublicKey();
+
+		if(publicKey == null)
+		    return null;
+
+		/*
+		** [ Public Key Signature ]
+		*/
+
+		bytes = cryptography.signViaChatEncryption
+		    (publicKey.getEncoded());
+
+		if(bytes == null)
+		    return null;
+
+		output.writeObject(publicKey);
+		output.writeObject(bytes);
+
+		/*
+		** [ Signature Key ]
+		*/
+
+		publicKey = cryptography.chatSignaturePublicKey();
+
+		if(publicKey == null)
+		    return null;
+
+		/*
+		** [ Signature Key Signature ]
+		*/
+
+		bytes = cryptography.signViaChatSignature
+		    (publicKey.getEncoded());
+
+		if(bytes == null)
+		    return null;
+
+		output.writeObject(publicKey);
+		output.writeObject(bytes);
+	    }
 	}
 	catch(Exception exception)
 	{

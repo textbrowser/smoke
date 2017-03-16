@@ -112,6 +112,28 @@ public class Cryptography
 	}
     }
 
+    public PublicKey chatEncryptionPublicKey()
+    {
+	synchronized(m_chatEncryptionKeyPair)
+	{
+	    if(m_chatEncryptionKeyPair != null)
+		return m_chatEncryptionKeyPair.getPublic();
+	    else
+		return null;
+	}
+    }
+
+    public PublicKey chatSignaturePublicKey()
+    {
+	synchronized(m_chatSignatureKeyPair)
+	{
+	    if(m_chatSignatureKeyPair != null)
+		return m_chatSignatureKeyPair.getPublic();
+	    else
+		return null;
+	}
+    }
+
     public String fancyKeyInformationOutput(KeyPair keyPair)
     {
 	if(keyPair == null || keyPair.getPublic() == null)
@@ -344,7 +366,44 @@ public class Cryptography
 	return bytes;
     }
 
-    public byte[] signViaChat(byte data[])
+    public byte[] signViaChatEncryption(byte data[])
+    {
+	if(data == null)
+	    return null;
+
+	synchronized(m_chatEncryptionKeyPairMutex)
+	{
+	    if(m_chatEncryptionKeyPair == null ||
+	       m_chatEncryptionKeyPair.getPrivate() == null)
+		return null;
+
+	    Signature signature = null;
+	    byte bytes[] = null;
+
+	    try
+	    {
+		if(m_chatEncryptionKeyPair.getPrivate().getAlgorithm().
+		   equals("DSA"))
+		    signature = Signature.getInstance
+			(PKI_DSA_SIGNATURE_ALGORITHM);
+		else
+		    signature = Signature.getInstance
+			(PKI_RSA_SIGNATURE_ALGORITHM);
+
+		signature.initSign(m_chatEncryptionKeyPair.getPrivate());
+		signature.update(data);
+		bytes = signature.sign();
+	    }
+	    catch(Exception exception)
+	    {
+		return null;
+	    }
+
+	    return bytes;
+	}
+    }
+
+    public byte[] signViaChatSignature(byte data[])
     {
 	if(data == null)
 	    return null;
