@@ -1,11 +1,10 @@
 [AES-256] (1)
 {
 	Key Type (1)
-	Name (2)
-	Public Key (3)
-	Public Key Signature (4)
-	Signature Public Key (5)
-	Signature Public Key Signature (6)
+	Public Key (2)
+	Public Key Signature (3)
+	Signature Public Key (4)
+	Signature Public Key Signature (5)
 }
 
 [SHA-512 HMAC] (2)
