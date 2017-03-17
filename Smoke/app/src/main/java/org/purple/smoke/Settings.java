@@ -116,6 +116,8 @@ public class Settings extends AppCompatActivity
 	    (R.id.participant_name);
 	final TextView textView2 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
+	final TextView textView3 = (TextView) findViewById
+	    (R.id.siphash_identity);
 
 	string = textView2.getText().toString().replace(":", "");
 
@@ -143,6 +145,13 @@ public class Settings extends AppCompatActivity
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
 		 "A SipHash ID must be of the form 01:02:03:04:05:06:07:08.");
+	    return;
+	}
+	else if(textView3.getText().toString().endsWith(string))
+	{
+	    Miscellaneous.showErrorDialog
+		(Settings.this,
+		 "Please do not attempt to add your own SipHash ID.");
 	    return;
 	}
 
