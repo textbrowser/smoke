@@ -30,6 +30,7 @@ package org.purple.smoke;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.security.PublicKey;
+import java.util.Arrays;
 
 public class Messages
 {
@@ -167,6 +168,12 @@ public class Messages
 	if(cryptography == null || keyStream == null)
 	    return null;
 
+	/*
+	** keyStream
+	** [0 .. 31] - AES-256 Encryption Key
+	** [32 .. 95] - SHA-512 HMAC Key
+	*/
+
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();
 	ObjectOutputStream output = null;
 
@@ -229,6 +236,37 @@ public class Messages
 
 		output.writeObject(publicKey);
 		output.writeObject(bytes);
+		output.flush();
+
+		byte messageBytes[] = Cryptography.encrypt
+		    (stream.toByteArray(),
+		     Arrays.copyOfRange(keyStream, 0, 31));
+
+		if(messageBytes == null)
+		    return null;
+
+		/*
+		** [ Digest ([ Message Data ]) ]
+		*/
+
+		byte macBytes[] = Cryptography.hmac
+		    (messageBytes,
+		     Arrays.copyOfRange(keyStream, 32, 95));
+
+		if(macBytes == null)
+		    return null;
+
+		/*
+		** [ Destination ]
+		*/
+
+		byte destinationBytes[] = new byte[64]; // Not used.
+
+		output.reset();
+		output.writeObject(messageBytes);
+		output.writeObject(macBytes);
+		output.writeObject(destinationBytes);
+		output.flush();
 	    }
 	}
 	catch(Exception exception)
