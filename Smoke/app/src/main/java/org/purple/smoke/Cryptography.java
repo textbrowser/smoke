@@ -191,7 +191,7 @@ public class Cryptography
 	}
     }
 
-    public byte[] etm(byte data[])
+    public byte[] etm(byte data[]) // Encrypt-Then-MAC
     {
 	/*
 	** Encrypt-then-MAC.
@@ -284,7 +284,7 @@ public class Cryptography
 	}
     }
 
-    public byte[] mtd(byte data[])
+    public byte[] mtd(byte data[]) // MAC-Then-Decrypt
     {
 	/*
 	** MAC-then-decrypt.

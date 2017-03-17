@@ -264,6 +264,36 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
+		SparseArray<String> sparseArray =
+		    m_databaseHelper.readSipHashStreams();
+
+		if(sparseArray == null)
+		    m_error = true;
+		else
+		    for(int i = 0; i < sparseArray.size(); i++)
+		    {
+			byte bytes[] = s_cryptography.mtd
+			    (Base64.decode(sparseArray.get(i), Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    m_error = true;
+			    break;
+			}
+
+			bytes = Messages.epksMessage
+			    (s_cryptography, "chat", bytes);
+
+			if(bytes == null)
+			{
+			    m_error = true;
+			    break;
+			}
+
+			Kernel.getInstance().enqueueMessage
+			    (Base64.encodeToString(bytes, Base64.DEFAULT));
+		    }
+
 		Settings.this.runOnUiThread(new Runnable()
 		{
 		    @Override

@@ -240,7 +240,7 @@ public class Messages
 
 		byte messageBytes[] = Cryptography.encrypt
 		    (stream.toByteArray(),
-		     Arrays.copyOfRange(keyStream, 0, 31));
+		     Arrays.copyOfRange(keyStream, 0, 32));
 
 		if(messageBytes == null)
 		    return null;
@@ -251,7 +251,7 @@ public class Messages
 
 		byte macBytes[] = Cryptography.hmac
 		    (messageBytes,
-		     Arrays.copyOfRange(keyStream, 32, 95));
+		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 		if(macBytes == null)
 		    return null;
