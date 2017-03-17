@@ -76,7 +76,6 @@ public class Database extends SQLiteOpenHelper
 
 	Cursor cursor = null;
 	SparseArray<NeighborElement> sparseArray = null;
-	int index = -1;
 
 	try
 	{
@@ -101,6 +100,8 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
+		int index = -1;
+
 		sparseArray = new SparseArray<> ();
 
 		while(!cursor.isAfterLast())
@@ -224,7 +225,6 @@ public class Database extends SQLiteOpenHelper
 
 	Cursor cursor = null;
 	SparseArray<SipHashIdElement> sparseArray = null;
-	int index = -1;
 
 	try
 	{
@@ -237,6 +237,8 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
+		int index = -1;
+
 		sparseArray = new SparseArray<> ();
 
 		while(!cursor.isAfterLast())
@@ -359,7 +361,6 @@ public class Database extends SQLiteOpenHelper
 
 	Cursor cursor = null;
 	SparseArray<String> sparseArray = null;
-	int index = -1;
 
 	try
 	{
@@ -367,6 +368,8 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
+		int index = -1;
+
 		sparseArray = new SparseArray<> ();
 
 		while(!cursor.isAfterLast())
@@ -402,7 +405,6 @@ public class Database extends SQLiteOpenHelper
 
 	Cursor cursor = null;
 	SparseIntArray sparseArray = null;
-	int index = -1;
 
 	try
 	{
@@ -410,6 +412,8 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
+		int index = -1;
+
 		sparseArray = new SparseIntArray();
 
 		while(!cursor.isAfterLast())
