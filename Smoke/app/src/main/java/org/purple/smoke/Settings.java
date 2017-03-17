@@ -101,9 +101,9 @@ public class Settings extends AppCompatActivity
 					   spinner1.getSelectedItem().
 					   toString(),
 					   ipVersion))
-	    Miscellaneous.showErrorDialog(Settings.this,
-					  "An error occurred while " +
-					  "saving the neighbor information.");
+	    Miscellaneous.showErrorDialog
+		(Settings.this,
+		 "An error occurred while saving the neighbor information.");
 	else
 	    populateNeighbors();
     }
@@ -241,6 +241,49 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
 	textView1.setEnabled(state);
+    }
+
+    private void epks()
+    {
+	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+
+	dialog.setCancelable(false);
+	dialog.setIndeterminate(true);
+	dialog.setMessage
+	    ("Transferring public key material. Please be patient...");
+	dialog.show();
+
+	class SingleShot implements Runnable
+	{
+	    private boolean m_error = false;
+
+	    SingleShot()
+	    {
+	    }
+
+	    @Override
+	    public void run()
+	    {
+		Settings.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			dialog.dismiss();
+
+			if(m_error)
+			    Miscellaneous.showErrorDialog
+				(Settings.this,
+				 "An error occurred while " +
+				 "preparing to transfer public key material.");
+		    }
+		});
+	    }
+	}
+
+	Thread thread = new Thread(new SingleShot());
+
+	thread.start();
     }
 
     private void populateFancyKeyData()
@@ -608,8 +651,17 @@ public class Settings extends AppCompatActivity
 
     private void prepareListeners()
     {
-	Button button1 = (Button) findViewById(R.id.add_neighbor);
+	Button button1 = (Button) findViewById(R.id.epks);
 
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		epks();
+	    }
+        });
+
+	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
@@ -666,12 +718,11 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		Miscellaneous.
-		    showPromptDialog(Settings.this,
-				     listener1,
-				     "Are you sure that you " +
-				     "wish to reset Smoke? All " +
-				     "private data will be lost.");
+		Miscellaneous.showPromptDialog(Settings.this,
+					       listener1,
+					       "Are you sure that you " +
+					       "wish to reset Smoke? All " +
+					       "private data will be lost.");
 	    }
 	});
 
@@ -757,14 +808,13 @@ public class Settings extends AppCompatActivity
 		}
 
 		if(State.getInstance().isAuthenticated())
-		    Miscellaneous.
-			showPromptDialog(Settings.this,
-					 listener2,
-					 "Are you sure that you " +
-					 "wish to create new " +
-					 "credentials? Existing " +
-					 "database values will be " +
-					 "removed.");
+		    Miscellaneous.showPromptDialog(Settings.this,
+						   listener2,
+						   "Are you sure that you " +
+						   "wish to create new " +
+						   "credentials? Existing " +
+						   "database values will be " +
+						   "removed.");
 		else
 		    prepareCredentials();
 	    }
@@ -838,8 +888,8 @@ public class Settings extends AppCompatActivity
 
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
-	dialog.setMessage("Generating confidential material. " +
-			  "Please be patient...");
+	dialog.setMessage
+	    ("Generating confidential material. Please be patient...");
 	dialog.show();
 
 	class SingleShot implements Runnable
@@ -1011,8 +1061,7 @@ public class Settings extends AppCompatActivity
 			    startKernel();
 
 			    if(m_databaseHelper.
-			       readSetting(null,
-					   "automatic_neighbors_refresh").
+			       readSetting(null, "automatic_neighbors_refresh").
 			       equals("true"))
 				startTimers();
 			}
@@ -1371,7 +1420,12 @@ public class Settings extends AppCompatActivity
 				    View v,
 				    ContextMenuInfo menuInfo)
     {
-	super.onCreateContextMenu(menu, v, menuInfo);
-	menu.add(0, v.getId(), 0, "Delete (" + v.getTag() + ")");
+	Object tag = v.getTag();
+
+	if(tag != null)
+	{
+	    super.onCreateContextMenu(menu, v, menuInfo);
+	    menu.add(0, v.getId(), 0, "Delete (" + v.getTag() + ")");
+	}
     }
 }
