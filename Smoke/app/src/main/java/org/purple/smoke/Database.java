@@ -350,6 +350,49 @@ public class Database extends SQLiteOpenHelper
 	return sparseArray;
     }
 
+    public SparseArray<String> readSipHashStreams()
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	SparseArray<String> sparseArray = null;
+	int index = -1;
+
+	try
+	{
+	    cursor = m_db.rawQuery("SELECT stream FROM siphash_ids", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		sparseArray = new SparseArray<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    index += 1;
+		    sparseArray.append(index, cursor.getString(0));
+		    cursor.moveToNext();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(sparseArray != null)
+		sparseArray.clear();
+
+	    sparseArray = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return sparseArray;
+    }
+
     public SparseIntArray readNeighborOids()
     {
 	prepareDb();
