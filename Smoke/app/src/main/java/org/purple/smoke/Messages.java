@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.security.PublicKey;
@@ -34,6 +35,31 @@ import java.util.Arrays;
 
 public class Messages
 {
+    public static String bytesToMessageString(byte bytes[])
+    {
+	StringBuffer results = new StringBuffer();
+
+	results.append("POST HTTP/1.1\r\n");
+	results.append("Content-Type: application/x-www-form-urlencoded\r\n");
+	results.append("Content-Length: %1\r\n");
+	results.append("\r\n");
+	results.append("content=%2\r\n");
+	results.append("\r\n\r\n");
+
+	String base64 = "";
+
+	if(bytes != null)
+	    base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+	int indexOf = results.indexOf("%1");
+	int length = base64.length() + "content=\r\n\r\n\r\n".length();
+
+	results = results.replace(indexOf, indexOf + 2, String.valueOf(length));
+	indexOf = results.indexOf("%2");
+	results = results.replace(indexOf, indexOf + 2, base64);
+	return results.toString();
+    }
+
     public static byte[] chatMessage(Cryptography cryptography,
 				     PublicKey receiverPublicKey,
 				     String message,
