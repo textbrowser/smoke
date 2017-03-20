@@ -37,7 +37,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
-import java.security.interfaces.DSAPublicKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
@@ -65,9 +65,10 @@ public class Cryptography
     private final Object m_macKeyMutex = new Object();
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
-    private final static String PKI_DSA_SIGNATURE_ALGORITHM = "SHA1WithDSA";
+    private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
+	"SHA512withECDSA";
     private final static String PKI_RSA_SIGNATURE_ALGORITHM =
-	"SHA512WithRSA/PSS";
+	"SHA512withRSA/PSS";
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS5Padding";
@@ -153,16 +154,17 @@ public class Cryptography
 	stringBuffer.append("Format: ");
 	stringBuffer.append(publicKey.getFormat());
 
-	if(algorithm.equals("DSA") || algorithm.equals("RSA"))
+	if(algorithm.equals("EC") || algorithm.equals("RSA"))
 	    try
 	    {
-		if(algorithm.equals("DSA"))
+		if(algorithm.equals("EC"))
 		{
-		    DSAPublicKey dsaPublicKey = (DSAPublicKey) publicKey;
+		    ECPublicKey ecdsaPublicKey = (ECPublicKey) publicKey;
 
-		    if(dsaPublicKey != null)
+		    if(ecdsaPublicKey != null)
 			stringBuffer.append("\n").append("Size: ").
-			    append(dsaPublicKey.getY().bitLength());
+			    append(ecdsaPublicKey.getW().getAffineX().
+				   bitLength());
 		}
 		else if(algorithm.equals("RSA"))
 		{
@@ -383,14 +385,7 @@ public class Cryptography
 
 	    try
 	    {
-		if(m_chatEncryptionKeyPair.getPrivate().getAlgorithm().
-		   equals("DSA"))
-		    signature = Signature.getInstance
-			(PKI_DSA_SIGNATURE_ALGORITHM);
-		else
-		    signature = Signature.getInstance
-			(PKI_RSA_SIGNATURE_ALGORITHM);
-
+		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
 		signature.initSign(m_chatEncryptionKeyPair.getPrivate());
 		signature.update(data);
 		bytes = signature.sign();
@@ -421,9 +416,9 @@ public class Cryptography
 	    try
 	    {
 		if(m_chatSignatureKeyPair.getPrivate().getAlgorithm().
-		   equals("DSA"))
+		   equals("EC"))
 		    signature = Signature.getInstance
-			(PKI_DSA_SIGNATURE_ALGORITHM);
+			(PKI_ECDSA_SIGNATURE_ALGORITHM);
 		else
 		    signature = Signature.getInstance
 			(PKI_RSA_SIGNATURE_ALGORITHM);
@@ -588,8 +583,9 @@ public class Cryptography
 
 	try
 	{
-	    if(publicKey.getAlgorithm().equals("DSA"))
-		signature = Signature.getInstance(PKI_DSA_SIGNATURE_ALGORITHM);
+	    if(publicKey.getAlgorithm().equals("EC"))
+		signature = Signature.getInstance
+		    (PKI_ECDSA_SIGNATURE_ALGORITHM);
 	    else
 		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
 

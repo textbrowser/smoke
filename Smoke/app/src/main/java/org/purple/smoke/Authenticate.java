@@ -204,10 +204,7 @@ public class Authenticate extends AppCompatActivity
 				    s_cryptography.reset();
 				}
 			    }
-			    catch(InvalidKeySpecException |
-				  NoSuchAlgorithmException |
-				  NumberFormatException |
-				  SQLException exception)
+			    catch(Exception exception)
 			    {
 				m_error = true;
 				s_cryptography.reset();

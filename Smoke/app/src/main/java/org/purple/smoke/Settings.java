@@ -72,7 +72,7 @@ public class Settings extends AppCompatActivity
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int s_pkiEncryptionKeySize = 3072;
-    private final static int s_pkiSignatureKeySize = 3072;
+    private final static int s_pkiSignatureKeySize[] = {384, 3072};
     private final static int s_timerInterval = 7500; // 7.5 Seconds
 
     private void addNeighbor()
@@ -314,7 +314,9 @@ public class Settings extends AppCompatActivity
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
 				 "An error occurred while " +
-				 "preparing to transfer public key material.");
+				 "preparing to transfer public key material. " +
+				 "Please verify that participant SipHash " +
+				 "identities have been defined.");
 		    }
 		});
 	    }
@@ -812,6 +814,8 @@ public class Settings extends AppCompatActivity
 	    public void onCancel(DialogInterface dialog)
 	    {
 		m_databaseHelper.reset();
+		populateFancyKeyData();
+		populateParticipants();
 		prepareCredentials();
 	    }
 	};
@@ -948,6 +952,9 @@ public class Settings extends AppCompatActivity
 		m_iterationCount = iterationCount;
 		m_password = password;
 		m_signatureAlgorithm = signatureAlgorithm;
+
+		if(m_signatureAlgorithm.equals("ECDSA"))
+		    m_signatureAlgorithm = "EC";
 	    }
 
 	    @Override
@@ -968,9 +975,16 @@ public class Settings extends AppCompatActivity
 		    chatEncryptionKeyPair = Cryptography.
 			generatePrivatePublicKeyPair
 			(m_encryptionAlgorithm, s_pkiEncryptionKeySize);
-		    chatSignatureKeyPair = Cryptography.
-			generatePrivatePublicKeyPair
-			(m_signatureAlgorithm, s_pkiSignatureKeySize);
+
+		    if(m_signatureAlgorithm.equals("EC"))
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    ("EC", s_pkiSignatureKeySize[0]);
+		    else
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    (m_signatureAlgorithm, s_pkiSignatureKeySize[1]);
+
 		    encryptionKey = Cryptography.
 			generateEncryptionKey
 			(encryptionSalt,
@@ -1052,22 +1066,18 @@ public class Settings extends AppCompatActivity
 			       macSalt);
 
 		    if(saltedPassword != null)
-		    {
 			m_databaseHelper.writeSetting
 			    (null,
 			     "saltedPassword",
 			     Base64.encodeToString(saltedPassword,
-							   Base64.DEFAULT));
-		    }
+						   Base64.DEFAULT));
 		    else
 		    {
 			m_error = true;
 			s_cryptography.reset();
 		    }
 		}
-		catch(InvalidKeySpecException |
-		      NoSuchAlgorithmException |
-		      NumberFormatException exception)
+		catch(Exception exception)
 		{
 		    m_error = true;
 		    s_cryptography.reset();
@@ -1269,7 +1279,7 @@ public class Settings extends AppCompatActivity
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "DSA", "RSA"
+	    "ECDSA", "RSA"
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);

@@ -29,6 +29,7 @@ Completed Items
 25.    Reset option. Remove smoke.db. Reset widget states.
 26.    Inbound database table.
 27.    SipHash (https://en.wikipedia.org/wiki/SipHash).
+28.    ECDSA.
 
 Ignored / Impossible Items
 
@@ -46,10 +47,9 @@ Remaining Items
 5.     Kernel.
 6.     Virtual keyboard.
 7.     Participant import.
-8.     ECDSA, ECPublicKey.
-9.     EPKS.
-10.    Retain first-contact server certificate.
-11.    Sort table contents?
-12.    Tab order.
-13.    Allow content-copying of read-only views.
-14.    Complete Cryptography.pkiEncrypt().
+8.     EPKS.
+9.     Retain first-contact server certificate.
+10.    Sort table contents?
+11.    Tab order.
+12.    Allow content-copying of read-only views.
+13.    Complete Cryptography.pkiEncrypt().
