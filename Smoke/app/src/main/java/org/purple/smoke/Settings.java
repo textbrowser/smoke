@@ -300,7 +300,7 @@ public class Settings extends AppCompatActivity
 			}
 
 			Kernel.getInstance().enqueueMessage
-			    (Base64.encodeToString(bytes, Base64.DEFAULT));
+			    (Messages.bytesToMessageString(bytes));
 		    }
 
 		Settings.this.runOnUiThread(new Runnable()

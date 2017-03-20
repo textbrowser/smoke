@@ -39,7 +39,7 @@ Ignored / Impossible Items
 
 Remaining Items
 
-1 .    SQLite secure delete.
+1.     SQLite secure delete.
 2.     Socket channels. A lot of work.
 3.     Buzz-like page.
 4.     Source-level string translations.
@@ -52,3 +52,4 @@ Remaining Items
 11.    Sort table contents?
 12.    Tab order.
 13.    Allow content-copying of read-only views.
+14.    Complete Cryptography.pkiEncrypt().
