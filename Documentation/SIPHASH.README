@@ -3,14 +3,13 @@ SipHash identities are generated as follows:
 id := siphash(public-encryption-key || public-signature-key,
 	      md5(public-encryption-key || public-signature-key))
 
-The identities are used for the generation of non-confidential authentication
-and encryption key streams:
+Generating of non-confidential authentication and encryption key streams from SipHash identities:
 
 keystream1 := pbkdf2(sha512(id), // Salt
 		     id,
 		     1000,       // Iteration Count
-		     768)        // Bits
+		     768)        // Bits (96 Bytes)
 keystream2 := pbkdf2(sha512(id), // Salt
 		     keystream1,
 		     1000,       // Iteration Count
-		     768)        // Bits
+		     768)        // Bits (96 Bytes)
