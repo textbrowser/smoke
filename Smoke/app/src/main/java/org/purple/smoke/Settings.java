@@ -70,7 +70,8 @@ public class Settings extends AppCompatActivity
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int s_pkiEncryptionKeySize = 3072;
-    private final static int s_pkiSignatureKeySize[] = {384, 3072};
+    private final static int s_pkiSignatureKeySize[] =
+        {384, 3072}; // ECDSA, RSA
     private final static int s_timerInterval = 7500; // 7.5 Seconds
 
     private void addNeighbor()

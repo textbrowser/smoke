@@ -53,3 +53,4 @@ Remaining Items
 11.    Tab order.
 12.    Allow content-copying of read-only views.
 13.    Complete Cryptography.pkiEncrypt().
+14.    Reset option in Authenticate activity.
