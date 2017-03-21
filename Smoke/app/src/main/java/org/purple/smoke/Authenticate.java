@@ -291,7 +291,7 @@ public class Authenticate extends AppCompatActivity
 					       listener1,
 					       "Are you sure that you " +
 					       "wish to reset Smoke? All " +
-					       "data will be lost.");
+					       "data will be removed.");
 	    }
 	});
     }
