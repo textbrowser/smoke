@@ -38,6 +38,7 @@ Ignored / Impossible Items
 2.     Create a BroadcastReceiver and notify all other activities on exit.
 3.     Scroll bars on Spinner objects.
 4.     Detect removal of smoke.db.
+5.     Participant import. Superseded by EPKS.
 
 Remaining Items
 
@@ -47,10 +48,9 @@ Remaining Items
 4.     Source-level string translations.
 5.     Kernel.
 6.     Virtual keyboard.
-7.     Participant import.
-8.     EPKS.
-9.     Retain first-contact server certificate.
-10.    Sort table contents?
-11.    Tab order.
-12.    Allow content-copying of read-only views.
-13.    Complete Cryptography.pkiEncrypt().
+7.     EPKS.
+8.     Retain first-contact server certificate.
+9.     Sort table contents?
+10.    Tab order.
+11.    Allow content-copying of read-only views.
+12.    Complete Cryptography.pkiEncrypt().
