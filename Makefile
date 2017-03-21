@@ -27,6 +27,9 @@ kill-gradle-daemon:
 launch-emulator:
 	$(MAKE) -f $(MAKEFILE) launch-emulator
 
+list-devices:
+	$(MAKE) -f $(MAKEFILE) list-devices
+
 list-files:
 	$(MAKE) -f $(MAKEFILE) list-files
 

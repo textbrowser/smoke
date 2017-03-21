@@ -27,6 +27,9 @@ launch-emulator:
 	$(EMULATOR) -netdelay none -netspeed full -avd \
 	`$(EMULATOR) -list-avds | sort | tail -1` &
 
+list-devices:
+	$(ADB) devices -l
+
 list-files:
 	$(ADB) shell run-as org.purple.smoke ls -l /data/data/org.purple.smoke/databases
 
