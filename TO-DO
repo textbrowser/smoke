@@ -30,6 +30,7 @@ Completed Items
 26.    Inbound database table.
 27.    SipHash (https://en.wikipedia.org/wiki/SipHash).
 28.    ECDSA.
+29.    Reset option in Authenticate activity.
 
 Ignored / Impossible Items
 
@@ -53,4 +54,3 @@ Remaining Items
 11.    Tab order.
 12.    Allow content-copying of read-only views.
 13.    Complete Cryptography.pkiEncrypt().
-14.    Reset option in Authenticate activity.

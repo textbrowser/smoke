@@ -762,7 +762,7 @@ public class Settings extends AppCompatActivity
 					       listener1,
 					       "Are you sure that you " +
 					       "wish to reset Smoke? All " +
-					       "private data will be lost.");
+					       "data will be lost.");
 	    }
 	});
 
@@ -1460,6 +1460,8 @@ public class Settings extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
+	menu.findItem(R.id.action_chat).setEnabled
+	    (State.getInstance().isAuthenticated());
 	return true;
     }
 

@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -260,6 +261,37 @@ public class Authenticate extends AppCompatActivity
 
 		    thread.start();
 		}
+	    }
+	});
+
+	final DialogInterface.OnCancelListener listener1 =
+	    new DialogInterface.OnCancelListener()
+	{
+	    public void onCancel(DialogInterface dialog)
+	    {
+		State.getInstance().reset();
+		m_databaseHelper.resetAndDrop();
+		s_cryptography.reset();
+
+		final Intent intent = new Intent
+		    (Authenticate.this, Settings.class);
+
+		finish();
+		startActivity(intent);
+	    }
+	};
+
+	final Button button2 = (Button) findViewById(R.id.reset);
+
+	button2.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		Miscellaneous.showPromptDialog(Authenticate.this,
+					       listener1,
+					       "Are you sure that you " +
+					       "wish to reset Smoke? All " +
+					       "data will be lost.");
 	    }
 	});
     }
