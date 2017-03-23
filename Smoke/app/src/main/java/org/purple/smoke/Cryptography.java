@@ -59,10 +59,14 @@ public class Cryptography
     private KeyPair m_chatSignatureKeyPair = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
+    private byte m_sipHashEncryptionKey[] = null;
+    private byte m_sipHashMacKey[] = null;
     private final Object m_chatEncryptionKeyPairMutex = new Object();
     private final Object m_chatSignatureKeyPairMutex = new Object();
     private final Object m_encryptionKeyMutex = new Object();
     private final Object m_macKeyMutex = new Object();
+    private final Object m_sipHashEncryptionKeyMutex = new Object();
+    private final Object m_sipHashMacKeyMutex = new Object();
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
@@ -72,6 +76,7 @@ public class Cryptography
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS5Padding";
+    private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 1000;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
 
@@ -180,6 +185,46 @@ public class Cryptography
 	    }
 
 	return stringBuffer.toString();
+    }
+
+    public boolean prepareSipHashKeys(String sipHashId)
+    {
+	try
+	{
+	    byte bytes[] = null;
+	    byte salt[] = sha512(sipHashId.trim().getBytes());
+	    byte temporary[] = pbkdf2(salt,
+				      sipHashId.toCharArray(),
+				      SIPHASH_STREAM_CREATION_ITERATION_COUNT,
+				      768); // 8 * (32 + 64) Bits
+
+	    if(temporary != null)
+		bytes = pbkdf2(salt,
+			       new String(temporary).toCharArray(),
+			       SIPHASH_STREAM_CREATION_ITERATION_COUNT,
+			       768); // 8 * (32 + 64) Bits
+
+	    if(bytes != null)
+	    {
+		synchronized(m_sipHashEncryptionKeyMutex)
+		{
+		    m_sipHashEncryptionKey = Arrays.copyOfRange(bytes, 0, 32);
+		}
+
+		synchronized(m_sipHashMacKeyMutex)
+		{
+		    m_sipHashMacKey = Arrays.copyOfRange(bytes, 32, 96);
+		}
+	    }
+	    else
+		return false;
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+
+	return true;
     }
 
     public byte[] chatEncryptionKeyDigest()
