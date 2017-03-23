@@ -60,6 +60,16 @@ public class Messages
 	return results.toString();
     }
 
+    public static String stripMessage(String message)
+    {
+	int indexOf = message.indexOf("content=");
+
+	if(indexOf >= 0)
+	    message = message.substring(indexOf + 8);
+
+	return message.trim();
+    }
+
     public static byte[] chatMessage(Cryptography cryptography,
 				     PublicKey receiverPublicKey,
 				     String message,
