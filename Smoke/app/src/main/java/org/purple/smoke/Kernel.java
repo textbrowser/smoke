@@ -212,6 +212,11 @@ public class Kernel
 	}
     }
 
+    public static boolean ourMessage(String buffer)
+    {
+	return false;
+    }
+
     public static synchronized Kernel getInstance()
     {
 	if(s_instance == null)

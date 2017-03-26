@@ -289,7 +289,9 @@ public class TcpNeighbor extends Neighbor
 				String buffer = m_stringBuffer.
 				    substring(0, indexOf + s_eom.length());
 
-				echo(buffer);
+				if(!Kernel.getInstance().ourMessage(buffer))
+				    echo(buffer);
+
 				m_stringBuffer.delete(0, buffer.length());
 				indexOf = m_stringBuffer.indexOf(s_eom);
 			    }

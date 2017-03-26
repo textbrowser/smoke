@@ -803,6 +803,22 @@ public class Cryptography
 	{
 	    m_macKey = null;
 	}
+
+	synchronized(m_sipHashEncryptionKeyMutex)
+	{
+	    if(m_sipHashEncryptionKey != null)
+		Arrays.fill(m_sipHashEncryptionKey, (byte) 0);
+
+	    m_sipHashEncryptionKey = null;
+	}
+
+	synchronized(m_sipHashMacKeyMutex)
+	{
+	    if(m_sipHashMacKey != null)
+		Arrays.fill(m_sipHashMacKey, (byte) 0);
+
+	    m_sipHashMacKey = null;
+	}
     }
 
     public void setChatEncryptionKeyPair(KeyPair keyPair)
