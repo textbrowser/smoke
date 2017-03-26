@@ -39,6 +39,7 @@ Ignored / Impossible Items
 3.     Scroll bars on Spinner objects.
 4.     Detect removal of smoke.db.
 5.     Participant import. Superseded by EPKS.
+6.     Virtual keyboard.
 
 Remaining Items
 
@@ -47,10 +48,9 @@ Remaining Items
 3.     Buzz-like page.
 4.     Source-level string translations.
 5.     Kernel.
-6.     Virtual keyboard.
-7.     EPKS.
-8.     Retain first-contact server certificate.
-9.     Sort table contents?
-10.    Tab order.
-11.    Allow content-copying of read-only views.
-12.    Complete Cryptography.pkiEncrypt().
+6.     EPKS.
+7.     Retain first-contact server certificate.
+8.     Sort table contents?
+9.     Tab order.
+10.    Allow content-copying of read-only views.
+11.    Complete Cryptography.pkiEncrypt().
