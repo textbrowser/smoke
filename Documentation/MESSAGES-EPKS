@@ -12,4 +12,7 @@
 	[AES-256]
 }
 
-[Destination] (3) (Ignore)
+[Destination SipHash HMAC] (3)
+{
+	[AES-256] || [SHA-512 HMAC] (1)
+}
