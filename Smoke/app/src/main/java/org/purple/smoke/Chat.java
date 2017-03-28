@@ -84,6 +84,7 @@ public class Chat extends AppCompatActivity
 		String str = textView1.getText().toString().trim();
 		String timestamp = "";
 		StringBuffer stringBuffer = new StringBuffer();
+		byte sipHashKeyStream[] = null;
 		int sequence = 1;
 
 		stringBuffer.append("me: ");
@@ -102,6 +103,7 @@ public class Chat extends AppCompatActivity
 		     s_cryptography.chatEncryptionKeyPair().getPublic(),
 		     str,
 		     timestamp,
+		     sipHashKeyStream,
 		     sequence);
 
 		if(bytes != null)

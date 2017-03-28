@@ -78,6 +78,7 @@ public class Messages
 				     PublicKey receiverPublicKey,
 				     String message,
 				     String timestamp,
+				     byte sipHashKeyStream[],
 				     int sequence)
     {
 	if(cryptography == null || receiverPublicKey == null)
