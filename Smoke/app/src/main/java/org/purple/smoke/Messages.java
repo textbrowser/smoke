@@ -62,6 +62,10 @@ public class Messages
 
     public static String stripMessage(String message)
     {
+	/*
+	** Remove Smoke-specific leading and trailing data.
+	*/
+
 	int indexOf = message.indexOf("content=");
 
 	if(indexOf >= 0)
