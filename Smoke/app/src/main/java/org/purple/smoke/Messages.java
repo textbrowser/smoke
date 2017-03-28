@@ -300,7 +300,11 @@ public class Messages
 		** [ Destination ]
 		*/
 
-		byte destinationBytes[] = new byte[64]; // Not used.
+		SipHash sipHash = new SipHash();
+		long destinationBytes = sipHash.hmac
+		    (Miscellaneous.joinByteArrays(messageBytes,
+						  macBytes),
+		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 		output.reset();
 		output.writeObject(messageBytes);
