@@ -3,9 +3,11 @@
 ADB = ~/Android/Sdk/platform-tools/adb
 EMULATOR = ~/Android/Sdk/tools/emulator
 GRADLEW = ./Smoke/gradlew
+JDK = "${HOME}/Desktop/android-studio/jre"
 
 all:
-	$(GRADLEW) --build-file Smoke/build.gradle assembleDebug \
+	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
+	--build-file Smoke/build.gradle assembleDebug \
 	--configure-on-demand --daemon --parallel
 
 clean:
