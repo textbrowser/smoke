@@ -97,6 +97,9 @@ public class Messages
 	{
 	    output = new ObjectOutputStream(stream);
 
+	    ByteArrayOutputStream s = new ByteArrayOutputStream();
+	    ObjectOutputStream o = new ObjectOutputStream(s);
+
 	    /*
 	    ** Create random encryption and mac keys.
 	    */
@@ -135,12 +138,11 @@ public class Messages
 	    if(senderPublicKeyDigest == null)
 		return null;
 
-	    output.reset();
-	    output.writeObject(message);
-	    output.writeObject(sequence);
-	    output.writeObject(timestamp);
-	    output.writeObject(senderPublicKeyDigest);
-	    output.flush();
+	    o.writeObject(message);
+	    o.writeObject(sequence);
+	    o.writeObject(timestamp);
+	    o.writeObject(senderPublicKeyDigest);
+	    o.flush();
 
 	    /*
 	    ** Produce a signature of [ Private Key Data ] || [ Message Data ].
@@ -149,16 +151,16 @@ public class Messages
 	    byte signature[] = cryptography.signViaChatSignature
 		(Miscellaneous.joinByteArrays(encryptionKeyBytes,
 					      macKeyBytes,
-					      stream.toByteArray()));
+					      s.toByteArray()));
 
 	    if(signature == null)
 		return null;
 
-	    output.writeObject(signature);
-	    output.flush();
+	    o.writeObject(signature);
+	    o.flush();
 
 	    byte messageBytes[] = Cryptography.encrypt
-		(stream.toByteArray(), encryptionKeyBytes);
+		(s.toByteArray(), encryptionKeyBytes);
 
 	    if(messageBytes == null)
 		return null;
@@ -178,8 +180,7 @@ public class Messages
 	    ** [ Destination Digest ]
 	    */
 
-	    SipHash sipHash = new SipHash();
-	    long destination = sipHash.hmac
+	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(keysBytes,
 					      messageBytes,
 					      macBytes),
@@ -187,11 +188,10 @@ public class Messages
 				    32,
 				    sipHashKeyStream.length));
 
-	    output.reset();
 	    output.writeObject(keysBytes);
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
-	    output.writeObject(Miscellaneous.longToByteArray(destination));
+	    output.writeObject(destination);
 	    output.flush();
 	}
 	catch(Exception exception)
@@ -234,13 +234,15 @@ public class Messages
 	try
 	{
 	    output = new ObjectOutputStream(stream);
-	    output.reset();
+
+	    ByteArrayOutputStream s = new ByteArrayOutputStream();
+	    ObjectOutputStream o = new ObjectOutputStream(s);
 
 	    /*
 	    ** [ Key Type ]
 	    */
 
-	    output.writeObject(keyType);
+	    o.writeObject(keyType);
 
 	    PublicKey publicKey = null;
 	    byte bytes[] = null;
@@ -273,8 +275,8 @@ public class Messages
 		if(bytes == null)
 		    return null;
 
-		output.writeObject(publicKey);
-		output.writeObject(bytes);
+		o.writeObject(publicKey);
+		o.writeObject(bytes);
 
 		/*
 		** [ Signature Key ]
@@ -295,13 +297,12 @@ public class Messages
 		if(bytes == null)
 		    return null;
 
-		output.writeObject(publicKey);
-		output.writeObject(bytes);
+		o.writeObject(publicKey);
+		o.writeObject(bytes);
 		output.flush();
 
 		byte messageBytes[] = Cryptography.encrypt
-		    (stream.toByteArray(),
-		     Arrays.copyOfRange(keyStream, 0, 32));
+		    (s.toByteArray(), Arrays.copyOfRange(keyStream, 0, 32));
 
 		if(messageBytes == null)
 		    return null;
@@ -325,18 +326,16 @@ public class Messages
 		** [ Destination Digest ]
 		*/
 
-		SipHash sipHash = new SipHash();
-		long destination = sipHash.hmac
+		byte destination[] = Cryptography.hmac
 		    (Miscellaneous.joinByteArrays(messageBytes,
 						  macBytes,
 						  singleArray),
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-		output.reset();
 		output.writeObject(messageBytes);
 		output.writeObject(macBytes);
 		output.writeObject(singleArray);
-		output.writeObject(Miscellaneous.longToByteArray(destination));
+		output.writeObject(destination);
 		output.flush();
 	    }
 	}

@@ -21,7 +21,7 @@
 	[PK] || [AES-256]
 }
 
-[Destination SipHash HMAC] (4)
+[Destination SHA-512 HMAC] (4)
 {
 	[PK] || [AES-256] || [SHA-512 HMAC] (1)
 }

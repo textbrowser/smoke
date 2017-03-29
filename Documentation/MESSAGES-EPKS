@@ -14,7 +14,7 @@
 
 [One-Byte Array] (3)
 
-[Destination SipHash HMAC] (4)
+[Destination SHA-512 HMAC] (4)
 {
-	[AES-256] || [SHA-512 HMAC] || [Empy One-Byte Array] (1)
+	[AES-256] || [SHA-512 HMAC] || [One-Byte Array] (1)
 }
