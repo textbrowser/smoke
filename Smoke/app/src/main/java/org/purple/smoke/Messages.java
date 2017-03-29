@@ -248,7 +248,7 @@ public class Messages
 	    /*
 	    ** [ Public Key Data ]
 	    ** [ Digest ([ Public Key Data ]) ]
-	    ** [ Empty One-Byte Array ]
+	    ** [ One-Byte Array ]
 	    ** [ Destination Digest ]
 	    */
 
@@ -307,7 +307,7 @@ public class Messages
 		    return null;
 
 		/*
-		** [ Digest ([ Message Data ]) ]
+		** [ Digest ([ Public Key Data ]) ]
 		*/
 
 		byte macBytes[] = Cryptography.hmac
@@ -317,9 +317,9 @@ public class Messages
 		if(macBytes == null)
 		    return null;
 
-		byte emptyArray[] = new byte[1];
+		byte singleArray[] = new byte[1];
 
-		emptyArray[0] = 0;
+		singleArray[0] = 0;
 
 		/*
 		** [ Destination Digest ]
@@ -329,13 +329,13 @@ public class Messages
 		long destination = sipHash.hmac
 		    (Miscellaneous.joinByteArrays(messageBytes,
 						  macBytes,
-						  emptyArray),
+						  singleArray),
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 		output.reset();
 		output.writeObject(messageBytes);
 		output.writeObject(macBytes);
-		output.writeObject(emptyArray);
+		output.writeObject(singleArray);
 		output.writeObject(Miscellaneous.longToByteArray(destination));
 		output.flush();
 	    }
