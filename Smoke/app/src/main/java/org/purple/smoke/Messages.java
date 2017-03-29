@@ -84,6 +84,12 @@ public class Messages
 	if(cryptography == null || receiverPublicKey == null)
 	    return null;
 
+	/*
+	** sipHashKeyStream
+	** [0 .. 31] - AES-256 Encryption Key
+	** [32 .. 95] - SHA-512 HMAC Key
+	*/
+
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();
 	ObjectOutputStream output = null;
 
