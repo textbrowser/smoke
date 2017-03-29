@@ -226,6 +226,11 @@ public class Kernel
 	    stream = new ByteArrayInputStream
 		(Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT));
 	    input = new ObjectInputStream(stream);
+
+	    byte array1[] = (byte[]) input.readObject();
+	    byte array2[] = (byte[]) input.readObject();
+	    byte array3[] = (byte[]) input.readObject();
+	    byte array4[] = (byte[]) input.readObject();
 	}
 	catch(Exception exception)
 	{

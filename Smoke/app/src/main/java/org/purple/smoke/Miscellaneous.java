@@ -165,6 +165,19 @@ public class Miscellaneous
 	return bytes;
     }
 
+    public static long byteArrayToLong(byte bytes[])
+    {
+	if(bytes == null || bytes.length != 8)
+	    return 0;
+
+	long value = 0;
+
+	for(int i = 0; i < 8; i++)
+	    value |= (((long) bytes[i]) & 0xff) << (8 * i);
+
+	return value;
+    }
+
     public static void showErrorDialog(Context context, String error)
     {
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
