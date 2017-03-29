@@ -179,7 +179,7 @@ public class Messages
 	    */
 
 	    SipHash sipHash = new SipHash();
-	    long destinationBytes = sipHash.hmac
+	    long destination = sipHash.hmac
 		(Miscellaneous.joinByteArrays(keysBytes,
 					      messageBytes,
 					      macBytes),
@@ -191,7 +191,7 @@ public class Messages
 	    output.writeObject(keysBytes);
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
-	    output.writeObject(destinationBytes);
+	    output.writeObject(destination);
 	    output.flush();
 	}
 	catch(Exception exception)
@@ -321,7 +321,7 @@ public class Messages
 		*/
 
 		SipHash sipHash = new SipHash();
-		long destinationBytes = sipHash.hmac
+		long destination = sipHash.hmac
 		    (Miscellaneous.joinByteArrays(messageBytes,
 						  macBytes),
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
@@ -329,7 +329,7 @@ public class Messages
 		output.reset();
 		output.writeObject(messageBytes);
 		output.writeObject(macBytes);
-		output.writeObject(destinationBytes);
+		output.writeObject(destination);
 		output.flush();
 	    }
 	}
