@@ -27,8 +27,11 @@
 
 package org.purple.smoke;
 
+import android.util.Base64;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -214,7 +217,36 @@ public class Kernel
 
     public static boolean ourMessage(String buffer)
     {
-	return false;
+	ByteArrayInputStream stream = null;
+	ObjectInputStream input = null;
+	boolean ok = true;
+
+	try
+	{
+	    stream = new ByteArrayInputStream
+		(Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT));
+	    input = new ObjectInputStream(stream);
+	}
+	catch(Exception exception)
+	{
+	    ok = false;
+	}
+	finally
+	{
+	    try
+	    {
+		if(input != null)
+		    input.close();
+
+		if(stream != null)
+		    stream.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	}
+
+	return ok;
     }
 
     public static synchronized Kernel getInstance()

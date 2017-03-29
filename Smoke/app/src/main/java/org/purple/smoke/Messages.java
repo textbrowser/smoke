@@ -191,7 +191,7 @@ public class Messages
 	    output.writeObject(keysBytes);
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
-	    output.writeObject(destination);
+	    output.writeObject(Miscellaneous.longToByteArray(destination));
 	    output.flush();
 	}
 	catch(Exception exception)
@@ -248,6 +248,7 @@ public class Messages
 	    /*
 	    ** [ Public Key Data ]
 	    ** [ Digest ([ Public Key Data ]) ]
+	    ** [ Empty One-Byte Array ]
 	    ** [ Destination Digest ]
 	    */
 
@@ -316,6 +317,10 @@ public class Messages
 		if(macBytes == null)
 		    return null;
 
+		byte emptyArray[] = new byte[1];
+
+		emptyArray[0] = 0;
+
 		/*
 		** [ Destination Digest ]
 		*/
@@ -323,13 +328,15 @@ public class Messages
 		SipHash sipHash = new SipHash();
 		long destination = sipHash.hmac
 		    (Miscellaneous.joinByteArrays(messageBytes,
-						  macBytes),
+						  macBytes,
+						  emptyArray),
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 		output.reset();
 		output.writeObject(messageBytes);
 		output.writeObject(macBytes);
-		output.writeObject(destination);
+		output.writeObject(emptyArray);
+		output.writeObject(Miscellaneous.longToByteArray(destination));
 		output.flush();
 	    }
 	}
