@@ -101,7 +101,7 @@ public class Messages
 	    ** Create random encryption and mac keys.
 	    */
 
-	    byte encryptionKeyBytes[] = Cryptography.randomBytes(32); // AES
+	    byte encryptionKeyBytes[] = Cryptography.randomBytes(32); // AES-256
 	    byte macKeyBytes[] = Cryptography.randomBytes(64); // SHA-512
 
 	    if(encryptionKeyBytes == null || macKeyBytes == null)
