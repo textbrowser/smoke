@@ -111,18 +111,18 @@ public class Messages
 	    ** [ Private Key Data ]
 	    ** [ Message Data ]
 	    ** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
-	    ** [ Destination (Digest) ]
+	    ** [ Destination Digest ]
 	    */
 
 	    /*
 	    ** [ Private Key Data ]
 	    */
 
-	    byte keyBytes[] = Cryptography.pkiEncrypt
+	    byte keysBytes[] = Cryptography.pkiEncrypt
 		(receiverPublicKey,
 		 Miscellaneous.joinByteArrays(encryptionKeyBytes, macKeyBytes));
 
-	    if(keyBytes == null)
+	    if(keysBytes == null)
 		return null;
 
 	    /*
@@ -168,20 +168,27 @@ public class Messages
 	    */
 
 	    byte macBytes[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(keyBytes, messageBytes),
+		(Miscellaneous.joinByteArrays(keysBytes, messageBytes),
 		 macKeyBytes);
 
 	    if(macBytes == null)
 		return null;
 
 	    /*
-	    ** [ Destination ]
+	    ** [ Destination Digest ]
 	    */
 
-	    byte destinationBytes[] = new byte[64]; // Not used.
+	    SipHash sipHash = new SipHash();
+	    long destinationBytes = sipHash.hmac
+		(Miscellaneous.joinByteArrays(keysBytes,
+					      messageBytes,
+					      macBytes),
+		 Arrays.copyOfRange(sipHashKeyStream,
+				    32,
+				    sipHashKeyStream.length));
 
 	    output.reset();
-	    output.writeObject(keyBytes);
+	    output.writeObject(keysBytes);
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
 	    output.writeObject(destinationBytes);
@@ -237,6 +244,12 @@ public class Messages
 
 	    PublicKey publicKey = null;
 	    byte bytes[] = null;
+
+	    /*
+	    ** [ Public Key Data ]
+	    ** [ Digest ([ Public Key Data ]) ]
+	    ** [ Destination Digest ]
+	    */
 
 	    if(keyType.equals("chat"))
 	    {
@@ -304,7 +317,7 @@ public class Messages
 		    return null;
 
 		/*
-		** [ Destination ]
+		** [ Destination Digest ]
 		*/
 
 		SipHash sipHash = new SipHash();
