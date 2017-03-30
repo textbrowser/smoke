@@ -189,7 +189,13 @@ public class Authenticate extends AppCompatActivity
 				    s_cryptography.setChatSignatureKeyPair
 					(algorithm, privateBytes, publicBytes);
 
-				    if(s_cryptography.
+				    boolean e1 = s_cryptography.
+					prepareSipHashIds();
+				    boolean e2 = s_cryptography.
+					prepareSipHashKeys();
+
+				    if(e1 == false || e2 == false ||
+				       s_cryptography.
 				       chatEncryptionKeyPair() == null ||
 				       s_cryptography.
 				       chatSignatureKeyPair() == null)

@@ -254,90 +254,85 @@ public class Messages
 	    ** [ Destination Digest ]
 	    */
 
-	    if(keyType.equals("chat"))
-	    {
-		/*
-		** [ Public Key ]
-		*/
+	    /*
+	    ** [ Public Key ]
+	    */
 
-		publicKey = cryptography.chatEncryptionPublicKey();
+	    publicKey = cryptography.chatEncryptionPublicKey();
 
-		if(publicKey == null)
-		    return null;
+	    if(publicKey == null)
+		return null;
 
-		/*
-		** [ Public Key Signature ]
-		*/
+	    /*
+	    ** [ Public Key Signature ]
+	    */
 
-		bytes = cryptography.signViaChatEncryption
-		    (publicKey.getEncoded());
+	    bytes = cryptography.signViaChatEncryption(publicKey.getEncoded());
 
-		if(bytes == null)
-		    return null;
+	    if(bytes == null)
+		return null;
 
-		o.writeObject(publicKey);
-		o.writeObject(bytes);
+	    o.writeObject(publicKey);
+	    o.writeObject(bytes);
 
-		/*
-		** [ Signature Key ]
-		*/
+	    /*
+	    ** [ Signature Key ]
+	    */
 
-		publicKey = cryptography.chatSignaturePublicKey();
+	    publicKey = cryptography.chatSignaturePublicKey();
 
-		if(publicKey == null)
-		    return null;
+	    if(publicKey == null)
+		return null;
 
-		/*
-		** [ Signature Key Signature ]
-		*/
+	    /*
+	    ** [ Signature Key Signature ]
+	    */
 
-		bytes = cryptography.signViaChatSignature
-		    (publicKey.getEncoded());
+	    bytes = cryptography.signViaChatSignature(publicKey.getEncoded());
 
-		if(bytes == null)
-		    return null;
+	    if(bytes == null)
+		return null;
 
-		o.writeObject(publicKey);
-		o.writeObject(bytes);
-		output.flush();
+	    o.writeObject(publicKey);
+	    o.writeObject(bytes);
+	    output.flush();
 
-		byte messageBytes[] = Cryptography.encrypt
-		    (s.toByteArray(), Arrays.copyOfRange(keyStream, 0, 32));
+	    byte messageBytes[] = Cryptography.encrypt
+		(s.toByteArray(), Arrays.copyOfRange(keyStream, 0, 32));
 
-		if(messageBytes == null)
-		    return null;
+	    if(messageBytes == null)
+		return null;
 
-		/*
-		** [ Digest ([ Public Key Data ]) ]
-		*/
+	    /*
+	    ** [ Digest ([ Public Key Data ]) ]
+	    */
 
-		byte macBytes[] = Cryptography.hmac
-		    (messageBytes,
-		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
+	    byte macBytes[] = Cryptography.hmac
+		(messageBytes,
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-		if(macBytes == null)
-		    return null;
+	    if(macBytes == null)
+		return null;
 
-		byte singleArray[] = new byte[1];
+	    byte singleArray[] = new byte[1];
 
-		singleArray[0] = 0;
+	    singleArray[0] = 0;
 
-		/*
-		** [ Destination Digest ]
-		*/
+	    /*
+	    ** [ Destination Digest ]
+	    */
 
-		byte destination[] = Cryptography.hmac
-		    (Miscellaneous.joinByteArrays(messageBytes,
-						  macBytes,
-						  singleArray),
-		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(messageBytes,
+					      macBytes,
+					      singleArray),
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-		output.writeObject(messageBytes);
-		output.writeObject(macBytes);
-		output.writeObject(singleArray);
-		output.writeObject(destination);
-		output.flush();
-	    }
+	    output.writeObject(messageBytes);
+	    output.writeObject(macBytes);
+	    output.writeObject(singleArray);
+	    output.writeObject(destination);
+	    output.flush();
 	}
 	catch(Exception exception)
 	{

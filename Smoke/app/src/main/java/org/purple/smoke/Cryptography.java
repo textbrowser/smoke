@@ -59,6 +59,7 @@ public class Cryptography
     private KeyPair m_chatSignatureKeyPair = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
+    private String m_sipHashId = "00:00:00:00:00:00:00:00";
     private byte m_sipHashEncryptionKey[] = null;
     private byte m_sipHashMacKey[] = null;
     private final Object m_chatEncryptionKeyPairMutex = new Object();
@@ -187,14 +188,14 @@ public class Cryptography
 	return stringBuffer.toString();
     }
 
-    public boolean prepareSipHashKeys(String sipHashId)
+    public boolean prepareSipHashKeys()
     {
 	try
 	{
 	    byte bytes[] = null;
-	    byte salt[] = sha512(sipHashId.trim().getBytes());
+	    byte salt[] = sha512(m_sipHashId.trim().getBytes());
 	    byte temporary[] = pbkdf2(salt,
-				      sipHashId.toCharArray(),
+				      m_sipHashId.toCharArray(),
 				      SIPHASH_STREAM_CREATION_ITERATION_COUNT,
 				      768); // 8 * (32 + 64) Bits
 
@@ -481,30 +482,51 @@ public class Cryptography
 	}
     }
 
+    public byte[] sipHashHmacKey()
+    {
+	synchronized(m_sipHashMacKeyMutex)
+	{
+	    return m_sipHashMacKey;
+	}
+    }
+
     public static byte[] pbkdf2(byte salt[],
 				char password[],
 				int iterations,
 				int length)
-	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
-	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
-	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-	    ("PBKDF2WithHmacSHA1");
+	try
+	{
+	    KeySpec keySpec = new PBEKeySpec
+		(password, salt, iterations, length);
+	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		("PBKDF2WithHmacSHA1");
 
-	return secretKeyFactory.generateSecret(keySpec).getEncoded();
+	    return secretKeyFactory.generateSecret(keySpec).getEncoded();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
-	throws NoSuchAlgorithmException
     {
-	prepareSecureRandom();
+	try
+	{
+	    prepareSecureRandom();
 
-	KeyPairGenerator keyPairGenerator = KeyPairGenerator.
-	    getInstance(algorithm);
+	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+		getInstance(algorithm);
 
-	keyPairGenerator.initialize(keySize, s_secureRandom);
-	return keyPairGenerator.generateKeyPair();
+	    keyPairGenerator.initialize(keySize, s_secureRandom);
+	    return keyPairGenerator.generateKeyPair();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
@@ -535,29 +557,43 @@ public class Cryptography
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
 						  int iterations)
-	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
-	final int length = 256; // Bits.
+	try
+	{
+	    final int length = 256; // Bits.
 
-	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
-	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-	    ("PBKDF2WithHmacSHA1");
+	    KeySpec keySpec = new PBEKeySpec
+		(password, salt, iterations, length);
+	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		("PBKDF2WithHmacSHA1");
 
-	return secretKeyFactory.generateSecret(keySpec);
+	    return secretKeyFactory.generateSecret(keySpec);
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static SecretKey generateMacKey(byte salt[],
 					   char password[],
 					   int iterations)
-	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
-	final int length = 512; // Bits.
+	try
+	{
+	    final int length = 512; // Bits.
 
-	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
-	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-	    ("PBKDF2WithHmacSHA1");
+	    KeySpec keySpec = new PBEKeySpec
+		(password, salt, iterations, length);
+	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		("PBKDF2WithHmacSHA1");
 
-	return secretKeyFactory.generateSecret(keySpec);
+	    return secretKeyFactory.generateSecret(keySpec);
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static String publicKeyFingerPrint(PublicKey publicKey)
@@ -780,6 +816,50 @@ public class Cryptography
 	    s_instance = new Cryptography();
 
 	return s_instance;
+    }
+
+    public boolean prepareSipHashIds()
+    {
+	try
+	{
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(chatEncryptionKeyPair().getPublic().getEncoded(),
+		 chatSignatureKeyPair().getPublic().getEncoded());
+
+	    if(bytes != null)
+	    {
+		byte key[] = md5(bytes); /*
+					 ** Use the MD-5 digest of the
+					 ** public keys as the input key to
+					 ** SipHash.
+					 */
+
+		if(key == null)
+		    return false;
+
+		SipHash sipHash = new SipHash();
+		long value = sipHash.hmac(bytes, key);
+
+		if(value == 0)
+		    return false;
+
+		bytes = Miscellaneous.longToByteArray(value);
+
+		if(bytes == null)
+		    return false;
+
+		m_sipHashId = Miscellaneous.
+		    byteArrayAsHexStringDelimited(bytes, ':');
+	    }
+	    else
+		return false;
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+
+	return true;
     }
 
     public void reset()

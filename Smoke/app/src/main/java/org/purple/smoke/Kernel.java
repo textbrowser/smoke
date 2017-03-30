@@ -39,16 +39,15 @@ import java.util.concurrent.TimeUnit;
 
 public class Kernel
 {
-    private Cryptography m_cryptography = null;
     private Database m_databaseHelper = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static int s_neighborsInterval = 10000; // 10 Seconds
+    private static Cryptography s_cryptography = Cryptography.getInstance();
     private static Kernel s_instance = null;
 
     private Kernel()
     {
-	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
 	prepareSchedulers();
     }
@@ -56,7 +55,7 @@ public class Kernel
     private void prepareNeighbors()
     {
 	SparseArray<NeighborElement> neighbors =
-	    m_databaseHelper.readNeighbors(m_cryptography);
+	    m_databaseHelper.readNeighbors(s_cryptography);
 	int count = m_databaseHelper.count("neighbors");
 
 	if(count == 0 || neighbors == null)
@@ -135,7 +134,7 @@ public class Kernel
 		    if(neighborElement.m_statusControl.toLowerCase().
 		       equals("disconnect"))
 			m_databaseHelper.saveNeighborInformation
-			    (m_cryptography,
+			    (s_cryptography,
 			     "0",
 			     "0",
 			     "",
@@ -219,7 +218,7 @@ public class Kernel
     {
 	ByteArrayInputStream stream = null;
 	ObjectInputStream input = null;
-	boolean ok = true;
+	boolean ok = false;
 
 	try
 	{
@@ -231,6 +230,23 @@ public class Kernel
 	    byte array2[] = (byte[]) input.readObject();
 	    byte array3[] = (byte[]) input.readObject();
 	    byte array4[] = (byte[]) input.readObject();
+
+	    if(array1 == null || array2 == null ||
+	       array3 == null || array4 == null)
+		return ok;
+
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(array1, array2, array3),
+		 s_cryptography.sipHashHmacKey());
+
+	    if(!Cryptography.memcmp(array4, destination))
+		return ok;
+
+	    /*
+	    ** We've authenticated the message!
+	    */
+
+	    ok = true;
 	}
 	catch(Exception exception)
 	{
