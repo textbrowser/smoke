@@ -1059,12 +1059,14 @@ public class Settings extends AppCompatActivity
 					       getEncoded(),
 					       Base64.DEFAULT));
 
+		    boolean e1 = s_cryptography.prepareSipHashIds();
+		    boolean e2 = s_cryptography.prepareSipHashKeys();
 		    byte saltedPassword[] = Cryptography.
 			sha512(m_password.getBytes(),
 			       encryptionSalt,
 			       macSalt);
 
-		    if(saltedPassword != null)
+		    if(e1 && e2 && saltedPassword != null)
 			m_databaseHelper.writeSetting
 			    (null,
 			     "saltedPassword",
