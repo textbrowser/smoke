@@ -512,21 +512,15 @@ public class Cryptography
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
+	throws NoSuchAlgorithmException
     {
-	try
-	{
-	    prepareSecureRandom();
+	prepareSecureRandom();
 
-	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
-		getInstance(algorithm);
+	KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+	    getInstance(algorithm);
 
-	    keyPairGenerator.initialize(keySize, s_secureRandom);
-	    return keyPairGenerator.generateKeyPair();
-	}
-	catch(Exception exception)
-	{
-	    return null;
-	}
+	keyPairGenerator.initialize(keySize, s_secureRandom);
+	return keyPairGenerator.generateKeyPair();
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
@@ -557,43 +551,29 @@ public class Cryptography
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
 						  int iterations)
+	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
-	try
-	{
-	    final int length = 256; // Bits.
+	final int length = 256; // Bits.
 
-	    KeySpec keySpec = new PBEKeySpec
-		(password, salt, iterations, length);
-	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		("PBKDF2WithHmacSHA1");
+	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
+	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+	    ("PBKDF2WithHmacSHA1");
 
-	    return secretKeyFactory.generateSecret(keySpec);
-	}
-	catch(Exception exception)
-	{
-	    return null;
-	}
+	return secretKeyFactory.generateSecret(keySpec);
     }
 
     public static SecretKey generateMacKey(byte salt[],
 					   char password[],
 					   int iterations)
+	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
-	try
-	{
-	    final int length = 512; // Bits.
+	final int length = 512; // Bits.
 
-	    KeySpec keySpec = new PBEKeySpec
-		(password, salt, iterations, length);
-	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		("PBKDF2WithHmacSHA1");
+	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
+	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+	    ("PBKDF2WithHmacSHA1");
 
-	    return secretKeyFactory.generateSecret(keySpec);
-	}
-	catch(Exception exception)
-	{
-	    return null;
-	}
+	return secretKeyFactory.generateSecret(keySpec);
     }
 
     public static String publicKeyFingerPrint(PublicKey publicKey)
