@@ -31,6 +31,7 @@ Completed Items
 27.    SipHash (https://en.wikipedia.org/wiki/SipHash).
 28.    ECDSA.
 29.    Reset option in Authenticate activity.
+30.    Connection status text colors.
 
 Ignored / Impossible Items
 
@@ -54,4 +55,4 @@ Remaining Items
 9.     Tab order.
 10.    Allow content-copying of read-only views.
 11.    Complete Cryptography.pkiEncrypt().
-12.    Connection status text colors.
+12.    Dynamic textview objects trim text.
