@@ -124,7 +124,7 @@ public class Miscellaneous
 
     public static byte[] intToByteArray(int value)
     {
-	return ByteBuffer.allocate(4).putInt(value).array();
+	return ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
     }
 
     public static byte[] joinByteArrays(byte[] ... data)
@@ -163,10 +163,10 @@ public class Miscellaneous
 
     public static byte[] longToByteArray(long value)
     {
-	byte bytes[] = new byte[8];
+	byte bytes[] = new byte[Long.BYTES];
 
-	for(int i = 0; i < 8; i++)
-	    bytes[i] = (byte) ((value >>> 8 * i) & 0xff);
+	for(int i = 0; i < Long.BYTES; i++)
+	    bytes[i] = (byte) ((value >>> Long.BYTES * i) & 0xff);
 
 	return bytes;
     }
@@ -187,13 +187,13 @@ public class Miscellaneous
 
     public static long byteArrayToLong(byte bytes[])
     {
-	if(bytes == null || bytes.length != 8)
+	if(bytes == null || bytes.length != Long.BYTES)
 	    return 0;
 
 	long value = 0;
 
-	for(int i = 0; i < 8; i++)
-	    value |= (((long) bytes[i]) & 0xff) << (8 * i);
+	for(int i = 0; i < Long.BYTES; i++)
+	    value |= (((long) bytes[i]) & 0xff) << (Long.BYTES * i);
 
 	return value;
     }
