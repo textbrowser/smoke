@@ -35,6 +35,9 @@ import java.util.Arrays;
 
 public class Messages
 {
+    public final static int MESSAGES_CHAT = 1;
+    public final static int MESSAGES_EPKS = 2;
+
     public static String bytesToMessageString(byte bytes[])
     {
 	StringBuffer results = new StringBuffer();
@@ -181,9 +184,11 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(keysBytes,
-					      messageBytes,
-					      macBytes),
+		(Miscellaneous.
+		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGES_CHAT),
+				keysBytes,
+				messageBytes,
+				macBytes),
 		 Arrays.copyOfRange(sipHashKeyStream,
 				    32,
 				    sipHashKeyStream.length));
@@ -323,9 +328,11 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(messageBytes,
-					      macBytes,
-					      singleArray),
+		(Miscellaneous.
+		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGES_EPKS),
+				messageBytes,
+				macBytes,
+				singleArray),
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 	    output.writeObject(messageBytes);

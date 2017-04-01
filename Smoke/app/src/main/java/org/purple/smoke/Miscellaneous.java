@@ -31,6 +31,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import java.lang.Integer;
+import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 
 public class Miscellaneous
@@ -119,6 +120,11 @@ public class Miscellaneous
 	{
 	    return "";
 	}
+    }
+
+    public static byte[] intToByteArray(int value)
+    {
+	return ByteBuffer.allocate(4).putInt(value).array();
     }
 
     public static byte[] joinByteArrays(byte[] ... data)

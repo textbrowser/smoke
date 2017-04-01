@@ -16,5 +16,6 @@
 
 [Destination SHA-512 HMAC] (4)
 {
-	[AES-256] || [SHA-512 HMAC] || [One-Byte Array] (1)
+	[MESSAGES_EPKS_ENUM] || [AES-256] || [SHA-512 HMAC] ||
+	[One-Byte Array] (1)
 }
