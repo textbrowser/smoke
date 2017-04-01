@@ -124,7 +124,14 @@ public class Miscellaneous
 
     public static byte[] intToByteArray(int value)
     {
-	return ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
+	try
+	{
+	    return ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static byte[] joinByteArrays(byte[] ... data)
@@ -163,12 +170,15 @@ public class Miscellaneous
 
     public static byte[] longToByteArray(long value)
     {
-	byte bytes[] = new byte[Long.BYTES];
+	try
+	{
+	    return ByteBuffer.allocate(Long.BYTES).putLong(value).array();
 
-	for(int i = 0; i < Long.BYTES; i++)
-	    bytes[i] = (byte) ((value >>> Long.BYTES * i) & 0xff);
-
-	return bytes;
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static int countOf(StringBuffer stringBuffer, char character)
@@ -190,12 +200,17 @@ public class Miscellaneous
 	if(bytes == null || bytes.length != Long.BYTES)
 	    return 0;
 
-	long value = 0;
+	try
+	{
+	    ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
 
-	for(int i = 0; i < Long.BYTES; i++)
-	    value |= (((long) bytes[i]) & 0xff) << (Long.BYTES * i);
-
-	return value;
+	    byteBuffer.put(bytes, 0, Long.BYTES);
+	    return byteBuffer.getLong();
+	}
+	catch(Exception exception)
+	{
+	    return 0;
+	}
     }
 
     public static void showErrorDialog(Context context, String error)
