@@ -165,6 +165,20 @@ public class Miscellaneous
 	return bytes;
     }
 
+    public static int countOf(StringBuffer stringBuffer, char character)
+    {
+	int count = 0;
+
+	if(stringBuffer == null)
+	    return count;
+
+	for(int i = 0; i < stringBuffer.length(); i++)
+	    if(character == stringBuffer.charAt(i))
+		count += 1;
+
+	return count;
+    }
+
     public static long byteArrayToLong(byte bytes[])
     {
 	if(bytes == null || bytes.length != 8)
