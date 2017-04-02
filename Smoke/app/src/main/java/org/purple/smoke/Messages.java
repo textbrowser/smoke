@@ -35,8 +35,11 @@ import java.util.Arrays;
 
 public class Messages
 {
-    public final static int MESSAGES_CHAT = 1;
-    public final static int MESSAGES_EPKS = 2;
+    public enum MESSAGE_TYPES
+    {
+	MESSAGE_CHAT,
+	MESSAGE_EPKS
+    }
 
     public static String bytesToMessageString(byte bytes[])
     {
@@ -185,7 +188,9 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.
-		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGES_CHAT),
+		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGE_TYPES.
+							     MESSAGE_CHAT.
+							     ordinal()),
 				keysBytes,
 				messageBytes,
 				macBytes),
@@ -329,7 +334,9 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.
-		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGES_EPKS),
+		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGE_TYPES.
+							     MESSAGE_EPKS.
+							     ordinal()),
 				messageBytes,
 				macBytes,
 				singleArray),

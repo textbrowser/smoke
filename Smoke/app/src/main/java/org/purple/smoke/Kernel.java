@@ -235,11 +235,30 @@ public class Kernel
 	       array3 == null || array4 == null)
 		return ok;
 
-	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(array1, array2, array3),
-		 s_cryptography.sipHashHmacKey());
+	    Messages.MESSAGE_TYPES messageType =
+		Messages.MESSAGE_TYPES.MESSAGE_CHAT;
+	    boolean found = false;
+	    byte destination[] = null;
 
-	    if(!Cryptography.memcmp(array4, destination))
+	    for(Messages.MESSAGE_TYPES t : Messages.MESSAGE_TYPES.values())
+	    {
+		destination = Cryptography.hmac
+		    (Miscellaneous.joinByteArrays(Miscellaneous.
+						  intToByteArray(t.ordinal()),
+						  array1,
+						  array2,
+						  array3),
+		     s_cryptography.sipHashHmacKey());
+
+		if(Cryptography.memcmp(array4, destination))
+		{
+		    found = true;
+		    messageType = t;
+		    break;
+		}
+	    }
+
+	    if(!found)
 		return ok;
 
 	    /*
