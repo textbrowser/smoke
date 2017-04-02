@@ -187,13 +187,9 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.
-		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGE_TYPES.
-							     MESSAGE_CHAT.
-							     ordinal()),
-				keysBytes,
-				messageBytes,
-				macBytes),
+		(Miscellaneous.joinByteArrays(keysBytes,
+					      messageBytes,
+					      macBytes),
 		 Arrays.copyOfRange(sipHashKeyStream,
 				    32,
 				    sipHashKeyStream.length));
@@ -333,13 +329,9 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.
-		 joinByteArrays(Miscellaneous.intToByteArray(MESSAGE_TYPES.
-							     MESSAGE_EPKS.
-							     ordinal()),
-				messageBytes,
-				macBytes,
-				singleArray),
+		(Miscellaneous.joinByteArrays(messageBytes,
+					      macBytes,
+					      singleArray),
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 	    output.writeObject(messageBytes);
