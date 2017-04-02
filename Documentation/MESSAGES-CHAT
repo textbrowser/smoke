@@ -23,5 +23,5 @@
 
 [Destination SHA-512 HMAC] (4)
 {
-	[MESSAGES_CHAT_ENUM] || [PK] || [AES-256] || [SHA-512 HMAC] (1)
+	[PK] || [AES-256] || [SHA-512 HMAC] (1)
 }
