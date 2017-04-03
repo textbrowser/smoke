@@ -1,0 +1,24 @@
+[PK] (1)
+{
+	AES-256 Key
+	SHA-512 Key
+}
+
+[AES-256] (2)
+{
+	Sender's Public Encryption Key SHA-512 Digest (1)
+	[PK Signature] (2)
+	{
+		[PK] || [AES-256] (1)
+	}
+}
+
+[SHA-512 HMAC] (3)
+{
+	[PK] || [AES-256]
+}
+
+[Destination SHA-512 HMAC] (4)
+{
+	[PK] || [AES-256] || [SHA-512 HMAC] (1)
+}
