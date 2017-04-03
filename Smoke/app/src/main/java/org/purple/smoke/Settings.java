@@ -1037,6 +1037,10 @@ public class Settings extends AppCompatActivity
 					       Base64.DEFAULT));
 		    m_databaseHelper.writeSetting
 			(s_cryptography,
+			 "pki_chat_encryption_algorithm",
+			 m_encryptionAlgorithm);
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
 			 "pki_chat_encryption_private_key",
 			 Base64.
 			 encodeToString(chatEncryptionKeyPair.

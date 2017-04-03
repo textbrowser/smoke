@@ -153,6 +153,7 @@ public class Authenticate extends AppCompatActivity
 					(encryptionKey);
 				    s_cryptography.setMacKey(macKey);
 
+				    String algorithm = "";
 				    byte privateBytes[] = Base64.decode
 					(m_databaseHelper.
 					 readSetting(s_cryptography,
@@ -166,14 +167,12 @@ public class Authenticate extends AppCompatActivity
 						     "public_key").
 					 getBytes(), Base64.DEFAULT);
 
-				    s_cryptography.setChatEncryptionKeyPair
-					("RSA", privateBytes, publicBytes);
-
-				    String algorithm = m_databaseHelper.
+				    algorithm = m_databaseHelper.
 					readSetting(s_cryptography,
-						    "pki_chat_signature_" +
+						    "pki_chat_encryption_" +
 						    "algorithm");
-
+				    s_cryptography.setChatEncryptionKeyPair
+					(algorithm, privateBytes, publicBytes);
 				    privateBytes = Base64.decode
 					(m_databaseHelper.
 					 readSetting(s_cryptography,
@@ -186,6 +185,10 @@ public class Authenticate extends AppCompatActivity
 						     "pki_chat_signature_" +
 						     "public_key").
 					 getBytes(), Base64.DEFAULT);
+				    algorithm = m_databaseHelper.
+					readSetting(s_cryptography,
+						    "pki_chat_signature_" +
+						    "algorithm");
 				    s_cryptography.setChatSignatureKeyPair
 					(algorithm, privateBytes, publicBytes);
 
