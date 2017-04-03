@@ -165,11 +165,11 @@ public class Cryptography
 	    {
 		if(algorithm.equals("EC"))
 		{
-		    ECPublicKey ecdsaPublicKey = (ECPublicKey) publicKey;
+		    ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
 
-		    if(ecdsaPublicKey != null)
+		    if(ecPublicKey != null)
 			stringBuffer.append("\n").append("Size: ").
-			    append(ecdsaPublicKey.getW().getAffineX().
+			    append(ecPublicKey.getW().getAffineX().
 				   bitLength());
 		}
 		else if(algorithm.equals("RSA"))
