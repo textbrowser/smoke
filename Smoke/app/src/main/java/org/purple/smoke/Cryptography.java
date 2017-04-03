@@ -431,7 +431,14 @@ public class Cryptography
 
 	    try
 	    {
-		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
+		if(m_chatEncryptionKeyPair.getPrivate().getAlgorithm().
+		   equals("EC"))
+		    signature = Signature.getInstance
+			(PKI_ECDSA_SIGNATURE_ALGORITHM);
+		else
+		    signature = Signature.getInstance
+			(PKI_RSA_SIGNATURE_ALGORITHM);
+
 		signature.initSign(m_chatEncryptionKeyPair.getPrivate());
 		signature.update(data);
 		bytes = signature.sign();
