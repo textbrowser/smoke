@@ -1117,7 +1117,7 @@ public class Settings extends AppCompatActivity
 			    Settings.this.enableWidgets(true);
 			    State.getInstance().setAuthenticated(true);
 			    spinner1.setSelection(0);
-			    spinner2.setSelection(0);
+			    spinner2.setSelection(1); // RSA
 			    spinner3.setSelection(1); // RSA
 			    textView1.requestFocus();
 			    textView1.setText("");
@@ -1370,6 +1370,11 @@ public class Settings extends AppCompatActivity
 	if(!State.getInstance().isAuthenticated())
 	    if(m_databaseHelper.accountPrepared())
 		showAuthenticateActivity();
+
+	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
+
+	if(spinner1.getAdapter().getCount() > 1)
+	    spinner1.setSelection(1); // RSA
 
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
 
