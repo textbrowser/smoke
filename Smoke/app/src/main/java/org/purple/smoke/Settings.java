@@ -69,7 +69,8 @@ public class Settings extends AppCompatActivity
 	Cryptography.getInstance();
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
-    private final static int s_pkiEncryptionKeySize = 3072;
+    private final static int s_pkiEncryptionKeySize[] =
+        {384, 3072}; // ECC, RSA
     private final static int s_pkiSignatureKeySize[] =
         {384, 3072}; // ECDSA, RSA
     private final static int s_timerInterval = 7500; // 7.5 Seconds
@@ -948,6 +949,10 @@ public class Settings extends AppCompatActivity
 		       int iterationCount)
 	    {
 		m_encryptionAlgorithm = encryptionAlgorithm;
+
+		if(m_encryptionAlgorithm.equals("ECC"))
+		    m_encryptionAlgorithm = "EC";
+
 		m_iterationCount = iterationCount;
 		m_password = password;
 		m_signatureAlgorithm = signatureAlgorithm;
@@ -971,9 +976,15 @@ public class Settings extends AppCompatActivity
 
 		try
 		{
-		    chatEncryptionKeyPair = Cryptography.
-			generatePrivatePublicKeyPair
-			(m_encryptionAlgorithm, s_pkiEncryptionKeySize);
+		    if(m_encryptionAlgorithm.equals("EC"))
+			chatEncryptionKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    ("EC", s_pkiEncryptionKeySize[0]);
+		    else
+			chatEncryptionKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    (m_encryptionAlgorithm, s_pkiEncryptionKeySize[1]);
+
 
 		    if(m_signatureAlgorithm.equals("EC"))
 			chatSignatureKeyPair = Cryptography.
@@ -1272,7 +1283,7 @@ public class Settings extends AppCompatActivity
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "RSA"
+	    "ECC", "RSA"
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
