@@ -623,7 +623,7 @@ public class Settings extends AppCompatActivity
 		stringBuffer.append("0.00");
 	    }
 
-	    stringBuffer.append(" Minutes");
+	    stringBuffer.append(" Minutes\n");
 	    textView.setGravity(Gravity.CENTER_VERTICAL);
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));

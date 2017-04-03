@@ -32,6 +32,7 @@ Completed Items
 28.    ECDSA.
 29.    Reset option in Authenticate activity.
 30.    Connection status text colors.
+31.    Dynamic textview objects trim text. Append an extra new line.
 
 Ignored / Impossible Items
 
@@ -55,5 +56,4 @@ Remaining Items
 9.     Tab order.
 10.    Allow content-copying of read-only views.
 11.    Complete Cryptography.pkiEncrypt().
-12.    Dynamic textview objects trim text.
-13.    Per request, include the source in the application bundle.
+12.    Per request, include the source in the application bundle.
