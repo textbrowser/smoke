@@ -229,19 +229,16 @@ public class Kernel
 	    byte array1[] = (byte[]) input.readObject();
 	    byte array2[] = (byte[]) input.readObject();
 	    byte array3[] = (byte[]) input.readObject();
-	    byte array4[] = (byte[]) input.readObject();
 
-	    if(array1 == null || array2 == null ||
-	       array3 == null || array4 == null)
+	    if(array1 == null || array2 == null || array3 == null)
 		return ok;
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(array1,
-					      array2,
-					      array3),
+					      array2),
 		 s_cryptography.sipHashHmacKey());
 
-	    if(!Cryptography.memcmp(array4, destination))
+	    if(!Cryptography.memcmp(array3, destination))
 		return ok;
 
 	    /*

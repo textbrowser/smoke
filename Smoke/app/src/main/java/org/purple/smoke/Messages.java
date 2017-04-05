@@ -320,23 +320,17 @@ public class Messages
 	    if(macBytes == null)
 		return null;
 
-	    byte singleArray[] = new byte[1];
-
-	    singleArray[0] = 0;
-
 	    /*
 	    ** [ Destination Digest ]
 	    */
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(messageBytes,
-					      macBytes,
-					      singleArray),
+					      macBytes),
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
-	    output.writeObject(singleArray);
 	    output.writeObject(destination);
 	    output.flush();
 	}
