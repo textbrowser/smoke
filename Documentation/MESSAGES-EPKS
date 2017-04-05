@@ -9,12 +9,10 @@
 
 [SHA-512 HMAC] (2)
 {
-	[AES-256]
+	[AES-256] (1)
 }
 
-[One-Byte Array] (3)
-
-[Destination SHA-512 HMAC] (4)
+[Destination SHA-512 HMAC] (3)
 {
-	[AES-256] || [SHA-512 HMAC] || [One-Byte Array] (1)
+	[AES-256] || [SHA-512 HMAC] (1)
 }
