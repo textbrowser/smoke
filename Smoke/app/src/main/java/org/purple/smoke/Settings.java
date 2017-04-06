@@ -192,7 +192,7 @@ public class Settings extends AppCompatActivity
 			if(m_error)
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
-				 "An error occurred while " +
+				 "An error occurred while attempting " +
 				 "to save the SipHash ID.");
 			else
 			    populateParticipants();
