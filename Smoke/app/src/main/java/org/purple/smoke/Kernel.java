@@ -233,19 +233,23 @@ public class Kernel
 	    if(array1 == null || array2 == null || array3 == null)
 		return ok;
 
-	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(array1,
-					      array2),
-		 s_cryptography.sipHashHmacKey());
+	    if(array3.length == 1)
+	    {
+		/*
+		** EPKS?
+		*/
 
-	    if(!Cryptography.memcmp(array3, destination))
-		return ok;
+		byte destination[] = Cryptography.hmac
+		    (array1, s_cryptography.sipHashHmacKey());
 
-	    /*
-	    ** We've authenticated the message!
-	    */
+		if(!Cryptography.memcmp(array2, destination))
+		    return ok;
 
-	    ok = true;
+		ok = true;
+	    }
+	    else
+	    {
+	    }
 	}
 	catch(Exception exception)
 	{

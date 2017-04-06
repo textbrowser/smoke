@@ -254,13 +254,6 @@ public class Messages
 	    byte bytes[] = null;
 
 	    /*
-	    ** [ Public Key Data ]
-	    ** [ Digest ([ Public Key Data ]) ]
-	    ** [ One-Byte Array ]
-	    ** [ Destination Digest ]
-	    */
-
-	    /*
 	    ** [ Public Key ]
 	    */
 
@@ -321,17 +314,15 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ Destination Digest ]
+	    ** [ Single-Byte Array ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(messageBytes,
-					      macBytes),
-		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+	    byte array[] = new byte[1];
 
+	    array[0] = 0;
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
-	    output.writeObject(destination);
+	    output.writeObject(array);
 	    output.flush();
 	}
 	catch(Exception exception)
