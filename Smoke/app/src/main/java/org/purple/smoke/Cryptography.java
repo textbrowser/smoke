@@ -60,11 +60,13 @@ public class Cryptography
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
     private String m_sipHashId = "00:00:00:00:00:00:00:00";
+    private byte m_id[] = null;
     private byte m_sipHashEncryptionKey[] = null;
     private byte m_sipHashMacKey[] = null;
     private final Object m_chatEncryptionKeyPairMutex = new Object();
     private final Object m_chatSignatureKeyPairMutex = new Object();
     private final Object m_encryptionKeyMutex = new Object();
+    private final Object m_idMutex = new Object();
     private final Object m_macKeyMutex = new Object();
     private final Object m_sipHashEncryptionKeyMutex = new Object();
     private final Object m_sipHashMacKeyMutex = new Object();
@@ -330,6 +332,22 @@ public class Cryptography
 	    }
 
 	    return bytes;
+	}
+    }
+
+    public byte[] id()
+    {
+	prepareSecureRandom();
+
+	synchronized(m_idMutex)
+	{
+	    if(m_id == null)
+	    {
+		m_id = new byte[64];
+		s_secureRandom.nextBytes(m_id);
+	    }
+
+	    return m_id;
 	}
     }
 
@@ -864,6 +882,11 @@ public class Cryptography
 	synchronized(m_encryptionKeyMutex)
 	{
 	    m_encryptionKey = null;
+	}
+
+	synchronized(m_idMutex)
+	{
+	    m_id = null;
 	}
 
 	synchronized(m_macKeyMutex)

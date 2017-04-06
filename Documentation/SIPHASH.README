@@ -13,3 +13,6 @@ keystream2 := pbkdf2(sha512(id), // Salt
 		     keystream1,
 		     1000,       // Iteration Count
 		     768)        // Bits (96 Bytes)
+
+The contents of keystream2 may be used to distribute public key pairs
+as well as other non-confidential material.
