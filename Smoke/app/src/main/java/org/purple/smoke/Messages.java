@@ -84,10 +84,13 @@ public class Messages
 				     PublicKey receiverPublicKey,
 				     String message,
 				     String timestamp,
+				     byte encryptionKeyBytes[],
+				     byte macKeyBytes[],
 				     byte sipHashKeyStream[],
 				     int sequence)
     {
-	if(cryptography == null || receiverPublicKey == null)
+	if(cryptography == null || encryptionKeyBytes == null ||
+	   macKeyBytes == null || receiverPublicKey == null)
 	    return null;
 
 	/*
@@ -105,34 +108,6 @@ public class Messages
 
 	    ByteArrayOutputStream s = new ByteArrayOutputStream();
 	    ObjectOutputStream o = new ObjectOutputStream(s);
-
-	    /*
-	    ** Create random encryption and mac keys.
-	    */
-
-	    byte encryptionKeyBytes[] = Cryptography.randomBytes(32); // AES-256
-	    byte macKeyBytes[] = Cryptography.randomBytes(64); // SHA-512
-
-	    if(encryptionKeyBytes == null || macKeyBytes == null)
-		return null;
-
-	    /*
-	    ** [ Private Key Data ]
-	    ** [ Message Data ]
-	    ** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
-	    ** [ Destination Digest ]
-	    */
-
-	    /*
-	    ** [ Private Key Data ]
-	    */
-
-	    byte keysBytes[] = Cryptography.pkiEncrypt
-		(receiverPublicKey,
-		 Miscellaneous.joinByteArrays(encryptionKeyBytes, macKeyBytes));
-
-	    if(keysBytes == null)
-		return null;
 
 	    /*
 	    ** [ Message Data ]
@@ -155,18 +130,13 @@ public class Messages
 	    */
 
 	    byte signature[] = cryptography.signViaChatSignature
-		(Miscellaneous.joinByteArrays(encryptionKeyBytes,
-					      macKeyBytes,
-					      s.toByteArray()));
+		(s.toByteArray());
 
 	    if(signature == null)
 		return null;
 
-	    o.writeObject(signature);
-	    o.flush();
-
 	    byte messageBytes[] = Cryptography.encrypt
-		(s.toByteArray(), encryptionKeyBytes);
+		(signature, encryptionKeyBytes);
 
 	    if(messageBytes == null)
 		return null;
@@ -176,8 +146,7 @@ public class Messages
 	    */
 
 	    byte macBytes[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(keysBytes, messageBytes),
-		 macKeyBytes);
+		(messageBytes, macKeyBytes);
 
 	    if(macBytes == null)
 		return null;
@@ -187,14 +156,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(keysBytes,
-					      messageBytes,
+		(Miscellaneous.joinByteArrays(messageBytes,
 					      macBytes),
 		 Arrays.copyOfRange(sipHashKeyStream,
 				    32,
 				    sipHashKeyStream.length));
 
-	    output.writeObject(keysBytes);
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
 	    output.writeObject(destination);
