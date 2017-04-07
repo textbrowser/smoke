@@ -36,6 +36,7 @@ import android.util.Base64;
 import android.util.Patterns;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+import java.io.ObjectInputStream;
 import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
@@ -705,6 +706,23 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return ok;
+    }
+
+    public boolean writeParticipant(Cryptography cryptography,
+				    ObjectInputStream input)
+    {
+	if(cryptography == null || input == null)
+	    return false;
+
+	try
+	{
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+
+	return true;
     }
 
     public boolean writeSipHashParticipant(Cryptography cryptography,

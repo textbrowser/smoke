@@ -39,24 +39,24 @@ import java.util.concurrent.TimeUnit;
 
 public class Kernel
 {
-    private Database m_databaseHelper = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static int s_neighborsInterval = 10000; // 10 Seconds
-    private static Cryptography s_cryptography = Cryptography.getInstance();
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
+    private final static Database s_databaseHelper = Database.getInstance();
     private static Kernel s_instance = null;
 
     private Kernel()
     {
-	m_databaseHelper = Database.getInstance();
 	prepareSchedulers();
     }
 
     private void prepareNeighbors()
     {
 	SparseArray<NeighborElement> neighbors =
-	    m_databaseHelper.readNeighbors(s_cryptography);
-	int count = m_databaseHelper.count("neighbors");
+	    s_databaseHelper.readNeighbors(s_cryptography);
+	int count = s_databaseHelper.count("neighbors");
 
 	if(count == 0 || neighbors == null)
 	{
@@ -133,7 +133,7 @@ public class Kernel
 		{
 		    if(neighborElement.m_statusControl.toLowerCase().
 		       equals("disconnect"))
-			m_databaseHelper.saveNeighborInformation
+			s_databaseHelper.saveNeighborInformation
 			    (s_cryptography,
 			     "0",
 			     "0",
@@ -244,7 +244,10 @@ public class Kernel
 		if(!ok)
 		    return ok;
 
-		s_cryptography.decryptWithSipHashKey(array1);
+		stream = new ByteArrayInputStream
+		    (s_cryptography.decryptWithSipHashKey(array1));
+		input = new ObjectInputStream(stream);
+		s_databaseHelper.writeParticipant(s_cryptography, input);
 	    }
 	    else
 	    {
@@ -303,11 +306,11 @@ public class Kernel
 	if(message.trim().isEmpty())
 	    return;
 
-	SparseIntArray neighbors = m_databaseHelper.readNeighborOids();
+	SparseIntArray neighbors = s_databaseHelper.readNeighborOids();
 
 	if(neighbors != null)
 	    for(int i = 0; i < neighbors.size(); i++)
-		m_databaseHelper.enqueueOutboundMessage
+		s_databaseHelper.enqueueOutboundMessage
 		    (message, neighbors.get(i));
     }
 }
