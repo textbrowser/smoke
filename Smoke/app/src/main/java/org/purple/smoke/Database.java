@@ -707,9 +707,9 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
-    public boolean writeParticipant(Cryptography cryptography,
-				    String name,
-				    String sipHashId)
+    public boolean writeSipHashParticipant(Cryptography cryptography,
+					   String name,
+					   String sipHashId)
     {
 	if(cryptography == null)
 	    return false;
@@ -785,7 +785,7 @@ public class Database extends SQLiteOpenHelper
 		    StringBuffer stringBuffer = new StringBuffer();
 
 		    stringBuffer.append
-			("Database::writeParticipant(): error with ");
+			("Database::writeSipHashParticipant(): error with ");
 		    stringBuffer.append(sparseArray.get(i));
 		    stringBuffer.append(" field.");
 		    writeLog(stringBuffer.toString());
@@ -1075,7 +1075,7 @@ public class Database extends SQLiteOpenHelper
 	    "name TEXT NOT NULL, " +
 	    "encryption_public_key TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
-	    "identity TEXT NOT NULL, "
+	    "identity TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
 	    "function_digest, " + // chat, e-mail, etc.
 	    "signature_public_key TEXT NOT NULL, " +

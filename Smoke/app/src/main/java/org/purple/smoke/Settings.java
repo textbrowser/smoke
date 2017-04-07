@@ -177,9 +177,9 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		if(!m_databaseHelper.writeParticipant(s_cryptography,
-						      m_name,
-						      m_siphashId))
+		if(!m_databaseHelper.writeSipHashParticipant(s_cryptography,
+							     m_name,
+							     m_siphashId))
 		    m_error = true;
 
 		Settings.this.runOnUiThread(new Runnable()
