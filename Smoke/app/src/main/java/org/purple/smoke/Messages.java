@@ -223,12 +223,12 @@ public class Messages
 
 	    o.writeObject(keyType);
 
-	    PublicKey publicKey = null;
-	    byte bytes[] = null;
-
 	    /*
 	    ** [ Public Key ]
 	    */
+
+	    PublicKey publicKey = null;
+	    byte bytes[] = null;
 
 	    publicKey = cryptography.chatEncryptionPublicKey();
 
@@ -276,7 +276,7 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ Digest ([ Public Key Data ]) ]
+	    ** [ Digest ([ Public Data ]) ]
 	    */
 
 	    byte macBytes[] = Cryptography.hmac
