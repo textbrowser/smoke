@@ -515,26 +515,6 @@ public class Cryptography
 	}
     }
 
-    public static byte[] pbkdf2(byte salt[],
-				char password[],
-				int iterations,
-				int length)
-    {
-	try
-	{
-	    KeySpec keySpec = new PBEKeySpec
-		(password, salt, iterations, length);
-	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		("PBKDF2WithHmacSHA1");
-
-	    return secretKeyFactory.generateSecret(keySpec).getEncoded();
-	}
-	catch(Exception exception)
-	{
-	    return null;
-	}
-    }
-
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
 	throws NoSuchAlgorithmException
@@ -767,6 +747,26 @@ public class Cryptography
 	}
 
 	return bytes;
+    }
+
+    public static byte[] pbkdf2(byte salt[],
+				char password[],
+				int iterations,
+				int length)
+    {
+	try
+	{
+	    KeySpec keySpec = new PBEKeySpec
+		(password, salt, iterations, length);
+	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		("PBKDF2WithHmacSHA1");
+
+	    return secretKeyFactory.generateSecret(keySpec).getEncoded();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
     }
 
     public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
