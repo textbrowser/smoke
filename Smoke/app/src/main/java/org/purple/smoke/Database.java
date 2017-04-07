@@ -736,8 +736,19 @@ public class Database extends SQLiteOpenHelper
 
 	    publicKey = (PublicKey) input.readObject();
 	    publicKeySignature = (byte []) input.readObject();
+
+	    if(!cryptography.verifySignature(publicKey,
+					     publicKeySignature,
+					     publicKey.getEncoded()))
+		return false;
+
 	    signatureKey = (PublicKey) input.readObject();
 	    signatureKeySignature = (byte []) input.readObject();
+
+	    if(!cryptography.verifySignature(signatureKey,
+					     signatureKeySignature,
+					     signatureKey.getEncoded()))
+		return false;
 	}
 	catch(Exception exception)
 	{
