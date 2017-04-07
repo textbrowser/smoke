@@ -190,6 +190,20 @@ public class Cryptography
 	return stringBuffer.toString();
     }
 
+    public boolean isValidSipHashMac(byte data[], byte mac[])
+    {
+	if(data == null || mac == null)
+	    return false;
+
+	byte bytes[] = null;
+
+	synchronized(m_sipHashMacKeyMutex)
+	{
+	    bytes = hmac(data, m_sipHashMacKey);
+	}
+
+	return memcmp(bytes, mac);
+    }
     public boolean prepareSipHashKeys()
     {
 	try

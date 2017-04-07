@@ -239,13 +239,10 @@ public class Kernel
 		** EPKS?
 		*/
 
-		byte destination[] = Cryptography.hmac
-		    (array1, s_cryptography.sipHashHmacKey());
+		ok = s_cryptography.isValidSipHashMac(array1, array2);
 
-		if(!Cryptography.memcmp(array2, destination))
+		if(!ok)
 		    return ok;
-
-		ok = true;
 	    }
 	    else
 	    {
