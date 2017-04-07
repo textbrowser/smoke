@@ -226,9 +226,9 @@ public class Kernel
 		(Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT));
 	    input = new ObjectInputStream(stream);
 
-	    byte array1[] = (byte[]) input.readObject();
-	    byte array2[] = (byte[]) input.readObject();
-	    byte array3[] = (byte[]) input.readObject();
+	    byte array1[] = (byte []) input.readObject();
+	    byte array2[] = (byte []) input.readObject();
+	    byte array3[] = (byte []) input.readObject();
 
 	    if(array1 == null || array2 == null || array3 == null)
 		return ok;

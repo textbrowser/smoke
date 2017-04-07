@@ -37,6 +37,7 @@ import android.util.Patterns;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.io.ObjectInputStream;
+import java.security.PublicKey;
 import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
@@ -716,6 +717,27 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
+	    PublicKey publicKey = null;
+	    PublicKey signatureKey = null;
+	    String keyType = "";
+	    byte identity[] = null;
+	    byte publicKeySignature[] = null;
+	    byte signatureKeySignature[] = null;
+
+	    identity = (byte []) input.readObject();
+
+	    if(identity.length != 64)
+		return false;
+
+	    keyType = (String) input.readObject();
+
+	    if(!keyType.equals("chat"))
+		return false;
+
+	    publicKey = (PublicKey) input.readObject();
+	    publicKeySignature = (byte []) input.readObject();
+	    signatureKey = (PublicKey) input.readObject();
+	    signatureKeySignature = (byte []) input.readObject();
 	}
 	catch(Exception exception)
 	{

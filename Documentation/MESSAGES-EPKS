@@ -1,6 +1,6 @@
 [AES-256] (1)
 {
-	Identity (1)
+	Identity (64 Bytes) (1)
 	Key Type (2)
 	Public Key (3)
 	Public Key Signature (4)
