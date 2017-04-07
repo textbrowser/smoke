@@ -266,13 +266,12 @@ public class Cryptography
 
 	try
 	{
-	    Cipher cipher = null;
-
 	    synchronized(m_sipHashEncryptionKeyMutex)
 	    {
 		if(m_sipHashEncryptionKey == null)
 		    return null;
 
+		Cipher cipher = null;
 		SecretKey secretKey = new SecretKeySpec
 		    (m_sipHashEncryptionKey, SYMMETRIC_ALGORITHM);
 		byte iv[] = Arrays.copyOf(data, 16);
@@ -320,14 +319,12 @@ public class Cryptography
 
 	try
 	{
-	    Cipher cipher = null;
-	    Mac mac = null;
-
 	    synchronized(m_encryptionKeyMutex)
 	    {
 		if(m_encryptionKey == null)
 		    return null;
 
+		Cipher cipher = null;
 		byte iv[] = new byte[16];
 
 		s_secureRandom.nextBytes(iv);
@@ -343,6 +340,8 @@ public class Cryptography
 	    {
 		if(m_macKey == null)
 		    return null;
+
+		Mac mac = null;
 
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
@@ -429,7 +428,6 @@ public class Cryptography
 	    ** Verify the computed digest with the provided digest.
 	    */
 
-	    Mac mac = null;
 	    byte digest1[] = null; // Provided Digest
 	    byte digest2[] = null; // Computed Digest
 
@@ -440,6 +438,8 @@ public class Cryptography
 	    {
 		if(m_macKey == null)
 		    return null;
+
+		Mac mac = null;
 
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
@@ -459,13 +459,12 @@ public class Cryptography
 
 	try
 	{
-	    Cipher cipher = null;
-
 	    synchronized(m_encryptionKeyMutex)
 	    {
 		if(m_encryptionKey == null)
 		    return null;
 
+		Cipher cipher = null;
 		byte iv[] = Arrays.copyOf(data, 16);
 
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
