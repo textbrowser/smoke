@@ -204,6 +204,7 @@ public class Cryptography
 
 	return memcmp(bytes, mac);
     }
+
     public boolean prepareSipHashKeys()
     {
 	try
@@ -254,6 +255,42 @@ public class Cryptography
 
 	    return sha512(m_chatEncryptionKeyPair.getPublic().getEncoded());
 	}
+    }
+
+    public byte[] decryptWithSipHashKey(byte data[])
+    {
+	if(data == null)
+	    return null;
+
+	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+
+	    synchronized(m_sipHashEncryptionKeyMutex)
+	    {
+		if(m_sipHashEncryptionKey == null)
+		    return null;
+
+		SecretKey secretKey = new SecretKeySpec
+		    (m_sipHashEncryptionKey, SYMMETRIC_ALGORITHM);
+		byte iv[] = Arrays.copyOf(data, 16);
+
+		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+		cipher.init(Cipher.DECRYPT_MODE,
+			    secretKey,
+			    new IvParameterSpec(iv));
+		bytes = cipher.doFinal
+		    (Arrays.copyOfRange(data, 16, data.length - 512 / 8));
+	    }
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
     }
 
     public byte[] etm(byte data[]) // Encrypt-Then-MAC

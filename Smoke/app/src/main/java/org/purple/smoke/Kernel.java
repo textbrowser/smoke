@@ -243,6 +243,8 @@ public class Kernel
 
 		if(!ok)
 		    return ok;
+
+		s_cryptography.decryptWithSipHashKey(array1);
 	    }
 	    else
 	    {
