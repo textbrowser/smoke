@@ -754,6 +754,10 @@ public class Database extends SQLiteOpenHelper
 					     signatureKeySignature,
 					     signatureKey.getEncoded()))
 		return false;
+
+	    ContentValues values = new ContentValues();
+
+	    m_db.insert("participants", null, values);
 	}
 	catch(Exception exception)
 	{
@@ -1131,12 +1135,12 @@ public class Database extends SQLiteOpenHelper
 	*/
 
 	str = "CREATE TABLE IF NOT EXISTS participants (" +
-	    "name TEXT NOT NULL, " +
 	    "encryption_public_key TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
+	    "function_digest, " + // chat, e-mail, etc.
 	    "identity TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
-	    "function_digest, " + // chat, e-mail, etc.
+	    "name TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
@@ -1218,7 +1222,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
-	    writeLog("Database::reset() failure.");
 	}
     }
 
