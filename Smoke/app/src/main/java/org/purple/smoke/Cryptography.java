@@ -281,7 +281,7 @@ public class Cryptography
 			    secretKey,
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal
-		    (Arrays.copyOfRange(data, 16, data.length - 512 / 8));
+		    (Arrays.copyOfRange(data, 16, data.length));
 	    }
 	}
 	catch(Exception exception)
@@ -327,8 +327,8 @@ public class Cryptography
 		Cipher cipher = null;
 		byte iv[] = new byte[16];
 
-		s_secureRandom.nextBytes(iv);
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+		s_secureRandom.nextBytes(iv);
 		cipher.init(Cipher.ENCRYPT_MODE,
 			    m_encryptionKey,
 			    new IvParameterSpec(iv));

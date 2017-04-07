@@ -1027,7 +1027,7 @@ public class Settings extends AppCompatActivity
 			 Base64.encodeToString(encryptionSalt,
 					       Base64.DEFAULT));
 		    m_databaseHelper.writeSetting
-			(null,
+			(s_cryptography,
 			 "identity",
 			 Base64.encodeToString(s_cryptography.identity(),
 					       Base64.DEFAULT));
