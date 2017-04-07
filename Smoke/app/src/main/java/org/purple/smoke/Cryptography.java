@@ -60,13 +60,13 @@ public class Cryptography
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
     private String m_sipHashId = "00:00:00:00:00:00:00:00";
-    private byte m_id[] = null;
+    private byte m_identity[] = null;
     private byte m_sipHashEncryptionKey[] = null;
     private byte m_sipHashMacKey[] = null;
     private final Object m_chatEncryptionKeyPairMutex = new Object();
     private final Object m_chatSignatureKeyPairMutex = new Object();
     private final Object m_encryptionKeyMutex = new Object();
-    private final Object m_idMutex = new Object();
+    private final Object m_identityMutex = new Object();
     private final Object m_macKeyMutex = new Object();
     private final Object m_sipHashEncryptionKeyMutex = new Object();
     private final Object m_sipHashMacKeyMutex = new Object();
@@ -335,19 +335,19 @@ public class Cryptography
 	}
     }
 
-    public byte[] id()
+    public byte[] identity()
     {
 	prepareSecureRandom();
 
-	synchronized(m_idMutex)
+	synchronized(m_identityMutex)
 	{
-	    if(m_id == null)
+	    if(m_identity == null)
 	    {
-		m_id = new byte[64];
-		s_secureRandom.nextBytes(m_id);
+		m_identity = new byte[64];
+		s_secureRandom.nextBytes(m_identity);
 	    }
 
-	    return m_id;
+	    return m_identity;
 	}
     }
 
@@ -884,9 +884,9 @@ public class Cryptography
 	    m_encryptionKey = null;
 	}
 
-	synchronized(m_idMutex)
+	synchronized(m_identityMutex)
 	{
-	    m_id = null;
+	    m_identity = null;
 	}
 
 	synchronized(m_macKeyMutex)
@@ -954,6 +954,14 @@ public class Cryptography
 	synchronized(m_encryptionKeyMutex)
 	{
 	    m_encryptionKey = key;
+	}
+    }
+
+    public void setIdentity(byte identity[])
+    {
+	synchronized(m_identityMutex)
+	{
+	    m_identity = identity;
 	}
     }
 

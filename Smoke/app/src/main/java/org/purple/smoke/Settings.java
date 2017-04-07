@@ -1028,6 +1028,11 @@ public class Settings extends AppCompatActivity
 					       Base64.DEFAULT));
 		    m_databaseHelper.writeSetting
 			(null,
+			 "identity",
+			 Base64.encodeToString(s_cryptography.identity(),
+					       Base64.DEFAULT));
+		    m_databaseHelper.writeSetting
+			(null,
 			 "iterationCount",
 			 String.valueOf(m_iterationCount));
 		    m_databaseHelper.writeSetting

@@ -212,6 +212,12 @@ public class Messages
 	    ObjectOutputStream o = new ObjectOutputStream(s);
 
 	    /*
+	    ** [ Identity ]
+	    */
+
+	    o.writeObject(cryptography.identity());
+
+	    /*
 	    ** [ Key Type ]
 	    */
 
