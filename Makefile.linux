@@ -25,9 +25,13 @@ kill-adb-server:
 kill-gradle-daemon:
 	$(GRADLEW) --stop
 
-launch-emulator:
+launch-emulator-1:
 	$(EMULATOR) -netdelay none -netspeed full -avd \
-	`$(EMULATOR) -list-avds | sort | tail -1` &
+	`$(EMULATOR) -list-avds | sort | sed "1q;d"` &
+
+launch-emulator-2:
+	$(EMULATOR) -netdelay none -netspeed full -avd \
+	`$(EMULATOR) -list-avds | sort | sed "2q;d"` &
 
 list-devices:
 	$(ADB) devices -l
