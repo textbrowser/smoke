@@ -715,6 +715,11 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || input == null)
 	    return false;
 
+	prepareDb();
+
+	if(m_db == null)
+	    return false;
+
 	try
 	{
 	    PublicKey publicKey = null;
@@ -920,6 +925,9 @@ public class Database extends SQLiteOpenHelper
 	    return;
 
 	prepareDb();
+
+	if(m_db == null)
+	    return;
 
 	try
 	{
@@ -1200,6 +1208,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    m_db.delete("congestion_control", null, null);
+	    m_db.delete("inbound_queue", null, null);
 	    m_db.delete("log", null, null);
 	    m_db.delete("neighbors", null, null);
 	    m_db.delete("outbound_queue", null, null);
@@ -1222,19 +1231,14 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    String str = "DROP TABLE IF EXISTS congestion_control";
-
-	    m_db.execSQL(str);
-	    str = "DROP TABLE IF EXISTS log";
-	    m_db.execSQL(str);
-	    str = "DROP TABLE IF EXISTS neighbors";
-	    m_db.execSQL(str);
-	    str = "DROP TABLE IF EXISTS outbound_queue";
-	    m_db.execSQL(str);
-	    str = "DROP TABLE IF EXISTS participants";
-	    m_db.execSQL(str);
-	    str = "DROP TABLE IF EXISTS settings";
-	    m_db.execSQL(str);
+	    m_db.execSQL("DROP TABLE IF EXISTS congestion_control");
+	    m_db.execSQL("DROP TABLE IF EXISTS inbound_queue");
+	    m_db.execSQL("DROP TABLE IF EXISTS log");
+	    m_db.execSQL("DROP TABLE IF EXISTS neighbors");
+	    m_db.execSQL("DROP TABLE IF EXISTS outbound_queue");
+	    m_db.execSQL("DROP TABLE IF EXISTS participants");
+	    m_db.execSQL("DROP TABLE IF EXISTS settings");
+	    m_db.execSQL("DROP TABLE IF EXISTS siphash_ids");
 	}
 	catch(Exception exception)
 	{

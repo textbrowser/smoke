@@ -5,7 +5,7 @@
 	Sender's Public Encryption Key SHA-512 Digest (3)
 	[PK Signature] (4)
 	{
-		[AES-256] || [SHA-512] || [Sender's PEK SHA-512 Digest] (1)
+		[AES-256] || [SHA-512] || [Sender's Public Encryption Key SHA-512 Digest] (1)
 	}
 }
 

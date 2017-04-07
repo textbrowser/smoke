@@ -78,7 +78,7 @@ public class Cryptography
 	"SHA512withRSA/PSS";
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
-	"AES/CBC/PKCS5Padding";
+	"AES/CBC/PKCS7Padding";
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 1000;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
