@@ -521,14 +521,6 @@ public class Cryptography
 	}
     }
 
-    public byte[] sipHashHmacKey()
-    {
-	synchronized(m_sipHashMacKeyMutex)
-	{
-	    return m_sipHashMacKey;
-	}
-    }
-
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
 	throws NoSuchAlgorithmException
