@@ -1073,15 +1073,13 @@ public class Database extends SQLiteOpenHelper
 
 	str = "CREATE TABLE IF NOT EXISTS participants (" +
 	    "name TEXT NOT NULL, " +
-	    "name_overridden TEXT NOT NULL, " +
 	    "encryption_public_key TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
-	    "forward_secrecy_magnet TEXT NOT NULL, " +
+	    "identity TEXT NOT NULL, "
+	    "keystream TEXT NOT NULL, " +
 	    "function_digest, " + // chat, e-mail, etc.
-	    "gemini_magnet TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
-	    "status TEXT NOT NULL, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
 	    "signature_public_key_digest))";
 
