@@ -70,7 +70,7 @@ public abstract class Neighbor
 
     private void saveStatistics()
     {
-	int oid = 0;
+	int oid = -1;
 	long bytesRead = 0;
 	long bytesWritten = 0;
 	long uptime = 0;
@@ -312,8 +312,15 @@ public abstract class Neighbor
 
     public abstract boolean send(String message);
 
-    public synchronized int getOid()
+    public int getOid()
     {
-	return m_oid;
+	int oid = -1;
+
+	synchronized(m_oidMutex)
+	{
+	    oid = m_oid;
+	}
+
+	return oid;
     }
 }
