@@ -215,33 +215,33 @@ public class UdpNeighbor extends Neighbor
 			if(byteArrayOutputStream != null &&
 			   byteArrayOutputStream.size() > 0)
 			    synchronized(m_stringBuffer)
-			{
-			    m_stringBuffer.append
-				(new String(byteArrayOutputStream.
-					    toByteArray()));
-
-			    /*
-			    ** Detect our end-of-message delimiter and record
-			    ** the message in some database table.
-			    */
-
-			    int indexOf = m_stringBuffer.indexOf(s_eom);
-
-			    while(indexOf >= 0)
 			    {
-				String buffer = m_stringBuffer.
-				    substring(0, indexOf + s_eom.length());
+				m_stringBuffer.append
+				    (new String(byteArrayOutputStream.
+						toByteArray()));
 
-				if(!Kernel.getInstance().ourMessage(buffer))
-				    echo(buffer);
+				/*
+				** Detect our end-of-message delimiter and
+				** record the message in some database table.
+				*/
 
-				m_stringBuffer.delete(0, buffer.length());
-				indexOf = m_stringBuffer.indexOf(s_eom);
+				int indexOf = m_stringBuffer.indexOf(s_eom);
+
+				while(indexOf >= 0)
+				{
+				    String buffer = m_stringBuffer.
+					substring(0, indexOf + s_eom.length());
+
+				    if(!Kernel.getInstance().ourMessage(buffer))
+					echo(buffer);
+
+				    m_stringBuffer.delete(0, buffer.length());
+				    indexOf = m_stringBuffer.indexOf(s_eom);
+				}
+
+				if(m_stringBuffer.length() > s_maximumBytes)
+				    m_stringBuffer.setLength(s_maximumBytes);
 			    }
-
-			    if(m_stringBuffer.length() > s_maximumBytes)
-				m_stringBuffer.setLength(s_maximumBytes);
-			}
 		    }
 		    catch(Exception exception)
 		    {
