@@ -58,3 +58,5 @@ Remaining Items
 10.    Allow content-copying of read-only views.
 11.    Complete Cryptography.pkiEncrypt().
 12.    Per request, include the source in the application bundle.
+13.    If a SipHash ID is deleted, its corresponding participants
+       entry should also be removed.
