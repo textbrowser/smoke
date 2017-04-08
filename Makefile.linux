@@ -46,14 +46,14 @@ load-apk: all
 	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 
 pull-database:
-	$(ADB) -s emulator-5554 exec-out run-as org.purple.smoke cat /data/data/org.purple.smoke/databases/smoke.db > smoke.db
+	./adb.bash exec-out run-as org.purple.smoke cat /data/data/org.purple.smoke/databases/smoke.db
 
 purge:
 	find . -name '*~*' -exec rm -f {} \;
 
 remove-database:
-	$(ADB) shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db
-	$(ADB) shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db-journal
+	./adb.bash shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db
+	./adb.bash shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db-journal
 
 stop-smoke:
 	./adb.bash shell am force-stop org.purple.smoke
