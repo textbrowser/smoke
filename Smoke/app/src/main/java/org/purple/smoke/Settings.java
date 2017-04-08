@@ -526,10 +526,9 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    if(neighborElement.m_status.equals("connected"))
-		textView.setTextColor
-		    (Color.rgb(144, 238, 144)); // Light Green
+		textView.setTextColor(Color.rgb(0, 100, 0)); // Dark Green
 	    else
-		textView.setTextColor(Color.rgb(240, 128, 128));
+		textView.setTextColor(Color.rgb(139, 0, 0)); // Dark Red
 
 	    stringBuffer.setLength(0);
 	    stringBuffer.append("Control: ");
