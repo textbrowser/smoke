@@ -34,6 +34,8 @@ Completed Items
 30.    Connection status text colors.
 31.    Dynamic textview objects trim text. Append an extra new line.
 32.    EPKS.
+33.    If a SipHash ID is deleted, its corresponding participants
+       entry should also be removed. Foreign key constraints.
 
 Ignored / Impossible Items
 
@@ -58,5 +60,4 @@ Remaining Items
 10.    Allow content-copying of read-only views.
 11.    Complete Cryptography.pkiEncrypt().
 12.    Per request, include the source in the application bundle.
-13.    If a SipHash ID is deleted, its corresponding participants
-       entry should also be removed.
+
