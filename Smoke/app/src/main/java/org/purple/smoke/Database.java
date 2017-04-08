@@ -755,6 +755,12 @@ public class Database extends SQLiteOpenHelper
 					     signatureKey.getEncoded()))
 		return false;
 
+	    /*
+	    ** We shall use the two public keys to generate the
+	    ** provider's SipHash ID. If a SipHash ID is not defined,
+	    ** we'll reject the data.
+	    */
+
 	    ContentValues values = new ContentValues();
 
 	    m_db.insert("participants", null, values);

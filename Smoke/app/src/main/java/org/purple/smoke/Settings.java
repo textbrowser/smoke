@@ -386,23 +386,7 @@ public class Settings extends AppCompatActivity
 		 getEncoded());
 
 	    if(bytes != null)
-	    {
-		SipHash sipHash = new SipHash();
-		byte key[] = Cryptography.md5(bytes); /*
-						      ** Use the MD-5 digest
-						      ** of the public keys
-						      ** as the input key to
-						      ** SipHash.
-						      */
-
-		stringBuffer.append
-		    (Miscellaneous.
-		     byteArrayAsHexStringDelimited(Miscellaneous.
-						   longToByteArray(sipHash.
-								   hmac(bytes,
-									key)),
-						   ':'));
-	    }
+		stringBuffer.append(Miscellaneous.sipHashIdFromData(bytes));
 	    else
 		stringBuffer.append("00:00:00:00:00:00:00:00");
 
