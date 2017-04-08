@@ -441,6 +441,51 @@ public class Database extends SQLiteOpenHelper
 	return sparseArray;
     }
 
+    public String nameFromSipHashId(Cryptography cryptography, String sipHashId)
+    {
+	if(cryptography == null)
+	    return "";
+
+	prepareDb();
+
+	if(m_db == null)
+	    return "";
+
+	Cursor cursor = null;
+	String name = "";
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT name FROM siphash_ids WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.trim().getBytes()),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+
+		bytes = cryptography.mtd(bytes);
+
+		if(bytes != null)
+		    name = new String(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return name;
+    }
+
     public String readNeighborStatusControl(Cryptography cryptography, int oid)
     {
 	if(cryptography == null)
@@ -760,6 +805,16 @@ public class Database extends SQLiteOpenHelper
 	    ** provider's SipHash ID. If a SipHash ID is not defined,
 	    ** we'll reject the data.
 	    */
+
+	    String name = nameFromSipHashId
+		(cryptography,
+		 Miscellaneous.
+		 sipHashIdFromData(Miscellaneous.
+				   joinByteArrays(publicKey.getEncoded(),
+						  signatureKey.getEncoded())));
+
+	    if(name.isEmpty())
+		return false;
 
 	    ContentValues values = new ContentValues();
 
