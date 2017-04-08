@@ -817,6 +817,46 @@ public class Database extends SQLiteOpenHelper
 		return false;
 
 	    ContentValues values = new ContentValues();
+	    SparseArray<String> sparseArray = new SparseArray<> ();
+
+	    sparseArray.append(0, "encryption_public_key");
+	    sparseArray.append(1, "encryption_public_key_digest");
+	    sparseArray.append(2, "function_digest");
+	    sparseArray.append(3, "identity");
+	    sparseArray.append(4, "keystream");
+	    sparseArray.append(5, "name");
+	    sparseArray.append(6, "signature_public_key");
+	    sparseArray.append(7, "signature_public_key_digest");
+
+	    for(int i = 0; i < sparseArray.size(); i++)
+	    {
+		byte bytes[] = null;
+
+		if(sparseArray.get(i).equals("encryption_public_key"))
+		    bytes = cryptography.etm(publicKey.getEncoded());
+		else if(sparseArray.get(i).
+			equals("encryption_public_key_digest"))
+		    bytes = cryptography.hmac(publicKey.getEncoded());
+		else if(sparseArray.get(i).equals("function_digest"))
+		    bytes = cryptography.hmac(keyType.getBytes());
+		else if(sparseArray.get(i).equals("identity"))
+		    bytes = cryptography.etm(identity);
+		else if(sparseArray.get(i).equals("keystream"))
+		    bytes = cryptography.etm("".getBytes());
+		else if(sparseArray.get(i).equals("name"))
+		    bytes = cryptography.etm(name.getBytes());
+		else if(sparseArray.get(i).equals("signature_public_key"))
+		    bytes = cryptography.etm(signatureKey.getEncoded());
+		else if(sparseArray.get(i).
+			equals("signature_public_key_digest"))
+		    bytes = cryptography.hmac(signatureKey.getEncoded());
+
+		if(bytes == null)
+		    return false;
+
+		values.put(sparseArray.get(i),
+			   Base64.encodeToString(bytes, Base64.DEFAULT));
+	    }
 
 	    m_db.insert("participants", null, values);
 	}
