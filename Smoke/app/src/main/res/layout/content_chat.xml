@@ -79,4 +79,13 @@
         android:layout_alignBottom="@+id/chat_message"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_scrollview"
+        android:layout_toLeftOf="@+id/clear_chat_messages"
+        android:layout_toStartOf="@+id/clear_chat_messages"
+        android:text="@string/call" />
 </RelativeLayout>
