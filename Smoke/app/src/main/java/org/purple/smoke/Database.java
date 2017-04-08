@@ -806,12 +806,13 @@ public class Database extends SQLiteOpenHelper
 	    ** we'll reject the data.
 	    */
 
-	    String name = nameFromSipHashId
-		(cryptography,
-		 Miscellaneous.
-		 sipHashIdFromData(Miscellaneous.
-				   joinByteArrays(publicKey.getEncoded(),
-						  signatureKey.getEncoded())));
+	    String name = "";
+	    String sipHashId = Miscellaneous.
+		sipHashIdFromData(Miscellaneous.
+				  joinByteArrays(publicKey.getEncoded(),
+						 signatureKey.getEncoded()));
+
+	    name = nameFromSipHashId(cryptography, sipHashId);
 
 	    if(name.isEmpty())
 		return false;
@@ -827,6 +828,7 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(5, "name");
 	    sparseArray.append(6, "signature_public_key");
 	    sparseArray.append(7, "signature_public_key_digest");
+	    sparseArray.append(8, "siphash_id_digest");
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
@@ -850,6 +852,8 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).
 			equals("signature_public_key_digest"))
 		    bytes = cryptography.hmac(signatureKey.getEncoded());
+		else if(sparseArray.get(i).equals("siphash_id_digest"))
+		    bytes = cryptography.hmac(sipHashId.getBytes());
 
 		if(bytes == null)
 		    return false;
@@ -1244,6 +1248,9 @@ public class Database extends SQLiteOpenHelper
 	    "name TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
+	    "siphash_id_digest TEXT NOT NULL, " +
+	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
+	    "siphash_ids(siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
 	    "signature_public_key_digest))";
 
@@ -1295,6 +1302,21 @@ public class Database extends SQLiteOpenHelper
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db)
+    {
+	super.onOpen(db);
+
+	try
+	{
+	    if(!db.isReadOnly())
+		db.execSQL("PRAGMA foreign_keys = ON");
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     @Override
