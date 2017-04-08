@@ -103,6 +103,11 @@ public class UdpNeighbor extends Neighbor
 		if(m_socket != null && m_socket.isClosed())
 		    m_socket = null;
 	    }
+
+	    synchronized(m_startTimeMutex)
+	    {
+		m_startTime = null;
+	    }
 	}
     }
 
@@ -288,6 +293,11 @@ public class UdpNeighbor extends Neighbor
 		m_socket = new DatagramSocket();
 		m_socket.connect(m_inetAddress, Integer.parseInt(m_ipPort));
 		m_socket.setSoTimeout(s_soTimeout);
+	    }
+
+	    synchronized(m_startTimeMutex)
+	    {
+		m_startTime = new Date();
 	    }
 	}
 	catch(Exception exception)

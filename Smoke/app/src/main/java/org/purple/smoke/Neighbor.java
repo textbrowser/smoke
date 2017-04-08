@@ -41,7 +41,6 @@ public abstract class Neighbor
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
     private UUID m_uuid = null;
-    private final Date m_startTime = new Date();
     private final Object m_oidMutex = new Object();
     private final String m_echoMode = "full";
     private final static int s_laneWidth = 100000;
@@ -52,6 +51,7 @@ public abstract class Neighbor
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
     protected Date m_lastTimeReadWrite = null;
+    protected Date m_startTime = null;
     protected ScheduledExecutorService m_readSocketScheduler = null;
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
@@ -60,6 +60,7 @@ public abstract class Neighbor
     protected final Object m_bytesWrittenMutex = new Object();
     protected final Object m_lastTimeReadWriteMutex = new Object();
     protected final Object m_socketMutex = new Object();
+    protected final Object m_startTimeMutex = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
@@ -90,9 +91,10 @@ public abstract class Neighbor
 	    oid = m_oid;
 	}
 
-	synchronized(m_startTime)
+	synchronized(m_startTimeMutex)
 	{
-	    uptime = new Date().getTime() - m_startTime.getTime();
+	    if(m_startTime != null)
+		uptime = new Date().getTime() - m_startTime.getTime();
 	}
 
 	String localIp = getLocalIp();
@@ -145,6 +147,7 @@ public abstract class Neighbor
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
 	m_sendOutboundScheduler = Executors.newSingleThreadScheduledExecutor();
+	m_startTime = new Date();
 	m_uuid = UUID.randomUUID();
 	m_version = version;
 

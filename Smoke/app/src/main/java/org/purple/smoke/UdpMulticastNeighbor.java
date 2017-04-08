@@ -99,6 +99,11 @@ public class UdpMulticastNeighbor extends Neighbor
 		if(m_socket != null && m_socket.isClosed())
 		    m_socket = null;
 	    }
+
+	    synchronized(m_startTimeMutex)
+	    {
+		m_startTime = null;
+	    }
 	}
     }
 
@@ -280,6 +285,11 @@ public class UdpMulticastNeighbor extends Neighbor
 		m_socket.joinGroup(m_inetAddress);
 		m_socket.setLoopbackMode(true);
 		m_socket.setSoTimeout(s_soTimeout);
+	    }
+
+	    synchronized(m_startTimeMutex)
+	    {
+		m_startTime = new Date();
 	    }
 	}
 	catch(Exception exception)

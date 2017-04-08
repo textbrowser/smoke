@@ -159,6 +159,11 @@ public class TcpNeighbor extends Neighbor
 		if(m_socket != null && m_socket.isClosed())
 		    m_socket = null;
 	    }
+
+	    synchronized(m_startTimeMutex)
+	    {
+		m_startTime = null;
+	    }
 	}
     }
 
@@ -369,6 +374,11 @@ public class TcpNeighbor extends Neighbor
 		m_socket.setEnabledProtocols(m_protocols);
 		m_socket.setSoTimeout(s_handshakeTimeout); // SSL/TLS process.
 		m_socket.setTcpNoDelay(true);
+	    }
+
+	    synchronized(m_startTimeMutex)
+	    {
+		m_startTime = new Date();
 	    }
 	}
 	catch(Exception exception)
