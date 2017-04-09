@@ -12,7 +12,7 @@
 	[AES-256] (1)
 }
 
-[Single-Byte Array] (3)
+[Destination SHA-512 HMAC] (3)
 {
-	0 (1)
+	[AES-256] || [SHA-512 HMAC] (1)
 }

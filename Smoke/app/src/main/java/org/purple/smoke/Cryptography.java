@@ -393,7 +393,7 @@ public class Cryptography
 	{
 	    if(m_identity == null)
 	    {
-		m_identity = new byte[64];
+		m_identity = new byte[8];
 		s_secureRandom.nextBytes(m_identity);
 	    }
 
