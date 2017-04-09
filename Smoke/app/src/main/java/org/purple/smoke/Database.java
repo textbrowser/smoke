@@ -770,14 +770,8 @@ public class Database extends SQLiteOpenHelper
 	    PublicKey publicKey = null;
 	    PublicKey signatureKey = null;
 	    String keyType = "";
-	    byte identity[] = null;
 	    byte publicKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
-
-	    identity = (byte []) input.readObject();
-
-	    if(identity.length != 64)
-		return false;
 
 	    keyType = (String) input.readObject();
 
@@ -842,7 +836,7 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("function_digest"))
 		    bytes = cryptography.hmac(keyType.getBytes());
 		else if(sparseArray.get(i).equals("identity"))
-		    bytes = cryptography.etm(identity);
+		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("keystream"))
 		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("name"))
