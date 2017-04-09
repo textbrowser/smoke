@@ -56,6 +56,7 @@ public abstract class Neighbor
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
+    protected byte m_bytes[] = null;
     protected final Object m_bytesReadMutex = new Object();
     protected final Object m_bytesWrittenMutex = new Object();
     protected final Object m_lastTimeReadWriteMutex = new Object();
@@ -138,6 +139,7 @@ public abstract class Neighbor
 		       String version,
 		       int oid)
     {
+	m_bytes = new byte[64 * 1024];
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
 	m_ipAddress = ipAddress;

@@ -33,6 +33,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -237,7 +238,6 @@ public class TcpNeighbor extends Neighbor
 
 		    try
 		    {
-			ByteArrayOutputStream byteArrayOutputStream = null;
 			long bytesRead = 0;
 
 			synchronized(m_socketMutex)
@@ -247,20 +247,12 @@ public class TcpNeighbor extends Neighbor
 			    else
 				m_socket.setSoTimeout(s_soTimeout);
 
-			    InputStream inputStream = m_socket.getInputStream();
-			    byte bytes[] = new byte[64 * 1024];
-
-			    byteArrayOutputStream = new ByteArrayOutputStream();
-
-			    int i = inputStream.read(bytes);
+			    int i = m_socket.getInputStream().read(m_bytes);
 
 			    if(i < 0)
 				bytesRead = -1;
 			    else if(i > 0)
-			    {
-				byteArrayOutputStream.write(bytes, 0, i);
 				bytesRead += i;
-			    }
 			}
 
 			if(bytesRead < 0)
@@ -274,36 +266,33 @@ public class TcpNeighbor extends Neighbor
 			    m_bytesRead += bytesRead;
 			}
 
-			if(byteArrayOutputStream != null &&
-			   byteArrayOutputStream.size() > 0)
-			    synchronized(m_stringBuffer)
+			synchronized(m_stringBuffer)
+			{
+			    m_stringBuffer.append
+				(new String(m_bytes, 0, (int) bytesRead));
+
+			    /*
+			    ** Detect our end-of-message delimiter and
+			    ** record the message in some database table.
+			    */
+
+			    int indexOf = m_stringBuffer.indexOf(s_eom);
+
+			    while(indexOf >= 0)
 			    {
-				m_stringBuffer.append
-				    (new String(byteArrayOutputStream.
-						toByteArray()));
+				String buffer = m_stringBuffer.
+				    substring(0, indexOf + s_eom.length());
 
-				/*
-				** Detect our end-of-message delimiter and
-				** record the message in some database table.
-				*/
+				if(!Kernel.getInstance().ourMessage(buffer))
+				    echo(buffer);
 
-				int indexOf = m_stringBuffer.indexOf(s_eom);
-
-				while(indexOf >= 0)
-				{
-				    String buffer = m_stringBuffer.
-					substring(0, indexOf + s_eom.length());
-
-				    if(!Kernel.getInstance().ourMessage(buffer))
-					echo(buffer);
-
-				    m_stringBuffer.delete(0, buffer.length());
-				    indexOf = m_stringBuffer.indexOf(s_eom);
-				}
-
-				if(m_stringBuffer.length() > s_maximumBytes)
-				    m_stringBuffer.setLength(s_maximumBytes);
+				m_stringBuffer.delete(0, buffer.length());
+				indexOf = m_stringBuffer.indexOf(s_eom);
 			    }
+
+			    if(m_stringBuffer.length() > s_maximumBytes)
+				m_stringBuffer.setLength(s_maximumBytes);
+			}
 		    }
 		    catch(Exception exception)
 		    {

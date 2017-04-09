@@ -186,11 +186,10 @@ public class UdpMulticastNeighbor extends Neighbor
 				return;
 
 			    DatagramPacket datagramPacket = null;
-			    byte bytes[] = new byte[64 * 1024];
 
 			    byteArrayOutputStream = new ByteArrayOutputStream();
 			    datagramPacket = new DatagramPacket
-				(bytes, bytes.length);
+				(m_bytes, m_bytes.length);
 			    m_socket.receive(datagramPacket);
 
 			    if(datagramPacket.getLength() > 0)
