@@ -233,24 +233,18 @@ public class Kernel
 	    if(array1 == null || array2 == null || array3 == null)
 		return ok;
 
-	    if(array3.length == 1)
+	    /*
+	    ** EPKS?
+	    */
+
+	    ok = s_cryptography.isValidSipHashMac(array1, array2);
+
+	    if(ok)
 	    {
-		/*
-		** EPKS?
-		*/
-
-		ok = s_cryptography.isValidSipHashMac(array1, array2);
-
-		if(!ok)
-		    return ok;
-
 		stream = new ByteArrayInputStream
 		    (s_cryptography.decryptWithSipHashKey(array1));
 		input = new ObjectInputStream(stream);
 		s_databaseHelper.writeParticipant(s_cryptography, input);
-	    }
-	    else
-	    {
 	    }
 	}
 	catch(Exception exception)

@@ -38,6 +38,7 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.io.ObjectInputStream;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
@@ -233,6 +234,7 @@ public class Database extends SQLiteOpenHelper
 		("SELECT " +
 		 "name, " +
 		 "siphash_id, " +
+		 "stream, " +
 		 "OID " +
 		 "FROM siphash_ids", null);
 
@@ -281,6 +283,10 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 1:
 			    sipHashIdElement.m_sipHashId = new String(bytes);
+			    break;
+			case 2:
+			    sipHashIdElement.m_stream = Arrays.copyOf
+				(bytes, bytes.length);
 			    break;
 			default:
 			    break;
@@ -335,50 +341,6 @@ public class Database extends SQLiteOpenHelper
 		sparseArray = new SparseArray<> ();
 		sparseArray.append(0, cursor.getString(0));
 		sparseArray.append(1, String.valueOf(cursor.getInt(1)));
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(sparseArray != null)
-		sparseArray.clear();
-
-	    sparseArray = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return sparseArray;
-    }
-
-    public SparseArray<String> readSipHashStreams()
-    {
-	prepareDb();
-
-	if(m_db == null)
-	    return null;
-
-	Cursor cursor = null;
-	SparseArray<String> sparseArray = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery("SELECT stream FROM siphash_ids", null);
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		int index = -1;
-
-		sparseArray = new SparseArray<> ();
-
-		while(!cursor.isAfterLast())
-		{
-		    index += 1;
-		    sparseArray.append(index, cursor.getString(0));
-		    cursor.moveToNext();
-		}
 	    }
 	}
 	catch(Exception exception)

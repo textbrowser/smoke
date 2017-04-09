@@ -119,7 +119,8 @@ public class Settings extends AppCompatActivity
 	final TextView textView3 = (TextView) findViewById
 	    (R.id.siphash_identity);
 
-	string = textView2.getText().toString().replace(":", "");
+	string = textView2.getText().toString().
+	    replace(" ", "").replace(":", "");
 
 	try
 	{
@@ -273,25 +274,27 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		SparseArray<String> sparseArray =
-		    m_databaseHelper.readSipHashStreams();
+		SparseArray<SipHashIdElement> sparseArray =
+		    m_databaseHelper.readSipHashIds(s_cryptography);
 
 		if(sparseArray == null)
 		    m_error = true;
 		else
 		    for(int i = 0; i < sparseArray.size(); i++)
 		    {
-			byte bytes[] = s_cryptography.mtd
-			    (Base64.decode(sparseArray.get(i), Base64.DEFAULT));
+			SipHashIdElement sipHashIdElement = sparseArray.get(i);
 
-			if(bytes == null)
+			if(sipHashIdElement == null)
 			{
 			    m_error = true;
 			    break;
 			}
 
-			bytes = Messages.epksMessage
-			    (s_cryptography, "chat", bytes);
+			byte bytes[] = Messages.epksMessage
+			    (s_cryptography,
+			     "chat",
+			     sipHashIdElement.m_sipHashId,
+			     sipHashIdElement.m_stream);
 
 			if(bytes == null)
 			{

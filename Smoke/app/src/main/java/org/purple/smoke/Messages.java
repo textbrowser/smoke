@@ -190,6 +190,7 @@ public class Messages
 
     public static byte[] epksMessage(Cryptography cryptography,
 				     String keyType,
+				     String sipHashId,
 				     byte keyStream[])
     {
 	if(cryptography == null || keyStream == null)
@@ -281,15 +282,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ Single-Byte Array ]
+	    ** [ Destination ]
 	    */
 
-	    byte array[] = new byte[1];
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(messageBytes, macBytes),
+		 Cryptography.sha512(sipHashId.getBytes()));
 
-	    array[0] = 0;
 	    output.writeObject(messageBytes);
 	    output.writeObject(macBytes);
-	    output.writeObject(array);
+	    output.writeObject(destination);
 	    output.flush();
 	}
 	catch(Exception exception)
