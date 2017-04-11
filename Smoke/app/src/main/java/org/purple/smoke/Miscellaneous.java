@@ -57,17 +57,43 @@ public class Miscellaneous
     }
 
     public static String byteArrayAsHexStringDelimited(byte bytes[],
-						       char delimiter)
+						       char delimiter,
+						       int offset)
     {
 	String string = byteArrayAsHexString(bytes);
 	StringBuffer stringBuffer = new StringBuffer();
 
 	try
 	{
-	    for(int i = 0; i < string.length(); i += 2)
+	    for(int i = 0; i < string.length(); i += offset)
 	    {
-		stringBuffer.append(string.charAt(i));
-		stringBuffer.append(string.charAt(i + 1));
+		stringBuffer.append(string.substring(i, i + offset));
+		stringBuffer.append(delimiter);
+	    }
+
+	    if(stringBuffer.length() > 0 &&
+	       stringBuffer.charAt(stringBuffer.length() - 1) == delimiter)
+		return stringBuffer.substring(0, stringBuffer.length() - 1);
+	    else
+		return stringBuffer.toString();
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
+    }
+
+    public static String delimitString(String string,
+				       char delimiter,
+				       int offset)
+    {
+	StringBuffer stringBuffer = new StringBuffer();
+
+	try
+	{
+	    for(int i = 0; i < string.length(); i += offset)
+	    {
+		stringBuffer.append(string.substring(i, i + offset));
 		stringBuffer.append(delimiter);
 	    }
 
@@ -133,7 +159,7 @@ public class Miscellaneous
 					      */
 
 	return byteArrayAsHexStringDelimited
-	    (longToByteArray(sipHash.hmac(bytes, key)), ':');
+	    (longToByteArray(sipHash.hmac(bytes, key)), ':', 2);
     }
 
     public static byte[] intToByteArray(int value)

@@ -120,7 +120,7 @@ public class Settings extends AppCompatActivity
 	    (R.id.siphash_identity);
 
 	string = textView2.getText().toString().
-	    replace(" ", "").replace(":", "");
+	    replace(" ", "").replace("-", "").replace(":", "");
 
 	try
 	{
@@ -145,7 +145,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "A SipHash ID must be of the form 01:02:03:04:05:06:07:08.");
+		 "A SipHash ID must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
 	else if(textView3.getText().toString().endsWith(string))
@@ -389,9 +389,13 @@ public class Settings extends AppCompatActivity
 		 getEncoded());
 
 	    if(bytes != null)
-		stringBuffer.append(Miscellaneous.sipHashIdFromData(bytes));
+		stringBuffer.append
+		    (Miscellaneous.delimitString(Miscellaneous.
+						 sipHashIdFromData(bytes).
+						 replace(":", ""), '-', 4).
+		     toUpperCase());
 	    else
-		stringBuffer.append("00:00:00:00:00:00:00:00");
+		stringBuffer.append("0000-0000-0000-0000");
 
 	    textView1.setText(stringBuffer);
 	    textView1.setVisibility(View.VISIBLE);
@@ -660,13 +664,17 @@ public class Settings extends AppCompatActivity
 		    (new TableRow.LayoutParams(0,
 					       LayoutParams.WRAP_CONTENT,
 					       1));
-		textView.setTag(sipHashIdElement.m_sipHashId);
 
 		if(j == 0)
 		    textView.setText(sipHashIdElement.m_name);
 		else
-		    textView.setText(sipHashIdElement.m_sipHashId);
+		    textView.setText
+			(Miscellaneous.
+			 delimitString(sipHashIdElement.m_sipHashId.
+				       replace(":", ""), '-', 4).
+			 toUpperCase());
 
+		textView.setTag(textView.getText());
 		textView.setTextSize(TEXTVIEW_TEXT_SIZE);
 		registerForContextMenu(textView);
 		row.addView(textView);

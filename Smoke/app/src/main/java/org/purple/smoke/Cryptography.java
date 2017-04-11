@@ -896,7 +896,7 @@ public class Cryptography
 		    return false;
 
 		m_sipHashId = Miscellaneous.
-		    byteArrayAsHexStringDelimited(bytes, ':');
+		    byteArrayAsHexStringDelimited(bytes, ':', 2);
 	    }
 	    else
 		return false;
