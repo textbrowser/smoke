@@ -592,7 +592,8 @@ public class Settings extends AppCompatActivity
 	    stringBuffer.append
 		(Miscellaneous.
 		 formattedDigitalInformation(neighborElement.m_bytesRead));
-	    stringBuffer.append(" Out: ");
+	    stringBuffer.append("\n");
+	    stringBuffer.append("Out: ");
 	    stringBuffer.append
 		(Miscellaneous.
 		 formattedDigitalInformation(neighborElement.m_bytesWritten));

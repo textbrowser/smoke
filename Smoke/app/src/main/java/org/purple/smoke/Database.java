@@ -900,7 +900,8 @@ public class Database extends SQLiteOpenHelper
 			bytes = cryptography.etm
 			    (Cryptography.
 			     pbkdf2(salt,
-				    new String(temporary).toCharArray(),
+				    new String(temporary, "UTF-8").
+				    toCharArray(),
 				    SIPHASH_STREAM_CREATION_ITERATION_COUNT,
 				    768)); // 8 * (32 + 64) Bits
 		}
