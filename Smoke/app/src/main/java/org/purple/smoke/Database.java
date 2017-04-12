@@ -282,7 +282,8 @@ public class Database extends SQLiteOpenHelper
 			    sipHashIdElement.m_name = new String(bytes);
 			    break;
 			case 1:
-			    sipHashIdElement.m_sipHashId = new String(bytes);
+			    sipHashIdElement.m_sipHashId = new String
+				(bytes, "UTF-8");
 			    break;
 			case 2:
 			    sipHashIdElement.m_stream = Arrays.copyOf
@@ -422,7 +423,8 @@ public class Database extends SQLiteOpenHelper
 		("SELECT name FROM siphash_ids WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString(cryptography.
-					      hmac(sipHashId.trim().getBytes()),
+					      hmac(sipHashId.trim().
+						   getBytes("UTF-8")),
 					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -809,7 +811,7 @@ public class Database extends SQLiteOpenHelper
 			equals("signature_public_key_digest"))
 		    bytes = cryptography.hmac(signatureKey.getEncoded());
 		else if(sparseArray.get(i).equals("siphash_id_digest"))
-		    bytes = cryptography.hmac(sipHashId.getBytes());
+		    bytes = cryptography.hmac(sipHashId.getBytes("UTF-8"));
 
 		if(bytes == null)
 		    return false;
@@ -879,13 +881,15 @@ public class Database extends SQLiteOpenHelper
 		if(sparseArray.get(i).equals("name"))
 		    bytes = cryptography.etm(name.getBytes());
 		else if(sparseArray.get(i).equals("siphash_id"))
-		    bytes = cryptography.etm(sipHashId.trim().getBytes());
+		    bytes = cryptography.etm
+			(sipHashId.trim().getBytes("UTF-8"));
 		else if(sparseArray.get(i).equals("siphash_id_digest"))
-		    bytes = cryptography.hmac(sipHashId.trim().getBytes());
+		    bytes = cryptography.hmac
+			(sipHashId.trim().getBytes("UTF-8"));
 		else
 		{
 		    byte salt[] = Cryptography.sha512
-			(sipHashId.trim().getBytes());
+			(sipHashId.trim().getBytes("UTF-8"));
 		    byte temporary[] = Cryptography.
 			pbkdf2(salt,
 			       sipHashId.toCharArray(),
