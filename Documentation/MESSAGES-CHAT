@@ -6,14 +6,18 @@
 	Sender's Public Encryption Key SHA-512 Digest (4)
 	[PK Signature] (5)
 	{
-		[AES-256] (1 ... 4)
+		[AES-256] (1 ... 4) (1)
 	}
 }
 
 [SHA-512 HMAC] (2)
 {
-	[AES-256]
+	[AES-256] (1)
 }
+
+/*
+** The destination is created via the recipient's identity.
+*/
 
 [Destination SHA-512 HMAC] (3)
 {

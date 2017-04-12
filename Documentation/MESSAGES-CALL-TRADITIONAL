@@ -2,17 +2,22 @@
 {
 	AES-256 Key (1)
 	SHA-512 Key (2)
-	Sender's Public Encryption Key SHA-512 Digest (3)
-	[PK Signature] (4)
+	Sender's Identity (3)
+	Sender's Public Encryption Key SHA-512 Digest (4)
+	[PK Signature] (5)
 	{
-		[AES-256] || [SHA-512] || [Sender's Public Encryption Key SHA-512 Digest] (1)
+		[PK] (1 ... 4) (1)
 	}
 }
 
 [SHA-512 HMAC] (2)
 {
-	[PK] || [AES-256] (1)
+	[PK] (1)
 }
+
+/*
+** The destination is created via the recipient's SipHash identity.
+*/
 
 [Destination SHA-512 HMAC] (3)
 {

@@ -12,6 +12,10 @@
 	[AES-256] (1)
 }
 
+/*
+** The destination is created via the recipient's SipHash identity.
+*/
+
 [Destination SHA-512 HMAC] (3)
 {
 	[AES-256] || [SHA-512 HMAC] (1)
