@@ -60,4 +60,4 @@ Remaining Items
 10.    Allow content-copying of read-only views.
 11.    Complete Cryptography.pkiEncrypt().
 12.    Per request, include the source in the application bundle.
-
+13.    Verify hexadecimal characters of SipHash identities.
