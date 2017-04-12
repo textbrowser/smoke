@@ -545,12 +545,26 @@ public class Settings extends AppCompatActivity
 		stringBuffer.append
 		    (neighborElement.m_statusControl.substring(0, 1).
 		     toUpperCase());
-		stringBuffer.append(neighborElement.m_statusControl.
-				    substring(1));
+		stringBuffer.append
+		    (neighborElement.m_statusControl.substring(1));
 	    }
 	    catch(Exception exception)
 	    {
 		stringBuffer.append("Disconnect");
+	    }
+
+	    stringBuffer.append("\n");
+	    stringBuffer.append("Status: ");
+
+	    try
+	    {
+		stringBuffer.append
+		    (neighborElement.m_status.substring(0, 1).toUpperCase());
+		stringBuffer.append(neighborElement.m_status.substring(1));
+	    }
+	    catch(Exception exception)
+	    {
+		stringBuffer.append("Disconnected");
 	    }
 
 	    stringBuffer.append("\n");
