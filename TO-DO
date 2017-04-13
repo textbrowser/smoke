@@ -61,3 +61,4 @@ Remaining Items
 11.    Complete Cryptography.pkiEncrypt().
 12.    Per request, include the source in the application bundle.
 13.    Verify hexadecimal characters of SipHash identities.
+14.    Deleting a neighbor does not cause an immediate disconnect.
