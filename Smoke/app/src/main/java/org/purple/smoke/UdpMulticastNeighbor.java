@@ -253,6 +253,7 @@ public class UdpMulticastNeighbor extends Neighbor
     public void abort()
     {
 	super.abort();
+	disconnect();
 	m_readSocketScheduler.shutdown();
 
 	try
@@ -262,8 +263,6 @@ public class UdpMulticastNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	}
-
-	disconnect();
     }
 
     public void connect()

@@ -257,6 +257,7 @@ public class UdpNeighbor extends Neighbor
     public void abort()
     {
 	super.abort();
+	disconnect();
 	m_readSocketScheduler.shutdown();
 
 	try
@@ -266,8 +267,6 @@ public class UdpNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	}
-
-	disconnect();
     }
 
     public void connect()
