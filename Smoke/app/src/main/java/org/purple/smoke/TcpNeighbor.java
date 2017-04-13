@@ -179,7 +179,7 @@ public class TcpNeighbor extends Neighbor
 
 	    synchronized(m_socketMutex)
 	    {
-		if(m_socket == null)
+		if(m_socket == null || m_socket.getOutputStream() == null)
 		    return;
 
 		OutputStream outputStream = m_socket.getOutputStream();
@@ -242,7 +242,8 @@ public class TcpNeighbor extends Neighbor
 
 			synchronized(m_socketMutex)
 			{
-			    if(m_socket == null)
+			    if(m_socket == null ||
+			       m_socket.getInputStream() == null)
 				return;
 			    else
 				m_socket.setSoTimeout(s_soTimeout);
@@ -328,6 +329,7 @@ public class TcpNeighbor extends Neighbor
     public void abort()
     {
 	super.abort();
+	disconnect();
 	m_readSocketScheduler.shutdown();
 
 	try
@@ -337,8 +339,6 @@ public class TcpNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	}
-
-	disconnect();
     }
 
     public void connect()
@@ -391,7 +391,7 @@ public class TcpNeighbor extends Neighbor
 	{
 	    synchronized(m_socketMutex)
 	    {
-		if(m_socket == null)
+		if(m_socket == null || m_socket.getOutputStream() == null)
 		    return ok;
 
 		OutputStream outputStream = m_socket.getOutputStream();
