@@ -46,7 +46,7 @@ public abstract class Neighbor
     private final static int s_laneWidth = 100000;
     private final static int s_sendOutboundTimerInterval = 1500; // 1.5 Seconds
     private final static int s_silence = 90000; // 90 Seconds
-    private final static int s_timerInterval = 10000; // 10 Seconds
+    private final static int s_timerInterval = 2500; // 2.5 Seconds
     private int m_oid = -1;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;

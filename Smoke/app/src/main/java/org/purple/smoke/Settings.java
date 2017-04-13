@@ -73,7 +73,7 @@ public class Settings extends AppCompatActivity
         {384, 3072}; // ECC, RSA
     private final static int s_pkiSignatureKeySize[] =
         {384, 3072}; // ECDSA, RSA
-    private final static int s_timerInterval = 7500; // 7.5 Seconds
+    private final static int s_timerInterval = 1250; // 1.25 Seconds
 
     private void addNeighbor()
     {
