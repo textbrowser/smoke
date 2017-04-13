@@ -294,6 +294,10 @@ public class TcpNeighbor extends Neighbor
 				m_stringBuffer.setLength(s_maximumBytes);
 			}
 		    }
+		    catch(java.net.SocketException exception)
+		    {
+			disconnect();
+		    }
 		    catch(Exception exception)
 		    {
 		    }

@@ -159,6 +159,8 @@ public abstract class Neighbor
 
 	m_scheduler.scheduleAtFixedRate(new Runnable()
 	{
+	    private long m_uptime = 0;
+
 	    @Override
 	    public void run()
 	    {
@@ -167,6 +169,12 @@ public abstract class Neighbor
 		synchronized(m_oidMutex)
 		{
 		    oid = m_oid;
+		}
+
+		synchronized(m_startTimeMutex)
+		{
+		    if(m_startTime != null)
+			m_uptime = new Date().getTime() - m_startTime.getTime();
 		}
 
 		String statusControl = m_databaseHelper.
@@ -191,7 +199,13 @@ public abstract class Neighbor
 		}
 
 		saveStatistics();
-		sendCapabilities();
+
+		if(m_uptime >= 10)
+		{
+		    m_uptime = 0;
+		    sendCapabilities();
+		}
+
 		terminateOnSilence();
 	    }
 	}, 0, s_timerInterval, TimeUnit.MILLISECONDS);
