@@ -65,8 +65,8 @@ public abstract class Neighbor
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
-    protected final static int s_readSocketInterval = 100; // 100 Milliseconds
-    protected final static int s_soTimeout = 200; // 200 Milliseconds
+    protected final static int s_readSocketInterval = 150; // 150 Milliseconds
+    protected final static int s_soTimeout = 100; // 100 Milliseconds
     protected long m_bytesRead = 0;
     protected long m_bytesWritten = 0;
 
