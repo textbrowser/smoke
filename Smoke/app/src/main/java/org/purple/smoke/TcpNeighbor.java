@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -53,12 +52,13 @@ public class TcpNeighbor extends Neighbor
 
     protected String getLocalIp()
     {
-	synchronized(m_socketMutex)
+	try
 	{
-	    if(m_socket != null &&
-	       m_socket.getLocalAddress() != null &&
-	       !m_socket.isClosed())
+	    if(m_socket != null && m_socket.getLocalAddress() != null)
 		return m_socket.getLocalAddress().getHostAddress();
+	}
+	catch(Exception exception)
+	{
 	}
 
 	if(m_version.equals("IPv4"))
@@ -71,17 +71,14 @@ public class TcpNeighbor extends Neighbor
     {
 	try
 	{
-	    synchronized(m_socketMutex)
+	    if(m_socket != null && m_socket.getSession() != null)
 	    {
-		if(m_socket != null && m_socket.getSession() != null)
-		{
-		    Certificate peerCertificates[] = m_socket.getSession().
-			getPeerCertificates();
+		Certificate peerCertificates[] = m_socket.getSession().
+		    getPeerCertificates();
 
-		    if(peerCertificates != null && peerCertificates.length > 0)
-			return Cryptography.publicKeyFingerPrint
-			    (peerCertificates[0].getPublicKey());
-		}
+		if(peerCertificates != null && peerCertificates.length > 0)
+		    return Cryptography.publicKeyFingerPrint
+			(peerCertificates[0].getPublicKey());
 	    }
 	}
 	catch(Exception exception)
@@ -93,12 +90,15 @@ public class TcpNeighbor extends Neighbor
 
     protected String getSessionCipher()
     {
-	synchronized(m_socketMutex)
+	try
 	{
 	    if(m_socket != null &&
 	       m_socket.getSession() != null &&
 	       m_socket.getSession().isValid())
 		return m_socket.getSession().getCipherSuite();
+	}
+	catch(Exception exception)
+	{
 	}
 
 	return "";
@@ -106,21 +106,28 @@ public class TcpNeighbor extends Neighbor
 
     protected boolean connected()
     {
-	synchronized(m_socketMutex)
+	try
 	{
-	    return m_socket != null &&
-		!m_socket.isClosed() &&
+	    return m_socket != null && !m_socket.isClosed() &&
 		m_socket.getSession() != null &&
 		m_socket.getSession().isValid();
 	}
+	catch(Exception exception)
+	{
+	}
+
+	return false;
     }
 
     protected int getLocalPort()
     {
-	synchronized(m_socketMutex)
+	try
 	{
 	    if(m_socket != null && !m_socket.isClosed())
 		return m_socket.getLocalPort();
+	}
+	catch(Exception exception)
+	{
 	}
 
 	return 0;
@@ -130,14 +137,11 @@ public class TcpNeighbor extends Neighbor
     {
 	try
 	{
-	    synchronized(m_socketMutex)
+	    if(m_socket != null)
 	    {
-		if(m_socket != null)
-		{
-		    m_socket.getInputStream().close();
-		    m_socket.getOutputStream().close();
-		    m_socket.close();
-		}
+		m_socket.getInputStream().close();
+		m_socket.getOutputStream().close();
+		m_socket.close();
 	    }
 	}
 	catch(Exception exception)
@@ -155,11 +159,7 @@ public class TcpNeighbor extends Neighbor
 		m_bytesWritten = 0;
 	    }
 
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null && m_socket.isClosed())
-		    m_socket = null;
-	    }
+	    m_socket = null;
 
 	    synchronized(m_startTimeMutex)
 	    {
@@ -177,17 +177,14 @@ public class TcpNeighbor extends Neighbor
 	{
 	    String capabilities = "";
 
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket == null || m_socket.getOutputStream() == null)
-		    return;
+	    if(m_socket == null || m_socket.getOutputStream() == null)
+		return;
 
-		OutputStream outputStream = m_socket.getOutputStream();
+	    OutputStream outputStream = m_socket.getOutputStream();
 
-		capabilities = getCapabilities();
-		outputStream.write(capabilities.getBytes());
-		outputStream.flush();
-	    }
+	    capabilities = getCapabilities();
+	    outputStream.write(capabilities.getBytes());
+	    outputStream.flush();
 
 	    synchronized(m_bytesWrittenMutex)
 	    {
@@ -240,21 +237,18 @@ public class TcpNeighbor extends Neighbor
 		    {
 			long bytesRead = 0;
 
-			synchronized(m_socketMutex)
-			{
-			    if(m_socket == null ||
-			       m_socket.getInputStream() == null)
-				return;
-			    else
-				m_socket.setSoTimeout(s_soTimeout);
+			if(m_socket == null ||
+			   m_socket.getInputStream() == null)
+			    return;
+			else
+			    m_socket.setSoTimeout(s_soTimeout);
 
-			    int i = m_socket.getInputStream().read(m_bytes);
+			int i = m_socket.getInputStream().read(m_bytes);
 
-			    if(i < 0)
-				bytesRead = -1;
-			    else if(i > 0)
-				bytesRead += i;
-			}
+			if(i < 0)
+			    bytesRead = -1;
+			else if(i > 0)
+			    bytesRead += i;
 
 			if(bytesRead < 0)
 			{
@@ -353,21 +347,17 @@ public class TcpNeighbor extends Neighbor
 		m_lastTimeReadWrite = new Date();
 	    }
 
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null)
-		    return;
+	    if(m_socket != null)
+		return;
 
-		SSLContext sslContext = SSLContext.getInstance("TLS");
+	    SSLContext sslContext = SSLContext.getInstance("TLS");
 
-		sslContext.init(null, m_trustManagers, null);
-		m_socket = (SSLSocket) sslContext.getSocketFactory().
-		    createSocket();
-		m_socket.connect(m_inetSocketAddress, s_connectionTimeout);
-		m_socket.setEnabledProtocols(m_protocols);
-		m_socket.setSoTimeout(s_handshakeTimeout); // SSL/TLS process.
-		m_socket.setTcpNoDelay(true);
-	    }
+	    sslContext.init(null, m_trustManagers, null);
+	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket();
+	    m_socket.connect(m_inetSocketAddress, s_connectionTimeout);
+	    m_socket.setEnabledProtocols(m_protocols);
+	    m_socket.setSoTimeout(s_handshakeTimeout); // SSL/TLS process.
+	    m_socket.setTcpNoDelay(true);
 
 	    synchronized(m_startTimeMutex)
 	    {
@@ -382,25 +372,18 @@ public class TcpNeighbor extends Neighbor
 
     public boolean send(String message)
     {
-	boolean ok = false;
-
 	if(!connected())
-	    return ok;
+	    return false;
 
 	try
 	{
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket == null || m_socket.getOutputStream() == null)
-		    return ok;
+	    if(m_socket == null || m_socket.getOutputStream() == null)
+		return false;
 
-		OutputStream outputStream = m_socket.getOutputStream();
+	    OutputStream outputStream = m_socket.getOutputStream();
 
-		outputStream.write(message.getBytes());
-		outputStream.flush();
-	    }
-
-	    ok = true;
+	    outputStream.write(message.getBytes());
+	    outputStream.flush();
 
 	    synchronized(m_bytesWrittenMutex)
 	    {
@@ -415,8 +398,9 @@ public class TcpNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	    disconnect();
+	    return false;
 	}
 
-	return ok;
+	return true;
     }
 }
