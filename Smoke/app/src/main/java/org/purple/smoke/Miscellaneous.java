@@ -30,7 +30,6 @@ package org.purple.smoke;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import java.lang.Integer;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 

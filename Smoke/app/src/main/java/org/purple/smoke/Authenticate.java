@@ -38,8 +38,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKey;
 
 public class Authenticate extends AppCompatActivity

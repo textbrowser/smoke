@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

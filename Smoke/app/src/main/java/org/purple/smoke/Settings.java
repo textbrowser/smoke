@@ -42,8 +42,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -670,32 +670,25 @@ public class Settings extends AppCompatActivity
 
 	    row.setLayoutParams(layoutParams);
 
-	    for(int j = 0; j < 2; j++)
-	    {
-		TextView textView = new TextView(Settings.this);
+	    TextView textView = new TextView(Settings.this);
 
-		textView.setId(sipHashIdElement.m_oid);
-		textView.setLayoutParams
-		    (new TableRow.LayoutParams(0,
-					       LayoutParams.WRAP_CONTENT,
-					       1));
+	    textView.setId(sipHashIdElement.m_oid);
+	    textView.setLayoutParams
+		(new TableRow.LayoutParams(0,
+					   LayoutParams.WRAP_CONTENT,
+					   1));
 
-		if(j == 0)
-		    textView.setText(sipHashIdElement.m_name);
-		else
-		    textView.setText
-			(Miscellaneous.
-			 delimitString(sipHashIdElement.m_sipHashId.
-				       replace(":", ""), '-', 4).
-			 toUpperCase());
-
-		textView.setTag(textView.getText());
-		textView.setTextSize(TEXTVIEW_TEXT_SIZE);
-		registerForContextMenu(textView);
-		row.addView(textView);
-	    }
-
-	    tableLayout.addView(row, i);
+	    textView.setText(sipHashIdElement.m_name);
+	    textView.append("@");
+	    textView.append
+		(Miscellaneous.
+		 delimitString(sipHashIdElement.m_sipHashId.
+			       replace(":", ""), '-', 4).toUpperCase());
+	    textView.setTag(textView.getText());
+	    textView.setTextSize(TEXTVIEW_TEXT_SIZE);
+	    registerForContextMenu(textView);
+	    row.addView(textView);
+	    tableLayout.addView(row, 0);
 	}
     }
 
