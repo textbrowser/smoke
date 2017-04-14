@@ -361,8 +361,8 @@ public class TcpNeighbor extends Neighbor
 
     public void abort()
     {
-	super.abort();
 	disconnect();
+	super.abort();
 	m_readSocketScheduler.shutdown();
 
 	try
@@ -385,9 +385,6 @@ public class TcpNeighbor extends Neighbor
 	    {
 		m_lastTimeReadWrite = new Date();
 	    }
-
-	    if(m_socket != null)
-		return;
 
 	    SSLContext sslContext = SSLContext.getInstance("TLS");
 

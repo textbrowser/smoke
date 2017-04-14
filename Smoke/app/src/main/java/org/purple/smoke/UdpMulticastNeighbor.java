@@ -300,8 +300,8 @@ public class UdpMulticastNeighbor extends Neighbor
 
     public void abort()
     {
-	super.abort();
 	disconnect();
+	super.abort();
 	m_readSocketScheduler.shutdown();
 
 	try
@@ -323,8 +323,6 @@ public class UdpMulticastNeighbor extends Neighbor
 	    synchronized(m_socketMutex)
 	    {
 		if(m_inetAddress == null)
-		    return;
-		else if(m_socket != null)
 		    return;
 
 		m_socket = new MulticastSocket(Integer.parseInt(m_ipPort));
