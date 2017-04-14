@@ -36,6 +36,7 @@ Completed Items
 32.    EPKS.
 33.    If a SipHash ID is deleted, its corresponding participants
        entry should also be removed. Foreign key constraints.
+34.    Deleting a neighbor does not cause an immediate disconnect.
 
 Ignored / Impossible Items
 
@@ -61,4 +62,3 @@ Remaining Items
 11.    Complete Cryptography.pkiEncrypt().
 12.    Per request, include the source in the application bundle.
 13.    Verify hexadecimal characters of SipHash identities.
-14.    Deleting a neighbor does not cause an immediate disconnect.
