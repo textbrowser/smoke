@@ -280,7 +280,7 @@ public class UdpMulticastNeighbor extends Neighbor
 				    String buffer = m_stringBuffer.
 					substring(0, indexOf + s_eom.length());
 
-				    if(!Kernel.getInstance().ourMessage(buffer))
+				    if(!Kernel.ourMessage(buffer))
 					echo(buffer);
 
 				    m_stringBuffer.delete(0, buffer.length());

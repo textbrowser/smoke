@@ -745,7 +745,7 @@ public class Database extends SQLiteOpenHelper
 	    publicKey = (PublicKey) input.readObject();
 	    publicKeySignature = (byte []) input.readObject();
 
-	    if(!cryptography.verifySignature(publicKey,
+	    if(!Cryptography.verifySignature(publicKey,
 					     publicKeySignature,
 					     publicKey.getEncoded()))
 		return false;
@@ -753,7 +753,7 @@ public class Database extends SQLiteOpenHelper
 	    signatureKey = (PublicKey) input.readObject();
 	    signatureKeySignature = (byte []) input.readObject();
 
-	    if(!cryptography.verifySignature(signatureKey,
+	    if(!Cryptography.verifySignature(signatureKey,
 					     signatureKeySignature,
 					     signatureKey.getEncoded()))
 		return false;
