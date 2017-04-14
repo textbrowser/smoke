@@ -293,6 +293,7 @@ public abstract class Neighbor
 
     protected abstract String getLocalIp();
     protected abstract boolean connected();
+    protected abstract boolean send(String message);
     protected abstract int getLocalPort();
     protected abstract void connect();
     protected abstract void disconnect();
@@ -329,8 +330,6 @@ public abstract class Neighbor
 	}
     }
 
-    public abstract boolean send(String message);
-
     public int getOid()
     {
 	int oid = -1;
@@ -341,5 +340,9 @@ public abstract class Neighbor
 	}
 
 	return oid;
+    }
+
+    public void scheduleSend(String message)
+    {
     }
 }

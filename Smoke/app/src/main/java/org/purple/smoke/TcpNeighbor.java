@@ -119,6 +119,40 @@ public class TcpNeighbor extends Neighbor
 	return false;
     }
 
+    protected boolean send(String message)
+    {
+	if(!connected())
+	    return false;
+
+	try
+	{
+	    if(m_socket == null || m_socket.getOutputStream() == null)
+		return false;
+
+	    OutputStream outputStream = m_socket.getOutputStream();
+
+	    outputStream.write(message.getBytes());
+	    outputStream.flush();
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
+		m_bytesWritten += message.length();
+	    }
+
+	    synchronized(m_lastTimeReadWriteMutex)
+	    {
+		m_lastTimeReadWrite = new Date();
+	    }
+	}
+	catch(Exception exception)
+	{
+	    disconnect();
+	    return false;
+	}
+
+	return true;
+    }
+
     protected int getLocalPort()
     {
 	try
@@ -368,39 +402,5 @@ public class TcpNeighbor extends Neighbor
 	{
 	    disconnect();
 	}
-    }
-
-    public boolean send(String message)
-    {
-	if(!connected())
-	    return false;
-
-	try
-	{
-	    if(m_socket == null || m_socket.getOutputStream() == null)
-		return false;
-
-	    OutputStream outputStream = m_socket.getOutputStream();
-
-	    outputStream.write(message.getBytes());
-	    outputStream.flush();
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten += message.length();
-	    }
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
-	}
-	catch(Exception exception)
-	{
-	    disconnect();
-	    return false;
-	}
-
-	return true;
     }
 }

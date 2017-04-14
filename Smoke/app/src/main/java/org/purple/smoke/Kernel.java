@@ -290,7 +290,7 @@ public class Kernel
 
 		if(m_neighbors.get(j) != null &&
 		   m_neighbors.get(j).getOid() != oid)
-		    m_neighbors.get(j).send(message);
+		    m_neighbors.get(j).scheduleSend(message);
 	    }
 	}
     }

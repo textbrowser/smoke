@@ -62,6 +62,49 @@ public class UdpNeighbor extends Neighbor
 	}
     }
 
+    protected boolean send(String message)
+    {
+	boolean ok = false;
+
+	if(!connected())
+	    return ok;
+
+	try
+	{
+	    synchronized(m_socketMutex)
+	    {
+		if(m_socket == null)
+		    return ok;
+
+		DatagramPacket datagramPacket = new DatagramPacket
+		    (message.getBytes(),
+		     message.getBytes().length,
+		     m_inetAddress,
+		     Integer.parseInt(m_ipPort));
+
+		m_socket.send(datagramPacket);
+	    }
+
+	    ok = true;
+
+	    synchronized(m_bytesWrittenMutex)
+	    {
+		m_bytesWritten += message.length();
+	    }
+
+	    synchronized(m_lastTimeReadWriteMutex)
+	    {
+		m_lastTimeReadWrite = new Date();
+	    }
+	}
+	catch(Exception exception)
+	{
+	    disconnect();
+	}
+
+	return ok;
+    }
+
     protected int getLocalPort()
     {
 	synchronized(m_socketMutex)
@@ -302,48 +345,5 @@ public class UdpNeighbor extends Neighbor
 	{
 	    disconnect();
 	}
-    }
-
-    public boolean send(String message)
-    {
-	boolean ok = false;
-
-	if(!connected())
-	    return ok;
-
-	try
-	{
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket == null)
-		    return ok;
-
-		DatagramPacket datagramPacket = new DatagramPacket
-		    (message.getBytes(),
-		     message.getBytes().length,
-		     m_inetAddress,
-		     Integer.parseInt(m_ipPort));
-
-		m_socket.send(datagramPacket);
-	    }
-
-	    ok = true;
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten += message.length();
-	    }
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
-	}
-	catch(Exception exception)
-	{
-	    disconnect();
-	}
-
-	return ok;
     }
 }
