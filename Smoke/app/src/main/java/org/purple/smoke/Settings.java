@@ -148,7 +148,8 @@ public class Settings extends AppCompatActivity
 		 "A SipHash ID must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
-	else if(textView3.getText().toString().endsWith(string))
+	else if(textView3.getText().toString().replace("-", "").
+		endsWith(string.replace(":", "")))
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
