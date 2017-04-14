@@ -398,6 +398,7 @@ public class Settings extends AppCompatActivity
 		stringBuffer.append("0000-0000-0000-0000");
 
 	    textView1.setText(stringBuffer);
+	    textView1.setTextIsSelectable(true);
 	    textView1.setVisibility(View.VISIBLE);
 	}
     }
@@ -685,6 +686,7 @@ public class Settings extends AppCompatActivity
 		 delimitString(sipHashIdElement.m_sipHashId.
 			       replace(":", ""), '-', 4).toUpperCase());
 	    textView.setTag(textView.getText());
+	    textView.setTextIsSelectable(true);
 	    textView.setTextSize(TEXTVIEW_TEXT_SIZE);
 	    registerForContextMenu(textView);
 	    row.addView(textView);
