@@ -125,7 +125,7 @@ public class Cryptography
 
     public PublicKey chatEncryptionPublicKey()
     {
-	synchronized(m_chatEncryptionKeyPair)
+	synchronized(m_chatEncryptionKeyPairMutex)
 	{
 	    if(m_chatEncryptionKeyPair != null)
 		return m_chatEncryptionKeyPair.getPublic();
@@ -136,7 +136,7 @@ public class Cryptography
 
     public PublicKey chatSignaturePublicKey()
     {
-	synchronized(m_chatSignatureKeyPair)
+	synchronized(m_chatSignatureKeyPairMutex)
 	{
 	    if(m_chatSignatureKeyPair != null)
 		return m_chatSignatureKeyPair.getPublic();
