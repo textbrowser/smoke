@@ -295,6 +295,11 @@ public class TcpNeighbor extends Neighbor
 			    m_bytesRead += bytesRead;
 			}
 
+			synchronized(m_lastTimeReadWriteMutex)
+			{
+			    m_lastTimeReadWrite = new Date();
+			}
+
 			synchronized(m_stringBuffer)
 			{
 			    m_stringBuffer.append

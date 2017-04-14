@@ -259,6 +259,11 @@ public class UdpNeighbor extends Neighbor
 			    m_bytesRead += bytesRead;
 			}
 
+			synchronized(m_lastTimeReadWriteMutex)
+			{
+			    m_lastTimeReadWrite = new Date();
+			}
+
 			if(byteArrayOutputStream != null &&
 			   byteArrayOutputStream.size() > 0)
 			    synchronized(m_stringBuffer)
