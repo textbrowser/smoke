@@ -2,8 +2,8 @@
 {
 	Message (1)
 	Sequence (2)
-	Timestamp (3)
-	Sender's Public Encryption Key SHA-512 Digest (4)
+	Sender's Public Encryption Key SHA-512 Digest (3)
+	Timestamp (4)
 	[PK Signature] (5)
 	{
 		[AES-256] (1 ... 4) (1)
