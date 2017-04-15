@@ -5,6 +5,7 @@
 	Public Key Signature (3)
 	Signature Public Key (4)
 	Signature Public Key Signature (5)
+	Timestamp (6)
 }
 
 [SHA-512 HMAC] (2)
