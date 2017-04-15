@@ -61,7 +61,6 @@ public abstract class Neighbor
     protected String m_version = "";
     protected byte m_bytes[] = null;
     protected final Object m_lastTimeReadWriteMutex = new Object();
-    protected final Object m_socketMutex = new Object();
     protected final Object m_startTimeMutex = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final static String s_eom = "\r\n\r\n\r\n";

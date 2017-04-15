@@ -47,36 +47,33 @@ public class UdpMulticastNeighbor extends Neighbor
 
     protected boolean connected()
     {
-	synchronized(m_socketMutex)
+	try
 	{
 	    return m_socket != null && !m_socket.isClosed();
+	}
+	catch(Exception exception)
+	{
+	    return false;
 	}
     }
 
     protected boolean send(String message)
     {
-	boolean ok = false;
-
 	if(!connected())
-	    return ok;
+	    return false;
 
 	try
 	{
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket == null)
-		    return ok;
+	    if(m_socket == null)
+		return false;
 
-		DatagramPacket datagramPacket = new DatagramPacket
-		    (message.getBytes(),
-		     message.getBytes().length,
-		     m_inetAddress,
-		     Integer.parseInt(m_ipPort));
+	    DatagramPacket datagramPacket = new DatagramPacket
+		(message.getBytes(),
+		 message.getBytes().length,
+		 m_inetAddress,
+		 Integer.parseInt(m_ipPort));
 
-		m_socket.send(datagramPacket);
-	    }
-
-	    ok = true;
+	    m_socket.send(datagramPacket);
 	    m_bytesWritten.getAndAdd(message.length());
 
 	    synchronized(m_lastTimeReadWriteMutex)
@@ -87,17 +84,21 @@ public class UdpMulticastNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	    disconnect();
+	    return false;
 	}
 
-	return ok;
+	return true;
     }
 
     protected int getLocalPort()
     {
-	synchronized(m_socketMutex)
+	try
 	{
 	    if(m_socket != null && !m_socket.isClosed())
 		return m_socket.getLocalPort();
+	}
+	catch(Exception exception)
+	{
 	}
 
 	return 0;
@@ -107,15 +108,12 @@ public class UdpMulticastNeighbor extends Neighbor
     {
 	try
 	{
-	    synchronized(m_socketMutex)
+	    if(m_socket != null)
 	    {
-		if(m_socket != null)
-		{
-		    if(m_inetAddress != null)
-			m_socket.leaveGroup(m_inetAddress);
+		if(m_inetAddress != null)
+		    m_socket.leaveGroup(m_inetAddress);
 
-		    m_socket.close();
-		}
+		m_socket.close();
 	    }
 	}
 	catch(Exception exception)
@@ -125,12 +123,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
-
-	    synchronized(m_socketMutex)
-	    {
-		if(m_socket != null && m_socket.isClosed())
-		    m_socket = null;
-	    }
+	    m_socket = null;
 
 	    synchronized(m_startTimeMutex)
 	    {
@@ -148,22 +141,18 @@ public class UdpMulticastNeighbor extends Neighbor
 	{
 	    String capabilities = "";
 
-	    synchronized(m_socketMutex)
-	    {
-		if(m_inetAddress == null || m_socket == null)
-		    return;
+	    if(m_inetAddress == null || m_socket == null)
+		return;
 
-		capabilities = getCapabilities();
+	    capabilities = getCapabilities();
 
-		DatagramPacket datagramPacket = new DatagramPacket
-		    (capabilities.getBytes(),
-		     capabilities.getBytes().length,
-		     m_inetAddress,
-		     Integer.parseInt(m_ipPort));
+	    DatagramPacket datagramPacket = new DatagramPacket
+		(capabilities.getBytes(),
+		 capabilities.getBytes().length,
+		 m_inetAddress,
+		 Integer.parseInt(m_ipPort));
 
-		m_socket.send(datagramPacket);
-	    }
-
+	    m_socket.send(datagramPacket);
 	    m_bytesWritten.getAndAdd(capabilities.length());
 
 	    synchronized(m_lastTimeReadWriteMutex)
@@ -209,26 +198,23 @@ public class UdpMulticastNeighbor extends Neighbor
 			ByteArrayOutputStream byteArrayOutputStream = null;
 			int bytesRead = 0;
 
-			synchronized(m_socketMutex)
-			{
-			    if(m_socket == null)
-				return;
+			if(m_socket == null)
+			    return;
 
-			    DatagramPacket datagramPacket = null;
+			DatagramPacket datagramPacket = null;
 
-			    byteArrayOutputStream = new ByteArrayOutputStream();
-			    datagramPacket = new DatagramPacket
-				(m_bytes, m_bytes.length);
-			    m_socket.receive(datagramPacket);
+			byteArrayOutputStream = new ByteArrayOutputStream();
+			datagramPacket = new DatagramPacket
+			    (m_bytes, m_bytes.length);
+			m_socket.receive(datagramPacket);
 
-			    if(datagramPacket.getLength() > 0)
-				byteArrayOutputStream.write
-				    (datagramPacket.getData(),
-				     0,
-				     datagramPacket.getLength());
+			if(datagramPacket.getLength() > 0)
+			    byteArrayOutputStream.write
+				(datagramPacket.getData(),
+				 0,
+				 datagramPacket.getLength());
 
-			    bytesRead += datagramPacket.getLength();
-			}
+			bytesRead += datagramPacket.getLength();
 
 			if(bytesRead < 0)
 			{
@@ -305,17 +291,10 @@ public class UdpMulticastNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
-
-	    synchronized(m_socketMutex)
-	    {
-		if(m_inetAddress == null)
-		    return;
-
-		m_socket = new MulticastSocket(Integer.parseInt(m_ipPort));
-		m_socket.joinGroup(m_inetAddress);
-		m_socket.setLoopbackMode(true);
-		m_socket.setSoTimeout(s_soTimeout);
-	    }
+	    m_socket = new MulticastSocket(Integer.parseInt(m_ipPort));
+	    m_socket.joinGroup(m_inetAddress);
+	    m_socket.setLoopbackMode(true);
+	    m_socket.setSoTimeout(s_soTimeout);
 
 	    synchronized(m_startTimeMutex)
 	    {
