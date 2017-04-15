@@ -131,11 +131,7 @@ public class TcpNeighbor extends Neighbor
 
 	    outputStream.write(message.getBytes());
 	    outputStream.flush();
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten += message.length();
-	    }
+	    m_bytesWritten.getAndAdd(message.length());
 
 	    synchronized(m_lastTimeReadWriteMutex)
 	    {
@@ -181,16 +177,8 @@ public class TcpNeighbor extends Neighbor
 	}
 	finally
 	{
-	    synchronized(m_bytesReadMutex)
-	    {
-		m_bytesRead = 0;
-	    }
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten = 0;
-	    }
-
+	    m_bytesRead.set(0);
+	    m_bytesWritten.set(0);
 	    m_socket = null;
 
 	    synchronized(m_startTimeMutex)
@@ -217,11 +205,7 @@ public class TcpNeighbor extends Neighbor
 	    capabilities = getCapabilities();
 	    outputStream.write(capabilities.getBytes());
 	    outputStream.flush();
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten += capabilities.length();
-	    }
+	    m_bytesWritten.getAndAdd(capabilities.length());
 
 	    synchronized(m_lastTimeReadWriteMutex)
 	    {
@@ -288,10 +272,7 @@ public class TcpNeighbor extends Neighbor
 			    return;
 			}
 
-			synchronized(m_bytesReadMutex)
-			{
-			    m_bytesRead += bytesRead;
-			}
+			m_bytesRead.getAndAdd(bytesRead);
 
 			synchronized(m_lastTimeReadWriteMutex)
 			{

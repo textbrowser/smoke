@@ -34,20 +34,23 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Neighbor
 {
+    private AtomicInteger m_oid = null;
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
     private UUID m_uuid = null;
-    private final Object m_oidMutex = new Object();
     private final String m_echoMode = "full";
     private final static int s_laneWidth = 100000;
     private final static int s_sendOutboundTimerInterval = 1500; // 1.5 Seconds
     private final static int s_silence = 90000; // 90 Seconds
     private final static int s_timerInterval = 2500; // 2.5 Seconds
-    private int m_oid = -1;
+    protected AtomicLong m_bytesRead = null;
+    protected AtomicLong m_bytesWritten = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
     protected Date m_lastTimeReadWrite = null;
@@ -57,8 +60,6 @@ public abstract class Neighbor
     protected String m_ipPort = "";
     protected String m_version = "";
     protected byte m_bytes[] = null;
-    protected final Object m_bytesReadMutex = new Object();
-    protected final Object m_bytesWrittenMutex = new Object();
     protected final Object m_lastTimeReadWriteMutex = new Object();
     protected final Object m_socketMutex = new Object();
     protected final Object m_startTimeMutex = new Object();
@@ -67,30 +68,10 @@ public abstract class Neighbor
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
     protected final static int s_readSocketInterval = 150; // 150 Milliseconds
     protected final static int s_soTimeout = 100; // 100 Milliseconds
-    protected long m_bytesRead = 0;
-    protected long m_bytesWritten = 0;
 
     private void saveStatistics()
     {
-	int oid = -1;
-	long bytesRead = 0;
-	long bytesWritten = 0;
 	long uptime = 0;
-
-	synchronized(m_bytesReadMutex)
-	{
-	    bytesRead = m_bytesRead;
-	}
-
-	synchronized(m_bytesWrittenMutex)
-	{
-	    bytesWritten = m_bytesWritten;
-	}
-
-	synchronized(m_oidMutex)
-	{
-	    oid = m_oid;
-	}
 
 	synchronized(m_startTimeMutex)
 	{
@@ -106,15 +87,15 @@ public abstract class Neighbor
 
 	m_databaseHelper.saveNeighborInformation
 	    (m_cryptography,
-	     String.valueOf(bytesRead),
-	     String.valueOf(bytesWritten),
+	     String.valueOf(m_bytesRead.get()),
+	     String.valueOf(m_bytesWritten.get()),
 	     localIp,
 	     localPort,
 	     peerCertificate,
 	     sessionCiper,
 	     connected ? "connected" : "disconnected",
 	     String.valueOf(uptime),
-	     String.valueOf(oid));
+	     String.valueOf(m_oid.get()));
     }
 
     private void terminateOnSilence()
@@ -140,12 +121,14 @@ public abstract class Neighbor
 		       int oid)
     {
 	m_bytes = new byte[64 * 1024];
+	m_bytesRead = new AtomicLong(0);
+	m_bytesWritten = new AtomicLong(0);
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
 	m_lastTimeReadWrite = new Date();
-	m_oid = oid;
+	m_oid = new AtomicInteger(oid);
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
 	m_sendOutboundScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -164,13 +147,6 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
-		int oid = -1;
-
-		synchronized(m_oidMutex)
-		{
-		    oid = m_oid;
-		}
-
 		synchronized(m_startTimeMutex)
 		{
 		    if(m_startTime != null)
@@ -178,7 +154,7 @@ public abstract class Neighbor
 		}
 
 		String statusControl = m_databaseHelper.
-		    readNeighborStatusControl(m_cryptography, oid);
+		    readNeighborStatusControl(m_cryptography, m_oid.get());
 
 		switch(statusControl)
 		{
@@ -219,15 +195,8 @@ public abstract class Neighbor
 		** Retrieve the first message.
 		*/
 
-		int oid = -1;
-
-		synchronized(m_oidMutex)
-		{
-		    oid = m_oid;
-		}
-
 		SparseArray<String> sparseArray =
-		    m_databaseHelper.readOutboundMessage(oid);
+		    m_databaseHelper.readOutboundMessage(m_oid.get());
 
 		/*
 		** If the message is sent successfully, remove it.
@@ -324,22 +293,12 @@ public abstract class Neighbor
 
     protected void echo(String message)
     {
-	synchronized(m_oidMutex)
-	{
-	    Kernel.getInstance().echo(message, m_oid);
-	}
+	Kernel.getInstance().echo(message, m_oid.get());
     }
 
     public int getOid()
     {
-	int oid = -1;
-
-	synchronized(m_oidMutex)
-	{
-	    oid = m_oid;
-	}
-
-	return oid;
+	return m_oid.get();
     }
 
     public void scheduleSend(String message)

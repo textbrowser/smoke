@@ -86,11 +86,7 @@ public class UdpNeighbor extends Neighbor
 	    }
 
 	    ok = true;
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten += message.length();
-	    }
+	    m_bytesWritten.getAndAdd(message.length());
 
 	    synchronized(m_lastTimeReadWriteMutex)
 	    {
@@ -131,15 +127,8 @@ public class UdpNeighbor extends Neighbor
 	}
 	finally
 	{
-	    synchronized(m_bytesReadMutex)
-	    {
-		m_bytesRead = 0;
-	    }
-
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten = 0;
-	    }
+	    m_bytesRead.set(0);
+	    m_bytesWritten.set(0);
 
 	    synchronized(m_socketMutex)
 	    {
@@ -179,10 +168,7 @@ public class UdpNeighbor extends Neighbor
 		m_socket.send(datagramPacket);
 	    }
 
-	    synchronized(m_bytesWrittenMutex)
-	    {
-		m_bytesWritten += capabilities.length();
-	    }
+	    m_bytesWritten.getAndAdd(capabilities.length());
 
 	    synchronized(m_lastTimeReadWriteMutex)
 	    {
@@ -254,10 +240,7 @@ public class UdpNeighbor extends Neighbor
 			    return;
 			}
 
-			synchronized(m_bytesReadMutex)
-			{
-			    m_bytesRead += bytesRead;
-			}
+			m_bytesRead.getAndAdd(bytesRead);
 
 			synchronized(m_lastTimeReadWriteMutex)
 			{
