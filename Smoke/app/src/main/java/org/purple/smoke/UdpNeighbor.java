@@ -131,11 +131,7 @@ public class UdpNeighbor extends Neighbor
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
 	    m_socket = null;
-
-	    synchronized(m_startTimeMutex)
-	    {
-		m_startTime = null;
-	    }
+	    m_startTime.set(System.nanoTime());
 	}
     }
 
@@ -310,11 +306,7 @@ public class UdpNeighbor extends Neighbor
 	    m_socket = new DatagramSocket();
 	    m_socket.connect(m_inetAddress, Integer.parseInt(m_ipPort));
 	    m_socket.setSoTimeout(s_soTimeout);
-
-	    synchronized(m_startTimeMutex)
-	    {
-		m_startTime = new Date();
-	    }
+	    m_startTime.set(System.nanoTime());
 	}
 	catch(Exception exception)
 	{

@@ -51,17 +51,16 @@ public abstract class Neighbor
     private final static int s_timerInterval = 2500; // 2.5 Seconds
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
+    protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
     protected Date m_lastTimeReadWrite = null;
-    protected Date m_startTime = null;
     protected ScheduledExecutorService m_readSocketScheduler = null;
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
     protected byte m_bytes[] = null;
     protected final Object m_lastTimeReadWriteMutex = new Object();
-    protected final Object m_startTimeMutex = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
@@ -70,19 +69,12 @@ public abstract class Neighbor
 
     private void saveStatistics()
     {
-	long uptime = 0;
-
-	synchronized(m_startTimeMutex)
-	{
-	    if(m_startTime != null)
-		uptime = new Date().getTime() - m_startTime.getTime();
-	}
-
 	String localIp = getLocalIp();
 	String localPort = String.valueOf(getLocalPort());
 	String peerCertificate = getPeerCertificateString();
 	String sessionCiper = getSessionCipher();
 	boolean connected = connected();
+	long uptime = uptime = System.nanoTime() - m_startTime.get();
 
 	m_databaseHelper.saveNeighborInformation
 	    (m_cryptography,
@@ -93,7 +85,7 @@ public abstract class Neighbor
 	     peerCertificate,
 	     sessionCiper,
 	     connected ? "connected" : "disconnected",
-	     String.valueOf(uptime),
+	     String.valueOf(uptime / 1000000),
 	     String.valueOf(m_oid.get()));
     }
 
@@ -131,7 +123,7 @@ public abstract class Neighbor
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
 	m_sendOutboundScheduler = Executors.newSingleThreadScheduledExecutor();
-	m_startTime = new Date();
+	m_startTime = new AtomicLong(System.nanoTime());
 	m_uuid = UUID.randomUUID();
 	m_version = version;
 
