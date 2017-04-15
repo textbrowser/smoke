@@ -209,8 +209,14 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/name_siphashid" />
+                        android:layout_weight="0.13"
+                        android:text="@string/name" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.13"
+                        android:text="@string/siphashid" />
 
                 </LinearLayout>
 

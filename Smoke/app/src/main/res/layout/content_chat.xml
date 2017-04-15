@@ -81,7 +81,6 @@
         android:layout_alignParentEnd="true" />
 
     <Button
-        android:id="@+id/call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chat_scrollview"
