@@ -4,9 +4,10 @@
 	SHA-512 Key (2)
 	Sender's Identity (3)
 	Sender's Public Encryption Key SHA-512 Digest (4)
-	[PK Signature] (5)
+	Timestamp (5)
+	[PK Signature] (6)
 	{
-		[PK] (1 ... 4) (1)
+		[PK] (1 ... 5) (1)
 	}
 }
 
