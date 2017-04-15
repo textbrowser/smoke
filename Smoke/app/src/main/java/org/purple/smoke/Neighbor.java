@@ -45,11 +45,10 @@ public abstract class Neighbor
     private String m_scopeId = "";
     private UUID m_uuid = null;
     private final String m_echoMode = "full";
-    private final static AtomicInteger s_timerInterval =
-	new AtomicInteger(2500); // 2.5 Seconds
     private final static int s_laneWidth = 100000;
     private final static int s_sendOutboundTimerInterval = 1500; // 1.5 Seconds
     private final static int s_silence = 90000; // 90 Seconds
+    private final static int s_timerInterval = 2500; // 2.5 Seconds
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
     protected Cryptography m_cryptography = null;
@@ -143,13 +142,11 @@ public abstract class Neighbor
 
 	m_scheduler.scheduleAtFixedRate(new Runnable()
 	{
-	    private int m_accumulatedTime = 0;
+	    private long m_accumulatedTime = System.nanoTime();
 
 	    @Override
 	    public void run()
 	    {
-		m_accumulatedTime += s_timerInterval.get();
-
 		String statusControl = m_databaseHelper.
 		    readNeighborStatusControl(m_cryptography, m_oid.get());
 
@@ -173,15 +170,15 @@ public abstract class Neighbor
 
 		saveStatistics();
 
-		if(m_accumulatedTime >= 10000)
+		if(System.nanoTime() - m_accumulatedTime >= 1e+10)
 		{
-		    m_accumulatedTime = 0;
+		    m_accumulatedTime = System.nanoTime();
 		    sendCapabilities();
 		}
 
 		terminateOnSilence();
 	    }
-	}, 0, s_timerInterval.get(), TimeUnit.MILLISECONDS);
+	}, 0, s_timerInterval, TimeUnit.MILLISECONDS);
 
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
