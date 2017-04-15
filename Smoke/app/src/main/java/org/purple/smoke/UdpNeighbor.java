@@ -307,6 +307,9 @@ public class UdpNeighbor extends Neighbor
 
 	try
 	{
+	    m_bytesRead.set(0);
+	    m_bytesWritten.set(0);
+
 	    synchronized(m_lastTimeReadWriteMutex)
 	    {
 		m_lastTimeReadWrite = new Date();

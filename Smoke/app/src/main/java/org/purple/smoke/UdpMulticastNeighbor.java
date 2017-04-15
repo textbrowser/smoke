@@ -303,6 +303,9 @@ public class UdpMulticastNeighbor extends Neighbor
 
 	try
 	{
+	    m_bytesRead.set(0);
+	    m_bytesWritten.set(0);
+
 	    synchronized(m_socketMutex)
 	    {
 		if(m_inetAddress == null)
