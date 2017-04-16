@@ -213,6 +213,12 @@ public class Messages
 	    ObjectOutputStream o = new ObjectOutputStream(s);
 
 	    /*
+	    ** [ A Timestamp ]
+	    */
+
+	    o.writeLong(System.currentTimeMillis());
+
+	    /*
 	    ** [ Key Type ]
 	    */
 
@@ -262,7 +268,6 @@ public class Messages
 
 	    o.writeObject(publicKey);
 	    o.writeObject(bytes);
-	    o.writeObject(System.currentTimeMillis());
 	    output.flush();
 
 	    byte messageBytes[] = Cryptography.encrypt

@@ -218,7 +218,6 @@ public class Kernel
     {
 	ByteArrayInputStream stream = null;
 	ObjectInputStream input = null;
-	boolean ok = false;
 
 	try
 	{
@@ -231,15 +230,13 @@ public class Kernel
 	    byte array3[] = (byte []) input.readObject();
 
 	    if(array1 == null || array2 == null || array3 == null)
-		return ok;
+		return false;
 
 	    /*
 	    ** EPKS?
 	    */
 
-	    ok = s_cryptography.isValidSipHashMac(array1, array2);
-
-	    if(ok)
+	    if(s_cryptography.isValidSipHashMac(array1, array2))
 	    {
 		stream = new ByteArrayInputStream
 		    (s_cryptography.decryptWithSipHashKey(array1));
@@ -249,7 +246,7 @@ public class Kernel
 	}
 	catch(Exception exception)
 	{
-	    ok = false;
+	    return false;
 	}
 	finally
 	{
@@ -266,7 +263,7 @@ public class Kernel
 	    }
 	}
 
-	return ok;
+	return true;
     }
 
     public static synchronized Kernel getInstance()
