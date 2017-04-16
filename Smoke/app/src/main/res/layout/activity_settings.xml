@@ -40,9 +40,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:text="@string/neighbors"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sectiongradient"
+                    android:text="@string/neighbors"
+                    android:textColor="@android:color/white"
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
 
@@ -195,9 +197,11 @@
                 </LinearLayout>
 
                 <TextView
-                    android:text="@string/participants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sectiongradient"
+                    android:text="@string/participants"
+                    android:textColor="@android:color/white"
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
 
@@ -289,9 +293,11 @@
                 </LinearLayout>
 
                 <TextView
-                    android:text="@string/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sectiongradient"
+                    android:text="@string/password"
+                    android:textColor="@android:color/white"
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
 
@@ -367,7 +373,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sectiongradient"
                     android:text="@string/public_data"
+                    android:textColor="@android:color/white"
                     android:textSize="25sp"
                     android:textStyle="normal|bold" />
 
