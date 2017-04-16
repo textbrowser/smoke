@@ -1516,4 +1516,12 @@ public class Settings extends AppCompatActivity
 	    menu.add(0, v.getId(), 0, "Delete (" + v.getTag() + ")");
 	}
     }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+	/*
+	** Empty.
+	*/
+    }
 }
