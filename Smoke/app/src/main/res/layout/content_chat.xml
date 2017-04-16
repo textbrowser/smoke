@@ -15,12 +15,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/chat"
-        android:textSize="25sp"
+        android:layout_above="@+id/chat_scrollview"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/clear_chat_messages"
-        android:layout_toStartOf="@+id/clear_chat_messages"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/button"
+        android:layout_toStartOf="@+id/button"
+        android:background="@drawable/sectiongradient"
+        android:gravity="center_vertical"
+        android:text="@string/chat"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
         android:textStyle="normal|bold" />
 
     <Button
@@ -86,5 +91,6 @@
         android:layout_above="@+id/chat_scrollview"
         android:layout_toLeftOf="@+id/clear_chat_messages"
         android:layout_toStartOf="@+id/clear_chat_messages"
-        android:text="@string/call" />
+        android:text="@string/call"
+        android:id="@+id/button" />
 </RelativeLayout>
