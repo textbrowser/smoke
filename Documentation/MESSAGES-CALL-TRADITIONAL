@@ -1,10 +1,10 @@
 [PK] (1)
 {
-	AES-256 Key (1)
-	SHA-512 Key (2)
-	Sender's Identity (3)
-	Sender's Public Encryption Key SHA-512 Digest (4)
-	Timestamp (5)
+	A Timestamp (1)
+	AES-256 Key (2)
+	SHA-512 Key (3)
+	Sender's Identity (4)
+	Sender's Public Encryption Key SHA-512 Digest (5)
 	[PK Signature] (6)
 	{
 		[PK] (1 ... 5) (1)

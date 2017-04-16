@@ -29,7 +29,6 @@ package org.purple.smoke;
 
 import android.util.Base64;
 import android.util.SparseArray;
-import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,16 +50,15 @@ public abstract class Neighbor
     private final static int s_timerInterval = 2500; // 2.5 Seconds
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
+    protected AtomicLong m_lastTimeRead = null;
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
-    protected Date m_lastTimeReadWrite = null;
     protected ScheduledExecutorService m_readSocketScheduler = null;
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
     protected byte m_bytes[] = null;
-    protected final Object m_lastTimeReadWriteMutex = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final static String s_eom = "\r\n\r\n\r\n";
     protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
@@ -91,16 +89,7 @@ public abstract class Neighbor
 
     private void terminateOnSilence()
     {
-	Date now = new Date();
-	boolean disconnect = false;
-
-	synchronized(m_lastTimeReadWriteMutex)
-	{
-	    disconnect = now.getTime() - m_lastTimeReadWrite.getTime() >
-		s_silence;
-	}
-
-	if(disconnect)
+	if((System.nanoTime() - m_lastTimeRead.get()) / 1000000 > s_silence)
 	    disconnect();
     }
 
@@ -118,7 +107,7 @@ public abstract class Neighbor
 	m_databaseHelper = Database.getInstance();
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
-	m_lastTimeReadWrite = new Date();
+	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;

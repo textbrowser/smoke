@@ -31,7 +31,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
@@ -132,11 +131,6 @@ public class TcpNeighbor extends Neighbor
 	    outputStream.write(message.getBytes());
 	    outputStream.flush();
 	    m_bytesWritten.getAndAdd(message.length());
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
 	}
 	catch(Exception exception)
 	{
@@ -202,11 +196,6 @@ public class TcpNeighbor extends Neighbor
 	    outputStream.write(capabilities.getBytes());
 	    outputStream.flush();
 	    m_bytesWritten.getAndAdd(capabilities.length());
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
 	}
 	catch(Exception exception)
 	{
@@ -269,11 +258,7 @@ public class TcpNeighbor extends Neighbor
 			}
 
 			m_bytesRead.getAndAdd(bytesRead);
-
-			synchronized(m_lastTimeReadWriteMutex)
-			{
-			    m_lastTimeReadWrite = new Date();
-			}
+			m_lastTimeRead.set(System.nanoTime());
 
 			synchronized(m_stringBuffer)
 			{
@@ -358,11 +343,7 @@ public class TcpNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
+	    m_lastTimeRead.set(System.nanoTime());
 
 	    SSLContext sslContext = SSLContext.getInstance("TLS");
 

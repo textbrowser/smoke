@@ -37,6 +37,7 @@ Completed Items
 33.    If a SipHash ID is deleted, its corresponding participants
        entry should also be removed. Foreign key constraints.
 34.    Deleting a neighbor does not cause an immediate disconnect.
+35.    Replace Date object with AtomicLong objects.
 
 Ignored / Impossible Items
 
@@ -62,5 +63,4 @@ Remaining Items
 11.    Complete Cryptography.pkiEncrypt().
 12.    Per request, include the source in the application bundle.
 13.    Verify hexadecimal characters of SipHash identities.
-14.    Replace Date objects with AtomicLong objects.
-15.    Local congestion control.
+14.    Local congestion control.

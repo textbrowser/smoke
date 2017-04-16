@@ -31,7 +31,6 @@ import java.io.ByteArrayOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -87,11 +86,6 @@ public class UdpNeighbor extends Neighbor
 
 	    m_socket.send(datagramPacket);
 	    m_bytesWritten.getAndAdd(message.length());
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
 	}
 	catch(Exception exception)
 	{
@@ -157,11 +151,6 @@ public class UdpNeighbor extends Neighbor
 
 	    m_socket.send(datagramPacket);
 	    m_bytesWritten.getAndAdd(capabilities.length());
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
 	}
 	catch(Exception exception)
 	{
@@ -226,11 +215,7 @@ public class UdpNeighbor extends Neighbor
 			}
 
 			m_bytesRead.getAndAdd(bytesRead);
-
-			synchronized(m_lastTimeReadWriteMutex)
-			{
-			    m_lastTimeReadWrite = new Date();
-			}
+			m_lastTimeRead.set(System.nanoTime());
 
 			if(byteArrayOutputStream != null &&
 			   byteArrayOutputStream.size() > 0)
@@ -297,12 +282,7 @@ public class UdpNeighbor extends Neighbor
 
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
-
-	    synchronized(m_lastTimeReadWriteMutex)
-	    {
-		m_lastTimeReadWrite = new Date();
-	    }
-
+	    m_lastTimeRead.set(System.nanoTime());
 	    m_socket = new DatagramSocket();
 	    m_socket.connect(m_inetAddress, Integer.parseInt(m_ipPort));
 	    m_socket.setSoTimeout(s_soTimeout);
