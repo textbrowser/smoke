@@ -42,6 +42,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/sectiongradient"
                     android:text="@string/neighbors"
                     android:textColor="@android:color/white"
@@ -199,6 +200,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/sectiongradient"
                     android:text="@string/participants"
                     android:textColor="@android:color/white"
@@ -295,6 +297,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/sectiongradient"
                     android:text="@string/password"
                     android:textColor="@android:color/white"
@@ -373,6 +376,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/sectiongradient"
                     android:text="@string/public_data"
                     android:textColor="@android:color/white"
