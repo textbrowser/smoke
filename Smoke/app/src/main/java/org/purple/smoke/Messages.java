@@ -262,6 +262,7 @@ public class Messages
 
 	    o.writeObject(publicKey);
 	    o.writeObject(bytes);
+	    o.writeObject(System.currentTimeMillis());
 	    output.flush();
 
 	    byte messageBytes[] = Cryptography.encrypt
