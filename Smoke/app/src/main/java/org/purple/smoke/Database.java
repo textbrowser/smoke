@@ -287,8 +287,8 @@ public class Database extends SQLiteOpenHelper
 				(bytes, "UTF-8");
 			    break;
 			case 2:
-			    sipHashIdElement.m_stream = Arrays.copyOf
-				(bytes, bytes.length);
+			    sipHashIdElement.m_stream = Miscellaneous.
+				deepCopy(bytes);
 			    break;
 			default:
 			    break;

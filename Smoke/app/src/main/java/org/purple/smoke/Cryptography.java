@@ -1004,7 +1004,7 @@ public class Cryptography
     {
 	synchronized(m_identityMutex)
 	{
-	    m_identity = identity;
+	    m_identity = Miscellaneous.deepCopy(identity);
 	}
     }
 
