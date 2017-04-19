@@ -64,3 +64,5 @@ Remaining Items
 11.    Per request, include the source in the application bundle.
 12.    Verify hexadecimal characters of SipHash identities.
 13.    Local congestion control.
+14.    Potential database locking problem with repeated replacement
+       of neighbor objects.
