@@ -161,6 +161,19 @@ public class Miscellaneous
 	    (longToByteArray(sipHash.hmac(bytes, key)), ':', 2);
     }
 
+    public static byte[] deepCopy(byte bytes[])
+    {
+	if(bytes == null || bytes.length < 0)
+	    return null;
+
+	byte array[] = new byte[bytes.length];
+
+	for(int i = 0; i < bytes.length; i++)
+	    array[i] = bytes[i];
+
+	return array;
+    }
+
     public static byte[] intToByteArray(int value)
     {
 	try

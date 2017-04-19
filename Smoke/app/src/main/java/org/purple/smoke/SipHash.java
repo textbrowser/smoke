@@ -39,6 +39,7 @@ public class SipHash
     private final static long c1 = 0x646f72616e646f6dL;
     private final static long c2 = 0x6c7967656e657261L;
     private final static long c3 = 0x7465646279746573L;
+    private byte m_key[] = null;
     private long m_v0 = 0;
     private long m_v1 = 0;
     private long m_v2 = 0;
@@ -78,6 +79,11 @@ public class SipHash
 	m_v0 += m_v3;
 	m_v3 = rotl(m_v3, 21);
 	m_v3 ^= m_v0;
+    }
+
+    public long hmac(byte data[])
+    {
+	return hmac(data, m_key);
     }
 
     public long hmac(byte data[], byte key[])
@@ -161,5 +167,13 @@ public class SipHash
 
     public SipHash()
     {
+    }
+
+    public SipHash(byte key[])
+    {
+	if(key == null || key.length < 0)
+	    return;
+
+	m_key = Miscellaneous.deepCopy(key);
     }
 }
