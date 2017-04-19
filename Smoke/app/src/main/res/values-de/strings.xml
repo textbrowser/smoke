@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smoke</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="add">Hinzufügen</string>
+    <string name="authenticate">Einloggen</string>
+    <string name="authenticate_authenticate">authentifiziere</string>
+    <string name="authenticate_password">Paswort</string>
+    <string name="automatic_refresh">Automatisch Erneuern</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
+    <string name="chat_encryption_key_data">Schlüssel-Daten zur Chat Verschlüsselung</string>
+    <string name="chat_signature_key_data">Schlüssel-Daten zur Chat Signatur</string>
+    <string name="clear">Löschen</string>
+    <string name="control">Steuerung</string>
+    <string name="details">Details</string>
+    <string name="encryption">Verschlüsselung</string>
+    <string name="epks">EPKS</string>
+    <string name="ip_address">IP Adresse</string>
+    <string name="neighbors">Nachbarn</string>
+    <string name="participants">Teilnehmer</string>
+    <string name="password">Passwort</string>
+    <string name="password_confirmation">Passwort Bestätigung</string>
+    <string name="please_type_a_message">Bitte gebe eine Nachricht ein...</string>
+    <string name="public_data">Öffentliche Daten</string>
+    <string name="refresh_neighbors">Erneuern</string>
+    <string name="refresh_participants">Erneuern</string>
+    <string name="reset_fields">Felder löschen</string>
+    <string name="send">Senden</string>
+    <string name="set_password">Setze Passwort</string>
+    <string name="signature">Signatur</string>
+    <string name="siphash_id"></string>
+</resources>
