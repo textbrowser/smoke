@@ -172,7 +172,7 @@ public class SipHash
 
     public SipHash(byte key[])
     {
-	if(key == null || key.length < 0)
+	if(key == null || key.length != KEY_LENGTH)
 	    return;
 
 	m_key = Miscellaneous.deepCopy(key);
