@@ -44,6 +44,7 @@ public class SipHash
     private long m_v1 = 0;
     private long m_v2 = 0;
     private long m_v3 = 0;
+    public final static int KEY_LENGTH = 16;
 
     private long byteArrayToLong(byte bytes[], int offset)
     {
@@ -88,7 +89,7 @@ public class SipHash
 
     public long hmac(byte data[], byte key[])
     {
-	if(data == null || key == null || key.length != 16) // 128-bit key.
+	if(data == null || key == null || key.length != KEY_LENGTH)
 	    return 0;
 
 	/*

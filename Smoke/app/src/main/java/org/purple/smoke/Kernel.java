@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class Kernel
 {
     private ScheduledExecutorService m_neighborsScheduler = null;
+    private SipHash m_congestionSipHash = null;
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static int s_neighborsInterval = 2500; // 2.5 Seconds
     private final static Cryptography s_cryptography =
@@ -49,6 +50,8 @@ public class Kernel
 
     private Kernel()
     {
+	m_congestionSipHash = new SipHash
+	    (Cryptography.randomBytes(SipHash.KEY_LENGTH));
 	prepareSchedulers();
     }
 
