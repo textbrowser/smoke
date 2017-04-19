@@ -1368,13 +1368,13 @@ public class Database extends SQLiteOpenHelper
 
 	    if(!status.equals("connected"))
 	    {
-		bytesRead = "0";
-		bytesWritten = "0";
+		bytesRead = "";
+		bytesWritten = "";
 		ipAddress = "";
-		ipPort = "0";
+		ipPort = "";
 		peerCertificate = "";
 		sessionCipher = "";
-		uptime = "0";
+		uptime = "";
 	    }
 
 	    values.put
@@ -1404,7 +1404,7 @@ public class Database extends SQLiteOpenHelper
 	    values.put
 		("local_port_digest",
 		 Base64.encodeToString(cryptography.
-				       etm(ipPort.trim().getBytes()),
+				       hmac(ipPort.trim().getBytes()),
 				       Base64.DEFAULT));
 	    values.put
 		("remote_certificate",
