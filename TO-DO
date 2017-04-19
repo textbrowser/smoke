@@ -38,6 +38,7 @@ Completed Items
        entry should also be removed. Foreign key constraints.
 34.    Deleting a neighbor does not cause an immediate disconnect.
 35.    Replace Date object with AtomicLong objects.
+36.    Copying of read-only values.
 
 Ignored / Impossible Items
 
@@ -59,8 +60,7 @@ Remaining Items
 7.     Retain first-contact server certificate.
 8.     Sort table contents?
 9.     Tab order.
-10.    Allow content-copying of read-only views.
-11.    Complete Cryptography.pkiEncrypt().
-12.    Per request, include the source in the application bundle.
-13.    Verify hexadecimal characters of SipHash identities.
-14.    Local congestion control.
+10.    Complete Cryptography.pkiEncrypt().
+11.    Per request, include the source in the application bundle.
+12.    Verify hexadecimal characters of SipHash identities.
+13.    Local congestion control.
