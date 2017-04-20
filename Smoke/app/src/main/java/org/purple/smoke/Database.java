@@ -69,12 +69,9 @@ public class Database extends SQLiteOpenHelper
 
     public SparseArray<NeighborElement> readNeighbors(Cryptography cryptography)
     {
-	if(cryptography == null)
-	    return null;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
@@ -218,12 +215,9 @@ public class Database extends SQLiteOpenHelper
     public SparseArray<SipHashIdElement> readSipHashIds
 	(Cryptography cryptography)
     {
-	if(cryptography == null)
-	    return null;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
@@ -407,12 +401,9 @@ public class Database extends SQLiteOpenHelper
 
     public String nameFromSipHashId(Cryptography cryptography, String sipHashId)
     {
-	if(cryptography == null)
-	    return "";
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return "";
 
 	Cursor cursor = null;
@@ -453,12 +444,9 @@ public class Database extends SQLiteOpenHelper
 
     public String readNeighborStatusControl(Cryptography cryptography, int oid)
     {
-	if(cryptography == null)
-	    return null;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
@@ -587,12 +575,9 @@ public class Database extends SQLiteOpenHelper
 				 String transport,
 				 String version)
     {
-	if(cryptography == null)
-	    return false;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return false;
 
 	ContentValues values = null;
@@ -722,12 +707,9 @@ public class Database extends SQLiteOpenHelper
     public boolean writeParticipant(Cryptography cryptography,
 				    ObjectInputStream input)
     {
-	if(cryptography == null || input == null)
-	    return false;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || input == null || m_db == null)
 	    return false;
 
 	try
@@ -843,12 +825,9 @@ public class Database extends SQLiteOpenHelper
 					   String name,
 					   String sipHashId)
     {
-	if(cryptography == null)
-	    return false;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return false;
 
 	ContentValues values = null;
@@ -1000,12 +979,9 @@ public class Database extends SQLiteOpenHelper
 
     public void enqueueOutboundMessage(String message, int oid)
     {
-	if(message.trim().isEmpty())
-	    return;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(message.trim().isEmpty() || m_db == null)
 	    return;
 
 	try
@@ -1025,12 +1001,9 @@ public class Database extends SQLiteOpenHelper
 				      String controlStatus,
 				      String oid)
     {
-	if(cryptography == null)
-	    return;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return;
 
 	try
@@ -1053,12 +1026,9 @@ public class Database extends SQLiteOpenHelper
 					  String oid,
 					  byte certificate[])
     {
-	if(cryptography == null)
-	    return;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return;
 
 	try
@@ -1354,12 +1324,9 @@ public class Database extends SQLiteOpenHelper
 					String uptime,
 					String oid)
     {
-	if(cryptography == null)
-	    return;
-
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return;
 
 	try
@@ -1430,6 +1397,25 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
+	}
+    }
+
+    public void writeCongestionDigest(byte data[])
+    {
+	prepareDb();
+
+	if(data == null || m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("digest", Base64.encodeToString(data, Base64.DEFAULT));
+	    m_db.insert("congestion_control", null, values);
+	}
+	catch(Exception exception)
+        {
 	}
     }
 
