@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
@@ -693,8 +694,14 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    if(ok)
-		if(m_db.replace("neighbors", null, values) == -1)
-		    ok = false;
+		m_db.insert("neighbors", null, values);
+	}
+	catch(SQLiteConstraintException exception)
+	{
+	    if(exception.getMessage().toLowerCase().contains("unique"))
+		ok = true;
+	    else
+		ok = false;
 	}
 	catch(Exception exception)
         {

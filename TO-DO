@@ -39,6 +39,9 @@ Completed Items
 34.    Deleting a neighbor does not cause an immediate disconnect.
 35.    Replace Date object with AtomicLong objects.
 36.    Copying of read-only values.
+37.    Potential database locking problem with repeated replacement
+       of neighbor objects. Replaced replace() with intelligent
+       insert().
 
 Ignored / Impossible Items
 
@@ -64,5 +67,3 @@ Remaining Items
 11.    Per request, include the source in the application bundle.
 12.    Verify hexadecimal characters of SipHash identities.
 13.    Local congestion control.
-14.    Potential database locking problem with repeated replacement
-       of neighbor objects.

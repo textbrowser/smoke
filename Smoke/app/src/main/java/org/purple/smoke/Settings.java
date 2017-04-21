@@ -78,6 +78,8 @@ public class Settings extends AppCompatActivity
     private void addNeighbor()
     {
 	String ipVersion = "";
+	final CheckBox checkBox = (CheckBox) findViewById
+	    (R.id.automatic_refresh);
 	final RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 	final Spinner spinner1 = (Spinner) findViewById
@@ -104,7 +106,7 @@ public class Settings extends AppCompatActivity
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
 		 "An error occurred while saving the neighbor information.");
-	else
+	else if(!checkBox.isChecked());
 	    populateNeighbors();
     }
 
