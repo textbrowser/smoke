@@ -1151,9 +1151,7 @@ public class Database extends SQLiteOpenHelper
 	    "transport_digest TEXT NOT NULL, " +
 	    "uptime TEXT NOT NULL, " +
 	    "user_defined_digest TEXT NOT NULL, " +
-	    "PRIMARY KEY (local_ip_address_digest, " +
-	    "local_port_digest, " +
-	    "remote_ip_address_digest, " +
+	    "PRIMARY KEY (remote_ip_address_digest, " +
 	    "remote_port_digest, " +
 	    "transport_digest))";
 
