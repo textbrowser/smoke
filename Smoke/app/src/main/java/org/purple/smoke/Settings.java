@@ -33,6 +33,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.view.ContextMenu;
@@ -64,6 +66,7 @@ import javax.crypto.SecretKey;
 public class Settings extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private InputFilter m_sipHashInputFilter = null;
     private ScheduledExecutorService m_scheduler = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -1234,6 +1237,24 @@ public class Settings extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_sipHashInputFilter = new InputFilter()
+	{
+	    public CharSequence filter(CharSequence source,
+				       int start,
+				       int end,
+				       Spanned dest,
+				       int dstart,
+				       int dend)
+	    {
+		for(int i = start; i < end; i++)
+		    if(!((source.charAt(i) >= '0' && source.charAt(i) <= '9') ||
+			 (source.charAt(i) >= 'A' && source.charAt(i) <= 'F') ||
+			 (source.charAt(i) >= 'a' && source.charAt(i) <= 'f')))
+			return "";
+
+		return null;
+	    }
+	};
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -1364,6 +1385,7 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
 	textView1.setEnabled(isAuthenticated);
+	textView1.setFilters(new InputFilter[] { m_sipHashInputFilter });
 	textView1 = (TextView) findViewById(R.id.password1);
 
 	if(!isAuthenticated)
