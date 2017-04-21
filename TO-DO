@@ -42,6 +42,7 @@ Completed Items
 37.    Potential database locking problem with repeated replacement
        of neighbor objects. Replaced replace() with intelligent
        insert().
+38.    Verify hexadecimal characters of SipHash identities.
 
 Ignored / Impossible Items
 
@@ -65,5 +66,4 @@ Remaining Items
 9.     Tab order.
 10.    Complete Cryptography.pkiEncrypt().
 11.    Per request, include the source in the application bundle.
-12.    Verify hexadecimal characters of SipHash identities.
-13.    Local congestion control.
+12.    Local congestion control.
