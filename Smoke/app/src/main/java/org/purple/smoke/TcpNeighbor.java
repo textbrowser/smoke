@@ -266,8 +266,7 @@ public class TcpNeighbor extends Neighbor
 				(new String(m_bytes, 0, (int) bytesRead));
 
 			    /*
-			    ** Detect our end-of-message delimiter and
-			    ** record the message in some database table.
+			    ** Detect our end-of-message delimiter.
 			    */
 
 			    int indexOf = m_stringBuffer.indexOf(s_eom);

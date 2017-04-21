@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class Kernel
 {
     private ScheduledExecutorService m_neighborsScheduler = null;
-    private SipHash m_congestionSipHash = null;
+    private static SipHash s_congestionSipHash = null;
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static int s_neighborsInterval = 2500; // 2.5 Seconds
     private final static Cryptography s_cryptography =
@@ -50,7 +50,7 @@ public class Kernel
 
     private Kernel()
     {
-	m_congestionSipHash = new SipHash
+	s_congestionSipHash = new SipHash
 	    (Cryptography.randomBytes(SipHash.KEY_LENGTH));
 	prepareSchedulers();
     }
@@ -219,6 +219,10 @@ public class Kernel
 
     public static boolean ourMessage(String buffer)
     {
+	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.
+						     hmac(buffer.getBytes())))
+	    return true;
+
 	ByteArrayInputStream stream = null;
 	ObjectInputStream input = null;
 
@@ -246,6 +250,9 @@ public class Kernel
 		input = new ObjectInputStream(stream);
 		s_databaseHelper.writeParticipant(s_cryptography, input);
 	    }
+
+	    s_databaseHelper.writeCongestionDigest
+		(s_congestionSipHash.hmac(buffer.getBytes()));
 	}
 	catch(Exception exception)
 	{
@@ -280,6 +287,11 @@ public class Kernel
     public void echo(String message, int oid)
     {
 	if(message.trim().isEmpty())
+	    return;
+
+	if(s_databaseHelper.
+	   containsCongestionDigest(s_congestionSipHash.hmac(message.
+							     getBytes())))
 	    return;
 
 	synchronized(m_neighbors)

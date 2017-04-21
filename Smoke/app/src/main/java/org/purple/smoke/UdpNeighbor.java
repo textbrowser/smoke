@@ -226,8 +226,7 @@ public class UdpNeighbor extends Neighbor
 						toByteArray()));
 
 				/*
-				** Detect our end-of-message delimiter and
-				** record the message in some database table.
+				** Detect our end-of-message delimiter.
 				*/
 
 				int indexOf = m_stringBuffer.indexOf(s_eom);

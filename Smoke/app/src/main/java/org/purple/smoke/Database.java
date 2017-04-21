@@ -543,6 +543,41 @@ public class Database extends SQLiteOpenHelper
 	    !readSetting(null, "saltedPassword").isEmpty();
     }
 
+    public boolean containsCongestionDigest(long value)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return false;
+
+	Cursor cursor = null;
+	boolean contains = false;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT EXISTS(SELECT 1 FROM " +
+		 "congestion_control WHERE digest = ?)",
+		 new String[] {Base64.
+			       encodeToString(Miscellaneous.
+					      longToByteArray(value),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		contains = cursor.getInt(0) == 1 ? true : false;
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return contains;
+    }
+
     public boolean deleteEntry(String oid, String table)
     {
 	prepareDb();
@@ -1405,18 +1440,21 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public void writeCongestionDigest(byte data[])
+    public void writeCongestionDigest(long value)
     {
 	prepareDb();
 
-	if(data == null || m_db == null)
+	if(m_db == null)
 	    return;
 
 	try
 	{
 	    ContentValues values = new ContentValues();
 
-	    values.put("digest", Base64.encodeToString(data, Base64.DEFAULT));
+	    values.put
+		("digest",
+		 Base64.encodeToString(Miscellaneous.
+				       longToByteArray(value), Base64.DEFAULT));
 	    m_db.insert("congestion_control", null, values);
 	}
 	catch(Exception exception)
