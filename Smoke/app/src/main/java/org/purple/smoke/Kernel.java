@@ -39,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Kernel
 {
+    private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -46,7 +47,9 @@ public class Kernel
 	Cryptography.getInstance();
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.getInstance().randomBytes(SipHash.KEY_LENGTH));
-    private final static int s_neighborsInterval = 2500; // 2.5 Seconds
+    private final static int CONGESTION_INTERVAL = 30000; // 30 Seconds
+    private final static int CONGESTION_LIFETIME = 30;
+    private final static int NEIGHBORS_INTERVAL = 2500; // 2.5 Seconds
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -201,18 +204,31 @@ public class Kernel
 
     private void prepareSchedulers()
     {
+	if(m_congestionScheduler == null)
+	{
+	    m_congestionScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_congestionScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
+		}
+	    }, 1500, CONGESTION_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
 	if(m_neighborsScheduler == null)
 	{
 	    m_neighborsScheduler = Executors.newSingleThreadScheduledExecutor();
-	    m_neighborsScheduler.scheduleAtFixedRate
-	    (new Runnable()
+	    m_neighborsScheduler.scheduleAtFixedRate(new Runnable()
 	    {
 		@Override
 		public void run()
 		{
 		    prepareNeighbors();
 		}
-	    }, 1500, s_neighborsInterval, TimeUnit.MILLISECONDS);
+	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 

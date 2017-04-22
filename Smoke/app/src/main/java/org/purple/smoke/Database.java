@@ -1305,6 +1305,26 @@ public class Database extends SQLiteOpenHelper
         onCreate(db);
     }
 
+    public void purgeCongestion(int lifetime)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    m_db.execSQL
+		("DELETE FROM congestion_control WHERE " +
+		 "ABS(STRFTIME('%s', 'now') - STRFTIME('%s', timestamp)) > " +
+		 "CAST(? AS INTEGER)",
+		 new String[] {String.valueOf(lifetime)});
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     public void reset()
     {
 	prepareDb();
