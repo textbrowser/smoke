@@ -47,7 +47,7 @@ public class Kernel
 	Cryptography.getInstance();
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.getInstance().randomBytes(SipHash.KEY_LENGTH));
-    private final static int CONGESTION_INTERVAL = 30000; // 30 Seconds
+    private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
     private final static int NEIGHBORS_INTERVAL = 2500; // 2.5 Seconds
     private static Kernel s_instance = null;

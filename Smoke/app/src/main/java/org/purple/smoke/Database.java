@@ -1314,8 +1314,12 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.execSQL
-		("DELETE FROM congestion_control WHERE " +
+	    /*
+	    ** The bound string value must be cast to an integer.
+	    */
+
+	    m_db.delete
+		("congestion_control",
 		 "ABS(STRFTIME('%s', 'now') - STRFTIME('%s', timestamp)) > " +
 		 "CAST(? AS INTEGER)",
 		 new String[] {String.valueOf(lifetime)});
