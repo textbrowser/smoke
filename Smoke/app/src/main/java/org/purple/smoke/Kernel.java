@@ -283,6 +283,21 @@ public class Kernel
 	return s_instance;
     }
 
+    public static void writeCongestionDigest(String message)
+    {
+	s_databaseHelper.writeCongestionDigest
+	    (s_congestionSipHash.hmac(message.getBytes()));
+    }
+
+    public static void writeCongestionDigest(byte data[])
+    {
+	s_databaseHelper.writeCongestionDigest
+	    (s_congestionSipHash.hmac(data)); /*
+					      ** Zero on hmac() failure.
+					      ** Acceptable.
+					      */
+    }
+
     public void echo(String message, int oid)
     {
 	if(message.trim().isEmpty())

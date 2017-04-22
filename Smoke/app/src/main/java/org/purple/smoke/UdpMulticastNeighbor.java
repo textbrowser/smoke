@@ -73,6 +73,7 @@ public class UdpMulticastNeighbor extends Neighbor
 		 Integer.parseInt(m_ipPort));
 
 	    m_socket.send(datagramPacket);
+	    Kernel.writeCongestionDigest(datagramPacket.getData());
 	    m_bytesWritten.getAndAdd(message.length());
 	}
 	catch(Exception exception)
