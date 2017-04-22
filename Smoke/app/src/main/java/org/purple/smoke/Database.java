@@ -585,16 +585,12 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return false;
 
-	boolean ok = true;
+	boolean ok = false;
 
 	try
 	{
-	    StringBuffer stringBuffer = new StringBuffer();
-
-	    stringBuffer.append("DELETE FROM ");
-	    stringBuffer.append(table);
-	    stringBuffer.append(" WHERE OID = ?");
-	    m_db.execSQL(stringBuffer.toString(), new String[] {oid});
+	    ok = m_db.delete
+		(table, "OID = ?", new String[] {oid}) > 0 ? true : false;
 	}
 	catch(Exception exception)
 	{
