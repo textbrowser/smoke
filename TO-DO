@@ -43,6 +43,8 @@ Completed Items
        of neighbor objects. Replaced replace() with intelligent
        insert().
 38.    Verify hexadecimal characters of SipHash identities.
+39.    Local congestion control.
+40.    SQLite secure delete (onConfigure()).
 
 Ignored / Impossible Items
 
@@ -55,7 +57,7 @@ Ignored / Impossible Items
 
 Remaining Items
 
-1.     SQLite secure delete.
+1.     Notify the Chat activity of new participants.
 2.     Socket channels. A lot of work.
 3.     Buzz-like page.
 4.     Source-level string translations.
@@ -66,5 +68,3 @@ Remaining Items
 9.     Tab order.
 10.    Complete Cryptography.pkiEncrypt().
 11.    Per request, include the source in the application bundle.
-12.    Local congestion control.
-13.    Notify the Chat activity of new participants.
