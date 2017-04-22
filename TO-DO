@@ -67,3 +67,4 @@ Remaining Items
 10.    Complete Cryptography.pkiEncrypt().
 11.    Per request, include the source in the application bundle.
 12.    Local congestion control.
+13.    Notify the Chat activity of new participants.
