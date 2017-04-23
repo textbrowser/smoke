@@ -38,6 +38,7 @@ import android.util.Patterns;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,13 +48,49 @@ import java.util.regex.Matcher;
 public class Database extends SQLiteOpenHelper
 {
     private SQLiteDatabase m_db = null;
+    private final static Comparator<NeighborElement>
+	s_readNeighborsComparator = new Comparator<NeighborElement> ()
+	{
+	    @Override
+	    public int compare(NeighborElement e1, NeighborElement e2)
+	    {
+		try
+		{
+		    byte bytes1[] = InetAddress.getByName(e1.m_remoteIpAddress).
+		    getAddress();
+		    byte bytes2[] = InetAddress.getByName(e2.m_remoteIpAddress).
+		    getAddress();
+		    int length = Math.max(bytes1.length, bytes2.length);
+
+		    for(int i = 0; i < length; i++)
+		    {
+			byte b1 = (i >= length - bytes1.length) ?
+			    bytes1[i - (length - bytes1.length)] : 0;
+			byte b2 = (i >= length - bytes2.length) ?
+			    bytes2[i - (length - bytes2.length)] : 0;
+
+			if(b1 != b2)
+			    return (0xff & b1) - (0xff & b2);
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+
+		int i = e1.m_remotePort.compareTo(e2.m_remotePort);
+
+		if(i != 0)
+		    return i;
+
+		return e1.m_transport.compareTo(e2.m_transport);
+	    }
+	};
     private final static Comparator<SipHashIdElement>
 	s_readSipHashIdsComparator = new Comparator<SipHashIdElement> ()
 	{
 	    @Override
 	    public int compare(SipHashIdElement e1, SipHashIdElement e2)
 	    {
-
 		return e1.m_name.compareTo(e2.m_name);
 	    }
 	};
@@ -113,7 +150,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		int index = -1;
+		ArrayList<NeighborElement> arrayList = new ArrayList<> ();
 
 		sparseArray = new SparseArray<> ();
 
@@ -200,13 +237,15 @@ public class Database extends SQLiteOpenHelper
 		    }
 
 		    if(!error)
-		    {
-			index += 1;
-			sparseArray.append(index, neighborElement);
-		    }
+			arrayList.add(neighborElement);
 
 		    cursor.moveToNext();
 		}
+
+		Collections.sort(arrayList, s_readNeighborsComparator);
+
+		for(int i = 0; i < arrayList.size(); i++)
+		    sparseArray.append(i, arrayList.get(i));
 	    }
 	}
 	catch(Exception exception)
