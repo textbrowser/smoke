@@ -53,6 +53,11 @@ public class State
 	return s_bundle.getChar("is_authenticated") == '1';
     }
 
+    public synchronized boolean neighborsEcho()
+    {
+	return s_bundle.getChar("neighbors_echo") == '1';
+    }
+
     public synchronized void reset()
     {
 	s_bundle.clear();
