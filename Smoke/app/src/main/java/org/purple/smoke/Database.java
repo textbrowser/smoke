@@ -39,12 +39,24 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.io.ObjectInputStream;
 import java.security.PublicKey;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
 {
     private SQLiteDatabase m_db = null;
+    private final static Comparator<SipHashIdElement>
+	s_readSipHashIdsComparator = new Comparator<SipHashIdElement> ()
+	{
+	    @Override
+	    public int compare(SipHashIdElement e1, SipHashIdElement e2)
+	    {
+
+		return e1.m_name.compareTo(e2.m_name);
+	    }
+	};
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 1000;
@@ -236,7 +248,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		int index = -1;
+		ArrayList<SipHashIdElement> arrayList = new ArrayList<> ();
 
 		sparseArray = new SparseArray<> ();
 
@@ -291,13 +303,16 @@ public class Database extends SQLiteOpenHelper
 		    }
 
 		    if(!error)
-		    {
-			index += 1;
-			sparseArray.append(index, sipHashIdElement);
-		    }
+			arrayList.add(sipHashIdElement);
 
 		    cursor.moveToNext();
 		}
+
+		Collections.sort
+		    (arrayList, s_readSipHashIdsComparator);
+
+		for(int i = 0; i < arrayList.size(); i++)
+		    sparseArray.append(i, arrayList.get(i));
 	    }
 	}
 	catch(Exception exception)
