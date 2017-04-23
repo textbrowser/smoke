@@ -39,4 +39,5 @@
     <string name="reset_smoke">Reset Smoke</string>
     <string name="call">Call</string>
     <string name="siphashid">SipHash ID</string>
+    <string name="echo">Echo</string>
 </resources>
