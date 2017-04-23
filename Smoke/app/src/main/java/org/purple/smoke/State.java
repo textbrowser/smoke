@@ -63,4 +63,8 @@ public class State
 	s_bundle.putChar("is_authenticated", state ? '1' : '0');
     }
 
+    public synchronized void setNeighborsEcho(boolean state)
+    {
+	s_bundle.putChar("neighbors_echo", state ? '1' : '0');
+    }
 }

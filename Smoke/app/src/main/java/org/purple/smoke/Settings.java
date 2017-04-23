@@ -924,6 +924,29 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
+	checkBox1 = (CheckBox) findViewById(R.id.echo);
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    if(isChecked)
+		    {
+			m_databaseHelper.writeSetting
+			    (null, "neighbors_echo", "true");
+			State.getInstance().setNeighborsEcho(true);
+		    }
+		    else
+		    {
+			m_databaseHelper.writeSetting
+			    (null, "neighbors_echo", "false");
+			State.getInstance().setNeighborsEcho(false);
+		    }
+		}
+	    });
+
 	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
 	checkBox1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
@@ -934,10 +957,10 @@ public class Settings extends AppCompatActivity
 		{
 		    if(isChecked)
 			m_databaseHelper.writeSetting
-			    (null, "neighbor_details", "true");
+			    (null, "neighbors_details", "true");
 		    else
 			m_databaseHelper.writeSetting
-			    (null, "neighbor_details", "false");
+			    (null, "neighbors_details", "false");
 		}
 	    });
     }
@@ -1286,12 +1309,20 @@ public class Settings extends AppCompatActivity
 	else
 	    checkBox1.setChecked(false);
 
-	CheckBox checkBox2 = (CheckBox) findViewById
-	    (R.id.neighbor_details);
+	checkBox1 = (CheckBox) findViewById(R.id.echo);
+
+	if(m_databaseHelper.readSetting(null, "neighbors_echo").equals("true"))
+	    checkBox1.setChecked(true);
+	else
+	    checkBox1.setChecked(false);
+
+	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
 
 	if(m_databaseHelper.
-	   readSetting(null, "neighbor_details").equals("true"))
-	    checkBox2.setChecked(true);
+	   readSetting(null, "neighbors_details").equals("true"))
+	    checkBox1.setChecked(true);
+	else
+	    checkBox1.setChecked(false);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
