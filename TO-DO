@@ -68,3 +68,5 @@ Remaining Items
 9.     Tab order.
 10.    Complete Cryptography.pkiEncrypt().
 11.    Per request, include the source in the application bundle.
+12.    Smoke echo? Expensive.
+13.    Validate neighbor IP address.
