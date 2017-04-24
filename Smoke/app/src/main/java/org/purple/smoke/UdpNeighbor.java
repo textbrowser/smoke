@@ -177,82 +177,81 @@ public class UdpNeighbor extends Neighbor
 	}
 
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
-	m_readSocketScheduler.scheduleAtFixedRate
-	    (new Runnable()
+	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
 	    {
-		@Override
-		public void run()
+		if(!connected())
+		    return;
+
+		try
 		{
-		    if(!connected())
+		    ByteArrayOutputStream byteArrayOutputStream = null;
+		    int bytesRead = 0;
+
+		    if(m_socket == null)
 			return;
 
-		    try
+		    DatagramPacket datagramPacket = null;
+
+		    byteArrayOutputStream = new ByteArrayOutputStream();
+		    datagramPacket = new DatagramPacket
+			(m_bytes, m_bytes.length);
+		    m_socket.receive(datagramPacket);
+
+		    if(datagramPacket.getLength() > 0)
+			byteArrayOutputStream.write
+			    (datagramPacket.getData(),
+			     0,
+			     datagramPacket.getLength());
+
+		    bytesRead += datagramPacket.getLength();
+
+		    if(bytesRead < 0)
 		    {
-			ByteArrayOutputStream byteArrayOutputStream = null;
-			int bytesRead = 0;
+			disconnect();
+			return;
+		    }
 
-			if(m_socket == null)
-			    return;
+		    m_bytesRead.getAndAdd(bytesRead);
+		    m_lastTimeRead.set(System.nanoTime());
 
-			DatagramPacket datagramPacket = null;
-
-			byteArrayOutputStream = new ByteArrayOutputStream();
-			datagramPacket = new DatagramPacket
-			    (m_bytes, m_bytes.length);
-			m_socket.receive(datagramPacket);
-
-			if(datagramPacket.getLength() > 0)
-			    byteArrayOutputStream.write
-				(datagramPacket.getData(),
-				 0,
-				 datagramPacket.getLength());
-
-			bytesRead += datagramPacket.getLength();
-
-			if(bytesRead < 0)
+		    if(byteArrayOutputStream != null &&
+		       byteArrayOutputStream.size() > 0)
+			synchronized(m_stringBuffer)
 			{
-			    disconnect();
-			    return;
-			}
+			    m_stringBuffer.append
+				(new String(byteArrayOutputStream.
+					    toByteArray()));
 
-			m_bytesRead.getAndAdd(bytesRead);
-			m_lastTimeRead.set(System.nanoTime());
+			    /*
+			    ** Detect our end-of-message delimiter.
+			    */
 
-			if(byteArrayOutputStream != null &&
-			   byteArrayOutputStream.size() > 0)
-			    synchronized(m_stringBuffer)
+			    int indexOf = m_stringBuffer.indexOf(EOM);
+
+			    while(indexOf >= 0)
 			    {
-				m_stringBuffer.append
-				    (new String(byteArrayOutputStream.
-						toByteArray()));
+				String buffer = m_stringBuffer.
+				    substring(0, indexOf + EOM.length());
 
-				/*
-				** Detect our end-of-message delimiter.
-				*/
+				if(!Kernel.ourMessage(buffer))
+				    echo(buffer);
 
-				int indexOf = m_stringBuffer.indexOf(s_eom);
-
-				while(indexOf >= 0)
-				{
-				    String buffer = m_stringBuffer.
-					substring(0, indexOf + s_eom.length());
-
-				    if(!Kernel.ourMessage(buffer))
-					echo(buffer);
-
-				    m_stringBuffer.delete(0, buffer.length());
-				    indexOf = m_stringBuffer.indexOf(s_eom);
-				}
-
-				if(m_stringBuffer.length() > s_maximumBytes)
-				    m_stringBuffer.setLength(s_maximumBytes);
+				m_stringBuffer.delete(0, buffer.length());
+				indexOf = m_stringBuffer.indexOf(EOM);
 			    }
-		    }
-		    catch(Exception exception)
-		    {
-		    }
+
+			    if(m_stringBuffer.length() > MAXIMUM_BYTES)
+				m_stringBuffer.setLength(MAXIMUM_BYTES);
+			}
 		}
-	    }, 0, s_readSocketInterval, TimeUnit.MILLISECONDS);
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     public void abort()
@@ -285,7 +284,7 @@ public class UdpNeighbor extends Neighbor
 	    m_lastTimeRead.set(System.nanoTime());
 	    m_socket = new DatagramSocket();
 	    m_socket.connect(m_inetAddress, Integer.parseInt(m_ipPort));
-	    m_socket.setSoTimeout(s_soTimeout);
+	    m_socket.setSoTimeout(SO_TIMEOUT);
 	    m_startTime.set(System.nanoTime());
 	}
 	catch(Exception exception)

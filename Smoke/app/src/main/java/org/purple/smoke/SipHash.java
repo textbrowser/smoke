@@ -33,12 +33,12 @@ package org.purple.smoke;
 
 public class SipHash
 {
-    private final static int s_cRounds = 4;
-    private final static int s_dRounds = 8;
-    private final static long c0 = 0x736f6d6570736575L;
-    private final static long c1 = 0x646f72616e646f6dL;
-    private final static long c2 = 0x6c7967656e657261L;
-    private final static long c3 = 0x7465646279746573L;
+    private final static int C_ROUNDS = 4;
+    private final static int D_ROUNDS = 8;
+    private final static long C0 = 0x736f6d6570736575L;
+    private final static long C1 = 0x646f72616e646f6dL;
+    private final static long C2 = 0x6c7967656e657261L;
+    private final static long C3 = 0x7465646279746573L;
     private byte m_key[] = null;
     private long m_v0 = 0;
     private long m_v1 = 0;
@@ -99,10 +99,10 @@ public class SipHash
 	long k0 = byteArrayToLong(key, 0);
 	long k1 = byteArrayToLong(key, Long.BYTES);
 
-	m_v0 = k0 ^ c0;
-	m_v1 = k1 ^ c1;
-	m_v2 = k0 ^ c2;
-	m_v3 = k1 ^ c3;
+	m_v0 = k0 ^ C0;
+	m_v1 = k1 ^ C1;
+	m_v2 = k0 ^ C2;
+	m_v3 = k1 ^ C3;
 
 	/*
 	** Compression
@@ -117,7 +117,7 @@ public class SipHash
 
 	    m_v3 ^= m;
 
-	    for(int j = 0; j < s_cRounds; j++)
+	    for(int j = 0; j < C_ROUNDS; j++)
 		round();
 
 	    m_v0 ^= m;
@@ -149,7 +149,7 @@ public class SipHash
 
 	m_v3 ^= b;
 
-	for(int i = 0; i < s_cRounds; i++)
+	for(int i = 0; i < C_ROUNDS; i++)
 	    round();
 
 	m_v0 ^= b;
@@ -160,7 +160,7 @@ public class SipHash
 
 	m_v2 ^= 0xff;
 
-	for(int i = 0; i < s_dRounds; i++)
+	for(int i = 0; i < D_ROUNDS; i++)
 	    round();
 
 	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;

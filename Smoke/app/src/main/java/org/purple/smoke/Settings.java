@@ -93,11 +93,11 @@ public class Settings extends AppCompatActivity
     };
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
-    private final static int s_pkiEncryptionKeySize[] =
+    private final static int PKI_ENCRYPTION_KEY_SIZES[] =
         {384, 3072}; // ECC, RSA
-    private final static int s_pkiSignatureKeySize[] =
+    private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
-    private final static int s_timerInterval = 2500; // 2.5 Seconds
+    private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
 
     private void addNeighbor()
     {
@@ -1039,21 +1039,22 @@ public class Settings extends AppCompatActivity
 		    if(m_encryptionAlgorithm.equals("EC"))
 			chatEncryptionKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    ("EC", s_pkiEncryptionKeySize[0]);
+			    ("EC", PKI_ENCRYPTION_KEY_SIZES[0]);
 		    else
 			chatEncryptionKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    (m_encryptionAlgorithm, s_pkiEncryptionKeySize[1]);
+			    (m_encryptionAlgorithm,
+			     PKI_ENCRYPTION_KEY_SIZES[1]);
 
 
 		    if(m_signatureAlgorithm.equals("EC"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    ("EC", s_pkiSignatureKeySize[0]);
+			    ("EC", PKI_SIGNATURE_KEY_SIZES[0]);
 		    else
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    (m_signatureAlgorithm, s_pkiSignatureKeySize[1]);
+			    (m_signatureAlgorithm, PKI_SIGNATURE_KEY_SIZES[1]);
 
 		    encryptionKey = Cryptography.
 			generateEncryptionKey
@@ -1235,24 +1236,23 @@ public class Settings extends AppCompatActivity
 	if(m_scheduler == null)
 	{
 	    m_scheduler = Executors.newSingleThreadScheduledExecutor();
-	    m_scheduler.scheduleAtFixedRate
-		(new Runnable()
+	    m_scheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		private final Runnable runnable = new Runnable()
 		{
-		    private final Runnable runnable = new Runnable()
-		    {
-			@Override
-			public void run()
-			{
-			    populateNeighbors();
-			}
-		    };
-
 		    @Override
 		    public void run()
 		    {
-			Settings.this.runOnUiThread(runnable);
+			populateNeighbors();
 		    }
-		}, 0, s_timerInterval, TimeUnit.MILLISECONDS);
+		};
+
+		@Override
+		public void run()
+		{
+		    Settings.this.runOnUiThread(runnable);
+		}
+	    }, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }
 

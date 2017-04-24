@@ -44,8 +44,8 @@ public class TcpNeighbor extends Neighbor
     private SSLSocket m_socket = null;
     private String m_protocols[] = null;
     private TrustManager m_trustManagers[] = null;
-    private final static int s_connectionTimeout = 10000; // 10 Seconds
-    private final static int s_handshakeTimeout = 10000; // 10 Seconds
+    private final static int CONNECTION_TIMEOUT = 10000; // 10 Seconds
+    private final static int HANDSHAKE_TIMEOUT = 10000; // 10 Seconds
 
     protected String getLocalIp()
     {
@@ -226,77 +226,76 @@ public class TcpNeighbor extends Neighbor
 	m_inetSocketAddress = new InetSocketAddress(m_ipAddress, port);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
-	m_readSocketScheduler.scheduleAtFixedRate
-	    (new Runnable()
+	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
 	    {
-		@Override
-		public void run()
+		if(!connected())
+		    return;
+
+		try
 		{
-		    if(!connected())
+		    long bytesRead = 0;
+
+		    if(m_socket == null ||
+		       m_socket.getInputStream() == null)
 			return;
+		    else
+			m_socket.setSoTimeout(SO_TIMEOUT);
 
-		    try
-		    {
-			long bytesRead = 0;
+		    int i = m_socket.getInputStream().read(m_bytes);
 
-			if(m_socket == null ||
-			   m_socket.getInputStream() == null)
-			    return;
-			else
-			    m_socket.setSoTimeout(s_soTimeout);
+		    if(i < 0)
+			bytesRead = -1;
+		    else if(i > 0)
+			bytesRead += i;
 
-			int i = m_socket.getInputStream().read(m_bytes);
-
-			if(i < 0)
-			    bytesRead = -1;
-			else if(i > 0)
-			    bytesRead += i;
-
-			if(bytesRead < 0)
-			{
-			    disconnect();
-			    return;
-			}
-
-			m_bytesRead.getAndAdd(bytesRead);
-			m_lastTimeRead.set(System.nanoTime());
-
-			synchronized(m_stringBuffer)
-			{
-			    m_stringBuffer.append
-				(new String(m_bytes, 0, (int) bytesRead));
-
-			    /*
-			    ** Detect our end-of-message delimiter.
-			    */
-
-			    int indexOf = m_stringBuffer.indexOf(s_eom);
-
-			    while(indexOf >= 0)
-			    {
-				String buffer = m_stringBuffer.
-				    substring(0, indexOf + s_eom.length());
-
-				if(!Kernel.ourMessage(buffer))
-				    echo(buffer);
-
-				m_stringBuffer.delete(0, buffer.length());
-				indexOf = m_stringBuffer.indexOf(s_eom);
-			    }
-
-			    if(m_stringBuffer.length() > s_maximumBytes)
-				m_stringBuffer.setLength(s_maximumBytes);
-			}
-		    }
-		    catch(java.net.SocketException exception)
+		    if(bytesRead < 0)
 		    {
 			disconnect();
+			return;
 		    }
-		    catch(Exception exception)
+
+		    m_bytesRead.getAndAdd(bytesRead);
+		    m_lastTimeRead.set(System.nanoTime());
+
+		    synchronized(m_stringBuffer)
 		    {
+			m_stringBuffer.append
+			    (new String(m_bytes, 0, (int) bytesRead));
+
+			/*
+			** Detect our end-of-message delimiter.
+			*/
+
+			int indexOf = m_stringBuffer.indexOf(EOM);
+
+			while(indexOf >= 0)
+			{
+			    String buffer = m_stringBuffer.
+				substring(0, indexOf + EOM.length());
+
+			    if(!Kernel.ourMessage(buffer))
+				echo(buffer);
+
+			    m_stringBuffer.delete(0, buffer.length());
+			    indexOf = m_stringBuffer.indexOf(EOM);
+			}
+
+			if(m_stringBuffer.length() > MAXIMUM_BYTES)
+			    m_stringBuffer.setLength(MAXIMUM_BYTES);
 		    }
 		}
-	    }, 0, s_readSocketInterval, TimeUnit.MILLISECONDS);
+		catch(java.net.SocketException exception)
+		{
+		    disconnect();
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);
 	m_trustManagers = new TrustManager[]
 	{
 	    new X509TrustManager()
@@ -349,9 +348,9 @@ public class TcpNeighbor extends Neighbor
 
 	    sslContext.init(null, m_trustManagers, null);
 	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket();
-	    m_socket.connect(m_inetSocketAddress, s_connectionTimeout);
+	    m_socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
 	    m_socket.setEnabledProtocols(m_protocols);
-	    m_socket.setSoTimeout(s_handshakeTimeout); // SSL/TLS process.
+	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
 	    m_socket.setTcpNoDelay(true);
 	    m_startTime.set(System.nanoTime());
 	}

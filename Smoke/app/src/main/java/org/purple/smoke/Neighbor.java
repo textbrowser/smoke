@@ -44,10 +44,10 @@ public abstract class Neighbor
     private String m_scopeId = "";
     private UUID m_uuid = null;
     private final String m_echoMode = "full";
-    private final static int s_laneWidth = 100000;
-    private final static int s_sendOutboundTimerInterval = 1500; // 1.5 Seconds
-    private final static int s_silence = 90000; // 90 Seconds
-    private final static int s_timerInterval = 2500; // 2.5 Seconds
+    private final static int LANE_WIDTH = 100000;
+    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 1500; // 1.5 Seconds
+    private final static int SILENCE = 90000; // 90 Seconds
+    private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
     protected AtomicLong m_lastTimeRead = null;
@@ -60,10 +60,10 @@ public abstract class Neighbor
     protected String m_version = "";
     protected byte m_bytes[] = null;
     protected final StringBuffer m_stringBuffer = new StringBuffer();
-    protected final static String s_eom = "\r\n\r\n\r\n";
-    protected final static int s_maximumBytes = 32 * 1024 * 1024; // 32 MiB
-    protected final static int s_readSocketInterval = 150; // 150 Milliseconds
-    protected final static int s_soTimeout = 100; // 100 Milliseconds
+    protected final static String EOM = "\r\n\r\n\r\n";
+    protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
+    protected final static int READ_SOCKET_INTERVAL = 150; // 150 Milliseconds
+    protected final static int SO_TIMEOUT = 100; // 100 Milliseconds
 
     private void saveStatistics()
     {
@@ -89,7 +89,7 @@ public abstract class Neighbor
 
     private void terminateOnSilence()
     {
-	if((System.nanoTime() - m_lastTimeRead.get()) / 1000000 > s_silence)
+	if((System.nanoTime() - m_lastTimeRead.get()) / 1000000 > SILENCE)
 	    disconnect();
     }
 
@@ -158,7 +158,7 @@ public abstract class Neighbor
 
 		terminateOnSilence();
 	    }
-	}, 0, s_timerInterval, TimeUnit.MILLISECONDS);
+	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
 
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
@@ -181,7 +181,7 @@ public abstract class Neighbor
 			m_databaseHelper.deleteEntry
 			    (sparseArray.get(1), "outbound_queue");
 	    }
-	}, 0, s_sendOutboundTimerInterval, TimeUnit.MILLISECONDS);
+	}, 0, SEND_OUTBOUND_TIMER_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     protected String getCapabilities()
@@ -192,7 +192,7 @@ public abstract class Neighbor
 
 	    message.append(m_uuid.toString());
 	    message.append("\n");
-	    message.append(String.valueOf(s_laneWidth));
+	    message.append(String.valueOf(LANE_WIDTH));
 	    message.append("\n");
 	    message.append(m_echoMode);
 
