@@ -91,7 +91,12 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(SipHashIdElement e1, SipHashIdElement e2)
 	    {
-		return e1.m_name.compareTo(e2.m_name);
+	    	int i = e1.m_name.compareTo(e2.m_name);
+
+		if(i != 0)
+		    return i;
+
+		return e1.m_sipHashId.compareTo(e2.m_sipHashId);
 	    }
 	};
     private final static String DATABASE_NAME = "smoke.db";
