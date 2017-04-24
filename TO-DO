@@ -70,3 +70,5 @@ Remaining Items
 10.    Complete Cryptography.pkiEncrypt().
 11.    Per request, include the source in the application bundle.
 12.    Smoke echo? Expensive. Optional.
+13.    Change case of final-static objects in Neighbor, Settings, SipHash,
+       TcpNeighbor classes.

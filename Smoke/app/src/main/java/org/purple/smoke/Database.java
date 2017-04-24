@@ -54,6 +54,10 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(NeighborElement e1, NeighborElement e2)
 	    {
+		/*
+		** Sort by IP address, port, and transport.
+		*/
+
 		try
 		{
 		    byte bytes1[] = InetAddress.getByName(e1.m_remoteIpAddress).
@@ -91,6 +95,10 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(SipHashIdElement e1, SipHashIdElement e2)
 	    {
+		/*
+		** Sort by name and SipHash identity.
+		*/
+
 	    	int i = e1.m_name.compareTo(e2.m_name);
 
 		if(i != 0)
@@ -247,7 +255,8 @@ public class Database extends SQLiteOpenHelper
 		    cursor.moveToNext();
 		}
 
-		Collections.sort(arrayList, s_readNeighborsComparator);
+		if(arrayList.size() > 1)
+		    Collections.sort(arrayList, s_readNeighborsComparator);
 
 		for(int i = 0; i < arrayList.size(); i++)
 		    sparseArray.append(i, arrayList.get(i));
@@ -352,8 +361,8 @@ public class Database extends SQLiteOpenHelper
 		    cursor.moveToNext();
 		}
 
-		Collections.sort
-		    (arrayList, s_readSipHashIdsComparator);
+		if(arrayList.size() > 1)
+		    Collections.sort(arrayList, s_readSipHashIdsComparator);
 
 		for(int i = 0; i < arrayList.size(); i++)
 		    sparseArray.append(i, arrayList.get(i));
