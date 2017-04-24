@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 import android.util.Base64;
 import android.util.SparseArray;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,14 +39,16 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Neighbor
 {
+    private ArrayList<String> m_queue = null;
     private AtomicInteger m_oid = null;
+    private Object m_queueMutex = null;
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
     private UUID m_uuid = null;
     private final String m_echoMode = "full";
     private final static int LANE_WIDTH = 100000;
-    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 1500; // 1.5 Seconds
+    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 500; // 0.5 Seconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
     protected AtomicLong m_bytesRead = null;
@@ -109,6 +112,8 @@ public abstract class Neighbor
 	m_ipPort = ipPort;
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
+	m_queue = new ArrayList<String> ();
+	m_queueMutex = new Object();
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
 	m_sendOutboundScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -166,7 +171,7 @@ public abstract class Neighbor
 	    public void run()
 	    {
 		/*
-		** Retrieve the first message.
+		** Retrieve the first database message.
 		*/
 
 		SparseArray<String> sparseArray =
@@ -180,6 +185,16 @@ public abstract class Neighbor
 		    if(send(sparseArray.get(0)))
 			m_databaseHelper.deleteEntry
 			    (sparseArray.get(1), "outbound_queue");
+
+		/*
+		** Echo packets.
+		*/
+
+		synchronized(m_queueMutex)
+		{
+		    if(!m_queue.isEmpty())
+			send(m_queue.remove(0)); // Ignore results.
+		}
 	    }
 	}, 0, SEND_OUTBOUND_TIMER_INTERVAL, TimeUnit.MILLISECONDS);
     }
@@ -277,5 +292,12 @@ public abstract class Neighbor
 
     public void scheduleSend(String message)
     {
+	if(!State.getInstance().neighborsEcho())
+	    return;
+
+	synchronized(m_queueMutex)
+	{
+	    m_queue.add(message);
+	}
     }
 }
