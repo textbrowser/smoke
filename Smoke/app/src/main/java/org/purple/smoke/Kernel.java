@@ -314,6 +314,20 @@ public class Kernel
 					      */
     }
 
+    public void clearNeighborQueues()
+    {
+	synchronized(m_neighbors)
+	{
+	    for(int i = 0; i < m_neighbors.size(); i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null)
+		    m_neighbors.get(j).clearQueue();
+	    }
+	}
+    }
+
     public void echo(String message, int oid)
     {
 	if(!State.getInstance().neighborsEcho() || message.trim().isEmpty())

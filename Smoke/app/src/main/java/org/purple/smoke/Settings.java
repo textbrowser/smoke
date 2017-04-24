@@ -942,6 +942,7 @@ public class Settings extends AppCompatActivity
 		    {
 			m_databaseHelper.writeSetting
 			    (null, "neighbors_echo", "false");
+			Kernel.getInstance().clearNeighborQueues();
 			State.getInstance().setNeighborsEcho(false);
 		    }
 		}

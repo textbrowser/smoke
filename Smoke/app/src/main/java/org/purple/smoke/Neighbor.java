@@ -290,6 +290,14 @@ public abstract class Neighbor
 	return m_oid.get();
     }
 
+    public void clearQueue()
+    {
+	synchronized(m_queueMutex)
+	{
+	    m_queue.clear();
+	}
+    }
+
     public void scheduleSend(String message)
     {
 	if(!State.getInstance().neighborsEcho())
