@@ -434,7 +434,7 @@ public class Settings extends AppCompatActivity
     private void populateNeighbors()
     {
 	SparseArray<NeighborElement> sparseArray =
-	    m_databaseHelper.readNeighbors(s_cryptography);
+	    m_databaseHelper.readNeighbors(s_cryptography, true);
 	final TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.neighbors);
 

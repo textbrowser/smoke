@@ -230,7 +230,8 @@ public class Database extends SQLiteOpenHelper
 	return arrayList;
     }
 
-    public SparseArray<NeighborElement> readNeighbors(Cryptography cryptography)
+    public SparseArray<NeighborElement> readNeighbors
+	(Cryptography cryptography, boolean sort)
     {
 	prepareDb();
 
@@ -263,7 +264,11 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		ArrayList<NeighborElement> arrayList = new ArrayList<> ();
+		ArrayList<NeighborElement> arrayList = null;
+		int index = -1;
+
+		if(sort)
+		    arrayList = new ArrayList<> ();
 
 		sparseArray = new SparseArray<> ();
 
@@ -350,16 +355,27 @@ public class Database extends SQLiteOpenHelper
 		    }
 
 		    if(!error)
-			arrayList.add(neighborElement);
+		    {
+			if(sort)
+			    arrayList.add(neighborElement);
+			else
+			{
+			    index += 1;
+			    sparseArray.append(index, neighborElement);
+			}
+		    }
 
 		    cursor.moveToNext();
 		}
 
-		if(arrayList.size() > 1)
-		    Collections.sort(arrayList, s_readNeighborsComparator);
+		if(sort)
+		{
+		    if(arrayList.size() > 1)
+			Collections.sort(arrayList, s_readNeighborsComparator);
 
-		for(int i = 0; i < arrayList.size(); i++)
-		    sparseArray.append(i, arrayList.get(i));
+		    for(int i = 0; i < arrayList.size(); i++)
+			sparseArray.append(i, arrayList.get(i));
+		}
 	    }
 	}
 	catch(Exception exception)

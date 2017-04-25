@@ -60,7 +60,7 @@ public class Kernel
     private void prepareNeighbors()
     {
 	SparseArray<NeighborElement> neighbors =
-	    s_databaseHelper.readNeighbors(s_cryptography);
+	    s_databaseHelper.readNeighbors(s_cryptography, false);
 	int count = s_databaseHelper.count("neighbors");
 
 	if(count == 0 || neighbors == null)
