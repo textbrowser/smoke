@@ -130,6 +130,106 @@ public class Database extends SQLiteOpenHelper
 	    }
     }
 
+    public ArrayList<SipHashIdElement> readSipHashIds(Cryptography cryptography)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	ArrayList<SipHashIdElement> arrayList = null;
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "name, " +
+		 "siphash_id, " +
+		 "stream, " +
+		 "OID " +
+		 "FROM siphash_ids", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
+		    boolean error = false;
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    sipHashIdElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
+			byte bytes[] = Base64.decode
+			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
+
+			bytes = cryptography.mtd(bytes);
+
+			if(bytes == null)
+			{
+			    error = true;
+
+			    StringBuffer stringBuffer = new StringBuffer();
+
+			    stringBuffer.append("Database::readSipHashIds(): ");
+			    stringBuffer.append("error on column ");
+			    stringBuffer.append(cursor.getColumnName(i));
+			    stringBuffer.append(".");
+			    writeLog(stringBuffer.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    sipHashIdElement.m_name = new String(bytes);
+			    break;
+			case 1:
+			    sipHashIdElement.m_sipHashId = new String
+				(bytes, "UTF-8");
+			    break;
+			case 2:
+			    sipHashIdElement.m_stream = Miscellaneous.
+				deepCopy(bytes);
+			    break;
+			default:
+			    break;
+			}
+		    }
+
+		    if(!error)
+			arrayList.add(sipHashIdElement);
+
+		    cursor.moveToNext();
+		}
+
+		if(arrayList.size() > 1)
+		    Collections.sort(arrayList, s_readSipHashIdsComparator);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
     public SparseArray<NeighborElement> readNeighbors(Cryptography cryptography)
     {
 	prepareDb();
@@ -260,152 +360,6 @@ public class Database extends SQLiteOpenHelper
 
 		for(int i = 0; i < arrayList.size(); i++)
 		    sparseArray.append(i, arrayList.get(i));
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(sparseArray != null)
-		sparseArray.clear();
-
-	    sparseArray = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return sparseArray;
-    }
-
-    public SparseArray<SipHashIdElement> readSipHashIds
-	(Cryptography cryptography)
-    {
-	prepareDb();
-
-	if(cryptography == null || m_db == null)
-	    return null;
-
-	Cursor cursor = null;
-	SparseArray<SipHashIdElement> sparseArray = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "name, " +
-		 "siphash_id, " +
-		 "stream, " +
-		 "OID " +
-		 "FROM siphash_ids", null);
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		ArrayList<SipHashIdElement> arrayList = new ArrayList<> ();
-
-		sparseArray = new SparseArray<> ();
-
-		while(!cursor.isAfterLast())
-		{
-		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
-		    boolean error = false;
-
-		    for(int i = 0; i < cursor.getColumnCount(); i++)
-		    {
-			if(i == cursor.getColumnCount() - 1)
-			{
-			    sipHashIdElement.m_oid = cursor.getInt(i);
-			    continue;
-			}
-
-			byte bytes[] = Base64.decode
-			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
-
-			bytes = cryptography.mtd(bytes);
-
-			if(bytes == null)
-			{
-			    error = true;
-
-			    StringBuffer stringBuffer = new StringBuffer();
-
-			    stringBuffer.append("Database::readSipHashIds(): ");
-			    stringBuffer.append("error on column ");
-			    stringBuffer.append(cursor.getColumnName(i));
-			    stringBuffer.append(".");
-			    writeLog(stringBuffer.toString());
-			    break;
-			}
-
-			switch(i)
-			{
-			case 0:
-			    sipHashIdElement.m_name = new String(bytes);
-			    break;
-			case 1:
-			    sipHashIdElement.m_sipHashId = new String
-				(bytes, "UTF-8");
-			    break;
-			case 2:
-			    sipHashIdElement.m_stream = Miscellaneous.
-				deepCopy(bytes);
-			    break;
-			default:
-			    break;
-			}
-		    }
-
-		    if(!error)
-			arrayList.add(sipHashIdElement);
-
-		    cursor.moveToNext();
-		}
-
-		if(arrayList.size() > 1)
-		    Collections.sort(arrayList, s_readSipHashIdsComparator);
-
-		for(int i = 0; i < arrayList.size(); i++)
-		    sparseArray.append(i, arrayList.get(i));
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(sparseArray != null)
-		sparseArray.clear();
-
-	    sparseArray = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return sparseArray;
-    }
-
-    public SparseArray<String> readOutboundMessage(int oid)
-    {
-	prepareDb();
-
-	if(m_db == null)
-	    return null;
-
-	Cursor cursor = null;
-	SparseArray<String> sparseArray = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery
-		("SELECT message, OID FROM outbound_queue " +
-		 "WHERE neighbor_oid = ? ORDER BY OID",
-		 new String[] {String.valueOf(oid)});
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		sparseArray = new SparseArray<> ();
-		sparseArray.append(0, cursor.getString(0));
-		sparseArray.append(1, String.valueOf(cursor.getInt(1)));
 	    }
 	}
 	catch(Exception exception)
@@ -602,6 +556,43 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return str;
+    }
+
+    public String[] readOutboundMessage(int oid)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	String array[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT message, OID FROM outbound_queue " +
+		 "WHERE neighbor_oid = ? ORDER BY OID",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		array = new String[2];
+		array[0] = cursor.getString(0);
+		array[1] = String.valueOf(cursor.getInt(1));
+	    }
+	}
+	catch(Exception exception)
+	{
+	    array = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return array;
     }
 
     public boolean accountPrepared()

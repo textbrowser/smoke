@@ -174,17 +174,17 @@ public abstract class Neighbor
 		** Retrieve the first database message.
 		*/
 
-		SparseArray<String> sparseArray =
-		    m_databaseHelper.readOutboundMessage(m_oid.get());
+		String array[] = m_databaseHelper.readOutboundMessage
+		    (m_oid.get());
 
 		/*
 		** If the message is sent successfully, remove it.
 		*/
 
-		if(sparseArray != null)
-		    if(send(sparseArray.get(0)))
+		if(array != null)
+		    if(send(array[0]))
 			m_databaseHelper.deleteEntry
-			    (sparseArray.get(1), "outbound_queue");
+			    (array[1], "outbound_queue");
 
 		/*
 		** Echo packets.

@@ -58,6 +58,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import java.security.KeyPair;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -301,15 +302,15 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		SparseArray<SipHashIdElement> sparseArray =
+		ArrayList<SipHashIdElement> arrayList =
 		    m_databaseHelper.readSipHashIds(s_cryptography);
 
-		if(sparseArray == null)
+		if(arrayList == null)
 		    m_error = true;
 		else
-		    for(int i = 0; i < sparseArray.size(); i++)
+		    for(int i = 0; i < arrayList.size(); i++)
 		    {
-			SipHashIdElement sipHashIdElement = sparseArray.get(i);
+			SipHashIdElement sipHashIdElement = arrayList.get(i);
 
 			if(sipHashIdElement == null)
 			{
@@ -675,19 +676,19 @@ public class Settings extends AppCompatActivity
 
     private void populateParticipants()
     {
-	SparseArray<SipHashIdElement> sparseArray =
+	ArrayList<SipHashIdElement> arrayList =
 	    m_databaseHelper.readSipHashIds(s_cryptography);
 	final TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
 	tableLayout.removeAllViews();
 
-	if(sparseArray == null)
+	if(arrayList == null)
 	    return;
 
-	for(int i = 0; i < sparseArray.size(); i++)
+	for(int i = 0; i < arrayList.size(); i++)
 	{
-	    SipHashIdElement sipHashIdElement = sparseArray.get(i);
+	    SipHashIdElement sipHashIdElement = arrayList.get(i);
 
 	    if(sipHashIdElement == null)
 		continue;
@@ -1460,6 +1461,7 @@ public class Settings extends AppCompatActivity
 
 	if(isAuthenticated)
 	{
+	    checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 	    populateNeighbors();
 	    populateParticipants();
 	    startKernel();
