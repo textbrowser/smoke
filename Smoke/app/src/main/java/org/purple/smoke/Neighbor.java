@@ -112,7 +112,7 @@ public abstract class Neighbor
 	m_ipPort = ipPort;
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
-	m_queue = new ArrayList<String> ();
+	m_queue = new ArrayList<> ();
 	m_queueMutex = new Object();
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
