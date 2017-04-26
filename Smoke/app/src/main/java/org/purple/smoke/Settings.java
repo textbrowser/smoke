@@ -36,7 +36,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Base64;
-import android.util.SparseArray;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -433,12 +432,12 @@ public class Settings extends AppCompatActivity
 
     private void populateNeighbors()
     {
-	SparseArray<NeighborElement> sparseArray =
-	    m_databaseHelper.readNeighbors(s_cryptography, true);
+	ArrayList<NeighborElement> arrayList =
+	    m_databaseHelper.readNeighbors(s_cryptography);
 	final TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.neighbors);
 
-	if(sparseArray == null || sparseArray.size() == 0)
+	if(arrayList == null || arrayList.size() == 0)
 	{
 	    tableLayout.removeAllViews();
 	    return;
@@ -448,9 +447,9 @@ public class Settings extends AppCompatActivity
 	    (R.id.neighbor_details);
 	StringBuffer stringBuffer = new StringBuffer();
 
-	for(int i = 0; i < sparseArray.size(); i++)
+	for(int i = 0; i < arrayList.size(); i++)
 	{
-	    NeighborElement neighborElement = sparseArray.get(i);
+	    NeighborElement neighborElement = arrayList.get(i);
 
 	    if(neighborElement == null)
 		continue;

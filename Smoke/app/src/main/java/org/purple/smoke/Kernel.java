@@ -33,6 +33,7 @@ import android.util.SparseIntArray;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -59,8 +60,8 @@ public class Kernel
 
     private void prepareNeighbors()
     {
-	SparseArray<NeighborElement> neighbors =
-	    s_databaseHelper.readNeighbors(s_cryptography, false);
+	ArrayList<NeighborElement> neighbors =
+	    s_databaseHelper.readNeighbors(s_cryptography);
 	int count = s_databaseHelper.count("neighbors");
 
 	if(count == 0 || neighbors == null)

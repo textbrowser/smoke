@@ -130,6 +130,149 @@ public class Database extends SQLiteOpenHelper
 	    }
     }
 
+    public ArrayList<NeighborElement> readNeighbors(Cryptography cryptography)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	ArrayList<NeighborElement> arrayList = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "bytes_read, " +
+		 "bytes_written, " +
+		 "ip_version, " +
+		 "local_ip_address, " +
+		 "local_port, " +
+		 "remote_certificate, " +
+		 "remote_ip_address, " +
+		 "remote_port, " +
+		 "remote_scope_id, " +
+		 "session_cipher, " +
+		 "status, " +
+		 "status_control, " +
+		 "transport, " +
+		 "uptime, " +
+		 "OID " +
+		 "FROM neighbors", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    NeighborElement neighborElement = new NeighborElement();
+		    boolean error = false;
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    neighborElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
+			byte bytes[] = Base64.decode
+			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
+
+			bytes = cryptography.mtd(bytes);
+
+			if(bytes == null)
+			{
+			    error = true;
+
+			    StringBuffer stringBuffer = new StringBuffer();
+
+			    stringBuffer.append("Database::readNeighbors(): ");
+			    stringBuffer.append("error on column ");
+			    stringBuffer.append(cursor.getColumnName(i));
+			    stringBuffer.append(".");
+			    writeLog(stringBuffer.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    neighborElement.m_bytesRead = new String(bytes);
+			    break;
+			case 1:
+			    neighborElement.m_bytesWritten = new String(bytes);
+			    break;
+			case 2:
+			    neighborElement.m_ipVersion = new String(bytes);
+			    break;
+			case 3:
+			    neighborElement.m_localIpAddress =
+				new String(bytes);
+			    break;
+			case 4:
+			    neighborElement.m_localPort = new String(bytes);
+			    break;
+			case 5:
+			    neighborElement.m_remoteCertificate =
+				new String(bytes);
+			    break;
+			case 6:
+			    neighborElement.m_remoteIpAddress =
+				new String(bytes);
+			    break;
+			case 7:
+			    neighborElement.m_remotePort = new String(bytes);
+			    break;
+			case 8:
+			    neighborElement.m_remoteScopeId = new String(bytes);
+			    break;
+			case 9:
+			    neighborElement.m_sessionCipher = new String(bytes);
+			    break;
+			case 10:
+			    neighborElement.m_status = new String(bytes);
+			    break;
+			case 11:
+			    neighborElement.m_statusControl = new String(bytes);
+			    break;
+			case 12:
+			    neighborElement.m_transport = new String(bytes);
+			    break;
+			case 13:
+			    neighborElement.m_uptime = new String(bytes);
+			    break;
+			}
+		    }
+
+		    if(!error)
+			arrayList.add(neighborElement);
+
+		    cursor.moveToNext();
+		}
+
+		if(arrayList.size() > 1)
+		    Collections.sort(arrayList, s_readNeighborsComparator);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
     public ArrayList<SipHashIdElement> readSipHashIds(Cryptography cryptography)
     {
 	prepareDb();
@@ -228,170 +371,6 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return arrayList;
-    }
-
-    public SparseArray<NeighborElement> readNeighbors
-	(Cryptography cryptography, boolean sort)
-    {
-	prepareDb();
-
-	if(cryptography == null || m_db == null)
-	    return null;
-
-	Cursor cursor = null;
-	SparseArray<NeighborElement> sparseArray = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "bytes_read, " +
-		 "bytes_written, " +
-		 "ip_version, " +
-		 "local_ip_address, " +
-		 "local_port, " +
-		 "remote_certificate, " +
-		 "remote_ip_address, " +
-		 "remote_port, " +
-		 "remote_scope_id, " +
-		 "session_cipher, " +
-		 "status, " +
-		 "status_control, " +
-		 "transport, " +
-		 "uptime, " +
-		 "OID " +
-		 "FROM neighbors", null);
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		ArrayList<NeighborElement> arrayList = null;
-		int index = -1;
-
-		if(sort)
-		    arrayList = new ArrayList<> ();
-
-		sparseArray = new SparseArray<> ();
-
-		while(!cursor.isAfterLast())
-		{
-		    NeighborElement neighborElement = new NeighborElement();
-		    boolean error = false;
-
-		    for(int i = 0; i < cursor.getColumnCount(); i++)
-		    {
-			if(i == cursor.getColumnCount() - 1)
-			{
-			    neighborElement.m_oid = cursor.getInt(i);
-			    continue;
-			}
-
-			byte bytes[] = Base64.decode
-			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
-
-			bytes = cryptography.mtd(bytes);
-
-			if(bytes == null)
-			{
-			    error = true;
-
-			    StringBuffer stringBuffer = new StringBuffer();
-
-			    stringBuffer.append("Database::readNeighbors(): ");
-			    stringBuffer.append("error on column ");
-			    stringBuffer.append(cursor.getColumnName(i));
-			    stringBuffer.append(".");
-			    writeLog(stringBuffer.toString());
-			    break;
-			}
-
-			switch(i)
-			{
-			case 0:
-			    neighborElement.m_bytesRead = new String(bytes);
-			    break;
-			case 1:
-			    neighborElement.m_bytesWritten = new String(bytes);
-			    break;
-			case 2:
-			    neighborElement.m_ipVersion = new String(bytes);
-			    break;
-			case 3:
-			    neighborElement.m_localIpAddress =
-				new String(bytes);
-			    break;
-			case 4:
-			    neighborElement.m_localPort = new String(bytes);
-			    break;
-			case 5:
-			    neighborElement.m_remoteCertificate =
-				new String(bytes);
-			    break;
-			case 6:
-			    neighborElement.m_remoteIpAddress =
-				new String(bytes);
-			    break;
-			case 7:
-			    neighborElement.m_remotePort = new String(bytes);
-			    break;
-			case 8:
-			    neighborElement.m_remoteScopeId = new String(bytes);
-			    break;
-			case 9:
-			    neighborElement.m_sessionCipher = new String(bytes);
-			    break;
-			case 10:
-			    neighborElement.m_status = new String(bytes);
-			    break;
-			case 11:
-			    neighborElement.m_statusControl = new String(bytes);
-			    break;
-			case 12:
-			    neighborElement.m_transport = new String(bytes);
-			    break;
-			case 13:
-			    neighborElement.m_uptime = new String(bytes);
-			    break;
-			}
-		    }
-
-		    if(!error)
-		    {
-			if(sort)
-			    arrayList.add(neighborElement);
-			else
-			{
-			    index += 1;
-			    sparseArray.append(index, neighborElement);
-			}
-		    }
-
-		    cursor.moveToNext();
-		}
-
-		if(sort)
-		{
-		    if(arrayList.size() > 1)
-			Collections.sort(arrayList, s_readNeighborsComparator);
-
-		    for(int i = 0; i < arrayList.size(); i++)
-			sparseArray.append(i, arrayList.get(i));
-		}
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(sparseArray != null)
-		sparseArray.clear();
-
-	    sparseArray = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return sparseArray;
     }
 
     public SparseIntArray readNeighborOids()
