@@ -29,5 +29,5 @@
     <string name="send">Senden</string>
     <string name="set_password">Setze Passwort</string>
     <string name="signature">Signatur</string>
-    <string name="siphash_id"></string>
+    <string name="siphash_id" />
 </resources>
