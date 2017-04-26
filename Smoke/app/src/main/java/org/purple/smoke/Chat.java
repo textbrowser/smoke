@@ -129,7 +129,7 @@ public class Chat extends AppCompatActivity
 	    }
 	});
 
-	TextView textView1 = (TextView) findViewById(R.id.chat_message);
+	final TextView textView1 = (TextView) findViewById(R.id.chat_message);
 
 	textView1.requestFocus();
     }
