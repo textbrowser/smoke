@@ -41,13 +41,14 @@ public abstract class Neighbor
 {
     private ArrayList<String> m_queue = null;
     private AtomicInteger m_oid = null;
-    private Object m_queueMutex = null;
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
     private UUID m_uuid = null;
+    private final Object m_queueMutex = new Object();
     private final String m_echoMode = "full";
     private final static int LANE_WIDTH = 100000;
+    private final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 500; // 0.5 Seconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
@@ -113,7 +114,6 @@ public abstract class Neighbor
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
 	m_queue = new ArrayList<> ();
-	m_queueMutex = new Object();
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
 	m_sendOutboundScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -305,7 +305,8 @@ public abstract class Neighbor
 
 	synchronized(m_queueMutex)
 	{
-	    m_queue.add(message);
+	    if(m_queue.size() < MAXIMUM_QUEUED_ECHO_PACKETS)
+		m_queue.add(message);
 	}
     }
 }
