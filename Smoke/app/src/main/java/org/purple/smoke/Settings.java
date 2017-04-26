@@ -139,13 +139,11 @@ public class Settings extends AppCompatActivity
 	String string = "";
 	StringBuffer stringBuffer = new StringBuffer();
 	final TextView textView1 = (TextView) findViewById
-	    (R.id.participant_name);
-	final TextView textView2 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
-	final TextView textView3 = (TextView) findViewById
+	final TextView textView2 = (TextView) findViewById
 	    (R.id.siphash_identity);
 
-	string = textView2.getText().toString().
+	string = textView1.getText().toString().
 	    replace(" ", "").replace("-", "").replace(":", "");
 
 	try
@@ -174,7 +172,7 @@ public class Settings extends AppCompatActivity
 		 "A SipHash ID must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
-	else if(textView3.getText().toString().replace("-", "").
+	else if(textView2.getText().toString().replace("-", "").
 		endsWith(string.replace(":", "")))
 	{
 	    Miscellaneous.showErrorDialog
@@ -230,7 +228,8 @@ public class Settings extends AppCompatActivity
 	}
 
 	Thread thread = new Thread
-	    (new SingleShot(textView1.getText().toString(), string));
+	    (new SingleShot(((TextView) findViewById(R.id.participant_name)).
+			    getText().toString(), string));
 
 	thread.start();
     }
