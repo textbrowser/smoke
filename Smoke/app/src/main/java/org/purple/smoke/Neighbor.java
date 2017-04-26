@@ -75,7 +75,7 @@ public abstract class Neighbor
 	String peerCertificate = getPeerCertificateString();
 	String sessionCiper = getSessionCipher();
 	boolean connected = connected();
-	long uptime = uptime = System.nanoTime() - m_startTime.get();
+	long uptime = System.nanoTime() - m_startTime.get();
 
 	m_databaseHelper.saveNeighborInformation
 	    (m_cryptography,
