@@ -28,7 +28,7 @@
 package org.purple.smoke;
 
 import android.util.Base64;
-import android.util.SparseArray;
+
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.Executors;
