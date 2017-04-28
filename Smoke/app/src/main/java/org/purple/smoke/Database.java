@@ -1399,7 +1399,7 @@ public class Database extends SQLiteOpenHelper
 	    "name TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
-	    "siphash TEXT NOT NULL, " +
+	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids(siphash_id_digest) ON DELETE CASCADE, " +
