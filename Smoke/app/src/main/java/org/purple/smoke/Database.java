@@ -286,6 +286,107 @@ public class Database extends SQLiteOpenHelper
 	return arrayList;
     }
 
+    public ArrayList<ParticipantElement> readParticipants
+	(Cryptography cryptography)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	ArrayList<ParticipantElement> arrayList = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "name, " +
+		 "keystream, " +
+		 "siphash_id, " +
+		 "OID " +
+		 "FROM neighbors", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    ParticipantElement participantElement =
+			new ParticipantElement();
+		    boolean error = false;
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    participantElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
+			byte bytes[] = Base64.decode
+			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
+
+			bytes = cryptography.mtd(bytes);
+
+			if(bytes == null)
+			{
+			    error = true;
+
+			    StringBuffer stringBuffer = new StringBuffer();
+
+			    stringBuffer.append
+				("Database::readParticipants(): ");
+			    stringBuffer.append("error on column ");
+			    stringBuffer.append(cursor.getColumnName(i));
+			    stringBuffer.append(".");
+			    writeLog(stringBuffer.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    participantElement.m_name = new String(bytes);
+			    break;
+			case 1:
+			    participantElement.m_keyStream =
+				Miscellaneous.deepCopy(bytes);
+			    break;
+			case 2:
+			    participantElement.m_sipHashId = new String
+				(bytes, "UTF-8");
+			    break;
+			}
+		    }
+
+		    if(!error)
+			arrayList.add(participantElement);
+
+		    cursor.moveToNext();
+		}
+
+		if(arrayList.size() > 1)
+		    Collections.sort(arrayList, s_readParticipantsComparator);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
     public ArrayList<SipHashIdElement> readSipHashIds(Cryptography cryptography)
     {
 	prepareDb();
@@ -885,7 +986,8 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(5, "name");
 	    sparseArray.append(6, "signature_public_key");
 	    sparseArray.append(7, "signature_public_key_digest");
-	    sparseArray.append(8, "siphash_id_digest");
+	    sparseArray.append(8, "siphash_id");
+	    sparseArray.append(9, "siphash_id_digest");
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
@@ -909,6 +1011,8 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).
 			equals("signature_public_key_digest"))
 		    bytes = cryptography.hmac(signatureKey.getEncoded());
+		else if(sparseArray.get(i).equals("siphash_id"))
+		    bytes = cryptography.etm(sipHashId.getBytes("UTF-8"));
 		else if(sparseArray.get(i).equals("siphash_id_digest"))
 		    bytes = cryptography.hmac(sipHashId.getBytes("UTF-8"));
 
@@ -1295,6 +1399,7 @@ public class Database extends SQLiteOpenHelper
 	    "name TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
+	    "siphash TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids(siphash_id_digest) ON DELETE CASCADE, " +
