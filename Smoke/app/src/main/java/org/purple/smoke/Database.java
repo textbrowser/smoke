@@ -89,6 +89,15 @@ public class Database extends SQLiteOpenHelper
 		return e1.m_transport.compareTo(e2.m_transport);
 	    }
 	};
+    private final static Comparator<ParticipantElement>
+	s_readParticipantsComparator = new Comparator<ParticipantElement> ()
+	{
+	    @Override
+	    public int compare(ParticipantElement e1, ParticipantElement e2)
+	    {
+		return e1.m_name.compareTo(e2.m_name);
+	    }
+	};
     private final static Comparator<SipHashIdElement>
 	s_readSipHashIdsComparator = new Comparator<SipHashIdElement> ()
 	{
