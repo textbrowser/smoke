@@ -305,7 +305,7 @@ public class Database extends SQLiteOpenHelper
 		 "keystream, " +
 		 "siphash_id, " +
 		 "OID " +
-		 "FROM neighbors", null);
+		 "FROM participants", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {

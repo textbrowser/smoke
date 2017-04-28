@@ -34,15 +34,63 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import java.util.ArrayList;
 
 public class Chat extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static int CHECKBOX_TEXT_SIZE = 13;
+
+    private void populateParticipants()
+    {
+	ArrayList<ParticipantElement> arrayList =
+	    m_databaseHelper.readParticipants(s_cryptography);
+	final TableLayout tableLayout = (TableLayout) findViewById
+	    (R.id.participants);
+
+	tableLayout.removeAllViews();
+
+	if(arrayList == null)
+	    return;
+
+	for(int i = 0; i < arrayList.size(); i++)
+	{
+	    ParticipantElement participantElement = arrayList.get(i);
+
+	    if(participantElement == null)
+		continue;
+
+	    CheckBox checkBox = new CheckBox(Chat.this);
+	    StringBuffer stringBuffer = new StringBuffer();
+	    TableRow.LayoutParams layoutParams = new
+		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+	    TableRow row = new TableRow(Chat.this);
+
+	    checkBox.setId(participantElement.m_oid);
+	    checkBox.setLayoutParams
+		(new TableRow.LayoutParams(0,
+					   LayoutParams.WRAP_CONTENT,
+					   1));
+	    stringBuffer.append(participantElement.m_name);
+	    stringBuffer.append(" (");
+	    stringBuffer.append(participantElement.m_sipHashId);
+	    stringBuffer.append(")");
+	    checkBox.setText(stringBuffer);
+	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
+	    row.addView(checkBox);
+	    row.setLayoutParams(layoutParams);
+	    tableLayout.addView(row, i);
+	}
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,7 +100,7 @@ public class Chat extends AppCompatActivity
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        final Button button1 = (Button) findViewById(R.id.clear_chat_messages);
+        Button button1 = (Button) findViewById(R.id.clear_chat_messages);
 
         button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -65,9 +113,8 @@ public class Chat extends AppCompatActivity
 	    }
 	});
 
-        final Button button2 = (Button) findViewById(R.id.send_chat_message);
-
-        button2.setOnClickListener(new View.OnClickListener()
+        button1 = (Button) findViewById(R.id.send_chat_message);
+        button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
@@ -129,9 +176,12 @@ public class Chat extends AppCompatActivity
 	    }
 	});
 
-	final TextView textView1 = (TextView) findViewById(R.id.chat_message);
+	TextView textView1 = (TextView) findViewById(R.id.chat_message);
 
 	textView1.requestFocus();
+
+	if(State.getInstance().isAuthenticated())
+	    populateParticipants();
     }
 
     @Override
