@@ -81,9 +81,9 @@ public class Chat extends AppCompatActivity
 					   LayoutParams.WRAP_CONTENT,
 					   1));
 	    stringBuffer.append(participantElement.m_name);
-	    stringBuffer.append(" (");
+	    stringBuffer.append("\n");
 	    stringBuffer.append(participantElement.m_sipHashId);
-	    stringBuffer.append(")");
+	    stringBuffer.append("");
 	    checkBox.setText(stringBuffer);
 	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
 	    row.addView(checkBox);
