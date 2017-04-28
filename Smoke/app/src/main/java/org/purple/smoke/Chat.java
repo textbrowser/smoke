@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -87,6 +88,10 @@ public class Chat extends AppCompatActivity
 	    checkBox.setText(stringBuffer);
 	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
 	    row.addView(checkBox);
+
+	    if(i % 2 == 0)
+		row.setBackgroundColor(Color.argb(100, 179, 230, 255));
+
 	    row.setLayoutParams(layoutParams);
 	    tableLayout.addView(row, i);
 	}
