@@ -48,7 +48,7 @@ public abstract class Neighbor
     private final Object m_queueMutex = new Object();
     private final String m_echoMode = "full";
     private final static int LANE_WIDTH = 100000;
-    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 500; // 0.5 Seconds
+    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
     protected AtomicLong m_bytesRead = null;
