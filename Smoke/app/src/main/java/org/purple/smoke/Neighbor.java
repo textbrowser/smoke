@@ -48,7 +48,6 @@ public abstract class Neighbor
     private final Object m_queueMutex = new Object();
     private final String m_echoMode = "full";
     private final static int LANE_WIDTH = 100000;
-    private final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 500; // 0.5 Seconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
@@ -68,9 +67,11 @@ public abstract class Neighbor
     protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
     protected final static int READ_SOCKET_INTERVAL = 150; // 150 Milliseconds
     protected final static int SO_TIMEOUT = 100; // 100 Milliseconds
+    public final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
 
     private void saveStatistics()
     {
+	String echoQueueSize = "";
 	String localIp = getLocalIp();
 	String localPort = String.valueOf(getLocalPort());
 	String peerCertificate = getPeerCertificateString();
@@ -78,10 +79,16 @@ public abstract class Neighbor
 	boolean connected = connected();
 	long uptime = System.nanoTime() - m_startTime.get();
 
+	synchronized(m_queueMutex)
+	{
+	    echoQueueSize = String.valueOf(m_queue.size());
+	}
+
 	m_databaseHelper.saveNeighborInformation
 	    (m_cryptography,
 	     String.valueOf(m_bytesRead.get()),
 	     String.valueOf(m_bytesWritten.get()),
+	     echoQueueSize,
 	     localIp,
 	     localPort,
 	     peerCertificate,

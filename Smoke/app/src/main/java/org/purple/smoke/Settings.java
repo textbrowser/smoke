@@ -629,6 +629,11 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuffer.append("\n");
+	    stringBuffer.append("Echo Queue Size: ");
+	    stringBuffer.append(neighborElement.m_echoQueueSize);
+	    stringBuffer.append(" / ");
+	    stringBuffer.append(Neighbor.MAXIMUM_QUEUED_ECHO_PACKETS);
+	    stringBuffer.append("\n");
 	    stringBuffer.append("In: ");
 	    stringBuffer.append
 		(Miscellaneous.

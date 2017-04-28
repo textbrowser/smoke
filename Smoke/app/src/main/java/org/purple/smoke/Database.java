@@ -146,6 +146,7 @@ public class Database extends SQLiteOpenHelper
 		("SELECT " +
 		 "bytes_read, " +
 		 "bytes_written, " +
+		 "echo_queue_size, " +
 		 "ip_version, " +
 		 "local_ip_address, " +
 		 "local_port, " +
@@ -206,42 +207,45 @@ public class Database extends SQLiteOpenHelper
 			    neighborElement.m_bytesWritten = new String(bytes);
 			    break;
 			case 2:
-			    neighborElement.m_ipVersion = new String(bytes);
+			    neighborElement.m_echoQueueSize = new String(bytes);
 			    break;
 			case 3:
+			    neighborElement.m_ipVersion = new String(bytes);
+			    break;
+			case 4:
 			    neighborElement.m_localIpAddress =
 				new String(bytes);
 			    break;
-			case 4:
+			case 5:
 			    neighborElement.m_localPort = new String(bytes);
 			    break;
-			case 5:
+			case 6:
 			    neighborElement.m_remoteCertificate =
 				new String(bytes);
 			    break;
-			case 6:
+			case 7:
 			    neighborElement.m_remoteIpAddress =
 				new String(bytes);
 			    break;
-			case 7:
+			case 8:
 			    neighborElement.m_remotePort = new String(bytes);
 			    break;
-			case 8:
+			case 9:
 			    neighborElement.m_remoteScopeId = new String(bytes);
 			    break;
-			case 9:
+			case 10:
 			    neighborElement.m_sessionCipher = new String(bytes);
 			    break;
-			case 10:
+			case 11:
 			    neighborElement.m_status = new String(bytes);
 			    break;
-			case 11:
+			case 12:
 			    neighborElement.m_statusControl = new String(bytes);
 			    break;
-			case 12:
+			case 13:
 			    neighborElement.m_transport = new String(bytes);
 			    break;
-			case 13:
+			case 14:
 			    neighborElement.m_uptime = new String(bytes);
 			    break;
 			}
@@ -692,24 +696,25 @@ public class Database extends SQLiteOpenHelper
 
 	    sparseArray.append(0, "bytes_read");
 	    sparseArray.append(1, "bytes_written");
-	    sparseArray.append(2, "ip_version");
-	    sparseArray.append(3, "local_ip_address");
-	    sparseArray.append(4, "local_ip_address_digest");
-	    sparseArray.append(5, "local_port");
-	    sparseArray.append(6, "local_port_digest");
-	    sparseArray.append(7, "remote_certificate");
-	    sparseArray.append(8, "remote_ip_address");
-	    sparseArray.append(9, "remote_ip_address_digest");
-	    sparseArray.append(10, "remote_port");
-            sparseArray.append(11, "remote_port_digest");
-            sparseArray.append(12, "remote_scope_id");
-            sparseArray.append(13, "session_cipher");
-            sparseArray.append(14, "status");
-            sparseArray.append(15, "status_control");
-            sparseArray.append(16, "transport");
-            sparseArray.append(17, "transport_digest");
-            sparseArray.append(18, "uptime");
-            sparseArray.append(19, "user_defined_digest");
+	    sparseArray.append(2, "echo_queue_size");
+	    sparseArray.append(3, "ip_version");
+	    sparseArray.append(4, "local_ip_address");
+	    sparseArray.append(5, "local_ip_address_digest");
+	    sparseArray.append(6, "local_port");
+	    sparseArray.append(7, "local_port_digest");
+	    sparseArray.append(8, "remote_certificate");
+	    sparseArray.append(9, "remote_ip_address");
+	    sparseArray.append(10, "remote_ip_address_digest");
+	    sparseArray.append(11, "remote_port");
+            sparseArray.append(12, "remote_port_digest");
+            sparseArray.append(13, "remote_scope_id");
+            sparseArray.append(14, "session_cipher");
+            sparseArray.append(15, "status");
+            sparseArray.append(16, "status_control");
+            sparseArray.append(17, "transport");
+            sparseArray.append(18, "transport_digest");
+            sparseArray.append(19, "uptime");
+            sparseArray.append(20, "user_defined_digest");
 
 	    Matcher matcher = Patterns.IP_ADDRESS.matcher
 		(remoteIpAddress.trim());
@@ -724,7 +729,9 @@ public class Database extends SQLiteOpenHelper
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
-		if(sparseArray.get(i).equals("ip_version"))
+		if(sparseArray.get(i).equals("echo_queue_size"))
+		    bytes = cryptography.etm("0".getBytes());
+		else if(sparseArray.get(i).equals("ip_version"))
 		    bytes = cryptography.etm(version.trim().getBytes());
 		else if(sparseArray.get(i).equals("local_ip_address_digest"))
 		    bytes = cryptography.hmac("".getBytes());
@@ -1218,6 +1225,7 @@ public class Database extends SQLiteOpenHelper
 	str = "CREATE TABLE IF NOT EXISTS neighbors (" +
 	    "bytes_read TEXT NOT NULL, " +
 	    "bytes_written TEXT NOT NULL, " +
+	    "echo_queue_size TEXT NOT NULL, " +
 	    "ip_version TEXT NOT NULL, " +
 	    "local_ip_address TEXT NOT NULL, " +
 	    "local_ip_address_digest TEXT NOT NULL, " +
@@ -1430,6 +1438,7 @@ public class Database extends SQLiteOpenHelper
     public void saveNeighborInformation(Cryptography cryptography,
 					String bytesRead,
 					String bytesWritten,
+					String echoQueueSize,
 					String ipAddress,
 					String ipPort,
 					String peerCertificate,
@@ -1451,6 +1460,7 @@ public class Database extends SQLiteOpenHelper
 	    {
 		bytesRead = "";
 		bytesWritten = "";
+		echoQueueSize = "0";
 		ipAddress = "";
 		ipPort = "";
 		peerCertificate = "";
@@ -1465,6 +1475,11 @@ public class Database extends SQLiteOpenHelper
 	    values.put
 		("bytes_written",
 		 Base64.encodeToString(cryptography.etm(bytesWritten.
+							getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("echo_queue_size",
+		 Base64.encodeToString(cryptography.etm(echoQueueSize.
 							getBytes()),
 				       Base64.DEFAULT));
 	    values.put

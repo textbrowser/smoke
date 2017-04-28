@@ -50,6 +50,7 @@ Completed Items
        TcpNeighbor classes.
 43.    Kernel.
 44.    Smoke echo? Expensive. Optional.
+45.    Display count of queued echo packets per neighbor.
 
 Future Items
 
@@ -75,4 +76,3 @@ Remaining Items
 5.     Validate neighbor IP address.
 6.     Tab order.
 7.     Complete Cryptography.pkiEncrypt().
-8.     Display count of queued echo packets per neighbor.
