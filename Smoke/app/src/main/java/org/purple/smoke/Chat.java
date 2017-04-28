@@ -180,5 +180,4 @@ public class Chat extends AppCompatActivity
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	return true;
     }
-
 }
