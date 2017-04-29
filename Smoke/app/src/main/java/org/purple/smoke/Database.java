@@ -1270,7 +1270,23 @@ public class Database extends SQLiteOpenHelper
     {
 	try
 	{
+	    db.enableWriteAheadLogging();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
 	    db.execSQL("PRAGMA secure_delete = True", null);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
+	    db.setForeignKeyConstraintsEnabled(true);
         }
 	catch(Exception exception)
 	{
@@ -1460,15 +1476,6 @@ public class Database extends SQLiteOpenHelper
     public void onOpen(SQLiteDatabase db)
     {
 	super.onOpen(db);
-
-	try
-	{
-	    if(!db.isReadOnly())
-		db.execSQL("PRAGMA foreign_keys = ON");
-	}
-	catch(Exception exception)
-	{
-	}
     }
 
     @Override
