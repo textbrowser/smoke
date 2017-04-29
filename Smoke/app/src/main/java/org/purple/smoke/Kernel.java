@@ -50,7 +50,7 @@ public class Kernel
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
-    private final static int NEIGHBORS_INTERVAL = 2500; // 2.5 Seconds
+    private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -60,33 +60,17 @@ public class Kernel
 
     private void prepareNeighbors()
     {
-	ArrayList<NeighborElement> neighbors =
-	    s_databaseHelper.readNeighbors(s_cryptography);
-	int count = s_databaseHelper.count("neighbors");
-
-	if(count == 0 || neighbors == null)
+	if(s_databaseHelper.count("neighbors") == 0)
 	{
-	    /*
-	    ** Disconnect all existing sockets.
-	    */
-
-	    if(count == 0)
-		synchronized(m_neighbors)
-		{
-		    for(int i = 0; i < m_neighbors.size(); i++)
-		    {
-			int j = m_neighbors.keyAt(i);
-
-			if(m_neighbors.get(j) != null)
-			    m_neighbors.get(j).abort();
-		    }
-
-		    m_neighbors.clear();
-		}
-
-	    Runtime.getRuntime().runFinalization();
+	    purge();
 	    return;
 	}
+
+	ArrayList<NeighborElement> neighbors =
+	    s_databaseHelper.readNeighbors(s_cryptography);
+
+	if(neighbors == null)
+	    return;
 	else
 	    synchronized(m_neighbors)
 	    {
@@ -232,6 +216,28 @@ public class Kernel
 		}
 	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
+    }
+
+    private void purge()
+    {
+	/*
+	** Disconnect all existing sockets.
+	*/
+
+	synchronized(m_neighbors)
+	{
+	    for(int i = 0; i < m_neighbors.size(); i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null)
+		    m_neighbors.get(j).abort();
+	    }
+
+	    m_neighbors.clear();
+	}
+
+	Runtime.getRuntime().runFinalization();
     }
 
     public static boolean ourMessage(String buffer)
