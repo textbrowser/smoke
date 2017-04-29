@@ -83,7 +83,10 @@ public class Chat extends AppCompatActivity
 					   1));
 	    stringBuffer.append(participantElement.m_name);
 	    stringBuffer.append("\n");
-	    stringBuffer.append(participantElement.m_sipHashId);
+	    stringBuffer.append
+		(Miscellaneous.
+		 delimitString(participantElement.m_sipHashId.
+			       replace(":", ""), '-', 4).toUpperCase());
 	    stringBuffer.append("");
 	    checkBox.setText(stringBuffer);
 	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
