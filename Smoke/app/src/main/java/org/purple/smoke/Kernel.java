@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Base64;
 import android.util.SparseArray;

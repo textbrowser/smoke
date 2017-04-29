@@ -64,7 +64,7 @@ public class Chat extends AppCompatActivity
 	       equals("org.purple.smoke.populate_participants"))
 		populateParticipants();
 	}
-    };
+    }
 
     private ChatBroadcastReceiver m_receiver = null;
     private boolean m_receiverRegistered = false;
