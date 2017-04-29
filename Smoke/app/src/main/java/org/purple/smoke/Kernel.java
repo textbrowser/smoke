@@ -60,17 +60,14 @@ public class Kernel
 
     private void prepareNeighbors()
     {
-	if(s_databaseHelper.count("neighbors") == 0)
-	{
-	    purge();
-	    return;
-	}
-
 	ArrayList<NeighborElement> neighbors =
 	    s_databaseHelper.readNeighbors(s_cryptography);
 
 	if(neighbors == null)
+	{
+	    purge();
 	    return;
+	}
 	else
 	    synchronized(m_neighbors)
 	    {
