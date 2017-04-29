@@ -27,6 +27,8 @@
 
 package org.purple.smoke;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -268,7 +270,15 @@ public class Kernel
 		stream = new ByteArrayInputStream
 		    (s_cryptography.decryptWithSipHashKey(array1));
 		input = new ObjectInputStream(stream);
-		s_databaseHelper.writeParticipant(s_cryptography, input);
+
+		if(s_databaseHelper.writeParticipant(s_cryptography, input))
+		    if(Settings.context() != null)
+		    {
+			Intent intent = new Intent
+			    ("org.purple.smoke.populate_participants");
+
+			Settings.context().sendBroadcast(intent);
+		    }
 	    }
 
 	    s_databaseHelper.writeCongestionDigest

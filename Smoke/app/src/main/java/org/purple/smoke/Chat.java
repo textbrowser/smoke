@@ -27,7 +27,10 @@
 
 package org.purple.smoke;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +50,24 @@ import java.util.ArrayList;
 public class Chat extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+
+    private class ChatBroadcastReceiver extends BroadcastReceiver
+    {
+	public ChatBroadcastReceiver()
+	{
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent)
+	{
+	    if(intent.getAction().
+	       equals("org.purple.smoke.populate_participants"))
+		populateParticipants();
+	}
+    };
+
+    private ChatBroadcastReceiver m_receiver = null;
+    private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int CHECKBOX_TEXT_SIZE = 13;
@@ -105,6 +126,7 @@ public class Chat extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_receiver = new ChatBroadcastReceiver();
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
@@ -237,5 +259,31 @@ public class Chat extends AppCompatActivity
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	return true;
+    }
+
+    @Override
+    public void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+    }
+
+    @Override
+    public void onResume()
+    {
+	super.onResume();
+
+	if(!m_receiverRegistered)
+	{
+	    registerReceiver
+		(m_receiver,
+		 new IntentFilter("org.purple.smoke.populate_participants"));
+	    m_receiverRegistered = true;
+	}
     }
 }
