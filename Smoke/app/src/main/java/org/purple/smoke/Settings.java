@@ -83,7 +83,8 @@ public class Settings extends AppCompatActivity
 		** Allow hexadecimal characters only.
 		*/
 
-		if(!((source.charAt(i) >= '0' && source.charAt(i) <= '9') ||
+		if(!((source.charAt(i) == ' ' || source.charAt(i) == '-') ||
+		     (source.charAt(i) >= '0' && source.charAt(i) <= '9') ||
 		     (source.charAt(i) >= 'A' && source.charAt(i) <= 'F') ||
 		     (source.charAt(i) >= 'a' && source.charAt(i) <= 'f')))
 		    return "";
