@@ -899,10 +899,7 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(SQLiteConstraintException exception)
 	{
-	    if(exception.getMessage().toLowerCase().contains("unique"))
-		ok = true;
-	    else
-		ok = false;
+	    ok = exception.getMessage().toLowerCase().contains("unique");
 	}
 	catch(Exception exception)
         {
@@ -1026,10 +1023,7 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(SQLiteConstraintException exception)
 	{
-	    if(exception.getMessage().toLowerCase().contains("unique"))
-		return true;
-	    else
-		return false;
+	    return exception.getMessage().toLowerCase().contains("unique");
 	}
 	catch(Exception exception)
 	{
