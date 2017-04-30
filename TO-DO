@@ -77,3 +77,4 @@ Remaining Items
 4.     Validate neighbor IP address.
 5.     Tab order.
 6.     Complete Cryptography.pkiEncrypt().
+7.     Retain Chat participant states on refresh.

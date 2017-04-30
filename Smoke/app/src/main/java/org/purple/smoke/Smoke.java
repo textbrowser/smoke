@@ -35,6 +35,10 @@ public class Smoke extends Application
 
     public static synchronized Smoke getApplication()
     {
+	/*
+	** An unpleasant and necessary solution.
+	*/
+
 	return s_instance;
     }
 
@@ -43,5 +47,17 @@ public class Smoke extends Application
     {
 	super.onCreate();
 	s_instance = this;
+    }
+
+    @Override
+    public void onLowMemory()
+    {
+	try
+	{
+	    Kernel.getInstance().clearNeighborQueues();
+	}
+	catch(Exception exception)
+	{
+	}
     }
 }

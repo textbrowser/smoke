@@ -95,7 +95,12 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(ParticipantElement e1, ParticipantElement e2)
 	    {
-		return e1.m_name.compareTo(e2.m_name);
+		int i = e1.m_name.compareTo(e2.m_name);
+
+		if(i != 0)
+		    return i;
+
+		return e1.m_sipHashId.compareTo(e2.m_sipHashId);
 	    }
 	};
     private final static Comparator<SipHashIdElement>
