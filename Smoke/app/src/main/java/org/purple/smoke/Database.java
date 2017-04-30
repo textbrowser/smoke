@@ -732,7 +732,7 @@ public class Database extends SQLiteOpenHelper
 					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
-		contains = cursor.getInt(0) == 1 ? true : false;
+		contains = cursor.getInt(0) == 1;
 	}
 	catch(Exception exception)
 	{
@@ -757,8 +757,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    ok = m_db.delete
-		(table, "OID = ?", new String[] {oid}) > 0 ? true : false;
+	    ok = m_db.delete(table, "OID = ?", new String[]{oid}) > 0;
 	}
 	catch(Exception exception)
 	{

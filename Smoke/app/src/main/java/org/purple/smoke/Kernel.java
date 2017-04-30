@@ -271,13 +271,12 @@ public class Kernel
 		input = new ObjectInputStream(stream);
 
 		if(s_databaseHelper.writeParticipant(s_cryptography, input))
-		    if(Settings.context() != null)
-		    {
-			Intent intent = new Intent
-			    ("org.purple.smoke.populate_participants");
+		{
+		    Intent intent = new Intent
+			("org.purple.smoke.populate_participants");
 
-			Settings.context().sendBroadcast(intent);
-		    }
+		    Smoke.getApplication().sendBroadcast(intent);
+		}
 	    }
 
 	    s_databaseHelper.writeCongestionDigest

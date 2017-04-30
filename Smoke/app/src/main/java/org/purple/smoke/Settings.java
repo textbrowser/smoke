@@ -28,7 +28,6 @@
 package org.purple.smoke;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -100,7 +99,6 @@ public class Settings extends AppCompatActivity
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
-    private static Context s_context = null;
 
     private void addNeighbor()
     {
@@ -1292,7 +1290,6 @@ public class Settings extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
-	s_context = getApplicationContext();
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -1572,11 +1569,6 @@ public class Settings extends AppCompatActivity
 	menu.findItem(R.id.action_chat).setEnabled
 	    (State.getInstance().isAuthenticated());
 	return true;
-    }
-
-    public static synchronized Context context()
-    {
-	return s_context;
     }
 
     @Override
