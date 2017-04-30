@@ -44,10 +44,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/clear_chat_messages"
         android:layout_above="@+id/chat_message"
-        android:layout_toStartOf="@+id/clear_chat_messages"
+        android:layout_toStartOf="@+id/button"
         android:fadeScrollbars="false"
         android:id="@+id/chat_scrollview"
-        android:layout_toLeftOf="@+id/clear_chat_messages">
+        android:layout_toLeftOf="@+id/button">
 
         <TextView
             android:layout_width="match_parent"
