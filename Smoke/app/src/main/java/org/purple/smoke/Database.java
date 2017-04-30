@@ -1025,6 +1025,13 @@ public class Database extends SQLiteOpenHelper
 
 	    m_db.insert("participants", null, values);
 	}
+	catch(SQLiteConstraintException exception)
+	{
+	    if(exception.getMessage().toLowerCase().contains("unique"))
+		return true;
+	    else
+		return false;
+	}
 	catch(Exception exception)
 	{
 	    return false;
