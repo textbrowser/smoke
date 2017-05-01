@@ -277,7 +277,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:hint="@string/siphash_id"
+                        android:hint="@string/siphashid"
                         android:inputType="textPersonName" />
 
                 </LinearLayout>
@@ -407,7 +407,7 @@
                     android:id="@+id/siphash_identity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/siphash_identity" />
+                    android:text="@string/siphashid" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -31,10 +31,8 @@
     <string name="chat_encryption_key_data">Chat Encryption Key Data</string>
     <string name="automatic_refresh">Automatic Refresh</string>
     <string name="details">Details</string>
-    <string name="siphash_identity">SipHash Identity</string>
     <string name="epks">EPKS</string>
     <string name="public_data">Public Data</string>
-    <string name="siphash_id">SipHash ID</string>
     <string name="name">Name</string>
     <string name="reset_smoke">Reset Smoke</string>
     <string name="call">Call</string>
