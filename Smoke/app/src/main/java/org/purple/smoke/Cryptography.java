@@ -660,10 +660,18 @@ public class Cryptography
     {
 	prepareSecureRandom();
 
-	byte bytes[] = new byte[length];
+	try
+	{
+	    byte bytes[] = new byte[length];
 
-	s_secureRandom.nextBytes(bytes);
-	return Base64.encodeToString(bytes, Base64.DEFAULT);
+	    s_secureRandom.nextBytes(bytes);
+	    return Base64.encodeToString(bytes, Base64.DEFAULT);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
     }
 
     public static boolean memcmp(byte a[], byte b[])
@@ -826,9 +834,18 @@ public class Cryptography
     {
 	prepareSecureRandom();
 
-	byte bytes[] = new byte[length];
+	byte bytes[] = null;
 
-	s_secureRandom.nextBytes(bytes);
+	try
+	{
+	    bytes = new byte[length];
+	    s_secureRandom.nextBytes(bytes);
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
 	return bytes;
     }
 
