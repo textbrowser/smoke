@@ -443,8 +443,7 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 
-	CheckBox checkBox = (CheckBox) findViewById
-	    (R.id.neighbor_details);
+	CheckBox checkBox = (CheckBox) findViewById(R.id.neighbor_details);
 	StringBuffer stringBuffer = new StringBuffer();
 
 	for(int i = 0; i < arrayList.size(); i++)
