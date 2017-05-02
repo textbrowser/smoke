@@ -35,6 +35,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -212,6 +214,20 @@ public class Chat extends AppCompatActivity
 
 	if(State.getInstance().isAuthenticated())
 	    populateParticipants();
+
+	textView1 = (TextView) findViewById(R.id.participant);
+	registerForContextMenu(textView1);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+	int itemId = item.getItemId();
+
+	if(itemId == 0)
+	    populateParticipants();
+
+	return true;
     }
 
     @Override
@@ -221,6 +237,15 @@ public class Chat extends AppCompatActivity
 
 	getMenuInflater().inflate(R.menu.chat_menu, menu);
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu,
+				    View v,
+				    ContextMenuInfo menuInfo)
+    {
+	super.onCreateContextMenu(menu, v, menuInfo);
+	menu.add(0, 0, 0, "Refresh Participants Table");
     }
 
     @Override

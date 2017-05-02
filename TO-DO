@@ -53,6 +53,7 @@ Completed Items
 45.    Display count of queued echo packets per neighbor.
 46.    Notify the Chat activity of new participants.
 47.    Asynchronous database writes.
+48.    Refresh context menu on Chat table.
 
 Future Items
 
@@ -78,6 +79,5 @@ Remaining Items
 5.     Tab order.
 6.     Complete Cryptography.pkiEncrypt().
 7.     Retain Chat participant states on refresh.
-8.     Refresh context menu on Chat table.
-9.     Disable echo on low memory. Notify the user, although memory
+8.     Disable echo on low memory. Notify the user, although memory
        will be required.
