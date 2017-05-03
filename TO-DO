@@ -83,3 +83,4 @@ Remaining Items
 7.     Disable echo on low memory. Notify the user, although memory
        will be required.
 8.     Detect removal of neighbors.
+9.     Remote storage of messages.
