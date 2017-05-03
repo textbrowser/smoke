@@ -110,9 +110,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_message"
+        android:layout_below="@+id/linearLayout"
         android:layout_toEndOf="@+id/textView2"
         android:layout_toRightOf="@+id/textView2"
-        android:layout_below="@+id/linearLayout">
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical">
 
         <TableLayout
             android:id="@+id/participants"
