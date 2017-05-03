@@ -133,7 +133,16 @@ public class Chat extends AppCompatActivity
 		(Miscellaneous.
 		 delimitString(participantElement.m_sipHashId.
 			       replace(":", ""), '-', 4).toUpperCase());
-	    stringBuffer.append("");
+	    stringBuffer.append("\n");
+	    stringBuffer.append("Session Readiness: ");
+
+	    if(participantElement.m_keyStream == null ||
+	       participantElement.m_keyStream.length == 0)
+		stringBuffer.append("0%");
+	    else if(participantElement.m_keyStream.length == 48)
+		stringBuffer.append("50%");
+	    else
+		stringBuffer.append("100%");
 
 	    if(checked.containsKey(participantElement.m_sipHashId))
 		checkBox.setChecked(checked.get(participantElement.m_sipHashId).
