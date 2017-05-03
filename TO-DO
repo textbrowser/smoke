@@ -81,3 +81,4 @@ Remaining Items
 7.     Retain Chat participant states on refresh.
 8.     Disable echo on low memory. Notify the user, although memory
        will be required.
+9.     Detect external removal of neighbors and participants.

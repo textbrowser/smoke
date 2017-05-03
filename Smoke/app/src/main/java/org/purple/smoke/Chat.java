@@ -48,6 +48,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class Chat extends AppCompatActivity
 {
@@ -81,10 +82,32 @@ public class Chat extends AppCompatActivity
 	final TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
-	tableLayout.removeAllViews();
-
-	if(arrayList == null)
+	if(arrayList == null || arrayList.size() == 0)
+	{
+	    tableLayout.removeAllViews();
 	    return;
+	}
+
+	Hashtable<String, String> checked = new Hashtable<String, String> ();
+
+	for(int i = 0; i < tableLayout.getChildCount(); i++)
+	{
+	    TableRow row = (TableRow) tableLayout.getChildAt(i);
+
+	    if(row == null)
+		continue;
+
+	    CheckBox checkBox = (CheckBox) row.getChildAt(0);
+
+	    if(checkBox == null)
+		continue;
+
+	    if(checkBox.getTag() != null)
+		checked.put(checkBox.getTag().toString(),
+			    String.valueOf(checkBox.isChecked()));
+	}
+
+	tableLayout.removeAllViews();
 
 	for(int i = 0; i < arrayList.size(); i++)
 	{
@@ -111,6 +134,12 @@ public class Chat extends AppCompatActivity
 		 delimitString(participantElement.m_sipHashId.
 			       replace(":", ""), '-', 4).toUpperCase());
 	    stringBuffer.append("");
+
+	    if(checked.containsKey(participantElement.m_sipHashId))
+		checkBox.setChecked(checked.get(participantElement.m_sipHashId).
+				    equals("true"));
+
+	    checkBox.setTag(participantElement.m_sipHashId);
 	    checkBox.setText(stringBuffer);
 	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
 	    row.addView(checkBox);
