@@ -127,6 +127,8 @@ public class Chat extends AppCompatActivity
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
+	    stringBuffer.append(String.valueOf(i + 1));
+	    stringBuffer.append("\n");
 	    stringBuffer.append(participantElement.m_name);
 	    stringBuffer.append("\n");
 	    stringBuffer.append
