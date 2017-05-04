@@ -84,3 +84,7 @@ Remaining Items
        will be required.
 8.     Detect removal of neighbors.
 9.     Remote storage of messages.
+10.    The initial call (1/2-1/2) should store the generated stream in a map (or hash).
+       Upon receiving a timely response, the total key stream should be
+       saved to smoke.db. If a timely response is not received, the partial data
+       should be purged.
