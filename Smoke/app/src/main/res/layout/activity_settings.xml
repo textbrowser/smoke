@@ -235,8 +235,10 @@
 
                 <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp">
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="5dp"
+                    android:fadeScrollbars="false"
+                    android:scrollbars="vertical">
 
                     <TableLayout
                         android:id="@+id/participants"
