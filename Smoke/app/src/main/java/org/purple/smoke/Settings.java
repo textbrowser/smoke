@@ -170,7 +170,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "A SipHash ID must be of the form 0102-0304-0506-0708.");
+		 "A SipHash Identity must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
 	else if(textView2.getText().toString().replace("-", "").
@@ -178,7 +178,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "Please do not attempt to add your own SipHash ID.");
+		 "Please do not attempt to add your own SipHash Identity.");
 	    return;
 	}
 
@@ -220,7 +220,7 @@ public class Settings extends AppCompatActivity
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
 				 "An error occurred while attempting " +
-				 "to save the SipHash ID.");
+				 "to save the SipHash Identity.");
 			else
 			    populateParticipants();
 		    }
