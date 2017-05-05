@@ -42,7 +42,20 @@ import java.util.concurrent.TimeUnit;
 
 public class Kernel
 {
-    private Hashtable<String, String> m_callQueue = null;
+    private class ParticipantCall
+    {
+	public byte m_keyStream[] = null;
+	public int m_participantOid = -1;
+	public long m_startTime = -1; // Calls expire.
+
+	public ParticipantCall(int participantOid)
+	{
+	    m_participantOid = participantOid;
+	    m_startTime = System.nanoTime();
+	}
+    }
+
+    private Hashtable<String, ParticipantCall> m_callQueue = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
@@ -61,7 +74,7 @@ public class Kernel
 
     private Kernel()
     {
-	m_callQueue = new Hashtable<String, String> ();
+	m_callQueue = new Hashtable<String, ParticipantCall> ();
 	prepareSchedulers();
     }
 
@@ -202,7 +215,26 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    synchronized(m_callQueue)
+		    try
+		    {
+			String sipHashId = "";
+			int participantOid = -1;
+
+			synchronized(s_callQueueMutex)
+			{
+			    if(m_callQueue.isEmpty())
+				return;
+
+			    for(String string : m_callQueue.keySet())
+			    {
+				participantOid = m_callQueue.get(sipHashId).
+				    m_participantOid;
+				sipHashId = string;
+				break;
+			    }
+			}
+		    }
+		    catch(Exception exception)
 		    {
 		    }
 		}
@@ -357,7 +389,10 @@ public class Kernel
 
 	synchronized(s_callQueueMutex)
 	{
-	    m_callQueue.put(sipHashId, String.valueOf(participantOid));
+	    if(m_callQueue.containsKey(sipHashId))
+		m_callQueue.remove(sipHashId);
+
+	    m_callQueue.put(sipHashId, new ParticipantCall(participantOid));
 	}
     }
 
