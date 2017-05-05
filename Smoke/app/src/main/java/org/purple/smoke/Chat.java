@@ -77,6 +77,31 @@ public class Chat extends AppCompatActivity
 	Cryptography.getInstance();
     private final static int CHECKBOX_TEXT_SIZE = 13;
 
+    private String nameFromCheckBoxText(String text)
+    {
+	/*
+	** Index
+	** Name
+	** SipHash ID
+	** Percentage
+	*/
+
+	int indexOf = text.indexOf('\n');
+
+	try
+	{
+	    if(indexOf > 0)
+		return text.substring(indexOf + 1,
+				      text.indexOf('\n', indexOf + 1));
+	    else
+		return "unknown";
+	}
+	catch(Exception exception)
+	{
+	    return "unknown";
+	}
+    }
+
     private void populateParticipants()
     {
 	ArrayList<ParticipantElement> arrayList =
@@ -203,11 +228,15 @@ public class Chat extends AppCompatActivity
 			stringBuffer.append("] ");
 			stringBuffer.append("Initiating a session with ");
 			stringBuffer.append
+			    (nameFromCheckBoxText(checkBox.getText().
+						  toString()));
+			stringBuffer.append(" (");
+			stringBuffer.append
 			    (Miscellaneous.
 			     delimitString(checkBox.getTag().toString().
 					   replace(":", ""), '-', 4).
 			     toUpperCase());
-			stringBuffer.append(". Please be patient.\n");
+			stringBuffer.append("). Please be patient.\n");
 			textView.append(stringBuffer);
 		    }
 		}
