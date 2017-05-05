@@ -287,7 +287,6 @@ public class Kernel
 				    ("org.purple.smoke.populate_participants");
 
 				Smoke.getApplication().sendBroadcast(intent);
-				return;
 			    }
 
 			    if(participantOid == -1)
