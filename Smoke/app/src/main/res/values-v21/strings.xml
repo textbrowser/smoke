@@ -8,4 +8,5 @@
     <string name="name">Name</string>
     <string name="reset_smoke">Reset Smoke</string>
     <string name="participants">Participants</string>
+    <string name="siphash_identity">SipHash Identity</string>
 </resources>
