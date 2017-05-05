@@ -327,6 +327,10 @@ public class Kernel
 					      */
     }
 
+    public void call(String sipHashId)
+    {
+    }
+
     public void clearNeighborQueues()
     {
 	synchronized(m_neighbors)

@@ -19,8 +19,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/button"
-        android:layout_toStartOf="@+id/button"
+        android:layout_toLeftOf="@+id/call"
+        android:layout_toStartOf="@+id/call"
         android:background="@drawable/sectiongradient"
         android:gravity="center_vertical"
         android:text="@string/chat"
@@ -44,10 +44,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/clear_chat_messages"
         android:layout_above="@+id/chat_message"
-        android:layout_toStartOf="@+id/button"
+        android:layout_toStartOf="@+id/call"
         android:fadeScrollbars="false"
         android:id="@+id/chat_scrollview"
-        android:layout_toLeftOf="@+id/button">
+        android:layout_toLeftOf="@+id/call">
 
         <TextView
             android:layout_width="match_parent"
@@ -85,7 +85,7 @@
         android:layout_toLeftOf="@+id/clear_chat_messages"
         android:layout_toStartOf="@+id/clear_chat_messages"
         android:text="@string/call"
-        android:id="@+id/button" />
+        android:id="@+id/call" />
 
     <LinearLayout
         android:layout_width="match_parent"

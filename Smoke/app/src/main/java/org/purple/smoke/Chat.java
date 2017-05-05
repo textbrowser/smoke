@@ -163,6 +163,38 @@ public class Chat extends AppCompatActivity
 	}
     }
 
+    private void prepareListeners()
+    {
+	Button button1 = (Button) findViewById(R.id.call);
+
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		final TableLayout tableLayout = (TableLayout) findViewById
+		    (R.id.participants);
+
+		for(int i = 0; i < tableLayout.getChildCount(); i++)
+		{
+		    TableRow row = (TableRow) tableLayout.getChildAt(i);
+
+		    if(row == null)
+			continue;
+
+		    CheckBox checkBox = (CheckBox) row.getChildAt(0);
+
+		    if(checkBox == null)
+			continue;
+
+		    if(checkBox.getTag() != null && checkBox.isChecked())
+		    {
+			Kernel.getInstance().call(checkBox.getTag().toString());
+		    }
+		}
+	    }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
