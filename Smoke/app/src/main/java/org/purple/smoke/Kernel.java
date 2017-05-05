@@ -36,6 +36,7 @@ import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,14 @@ public class Kernel
 	    m_participantOid = participantOid;
 	    m_startTime = System.nanoTime();
 	}
+
+	public void prepareHalfKeys()
+	{
+	    m_keyStream = Cryptography.randomBytes(48); /*
+							** 0.5 (AES) +
+							** 0.5 (SHA-512)
+							*/
+	}
     }
 
     private Hashtable<String, ParticipantCall> m_callQueue = null;
@@ -66,7 +75,8 @@ public class Kernel
     private final static Object s_callQueueMutex = new Object();
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
-    private final static int CALL_INTERVAL = 2500; // 2.5 Seconds
+    private final static int CALL_INTERVAL = 250; // 0.250 Seconds
+    private final static int CALL_LIFETIME = 30000;
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
@@ -218,21 +228,97 @@ public class Kernel
 		    try
 		    {
 			String sipHashId = "";
+			boolean notify = false;
 			int participantOid = -1;
+			long startTime = -1;
 
 			synchronized(s_callQueueMutex)
 			{
 			    if(m_callQueue.isEmpty())
 				return;
 
+			    /*
+			    ** Remove expired calls.
+			    */
+
+			    Iterator<Hashtable.Entry<String, ParticipantCall> >
+				it = m_callQueue.entrySet().iterator();
+
+			    while(it.hasNext())
+			    {
+				Hashtable.Entry<String, ParticipantCall> entry =
+				    it.next();
+
+				if(it == null)
+				{
+				    it.remove();
+				    return;
+				}
+
+				if((System.nanoTime() - entry.getValue().
+				    m_startTime) / 1000000 > CALL_LIFETIME)
+				{
+				    it.remove();
+				    notify = true;
+				}
+			    }
+
+			    /*
+			    ** Discover a pending call.
+			    */
+
 			    for(String string : m_callQueue.keySet())
 			    {
-				participantOid = m_callQueue.get(sipHashId).
+				if(m_callQueue.get(string).m_keyStream != null)
+				    continue;
+
+				participantOid = m_callQueue.get(string).
 				    m_participantOid;
 				sipHashId = string;
+				startTime = m_callQueue.get(string).
+				    m_startTime;
 				break;
 			    }
+
+			    if(notify)
+			    {
+				/*
+				** Expired call(s). Notify some activity.
+				*/
+
+				Intent intent = new Intent
+				    ("org.purple.smoke.populate_participants");
+
+				Smoke.getApplication().sendBroadcast(intent);
+				return;
+			    }
+
+			    if(participantOid == -1)
+				/*
+				** A new call does not exist.
+				*/
+
+				return;
+
+			    ParticipantCall participantCall = m_callQueue.get
+				(sipHashId);
+
+			    participantCall.prepareHalfKeys();
+			    m_callQueue.put(sipHashId, participantCall);
 			}
+
+			/*
+			** Notify some activity to refresh itself.
+			*/
+
+			Intent intent = new Intent
+			    ("org.purple.smoke.populate_participants");
+
+			Smoke.getApplication().sendBroadcast(intent);
+
+			/*
+			** Place a call request to all neighbors.
+			*/
 		    }
 		    catch(Exception exception)
 		    {
@@ -289,6 +375,19 @@ public class Kernel
 	}
 
 	Runtime.getRuntime().runFinalization();
+    }
+
+    public int callingStreamLength(String sipHashId)
+    {
+	synchronized(s_callQueueMutex)
+	{
+	    if(m_callQueue.containsKey(sipHashId) &&
+	       m_callQueue.get(sipHashId) != null)
+		return m_callQueue.get(sipHashId).m_keyStream == null ? -1 :
+		    m_callQueue.get(sipHashId).m_keyStream.length;
+	}
+
+	return -1;
     }
 
     public static boolean ourMessage(String buffer)

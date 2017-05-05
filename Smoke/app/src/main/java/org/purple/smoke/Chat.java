@@ -165,7 +165,15 @@ public class Chat extends AppCompatActivity
 	    stringBuffer.append("\n");
 	    stringBuffer.append("Session Readiness: ");
 
-	    if(participantElement.m_keyStream == null ||
+	    int guessedLength = Kernel.getInstance().callingStreamLength
+		(participantElement.m_sipHashId);
+
+	    if(guessedLength >= 0)
+	    {
+		stringBuffer.append(100 * guessedLength / 96);
+		stringBuffer.append("%");
+	    }
+	    else if(participantElement.m_keyStream == null ||
 	       participantElement.m_keyStream.length == 0)
 		stringBuffer.append("0%");
 	    else if(participantElement.m_keyStream.length == 48)
