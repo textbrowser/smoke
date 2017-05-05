@@ -327,7 +327,7 @@ public class Kernel
 					      */
     }
 
-    public void call(String sipHashId)
+    public void call(int participantOid, String sipHashId)
     {
     }
 

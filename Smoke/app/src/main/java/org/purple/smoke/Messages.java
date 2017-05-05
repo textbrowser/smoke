@@ -35,12 +35,6 @@ import java.util.Arrays;
 
 public class Messages
 {
-    public enum MESSAGE_TYPES
-    {
-	MESSAGE_CHAT,
-	MESSAGE_EPKS
-    }
-
     public static String bytesToMessageString(byte bytes[])
     {
 	StringBuffer results = new StringBuffer();

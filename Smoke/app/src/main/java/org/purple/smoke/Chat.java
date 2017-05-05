@@ -220,7 +220,8 @@ public class Chat extends AppCompatActivity
 
 		    if(checkBox.getTag() != null && checkBox.isChecked())
 		    {
-			Kernel.getInstance().call(checkBox.getTag().toString());
+			Kernel.getInstance().call(checkBox.getId(),
+						  checkBox.getTag().toString());
 			stringBuffer.setLength(0);
 			stringBuffer.append("[");
 			stringBuffer.append
