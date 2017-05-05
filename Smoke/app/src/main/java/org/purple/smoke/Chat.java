@@ -47,7 +47,9 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 
 public class Chat extends AppCompatActivity
@@ -171,6 +173,11 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		SimpleDateFormat simpleDateFormat = new
+		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		StringBuffer stringBuffer = new StringBuffer();
+		final TextView textView = (TextView) findViewById
+		    (R.id.chat_messages);
 		final TableLayout tableLayout = (TableLayout) findViewById
 		    (R.id.participants);
 
@@ -189,7 +196,35 @@ public class Chat extends AppCompatActivity
 		    if(checkBox.getTag() != null && checkBox.isChecked())
 		    {
 			Kernel.getInstance().call(checkBox.getTag().toString());
+			stringBuffer.setLength(0);
+			stringBuffer.append("[");
+			stringBuffer.append
+			    (simpleDateFormat.format(new Date()));
+			stringBuffer.append("] ");
+			stringBuffer.append("Initiating a session with ");
+			stringBuffer.append
+			    (Miscellaneous.
+			     delimitString(checkBox.getTag().toString().
+					   replace(":", ""), '-', 4).
+			     toUpperCase());
+			stringBuffer.append(". Please be patient.\n");
+			textView.append(stringBuffer);
 		    }
+		}
+
+		if(tableLayout.getChildCount() > 0)
+		{
+		    final ScrollView scrollView = (ScrollView)
+			findViewById(R.id.chat_scrollview);
+
+		    scrollView.post(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+			}
+		    });
 		}
 	    }
         });
@@ -289,6 +324,12 @@ public class Chat extends AppCompatActivity
 
 	textView1 = (TextView) findViewById(R.id.participant);
 	registerForContextMenu(textView1);
+
+	/*
+	** Events.
+	*/
+
+	prepareListeners();
     }
 
     @Override

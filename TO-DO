@@ -89,3 +89,5 @@ Remaining Items
        Upon receiving a timely response, the total key stream should be
        saved to smoke.db. If a timely response is not received, the partial data
        should be purged.
+11.    Display date and time of sent message.
+12.    Display destination's name during session initialization.
