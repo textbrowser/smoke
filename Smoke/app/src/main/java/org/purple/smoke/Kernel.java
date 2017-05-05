@@ -249,11 +249,8 @@ public class Kernel
 				Hashtable.Entry<String, ParticipantCall> entry =
 				    it.next();
 
-				if(it == null)
-				{
+				if(entry.getValue() == null)
 				    it.remove();
-				    return;
-				}
 
 				if((System.nanoTime() - entry.getValue().
 				    m_startTime) / 1000000 > CALL_LIFETIME)
