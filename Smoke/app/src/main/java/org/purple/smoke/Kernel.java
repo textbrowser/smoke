@@ -35,20 +35,25 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Kernel
 {
+    private Hashtable<String, String> m_callQueue = null;
+    private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static Database s_databaseHelper = Database.getInstance();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static Object s_callQueueMutex = new Object();
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
+    private final static int CALL_INTERVAL = 2500; // 2.5 Seconds
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
@@ -56,6 +61,7 @@ public class Kernel
 
     private Kernel()
     {
+	m_callQueue = new Hashtable<String, String> ();
 	prepareSchedulers();
     }
 
@@ -64,7 +70,7 @@ public class Kernel
 	ArrayList<NeighborElement> neighbors =
 	    s_databaseHelper.readNeighbors(s_cryptography);
 
-	if(neighbors == null)
+	if(neighbors == null || neighbors.size() == 0)
 	{
 	    purge();
 	    return;
@@ -188,6 +194,21 @@ public class Kernel
 
     private void prepareSchedulers()
     {
+	if(m_callScheduler == null)
+	{
+	    m_callScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_callScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    synchronized(m_callQueue)
+		    {
+		    }
+		}
+	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
 	if(m_congestionScheduler == null)
 	{
 	    m_congestionScheduler = Executors.
@@ -329,6 +350,15 @@ public class Kernel
 
     public void call(int participantOid, String sipHashId)
     {
+	/*
+	** Calling messages are not placed in the outbound_queue
+	** as they are considered temporary.
+	*/
+
+	synchronized(s_callQueueMutex)
+	{
+	    m_callQueue.put(sipHashId, String.valueOf(participantOid));
+	}
     }
 
     public void clearNeighborQueues()
