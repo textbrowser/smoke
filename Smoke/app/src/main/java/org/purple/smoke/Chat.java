@@ -174,7 +174,7 @@ public class Chat extends AppCompatActivity
 		stringBuffer.append("%");
 	    }
 	    else if(participantElement.m_keyStream == null ||
-	       participantElement.m_keyStream.length == 0)
+		    participantElement.m_keyStream.length == 0)
 		stringBuffer.append("0%");
 	    else if(participantElement.m_keyStream.length == 48)
 		stringBuffer.append("50%");
