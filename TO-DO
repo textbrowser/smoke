@@ -93,3 +93,4 @@ Remaining Items
 11.    Display date and time of sent message.
 12.    Allow log clearing.
 13.    Chat activity state is not retained.
+14.    Test EC size limits.

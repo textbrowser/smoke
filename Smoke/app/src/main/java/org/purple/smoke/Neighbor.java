@@ -307,9 +307,6 @@ public abstract class Neighbor
 
     public void scheduleSend(String message)
     {
-	if(!State.getInstance().neighborsEcho())
-	    return;
-
 	synchronized(m_queueMutex)
 	{
 	    if(m_queue.size() < MAXIMUM_QUEUED_ECHO_PACKETS)

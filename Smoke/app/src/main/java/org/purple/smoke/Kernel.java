@@ -45,22 +45,23 @@ public class Kernel
 {
     private class ParticipantCall
     {
+	public String m_sipHashId = "";
 	public byte m_keyStream[] = null;
 	public int m_participantOid = -1;
 	public long m_startTime = -1; // Calls expire.
 
-	public ParticipantCall(int participantOid)
+	public ParticipantCall(String sipHashId, int participantOid)
 	{
 	    m_participantOid = participantOid;
+	    m_sipHashId = sipHashId;
 	    m_startTime = System.nanoTime();
 	}
 
 	public void prepareHalfKeys()
 	{
-	    m_keyStream = Cryptography.randomBytes(48); /*
-							** 0.5 (AES) +
-							** 0.5 (SHA-512)
-							*/
+	    m_keyStream = Miscellaneous.joinByteArrays
+		(Cryptography.aes128KeyBytes(),
+		 Cryptography.sha256KeyBytes());
 	}
     }
 
@@ -227,10 +228,7 @@ public class Kernel
 		{
 		    try
 		    {
-			String sipHashId = "";
-			boolean notify = false;
-			int participantOid = -1;
-			long startTime = -1;
+			ParticipantCall participantCall = null;
 
 			synchronized(s_callQueueMutex)
 			{
@@ -243,6 +241,7 @@ public class Kernel
 
 			    Iterator<Hashtable.Entry<String, ParticipantCall> >
 				it = m_callQueue.entrySet().iterator();
+			    boolean notify = false;
 
 			    while(it.hasNext())
 			    {
@@ -264,6 +263,9 @@ public class Kernel
 			    ** Discover a pending call.
 			    */
 
+			    String sipHashId = "";
+			    int participantOid = -1;
+
 			    for(String string : m_callQueue.keySet())
 			    {
 				if(m_callQueue.get(string).m_keyStream != null)
@@ -272,8 +274,6 @@ public class Kernel
 				participantOid = m_callQueue.get(string).
 				    m_participantOid;
 				sipHashId = string;
-				startTime = m_callQueue.get(string).
-				    m_startTime;
 				break;
 			    }
 
@@ -296,9 +296,7 @@ public class Kernel
 
 				return;
 
-			    ParticipantCall participantCall = m_callQueue.get
-				(sipHashId);
-
+			    participantCall = m_callQueue.get(sipHashId);
 			    participantCall.prepareHalfKeys();
 			    m_callQueue.put(sipHashId, participantCall);
 			}
@@ -315,6 +313,14 @@ public class Kernel
 			/*
 			** Place a call request to all neighbors.
 			*/
+
+			byte bytes[] = Messages.callMessage
+			    (s_cryptography,
+			     participantCall.m_sipHashId,
+			     participantCall.m_keyStream);
+
+			if(bytes != null)
+			    echo(Messages.bytesToMessageString(bytes), -1);
 		    }
 		    catch(Exception exception)
 		    {
@@ -487,7 +493,8 @@ public class Kernel
 	    if(m_callQueue.containsKey(sipHashId))
 		m_callQueue.remove(sipHashId);
 
-	    m_callQueue.put(sipHashId, new ParticipantCall(participantOid));
+	    m_callQueue.put
+		(sipHashId, new ParticipantCall(sipHashId, participantOid));
 	}
     }
 
@@ -507,7 +514,8 @@ public class Kernel
 
     public void echo(String message, int oid)
     {
-	if(!State.getInstance().neighborsEcho() || message.trim().isEmpty())
+	if((!State.getInstance().neighborsEcho() && oid != -1) ||
+	   message.trim().isEmpty())
 	    return;
 
 	if(s_databaseHelper.

@@ -95,7 +95,7 @@ public class Settings extends AppCompatActivity
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int PKI_ENCRYPTION_KEY_SIZES[] =
-        {384, 3072}; // ECC, RSA
+        {384, 7680}; // ECC, RSA
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
@@ -629,7 +629,7 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuffer.append("\n");
-	    stringBuffer.append("Echo Queue Size: ");
+	    stringBuffer.append("Temporary Queue Size: ");
 	    stringBuffer.append(neighborElement.m_echoQueueSize);
 	    stringBuffer.append(" / ");
 	    stringBuffer.append(Neighbor.MAXIMUM_QUEUED_ECHO_PACKETS);
@@ -1078,9 +1078,9 @@ public class Settings extends AppCompatActivity
 		    ** Prepare the Cryptography object's data.
 		    */
 
-		    s_cryptography.setChatEncryptionKeyPair
+		    s_cryptography.setChatEncryptionPublicKeyPair
 			(chatEncryptionKeyPair);
-		    s_cryptography.setChatSignatureKeyPair
+		    s_cryptography.setChatSignaturePublicKeyPair
 			(chatSignatureKeyPair);
 		    s_cryptography.setEncryptionKey
 			(encryptionKey);

@@ -74,23 +74,17 @@ public class Messages
 	return message.trim();
     }
 
-    public static byte[] chatMessage(Cryptography cryptography,
-				     PublicKey receiverPublicKey,
-				     String message,
-				     String timestamp,
-				     byte encryptionKeyBytes[],
-				     byte macKeyBytes[],
-				     byte sipHashKeyStream[],
-				     int sequence)
+    public static byte[] callMessage(Cryptography cryptography,
+				     String sipHashId,
+				     byte keyStream[])
     {
-	if(cryptography == null || encryptionKeyBytes == null ||
-	   macKeyBytes == null || receiverPublicKey == null)
+	if(cryptography == null || keyStream == null)
 	    return null;
 
 	/*
-	** sipHashKeyStream
-	** [0 .. 31] - AES-256 Encryption Key
-	** [32 .. 95] - SHA-512 HMAC Key
+	** keyStream
+	** [0 .. 15] - AES-128 Encryption Key
+	** [16 .. 47] - SHA-256 HMAC Key
 	*/
 
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -104,23 +98,38 @@ public class Messages
 	    ObjectOutputStream o = new ObjectOutputStream(s);
 
 	    /*
-	    ** [ Message Data ]
+	    ** [ A Timestamp ]
 	    */
 
-	    byte senderPublicKeyDigest[] = cryptography.
-		chatEncryptionKeyDigest();
+	    o.writeLong(System.currentTimeMillis());
 
-	    if(senderPublicKeyDigest == null)
-		return null;
+	    /*
+	    ** [ AES-128 Key ]
+	    */
 
-	    o.writeObject(message);
-	    o.writeObject(sequence);
-	    o.writeObject(timestamp);
-	    o.writeObject(senderPublicKeyDigest);
+	    o.writeObject(Arrays.copyOfRange(keyStream, 0, 16));
+
+	    /*
+	    ** [ SHA-256 Key ]
+	    */
+
+	    o.writeObject(Arrays.copyOfRange(keyStream, 16, keyStream.length));
+
+	    /*
+	    ** [ Identity ]
+	    */
+
+	    o.writeObject(cryptography.identity());
+
+	    /*
+	    ** [ Public Encryption Key Digest ]
+	    */
+
+	    o.writeObject(cryptography.chatEncryptionPublicKeyDigest());
 	    o.flush();
 
 	    /*
-	    ** Produce a signature of [ Private Key Data ] || [ Message Data ].
+	    ** [ Public Key Signature ]
 	    */
 
 	    byte signature[] = cryptography.signViaChatSignature
@@ -129,35 +138,29 @@ public class Messages
 	    if(signature == null)
 		return null;
 
-	    byte messageBytes[] = Cryptography.encrypt
-		(signature, encryptionKeyBytes);
+	    o.writeObject(signature);
+	    o.flush();
+
+	    PublicKey publicKey = Database.getInstance().
+		publicKeyForSipHashId(cryptography, sipHashId);
+
+	    if(publicKey == null)
+		return null;
+
+	    byte messageBytes[] = Cryptography.pkiEncrypt
+		(publicKey, s.toByteArray());
 
 	    if(messageBytes == null)
 		return null;
 
 	    /*
-	    ** [ Digest ([ Private Key Data ] || [ Message Data ]) ]
-	    */
-
-	    byte macBytes[] = Cryptography.hmac
-		(messageBytes, macKeyBytes);
-
-	    if(macBytes == null)
-		return null;
-
-	    /*
-	    ** [ Destination Digest ]
+	    ** [ Destination ]
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(messageBytes,
-					      macBytes),
-		 Arrays.copyOfRange(sipHashKeyStream,
-				    32,
-				    sipHashKeyStream.length));
+		(messageBytes, Cryptography.sha512(sipHashId.getBytes()));
 
 	    output.writeObject(messageBytes);
-	    output.writeObject(macBytes);
 	    output.writeObject(destination);
 	    output.flush();
 	}
@@ -180,6 +183,28 @@ public class Messages
 	}
 
 	return stream.toByteArray();
+    }
+
+    public static byte[] chatMessage(Cryptography cryptography,
+				     PublicKey receiverPublicKey,
+				     String message,
+				     String timestamp,
+				     byte encryptionKeyBytes[],
+				     byte macKeyBytes[],
+				     byte sipHashKeyStream[],
+				     int sequence)
+    {
+	if(cryptography == null || encryptionKeyBytes == null ||
+	   macKeyBytes == null || receiverPublicKey == null)
+	    return null;
+
+	/*
+	** sipHashKeyStream
+	** [0 .. 31] - AES-256 Encryption Key
+	** [32 .. 95] - SHA-512 HMAC Key
+	*/
+
+	return null;
     }
 
     public static byte[] epksMessage(Cryptography cryptography,

@@ -39,7 +39,9 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
+import java.security.KeyFactory;
 import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -490,6 +492,69 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return arrayList;
+    }
+
+    public PublicKey publicKeyForSipHashId(Cryptography cryptography,
+					   String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	PublicKey publicKey = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "encryption_public_key " +
+		 "FROM participants WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.trim().
+						   getBytes("UTF-8")),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+
+		bytes = cryptography.mtd(bytes);
+
+		if(bytes != null)
+		    for(int i = 0; i < 2; i++) // EC, RSA
+			try
+		        {
+			    if(i == 0)
+				publicKey = KeyFactory.getInstance("EC").
+				    generatePublic
+				    (new X509EncodedKeySpec(bytes));
+			    else
+				publicKey = KeyFactory.getInstance("RSA").
+				    generatePublic
+				    (new X509EncodedKeySpec(bytes));
+
+			    break;
+			}
+			catch(Exception exception)
+			{
+			}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    publicKey = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return publicKey;
     }
 
     public SparseIntArray readNeighborOids()

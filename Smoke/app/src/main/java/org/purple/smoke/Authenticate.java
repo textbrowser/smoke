@@ -175,7 +175,8 @@ public class Authenticate extends AppCompatActivity
 						    "pki_chat_encryption_" +
 						    "algorithm");
 				    s_cryptography.setIdentity(identity);
-				    s_cryptography.setChatEncryptionKeyPair
+				    s_cryptography.
+					setChatEncryptionPublicKeyPair
 					(algorithm, privateBytes, publicBytes);
 				    privateBytes = Base64.decode
 					(m_databaseHelper.
@@ -193,7 +194,8 @@ public class Authenticate extends AppCompatActivity
 					readSetting(s_cryptography,
 						    "pki_chat_signature_" +
 						    "algorithm");
-				    s_cryptography.setChatSignatureKeyPair
+				    s_cryptography.
+					setChatSignaturePublicKeyPair
 					(algorithm, privateBytes, publicBytes);
 
 				    boolean e1 = s_cryptography.
