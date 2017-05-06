@@ -30,10 +30,8 @@ package org.purple.smoke;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
-import java.util.zip.Deflater;
 
 public class Miscellaneous
 {
@@ -161,51 +159,6 @@ public class Miscellaneous
 
 	return byteArrayAsHexStringDelimited
 	    (longToByteArray(sipHash.hmac(bytes, key)), ':', 2);
-    }
-
-    public static byte[] compressed(byte data[])
-    {
-	if(data == null || data.length == 0)
-	    return null;
-
-	ByteArrayOutputStream byteArrayOutputStream = null;
-
-	try
-	{
-	    Deflater deflater = new Deflater();
-
-	    deflater.setLevel(Deflater.BEST_COMPRESSION);
-	    deflater.setInput(data);
-	    deflater.finish();
-	    byteArrayOutputStream = new ByteArrayOutputStream(data.length);
-
-	    byte buffer[] = new byte[1024];
-
-	    while(!deflater.finished())
-	    {
-		int count = deflater.deflate(buffer);
-
-		byteArrayOutputStream.write(buffer, 0, count);
-	    }
-
-	    return byteArrayOutputStream.toByteArray();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    try
-	    {
-		if(byteArrayOutputStream != null)
-		    byteArrayOutputStream.close();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	}
-
-	return null;
     }
 
     public static byte[] deepCopy(byte bytes[])
