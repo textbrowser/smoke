@@ -37,7 +37,7 @@ public class Miscellaneous
 {
     public static String byteArrayAsHexString(byte bytes[])
     {
-	if(bytes == null)
+	if(bytes == null || bytes.length <= 0)
 	    return "";
 
 	try
@@ -59,11 +59,15 @@ public class Miscellaneous
 						       char delimiter,
 						       int offset)
     {
+	if(bytes == null || bytes.length <= 0)
+	    return "";
+
 	String string = byteArrayAsHexString(bytes);
-	StringBuffer stringBuffer = new StringBuffer();
 
 	try
 	{
+	    StringBuffer stringBuffer = new StringBuffer();
+
 	    for(int i = 0; i < string.length(); i += offset)
 	    {
 		stringBuffer.append(string.substring(i, i + offset));
@@ -86,10 +90,10 @@ public class Miscellaneous
 				       char delimiter,
 				       int offset)
     {
-	StringBuffer stringBuffer = new StringBuffer();
-
 	try
 	{
+	    StringBuffer stringBuffer = new StringBuffer();
+
 	    for(int i = 0; i < string.length(); i += offset)
 	    {
 		stringBuffer.append(string.substring(i, i + offset));
@@ -163,7 +167,7 @@ public class Miscellaneous
 
     public static byte[] deepCopy(byte bytes[])
     {
-	if(bytes == null || bytes.length < 0)
+	if(bytes == null || bytes.length <= 0)
 	    return null;
 
 	byte array[] = new byte[bytes.length];
@@ -196,7 +200,7 @@ public class Miscellaneous
 	    int length = 0;
 
 	    for(byte b[] : data)
-		if(b != null)
+		if(b != null && b.length > 0)
 		    length += b.length;
 
 	    if(length == 0)
@@ -206,7 +210,7 @@ public class Miscellaneous
 	    int i = 0;
 
 	    for(byte b[] : data)
-		if(b != null)
+		if(b != null && b.length > 0)
 		{
 		    System.arraycopy(b, 0, bytes, i, b.length);
 		    i += b.length;
@@ -235,10 +239,10 @@ public class Miscellaneous
 
     public static int countOf(StringBuffer stringBuffer, char character)
     {
-	int count = 0;
+	if(stringBuffer == null || stringBuffer.length() == 0)
+	    return 0;
 
-	if(stringBuffer == null)
-	    return count;
+	int count = 0;
 
 	for(int i = 0; i < stringBuffer.length(); i++)
 	    if(character == stringBuffer.charAt(i))
