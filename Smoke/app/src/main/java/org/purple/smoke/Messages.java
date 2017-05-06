@@ -122,7 +122,7 @@ public class Messages
 	    o.writeObject(cryptography.identity());
 
 	    /*
-	    ** [ Public Encryption Key Digest ]
+	    ** [ Encryption Public Key Digest ]
 	    */
 
 	    o.writeObject(cryptography.chatEncryptionPublicKeyDigest());
@@ -244,7 +244,7 @@ public class Messages
 	    o.writeObject(keyType);
 
 	    /*
-	    ** [ Public Key ]
+	    ** [ Encryption Public Key ]
 	    */
 
 	    PublicKey publicKey = null;
@@ -256,7 +256,7 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ Public Key Signature ]
+	    ** [ Encryption Public Key Signature ]
 	    */
 
 	    bytes = cryptography.signViaChatEncryption(publicKey.getEncoded());
@@ -268,7 +268,7 @@ public class Messages
 	    o.writeObject(bytes);
 
 	    /*
-	    ** [ Signature Key ]
+	    ** [ Signature Public Key ]
 	    */
 
 	    publicKey = cryptography.chatSignaturePublicKey();
@@ -277,7 +277,7 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ Signature Key Signature ]
+	    ** [ Signature Public Key Signature ]
 	    */
 
 	    bytes = cryptography.signViaChatSignature(publicKey.getEncoded());
