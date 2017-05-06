@@ -83,8 +83,8 @@ public class Messages
 
 	/*
 	** keyStream
-	** [0 .. 15] - AES-128 Encryption Key
-	** [16 .. 47] - SHA-256 HMAC Key
+	** [0 ... 15] - AES-128 Encryption Key
+	** [16 ... 47] - SHA-256 HMAC Key
 	*/
 
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -200,8 +200,8 @@ public class Messages
 
 	/*
 	** sipHashKeyStream
-	** [0 .. 31] - AES-256 Encryption Key
-	** [32 .. 95] - SHA-512 HMAC Key
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
 	*/
 
 	return null;
@@ -217,8 +217,8 @@ public class Messages
 
 	/*
 	** keyStream
-	** [0 .. 31] - AES-256 Encryption Key
-	** [32 .. 95] - SHA-512 HMAC Key
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
 	*/
 
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();

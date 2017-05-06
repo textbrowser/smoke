@@ -185,7 +185,7 @@ public class Settings extends AppCompatActivity
 
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
-	dialog.setMessage("Generating key material. Please be patient...");
+	dialog.setMessage("Generating key material. Please be patient.");
 	dialog.show();
 
 	class SingleShot implements Runnable
@@ -286,7 +286,7 @@ public class Settings extends AppCompatActivity
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
 	dialog.setMessage
-	    ("Transferring public key material. Please be patient...");
+	    ("Transferring public key material. Please be patient.");
 	dialog.show();
 
 	class SingleShot implements Runnable
@@ -999,7 +999,7 @@ public class Settings extends AppCompatActivity
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
 	dialog.setMessage
-	    ("Generating confidential material. Please be patient...");
+	    ("Generating confidential material. Please be patient.");
 	dialog.show();
 
 	class SingleShot implements Runnable

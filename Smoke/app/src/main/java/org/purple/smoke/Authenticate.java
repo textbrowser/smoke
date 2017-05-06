@@ -105,7 +105,7 @@ public class Authenticate extends AppCompatActivity
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);
 		    dialog.setMessage
-			("Generating confidential data. Please be patient...");
+			("Generating confidential data. Please be patient.");
 		    dialog.show();
 
 		    class SingleShot implements Runnable
