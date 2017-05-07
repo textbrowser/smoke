@@ -57,7 +57,12 @@ Completed Items
 49.    Retain Chat participant states on refresh.
 50.    Detect removal of participants.
 51.    Display destination's name during session initialization.
-52.     Complete Cryptography.pkiEncrypt().
+52.    Complete Cryptography.pkiEncrypt().
+53.    The initial call (1/2-1/2) should store the generated stream in a
+       map (or hash).
+       Upon receiving a timely response, the total key stream should be
+       saved to smoke.db. If a timely response is not received, the partial data
+       should be purged.
 
 Future Items
 
@@ -73,26 +78,22 @@ Ignored / Impossible Items
 4.     Detect removal of smoke.db.
 5.     Participant import. Superseded by EPKS.
 6.     Virtual keyboard.
+7.     Periodic data transfers may raise Android warnings.
+       User is responsible for data limits.
+8.     Validate neighbor IP address. User is responsible.
+9.     Tab order.
 
 Remaining Items
 
 1.     Source-level string translations.
 2.     pull-database for multiple devices.
 3.     Retain first-contact server certificate.
-4.     Validate neighbor IP address.
-5.     Tab order.
-6.     Disable echo on low memory. Notify the user, although memory
+4.     Disable echo on low memory. Notify the user, although memory
        will be required.
-7.     Detect removal of neighbors.
-8.     Remote storage of messages.
-9.     The initial call (1/2-1/2) should store the generated stream in a
-       map (or hash).
-       Upon receiving a timely response, the total key stream should be
-       saved to smoke.db. If a timely response is not received, the partial data
-       should be purged.
-10.    Display date and time of sent message.
-11.    Allow log clearing.
-12.    Chat activity state is not retained.
-13.    Periodic data transfers may raise Android warnings.
-14.    Java serialization.
+5.     Detect removal of neighbors.
+6.     Remote storage of messages.
+7.     Display date and time of sent message.
+8.     Allow log clearing.
+9.     Chat activity state is not retained.
+10.    Java serialization requires safety.
        (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
