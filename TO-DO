@@ -94,3 +94,5 @@ Remaining Items
 11.    Allow log clearing.
 12.    Chat activity state is not retained.
 13.    Periodic data transfers may raise Android warnings.
+14.    Java serialization.
+       (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
