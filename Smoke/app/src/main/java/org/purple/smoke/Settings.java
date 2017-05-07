@@ -318,9 +318,9 @@ public class Settings extends AppCompatActivity
 
 			byte bytes[] = Messages.epksMessage
 			    (s_cryptography,
-			     "chat",
 			     sipHashIdElement.m_sipHashId,
-			     sipHashIdElement.m_stream);
+			     sipHashIdElement.m_stream,
+			     Messages.CHAT_EPKS);
 
 			if(bytes == null)
 			{
@@ -1179,7 +1179,7 @@ public class Settings extends AppCompatActivity
 			    Settings.this.enableWidgets(true);
 			    State.getInstance().setAuthenticated(true);
 			    spinner1.setSelection(0);
-			    spinner2.setSelection(1); // RSA
+			    spinner2.setSelection(0); // RSA
 			    spinner3.setSelection(1); // RSA
 			    textView1.requestFocus();
 			    textView1.setText("");
@@ -1442,10 +1442,7 @@ public class Settings extends AppCompatActivity
 		showAuthenticateActivity();
 
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
-
-	if(spinner1.getAdapter().getCount() > 1)
-	    spinner1.setSelection(1); // RSA
-
+	spinner1.setSelection(0); // RSA
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
 
 	if(spinner1.getAdapter().getCount() > 1)
