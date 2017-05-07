@@ -87,13 +87,8 @@ public class Messages
 	** [16 ... 47] - SHA-256 HMAC Key
 	*/
 
-	ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	ObjectOutputStream output = null;
-
 	try
 	{
-	    output = new ObjectOutputStream(stream);
-
 	    byte bytes[] = Miscellaneous.joinByteArrays
 		/*
 		** [ A Timestamp ]
@@ -153,29 +148,13 @@ public class Messages
 	    byte destination[] = Cryptography.hmac
 		(messageBytes, Cryptography.sha512(sipHashId.getBytes()));
 
-	    output.writeObject(messageBytes);
-	    output.writeObject(destination);
-	    output.flush();
+	    return Miscellaneous.joinByteArrays(messageBytes, destination);
 	}
 	catch(Exception exception)
 	{
-	    return null;
-	}
-	finally
-	{
-	    try
-	    {
-		if(output != null)
-		    output.close();
-
-		stream.close();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
 	}
 
-	return stream.toByteArray();
+	return null;
     }
 
     public static byte[] chatMessage(Cryptography cryptography,
