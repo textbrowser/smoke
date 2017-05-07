@@ -37,7 +37,6 @@ import android.util.Base64;
 import android.util.Patterns;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
-import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -980,49 +979,91 @@ public class Database extends SQLiteOpenHelper
     }
 
     public boolean writeParticipant(Cryptography cryptography,
-				    ObjectInputStream input)
+				    byte data[])
     {
 	prepareDb();
 
-	if(cryptography == null || input == null || m_db == null)
+	if(cryptography == null ||
+	   data == null ||
+	   data.length < 0 ||
+	   m_db == null)
 	    return false;
 
 	try
 	{
+	    String strings[] = new String(data).split("\\n");
+
+	    if(strings == null || strings.length != 6)
+		return false;
+
 	    PublicKey publicKey = null;
 	    PublicKey signatureKey = null;
-	    String keyType = "";
+	    byte keyType[] = null;
 	    byte publicKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
+	    int indexOf = -1;
 	    long current = System.currentTimeMillis();
 	    long timestamp = 0;
 
-	    timestamp = input.readLong();
+	    for(int i = 0; i < strings.length; i++)
+		switch(i)
+		{
+		case 0:
+		    timestamp = Miscellaneous.byteArrayToLong
+			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
 
-	    if(current - timestamp < 0 ||
-	       current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
-		return false;
+		    if(current - timestamp < 0 ||
+		       current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
+			return false;
 
-	    keyType = (String) input.readObject();
+		    break;
+		case 1:
+		    keyType = Base64.decode
+			(strings[i].getBytes(), Base64.NO_WRAP);
 
-	    if(!keyType.equals("chat"))
-		return false;
+		    if(keyType == null ||
+		       keyType.length != 1 ||
+		       keyType[0] != Messages.CHAT_EPKS[0])
+			return false;
 
-	    publicKey = (PublicKey) input.readObject();
-	    publicKeySignature = (byte []) input.readObject();
+		    break;
+		case 2:
+		    publicKey = Cryptography.publicKeyFromBytes
+			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
 
-	    if(!Cryptography.verifySignature(publicKey,
-					     publicKeySignature,
-					     publicKey.getEncoded()))
-		return false;
+		    if(publicKey == null)
+			return false;
 
-	    signatureKey = (PublicKey) input.readObject();
-	    signatureKeySignature = (byte []) input.readObject();
+		    break;
+		case 3:
+		    publicKeySignature = Base64.decode
+			(strings[i].getBytes(), Base64.NO_WRAP);
 
-	    if(!Cryptography.verifySignature(signatureKey,
-					     signatureKeySignature,
-					     signatureKey.getEncoded()))
-		return false;
+		    if(!Cryptography.verifySignature(publicKey,
+						     publicKeySignature,
+						     publicKey.getEncoded()))
+			return false;
+
+		    break;
+		case 4:
+		    signatureKey = Cryptography.publicKeyFromBytes
+			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
+
+		    if(signatureKey == null)
+			return false;
+
+		    break;
+		case 5:
+		    signatureKeySignature = Base64.decode
+			(strings[i].getBytes(), Base64.NO_WRAP);
+
+		    if(!Cryptography.verifySignature(signatureKey,
+						     signatureKeySignature,
+						     signatureKey.getEncoded()))
+			return false;
+
+		    break;
+		}
 
 	    /*
 	    ** We shall use the two public keys to generate the
@@ -1065,7 +1106,10 @@ public class Database extends SQLiteOpenHelper
 			equals("encryption_public_key_digest"))
 		    bytes = cryptography.hmac(publicKey.getEncoded());
 		else if(sparseArray.get(i).equals("function_digest"))
-		    bytes = cryptography.hmac(keyType.getBytes());
+		{
+		    if(keyType[0] == Messages.CHAT_EPKS[0])
+			bytes = cryptography.hmac("chat".getBytes());
+		}
 		else if(sparseArray.get(i).equals("identity"))
 		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("keystream"))
@@ -1082,8 +1126,8 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("siphash_id_digest"))
 		    bytes = cryptography.hmac(sipHashId.getBytes("UTF-8"));
 
-		if(bytes == null)
-		    return false;
+		if(bytes == null){writeLog(i + " index");
+		    return false;}
 
 		values.put(sparseArray.get(i),
 			   Base64.encodeToString(bytes, Base64.DEFAULT));

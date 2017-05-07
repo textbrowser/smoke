@@ -11,11 +11,13 @@
 	}
 }
 
+[Random Bytes] (2)						64 Bytes
+
 /*
 ** The destination is created via the recipient's SipHash identity.
 */
 
-[Destination SHA-512 HMAC] (2)					64 Bytes
+[Destination SHA-512 HMAC] (3)					64 Bytes
 {
 	[PK] (1)
 }

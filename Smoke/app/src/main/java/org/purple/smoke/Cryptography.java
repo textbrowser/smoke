@@ -204,7 +204,7 @@ public class Cryptography
 
     public boolean isValidSipHashMac(byte data[], byte mac[])
     {
-	if(data == null || data.length <= 0 || mac == null || mac.length <= 0)
+	if(data == null || data.length < 0 || mac == null || mac.length < 0)
 	    return false;
 
 	byte bytes[] = null;
@@ -272,7 +272,7 @@ public class Cryptography
 
     public byte[] decryptWithSipHashKey(byte data[])
     {
-	if(data == null || data.length <= 0)
+	if(data == null || data.length < 0)
 	    return null;
 
 	byte bytes[] = null;
@@ -311,7 +311,7 @@ public class Cryptography
 	** Encrypt-then-MAC.
 	*/
 
-	if(data == null || data.length <= 0)
+	if(data == null || data.length < 0)
 	    return null;
 
 	synchronized(m_encryptionKeyMutex)
@@ -371,7 +371,7 @@ public class Cryptography
 
     public byte[] hmac(byte data[])
     {
-	if(data == null || data.length <= 0)
+	if(data == null || data.length < 0)
 	    return null;
 
 	synchronized(m_macKeyMutex)
@@ -420,7 +420,7 @@ public class Cryptography
 	** MAC-then-decrypt.
 	*/
 
-	if(data == null || data.length <= 0)
+	if(data == null || data.length < 0)
 	    return null;
 
 	synchronized(m_encryptionKeyMutex)
@@ -498,7 +498,7 @@ public class Cryptography
 
     public byte[] signViaChatEncryption(byte data[])
     {
-	if(data == null || data.length <= 0)
+	if(data == null || data.length < 0)
 	    return null;
 
 	synchronized(m_chatEncryptionPublicKeyPairMutex)
@@ -535,7 +535,7 @@ public class Cryptography
 
     public byte[] signViaChatSignature(byte data[])
     {
-	if(data == null || data.length <= 0)
+	if(data == null || data.length < 0)
 	    return null;
 
 	synchronized(m_chatSignaturePublicKeyPairMutex)
@@ -603,6 +603,38 @@ public class Cryptography
 	    Database.getInstance().writeLog
 		("Cryptography::generatePrivatePublicKeyPair(): " +
 		 "exception raised.");
+	}
+
+	return null;
+    }
+
+    public static PublicKey publicKeyFromBytes(byte publicBytes[])
+    {
+	try
+	{
+	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
+
+	    for(int i = 0; i < 2; i++)
+		try
+		{
+		    KeyFactory generator = null;
+
+		    if(i == 0)
+			generator = KeyFactory.getInstance("EC");
+		    else
+			generator = KeyFactory.getInstance("RSA");
+
+		    PublicKey publicKey = generator.generatePublic
+			(publicKeySpec);
+
+		    return publicKey;
+		}
+		catch(Exception exception)
+		{
+		}
+	}
+	catch(Exception exception)
+	{
 	}
 
 	return null;
@@ -688,7 +720,7 @@ public class Cryptography
 
     public static boolean memcmp(byte a[], byte b[])
     {
-	if(a == null || a.length <= 0 || b == null || b.length <= 0)
+	if(a == null || a.length < 0 || b == null || b.length < 0)
 	    return false;
 
 	int rc = 0;
@@ -705,9 +737,9 @@ public class Cryptography
 					  byte data[])
     {
 	if(bytes == null ||
-	   bytes.length <= 0 ||
+	   bytes.length < 0 ||
 	   data == null ||
-	   data.length <= 0 ||
+	   data.length < 0 ||
 	   publicKey == null)
 	    return false;
 
@@ -752,9 +784,9 @@ public class Cryptography
     public static byte[] encrypt(byte data[], byte keyBytes[])
     {
 	if(data == null ||
-	   data.length <= 0 ||
+	   data.length < 0 ||
 	   keyBytes == null ||
-	   keyBytes.length <= 0)
+	   keyBytes.length < 0)
 	    return null;
 
 	prepareSecureRandom();
@@ -787,9 +819,9 @@ public class Cryptography
     public static byte[] hmac(byte data[], byte keyBytes[])
     {
 	if(data == null ||
-	   data.length <= 0 ||
+	   data.length < 0 ||
 	   keyBytes == null ||
-	   keyBytes.length <= 0)
+	   keyBytes.length < 0)
 	    return null;
 
 	byte bytes[] = null;
@@ -859,7 +891,7 @@ public class Cryptography
 
     public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
     {
-	if(data == null || data.length <= 0 || publicKey == null)
+	if(data == null || data.length < 0 || publicKey == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -964,7 +996,7 @@ public class Cryptography
 					 ** SipHash.
 					 */
 
-		if(key == null || key.length <= 0)
+		if(key == null || key.length < 0)
 		    return false;
 
 		SipHash sipHash = new SipHash();
@@ -975,7 +1007,7 @@ public class Cryptography
 
 		bytes = Miscellaneous.longToByteArray(value);
 
-		if(bytes == null || bytes.length <= 0)
+		if(bytes == null || bytes.length < 0)
 		    return false;
 
 		m_sipHashId = Miscellaneous.

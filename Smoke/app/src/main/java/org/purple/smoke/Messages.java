@@ -28,13 +28,13 @@
 package org.purple.smoke;
 
 import android.util.Base64;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.security.PublicKey;
 import java.util.Arrays;
 
 public class Messages
 {
+    public final static byte CHAT_EPKS[] = new byte[] {0};
+
     public static String bytesToMessageString(byte bytes[])
     {
 	StringBuffer results = new StringBuffer();
@@ -180,9 +180,9 @@ public class Messages
     }
 
     public static byte[] epksMessage(Cryptography cryptography,
-				     String keyType,
 				     String sipHashId,
-				     byte keyStream[])
+				     byte keyStream[],
+				     byte keyType[])
     {
 	if(cryptography == null || keyStream == null)
 	    return null;
@@ -193,27 +193,28 @@ public class Messages
 	** [32 ... 95] - SHA-512 HMAC Key
 	*/
 
-	ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	ObjectOutputStream output = null;
-
 	try
 	{
-	    output = new ObjectOutputStream(stream);
-
-	    ByteArrayOutputStream s = new ByteArrayOutputStream();
-	    ObjectOutputStream o = new ObjectOutputStream(s);
+	    StringBuffer stringBuffer = new StringBuffer();
 
 	    /*
 	    ** [ A Timestamp ]
 	    */
 
-	    o.writeLong(System.currentTimeMillis());
+	    stringBuffer.append
+		(Base64.encodeToString(Miscellaneous.
+				       longToByteArray(System.
+						       currentTimeMillis()),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
 
 	    /*
 	    ** [ Key Type ]
 	    */
 
-	    o.writeObject(keyType);
+	    stringBuffer.append
+		(Base64.encodeToString(keyType, Base64.NO_WRAP));
+	    stringBuffer.append("\n");
 
 	    /*
 	    ** [ Encryption Public Key ]
@@ -236,8 +237,11 @@ public class Messages
 	    if(bytes == null)
 		return null;
 
-	    o.writeObject(publicKey);
-	    o.writeObject(bytes);
+	    stringBuffer.append(Base64.encodeToString(publicKey.getEncoded(),
+						      Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+	    stringBuffer.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
+	    stringBuffer.append("\n");
 
 	    /*
 	    ** [ Signature Public Key ]
@@ -257,12 +261,14 @@ public class Messages
 	    if(bytes == null)
 		return null;
 
-	    o.writeObject(publicKey);
-	    o.writeObject(bytes);
-	    output.flush();
+	    stringBuffer.append(Base64.encodeToString(publicKey.getEncoded(),
+						      Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+	    stringBuffer.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
 	    byte messageBytes[] = Cryptography.encrypt
-		(s.toByteArray(), Arrays.copyOfRange(keyStream, 0, 32));
+		(stringBuffer.toString().getBytes(),
+		 Arrays.copyOfRange(keyStream, 0, 32));
 
 	    if(messageBytes == null)
 		return null;
@@ -286,29 +292,13 @@ public class Messages
 		(Miscellaneous.joinByteArrays(messageBytes, macBytes),
 		 Cryptography.sha512(sipHashId.getBytes()));
 
-	    output.writeObject(messageBytes);
-	    output.writeObject(macBytes);
-	    output.writeObject(destination);
-	    output.flush();
+	    return Miscellaneous.joinByteArrays
+		(messageBytes, macBytes, destination);
 	}
 	catch(Exception exception)
 	{
-	    return null;
-	}
-	finally
-	{
-	    try
-	    {
-		if(output != null)
-		    output.close();
-
-		stream.close();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
 	}
 
-	return stream.toByteArray();
+	return null;
     }
 }

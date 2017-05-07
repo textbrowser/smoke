@@ -31,10 +31,9 @@ import android.content.Intent;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.concurrent.Executors;
@@ -398,21 +397,20 @@ public class Kernel
 						     hmac(buffer.getBytes())))
 	    return true;
 
-	ByteArrayInputStream stream = null;
-	ObjectInputStream input = null;
-
 	try
 	{
-	    stream = new ByteArrayInputStream
-		(Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT));
-	    input = new ObjectInputStream(stream);
+	    byte bytes[] =
+		Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT);
 
-	    byte array1[] = (byte []) input.readObject();
-	    byte array2[] = (byte []) input.readObject();
-	    byte array3[] = (byte []) input.readObject();
-
-	    if(array1 == null || array2 == null || array3 == null)
+	    if(bytes == null || bytes.length < 128)
 		return false;
+
+	    byte array1[] = Arrays.copyOfRange
+		(bytes, 0, bytes.length - 128);
+	    byte array2[] = Arrays.copyOfRange
+		(bytes, bytes.length - 128, bytes.length - 64);
+	    byte array3[] = Arrays.copyOfRange
+		(bytes, bytes.length - 64, bytes.length);
 
 	    /*
 	    ** EPKS?
@@ -420,11 +418,9 @@ public class Kernel
 
 	    if(s_cryptography.isValidSipHashMac(array1, array2))
 	    {
-		stream = new ByteArrayInputStream
-		    (s_cryptography.decryptWithSipHashKey(array1));
-		input = new ObjectInputStream(stream);
+		array1 = s_cryptography.decryptWithSipHashKey(array1);
 
-		if(s_databaseHelper.writeParticipant(s_cryptography, input))
+		if(s_databaseHelper.writeParticipant(s_cryptography, array1))
 		{
 		    Intent intent = new Intent
 			("org.purple.smoke.populate_participants");
@@ -439,20 +435,6 @@ public class Kernel
 	catch(Exception exception)
 	{
 	    return false;
-	}
-	finally
-	{
-	    try
-	    {
-		if(input != null)
-		    input.close();
-
-		if(stream != null)
-		    stream.close();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
 	}
 
 	return true;
