@@ -301,7 +301,7 @@ public class Chat extends AppCompatActivity
 		byte encryptionKeyBytes[] = null;
 		byte macKeyBytes[] = null;
 		byte sipHashKeyStream[] = null;
-		int sequence = 1;
+		long sequence = 1;
 
 		stringBuffer.append("me: ");
 		stringBuffer.append(str);

@@ -164,7 +164,7 @@ public class Messages
 				     byte encryptionKeyBytes[],
 				     byte macKeyBytes[],
 				     byte sipHashKeyStream[],
-				     int sequence)
+				     long sequence)
     {
 	if(cryptography == null || encryptionKeyBytes == null ||
 	   macKeyBytes == null || receiverPublicKey == null)

@@ -1,11 +1,11 @@
 [PK] (1)
 {
-	A Timestamp (1)
-	AES-128 Key (2)
-	SHA-256 Key (3)
-	Sender's Identity (4)
-	Sender's Public Encryption Key SHA-512 Digest (5)
-	[PK Signature] (6)
+	A Timestamp (1)						8 Bytes
+	AES-128 Key (2)						16 Bytes
+	SHA-256 Key (3)						32 Bytes
+	Sender's Identity (4)					8 Bytes
+	Sender's Public Encryption Key SHA-512 Digest (5)	64 Bytes
+	[PK Signature] (6)					Variable Bytes
 	{
 		[PK] (1 ... 5) (1)
 	}
@@ -15,7 +15,7 @@
 ** The destination is created via the recipient's SipHash identity.
 */
 
-[Destination SHA-512 HMAC] (2)
+[Destination SHA-512 HMAC] (2)					64 Bytes
 {
-	[PK] || (1)
+	[PK] (1)
 }
