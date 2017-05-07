@@ -260,7 +260,8 @@ public class Miscellaneous
 	{
 	    ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
 
-	    byteBuffer.put(bytes, 0, Long.BYTES);
+	    byteBuffer.put(bytes);
+	    byteBuffer.flip();
 	    return byteBuffer.getLong();
 	}
 	catch(Exception exception)
