@@ -28,7 +28,6 @@
 package org.purple.smoke;
 
 import android.util.Base64;
-
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -205,7 +204,7 @@ public class Cryptography
 
     public boolean isValidSipHashMac(byte data[], byte mac[])
     {
-	if(data == null || mac == null)
+	if(data == null || data.length <= 0 || mac == null || mac.length <= 0)
 	    return false;
 
 	byte bytes[] = null;
@@ -273,7 +272,7 @@ public class Cryptography
 
     public byte[] decryptWithSipHashKey(byte data[])
     {
-	if(data == null)
+	if(data == null || data.length <= 0)
 	    return null;
 
 	byte bytes[] = null;
@@ -312,7 +311,7 @@ public class Cryptography
 	** Encrypt-then-MAC.
 	*/
 
-	if(data == null)
+	if(data == null || data.length <= 0)
 	    return null;
 
 	synchronized(m_encryptionKeyMutex)
@@ -372,7 +371,7 @@ public class Cryptography
 
     public byte[] hmac(byte data[])
     {
-	if(data == null)
+	if(data == null || data.length <= 0)
 	    return null;
 
 	synchronized(m_macKeyMutex)
@@ -421,7 +420,7 @@ public class Cryptography
 	** MAC-then-decrypt.
 	*/
 
-	if(data == null)
+	if(data == null || data.length <= 0)
 	    return null;
 
 	synchronized(m_encryptionKeyMutex)
@@ -499,7 +498,7 @@ public class Cryptography
 
     public byte[] signViaChatEncryption(byte data[])
     {
-	if(data == null)
+	if(data == null || data.length <= 0)
 	    return null;
 
 	synchronized(m_chatEncryptionPublicKeyPairMutex)
@@ -536,7 +535,7 @@ public class Cryptography
 
     public byte[] signViaChatSignature(byte data[])
     {
-	if(data == null)
+	if(data == null || data.length <= 0)
 	    return null;
 
 	synchronized(m_chatSignaturePublicKeyPairMutex)
@@ -689,7 +688,7 @@ public class Cryptography
 
     public static boolean memcmp(byte a[], byte b[])
     {
-	if(a == null || b == null)
+	if(a == null || a.length <= 0 || b == null || b.length <= 0)
 	    return false;
 
 	int rc = 0;
@@ -705,7 +704,11 @@ public class Cryptography
 					  byte bytes[],
 					  byte data[])
     {
-	if(bytes == null || data == null || publicKey == null)
+	if(bytes == null ||
+	   bytes.length <= 0 ||
+	   data == null ||
+	   data.length <= 0 ||
+	   publicKey == null)
 	    return false;
 
 	Signature signature = null;
@@ -748,7 +751,10 @@ public class Cryptography
 
     public static byte[] encrypt(byte data[], byte keyBytes[])
     {
-	if(data == null || keyBytes == null)
+	if(data == null ||
+	   data.length <= 0 ||
+	   keyBytes == null ||
+	   keyBytes.length <= 0)
 	    return null;
 
 	prepareSecureRandom();
@@ -780,7 +786,10 @@ public class Cryptography
 
     public static byte[] hmac(byte data[], byte keyBytes[])
     {
-	if(data == null || keyBytes == null)
+	if(data == null ||
+	   data.length <= 0 ||
+	   keyBytes == null ||
+	   keyBytes.length <= 0)
 	    return null;
 
 	byte bytes[] = null;
@@ -850,7 +859,7 @@ public class Cryptography
 
     public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
     {
-	if(data == null || publicKey == null)
+	if(data == null || data.length <= 0 || publicKey == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -955,7 +964,7 @@ public class Cryptography
 					 ** SipHash.
 					 */
 
-		if(key == null)
+		if(key == null || key.length <= 0)
 		    return false;
 
 		SipHash sipHash = new SipHash();
@@ -966,7 +975,7 @@ public class Cryptography
 
 		bytes = Miscellaneous.longToByteArray(value);
 
-		if(bytes == null)
+		if(bytes == null || bytes.length <= 0)
 		    return false;
 
 		m_sipHashId = Miscellaneous.
