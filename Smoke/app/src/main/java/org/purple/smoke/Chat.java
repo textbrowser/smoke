@@ -80,21 +80,14 @@ public class Chat extends AppCompatActivity
     private String nameFromCheckBoxText(String text)
     {
 	/*
-	** Index
 	** Name
 	** SipHash ID
 	** Percentage
 	*/
 
-	int indexOf = text.indexOf('\n');
-
 	try
 	{
-	    if(indexOf > 0)
-		return text.substring(indexOf + 1,
-				      text.indexOf('\n', indexOf + 1));
-	    else
-		return "unknown";
+	    return text.substring(0, text.indexOf('\n', 1));
 	}
 	catch(Exception exception)
 	{
@@ -154,8 +147,6 @@ public class Chat extends AppCompatActivity
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
-	    stringBuffer.append(String.valueOf(i + 1));
-	    stringBuffer.append("\n");
 	    stringBuffer.append(participantElement.m_name);
 	    stringBuffer.append("\n");
 	    stringBuffer.append
