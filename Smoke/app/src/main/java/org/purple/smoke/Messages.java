@@ -94,52 +94,45 @@ public class Messages
 	{
 	    output = new ObjectOutputStream(stream);
 
-	    ByteArrayOutputStream s = new ByteArrayOutputStream();
-	    ObjectOutputStream o = new ObjectOutputStream(s);
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		/*
+		** [ A Timestamp ]
+		*/
 
-	    /*
-	    ** [ A Timestamp ]
-	    */
+		(Miscellaneous.longToByteArray(System.currentTimeMillis()),
 
-	    o.writeLong(System.currentTimeMillis());
+		 /*
+		 ** [ AES-128 Key ]
+		 */
 
-	    /*
-	    ** [ AES-128 Key ]
-	    */
+		 Arrays.copyOfRange(keyStream, 0, 16),
 
-	    o.writeObject(Arrays.copyOfRange(keyStream, 0, 16));
+		 /*
+		 ** [ SHA-256 Key ]
+		 */
 
-	    /*
-	    ** [ SHA-256 Key ]
-	    */
+		 Arrays.copyOfRange(keyStream, 16, keyStream.length),
 
-	    o.writeObject(Arrays.copyOfRange(keyStream, 16, keyStream.length));
+		 /*
+		 ** [ Identity ]
+		 */
 
-	    /*
-	    ** [ Identity ]
-	    */
+		 cryptography.identity(),
 
-	    o.writeObject(cryptography.identity());
+		 /*
+		 ** [ Encryption Public Key Digest ]
+		 */
 
-	    /*
-	    ** [ Encryption Public Key Digest ]
-	    */
-
-	    o.writeObject(cryptography.chatEncryptionPublicKeyDigest());
-	    o.flush();
+		 cryptography.chatEncryptionPublicKeyDigest());
 
 	    /*
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature
-		(s.toByteArray());
+	    byte signature[] = cryptography.signViaChatSignature(bytes);
 
 	    if(signature == null)
 		return null;
-
-	    o.writeObject(signature);
-	    o.flush();
 
 	    PublicKey publicKey = Database.getInstance().
 		publicKeyForSipHashId(cryptography, sipHashId);
@@ -148,7 +141,7 @@ public class Messages
 		return null;
 
 	    byte messageBytes[] = Cryptography.pkiEncrypt
-		(publicKey, s.toByteArray());
+		(publicKey, Miscellaneous.joinByteArrays(bytes, signature));
 
 	    if(messageBytes == null)
 		return null;
