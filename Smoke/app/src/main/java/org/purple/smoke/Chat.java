@@ -208,36 +208,50 @@ public class Chat extends AppCompatActivity
 		 delimitString(participantElement.m_sipHashId.
 			       replace(":", ""), '-', 4).toUpperCase());
 	    stringBuffer.append("\n");
-	    stringBuffer.append("Session Readiness: ");
 
 	    int guessedLength = Kernel.getInstance().callingStreamLength
 		(participantElement.m_sipHashId);
 
 	    if(guessedLength >= 0)
-	    {
-		stringBuffer.append(100 * guessedLength / 96);
-		stringBuffer.append("%");
-	    }
+		switch(100 * guessedLength / 96)
+		{
+		case 0:
+		    stringBuffer.append("Session Closed");
+		    break;
+		case 50:
+		    stringBuffer.append("Session Incomplete");
+		    break;
+		case 100:
+		    stringBuffer.append("Session Ready");
+		    break;
+		default:
+		    stringBuffer.append("Session Faulty");
+		}
 	    else if(participantElement.m_keyStream == null ||
 		    participantElement.m_keyStream.length == 0)
-		stringBuffer.append("0%");
+		stringBuffer.append("Session Closed");
 	    else if(participantElement.m_keyStream.length == 48)
-		stringBuffer.append("50%");
+		stringBuffer.append("Session Incomplete");
+	    else if(participantElement.m_keyStream.length == 96)
+		stringBuffer.append("Session Ready");
 	    else
-		stringBuffer.append("100%");
+		stringBuffer.append("Session Faulty");
 
-	    stringBuffer.append("\n");
-	    stringBuffer.append("KeyStream ID: ");
+	    if(participantElement.m_keyStream != null &&
+	       participantElement.m_keyStream.length == 96)
+	    {
+		stringBuffer.append("\n");
 
-	    long value = s_siphash.hmac(participantElement.m_keyStream);
+		long value = s_siphash.hmac(participantElement.m_keyStream);
 
-	    stringBuffer.append
-		(Miscellaneous.
-		 delimitString(Miscellaneous.
-			       sipHashIdFromData(Miscellaneous.
-						 longToByteArray(value)).
-			       replace(":", ""), '-', 4).
-		 toUpperCase());
+		stringBuffer.append
+		    (Miscellaneous.
+		     delimitString(Miscellaneous.
+				   sipHashIdFromData(Miscellaneous.
+						     longToByteArray(value)).
+				   replace(":", ""), '-', 4).
+		     toUpperCase());
+	    }
 
 	    if(checked.containsKey(participantElement.m_sipHashId))
 		checkBox.setChecked(checked.get(participantElement.m_sipHashId).
