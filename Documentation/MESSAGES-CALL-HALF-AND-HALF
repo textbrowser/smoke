@@ -19,5 +19,5 @@
 
 [Destination SHA-512 HMAC] (3)					64 Bytes
 {
-	[PK] (1)
+	[PK] || [Random Bytes] (1)
 }

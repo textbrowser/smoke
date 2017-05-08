@@ -412,12 +412,12 @@ public class Kernel
 	    byte array3[] = Arrays.copyOfRange
 		(bytes, bytes.length - 64, bytes.length);
 
-	    /*
-	    ** EPKS?
-	    */
-
 	    if(s_cryptography.isValidSipHashMac(array1, array2))
 	    {
+		/*
+		** EPKS
+		*/
+
 		array1 = s_cryptography.decryptWithSipHashKey(array1);
 
 		if(s_databaseHelper.writeParticipant(s_cryptography, array1))
@@ -430,6 +430,10 @@ public class Kernel
 	    }
 	    else if((bytes = s_cryptography.pkiDecrypt(array1)) != null)
 	    {
+		/*
+		** Organic Half-And-Half
+		*/
+
 		Intent intent = new Intent
 		    ("org.purple.smoke.half_and_half_call");
 
