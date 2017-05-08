@@ -398,6 +398,9 @@ public class Kernel
 						     hmac(buffer.getBytes())))
 	    return true;
 
+	s_databaseHelper.writeCongestionDigest
+	    (s_congestionSipHash.hmac(buffer.getBytes()));
+
 	try
 	{
 	    byte bytes[] =
@@ -438,7 +441,15 @@ public class Kernel
 		PublicKey signatureKey = s_databaseHelper.signatureKeyForDigest
 		    (s_cryptography, Arrays.copyOfRange(array1, 64, 128));
 
-		if(signatureKey != null)
+		if(signatureKey != null &&
+		   Cryptography.
+		   verifySignature(signatureKey,
+				   Arrays.copyOfRange(array1,
+						      128,
+						      array1.length),
+				   Arrays.copyOfRange(array1,
+						      0,
+						      128)))
 		{
 		    Intent intent = new Intent
 			("org.purple.smoke.half_and_half_call");
@@ -446,9 +457,6 @@ public class Kernel
 		    Smoke.getApplication().sendBroadcast(intent);
 		}
 	    }
-
-	    s_databaseHelper.writeCongestionDigest
-		(s_congestionSipHash.hmac(buffer.getBytes()));
 	}
 	catch(Exception exception)
 	{
