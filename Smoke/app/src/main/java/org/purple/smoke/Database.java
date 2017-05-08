@@ -1124,7 +1124,7 @@ public class Database extends SQLiteOpenHelper
 
 		    if(keyType == null ||
 		       keyType.length != 1 ||
-		       keyType[0] != Messages.CHAT_EPKS[0])
+		       keyType[0] != Messages.CHAT_KEY_TYPE[0])
 			return false;
 
 		    break;
@@ -1208,7 +1208,7 @@ public class Database extends SQLiteOpenHelper
 		    bytes = Cryptography.sha512(publicKey.getEncoded());
 		else if(sparseArray.get(i).equals("function_digest"))
 		{
-		    if(keyType[0] == Messages.CHAT_EPKS[0])
+		    if(keyType[0] == Messages.CHAT_KEY_TYPE[0])
 			bytes = cryptography.hmac("chat".getBytes());
 		}
 		else if(sparseArray.get(i).equals("identity"))

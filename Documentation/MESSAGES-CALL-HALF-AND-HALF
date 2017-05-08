@@ -1,11 +1,12 @@
 [PK] (1)
 {
-	A Timestamp (1)						8 Bytes
-	AES-128 Key (2)						16 Bytes
-	SHA-256 Key (3)						32 Bytes
-	Sender's Identity (4)					8 Bytes
-	Sender's Public Encryption Key SHA-512 Digest (5)	64 Bytes
-	[PK Signature] (6)					Variable Bytes
+	A Tag (1)						1 Byte
+	A Timestamp (2)						8 Bytes
+	AES-128 Key (3)						16 Bytes
+	SHA-256 Key (4)						32 Bytes
+	Sender's Identity (5)					8 Bytes
+	Sender's Public Encryption Key SHA-512 Digest (6)	64 Bytes
+	[PK Signature] (7)					Variable Bytes
 	{
 		[PK] (1 ... 5) (1)
 	}

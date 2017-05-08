@@ -320,7 +320,7 @@ public class Settings extends AppCompatActivity
 			    (s_cryptography,
 			     sipHashIdElement.m_sipHashId,
 			     sipHashIdElement.m_stream,
-			     Messages.CHAT_EPKS);
+			     Messages.CHAT_KEY_TYPE);
 
 			if(bytes == null)
 			{

@@ -298,7 +298,7 @@ public class Kernel
 
 			    participantCall = m_callQueue.get(sipHashId);
 			    participantCall.prepareHalfKeys();
-			    m_callQueue.put(sipHashId, participantCall);
+			    m_callQueue.replace(sipHashId, participantCall);
 			}
 
 			/*
@@ -317,7 +317,8 @@ public class Kernel
 			byte bytes[] = Messages.callMessage
 			    (s_cryptography,
 			     participantCall.m_sipHashId,
-			     participantCall.m_keyStream);
+			     participantCall.m_keyStream,
+			     Messages.CALL_TAGS[0]);
 
 			if(bytes != null)
 			    echo(Messages.bytesToMessageString(bytes), -1);
@@ -427,65 +428,78 @@ public class Kernel
 		*/
 
 		PublicKey signatureKey = s_databaseHelper.signatureKeyForDigest
-		    (s_cryptography, Arrays.copyOfRange(array1, 64, 128));
+		    (s_cryptography,
+		     Arrays.
+		     copyOfRange(array1,
+				 Messages.CALL_HALF_AND_HALF_OFFSETS[5],
+				 Messages.CALL_HALF_AND_HALF_OFFSETS[5] + 64));
 
 		if(signatureKey != null &&
 		   Cryptography.
 		   verifySignature(signatureKey,
-				   Arrays.copyOfRange(array1,
-						      128,
-						      array1.length),
+				   Arrays.
+				   copyOfRange(array1,
+					       Messages.
+					       CALL_HALF_AND_HALF_OFFSETS[6],
+					       array1.length),
 				   Arrays.copyOfRange(array1,
 						      0,
-						      128)))
+						      129)))
 		{
 		    long current = System.currentTimeMillis();
 		    long timestamp = Miscellaneous.byteArrayToLong
-			(Arrays.copyOfRange(array1, 0, 8));
+			(Arrays.
+			 copyOfRange(array1,
+				     Messages.CALL_HALF_AND_HALF_OFFSETS[1],
+				     Messages.
+				     CALL_HALF_AND_HALF_OFFSETS[1] + 8));
 
 		    if(current - timestamp < 0 ||
 		       current - timestamp > CALL_LIFETIME)
 			return false;
 
 		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
-			(s_cryptography, Arrays.copyOfRange(array1, 64, 128));
+			(s_cryptography,
+			 Arrays.
+			 copyOfRange(array1,
+				     Messages.CALL_HALF_AND_HALF_OFFSETS[5],
+				     Messages.CALL_HALF_AND_HALF_OFFSETS[5] +
+				     64));
 
 		    if(array != null && array.length == 2)
 		    {
-			ParticipantCall participantCall = null;
-
-			synchronized(m_callQueueMutex)
-			{
-			    participantCall = m_callQueue.get(array[1]);
-			}
-
 			byte keyStream[] = null;
 
-			if(participantCall == null)
-			    /*
-			    ** We have received new keys.
-			    */
-
+			if(array1[0] == Messages.CALL_TAGS[0])
 			    keyStream = Miscellaneous.joinByteArrays
-				(Arrays.copyOfRange(array1, 8, 24),
+				(Arrays.copyOfRange(array1, 9, 25),
 				 Cryptography.aes128KeyBytes(),
-				 Arrays.copyOfRange(array1, 24, 56),
+				 Arrays.copyOfRange(array1, 25, 57),
 				 Cryptography.sha256KeyBytes());
-			else
-			    /*
-			    ** We have partial keys.
-			    */
+			else if(array1[0] == Messages.CALL_TAGS[1])
+			{
+			    ParticipantCall participantCall = null;
+
+			    synchronized(m_callQueueMutex)
+			    {
+				participantCall = m_callQueue.get(array[1]);
+			    }
+
+			    if(participantCall == null)
+				return false;
 
 			    keyStream = Miscellaneous.joinByteArrays
 				(Arrays.copyOfRange(participantCall.m_keyStream,
 						    0,
 						    16),
-				 Arrays.copyOfRange(array1, 8, 24),
+				 Arrays.copyOfRange(array1, 9, 25),
 				 Arrays.copyOfRange(participantCall.m_keyStream,
 						    16,
-						    participantCall.m_keyStream.
-						    length),
-				 Arrays.copyOfRange(array1, 24, 56));
+						    48),
+				 Arrays.copyOfRange(array1, 25, 57));
+			}
+			else
+			    return false;
 
 			s_databaseHelper.writeCallKeys
 			    (s_cryptography, array[1], keyStream);
@@ -493,7 +507,7 @@ public class Kernel
 			Intent intent = new Intent
 			    ("org.purple.smoke.half_and_half_call");
 
-			if(participantCall == null)
+			if(array1[0] == Messages.CALL_TAGS[0])
 			    intent.putExtra("org.purple.smoke.initial", true);
 			else
 			    intent.putExtra("org.purple.smoke.initial", false);
@@ -503,7 +517,7 @@ public class Kernel
 			intent.putExtra("org.purple.smoke.sipHashId", array[1]);
 			Smoke.getApplication().sendBroadcast(intent);
 
-			if(participantCall == null)
+			if(array1[0] == Messages.CALL_TAGS[0])
 			{
 			    /*
 			    ** Respond via all neighbors.
@@ -519,10 +533,18 @@ public class Kernel
 						Arrays.copyOfRange(keyStream,
 								   64,
 								   keyStream.
-								   length)));
+								   length)),
+				 Messages.CALL_TAGS[1]);
 
 			    if(bytes != null)
 				echo(Messages.bytesToMessageString(bytes), -1);
+			}
+			else
+			{
+			    synchronized(m_callQueueMutex)
+			    {
+				m_callQueue.remove(array[1]);
+			    }
 			}
 		    }
 		}

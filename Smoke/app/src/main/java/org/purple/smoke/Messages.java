@@ -33,7 +33,10 @@ import java.util.Arrays;
 
 public class Messages
 {
-    public final static byte CHAT_EPKS[] = new byte[] {0};
+    public final static byte CALL_TAGS[] = new byte[] {0, 1};
+    public final static byte CHAT_KEY_TYPE[] = new byte[] {0};
+    public final static int CALL_HALF_AND_HALF_OFFSETS[] = new int[]
+	{0, 1, 9, 25, 57, 65, 129};
 
     public static String bytesToMessageString(byte bytes[])
     {
@@ -76,7 +79,8 @@ public class Messages
 
     public static byte[] callMessage(Cryptography cryptography,
 				     String sipHashId,
-				     byte keyStream[])
+				     byte keyStream[],
+				     byte tag)
     {
 	if(cryptography == null || keyStream == null)
 	    return null;
@@ -90,11 +94,18 @@ public class Messages
 	try
 	{
 	    byte bytes[] = Miscellaneous.joinByteArrays
-		/*
-		** [ A Timestamp ]
-		*/
+		(
+		 /*
+		 ** [ A Tag ]
+		 */
 
-		(Miscellaneous.longToByteArray(System.currentTimeMillis()),
+		 new byte[] {tag},
+
+		 /*
+		 ** [ A Timestamp ]
+		 */
+
+		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
 
 		 /*
 		 ** [ AES-128 Key ]

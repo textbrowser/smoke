@@ -83,8 +83,10 @@ public class Chat extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static SipHash s_siphash = new SipHash
-	(new byte[] {1, 2, 3, 4, 5, 6, 7, 8,
-		     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'});
+	(new byte[] {(byte) 1, (byte) 2, (byte) 3, (byte) 4,
+		     (byte) 5, (byte) 6, (byte) 7, (byte) 8,
+		     (byte) 9, (byte) 10, (byte) 11, (byte) 12,
+		     (byte) 13, (byte) 14, (byte) 15, (byte) 16});
     private final static int CHECKBOX_TEXT_SIZE = 13;
 
     private String nameFromCheckBoxText(String text)
