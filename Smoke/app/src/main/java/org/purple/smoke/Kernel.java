@@ -413,7 +413,7 @@ public class Kernel
 		(bytes, 0, bytes.length - 128);
 	    byte array2[] = Arrays.copyOfRange
 		(bytes, bytes.length - 128, bytes.length - 64);
-	    byte array3[] = Arrays.copyOfRange
+	    byte array3[] = Arrays.copyOfRange // The destination.
 		(bytes, bytes.length - 64, bytes.length);
 
 	    if(s_cryptography.isValidSipHashMac(array1, array2))
@@ -460,10 +460,18 @@ public class Kernel
 		       current - timestamp > CALL_LIFETIME)
 			return false;
 
-		    Intent intent = new Intent
-			("org.purple.smoke.half_and_half_call");
+		    String pair[] = s_databaseHelper.nameSipHashIdFromDigest
+			(s_cryptography, Arrays.copyOfRange(array1, 64, 128));
 
-		    Smoke.getApplication().sendBroadcast(intent);
+		    if(pair != null && pair.length == 2)
+		    {
+			Intent intent = new Intent
+			    ("org.purple.smoke.half_and_half_call");
+
+			intent.putExtra("org.purple.smoke.name", pair[0]);
+			intent.putExtra("org.purple.smoke.sipHashId", pair[1]);
+			Smoke.getApplication().sendBroadcast(intent);
+		    }
 		}
 	    }
 	}

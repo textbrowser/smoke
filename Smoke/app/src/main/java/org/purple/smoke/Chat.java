@@ -70,7 +70,9 @@ public class Chat extends AppCompatActivity
 		populateParticipants();
 	    else if(intent.getAction().
 		    equals("org.purple.smoke.half_and_half_call"))
-		halfAndHalfCall();
+		halfAndHalfCall
+		    (intent.getStringExtra("org.purple.smoke.name"),
+		     intent.getStringExtra("org.purple.smoke.sipHashId"));
 	}
     }
 
@@ -98,7 +100,7 @@ public class Chat extends AppCompatActivity
 	}
     }
 
-    private void halfAndHalfCall()
+    private void halfAndHalfCall(String name, String sipHashId)
     {
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -108,7 +110,13 @@ public class Chat extends AppCompatActivity
 
 	stringBuffer.append("[");
 	stringBuffer.append(simpleDateFormat.format(new Date()));
-	stringBuffer.append("] Received a half-and-half organic call. ");
+	stringBuffer.append("] Received a half-and-half organic call from ");
+	stringBuffer.append(name);
+	stringBuffer.append(" (");
+	stringBuffer.append
+	    (Miscellaneous.
+	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
+	stringBuffer.append("). ");
 	stringBuffer.append("Dispatching response. Please be patient.\n");
 	textView.append(stringBuffer);
     }

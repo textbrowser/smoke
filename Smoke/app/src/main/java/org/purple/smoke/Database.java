@@ -783,6 +783,62 @@ public class Database extends SQLiteOpenHelper
 	return str;
     }
 
+    public String[] nameSipHashIdFromDigest(Cryptography cryptography,
+					    byte digest[])
+    {
+	prepareDb();
+
+	if(cryptography == null ||
+	   digest == null ||
+	   digest.length < 0 ||
+	   m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	String array[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT name, siphash_id " +
+		 "FROM participants WHERE encryption_public_key_digest = ?",
+		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+
+		bytes = cryptography.mtd(bytes);
+
+		if(bytes != null)
+		{
+		    array = new String[2];
+		    array[0] = new String(bytes);
+		    bytes = Base64.decode
+			(cursor.getString(1).getBytes(), Base64.DEFAULT);
+		    bytes = cryptography.mtd(bytes);
+
+		    if(bytes != null)
+			array[1] = new String(bytes, "UTF-8");
+		    else
+			array = null;
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    array = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return array;
+    }
+
     public String[] readOutboundMessage(int oid)
     {
 	prepareDb();
@@ -1171,8 +1227,8 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("siphash_id_digest"))
 		    bytes = cryptography.hmac(sipHashId.getBytes("UTF-8"));
 
-		if(bytes == null){writeLog(i + " index");
-		    return false;}
+		if(bytes == null)
+		    return false;
 
 		values.put(sparseArray.get(i),
 			   Base64.encodeToString(bytes, Base64.DEFAULT));
