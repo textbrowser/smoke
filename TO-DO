@@ -63,6 +63,8 @@ Completed Items
        Upon receiving a timely response, the total key stream should be
        saved to smoke.db. If a timely response is not received, the partial data
        should be purged.
+54.    Java serialization requires safety.
+       (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
 
 Future Items
 
@@ -95,5 +97,3 @@ Remaining Items
 7.     Display date and time of sent message.
 8.     Allow log clearing.
 9.     Chat activity state is not retained.
-10.    Java serialization requires safety.
-       (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
