@@ -65,6 +65,10 @@ Completed Items
        should be purged.
 54.    Java serialization requires safety.
        (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
+55.    Inadvertent calling may sever an established session.
+       Do not save a key stream unless a response is received.
+       As the half-response does not produce a response, the automatic
+       response's result is ignored.
 
 Future Items
 
@@ -99,4 +103,3 @@ Remaining Items
 9.     Chat activity state is not retained.
 10.    Allow resetting of Chat sessions via context menu.
 11.    Organic half-and-half: resolve collisions.
-12.    Inadvertent calling may sever an established session.

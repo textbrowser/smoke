@@ -286,12 +286,8 @@ public class Chat extends AppCompatActivity
 
 		    if(checkBox.getTag() != null && checkBox.isChecked())
 		    {
-			Kernel.getInstance().call(checkBox.getId(),
-						  checkBox.getTag().toString());
-			m_databaseHelper.writeCallKeys
-			    (s_cryptography,
-			     checkBox.getTag().toString(),
-			     new byte[] {});
+			Kernel.getInstance().call
+			    (checkBox.getId(), checkBox.getTag().toString());
 			stringBuffer.setLength(0);
 			stringBuffer.append("[");
 			stringBuffer.append
