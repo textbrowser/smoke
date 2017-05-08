@@ -99,3 +99,4 @@ Remaining Items
 9.     Chat activity state is not retained.
 10.    Allow resetting of Chat sessions via context menu.
 11.    Organic half-and-half: resolve collisions.
+12.    Inadvertent calling may sever an established session.
