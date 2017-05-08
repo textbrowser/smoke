@@ -106,3 +106,4 @@ Remaining Items
 6.     Display date and time of sent message.
 7.     Allow log clearing.
 8.     Allow resetting of Chat sessions via context menu.
+9.     Prevent adding of own public keys.
