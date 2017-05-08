@@ -72,7 +72,9 @@ public class Chat extends AppCompatActivity
 		    equals("org.purple.smoke.half_and_half_call"))
 		halfAndHalfCall
 		    (intent.getStringExtra("org.purple.smoke.name"),
-		     intent.getStringExtra("org.purple.smoke.sipHashId"));
+		     intent.getStringExtra("org.purple.smoke.sipHashId"),
+		     intent.getBooleanExtra("org.purple.smoke.initial", false),
+		     intent.getBooleanExtra("org.purple.smoke.refresh", false));
 	}
     }
 
@@ -80,6 +82,9 @@ public class Chat extends AppCompatActivity
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static SipHash s_siphash = new SipHash
+	(new byte[] {0, 0, 0, 0, 0, 0, 0, 0,
+		     0, 0, 0, 0, 0, 0, 0, 0});
     private final static int CHECKBOX_TEXT_SIZE = 13;
 
     private String nameFromCheckBoxText(String text)
@@ -100,7 +105,10 @@ public class Chat extends AppCompatActivity
 	}
     }
 
-    private void halfAndHalfCall(String name, String sipHashId)
+    private void halfAndHalfCall(String name,
+				 String sipHashId,
+				 boolean initial,
+				 boolean refresh)
     {
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -108,17 +116,37 @@ public class Chat extends AppCompatActivity
 	final TextView textView = (TextView) findViewById
 	    (R.id.chat_messages);
 
+	if(name == null)
+	    name = "unknown";
+
+	if(sipHashId == null)
+	    sipHashId = "00:00:00:00";
+
 	stringBuffer.append("[");
 	stringBuffer.append(simpleDateFormat.format(new Date()));
-	stringBuffer.append("] Received a half-and-half organic call from ");
+	stringBuffer.append("] ");
+
+	if(initial)
+	    stringBuffer.append("Received a half-and-half organic call from ");
+	else
+	    stringBuffer.append
+		("Received a half-and-half organic response from ");
+
 	stringBuffer.append(name);
 	stringBuffer.append(" (");
 	stringBuffer.append
 	    (Miscellaneous.
 	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
-	stringBuffer.append("). ");
-	stringBuffer.append("Dispatching response. Please be patient.\n");
+	stringBuffer.append(").");
+
+	if(initial)
+	    stringBuffer.append(" Dispatching a response. Please be patient.");
+
+	stringBuffer.append("\n");
 	textView.append(stringBuffer);
+
+	if(refresh)
+	    populateParticipants();
     }
 
     private void populateParticipants()
@@ -198,6 +226,19 @@ public class Chat extends AppCompatActivity
 	    else
 		stringBuffer.append("100%");
 
+	    stringBuffer.append("\n");
+	    stringBuffer.append("KeyStream ID: ");
+
+	    long value = s_siphash.hmac(participantElement.m_keyStream);
+
+	    stringBuffer.append
+		(Miscellaneous.
+		 delimitString(Miscellaneous.
+			       sipHashIdFromData(Miscellaneous.
+						 longToByteArray(value)).
+			       replace(":", ""), '-', 4).
+		 toUpperCase());
+
 	    if(checked.containsKey(participantElement.m_sipHashId))
 		checkBox.setChecked(checked.get(participantElement.m_sipHashId).
 				    equals("true"));
@@ -247,6 +288,10 @@ public class Chat extends AppCompatActivity
 		    {
 			Kernel.getInstance().call(checkBox.getId(),
 						  checkBox.getTag().toString());
+			m_databaseHelper.writeCallKeys
+			    (s_cryptography,
+			     checkBox.getTag().toString(),
+			     new byte[] {});
 			stringBuffer.setLength(0);
 			stringBuffer.append("[");
 			stringBuffer.append

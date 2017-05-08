@@ -1485,7 +1485,7 @@ public class Database extends SQLiteOpenHelper
     {
 	try
 	{
-	    db.enableWriteAheadLogging();
+	    // db.enableWriteAheadLogging();
 	}
 	catch(Exception exception)
 	{
@@ -1862,6 +1862,39 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
+	}
+    }
+
+    public void writeCallKeys(Cryptography cryptography,
+			      String sipHashId,
+			      byte keyStream[])
+    {
+	prepareDb();
+
+	if(cryptography == null ||
+	   keyStream == null ||
+	   keyStream.length < 0 ||
+	   m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("keystream",
+		 Base64.encodeToString(cryptography.etm(keyStream),
+				       Base64.DEFAULT));
+	    m_db.update("participants", values, "siphash_id_digest = ?",
+			new String[] {Base64.
+				      encodeToString(cryptography.
+						     hmac(sipHashId.trim().
+							  getBytes("UTF-8")),
+						     Base64.DEFAULT)});
+
+	}
+	catch(Exception exception)
+        {
 	}
     }
 

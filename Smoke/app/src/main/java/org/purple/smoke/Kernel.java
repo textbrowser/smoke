@@ -69,11 +69,11 @@ public class Kernel
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
+    private final Object m_callQueueMutex = new Object();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static Database s_databaseHelper = Database.getInstance();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
-    private final static Object s_callQueueMutex = new Object();
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
@@ -230,7 +230,7 @@ public class Kernel
 		    {
 			ParticipantCall participantCall = null;
 
-			synchronized(s_callQueueMutex)
+			synchronized(m_callQueueMutex)
 			{
 			    if(m_callQueue.isEmpty())
 				return;
@@ -379,20 +379,7 @@ public class Kernel
 	Runtime.getRuntime().runFinalization();
     }
 
-    public int callingStreamLength(String sipHashId)
-    {
-	synchronized(s_callQueueMutex)
-	{
-	    if(m_callQueue.containsKey(sipHashId) &&
-	       m_callQueue.get(sipHashId) != null)
-		return m_callQueue.get(sipHashId).m_keyStream == null ? -1 :
-		    m_callQueue.get(sipHashId).m_keyStream.length;
-	}
-
-	return -1;
-    }
-
-    public static boolean ourMessage(String buffer)
+    public boolean ourMessage(String buffer)
     {
 	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.
 						     hmac(buffer.getBytes())))
@@ -460,17 +447,83 @@ public class Kernel
 		       current - timestamp > CALL_LIFETIME)
 			return false;
 
-		    String pair[] = s_databaseHelper.nameSipHashIdFromDigest
+		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography, Arrays.copyOfRange(array1, 64, 128));
 
-		    if(pair != null && pair.length == 2)
+		    if(array != null && array.length == 2)
 		    {
+			ParticipantCall participantCall = null;
+
+			synchronized(m_callQueueMutex)
+			{
+			    participantCall = m_callQueue.get(array[1]);
+			}
+
+			byte keyStream[] = null;
+
+			if(participantCall == null)
+			    /*
+			    ** We have received new keys.
+			    */
+
+			    keyStream = Miscellaneous.joinByteArrays
+				(Arrays.copyOfRange(array1, 8, 24),
+				 Cryptography.aes128KeyBytes(),
+				 Arrays.copyOfRange(array1, 24, 56),
+				 Cryptography.sha256KeyBytes());
+			else
+			    /*
+			    ** We have partial keys.
+			    */
+
+			    keyStream = Miscellaneous.joinByteArrays
+				(Arrays.copyOfRange(participantCall.m_keyStream,
+						    0,
+						    16),
+				 Arrays.copyOfRange(array1, 8, 24),
+				 Arrays.copyOfRange(participantCall.m_keyStream,
+						    16,
+						    participantCall.m_keyStream.
+						    length),
+				 Arrays.copyOfRange(array1, 24, 56));
+
+			s_databaseHelper.writeCallKeys
+			    (s_cryptography, array[1], keyStream);
+
 			Intent intent = new Intent
 			    ("org.purple.smoke.half_and_half_call");
 
-			intent.putExtra("org.purple.smoke.name", pair[0]);
-			intent.putExtra("org.purple.smoke.sipHashId", pair[1]);
+			if(participantCall == null)
+			    intent.putExtra("org.purple.smoke.initial", true);
+			else
+			    intent.putExtra("org.purple.smoke.initial", false);
+
+			intent.putExtra("org.purple.smoke.name", array[0]);
+			intent.putExtra("org.purple.smoke.refresh", true);
+			intent.putExtra("org.purple.smoke.sipHashId", array[1]);
 			Smoke.getApplication().sendBroadcast(intent);
+
+			if(participantCall == null)
+			{
+			    /*
+			    ** Respond.
+			    */
+
+			    bytes = Messages.callMessage
+				(s_cryptography,
+				 array[1],
+				 Miscellaneous.
+				 joinByteArrays(Arrays.copyOfRange(keyStream,
+								   16,
+								   32),
+						Arrays.copyOfRange(keyStream,
+								   64,
+								   keyStream.
+								   length)));
+
+			    if(bytes != null)
+				echo(Messages.bytesToMessageString(bytes), -1);
+			}
 		    }
 		}
 	    }
@@ -481,6 +534,19 @@ public class Kernel
 	}
 
 	return true;
+    }
+
+    public int callingStreamLength(String sipHashId)
+    {
+	synchronized(m_callQueueMutex)
+	{
+	    if(m_callQueue.containsKey(sipHashId) &&
+	       m_callQueue.get(sipHashId) != null)
+		return m_callQueue.get(sipHashId).m_keyStream == null ? -1 :
+		    m_callQueue.get(sipHashId).m_keyStream.length;
+	}
+
+	return -1;
     }
 
     public static synchronized Kernel getInstance()
@@ -513,7 +579,7 @@ public class Kernel
 	** as they are considered temporary.
 	*/
 
-	synchronized(s_callQueueMutex)
+	synchronized(m_callQueueMutex)
 	{
 	    if(m_callQueue.containsKey(sipHashId))
 		m_callQueue.remove(sipHashId);
