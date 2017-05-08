@@ -77,7 +77,7 @@ public class Kernel
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
-    private final static int CALL_LIFETIME = 30000; // 30 Seconds
+    private final static int CALL_LIFETIME = 15000; // 15 Seconds
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
