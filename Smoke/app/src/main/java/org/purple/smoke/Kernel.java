@@ -32,6 +32,7 @@ import android.util.Base64;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.net.InetAddress;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -428,16 +429,22 @@ public class Kernel
 		    Smoke.getApplication().sendBroadcast(intent);
 		}
 	    }
-	    else if((bytes = s_cryptography.pkiDecrypt(array1)) != null)
+	    else if((array1 = s_cryptography.pkiDecrypt(array1)) != null)
 	    {
 		/*
 		** Organic Half-And-Half
 		*/
 
-		Intent intent = new Intent
-		    ("org.purple.smoke.half_and_half_call");
+		PublicKey signatureKey = s_databaseHelper.signatureKeyForDigest
+		    (s_cryptography, Arrays.copyOfRange(array1, 64, 128));
 
-		Smoke.getApplication().sendBroadcast(intent);
+		if(signatureKey != null)
+		{
+		    Intent intent = new Intent
+			("org.purple.smoke.half_and_half_call");
+
+		    Smoke.getApplication().sendBroadcast(intent);
+		}
 	    }
 
 	    s_databaseHelper.writeCongestionDigest

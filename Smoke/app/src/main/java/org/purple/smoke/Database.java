@@ -541,6 +541,68 @@ public class Database extends SQLiteOpenHelper
 	return publicKey;
     }
 
+    public PublicKey signatureKeyForDigest(Cryptography cryptography,
+					   byte digest[])
+    {
+	prepareDb();
+
+	if(cryptography == null ||
+	   digest == null ||
+	   digest.length < 0 ||
+	   m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	PublicKey publicKey = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "signature_public_key " +
+		 "FROM participants WHERE encryption_public_key_digest = ?",
+		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+
+		bytes = cryptography.mtd(bytes);
+
+		if(bytes != null)
+		    for(int i = 0; i < 2; i++)
+			try
+			{
+			    if(i == 0)
+				publicKey = KeyFactory.getInstance("EC").
+				    generatePublic
+				    (new X509EncodedKeySpec(bytes));
+			    else
+				publicKey = KeyFactory.getInstance("RSA").
+				    generatePublic
+				    (new X509EncodedKeySpec(bytes));
+
+			    break;
+			}
+			catch(Exception exception)
+			{
+			}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    publicKey = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return publicKey;
+    }
+
     public SparseIntArray readNeighborOids()
     {
 	prepareDb();
@@ -1089,7 +1151,7 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.etm(publicKey.getEncoded());
 		else if(sparseArray.get(i).
 			equals("encryption_public_key_digest"))
-		    bytes = cryptography.hmac(publicKey.getEncoded());
+		    bytes = Cryptography.sha512(publicKey.getEncoded());
 		else if(sparseArray.get(i).equals("function_digest"))
 		{
 		    if(keyType[0] == Messages.CHAT_EPKS[0])
@@ -1105,7 +1167,7 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.etm(signatureKey.getEncoded());
 		else if(sparseArray.get(i).
 			equals("signature_public_key_digest"))
-		    bytes = cryptography.hmac(signatureKey.getEncoded());
+		    bytes = Cryptography.sha512(signatureKey.getEncoded());
 		else if(sparseArray.get(i).equals("siphash_id"))
 		    bytes = cryptography.etm(sipHashId.getBytes("UTF-8"));
 		else if(sparseArray.get(i).equals("siphash_id_digest"))
