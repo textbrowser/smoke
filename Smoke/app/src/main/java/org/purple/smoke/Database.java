@@ -1048,15 +1048,13 @@ public class Database extends SQLiteOpenHelper
 	    byte keyType[] = null;
 	    byte publicKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
-	    int indexOf = -1;
-	    long current = System.currentTimeMillis();
-	    long timestamp = 0;
 
 	    for(int i = 0; i < strings.length; i++)
 		switch(i)
 		{
 		case 0:
-		    timestamp = Miscellaneous.byteArrayToLong
+		    long current = System.currentTimeMillis();
+		    long timestamp = Miscellaneous.byteArrayToLong
 			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
 
 		    if(current - timestamp < 0 ||
