@@ -506,7 +506,7 @@ public class Kernel
 			if(participantCall == null)
 			{
 			    /*
-			    ** Respond.
+			    ** Respond via all neighbors.
 			    */
 
 			    bytes = Messages.callMessage
