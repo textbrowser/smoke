@@ -97,3 +97,4 @@ Remaining Items
 7.     Display date and time of sent message.
 8.     Allow log clearing.
 9.     Chat activity state is not retained.
+10.    Allow resetting of Chat sessions via context menu.
