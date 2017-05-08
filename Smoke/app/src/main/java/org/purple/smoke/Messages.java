@@ -152,7 +152,7 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(randomBytes, messageBytes),
+		(Miscellaneous.joinByteArrays(messageBytes, randomBytes),
 		 Cryptography.sha512(sipHashId.getBytes()));
 
 	    return Miscellaneous.joinByteArrays
