@@ -1485,7 +1485,7 @@ public class Database extends SQLiteOpenHelper
     {
 	try
 	{
-	    // db.enableWriteAheadLogging();
+	    db.enableWriteAheadLogging();
 	}
 	catch(Exception exception)
 	{
