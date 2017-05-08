@@ -428,6 +428,13 @@ public class Kernel
 		    Smoke.getApplication().sendBroadcast(intent);
 		}
 	    }
+	    else if((bytes = s_cryptography.pkiDecrypt(array1)) != null)
+	    {
+		Intent intent = new Intent
+		    ("org.purple.smoke.half_and_half_call");
+
+		Smoke.getApplication().sendBroadcast(intent);
+	    }
 
 	    s_databaseHelper.writeCongestionDigest
 		(s_congestionSipHash.hmac(buffer.getBytes()));

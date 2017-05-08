@@ -142,13 +142,21 @@ public class Messages
 		return null;
 
 	    /*
+	    ** [ Random Bytes ]
+	    */
+
+	    byte randomBytes[] = Cryptography.randomBytes(64);
+
+	    /*
 	    ** [ Destination ]
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(messageBytes, Cryptography.sha512(sipHashId.getBytes()));
+		(Miscellaneous.joinByteArrays(randomBytes, messageBytes),
+		 Cryptography.sha512(sipHashId.getBytes()));
 
-	    return Miscellaneous.joinByteArrays(messageBytes, destination);
+	    return Miscellaneous.joinByteArrays
+		(messageBytes, randomBytes, destination);
 	}
 	catch(Exception exception)
 	{

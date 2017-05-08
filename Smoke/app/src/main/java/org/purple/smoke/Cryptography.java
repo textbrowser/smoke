@@ -496,6 +496,33 @@ public class Cryptography
 	return bytes;
     }
 
+    public byte[] pkiDecrypt(byte data[])
+    {
+	if(data == null || data.length < 0)
+	    return null;
+
+	synchronized(m_chatEncryptionPublicKeyPair)
+	{
+	    byte bytes[] = null;
+
+	    try
+	    {
+		Cipher cipher = null;
+
+		cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
+		cipher.init(Cipher.DECRYPT_MODE,
+			    m_chatEncryptionPublicKeyPair.getPrivate());
+		bytes = cipher.doFinal(data);
+	    }
+	    catch(Exception exception)
+	    {
+		bytes = null;
+	    }
+
+	    return bytes;
+	}
+    }
+
     public byte[] signViaChatEncryption(byte data[])
     {
 	if(data == null || data.length < 0)

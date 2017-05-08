@@ -68,6 +68,9 @@ public class Chat extends AppCompatActivity
 	    if(intent.getAction().
 	       equals("org.purple.smoke.populate_participants"))
 		populateParticipants();
+	    else if(intent.getAction().
+		    equals("org.purple.smoke.half_and_half_call"))
+		halfAndHalfCall();
 	}
     }
 
@@ -93,6 +96,21 @@ public class Chat extends AppCompatActivity
 	{
 	    return "unknown";
 	}
+    }
+
+    private void halfAndHalfCall()
+    {
+	SimpleDateFormat simpleDateFormat = new
+	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	StringBuffer stringBuffer = new StringBuffer();
+	final TextView textView = (TextView) findViewById
+	    (R.id.chat_messages);
+
+	stringBuffer.append("[");
+	stringBuffer.append(simpleDateFormat.format(new Date()));
+	stringBuffer.append("] Received a half-and-half organic call. ");
+	stringBuffer.append("Dispatching response. Please be patient.\n");
+	textView.append(stringBuffer);
     }
 
     private void populateParticipants()
@@ -447,9 +465,11 @@ public class Chat extends AppCompatActivity
 
 	if(!m_receiverRegistered)
 	{
-	    registerReceiver
-		(m_receiver,
-		 new IntentFilter("org.purple.smoke.populate_participants"));
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.populate_participants");
+	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
+	    registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
     }

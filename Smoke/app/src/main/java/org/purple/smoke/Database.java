@@ -524,23 +524,8 @@ public class Database extends SQLiteOpenHelper
 		bytes = cryptography.mtd(bytes);
 
 		if(bytes != null)
-		    for(int i = 0; i < 2; i++) // EC, RSA
-			try
-		        {
-			    if(i == 0)
-				publicKey = KeyFactory.getInstance("EC").
-				    generatePublic
-				    (new X509EncodedKeySpec(bytes));
-			    else
-				publicKey = KeyFactory.getInstance("RSA").
-				    generatePublic
-				    (new X509EncodedKeySpec(bytes));
-
-			    break;
-			}
-			catch(Exception exception)
-			{
-			}
+		    publicKey = KeyFactory.getInstance("RSA").
+			generatePublic(new X509EncodedKeySpec(bytes));
 	    }
 	}
 	catch(Exception exception)
