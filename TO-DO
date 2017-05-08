@@ -69,7 +69,11 @@ Completed Items
        Do not save a key stream unless a response is received.
        As the half-response does not produce a response, the automatic
        response's result is ignored.
-56.    Organic half-and-half: resolve collisions.
+56.    Organic half-and-half: resolve collisions. As Smoke is not ordered,
+       order is impossible to predict.
+57.    Chat activity state is not retained. States of selected items
+       will not be retained as such states are expensive.
+       The Bundle object is not saved.
 
 Future Items
 
@@ -101,5 +105,4 @@ Remaining Items
 6.     Remote storage of messages.
 7.     Display date and time of sent message.
 8.     Allow log clearing.
-9.     Chat activity state is not retained.
-10.    Allow resetting of Chat sessions via context menu.
+9.     Allow resetting of Chat sessions via context menu.

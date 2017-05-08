@@ -442,6 +442,23 @@ public class Chat extends AppCompatActivity
 	*/
 
 	prepareListeners();
+
+	/*
+	** Restore some data.
+	*/
+
+	try
+	{
+	    textView1 = (TextView) findViewById(R.id.chat_message);
+	    textView1.setText
+		(State.getInstance().getCharSequence("chat.message"));
+	    textView1 = (TextView) findViewById(R.id.chat_messages);
+	    textView1.setText
+		(State.getInstance().getCharSequence("chat.messages"));
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     @Override
@@ -484,6 +501,13 @@ public class Chat extends AppCompatActivity
 
         if(id == R.id.action_settings)
 	{
+	    TextView textView = (TextView) findViewById(R.id.chat_message);
+
+	    State.getInstance().writeCharSequence
+		("chat.message", textView.getText());
+	    textView = (TextView) findViewById(R.id.chat_messages);
+	    State.getInstance().writeCharSequence
+		("chat.messages", textView.getText());
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 
             final Intent intent = new Intent(Chat.this, Settings.class);

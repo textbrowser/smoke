@@ -48,6 +48,11 @@ public class State
 	return s_instance;
     }
 
+    public synchronized CharSequence getCharSequence(String key)
+    {
+	return s_bundle.getCharSequence(key);
+    }
+
     public synchronized boolean isAuthenticated()
     {
 	return s_bundle.getChar("is_authenticated") == '1';
@@ -71,5 +76,10 @@ public class State
     public synchronized void setNeighborsEcho(boolean state)
     {
 	s_bundle.putChar("neighbors_echo", state ? '1' : '0');
+    }
+
+    public synchronized void writeCharSequence(String key, CharSequence text)
+    {
+	s_bundle.putCharSequence(key, text);
     }
 }
