@@ -144,7 +144,7 @@ public class Chat extends AppCompatActivity
 	if(initial)
 	    stringBuffer.append(" Dispatching a response. Please be patient.");
 
-	stringBuffer.append("\n");
+	stringBuffer.append("\n\n");
 	textView.append(stringBuffer);
 
 	if(refresh)
@@ -319,7 +319,7 @@ public class Chat extends AppCompatActivity
 			     delimitString(checkBox.getTag().toString().
 					   replace(":", ""), '-', 4).
 			     toUpperCase());
-			stringBuffer.append("). Please be patient.\n");
+			stringBuffer.append("). Please be patient.\n\n");
 			textView.append(stringBuffer);
 		    }
 		}

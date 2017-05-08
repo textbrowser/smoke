@@ -291,7 +291,7 @@ public class Settings extends AppCompatActivity
 
 	class SingleShot implements Runnable
 	{
-	    private boolean m_error = false;
+	    private String m_error = "";
 
 	    SingleShot()
 	    {
@@ -304,7 +304,7 @@ public class Settings extends AppCompatActivity
 		    m_databaseHelper.readSipHashIds(s_cryptography);
 
 		if(arrayList == null)
-		    m_error = true;
+		    m_error = "empty array list";
 		else
 		    for(int i = 0; i < arrayList.size(); i++)
 		    {
@@ -312,7 +312,7 @@ public class Settings extends AppCompatActivity
 
 			if(sipHashIdElement == null)
 			{
-			    m_error = true;
+			    m_error = "zero element";
 			    break;
 			}
 
@@ -324,7 +324,7 @@ public class Settings extends AppCompatActivity
 
 			if(bytes == null)
 			{
-			    m_error = true;
+			    m_error = "epksMessage() failure";
 			    break;
 			}
 
@@ -339,10 +339,10 @@ public class Settings extends AppCompatActivity
 		    {
 			dialog.dismiss();
 
-			if(m_error)
+			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
-				 "An error occurred while " +
+				 "An error (" + m_error + ") occurred while " +
 				 "preparing to transfer public key material. " +
 				 "Please verify that participant SipHash " +
 				 "identities have been defined.");
