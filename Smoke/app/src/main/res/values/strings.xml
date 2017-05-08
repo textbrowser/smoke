@@ -39,4 +39,6 @@
     <string name="siphashid">SipHash ID</string>
     <string name="echo">Echo</string>
     <string name="siphash_identity">SipHash Identity</string>
+    <string name="about">About</string>
+    <string name="version_2017_06_06">Version 2017.06.06</string>
 </resources>
