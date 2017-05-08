@@ -79,7 +79,11 @@ public class Cryptography
     private final static String PKI_RSA_ENCRYPTION_ALGORITHM =
 	"RSA/NONE/OAEPwithSHA-256andMGF1Padding";
     private final static String PKI_RSA_SIGNATURE_ALGORITHM =
-	"SHA512withRSA/PSS";
+	/*
+	** SHA512withRSA/PSS requires API 23+.
+	*/
+
+	"SHA512withRSA";
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
