@@ -432,7 +432,8 @@ public class Kernel
 		    Smoke.getApplication().sendBroadcast(intent);
 		}
 	    }
-	    else if((array1 = s_cryptography.pkiDecrypt(array1)) != null)
+	    else if((array1 = s_cryptography.pkiDecrypt(array1)) != null &&
+		    array1.length > 128)
 	    {
 		/*
 		** Organic Half-And-Half
