@@ -147,6 +147,18 @@ public class Chat extends AppCompatActivity
 	stringBuffer.append("\n\n");
 	textView.append(stringBuffer);
 
+	final ScrollView scrollView = (ScrollView)
+	    findViewById(R.id.chat_scrollview);
+
+	scrollView.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+	    }
+	});
+
 	if(refresh)
 	    populateParticipants();
     }
