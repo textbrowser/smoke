@@ -318,7 +318,7 @@ public class Kernel
 			    (s_cryptography,
 			     participantCall.m_sipHashId,
 			     participantCall.m_keyStream,
-			     Messages.CALL_TAGS[0]);
+			     Messages.CALL_HALF_AND_HALF_TAGS[0]);
 
 			if(bytes != null)
 			    echo(Messages.bytesToMessageString(bytes), -1);
@@ -470,13 +470,14 @@ public class Kernel
 		    {
 			byte keyStream[] = null;
 
-			if(array1[0] == Messages.CALL_TAGS[0])
+			if(array1[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
 			    keyStream = Miscellaneous.joinByteArrays
 				(Arrays.copyOfRange(array1, 9, 25),
 				 Cryptography.aes128KeyBytes(),
 				 Arrays.copyOfRange(array1, 25, 57),
 				 Cryptography.sha256KeyBytes());
-			else if(array1[0] == Messages.CALL_TAGS[1])
+			else if(array1[0] ==
+				Messages.CALL_HALF_AND_HALF_TAGS[1])
 			{
 			    ParticipantCall participantCall = null;
 
@@ -507,7 +508,7 @@ public class Kernel
 			Intent intent = new Intent
 			    ("org.purple.smoke.half_and_half_call");
 
-			if(array1[0] == Messages.CALL_TAGS[0])
+			if(array1[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
 			    intent.putExtra("org.purple.smoke.initial", true);
 			else
 			    intent.putExtra("org.purple.smoke.initial", false);
@@ -517,7 +518,7 @@ public class Kernel
 			intent.putExtra("org.purple.smoke.sipHashId", array[1]);
 			Smoke.getApplication().sendBroadcast(intent);
 
-			if(array1[0] == Messages.CALL_TAGS[0])
+			if(array1[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
 			{
 			    /*
 			    ** Respond via all neighbors.
@@ -534,7 +535,7 @@ public class Kernel
 								   64,
 								   keyStream.
 								   length)),
-				 Messages.CALL_TAGS[1]);
+				 Messages.CALL_HALF_AND_HALF_TAGS[1]);
 
 			    if(bytes != null)
 				echo(Messages.bytesToMessageString(bytes), -1);

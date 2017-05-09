@@ -1096,7 +1096,8 @@ public class Database extends SQLiteOpenHelper
 	{
 	    String strings[] = new String(data).split("\\n");
 
-	    if(strings == null || strings.length != 6)
+	    if(strings == null ||
+	       strings.length != Messages.EPKS_GROUP_ONE_ELEMENT_COUNT)
 		return false;
 
 	    PublicKey publicKey = null;
