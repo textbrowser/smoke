@@ -234,7 +234,7 @@ public class Cryptography
 		return true;
 	    else if(key.hashCode() ==
 		    m_chatSignaturePublicKeyPair.getPublic().hashCode())
-	    return true;
+		return true;
 	}
 
 	return false;
