@@ -48,8 +48,7 @@ public class Authenticate extends AppCompatActivity
 
     private void prepareListeners()
     {
-        final Button button1 = (Button) findViewById
-	    (R.id.authenticate);
+        final Button button1 = (Button) findViewById(R.id.authenticate);
 
         button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -75,14 +74,15 @@ public class Authenticate extends AppCompatActivity
 		     macSalt);
 
 		if(saltedPassword == null ||
-		   !Cryptography.
-		   memcmp(m_databaseHelper.readSetting(null,
-						       "saltedPassword").
-			  getBytes(),
-			  Base64.encode(saltedPassword, Base64.DEFAULT)))
+		   !Cryptography.memcmp(m_databaseHelper.
+					readSetting(null, "saltedPassword").
+					getBytes(),
+					Base64.encode(saltedPassword,
+						      Base64.DEFAULT)))
 		{
-		    Miscellaneous.showErrorDialog(Authenticate.this,
-						  "Incorrect password.");
+		    Miscellaneous.showErrorDialog
+			(Authenticate.this,
+			 "Incorrect password. Please try again.");
 		    textView1.requestFocus();
 		}
 		else
@@ -105,7 +105,9 @@ public class Authenticate extends AppCompatActivity
 		    dialog.setCancelable(false);
 		    dialog.setIndeterminate(true);
 		    dialog.setMessage
-			("Generating confidential data. Please be patient.");
+			("Generating confidential data. Please be patient " +
+			 "and do not rotate the device while the process " +
+			 "executes.");
 		    dialog.show();
 
 		    class SingleShot implements Runnable
