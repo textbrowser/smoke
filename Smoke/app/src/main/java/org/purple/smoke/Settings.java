@@ -185,7 +185,9 @@ public class Settings extends AppCompatActivity
 
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
-	dialog.setMessage("Generating key material. Please be patient.");
+	dialog.setMessage("Generating key material. Please be patient and " +
+			  "do not rotate the device until the process " +
+			  "completes.");
 	dialog.show();
 
 	class SingleShot implements Runnable
@@ -286,7 +288,8 @@ public class Settings extends AppCompatActivity
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
 	dialog.setMessage
-	    ("Transferring public key material. Please be patient.");
+	    ("Transferring public key material. Please be patient " +
+	     "and do not rotate the device until the process completes.");
 	dialog.show();
 
 	class SingleShot implements Runnable
@@ -876,15 +879,15 @@ public class Settings extends AppCompatActivity
 		textView1.setSelectAllOnFocus(true);
 		textView2.setSelectAllOnFocus(true);
 
-		if(textView1.getText().length() < 16 ||
+		if(textView1.getText().length() < 8 ||
 		   !textView1.getText().toString().
 		   equals(textView2.getText().toString()))
 		{
 		    String error = "";
 
-		    if(textView1.getText().length() < 16)
+		    if(textView1.getText().length() < 8)
 			error = "Each password must contain " +
-			    "at least sixteen characters.";
+			    "at least eight characters.";
 		    else
 			error = "The provided passwords are not identical.";
 
@@ -999,7 +1002,8 @@ public class Settings extends AppCompatActivity
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
 	dialog.setMessage
-	    ("Generating confidential material. Please be patient.");
+	    ("Generating confidential material. Please be patient and " +
+	     "do not rotate the device until the process completes.");
 	dialog.show();
 
 	class SingleShot implements Runnable
