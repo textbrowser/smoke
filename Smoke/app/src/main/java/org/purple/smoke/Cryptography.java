@@ -206,6 +206,40 @@ public class Cryptography
 	}
     }
 
+    public boolean compareChatEncryptionPublicKey(PublicKey key)
+    {
+	if(key == null)
+	    return false;
+
+	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	{
+	    if(key.equals(m_chatEncryptionPublicKeyPair.getPublic()))
+		return true;
+	    else if(key.hashCode() ==
+		    m_chatEncryptionPublicKeyPair.getPublic().hashCode())
+	    return true;
+	}
+
+	return false;
+    }
+
+    public boolean compareChatSignaturePublicKey(PublicKey key)
+    {
+	if(key == null)
+	    return false;
+
+	synchronized(m_chatSignaturePublicKeyPairMutex)
+	{
+	    if(key.equals(m_chatSignaturePublicKeyPair.getPublic()))
+		return true;
+	    else if(key.hashCode() ==
+		    m_chatSignaturePublicKeyPair.getPublic().hashCode())
+	    return true;
+	}
+
+	return false;
+    }
+
     public boolean isValidSipHashMac(byte data[], byte mac[])
     {
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)

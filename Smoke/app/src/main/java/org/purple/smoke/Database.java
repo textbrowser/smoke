@@ -1134,6 +1134,12 @@ public class Database extends SQLiteOpenHelper
 
 		    if(publicKey == null)
 			return false;
+		    else if(cryptography.
+			    compareChatEncryptionPublicKey(publicKey))
+			return false;
+		    else if(cryptography.
+			    compareChatSignaturePublicKey(publicKey))
+			return false;
 
 		    break;
 		case 3:
@@ -1151,6 +1157,12 @@ public class Database extends SQLiteOpenHelper
 			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
 
 		    if(signatureKey == null)
+			return false;
+		    else if(cryptography.
+			    compareChatEncryptionPublicKey(signatureKey))
+			return false;
+		    else if(cryptography.
+			    compareChatSignaturePublicKey(signatureKey))
 			return false;
 
 		    break;
