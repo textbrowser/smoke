@@ -255,6 +255,17 @@ public class Cryptography
 	return memcmp(bytes, mac);
     }
 
+    public boolean iAmTheDestination(byte data[], byte mac[])
+    {
+	if(data == null || data.length < 0 || mac == null || mac.length < 0)
+	    return false;
+
+	synchronized(m_sipHashIdMutex)
+	{
+	    return memcmp(hmac(data, sha512(m_sipHashId.getBytes())), mac);
+	}
+    }
+
     public boolean prepareSipHashKeys()
     {
 	try

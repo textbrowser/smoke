@@ -404,6 +404,11 @@ public class Kernel
 	    byte array3[] = Arrays.copyOfRange // The destination.
 		(bytes, bytes.length - 64, bytes.length);
 
+	    if(!s_cryptography.iAmTheDestination(Miscellaneous.
+						 joinByteArrays(array1, array2),
+						 array3))
+		return false;
+
 	    if(s_cryptography.isValidSipHashMac(array1, array2))
 	    {
 		/*

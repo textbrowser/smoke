@@ -75,6 +75,7 @@ Completed Items
        will not be retained as such states are expensive.
        The Bundle object is not saved.
 58.    Compare provided encryption and signature public keys.
+59.    Inspect destination tags.
 
 Future Items
 
@@ -107,4 +108,3 @@ Remaining Items
 6.     Display date and time of sent message.
 7.     Allow log clearing.
 8.     Allow resetting of Chat session keys via context menu.
-9.     Inspect destination tags.
