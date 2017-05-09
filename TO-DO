@@ -106,4 +106,5 @@ Remaining Items
 5.     Remote storage of messages.
 6.     Display date and time of sent message.
 7.     Allow log clearing.
-8.     Allow resetting of Chat sessions via context menu.
+8.     Allow resetting of Chat session keys via context menu.
+9.     Inspect destination tags.
