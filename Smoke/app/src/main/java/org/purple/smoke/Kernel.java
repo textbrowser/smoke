@@ -459,8 +459,12 @@ public class Kernel
 				     Messages.
 				     CALL_HALF_AND_HALF_OFFSETS[1] + 8));
 
-		    if(current - timestamp < 0 ||
-		       current - timestamp > CALL_LIFETIME)
+		    if(current - timestamp < 0)
+		    {
+			if(timestamp - current > CALL_LIFETIME)
+			    return false;
+		    }
+		    else if(current - timestamp > CALL_LIFETIME)
 			return false;
 
 		    String array[] = s_databaseHelper.nameSipHashIdFromDigest

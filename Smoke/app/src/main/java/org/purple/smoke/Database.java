@@ -1114,8 +1114,12 @@ public class Database extends SQLiteOpenHelper
 		    long timestamp = Miscellaneous.byteArrayToLong
 			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
 
-		    if(current - timestamp < 0 ||
-		       current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
+		    if(current - timestamp < 0)
+		    {
+			if(timestamp - current > WRITE_PARTICIPANT_TIME_DELTA)
+			    return false;
+		    }
+		    else if(current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
 			return false;
 
 		    break;
