@@ -202,6 +202,34 @@
                 </RadioGroup>
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/proxy_ip_address"
+                        android:layout_width="147dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/proxy_ip_address"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/proxy_port"
+                        android:layout_width="93dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/proxy_port"
+                        android:inputType="number" />
+
+                    <Spinner
+                        android:id="@+id/proxy_type"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
