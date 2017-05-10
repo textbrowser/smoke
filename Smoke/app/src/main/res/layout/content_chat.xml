@@ -50,9 +50,10 @@
         android:layout_toLeftOf="@+id/call">
 
         <TextView
+            android:id="@+id/chat_messages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/chat_messages" />
+            android:layout_marginEnd="5dp" />
     </ScrollView>
 
     <EditText
