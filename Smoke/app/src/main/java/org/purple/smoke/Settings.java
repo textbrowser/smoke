@@ -269,6 +269,8 @@ public class Settings extends AppCompatActivity
 
 	spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
 	spinner1.setEnabled(state);
+	spinner1 = (Spinner) findViewById(R.id.proxy_type);
+	spinner1.setEnabled(state);
 
 	TextView textView1 = null;
 
@@ -281,6 +283,10 @@ public class Settings extends AppCompatActivity
 	textView1 = (TextView) findViewById(R.id.participant_name);
 	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.proxy_ip_address);
+	textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.proxy_port);
 	textView1.setEnabled(state);
     }
 
