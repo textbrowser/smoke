@@ -108,6 +108,9 @@ public class Settings extends AppCompatActivity
 	    (R.id.neighbors_ipv_radio_group);
 	final Spinner spinner1 = (Spinner) findViewById
 	    (R.id.neighbors_transport);
+	final TextView proxyIpAddress = (TextView) findViewById
+	    (R.id.proxy_ip_address);
+	final TextView proxyPort = (TextView) findViewById(R.id.proxy_port);
 	final TextView textView1 = (TextView) findViewById
 	    (R.id.neighbors_ip_address);
 	final TextView textView2 = (TextView) findViewById
@@ -121,9 +124,9 @@ public class Settings extends AppCompatActivity
 	    ipVersion = "IPv6";
 
 	if(!m_databaseHelper.writeNeighbor(s_cryptography,
-					   "", // Proxy IP Address
-					   "", // Proxy Port
-					   "", // Proxy Type
+					   proxyIpAddress.getText().toString(),
+					   proxyPort.getText().toString(),
+					   "SOCKS",
 					   textView1.getText().toString(),
 					   textView2.getText().toString(),
 					   textView3.getText().toString(),
@@ -831,6 +834,10 @@ public class Settings extends AppCompatActivity
 		    (R.id.neighbors_ipv4);
 		final Spinner spinner1 = (Spinner) findViewById
 		    (R.id.neighbors_transport);
+		final TextView proxyIpAddress = (TextView) findViewById
+		    (R.id.proxy_ip_address);
+		final TextView proxyPort = (TextView) findViewById
+		    (R.id.proxy_port);
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.neighbors_ip_address);
 		final TextView textView2 = (TextView) findViewById
@@ -838,6 +845,8 @@ public class Settings extends AppCompatActivity
 		final TextView textView3 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
+		proxyIpAddress.setText("");
+		proxyPort.setText("");
 		radioButton1.setChecked(true);
 		spinner1.setSelection(0);
 		textView1.setText("");
