@@ -121,6 +121,9 @@ public class Settings extends AppCompatActivity
 	    ipVersion = "IPv6";
 
 	if(!m_databaseHelper.writeNeighbor(s_cryptography,
+					   "", // Proxy IP Address
+					   "", // Proxy Port
+					   "", // Proxy Type
 					   textView1.getText().toString(),
 					   textView2.getText().toString(),
 					   textView3.getText().toString(),

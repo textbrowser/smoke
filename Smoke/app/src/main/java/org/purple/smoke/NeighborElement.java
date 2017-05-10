@@ -35,6 +35,9 @@ public class NeighborElement
     public String m_ipVersion = "";
     public String m_localIpAddress = "";
     public String m_localPort = "";
+    public String m_proxyIpAddress = "";
+    public String m_proxyPort = "";
+    public String m_proxyType = "";
     public String m_remoteCertificate = "";
     public String m_remoteIpAddress = "";
     public String m_remotePort = "";

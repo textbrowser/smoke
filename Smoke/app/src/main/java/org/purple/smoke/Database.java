@@ -940,6 +940,9 @@ public class Database extends SQLiteOpenHelper
     }
 
     public boolean writeNeighbor(Cryptography cryptography,
+				 String proxyIpAddress,
+				 String proxyPort,
+				 String proxyType,
 				 String remoteIpAddress,
 				 String remoteIpPort,
 				 String remoteIpScopeId,
@@ -983,19 +986,22 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(5, "local_ip_address_digest");
 	    sparseArray.append(6, "local_port");
 	    sparseArray.append(7, "local_port_digest");
-	    sparseArray.append(8, "remote_certificate");
-	    sparseArray.append(9, "remote_ip_address");
-	    sparseArray.append(10, "remote_ip_address_digest");
-	    sparseArray.append(11, "remote_port");
-            sparseArray.append(12, "remote_port_digest");
-            sparseArray.append(13, "remote_scope_id");
-            sparseArray.append(14, "session_cipher");
-            sparseArray.append(15, "status");
-            sparseArray.append(16, "status_control");
-            sparseArray.append(17, "transport");
-            sparseArray.append(18, "transport_digest");
-            sparseArray.append(19, "uptime");
-            sparseArray.append(20, "user_defined_digest");
+	    sparseArray.append(8, "proxy_ip_address");
+	    sparseArray.append(9, "proxy_port");
+	    sparseArray.append(10, "proxy_type");
+	    sparseArray.append(11, "remote_certificate");
+	    sparseArray.append(12, "remote_ip_address");
+	    sparseArray.append(13, "remote_ip_address_digest");
+	    sparseArray.append(14, "remote_port");
+            sparseArray.append(15, "remote_port_digest");
+            sparseArray.append(16, "remote_scope_id");
+            sparseArray.append(17, "session_cipher");
+            sparseArray.append(18, "status");
+            sparseArray.append(19, "status_control");
+            sparseArray.append(20, "transport");
+            sparseArray.append(21, "transport_digest");
+            sparseArray.append(22, "uptime");
+            sparseArray.append(23, "user_defined_digest");
 
 	    Matcher matcher = Patterns.IP_ADDRESS.matcher
 		(remoteIpAddress.trim());
@@ -1018,6 +1024,12 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.hmac("".getBytes());
 		else if(sparseArray.get(i).equals("local_port_digest"))
 		    bytes = cryptography.hmac("".getBytes());
+		else if(sparseArray.get(i).equals("proxy_ip_address"))
+		    bytes = cryptography.etm(proxyIpAddress.getBytes());
+		else if(sparseArray.get(i).equals("proxy_port"))
+		    bytes = cryptography.etm(proxyPort.getBytes());
+		else if(sparseArray.get(i).equals("proxy_type"))
+		    bytes = cryptography.etm(proxyType.getBytes());
 		else if(sparseArray.get(i).equals("remote_ip_address"))
 		    bytes = cryptography.etm(remoteIpAddress.trim().getBytes());
 		else if(sparseArray.get(i).equals("remote_ip_address_digest"))
@@ -1592,6 +1604,9 @@ public class Database extends SQLiteOpenHelper
 	    "local_ip_address_digest TEXT NOT NULL, " +
 	    "local_port TEXT NOT NULL, " +
 	    "local_port_digest TEXT NOT NULL, " +
+	    "proxy_ip_address TEXT NOT NULL, " +
+	    "proxy_port TEXT NOT NULL, " +
+	    "proxy_type TEXT NOT NULL, " +
 	    "remote_certificate TEXT NOT NULL, " +
 	    "remote_ip_address TEXT NOT NULL, " +
 	    "remote_ip_address_digest TEXT NOT NULL, " +
