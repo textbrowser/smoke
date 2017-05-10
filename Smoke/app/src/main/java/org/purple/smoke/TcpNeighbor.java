@@ -261,7 +261,7 @@ public class TcpNeighbor extends Neighbor
 	    }
 	    catch(Exception exception)
 	    {
-		m_proxyIpAddress = null;
+		m_proxyInetSocketAddress = null;
 	    }
 
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
