@@ -29,6 +29,8 @@ package org.purple.smoke;
 
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.Socket;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.Executors;
@@ -386,8 +388,23 @@ public class TcpNeighbor extends Neighbor
 	    SSLContext sslContext = SSLContext.getInstance("TLS");
 
 	    sslContext.init(null, m_trustManagers, null);
-	    m_socket = (SSLSocket) sslContext.getSocketFactory().createSocket();
-	    m_socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
+
+	    if(m_proxyInetSocketAddress == null)
+	    {
+		m_socket = (SSLSocket) sslContext.getSocketFactory().
+		    createSocket();
+		m_socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
+	    }
+	    else
+	    {
+		Socket socket = new Socket
+		    (new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
+
+		socket.connect(m_inetSocketAddress);
+		m_socket = (SSLSocket) sslContext.getSocketFactory().
+		    createSocket(socket, m_proxyIpAddress, m_proxyPort, true);
+	    }
+
 	    m_socket.setEnabledProtocols(m_protocols);
 	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
 	    m_socket.setTcpNoDelay(true);
