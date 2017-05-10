@@ -78,6 +78,7 @@ Completed Items
 59.    Inspect destination tags.
 60.    The Socket class supports the Proxy class.
        Modify Settings so that TCP neighbors support SOCKS proxies.
+61.    Disable proxy fields for non-TCP.
 
 Future Items
 
@@ -110,4 +111,3 @@ Remaining Items
 6.     Display date and time of sent message.
 7.     Allow log clearing.
 8.     Allow resetting of Chat session keys via context menu.
-9.     Disable proxy fields for non-TCP.

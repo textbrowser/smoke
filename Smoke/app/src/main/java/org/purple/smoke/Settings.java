@@ -780,6 +780,7 @@ public class Settings extends AppCompatActivity
     private void prepareListeners()
     {
 	Button button1 = (Button) findViewById(R.id.epks);
+	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
 
 	button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -1018,6 +1019,44 @@ public class Settings extends AppCompatActivity
 		    else
 			m_databaseHelper.writeSetting
 			    (null, "neighbors_details", "false");
+		}
+	    });
+
+	spinner1.setOnItemSelectedListener
+	    (new OnItemSelectedListener()
+	    {
+		@Override
+		public void onItemSelected(AdapterView<?> parent,
+					   View view,
+					   int position,
+					   long id)
+		{
+		    final Spinner proxyType = (Spinner)
+			findViewById(R.id.proxy_type);
+		    final TextView proxyIpAddress =
+			(TextView) findViewById(R.id.proxy_ip_address);
+		    final TextView proxyPort = (TextView) findViewById
+			(R.id.proxy_port);
+
+		    if(position == 0)
+		    {
+			proxyIpAddress.setEnabled(true);
+			proxyPort.setEnabled(true);
+			proxyType.setEnabled(true);
+		    }
+		    else
+		    {
+			proxyIpAddress.setEnabled(false);
+			proxyIpAddress.setText("");
+			proxyPort.setEnabled(false);
+			proxyPort.setText("");
+			proxyType.setEnabled(false);
+		    }
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent)
+		{
 		}
 	    });
     }
