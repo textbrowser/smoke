@@ -172,7 +172,10 @@ public class Kernel
 
 	    if(neighborElement.m_transport.equals("TCP"))
 		neighbor = new TcpNeighbor
-		    (neighborElement.m_remoteIpAddress,
+		    (neighborElement.m_proxyIpAddress,
+		     neighborElement.m_proxyPort,
+		     neighborElement.m_proxyType,
+		     neighborElement.m_remoteIpAddress,
 		     neighborElement.m_remotePort,
 		     neighborElement.m_remoteScopeId,
 		     neighborElement.m_ipVersion,

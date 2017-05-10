@@ -43,9 +43,12 @@ public class TcpNeighbor extends Neighbor
     private InetSocketAddress m_inetSocketAddress = null;
     private SSLSocket m_socket = null;
     private String m_protocols[] = null;
+    private String m_proxyIpAddress = "";
+    private String m_proxyType = "";
     private TrustManager m_trustManagers[] = null;
     private final static int CONNECTION_TIMEOUT = 10000; // 10 Seconds
     private final static int HANDSHAKE_TIMEOUT = 10000; // 10 Seconds
+    private int m_proxyPort = -1;
 
     protected String getLocalIp()
     {
@@ -204,7 +207,10 @@ public class TcpNeighbor extends Neighbor
 	}
     }
 
-    public TcpNeighbor(String ipAddress,
+    public TcpNeighbor(String proxyIpAddress,
+		       String proxyPort,
+		       String proxyType,
+		       String ipAddress,
 		       String ipPort,
 		       String scopeId,
 		       String version,
@@ -223,8 +229,19 @@ public class TcpNeighbor extends Neighbor
 	    port = 4710;
 	}
 
+	try
+	{
+	    m_proxyPort = Integer.parseInt(proxyPort);
+	}
+	catch(Exception exception)
+	{
+	    m_proxyPort = -1;
+	}
+
 	m_inetSocketAddress = new InetSocketAddress(m_ipAddress, port);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
+	m_proxyIpAddress = proxyIpAddress.trim();
+	m_proxyType = proxyType;
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
 	{
