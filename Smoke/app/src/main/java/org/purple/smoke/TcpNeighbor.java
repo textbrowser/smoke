@@ -80,8 +80,8 @@ public class TcpNeighbor extends Neighbor
 		    getPeerCertificates();
 
 		if(peerCertificates != null && peerCertificates.length > 0)
-		    return Cryptography.publicKeyFingerPrint
-			(peerCertificates[0].getPublicKey());
+		    return Cryptography.fingerPrint
+			(peerCertificates[0].getEncoded());
 	    }
 	}
 	catch(Exception exception)
@@ -354,6 +354,23 @@ public class TcpNeighbor extends Neighbor
 		public void checkServerTrusted
 		    (X509Certificate chain[], String authType)
 		{
+		    if(authType == null || authType.length() == 0)
+			disconnect();
+		    else if(chain == null || chain.length == 0)
+			disconnect();
+		    else
+		    {
+			try
+			{
+			    chain[0].checkValidity();
+			}
+			catch(Exception exception)
+			{
+			    // Expired?
+
+			    disconnect();
+			}
+		    }
 		}
 	    }
 	};

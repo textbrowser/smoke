@@ -649,9 +649,14 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuffer.append("\nProxy: ");
-	    stringBuffer.append(neighborElement.m_proxyIpAddress);
-	    stringBuffer.append(":");
-	    stringBuffer.append(neighborElement.m_proxyPort);
+
+	    if(!neighborElement.m_proxyIpAddress.isEmpty() &&
+	       !neighborElement.m_proxyPort.isEmpty())
+	    {
+		stringBuffer.append(neighborElement.m_proxyIpAddress);
+		stringBuffer.append(":");
+		stringBuffer.append(neighborElement.m_proxyPort);
+	    }
 
 	    if(checkBox.isChecked())
 	    {
@@ -659,7 +664,7 @@ public class Settings extends AppCompatActivity
 		{
 		    stringBuffer.append("\n");
 		    stringBuffer.append
-			("Remote Certificate's Public Key Fingerprint: ");
+			("Remote Certificate's Fingerprint: ");
 		    stringBuffer.append(neighborElement.m_remoteCertificate);
 		}
 
