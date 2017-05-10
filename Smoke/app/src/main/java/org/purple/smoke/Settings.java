@@ -1334,17 +1334,27 @@ public class Settings extends AppCompatActivity
         radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv6);
         radioButton1.setEnabled(isAuthenticated);
 
-        Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
+	Spinner spinner1 = (Spinner) findViewById(R.id.proxy_type);
         String array[] = new String[]
+	{
+	    "SOCKS"
+	};
+
+	spinner1.setEnabled(isAuthenticated);
+
+	ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+	    (Settings.this, android.R.layout.simple_spinner_item, array);
+
+        spinner1.setAdapter(arrayAdapter);
+
+        spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
+        array = new String[]
 	{
 	    "TCP", "UDP"
 	};
-
         spinner1.setEnabled(isAuthenticated);
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+        arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
-
         spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
@@ -1431,6 +1441,10 @@ public class Settings extends AppCompatActivity
 	textView1.setText("");
         textView1 = (TextView) findViewById(R.id.password2);
         textView1.setText("");
+	textView1 = (TextView) findViewById(R.id.proxy_ip_address);
+	textView1.setEnabled(isAuthenticated);
+	textView1 = (TextView) findViewById(R.id.proxy_port);
+	textView1.setEnabled(isAuthenticated);
 	prepareListeners();
 
 	/*
