@@ -111,3 +111,5 @@ Remaining Items
 6.     Display date and time of sent message.
 7.     Allow log clearing.
 8.     Allow resetting of Chat session keys via context menu.
+9.     Include network information in neighbors pertaining to
+       errors.
