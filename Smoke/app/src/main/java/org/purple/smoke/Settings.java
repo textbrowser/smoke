@@ -69,6 +69,30 @@ public class Settings extends AppCompatActivity
     private ScheduledExecutorService m_scheduler = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static InputFilter s_portFilter = new InputFilter()
+    {
+	public CharSequence filter(CharSequence source,
+				   int start,
+				   int end,
+				   Spanned dest,
+				   int dstart,
+				   int dend)
+	{
+	    try
+	    {
+		int port = Integer.parseInt
+		    (dest.toString() + source.toString());
+
+		if(port >= 0 && port <= 65535)
+		    return null;
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    return "";
+	}
+    };
     private final static InputFilter s_sipHashInputFilter = new InputFilter()
     {
 	public CharSequence filter(CharSequence source,
@@ -1436,6 +1460,7 @@ public class Settings extends AppCompatActivity
         textView1.setVisibility(View.GONE);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
         textView1.setEnabled(isAuthenticated);
+	textView1.setFilters(new InputFilter[] { s_portFilter });
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 
@@ -1460,6 +1485,7 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.proxy_port);
 	textView1.setEnabled(isAuthenticated);
+	textView1.setFilters(new InputFilter[] { s_portFilter });
 	prepareListeners();
 
 	/*
