@@ -648,6 +648,11 @@ public class Settings extends AppCompatActivity
 		stringBuffer.append(neighborElement.m_localPort);
 	    }
 
+	    stringBuffer.append("\nProxy: ");
+	    stringBuffer.append(neighborElement.m_proxyIpAddress);
+	    stringBuffer.append(":");
+	    stringBuffer.append(neighborElement.m_proxyPort);
+
 	    if(checkBox.isChecked())
 	    {
 		if(!neighborElement.m_remoteCertificate.isEmpty())
