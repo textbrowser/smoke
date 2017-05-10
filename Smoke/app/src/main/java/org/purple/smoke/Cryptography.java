@@ -77,7 +77,7 @@ public class Cryptography
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
 	"SHA512withECDSA";
     private final static String PKI_RSA_ENCRYPTION_ALGORITHM =
-	"RSA/NONE/OAEPwithSHA-256andMGF1Padding";
+	"RSA/NONE/OAEPwithSHA-512andMGF1Padding";
     private final static String PKI_RSA_SIGNATURE_ALGORITHM =
 	/*
 	** SHA512withRSA/PSS requires API 23+.
