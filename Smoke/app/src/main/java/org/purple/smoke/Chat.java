@@ -146,18 +146,7 @@ public class Chat extends AppCompatActivity
 
 	stringBuffer.append("\n\n");
 	textView.append(stringBuffer);
-
-	final ScrollView scrollView = (ScrollView)
-	    findViewById(R.id.chat_scrollview);
-
-	scrollView.post(new Runnable()
-	{
-	    @Override
-	    public void run()
-	    {
-		scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-	    }
-	});
+	scrollMessagesView();
 
 	if(refresh)
 	    populateParticipants();
@@ -337,21 +326,24 @@ public class Chat extends AppCompatActivity
 		}
 
 		if(tableLayout.getChildCount() > 0)
-		{
-		    final ScrollView scrollView = (ScrollView)
-			findViewById(R.id.chat_scrollview);
-
-		    scrollView.post(new Runnable()
-		    {
-			@Override
-			public void run()
-			{
-			    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-			}
-		    });
-		}
+		    scrollMessagesView();
 	    }
         });
+    }
+
+    private void scrollMessagesView()
+    {
+	final ScrollView scrollView = (ScrollView)
+	    findViewById(R.id.chat_scrollview);
+
+	scrollView.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+	    }
+	});
     }
 
     @Override
@@ -423,18 +415,7 @@ public class Chat extends AppCompatActivity
 		{
 		    Kernel.getInstance().enqueueMessage
 			(Messages.bytesToMessageString(bytes));
-
-		    final ScrollView scrollView = (ScrollView)
-			findViewById(R.id.chat_scrollview);
-
-		    scrollView.post(new Runnable()
-		    {
-			@Override
-			public void run()
-			{
-			    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-			}
-		    });
+		    scrollMessagesView();
 		}
 	    }
 	});
@@ -450,7 +431,7 @@ public class Chat extends AppCompatActivity
 	registerForContextMenu(textView1);
 
 	/*
-	** Events.
+	** Preparse some event listeners.
 	*/
 
 	prepareListeners();
@@ -467,6 +448,9 @@ public class Chat extends AppCompatActivity
 	    textView1 = (TextView) findViewById(R.id.chat_messages);
 	    textView1.setText
 		(State.getInstance().getCharSequence("chat.messages"));
+
+	    if(textView1.getText().length() > 0)
+		scrollMessagesView();
 	}
 	catch(Exception exception)
 	{
