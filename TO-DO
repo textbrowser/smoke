@@ -108,3 +108,5 @@ Remaining Items
 6.     Display date and time of sent message.
 7.     Allow log clearing.
 8.     Allow resetting of Chat session keys via context menu.
+9.     The Socket class supports the Proxy class.
+       Modify Settings so that TCP neighbors support SOCKS proxies.
