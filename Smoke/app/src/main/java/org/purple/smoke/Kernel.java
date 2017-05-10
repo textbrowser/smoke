@@ -298,7 +298,7 @@ public class Kernel
 
 			    participantCall = m_callQueue.get(sipHashId);
 			    participantCall.prepareHalfKeys();
-			    m_callQueue.replace(sipHashId, participantCall);
+			    m_callQueue.put(sipHashId, participantCall);
 			}
 
 			/*
