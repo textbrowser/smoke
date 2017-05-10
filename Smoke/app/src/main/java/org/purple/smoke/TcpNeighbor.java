@@ -41,6 +41,7 @@ import javax.net.ssl.X509TrustManager;
 public class TcpNeighbor extends Neighbor
 {
     private InetSocketAddress m_inetSocketAddress = null;
+    private InetSocketAddress m_proxyInetSocketAddress = null;
     private SSLSocket m_socket = null;
     private String m_protocols[] = null;
     private String m_proxyIpAddress = "";
@@ -218,6 +219,15 @@ public class TcpNeighbor extends Neighbor
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
 
+	try
+	{
+	    m_proxyPort = Integer.parseInt(proxyPort);
+	}
+	catch(Exception exception)
+	{
+	    m_proxyPort = -1;
+	}
+
 	int port = 4710;
 
 	try
@@ -231,17 +241,29 @@ public class TcpNeighbor extends Neighbor
 
 	try
 	{
-	    m_proxyPort = Integer.parseInt(proxyPort);
+	    m_inetSocketAddress = new InetSocketAddress(m_ipAddress, port);
 	}
 	catch(Exception exception)
 	{
-	    m_proxyPort = -1;
+	    m_inetSocketAddress = null;
 	}
 
-	m_inetSocketAddress = new InetSocketAddress(m_ipAddress, port);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
 	m_proxyIpAddress = proxyIpAddress.trim();
 	m_proxyType = proxyType;
+
+	if(!m_proxyIpAddress.isEmpty() && m_proxyPort != -1 &&
+	   !m_proxyType.isEmpty())
+	    try
+	    {
+		m_proxyInetSocketAddress = new InetSocketAddress
+		    (m_proxyIpAddress, m_proxyPort);
+	    }
+	    catch(Exception exception)
+	    {
+		m_proxyIpAddress = null;
+	    }
+
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
 	{
