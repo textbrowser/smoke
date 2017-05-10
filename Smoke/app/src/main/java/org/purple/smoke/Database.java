@@ -165,6 +165,9 @@ public class Database extends SQLiteOpenHelper
 		 "ip_version, " +
 		 "local_ip_address, " +
 		 "local_port, " +
+		 "proxy_ip_address, " +
+		 "proxy_port, " +
+		 "proxy_type, " +
 		 "remote_certificate, " +
 		 "remote_ip_address, " +
 		 "remote_port, " +
@@ -235,32 +238,42 @@ public class Database extends SQLiteOpenHelper
 			    neighborElement.m_localPort = new String(bytes);
 			    break;
 			case 6:
-			    neighborElement.m_remoteCertificate =
+			    neighborElement.m_proxyIpAddress =
 				new String(bytes);
 			    break;
 			case 7:
+			    neighborElement.m_proxyPort = new String(bytes);
+			    break;
+			case 8:
+			    neighborElement.m_proxyType = new String(bytes);
+			    break;
+			case 9:
+			    neighborElement.m_remoteCertificate =
+				new String(bytes);
+			    break;
+			case 10:
 			    neighborElement.m_remoteIpAddress =
 				new String(bytes);
 			    break;
-			case 8:
+			case 11:
 			    neighborElement.m_remotePort = new String(bytes);
 			    break;
-			case 9:
+			case 12:
 			    neighborElement.m_remoteScopeId = new String(bytes);
 			    break;
-			case 10:
+			case 13:
 			    neighborElement.m_sessionCipher = new String(bytes);
 			    break;
-			case 11:
+			case 14:
 			    neighborElement.m_status = new String(bytes);
 			    break;
-			case 12:
+			case 15:
 			    neighborElement.m_statusControl = new String(bytes);
 			    break;
-			case 13:
+			case 16:
 			    neighborElement.m_transport = new String(bytes);
 			    break;
-			case 14:
+			case 17:
 			    neighborElement.m_uptime = new String(bytes);
 			    break;
 			}
@@ -1559,23 +1572,6 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	/*
-	** Create the inbound_queue table.
-	*/
-
-	str = "CREATE TABLE IF NOT EXISTS inbound_queue (" +
-	    "message TEXT NOT NULL, " +
-	    "neighbor_oid INTEGER NOT NULL, " +
-	    "PRIMARY KEY (message, neighbor_oid))";
-
-	try
-	{
-	    db.execSQL(str);
-	}
-	catch(Exception exception)
-	{
-	}
-
-	/*
 	** Create the log table.
 	*/
 
@@ -1765,7 +1761,6 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    m_db.delete("congestion_control", null, null);
-	    m_db.delete("inbound_queue", null, null);
 	    m_db.delete("log", null, null);
 	    m_db.delete("neighbors", null, null);
 	    m_db.delete("outbound_queue", null, null);
@@ -1788,7 +1783,6 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    m_db.execSQL("DROP TABLE IF EXISTS congestion_control");
-	    m_db.execSQL("DROP TABLE IF EXISTS inbound_queue");
 	    m_db.execSQL("DROP TABLE IF EXISTS log");
 	    m_db.execSQL("DROP TABLE IF EXISTS neighbors");
 	    m_db.execSQL("DROP TABLE IF EXISTS outbound_queue");
