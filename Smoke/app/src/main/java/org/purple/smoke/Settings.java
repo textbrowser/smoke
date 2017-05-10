@@ -660,12 +660,15 @@ public class Settings extends AppCompatActivity
 
 	    if(checkBox.isChecked())
 	    {
-		if(!neighborElement.m_remoteCertificate.isEmpty())
+		if(neighborElement.m_remoteCertificate != null &&
+		   neighborElement.m_remoteCertificate.length > 0)
 		{
 		    stringBuffer.append("\n");
 		    stringBuffer.append
 			("Remote Certificate's Fingerprint: ");
-		    stringBuffer.append(neighborElement.m_remoteCertificate);
+		    stringBuffer.append
+			(s_cryptography.fingerPrint(neighborElement.
+						    m_remoteCertificate));
 		}
 
 		if(!neighborElement.m_sessionCipher.isEmpty())

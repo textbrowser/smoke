@@ -38,7 +38,6 @@ public class NeighborElement
     public String m_proxyIpAddress = "";
     public String m_proxyPort = "";
     public String m_proxyType = "";
-    public String m_remoteCertificate = "";
     public String m_remoteIpAddress = "";
     public String m_remotePort = "";
     public String m_remoteScopeId = "";
@@ -47,6 +46,7 @@ public class NeighborElement
     public String m_statusControl = "";
     public String m_transport = "";
     public String m_uptime = "";
+    public byte m_remoteCertificate[] = null;
     public int m_oid = -1;
 
     public NeighborElement()

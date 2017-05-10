@@ -249,7 +249,7 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 9:
 			    neighborElement.m_remoteCertificate =
-				new String(bytes);
+				Miscellaneous.deepCopy(bytes);
 			    break;
 			case 10:
 			    neighborElement.m_remoteIpAddress =
