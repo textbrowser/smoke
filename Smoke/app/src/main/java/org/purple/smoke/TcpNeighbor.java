@@ -372,6 +372,10 @@ public class TcpNeighbor extends Neighbor
 			try
 			{
 			    chain[0].checkValidity();
+			    Database.getInstance().neighborRecordCertificate
+				(Cryptography.getInstance(),
+				 String.valueOf(m_oid.get()),
+				 chain[0].getEncoded());
 			}
 			catch(Exception exception)
 			{

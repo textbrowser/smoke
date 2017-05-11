@@ -40,7 +40,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public abstract class Neighbor
 {
     private ArrayList<String> m_queue = null;
-    private AtomicInteger m_oid = null;
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
@@ -51,6 +50,7 @@ public abstract class Neighbor
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
+    protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
     protected AtomicLong m_lastTimeRead = null;
@@ -74,7 +74,6 @@ public abstract class Neighbor
 	String echoQueueSize = "";
 	String localIp = getLocalIp();
 	String localPort = String.valueOf(getLocalPort());
-	String peerCertificate = getPeerCertificateString();
 	String sessionCiper = getSessionCipher();
 	boolean connected = connected();
 	long uptime = System.nanoTime() - m_startTime.get();
@@ -91,7 +90,6 @@ public abstract class Neighbor
 	     echoQueueSize,
 	     localIp,
 	     localPort,
-	     peerCertificate,
 	     sessionCiper,
 	     connected ? "connected" : "disconnected",
 	     String.valueOf(uptime / 1000000),

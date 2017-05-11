@@ -1802,7 +1802,6 @@ public class Database extends SQLiteOpenHelper
 					String echoQueueSize,
 					String ipAddress,
 					String ipPort,
-					String peerCertificate,
 					String sessionCipher,
 					String status,
 					String uptime,
@@ -1824,7 +1823,6 @@ public class Database extends SQLiteOpenHelper
 		echoQueueSize = "0";
 		ipAddress = "";
 		ipPort = "";
-		peerCertificate = "";
 		sessionCipher = "";
 		uptime = "";
 	    }
@@ -1862,11 +1860,6 @@ public class Database extends SQLiteOpenHelper
 		("local_port_digest",
 		 Base64.encodeToString(cryptography.
 				       hmac(ipPort.trim().getBytes()),
-				       Base64.DEFAULT));
-	    values.put
-		("remote_certificate",
-		 Base64.encodeToString(cryptography.
-				       etm(peerCertificate.trim().getBytes()),
 				       Base64.DEFAULT));
 	    values.put
 		("session_cipher",
