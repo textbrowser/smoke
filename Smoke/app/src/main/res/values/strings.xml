@@ -40,7 +40,6 @@
     <string name="echo">Echo</string>
     <string name="siphash_identity">SipHash Identity</string>
     <string name="about">About</string>
-    <string name="version_2017_06_06">Version 2017.06.06</string>
     <string name="proxy_port">Proxy Port</string>
     <string name="proxy_ip_address">Proxy IP Address</string>
 </resources>

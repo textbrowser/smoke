@@ -79,6 +79,7 @@ Completed Items
 60.    The Socket class supports the Proxy class.
        Modify Settings so that TCP neighbors support SOCKS proxies.
 61.    Disable proxy fields for non-TCP.
+62.    Depict Android version in About. New About.java file too.
 
 Future Items
 
@@ -115,4 +116,3 @@ Remaining Items
        errors.
 10.    Deleting a connected neighbor and quickly re-adding it
        is problematic.
-11.    Depict Android version in About. New About.java file too.

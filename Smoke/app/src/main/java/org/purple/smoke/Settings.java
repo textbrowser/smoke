@@ -1507,6 +1507,8 @@ public class Settings extends AppCompatActivity
 
 	TextView textView1 = null;
 
+	textView1 = (TextView) findViewById(R.id.about);
+	textView1.setText(About.about());
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(isAuthenticated);
         textView1.setVisibility(View.GONE);
