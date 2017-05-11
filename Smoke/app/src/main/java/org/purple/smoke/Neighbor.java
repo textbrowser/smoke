@@ -263,11 +263,6 @@ public abstract class Neighbor
 	}
     }
 
-    protected String getPeerCertificateString()
-    {
-	return "";
-    }
-
     protected String getSessionCipher()
     {
 	return "";

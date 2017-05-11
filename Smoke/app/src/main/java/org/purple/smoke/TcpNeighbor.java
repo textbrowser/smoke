@@ -70,27 +70,6 @@ public class TcpNeighbor extends Neighbor
 	    return "::";
     }
 
-    protected String getPeerCertificateString()
-    {
-	try
-	{
-	    if(m_socket != null && m_socket.getSession() != null)
-	    {
-		Certificate peerCertificates[] = m_socket.getSession().
-		    getPeerCertificates();
-
-		if(peerCertificates != null && peerCertificates.length > 0)
-		    return Cryptography.fingerPrint
-			(peerCertificates[0].getEncoded());
-	    }
-	}
-	catch(Exception exception)
-	{
-	}
-
-	return "";
-    }
-
     protected String getSessionCipher()
     {
 	try
