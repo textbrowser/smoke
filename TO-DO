@@ -113,3 +113,5 @@ Remaining Items
 8.     Allow resetting of Chat session keys via context menu.
 9.     Include network information in neighbors pertaining to
        errors.
+10.    Deleting a connected neighbor and quickly re-adding it
+       is problematic.
