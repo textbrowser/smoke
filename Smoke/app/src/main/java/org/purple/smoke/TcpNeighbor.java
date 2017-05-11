@@ -238,7 +238,7 @@ public class TcpNeighbor extends Neighbor
 	    m_inetSocketAddress = null;
 	}
 
-	m_isValidCertificate = new AtomicInteger(1);
+	m_isValidCertificate = new AtomicInteger(0);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
 	m_proxyIpAddress = proxyIpAddress.trim();
 	m_proxyType = proxyType;
@@ -420,7 +420,6 @@ public class TcpNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
-	    m_isValidCertificate.set(1);
 	    m_lastTimeRead.set(System.nanoTime());
 
 	    SSLContext sslContext = SSLContext.getInstance("TLS");
