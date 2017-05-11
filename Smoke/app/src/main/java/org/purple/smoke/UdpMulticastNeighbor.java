@@ -175,6 +175,15 @@ public class UdpMulticastNeighbor extends Neighbor
 	    @Override
 	    public void run()
 	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
+		}
+		catch(Exception exception)
+		{
+		}
+
 		if(!connected())
 		    return;
 

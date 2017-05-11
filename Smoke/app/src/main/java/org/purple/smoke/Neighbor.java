@@ -139,6 +139,15 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
+		}
+		catch(Exception exception)
+		{
+		}
+
 		String statusControl = m_databaseHelper.
 		    readNeighborStatusControl(m_cryptography, m_oid.get());
 
@@ -157,6 +166,7 @@ public abstract class Neighbor
 
 		    abort();
 		    disconnect();
+		    m_scheduler.shutdown();
 		    return;
 		}
 
@@ -177,6 +187,15 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
+		}
+		catch(Exception exception)
+		{
+		}
+
 		/*
 		** Retrieve the first database message.
 		*/
