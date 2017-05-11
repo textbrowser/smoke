@@ -995,26 +995,27 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(1, "bytes_written");
 	    sparseArray.append(2, "echo_queue_size");
 	    sparseArray.append(3, "ip_version");
-	    sparseArray.append(4, "local_ip_address");
-	    sparseArray.append(5, "local_ip_address_digest");
-	    sparseArray.append(6, "local_port");
-	    sparseArray.append(7, "local_port_digest");
-	    sparseArray.append(8, "proxy_ip_address");
-	    sparseArray.append(9, "proxy_port");
-	    sparseArray.append(10, "proxy_type");
-	    sparseArray.append(11, "remote_certificate");
-	    sparseArray.append(12, "remote_ip_address");
-	    sparseArray.append(13, "remote_ip_address_digest");
-	    sparseArray.append(14, "remote_port");
-            sparseArray.append(15, "remote_port_digest");
-            sparseArray.append(16, "remote_scope_id");
-            sparseArray.append(17, "session_cipher");
-            sparseArray.append(18, "status");
-            sparseArray.append(19, "status_control");
-            sparseArray.append(20, "transport");
-            sparseArray.append(21, "transport_digest");
-            sparseArray.append(22, "uptime");
-            sparseArray.append(23, "user_defined_digest");
+	    sparseArray.append(4, "last_error");
+	    sparseArray.append(5, "local_ip_address");
+	    sparseArray.append(6, "local_ip_address_digest");
+	    sparseArray.append(7, "local_port");
+	    sparseArray.append(8, "local_port_digest");
+	    sparseArray.append(9, "proxy_ip_address");
+	    sparseArray.append(10, "proxy_port");
+	    sparseArray.append(11, "proxy_type");
+	    sparseArray.append(12, "remote_certificate");
+	    sparseArray.append(13, "remote_ip_address");
+	    sparseArray.append(14, "remote_ip_address_digest");
+	    sparseArray.append(15, "remote_port");
+            sparseArray.append(16, "remote_port_digest");
+            sparseArray.append(17, "remote_scope_id");
+            sparseArray.append(18, "session_cipher");
+            sparseArray.append(19, "status");
+            sparseArray.append(20, "status_control");
+            sparseArray.append(21, "transport");
+            sparseArray.append(22, "transport_digest");
+            sparseArray.append(23, "uptime");
+            sparseArray.append(24, "user_defined_digest");
 
 	    Matcher matcher = Patterns.IP_ADDRESS.matcher
 		(remoteIpAddress.trim());
@@ -1033,6 +1034,8 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.etm("0".getBytes());
 		else if(sparseArray.get(i).equals("ip_version"))
 		    bytes = cryptography.etm(version.trim().getBytes());
+		else if(sparseArray.get(i).equals("last_error"))
+		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("local_ip_address_digest"))
 		    bytes = cryptography.hmac("".getBytes());
 		else if(sparseArray.get(i).equals("local_port_digest"))
@@ -1399,6 +1402,43 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
+    public byte[] neighborRemoteCertificate(Cryptography cryptography,
+					    int oid)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	byte bytes[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT remote_certificate FROM neighbors WHERE OID = ?",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		bytes = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+		bytes = cryptography.mtd(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return bytes;
+    }
+
     public int count(String table)
     {
 	prepareDb();
@@ -1484,7 +1524,7 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.
 				       etm(controlStatus.trim().getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
 	}
 	catch(Exception exception)
 	{
@@ -1515,7 +1555,8 @@ public class Database extends SQLiteOpenHelper
 		     Base64.encodeToString(cryptography.etm(certificate),
 					   Base64.DEFAULT));
 
-	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
+	    writeLog("Done?");
 	}
 	catch(Exception exception)
 	{
@@ -1595,6 +1636,7 @@ public class Database extends SQLiteOpenHelper
 	    "bytes_written TEXT NOT NULL, " +
 	    "echo_queue_size TEXT NOT NULL, " +
 	    "ip_version TEXT NOT NULL, " +
+	    "last_error TEXT NOT NULL, " +
 	    "local_ip_address TEXT NOT NULL, " +
 	    "local_ip_address_digest TEXT NOT NULL, " +
 	    "local_port TEXT NOT NULL, " +
@@ -1876,7 +1918,7 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.
 				       etm(uptime.trim().getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
+	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
 	}
 	catch(Exception exception)
 	{
