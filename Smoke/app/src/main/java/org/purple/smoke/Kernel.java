@@ -99,36 +99,36 @@ public class Kernel
 	    purge();
 	    return;
 	}
-	else
-	    synchronized(m_neighbors)
+
+	synchronized(m_neighbors)
+	{
+	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
 	    {
-		for(int i = m_neighbors.size() - 1; i >= 0; i--)
-		{
-		    /*
-		    ** Remove neighbor objects which do not exist in the
-		    ** database.
-		    */
+		/*
+		** Remove neighbor objects which do not exist in the
+		** database.
+		*/
 
-		    boolean found = false;
-		    int oid = m_neighbors.keyAt(i);
+		boolean found = false;
+		int oid = m_neighbors.keyAt(i);
 
-		    for(int j = 0; j < neighbors.size(); j++)
-			if(neighbors.get(j) != null &&
-			   neighbors.get(j).m_oid == oid)
-			{
-			    found = true;
-			    break;
-			}
-
-		    if(!found)
+		for(int j = 0; j < neighbors.size(); j++)
+		    if(neighbors.get(j) != null &&
+		       neighbors.get(j).m_oid == oid)
 		    {
-			if(m_neighbors.get(oid) != null)
-			    m_neighbors.get(oid).abort();
-
-			m_neighbors.remove(oid);
+			found = true;
+			break;
 		    }
+
+		if(!found)
+		{
+		    if(m_neighbors.get(oid) != null)
+			m_neighbors.get(oid).abort();
+
+		    m_neighbors.remove(oid);
 		}
 	    }
+	}
 
 	for(int i = 0; i < neighbors.size(); i++)
 	{
