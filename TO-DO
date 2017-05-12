@@ -122,3 +122,4 @@ Remaining Items
 9.     Include network information in neighbors pertaining to
        errors.
 10.    Validate the SipHash implementation.
+11.    Dynamic DNS for home servers.
