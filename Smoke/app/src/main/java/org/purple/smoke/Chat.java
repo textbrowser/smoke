@@ -400,6 +400,8 @@ public class Chat extends AppCompatActivity
 		final TextView textView2 = (TextView) findViewById
 		    (R.id.chat_messages);
 
+		SimpleDateFormat simpleDateFormat = new
+		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		String str = textView1.getText().toString().trim();
 		String timestamp = "";
 		StringBuffer stringBuffer = new StringBuffer();
@@ -408,6 +410,9 @@ public class Chat extends AppCompatActivity
 		byte sipHashKeyStream[] = null;
 		long sequence = 1;
 
+		stringBuffer.append("[");
+		stringBuffer.append(simpleDateFormat.format(new Date()));
+		stringBuffer.append("] ");
 		stringBuffer.append("me: ");
 		stringBuffer.append(str);
 		stringBuffer.append("\n");

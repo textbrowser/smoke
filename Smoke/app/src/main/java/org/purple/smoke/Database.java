@@ -1017,15 +1017,18 @@ public class Database extends SQLiteOpenHelper
             sparseArray.append(23, "uptime");
             sparseArray.append(24, "user_defined_digest");
 
-	    Matcher matcher = Patterns.IP_ADDRESS.matcher
-		(remoteIpAddress.trim());
-
-	    if(!matcher.matches())
+	    if(!remoteIpAddress.toLowerCase().trim().matches(".*[a-z].*"))
 	    {
-		if(version.toLowerCase().equals("ipv4"))
-		    remoteIpAddress = "0.0.0.0";
-		else
-		    remoteIpAddress = "0:0:0:0:0:ffff:0:0";
+		Matcher matcher = Patterns.IP_ADDRESS.matcher
+		    (remoteIpAddress.trim());
+
+		if(!matcher.matches())
+		{
+		    if(version.toLowerCase().equals("ipv4"))
+			remoteIpAddress = "0.0.0.0";
+		    else
+			remoteIpAddress = "0:0:0:0:0:ffff:0:0";
+		}
 	    }
 
 	    for(int i = 0; i < sparseArray.size(); i++)
