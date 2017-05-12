@@ -126,3 +126,4 @@ Remaining Items
        errors.
 10.    Validate the SipHash implementation.
 11.    Dynamic DNS for home servers.
+12.    Compress IPv6 Scope ID field when hidden.

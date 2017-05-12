@@ -68,6 +68,21 @@ public class State
 	return s_bundle.getChar("neighbors_echo") == '1';
     }
 
+    public synchronized long chatSequence(String sipHashId)
+    {
+	if(s_bundle.containsKey("chat_sequence" + sipHashId))
+	    return s_bundle.getLong("chat_sequence" + sipHashId);
+	else
+	    return 1;
+    }
+
+    public synchronized void incrementChatSequence(String sipHashId)
+    {
+	long sequence = chatSequence(sipHashId);
+
+	s_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
+    }
+
     public synchronized void reset()
     {
 	s_bundle.clear();

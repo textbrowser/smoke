@@ -403,43 +403,51 @@ public class Chat extends AppCompatActivity
 		SimpleDateFormat simpleDateFormat = new
 		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		String str = textView1.getText().toString().trim();
-		String timestamp = "";
 		StringBuffer stringBuffer = new StringBuffer();
-		byte encryptionKeyBytes[] = null;
-		byte macKeyBytes[] = null;
-		byte sipHashKeyStream[] = null;
-		long sequence = 1;
+		final TableLayout tableLayout = (TableLayout) findViewById
+		    (R.id.participants);
 
-		stringBuffer.append("[");
-		stringBuffer.append(simpleDateFormat.format(new Date()));
-		stringBuffer.append("] ");
-		stringBuffer.append("me: ");
-		stringBuffer.append(str);
-		stringBuffer.append("\n");
-		textView2.append(stringBuffer);
-		textView1.setText("");
-
-		/*
-		** Iterate through selected people, if possible.
-		** Otherwise, use checked items.
-		*/
-
-		byte bytes[] = Messages.chatMessage
-		    (s_cryptography,
-		     s_cryptography.chatEncryptionKeyPair().getPublic(),
-		     str,
-		     timestamp,
-		     encryptionKeyBytes,
-		     macKeyBytes,
-		     sipHashKeyStream,
-		     sequence);
-
-		if(bytes != null)
+		for(int i = 0; i < tableLayout.getChildCount(); i++)
 		{
-		    Kernel.getInstance().enqueueMessage
-			(Messages.bytesToMessageString(bytes));
-		    scrollMessagesView();
+		    TableRow row = (TableRow) tableLayout.getChildAt(i);
+
+		    if(row == null)
+			continue;
+
+		    CheckBox checkBox = (CheckBox) row.getChildAt(0);
+
+		    if(checkBox == null || checkBox.getTag() == null)
+			continue;
+
+		    stringBuffer.setLength(0);
+		    stringBuffer.append("[");
+		    stringBuffer.append(simpleDateFormat.format(new Date()));
+		    stringBuffer.append("] ");
+		    stringBuffer.append("me: ");
+		    stringBuffer.append(str);
+		    stringBuffer.append("\n\n");
+		    textView2.append(stringBuffer);
+		    textView1.setText("");
+
+		    String sipHashId = checkBox.getTag().toString();
+		    byte keyStream[] = null;
+		    byte bytes[] = null;
+
+		    bytes = Messages.chatMessage
+			(str,
+			 keyStream,
+			 State.getInstance().chatSequence(sipHashId),
+			 System.currentTimeMillis());
+
+		    if(bytes != null)
+		    {
+			Kernel.getInstance().enqueueMessage
+			    (Messages.bytesToMessageString(bytes));
+			State.getInstance().incrementChatSequence(sipHashId);
+		    }
 		}
+
+		scrollMessagesView();
 	    }
 	});
 

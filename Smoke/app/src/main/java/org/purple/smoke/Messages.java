@@ -83,7 +83,7 @@ public class Messages
 				     byte keyStream[],
 				     byte tag)
     {
-	if(cryptography == null || keyStream == null)
+	if(cryptography == null || keyStream == null || keyStream.length <= 0)
 	    return null;
 
 	/*
@@ -177,21 +177,16 @@ public class Messages
 	return null;
     }
 
-    public static byte[] chatMessage(Cryptography cryptography,
-				     PublicKey receiverPublicKey,
-				     String message,
-				     String timestamp,
-				     byte encryptionKeyBytes[],
-				     byte macKeyBytes[],
-				     byte sipHashKeyStream[],
-				     long sequence)
+    public static byte[] chatMessage(String message,
+				     byte keyStream[],
+				     long sequence,
+				     long timestamp)
     {
-	if(cryptography == null || encryptionKeyBytes == null ||
-	   macKeyBytes == null || receiverPublicKey == null)
+	if(keyStream == null || keyStream.length <= 0)
 	    return null;
 
 	/*
-	** sipHashKeyStream
+	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
 	** [32 ... 95] - SHA-512 HMAC Key
 	*/
@@ -204,7 +199,7 @@ public class Messages
 				     byte keyStream[],
 				     byte keyType[])
     {
-	if(cryptography == null || keyStream == null)
+	if(cryptography == null || keyStream == null || keyStream.length <= 0)
 	    return null;
 
 	/*
