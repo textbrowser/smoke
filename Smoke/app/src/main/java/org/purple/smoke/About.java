@@ -31,19 +31,15 @@ import android.os.Build;
 
 public class About
 {
+    private final static String s_about = "Version 2017.06.06\nAndroid " +
+	Build.VERSION.BASE_OS + " " + Build.VERSION.RELEASE;
+
     private About()
     {
     }
 
     public static String about()
     {
-	StringBuffer stringBuffer = new StringBuffer();
-
-	stringBuffer.append("Version 2017.06.06\n");
-	stringBuffer.append("Android ");
-	stringBuffer.append(Build.VERSION.BASE_OS);
-	stringBuffer.append(" ");
-	stringBuffer.append(Build.VERSION.RELEASE);
-	return stringBuffer.toString();
+	return s_about;
     }
 }
