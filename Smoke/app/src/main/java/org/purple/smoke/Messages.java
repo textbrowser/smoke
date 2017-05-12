@@ -177,12 +177,13 @@ public class Messages
 	return null;
     }
 
-    public static byte[] chatMessage(String message,
+    public static byte[] chatMessage(Cryptography cryptography,
+				     String message,
 				     byte keyStream[],
 				     long sequence,
 				     long timestamp)
     {
-	if(keyStream == null || keyStream.length <= 0)
+	if(cryptography == null || keyStream == null || keyStream.length <= 0)
 	    return null;
 
 	/*

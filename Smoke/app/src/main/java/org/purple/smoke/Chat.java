@@ -434,7 +434,8 @@ public class Chat extends AppCompatActivity
 		    byte bytes[] = null;
 
 		    bytes = Messages.chatMessage
-			(str,
+			(s_cryptography,
+			 str,
 			 keyStream,
 			 State.getInstance().chatSequence(sipHashId),
 			 System.currentTimeMillis());

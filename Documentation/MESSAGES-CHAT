@@ -1,18 +1,22 @@
-[AES-256] (1)
+[PK] (1)
+{
+	Sender's Public Encryption Key SHA-512 Digest (1)	64 Bytes
+}
+
+[AES-256] (2)
 {
 	A Timestamp (1)						8 Bytes (Base-64)
 	Message (2)						Variable Bytes (Base-64)
 	Sequence (3)						8 Bytes (Base-64)
-	Sender's Public Encryption Key SHA-512 Digest (4)	64 Bytes (Base-64)
-	[PK Signature] (5)					Variable Bytes (Base-64)
+	[PK Signature] (4)					Variable Bytes (Base-64)
 	{
-		[AES-256] (1 ... 4) (1)
+		[PK] || [AES-256] (1 ... 3) (1)
 	}
 }
 
-[SHA-512 HMAC] (2)						64 Bytes
+[SHA-512 HMAC] (3)						64 Bytes
 {
-	[AES-256] (1)
+	[PK] || [AES-256] (1)
 }
 
 /*
@@ -21,5 +25,5 @@
 
 [Destination SHA-512 HMAC] (3)					64 Bytes
 {
-	[AES-256] || [SHA-512 HMAC] (1)
+	[PK] || [AES-256] || [SHA-512 HMAC] (1)
 }
