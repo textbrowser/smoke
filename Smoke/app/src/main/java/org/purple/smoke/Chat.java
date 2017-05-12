@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -194,11 +195,27 @@ public class Chat extends AppCompatActivity
 		continue;
 
 	    CheckBox checkBox = new CheckBox(Chat.this);
+	    final String sipHashId = participantElement.m_sipHashId;
+
+	    checkBox.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    State.getInstance().setChatCheckBoxSelected
+			(sipHashId, isChecked);
+		}
+	    });
+
 	    StringBuffer stringBuffer = new StringBuffer();
 	    TableRow.LayoutParams layoutParams = new
 		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Chat.this);
 
+	    checkBox.setChecked
+		(State.getInstance().chatCheckBoxIsSelected(sipHashId));
 	    checkBox.setId(participantElement.m_oid);
 	    checkBox.setLayoutParams
 		(new TableRow.LayoutParams(0,

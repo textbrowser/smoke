@@ -85,6 +85,7 @@ Completed Items
        exit run().
 64.    Retain first-contact server certificate. Inspect stored
        bytes with received bytes.
+65.    Retain Chat widget selection states.
 
 Future Items
 
@@ -120,3 +121,4 @@ Remaining Items
 8.     Allow resetting of Chat session keys via context menu.
 9.     Include network information in neighbors pertaining to
        errors.
+10.    Validate the SipHash implementation.
