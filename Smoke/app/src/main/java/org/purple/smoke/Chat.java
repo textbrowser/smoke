@@ -416,7 +416,9 @@ public class Chat extends AppCompatActivity
 
 		    CheckBox checkBox = (CheckBox) row.getChildAt(0);
 
-		    if(checkBox == null || checkBox.getTag() == null)
+		    if(checkBox == null ||
+		       checkBox.getTag() == null ||
+		       !checkBox.isChecked())
 			continue;
 
 		    stringBuffer.setLength(0);
@@ -436,6 +438,7 @@ public class Chat extends AppCompatActivity
 		    bytes = Messages.chatMessage
 			(s_cryptography,
 			 str,
+			 sipHashId,
 			 keyStream,
 			 State.getInstance().chatSequence(sipHashId),
 			 System.currentTimeMillis());

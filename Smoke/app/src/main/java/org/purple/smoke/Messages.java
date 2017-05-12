@@ -179,6 +179,7 @@ public class Messages
 
     public static byte[] chatMessage(Cryptography cryptography,
 				     String message,
+				     String sipHashId,
 				     byte keyStream[],
 				     long sequence,
 				     long timestamp)
@@ -191,6 +192,103 @@ public class Messages
 	** [0 ... 31] - AES-256 Encryption Key
 	** [32 ... 95] - SHA-512 HMAC Key
 	*/
+
+	try
+	{
+	    PublicKey publicKey = Database.getInstance().
+		publicKeyForSipHashId(cryptography, sipHashId);
+
+	    if(publicKey == null)
+		return null;
+
+	    /*
+	    ** [ PK ]
+	    */
+
+	    byte pk[] = Cryptography.pkiEncrypt
+		(publicKey, cryptography.chatEncryptionPublicKeyDigest());
+
+	    if(pk == null)
+		return null;
+
+	    StringBuffer stringBuffer = new StringBuffer();
+
+	    /*
+	    ** [ A Timestamp ]
+	    */
+
+	    stringBuffer.append
+		(Base64.encodeToString(Miscellaneous.
+				       longToByteArray(System.
+						       currentTimeMillis()),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+
+	    /*
+	    ** [ Message ]
+	    */
+
+	    stringBuffer.append
+		(Base64.encodeToString(message.getBytes("UTF-8"),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+
+	    /*
+	    ** [ Sequence ]
+	    */
+
+	    stringBuffer.append
+		(Base64.encodeToString(Miscellaneous.
+				       longToByteArray(sequence),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+
+	    /*
+	    ** [ Public Key Signature ]
+	    */
+
+	    byte signature[] = cryptography.signViaChatSignature
+		(Miscellaneous.
+		 joinByteArrays(pk, stringBuffer.toString().getBytes()));
+
+	    if(signature == null)
+		return null;
+
+	    stringBuffer.append(Base64.encodeToString(signature,
+						      Base64.NO_WRAP));
+
+	    byte messageBytes[] = Cryptography.encrypt
+		(stringBuffer.toString().getBytes(),
+		 Arrays.copyOfRange(keyStream, 0, 32));
+
+	    if(messageBytes == null)
+		return null;
+
+	    /*
+	    ** [ Digest ]
+	    */
+
+	    byte macBytes[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, messageBytes),
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+	    if(macBytes == null)
+		return null;
+
+	    /*
+	    ** [ Destination ]
+	    */
+
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, messageBytes, macBytes),
+		 Cryptography.sha512(sipHashId.getBytes()));
+
+	    return Miscellaneous.joinByteArrays
+		(pk, messageBytes, macBytes, destination);
+	}
+	catch(Exception exception)
+	{
+	}
 
 	return null;
     }
@@ -290,7 +388,7 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ Digest ([ Public Data ]) ]
+	    ** [ Digest ]
 	    */
 
 	    byte macBytes[] = Cryptography.hmac
