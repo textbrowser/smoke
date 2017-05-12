@@ -112,9 +112,8 @@ public class Kernel
 		boolean found = false;
 		int oid = m_neighbors.keyAt(i);
 
-		for(int j = 0; j < neighbors.size(); j++)
-		    if(neighbors.get(j) != null &&
-		       neighbors.get(j).m_oid == oid)
+		for(NeighborElement neighbor : neighbors)
+		    if(neighbor != null && neighbor.m_oid == oid)
 		    {
 			found = true;
 			break;
@@ -130,10 +129,8 @@ public class Kernel
 	    }
 	}
 
-	for(int i = 0; i < neighbors.size(); i++)
+	for(NeighborElement neighborElement : neighbors)
 	{
-	    NeighborElement neighborElement = neighbors.get(i);
-
 	    if(neighborElement == null)
 		continue;
 	    else

@@ -1133,14 +1133,15 @@ public class Database extends SQLiteOpenHelper
 	    byte keyType[] = null;
 	    byte publicKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
+	    int ii = 0;
 
-	    for(int i = 0; i < strings.length; i++)
-		switch(i)
+	    for(String string : strings)
+		switch(ii)
 		{
 		case 0:
 		    long current = System.currentTimeMillis();
 		    long timestamp = Miscellaneous.byteArrayToLong
-			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
 		    if(current - timestamp < 0)
 		    {
@@ -1150,20 +1151,22 @@ public class Database extends SQLiteOpenHelper
 		    else if(current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
 			return false;
 
+		    ii += 1;
 		    break;
 		case 1:
 		    keyType = Base64.decode
-			(strings[i].getBytes(), Base64.NO_WRAP);
+			(string.getBytes(), Base64.NO_WRAP);
 
 		    if(keyType == null ||
 		       keyType.length != 1 ||
 		       keyType[0] != Messages.CHAT_KEY_TYPE[0])
 			return false;
 
+		    ii += 1;
 		    break;
 		case 2:
 		    publicKey = Cryptography.publicKeyFromBytes
-			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
 		    if(publicKey == null)
 			return false;
@@ -1174,20 +1177,22 @@ public class Database extends SQLiteOpenHelper
 			    compareChatSignaturePublicKey(publicKey))
 			return false;
 
+		    ii += 1;
 		    break;
 		case 3:
 		    publicKeySignature = Base64.decode
-			(strings[i].getBytes(), Base64.NO_WRAP);
+			(string.getBytes(), Base64.NO_WRAP);
 
 		    if(!Cryptography.verifySignature(publicKey,
 						     publicKeySignature,
 						     publicKey.getEncoded()))
 			return false;
 
+		    ii += 1;
 		    break;
 		case 4:
 		    signatureKey = Cryptography.publicKeyFromBytes
-			(Base64.decode(strings[i].getBytes(), Base64.NO_WRAP));
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
 		    if(signatureKey == null)
 			return false;
@@ -1198,16 +1203,18 @@ public class Database extends SQLiteOpenHelper
 			    compareChatSignaturePublicKey(signatureKey))
 			return false;
 
+		    ii += 1;
 		    break;
 		case 5:
 		    signatureKeySignature = Base64.decode
-			(strings[i].getBytes(), Base64.NO_WRAP);
+			(string.getBytes(), Base64.NO_WRAP);
 
 		    if(!Cryptography.verifySignature(signatureKey,
 						     signatureKeySignature,
 						     signatureKey.getEncoded()))
 			return false;
 
+		    ii += 1;
 		    break;
 		}
 

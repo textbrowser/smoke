@@ -345,10 +345,8 @@ public class Settings extends AppCompatActivity
 		if(arrayList == null)
 		    m_error = "empty array list";
 		else
-		    for(int i = 0; i < arrayList.size(); i++)
+		    for(SipHashIdElement sipHashIdElement : arrayList)
 		    {
-			SipHashIdElement sipHashIdElement = arrayList.get(i);
-
 			if(sipHashIdElement == null)
 			{
 			    m_error = "zero element";
@@ -1604,7 +1602,11 @@ public class Settings extends AppCompatActivity
 		default:
 		    if(m_databaseHelper.deleteEntry(String.valueOf(itemId),
 						    "siphash_ids"))
+		    {
+			State.getInstance().setChatCheckBoxSelected
+			    (itemId, false);
 			populateParticipants();
+		    }
 
 		    break;
 		}

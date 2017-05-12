@@ -187,15 +187,15 @@ public class Chat extends AppCompatActivity
 
 	tableLayout.removeAllViews();
 
-	for(int i = 0; i < arrayList.size(); i++)
-	{
-	    ParticipantElement participantElement = arrayList.get(i);
+	int i = 0;
 
+	for(ParticipantElement participantElement : arrayList)
+	{
 	    if(participantElement == null)
 		continue;
 
 	    CheckBox checkBox = new CheckBox(Chat.this);
-	    final String sipHashId = participantElement.m_sipHashId;
+	    final int oid = participantElement.m_oid;
 
 	    checkBox.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
@@ -205,7 +205,7 @@ public class Chat extends AppCompatActivity
 		    (CompoundButton buttonView, boolean isChecked)
 		{
 		    State.getInstance().setChatCheckBoxSelected
-			(sipHashId, isChecked);
+			(oid, isChecked);
 		}
 	    });
 
@@ -215,7 +215,7 @@ public class Chat extends AppCompatActivity
 	    TableRow row = new TableRow(Chat.this);
 
 	    checkBox.setChecked
-		(State.getInstance().chatCheckBoxIsSelected(sipHashId));
+		(State.getInstance().chatCheckBoxIsSelected(oid));
 	    checkBox.setId(participantElement.m_oid);
 	    checkBox.setLayoutParams
 		(new TableRow.LayoutParams(0,
@@ -287,6 +287,7 @@ public class Chat extends AppCompatActivity
 
 	    row.setLayoutParams(layoutParams);
 	    tableLayout.addView(row, i);
+	    i += 1;
 	}
     }
 

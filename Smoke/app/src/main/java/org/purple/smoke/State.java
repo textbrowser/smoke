@@ -53,9 +53,9 @@ public class State
 	return s_bundle.getCharSequence(key);
     }
 
-    public synchronized boolean chatCheckBoxIsSelected(String sipHashId)
+    public synchronized boolean chatCheckBoxIsSelected(int oid)
     {
-	return s_bundle.getChar(sipHashId) == '1';
+	return s_bundle.getChar(String.valueOf(oid)) == '1';
     }
 
     public synchronized boolean isAuthenticated()
@@ -78,13 +78,13 @@ public class State
 	s_bundle.putChar("is_authenticated", state ? '1' : '0');
     }
 
-    public synchronized void setChatCheckBoxSelected(String sipHashId,
+    public synchronized void setChatCheckBoxSelected(int oid,
 						     boolean checked)
     {
 	if(checked)
-	    s_bundle.putChar(sipHashId, '1');
+	    s_bundle.putChar(String.valueOf(oid), '1');
 	else
-	    s_bundle.remove(sipHashId);
+	    s_bundle.remove(String.valueOf(oid));
     }
 
     public synchronized void setNeighborsEcho(boolean state)
