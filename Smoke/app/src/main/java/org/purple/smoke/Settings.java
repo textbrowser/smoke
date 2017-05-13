@@ -665,8 +665,8 @@ public class Settings extends AppCompatActivity
 		    stringBuffer.append
 			("Remote Certificate's Fingerprint: ");
 		    stringBuffer.append
-			(s_cryptography.fingerPrint(neighborElement.
-						    m_remoteCertificate));
+			(Cryptography.
+			 fingerPrint(neighborElement.m_remoteCertificate));
 		}
 
 		if(!neighborElement.m_sessionCipher.isEmpty())
