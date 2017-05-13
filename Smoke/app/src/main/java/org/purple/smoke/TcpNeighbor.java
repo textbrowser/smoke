@@ -437,7 +437,7 @@ public class TcpNeighbor extends Neighbor
 		Socket socket = new Socket
 		    (new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
 
-		socket.connect(m_inetSocketAddress);
+		socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
 		m_socket = (SSLSocket) sslContext.getSocketFactory().
 		    createSocket(socket, m_proxyIpAddress, m_proxyPort, true);
 	    }
