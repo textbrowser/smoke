@@ -131,3 +131,4 @@ Remaining Items
 9.     Validate the SipHash implementation.
 10.    Resolve DNS through a proxy if a proxy is defined.
 11.    Optional SipHash identities in received messages.
+12.    Application icon.
