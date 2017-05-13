@@ -10,7 +10,7 @@
 	Sequence (3)						8 Bytes (Base-64)
 	[PK Signature] (4)					Variable Bytes (Base-64)
 	{
-		[PK] || [AES-256] (1 ... 3) (1)
+		[PK] (1) || [AES-256] (1 ... 3) (1)
 	}
 }
 

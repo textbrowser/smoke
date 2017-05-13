@@ -250,7 +250,8 @@ public class Messages
 
 	    byte signature[] = cryptography.signViaChatSignature
 		(Miscellaneous.
-		 joinByteArrays(pk, stringBuffer.toString().getBytes()));
+		 joinByteArrays(cryptography.chatEncryptionPublicKeyDigest(),
+				stringBuffer.toString().getBytes()));
 
 	    if(signature == null)
 		return null;

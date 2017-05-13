@@ -560,10 +560,8 @@ public class Kernel
 	    }
 	    else
 	    {
-		byte pk[] = s_cryptography.pkiDecrypt(Arrays.
-						      copyOfRange(bytes,
-								  0,
-								  6144 / 8));
+		byte pk[] = s_cryptography.pkiDecrypt
+		    (Arrays.copyOfRange(bytes, 0, 6144 / 8));
 
 		if(pk == null)
 		    return false;
@@ -622,7 +620,26 @@ public class Kernel
 		    case 3:
 			publicKeySignature = Base64.decode
 			    (string.getBytes(), Base64.NO_WRAP);
-			ii += 1;
+
+			PublicKey signatureKey = s_databaseHelper.
+			    signatureKeyForDigest(s_cryptography, pk);
+
+			if(signatureKey == null)
+			    return false;
+
+			if(!Cryptography.
+			   verifySignature(signatureKey,
+					   publicKeySignature,
+					   Miscellaneous.
+					   joinByteArrays(pk,
+							  strings[0].getBytes(),
+							  "\n".getBytes(),
+							  strings[1].getBytes(),
+							  "\n".getBytes(),
+							  strings[2].getBytes(),
+							  "\n".getBytes())))
+			    return false;
+
 			break;
 		    }
 

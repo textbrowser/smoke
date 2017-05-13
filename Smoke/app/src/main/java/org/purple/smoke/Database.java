@@ -1217,7 +1217,6 @@ public class Database extends SQLiteOpenHelper
 						     signatureKey.getEncoded()))
 			return false;
 
-		    ii += 1;
 		    break;
 		}
 
