@@ -85,7 +85,7 @@ public class Kernel
 
     private Kernel()
     {
-	m_callQueue = new Hashtable<String, ParticipantCall> ();
+	m_callQueue = new Hashtable<> ();
 	prepareSchedulers();
     }
 

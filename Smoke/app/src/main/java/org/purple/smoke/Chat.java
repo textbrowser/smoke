@@ -212,7 +212,7 @@ public class Chat extends AppCompatActivity
 	    return;
 	}
 
-	Hashtable<String, String> checked = new Hashtable<String, String> ();
+	Hashtable<String, String> checked = new Hashtable<> ();
 
 	for(int i = 0; i < tableLayout.getChildCount(); i++)
 	{
