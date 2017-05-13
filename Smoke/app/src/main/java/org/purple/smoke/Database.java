@@ -1155,8 +1155,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    String strings[] = new String(data).split("\\n");
 
-	    if(strings == null ||
-	       strings.length != Messages.EPKS_GROUP_ONE_ELEMENT_COUNT)
+	    if(strings.length != Messages.EPKS_GROUP_ONE_ELEMENT_COUNT)
 		return false;
 
 	    PublicKey publicKey = null;
@@ -1290,7 +1289,9 @@ public class Database extends SQLiteOpenHelper
 		    bytes = Cryptography.sha512(publicKey.getEncoded());
 		else if(sparseArray.get(i).equals("function_digest"))
 		{
-		    if(keyType[0] == Messages.CHAT_KEY_TYPE[0])
+		    if(keyType != null &&
+		       keyType.length == 1 &&
+		       keyType[0] == Messages.CHAT_KEY_TYPE[0])
 			bytes = cryptography.hmac("chat".getBytes());
 		}
 		else if(sparseArray.get(i).equals("identity"))

@@ -595,8 +595,7 @@ public class Kernel
 
 		String strings[] = new String(bytes).split("\\n");
 
-		if(strings == null ||
-		   strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
+		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
 		    return false;
 
 		String message = null;
