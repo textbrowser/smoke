@@ -162,9 +162,8 @@ public abstract class Neighbor
 		    ** Abort!
 		    */
 
-		    abort();
 		    disconnect();
-		    m_scheduler.shutdown();
+		    abort();
 		    return;
 		}
 
