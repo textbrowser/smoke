@@ -561,7 +561,10 @@ public class Kernel
 	    else
 	    {
 		byte pk[] = s_cryptography.pkiDecrypt
-		    (Arrays.copyOfRange(bytes, 0, 6144 / 8));
+		    (Arrays.
+		     copyOfRange(bytes,
+				 0,
+				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
 
 		if(pk == null)
 		    return false;
@@ -580,7 +583,10 @@ public class Kernel
 		    return false;
 
 		bytes = Cryptography.decrypt
-		    (Arrays.copyOfRange(bytes, 6144 / 8, bytes.length - 128),
+		    (Arrays.
+		     copyOfRange(bytes,
+				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
+				 bytes.length - 128),
 		     Arrays.copyOfRange(keyStream, 0, 32));
 
 		if(bytes == null)

@@ -118,10 +118,10 @@ public class Settings extends AppCompatActivity
     };
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
-    private final static int PKI_ENCRYPTION_KEY_SIZES[] = {6144}; // RSA
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
+    public final static int PKI_ENCRYPTION_KEY_SIZES[] = {6144}; // RSA
 
     private void addNeighbor()
     {
