@@ -865,6 +865,38 @@ public class Cryptography
 	}
     }
 
+    public static byte[] decrypt(byte data[], byte keyBytes[])
+    {
+	if(data == null ||
+	   data.length < 0 ||
+	   keyBytes == null ||
+	   keyBytes.length < 0)
+	    return null;
+
+	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+	    SecretKey secretKey = new SecretKeySpec
+		(keyBytes, SYMMETRIC_ALGORITHM);
+	    byte iv[] = Arrays.copyOf(data, 16);
+
+	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+	    cipher.init(Cipher.DECRYPT_MODE,
+			secretKey,
+			new IvParameterSpec(iv));
+	    bytes = cipher.doFinal
+		(Arrays.copyOfRange(data, 16, data.length));
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
     public static byte[] encrypt(byte data[], byte keyBytes[])
     {
 	if(data == null ||

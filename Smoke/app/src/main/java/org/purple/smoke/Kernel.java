@@ -558,6 +558,93 @@ public class Kernel
 		    }
 		}
 	    }
+	    else
+	    {
+		byte pk[] = s_cryptography.pkiDecrypt(Arrays.
+						      copyOfRange(bytes,
+								  0,
+								  6144 / 8));
+
+		if(pk == null)
+		    return false;
+
+		byte keyStream[] = s_databaseHelper.participantKeyStream
+		    (s_cryptography, pk);
+
+		if(keyStream == null)
+		    return false;
+
+		byte hmac[] = Cryptography.hmac
+		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
+		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+		if(!Cryptography.memcmp(array2, hmac))
+		    return false;
+
+		bytes = Cryptography.decrypt
+		    (Arrays.copyOfRange(bytes, 6144 / 8, bytes.length - 128),
+		     Arrays.copyOfRange(keyStream, 0, 32));
+
+		if(bytes == null)
+		    return false;
+
+		String strings[] = new String(bytes).split("\\n");
+
+		if(strings == null ||
+		   strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
+		    return false;
+
+		String message = null;
+		byte publicKeySignature[] = null;
+		int ii = 0;
+		long sequence = 0;
+		long timestamp = 0;
+
+		for(String string : strings)
+		    switch(ii)
+		    {
+		    case 0:
+			timestamp = Miscellaneous.byteArrayToLong
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+			ii += 1;
+			break;
+		    case 1:
+			message = new String
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
+			     "UTF-8");
+			ii += 1;
+			break;
+		    case 2:
+			sequence = Miscellaneous.byteArrayToLong
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+			ii += 1;
+			break;
+		    case 3:
+			publicKeySignature = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
+			ii += 1;
+			break;
+		    }
+
+		if(message == null)
+		    return false;
+
+		strings = s_databaseHelper.nameSipHashIdFromDigest
+		    (s_cryptography, pk);
+
+		if(strings == null || strings.length != 2)
+		    return false;
+
+		Intent intent = new Intent
+		    ("org.purple.smoke.chat_message");
+
+		intent.putExtra("org.purple.smoke.message", message);
+		intent.putExtra("org.purple.smoke.name", strings[0]);
+		intent.putExtra("org.purple.smoke.sequence", sequence);
+		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
+		intent.putExtra("org.purple.smoke.timestamp", timestamp);
+		Smoke.getApplication().sendBroadcast(intent);
+	    }
 	}
 	catch(Exception exception)
 	{

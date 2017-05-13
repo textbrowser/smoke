@@ -37,6 +37,7 @@ public class Messages
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0};
     public final static int CALL_HALF_AND_HALF_OFFSETS[] = new int[]
 	{0, 1, 9, 25, 57, 65, 129};
+    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 4;
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 6;
 
     public static String bytesToMessageString(byte bytes[])

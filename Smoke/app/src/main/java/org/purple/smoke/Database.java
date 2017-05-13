@@ -1449,6 +1449,89 @@ public class Database extends SQLiteOpenHelper
 	return bytes;
     }
 
+    public byte[] participantKeyStream(Cryptography cryptography,
+				       String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	byte bytes[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT keystream FROM participants " +
+		 "WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.trim().
+						   getBytes("UTF-8")),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		bytes = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+		bytes = cryptography.mtd(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return bytes;
+    }
+
+    public byte[] participantKeyStream(Cryptography cryptography,
+				       byte digest[])
+    {
+	prepareDb();
+
+	if(cryptography == null ||
+	   digest == null ||
+	   digest.length < 0 ||
+	   m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	byte bytes[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT keystream FROM participants " +
+		 "WHERE encryption_public_key_digest = ?",
+		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		bytes = Base64.decode
+		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
+		bytes = cryptography.mtd(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return bytes;
+    }
+
     public int count(String table)
     {
 	prepareDb();
