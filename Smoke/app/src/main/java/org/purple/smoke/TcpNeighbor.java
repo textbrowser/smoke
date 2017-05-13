@@ -301,31 +301,31 @@ public class TcpNeighbor extends Neighbor
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
 
-		    synchronized(m_stringBuffer)
+		    synchronized(m_stringBuilder)
 		    {
-			m_stringBuffer.append
+			m_stringBuilder.append
 			    (new String(m_bytes, 0, (int) bytesRead));
 
 			/*
 			** Detect our end-of-message delimiter.
 			*/
 
-			int indexOf = m_stringBuffer.indexOf(EOM);
+			int indexOf = m_stringBuilder.indexOf(EOM);
 
 			while(indexOf >= 0)
 			{
-			    String buffer = m_stringBuffer.
+			    String buffer = m_stringBuilder.
 				substring(0, indexOf + EOM.length());
 
 			    if(!Kernel.getInstance().ourMessage(buffer))
 				echo(buffer);
 
-			    m_stringBuffer.delete(0, buffer.length());
-			    indexOf = m_stringBuffer.indexOf(EOM);
+			    m_stringBuilder.delete(0, buffer.length());
+			    indexOf = m_stringBuilder.indexOf(EOM);
 			}
 
-			if(m_stringBuffer.length() > MAXIMUM_BYTES)
-			    m_stringBuffer.setLength(MAXIMUM_BYTES);
+			if(m_stringBuilder.length() > MAXIMUM_BYTES)
+			    m_stringBuilder.setLength(MAXIMUM_BYTES);
 		    }
 		}
 		catch(java.net.SocketException exception)

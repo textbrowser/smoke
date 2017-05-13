@@ -228,9 +228,9 @@ public class UdpNeighbor extends Neighbor
 
 		    if(byteArrayOutputStream != null &&
 		       byteArrayOutputStream.size() > 0)
-			synchronized(m_stringBuffer)
+			synchronized(m_stringBuilder)
 			{
-			    m_stringBuffer.append
+			    m_stringBuilder.append
 				(new String(byteArrayOutputStream.
 					    toByteArray()));
 
@@ -238,22 +238,22 @@ public class UdpNeighbor extends Neighbor
 			    ** Detect our end-of-message delimiter.
 			    */
 
-			    int indexOf = m_stringBuffer.indexOf(EOM);
+			    int indexOf = m_stringBuilder.indexOf(EOM);
 
 			    while(indexOf >= 0)
 			    {
-				String buffer = m_stringBuffer.
+				String buffer = m_stringBuilder.
 				    substring(0, indexOf + EOM.length());
 
 				if(!Kernel.getInstance().ourMessage(buffer))
 				    echo(buffer);
 
-				m_stringBuffer.delete(0, buffer.length());
-				indexOf = m_stringBuffer.indexOf(EOM);
+				m_stringBuilder.delete(0, buffer.length());
+				indexOf = m_stringBuilder.indexOf(EOM);
 			    }
 
-			    if(m_stringBuffer.length() > MAXIMUM_BYTES)
-				m_stringBuffer.setLength(MAXIMUM_BYTES);
+			    if(m_stringBuilder.length() > MAXIMUM_BYTES)
+				m_stringBuilder.setLength(MAXIMUM_BYTES);
 			}
 		}
 		catch(Exception exception)

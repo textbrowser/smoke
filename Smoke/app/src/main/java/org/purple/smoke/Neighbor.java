@@ -64,7 +64,7 @@ public abstract class Neighbor
     protected String m_version = "";
     protected byte m_bytes[] = null;
     protected final Object m_errorMutex = new Object();
-    protected final StringBuffer m_stringBuffer = new StringBuffer();
+    protected final StringBuilder m_stringBuilder = new StringBuilder();
     protected final static String EOM = "\r\n\r\n\r\n";
     protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
     protected final static int READ_SOCKET_INTERVAL = 150; // 150 Milliseconds
@@ -172,7 +172,6 @@ public abstract class Neighbor
 		    */
 
 		    disconnect();
-		    abort();
 		    return;
 		}
 
@@ -290,7 +289,7 @@ public abstract class Neighbor
 
 	try
 	{
-	    m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
+	    m_scheduler.awaitTermination(15, TimeUnit.SECONDS);
 	}
 	catch(Exception exception)
 	{
