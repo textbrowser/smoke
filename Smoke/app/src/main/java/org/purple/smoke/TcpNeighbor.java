@@ -31,7 +31,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;

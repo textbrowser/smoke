@@ -219,9 +219,7 @@ public class Messages
 	    */
 
 	    stringBuffer.append
-		(Base64.encodeToString(Miscellaneous.
-				       longToByteArray(System.
-						       currentTimeMillis()),
+		(Base64.encodeToString(Miscellaneous.longToByteArray(timestamp),
 				       Base64.NO_WRAP));
 	    stringBuffer.append("\n");
 
