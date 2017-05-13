@@ -1961,6 +1961,7 @@ public class Database extends SQLiteOpenHelper
 					String bytesRead,
 					String bytesWritten,
 					String echoQueueSize,
+					String error,
 					String ipAddress,
 					String ipPort,
 					String sessionCipher,
@@ -1982,6 +1983,7 @@ public class Database extends SQLiteOpenHelper
 		bytesRead = "";
 		bytesWritten = "";
 		echoQueueSize = "0";
+		error = "";
 		ipAddress = "";
 		ipPort = "";
 		sessionCipher = "";
@@ -2001,6 +2003,10 @@ public class Database extends SQLiteOpenHelper
 		("echo_queue_size",
 		 Base64.encodeToString(cryptography.etm(echoQueueSize.
 							getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("last_error",
+		 Base64.encodeToString(cryptography.etm(error.getBytes()),
 				       Base64.DEFAULT));
 	    values.put
 		("local_ip_address",

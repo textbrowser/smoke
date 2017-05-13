@@ -150,14 +150,15 @@ public class Kernel
 		       equals("disconnect"))
 			s_databaseHelper.saveNeighborInformation
 			    (s_cryptography,
-			     "0",
-			     "0",
-			     "0",
-			     "",
-			     "0",
-			     "",
-			     "disconnected",
-			     "0",
+			     "0",             // Bytes Read
+			     "0",             // Bytes Written
+			     "0",             // Queue Size
+			     "",              // Error
+			     "",              // IP Address
+			     "0",             // Port
+			     "",              // Session Cipher
+			     "disconnected",  // Status
+			     "0",             // Uptime
 			     String.valueOf(neighborElement.m_oid));
 
 		    continue;

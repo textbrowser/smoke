@@ -57,7 +57,9 @@ public abstract class Neighbor
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
+    protected Object m_errorMutex = new Object();
     protected ScheduledExecutorService m_readSocketScheduler = null;
+    protected String m_error = "";
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
@@ -72,11 +74,17 @@ public abstract class Neighbor
     private void saveStatistics()
     {
 	String echoQueueSize = "";
+	String error = "";
 	String localIp = getLocalIp();
 	String localPort = String.valueOf(getLocalPort());
 	String sessionCiper = getSessionCipher();
 	boolean connected = connected();
 	long uptime = System.nanoTime() - m_startTime.get();
+
+	synchronized(m_errorMutex)
+	{
+	    error = m_error;
+	}
 
 	synchronized(m_queueMutex)
 	{
@@ -88,6 +96,7 @@ public abstract class Neighbor
 	     String.valueOf(m_bytesRead.get()),
 	     String.valueOf(m_bytesWritten.get()),
 	     echoQueueSize,
+	     error,
 	     localIp,
 	     localPort,
 	     sessionCiper,
