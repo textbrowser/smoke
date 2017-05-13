@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -259,6 +260,7 @@ public class Chat extends AppCompatActivity
 		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Chat.this);
 
+	    registerForContextMenu(checkBox);
 	    checkBox.setChecked
 		(State.getInstance().chatCheckBoxIsSelected(oid));
 	    checkBox.setId(participantElement.m_oid);
@@ -545,9 +547,44 @@ public class Chat extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
-	int itemId = item.getItemId();
+	final int itemId = item.getItemId();
 
-	if(itemId == 0)
+	/*
+	** Prepare a listener.
+	*/
+
+	final DialogInterface.OnCancelListener listener =
+	    new DialogInterface.OnCancelListener()
+	    {
+		public void onCancel(DialogInterface dialog)
+		{
+		    if(itemId > -1)
+			switch(itemId)
+			{
+			default:
+			    if(m_databaseHelper.
+			       resetParticipantKeyStream(s_cryptography,
+							 itemId))
+				populateParticipants();
+
+			    break;
+			}
+		}
+	    };
+
+	/*
+	** Regular expression?
+	*/
+
+	if(itemId > -1)
+	    Miscellaneous.showPromptDialog
+		(Chat.this,
+		 listener,
+		 "Are you sure that you " +
+		 "wish to reset the session for " +
+		 item.getTitle().toString().replace("Reset Session (", "").
+		 replace(")", "") + "?");
+	else
 	    populateParticipants();
 
 	return true;
@@ -568,7 +605,19 @@ public class Chat extends AppCompatActivity
 				    ContextMenuInfo menuInfo)
     {
 	super.onCreateContextMenu(menu, v, menuInfo);
-	menu.add(0, 0, 0, "Refresh Participants Table");
+
+	if(v.getTag() != null)
+	    menu.add
+		(0,
+		 v.getId(),
+		 0,
+		 "Reset Session (" +
+		 Miscellaneous.
+		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
+		 toUpperCase() +
+		 ")");
+
+	menu.add(0, -1, 0, "Refresh Participants Table");
     }
 
     @Override

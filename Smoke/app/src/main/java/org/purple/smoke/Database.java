@@ -952,6 +952,34 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
+    public boolean resetParticipantKeyStream(Cryptography cryptography,
+					     int oid)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return false;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("keystream",
+		 Base64.encodeToString(cryptography.
+				       etm("".getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update("participants", values, "OID = ?",
+			new String[] {String.valueOf(oid)});
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+
+	return true;
+    }
+
     public boolean writeNeighbor(Cryptography cryptography,
 				 String proxyIpAddress,
 				 String proxyPort,
