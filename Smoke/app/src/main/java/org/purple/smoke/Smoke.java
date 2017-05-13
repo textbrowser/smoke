@@ -52,6 +52,8 @@ public class Smoke extends Application
     @Override
     public void onLowMemory()
     {
+	super.onLowMemory();
+
 	try
 	{
 	    Kernel.getInstance().clearNeighborQueues();

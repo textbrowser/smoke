@@ -205,7 +205,7 @@ public class Authenticate extends AppCompatActivity
 				    boolean e2 = s_cryptography.
 					prepareSipHashKeys();
 
-				    if(e1 == false || e2 == false ||
+				    if(!e1 || !e2 ||
 				       s_cryptography.
 				       chatEncryptionKeyPair() == null ||
 				       s_cryptography.
