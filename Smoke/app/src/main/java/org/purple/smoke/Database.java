@@ -1676,7 +1676,6 @@ public class Database extends SQLiteOpenHelper
 					   Base64.DEFAULT));
 
 	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
-	    writeLog("Done?");
 	}
 	catch(Exception exception)
 	{
