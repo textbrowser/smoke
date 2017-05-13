@@ -91,6 +91,7 @@ Completed Items
 67.    Display date and time of sent message.
 68.    Compress IPv6 Scope ID field when hidden.
 69.    Allow resetting of Chat session keys via context menu.
+70.    Dynamic DNS for home servers. Functional.
 
 Future Items
 
@@ -124,7 +125,7 @@ Remaining Items
 5.     Remote storage of messages. After the initial release.
 6.     Sign release.
 7.     Allow log clearing. New Log activity.
-8.     Dynamic DNS for home servers.
-9.     Include network information in neighbors pertaining to
+8.     Include network information in neighbors pertaining to
        errors.
-10.    Validate the SipHash implementation.
+9.     Validate the SipHash implementation.
+10.    Resolve DNS through a proxy if a proxy is defined.
