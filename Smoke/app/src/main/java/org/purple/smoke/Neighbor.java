@@ -150,6 +150,12 @@ public abstract class Neighbor
 		{
 		    if(Thread.currentThread().isInterrupted())
 			return;
+		    else
+			Thread.sleep(5);
+		}
+		catch(InterruptedException exception)
+		{
+		    Thread.currentThread().interrupt();
 		}
 		catch(Exception exception)
 		{
@@ -196,6 +202,12 @@ public abstract class Neighbor
 		{
 		    if(Thread.currentThread().isInterrupted())
 			return;
+		    else
+			Thread.sleep(5);
+		}
+		catch(InterruptedException exception)
+		{
+		    Thread.currentThread().interrupt();
 		}
 		catch(Exception exception)
 		{
@@ -289,7 +301,7 @@ public abstract class Neighbor
 
 	try
 	{
-	    m_scheduler.awaitTermination(15, TimeUnit.SECONDS);
+	    m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
 	}
 	catch(Exception exception)
 	{

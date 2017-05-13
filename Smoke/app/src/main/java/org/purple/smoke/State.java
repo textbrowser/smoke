@@ -53,6 +53,11 @@ public class State
 	return s_bundle.getCharSequence(key);
     }
 
+    public synchronized String getString(String key)
+    {
+	return s_bundle.getString(key, "");
+    }
+
     public synchronized boolean chatCheckBoxIsSelected(int oid)
     {
 	return s_bundle.getChar(String.valueOf(oid)) == '1';
@@ -83,6 +88,11 @@ public class State
 	s_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
     }
 
+    public synchronized void removeKey(String key)
+    {
+	s_bundle.remove(key);
+    }
+
     public synchronized void reset()
     {
 	s_bundle.clear();
@@ -105,6 +115,11 @@ public class State
     public synchronized void setNeighborsEcho(boolean state)
     {
 	s_bundle.putChar("neighbors_echo", state ? '1' : '0');
+    }
+
+    public synchronized void setString(String key, String value)
+    {
+	s_bundle.putString(key, value);
     }
 
     public synchronized void writeCharSequence(String key, CharSequence text)

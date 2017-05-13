@@ -30,6 +30,8 @@ package org.purple.smoke;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.InputType;
+import android.widget.EditText;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 
@@ -319,6 +321,53 @@ public class Miscellaneous
 							 ** for a response.
 							 */
 	alertDialog.setTitle("Confirmation");
+	alertDialog.show();
+    }
+
+    public static void showTextInputDialog
+	(Context context,
+	 DialogInterface.OnCancelListener cancelListener,
+	 String prompt,
+	 String title)
+    {
+	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+	final EditText editText = new EditText(context);
+	final boolean contextIsChat = context instanceof Chat;
+
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_NEGATIVE, "Cancel",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     if(contextIsChat)
+			 State.getInstance().removeKey("chat_secret_input");
+
+		     dialog.dismiss();
+		 }
+	     });
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_POSITIVE, "Accept",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     if(contextIsChat)
+			 State.getInstance().setString
+			     ("chat_secret_input",
+			      editText.getText().toString());
+
+		     dialog.cancel();
+		 }
+	     });
+	alertDialog.setMessage(prompt);
+	alertDialog.setOnCancelListener(cancelListener); /*
+							 ** We cannot wait
+							 ** for a response.
+							 */
+	alertDialog.setTitle(title);
+	editText.setInputType(InputType.TYPE_CLASS_TEXT);
+	alertDialog.setView(editText);
 	alertDialog.show();
     }
 }

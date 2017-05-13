@@ -267,6 +267,12 @@ public class TcpNeighbor extends Neighbor
 		{
 		    if(Thread.currentThread().isInterrupted())
 			return;
+		    else
+			Thread.sleep(5);
+		}
+		catch(InterruptedException exception)
+		{
+		    Thread.currentThread().interrupt();
 		}
 		catch(Exception exception)
 		{

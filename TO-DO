@@ -92,6 +92,8 @@ Completed Items
 68.    Compress IPv6 Scope ID field when hidden.
 69.    Allow resetting of Chat session keys via context menu.
 70.    Dynamic DNS for home servers. Functional.
+71.    Custom key streams via context menus.
+       Generate and separate.
 
 Future Items
 
@@ -120,8 +122,7 @@ Remaining Items
 
 1.     Source-level string translations.
 2.     pull-database for multiple devices.
-3.     Custom key streams via context menus.
-       Minimum of eight characters. Generate and separate.
+3.     Application icon.
 4.     Detect removal of neighbors.
 5.     Remote storage of messages. After the initial release.
 6.     Sign release.
@@ -131,4 +132,3 @@ Remaining Items
 9.     Validate the SipHash implementation.
 10.    Resolve DNS through a proxy if a proxy is defined.
 11.    Optional SipHash identities in received messages.
-12.    Application icon.

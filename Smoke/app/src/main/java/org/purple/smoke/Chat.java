@@ -547,6 +547,7 @@ public class Chat extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
+	final int groupId = item.getGroupId();
 	final int itemId = item.getItemId();
 
 	/*
@@ -559,14 +560,41 @@ public class Chat extends AppCompatActivity
 		public void onCancel(DialogInterface dialog)
 		{
 		    if(itemId > -1)
-			switch(itemId)
-			{
-			default:
+			switch(groupId)
+		        {
+			case 0:
+			    try
+			    {
+				String string = State.getInstance().
+				    getString("chat_secret_input");
+				byte bytes[] = Cryptography.pbkdf2
+				    (Cryptography.sha512(string.
+							 getBytes("UTF-8")),
+				     string.toCharArray(),
+				     1000,
+				     96 * 8);
+
+				if(m_databaseHelper.
+				   setParticipantKeyStream(s_cryptography,
+							   bytes,
+							   itemId))
+				    populateParticipants();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+
+			    State.getInstance().removeKey("chat_secret_input");
+			    break;
+			case 1:
 			    if(m_databaseHelper.
-			       resetParticipantKeyStream(s_cryptography,
-							 itemId))
+			       setParticipantKeyStream(s_cryptography,
+						       null,
+						       itemId))
 				populateParticipants();
 
+			    break;
+			default:
 			    break;
 			}
 		}
@@ -577,13 +605,27 @@ public class Chat extends AppCompatActivity
 	*/
 
 	if(itemId > -1)
-	    Miscellaneous.showPromptDialog
-		(Chat.this,
-		 listener,
-		 "Are you sure that you " +
-		 "wish to reset the session for " +
-		 item.getTitle().toString().replace("Reset Session (", "").
-		 replace(")", "") + "?");
+	    switch(groupId)
+	    {
+	    case 0:
+		Miscellaneous.showTextInputDialog
+		    (Chat.this,
+		     listener,
+		     "Please provide a secret for " +
+		     item.getTitle().toString().replace("Custom Session (", "").
+		     replace(")", "") + ".",
+		     "Secret");
+		break;
+	    case 1:
+		Miscellaneous.showPromptDialog
+		    (Chat.this,
+		     listener,
+		     "Are you sure that you " +
+		     "wish to reset the session for " +
+		     item.getTitle().toString().replace("Reset Session (", "").
+		     replace(")", "") + "?");
+		break;
+	    }
 	else
 	    populateParticipants();
 
@@ -607,8 +649,18 @@ public class Chat extends AppCompatActivity
 	super.onCreateContextMenu(menu, v, menuInfo);
 
 	if(v.getTag() != null)
+	{
 	    menu.add
 		(0,
+		 v.getId(),
+		 0,
+		 "Custom Session (" +
+		 Miscellaneous.
+		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
+		 toUpperCase() +
+		 ")");
+	    menu.add
+		(1,
 		 v.getId(),
 		 0,
 		 "Reset Session (" +
@@ -616,6 +668,7 @@ public class Chat extends AppCompatActivity
 		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")");
+	}
 
 	menu.add(0, -1, 0, "Refresh Participants Table");
     }

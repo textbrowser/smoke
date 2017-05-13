@@ -953,8 +953,9 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
-    public boolean resetParticipantKeyStream(Cryptography cryptography,
-					     int oid)
+    public boolean setParticipantKeyStream(Cryptography cryptography,
+					   byte keyStream[],
+					   int oid)
     {
 	prepareDb();
 
@@ -965,11 +966,17 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
-	    values.put
-		("keystream",
-		 Base64.encodeToString(cryptography.
-				       etm("".getBytes()),
-				       Base64.DEFAULT));
+	    if(keyStream == null || keyStream.length < 0)
+		values.put
+		    ("keystream",
+		     Base64.encodeToString(cryptography.etm("".getBytes()),
+					   Base64.DEFAULT));
+	    else
+		values.put
+		    ("keystream",
+		     Base64.encodeToString(cryptography.etm(keyStream),
+					   Base64.DEFAULT));
+
 	    m_db.update("participants", values, "OID = ?",
 			new String[] {String.valueOf(oid)});
 	}
