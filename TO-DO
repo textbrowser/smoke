@@ -99,6 +99,7 @@ Future Items
 2.     Per request, include the source in the application bundle.
 3.     Socket channels. A lot of work.
 4.     (130 / 16 + 1) * 16 + 8 <= 154.
+5.     Themes, of course.
 
 Ignored / Impossible Items
 
@@ -129,3 +130,4 @@ Remaining Items
        errors.
 9.     Validate the SipHash implementation.
 10.    Resolve DNS through a proxy if a proxy is defined.
+11.    Optional SipHash identities in received messages.
