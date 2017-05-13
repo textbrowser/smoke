@@ -143,29 +143,30 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:layout_width="131dp"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:ems="10"
                         android:id="@+id/neighbors_ip_address"
-                        android:hint="@string/ip_address" />
-
-                    <EditText
-                        android:layout_width="74dp"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:ems="10"
-                        android:id="@+id/neighbors_port"
-                        android:hint="@string/port" />
-
-                    <EditText
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:ems="10"
-                        android:id="@+id/neighbors_scope_id"
                         android:layout_weight="1"
-                        android:hint="@string/ipv6_scope_id" />
+                        android:ems="10"
+                        android:hint="@string/ip_address"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/neighbors_port"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/port"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/neighbors_scope_id"
+                        android:layout_width="125dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/ipv6_scope_id"
+                        android:inputType="textPersonName" />
                 </LinearLayout>
 
                 <RadioGroup

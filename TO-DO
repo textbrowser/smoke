@@ -89,6 +89,7 @@ Completed Items
        if participants are removed via the Settings activity.
 66.    Optimize loops.
 67.    Display date and time of sent message.
+68.    Compress IPv6 Scope ID field when hidden.
 
 Future Items
 
@@ -120,11 +121,10 @@ Remaining Items
        Minimum of eight characters. Generate and separate.
 4.     Detect removal of neighbors.
 5.     Remote storage of messages. After the initial release.
-6.     Compress IPv6 Scope ID field when hidden.
+6.     Sign release.
 7.     Allow log clearing. New Log activity.
 8.     Allow resetting of Chat session keys via context menu.
 9.     Include network information in neighbors pertaining to
        errors.
 10.    Validate the SipHash implementation.
 11.    Dynamic DNS for home servers.
-12.    Sign release.
