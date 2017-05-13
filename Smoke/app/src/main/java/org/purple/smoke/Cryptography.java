@@ -550,7 +550,7 @@ public class Cryptography
 	if(data == null || data.length < 0)
 	    return null;
 
-	synchronized(m_chatEncryptionPublicKeyPair)
+	synchronized(m_chatEncryptionPublicKeyPairMutex)
 	{
 	    byte bytes[] = null;
 
