@@ -127,3 +127,4 @@ Remaining Items
        errors.
 10.    Validate the SipHash implementation.
 11.    Dynamic DNS for home servers.
+12.    Sign release.
