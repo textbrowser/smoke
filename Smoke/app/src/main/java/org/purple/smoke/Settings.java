@@ -1025,6 +1025,12 @@ public class Settings extends AppCompatActivity
 		    else
 			m_databaseHelper.writeSetting
 			    (null, "neighbors_details", "false");
+
+		    final CheckBox checkBox = (CheckBox) findViewById
+			(R.id.automatic_refresh);
+
+		    if(!checkBox.isChecked())
+			populateNeighbors();
 		}
 	    });
 
