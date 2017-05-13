@@ -42,12 +42,12 @@ public class Miscellaneous
 
 	try
 	{
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder stringBuilder = new StringBuilder();
 
 	    for(byte b : bytes)
-		stringBuffer.append(String.format("%02x", b));
+		stringBuilder.append(String.format("%02x", b));
 
-	    return stringBuffer.toString();
+	    return stringBuilder.toString();
 	}
 	catch(Exception exception)
 	{
@@ -66,19 +66,19 @@ public class Miscellaneous
 
 	try
 	{
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder stringBuilder = new StringBuilder();
 
 	    for(int i = 0; i < string.length(); i += offset)
 	    {
-		stringBuffer.append(string.substring(i, i + offset));
-		stringBuffer.append(delimiter);
+		stringBuilder.append(string.substring(i, i + offset));
+		stringBuilder.append(delimiter);
 	    }
 
-	    if(stringBuffer.length() > 0 &&
-	       stringBuffer.charAt(stringBuffer.length() - 1) == delimiter)
-		return stringBuffer.substring(0, stringBuffer.length() - 1);
+	    if(stringBuilder.length() > 0 &&
+	       stringBuilder.charAt(stringBuilder.length() - 1) == delimiter)
+		return stringBuilder.substring(0, stringBuilder.length() - 1);
 	    else
-		return stringBuffer.toString();
+		return stringBuilder.toString();
 	}
 	catch(Exception exception)
 	{
@@ -92,19 +92,19 @@ public class Miscellaneous
     {
 	try
 	{
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder stringBuilder = new StringBuilder();
 
 	    for(int i = 0; i < string.length(); i += offset)
 	    {
-		stringBuffer.append(string.substring(i, i + offset));
-		stringBuffer.append(delimiter);
+		stringBuilder.append(string.substring(i, i + offset));
+		stringBuilder.append(delimiter);
 	    }
 
-	    if(stringBuffer.length() > 0 &&
-	       stringBuffer.charAt(stringBuffer.length() - 1) == delimiter)
-		return stringBuffer.substring(0, stringBuffer.length() - 1);
+	    if(stringBuilder.length() > 0 &&
+	       stringBuilder.charAt(stringBuilder.length() - 1) == delimiter)
+		return stringBuilder.substring(0, stringBuilder.length() - 1);
 	    else
-		return stringBuffer.toString();
+		return stringBuilder.toString();
 	}
 	catch(Exception exception)
 	{
@@ -117,33 +117,33 @@ public class Miscellaneous
 	try
 	{
 	    DecimalFormat decimalFormat = new DecimalFormat("0.00");
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder stringBuilder = new StringBuilder();
 	    long v = Integer.decode(bytes).longValue();
 
 	    if(v < 1024)
 	    {
-		stringBuffer.append(decimalFormat.format(v));
-		stringBuffer.append(" B");
+		stringBuilder.append(decimalFormat.format(v));
+		stringBuilder.append(" B");
 	    }
 	    else if(v < 1024 * 1024)
 	    {
-		stringBuffer.append(decimalFormat.format(v / (1.0 * 1024)));
-		stringBuffer.append(" KiB");
+		stringBuilder.append(decimalFormat.format(v / (1.0 * 1024)));
+		stringBuilder.append(" KiB");
 	    }
 	    else if(v < 1024 * 1024 * 1024)
 	    {
-		stringBuffer.append
+		stringBuilder.append
 		    (decimalFormat.format(v / (1.0 * 1024 * 1024)));
-		stringBuffer.append(" MiB");
+		stringBuilder.append(" MiB");
 	    }
 	    else
 	    {
-		stringBuffer.append
+		stringBuilder.append
 		    (decimalFormat.format(v / (1.0 * 1024 * 1024 * 1024)));
-		stringBuffer.append(" GiB");
+		stringBuilder.append(" GiB");
 	    }
 
-	    return stringBuffer.toString();
+	    return stringBuilder.toString();
 	}
 	catch(Exception exception)
 	{
@@ -237,15 +237,15 @@ public class Miscellaneous
 	}
     }
 
-    public static int countOf(StringBuffer stringBuffer, char character)
+    public static int countOf(StringBuilder stringBuilder, char character)
     {
-	if(stringBuffer == null || stringBuffer.length() == 0)
+	if(stringBuilder == null || stringBuilder.length() == 0)
 	    return 0;
 
 	int count = 0;
 
-	for(int i = 0; i < stringBuffer.length(); i++)
-	    if(character == stringBuffer.charAt(i))
+	for(int i = 0; i < stringBuilder.length(); i++)
+	    if(character == stringBuilder.charAt(i))
 		count += 1;
 
 	return count;

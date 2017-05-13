@@ -127,30 +127,30 @@ public class Chat extends AppCompatActivity
     {
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-	StringBuffer stringBuffer = new StringBuffer();
+	StringBuilder stringBuilder = new StringBuilder();
 	final TextView textView = (TextView) findViewById
 	    (R.id.chat_messages);
 
-	stringBuffer.append("[");
+	stringBuilder.append("[");
 
 	if(timestamp == 0)
-	    stringBuffer.append(simpleDateFormat.format(new Date()));
+	    stringBuilder.append(simpleDateFormat.format(new Date()));
 	else
-	    stringBuffer.append(simpleDateFormat.format(new Date(timestamp)));
+	    stringBuilder.append(simpleDateFormat.format(new Date(timestamp)));
 
-	stringBuffer.append("] ");
-	stringBuffer.append(name);
-	stringBuffer.append(" (");
-       	stringBuffer.append
+	stringBuilder.append("] ");
+	stringBuilder.append(name);
+	stringBuilder.append(" (");
+       	stringBuilder.append
 	    (Miscellaneous.
 	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
-	stringBuffer.append(")");
-	stringBuffer.append(":");
-	stringBuffer.append(sequence);
-	stringBuffer.append(": ");
-	stringBuffer.append(message);
-	stringBuffer.append("\n\n");
-	textView.append(stringBuffer);
+	stringBuilder.append(")");
+	stringBuilder.append(":");
+	stringBuilder.append(sequence);
+	stringBuilder.append(": ");
+	stringBuilder.append(message);
+	stringBuilder.append("\n\n");
+	textView.append(stringBuilder);
 	scrollMessagesView();
     }
 
@@ -161,7 +161,7 @@ public class Chat extends AppCompatActivity
     {
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-	StringBuffer stringBuffer = new StringBuffer();
+	StringBuilder stringBuilder = new StringBuilder();
 	final TextView textView = (TextView) findViewById
 	    (R.id.chat_messages);
 
@@ -171,28 +171,28 @@ public class Chat extends AppCompatActivity
 	if(sipHashId == null)
 	    sipHashId = "00:00:00:00";
 
-	stringBuffer.append("[");
-	stringBuffer.append(simpleDateFormat.format(new Date()));
-	stringBuffer.append("] ");
+	stringBuilder.append("[");
+	stringBuilder.append(simpleDateFormat.format(new Date()));
+	stringBuilder.append("] ");
 
 	if(initial)
-	    stringBuffer.append("Received a half-and-half organic call from ");
+	    stringBuilder.append("Received a half-and-half organic call from ");
 	else
-	    stringBuffer.append
+	    stringBuilder.append
 		("Received a half-and-half organic response from ");
 
-	stringBuffer.append(name);
-	stringBuffer.append(" (");
-	stringBuffer.append
+	stringBuilder.append(name);
+	stringBuilder.append(" (");
+	stringBuilder.append
 	    (Miscellaneous.
 	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
-	stringBuffer.append(").");
+	stringBuilder.append(").");
 
 	if(initial)
-	    stringBuffer.append(" Dispatching a response. Please be patient.");
+	    stringBuilder.append(" Dispatching a response. Please be patient.");
 
-	stringBuffer.append("\n\n");
-	textView.append(stringBuffer);
+	stringBuilder.append("\n\n");
+	textView.append(stringBuilder);
 	scrollMessagesView();
 
 	if(refresh)
@@ -255,7 +255,7 @@ public class Chat extends AppCompatActivity
 		}
 	    });
 
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder stringBuilder = new StringBuilder();
 	    TableRow.LayoutParams layoutParams = new
 		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Chat.this);
@@ -268,13 +268,13 @@ public class Chat extends AppCompatActivity
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
-	    stringBuffer.append(participantElement.m_name);
-	    stringBuffer.append("\n");
-	    stringBuffer.append
+	    stringBuilder.append(participantElement.m_name);
+	    stringBuilder.append("\n");
+	    stringBuilder.append
 		(Miscellaneous.
 		 delimitString(participantElement.m_sipHashId.
 			       replace(":", ""), '-', 4).toUpperCase());
-	    stringBuffer.append("\n");
+	    stringBuilder.append("\n");
 
 	    int guessedLength = Kernel.getInstance().callingStreamLength
 		(participantElement.m_sipHashId);
@@ -283,35 +283,35 @@ public class Chat extends AppCompatActivity
 		switch(100 * guessedLength / 96)
 		{
 		case 0:
-		    stringBuffer.append("Session Closed");
+		    stringBuilder.append("Session Closed");
 		    break;
 		case 50:
-		    stringBuffer.append("Session Incomplete");
+		    stringBuilder.append("Session Incomplete");
 		    break;
 		case 100:
-		    stringBuffer.append("Session Ready");
+		    stringBuilder.append("Session Ready");
 		    break;
 		default:
-		    stringBuffer.append("Session Faulty");
+		    stringBuilder.append("Session Faulty");
 		}
 	    else if(participantElement.m_keyStream == null ||
 		    participantElement.m_keyStream.length == 0)
-		stringBuffer.append("Session Closed");
+		stringBuilder.append("Session Closed");
 	    else if(participantElement.m_keyStream.length == 48)
-		stringBuffer.append("Session Incomplete");
+		stringBuilder.append("Session Incomplete");
 	    else if(participantElement.m_keyStream.length == 96)
-		stringBuffer.append("Session Ready");
+		stringBuilder.append("Session Ready");
 	    else
-		stringBuffer.append("Session Faulty");
+		stringBuilder.append("Session Faulty");
 
 	    if(participantElement.m_keyStream != null &&
 	       participantElement.m_keyStream.length == 96)
 	    {
-		stringBuffer.append("\n");
+		stringBuilder.append("\n");
 
 		long value = s_siphash.hmac(participantElement.m_keyStream);
 
-		stringBuffer.append
+		stringBuilder.append
 		    (Miscellaneous.
 		     delimitString(Miscellaneous.
 				   sipHashIdFromData(Miscellaneous.
@@ -325,7 +325,7 @@ public class Chat extends AppCompatActivity
 				    equals("true"));
 
 	    checkBox.setTag(participantElement.m_sipHashId);
-	    checkBox.setText(stringBuffer);
+	    checkBox.setText(stringBuilder);
 	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
 	    row.addView(checkBox);
 
@@ -348,7 +348,7 @@ public class Chat extends AppCompatActivity
 	    {
 		SimpleDateFormat simpleDateFormat = new
 		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder stringBuilder = new StringBuilder();
 		final TextView textView = (TextView) findViewById
 		    (R.id.chat_messages);
 		final TableLayout tableLayout = (TableLayout) findViewById
@@ -370,23 +370,23 @@ public class Chat extends AppCompatActivity
 		    {
 			Kernel.getInstance().call
 			    (checkBox.getId(), checkBox.getTag().toString());
-			stringBuffer.setLength(0);
-			stringBuffer.append("[");
-			stringBuffer.append
+			stringBuilder.setLength(0);
+			stringBuilder.append("[");
+			stringBuilder.append
 			    (simpleDateFormat.format(new Date()));
-			stringBuffer.append("] ");
-			stringBuffer.append("Initiating a session with ");
-			stringBuffer.append
+			stringBuilder.append("] ");
+			stringBuilder.append("Initiating a session with ");
+			stringBuilder.append
 			    (nameFromCheckBoxText(checkBox.getText().
 						  toString()));
-			stringBuffer.append(" (");
-			stringBuffer.append
+			stringBuilder.append(" (");
+			stringBuilder.append
 			    (Miscellaneous.
 			     delimitString(checkBox.getTag().toString().
 					   replace(":", ""), '-', 4).
 			     toUpperCase());
-			stringBuffer.append("). Please be patient.\n\n");
-			textView.append(stringBuffer);
+			stringBuilder.append("). Please be patient.\n\n");
+			textView.append(stringBuilder);
 		    }
 		}
 
@@ -450,7 +450,7 @@ public class Chat extends AppCompatActivity
 		SimpleDateFormat simpleDateFormat = new
 		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		String str = textView1.getText().toString().trim();
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder stringBuilder = new StringBuilder();
 		final TableLayout tableLayout = (TableLayout) findViewById
 		    (R.id.participants);
 
@@ -475,14 +475,14 @@ public class Chat extends AppCompatActivity
 		    if(keyStream == null || keyStream.length != 96)
 			continue;
 
-		    stringBuffer.setLength(0);
-		    stringBuffer.append("[");
-		    stringBuffer.append(simpleDateFormat.format(new Date()));
-		    stringBuffer.append("] ");
-		    stringBuffer.append("me: ");
-		    stringBuffer.append(str);
-		    stringBuffer.append("\n\n");
-		    textView2.append(stringBuffer);
+		    stringBuilder.setLength(0);
+		    stringBuilder.append("[");
+		    stringBuilder.append(simpleDateFormat.format(new Date()));
+		    stringBuilder.append("] ");
+		    stringBuilder.append("me: ");
+		    stringBuilder.append(str);
+		    stringBuilder.append("\n\n");
+		    textView2.append(stringBuilder);
 		    textView1.setText("");
 
 		    byte bytes[] = null;

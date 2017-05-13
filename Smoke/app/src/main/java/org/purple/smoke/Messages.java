@@ -42,7 +42,7 @@ public class Messages
 
     public static String bytesToMessageString(byte bytes[])
     {
-	StringBuffer results = new StringBuffer();
+	StringBuilder results = new StringBuilder();
 
 	results.append("POST HTTP/1.1\r\n");
 	results.append("Content-Type: application/x-www-form-urlencoded\r\n");
@@ -212,35 +212,35 @@ public class Messages
 	    if(pk == null)
 		return null;
 
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder stringBuilder = new StringBuilder();
 
 	    /*
 	    ** [ A Timestamp ]
 	    */
 
-	    stringBuffer.append
+	    stringBuilder.append
 		(Base64.encodeToString(Miscellaneous.longToByteArray(timestamp),
 				       Base64.NO_WRAP));
-	    stringBuffer.append("\n");
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Message ]
 	    */
 
-	    stringBuffer.append
+	    stringBuilder.append
 		(Base64.encodeToString(message.getBytes("UTF-8"),
 				       Base64.NO_WRAP));
-	    stringBuffer.append("\n");
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Sequence ]
 	    */
 
-	    stringBuffer.append
+	    stringBuilder.append
 		(Base64.encodeToString(Miscellaneous.
 				       longToByteArray(sequence),
 				       Base64.NO_WRAP));
-	    stringBuffer.append("\n");
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Public Key Signature ]
@@ -249,16 +249,16 @@ public class Messages
 	    byte signature[] = cryptography.signViaChatSignature
 		(Miscellaneous.
 		 joinByteArrays(cryptography.chatEncryptionPublicKeyDigest(),
-				stringBuffer.toString().getBytes()));
+				stringBuilder.toString().getBytes()));
 
 	    if(signature == null)
 		return null;
 
-	    stringBuffer.append(Base64.encodeToString(signature,
+	    stringBuilder.append(Base64.encodeToString(signature,
 						      Base64.NO_WRAP));
 
 	    byte messageBytes[] = Cryptography.encrypt
-		(stringBuffer.toString().getBytes(),
+		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
 	    if(messageBytes == null)
@@ -309,26 +309,26 @@ public class Messages
 
 	try
 	{
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder stringBuilder = new StringBuilder();
 
 	    /*
 	    ** [ A Timestamp ]
 	    */
 
-	    stringBuffer.append
+	    stringBuilder.append
 		(Base64.encodeToString(Miscellaneous.
 				       longToByteArray(System.
 						       currentTimeMillis()),
 				       Base64.NO_WRAP));
-	    stringBuffer.append("\n");
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Key Type ]
 	    */
 
-	    stringBuffer.append
+	    stringBuilder.append
 		(Base64.encodeToString(keyType, Base64.NO_WRAP));
-	    stringBuffer.append("\n");
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Encryption Public Key ]
@@ -351,11 +351,11 @@ public class Messages
 	    if(bytes == null)
 		return null;
 
-	    stringBuffer.append(Base64.encodeToString(publicKey.getEncoded(),
+	    stringBuilder.append(Base64.encodeToString(publicKey.getEncoded(),
 						      Base64.NO_WRAP));
-	    stringBuffer.append("\n");
-	    stringBuffer.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
-	    stringBuffer.append("\n");
+	    stringBuilder.append("\n");
+	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Signature Public Key ]
@@ -375,13 +375,13 @@ public class Messages
 	    if(bytes == null)
 		return null;
 
-	    stringBuffer.append(Base64.encodeToString(publicKey.getEncoded(),
+	    stringBuilder.append(Base64.encodeToString(publicKey.getEncoded(),
 						      Base64.NO_WRAP));
-	    stringBuffer.append("\n");
-	    stringBuffer.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
 	    byte messageBytes[] = Cryptography.encrypt
-		(stringBuffer.toString().getBytes(),
+		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
 	    if(messageBytes == null)

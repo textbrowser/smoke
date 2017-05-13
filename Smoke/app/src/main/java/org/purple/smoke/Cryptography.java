@@ -159,16 +159,16 @@ public class Cryptography
 
 	PublicKey publicKey = keyPair.getPublic();
 	String algorithm = publicKey.getAlgorithm();
-	StringBuffer stringBuffer = new StringBuffer();
+	StringBuilder StringBuilder = new StringBuilder();
 
-	stringBuffer.append("Algorithm: ");
-	stringBuffer.append(algorithm);
-	stringBuffer.append("\n");
-	stringBuffer.append("Fingerprint: ");
-	stringBuffer.append(publicKeyFingerPrint(publicKey));
-	stringBuffer.append("\n");
-	stringBuffer.append("Format: ");
-	stringBuffer.append(publicKey.getFormat());
+	StringBuilder.append("Algorithm: ");
+	StringBuilder.append(algorithm);
+	StringBuilder.append("\n");
+	StringBuilder.append("Fingerprint: ");
+	StringBuilder.append(publicKeyFingerPrint(publicKey));
+	StringBuilder.append("\n");
+	StringBuilder.append("Format: ");
+	StringBuilder.append(publicKey.getFormat());
 
 	if(algorithm.equals("EC") || algorithm.equals("RSA"))
 	    try
@@ -178,7 +178,7 @@ public class Cryptography
 		    ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
 
 		    if(ecPublicKey != null)
-			stringBuffer.append("\n").append("Size: ").
+			StringBuilder.append("\n").append("Size: ").
 			    append(ecPublicKey.getW().getAffineX().
 				   bitLength());
 		}
@@ -187,7 +187,7 @@ public class Cryptography
 		    RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
 
 		    if(rsaPublicKey != null)
-			stringBuffer.append("\n").append("Size: ").
+			StringBuilder.append("\n").append("Size: ").
 			    append(rsaPublicKey.getModulus().bitLength());
 		}
 	    }
@@ -195,7 +195,7 @@ public class Cryptography
 	    {
 	    }
 
-	return stringBuffer.toString();
+	return StringBuilder.toString();
     }
 
     public String sipHashId()
@@ -750,7 +750,7 @@ public class Cryptography
 	    "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc" +
 	    "83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd4" +
 	    "7417a81a538327af927da3e";
-	StringBuffer stringBuffer = new StringBuffer();
+	StringBuilder StringBuilder = new StringBuilder();
 
 	if(bytes != null)
 	{
@@ -764,16 +764,16 @@ public class Cryptography
 	{
 	    for(int i = 0; i < fingerprint.length(); i += 2)
 		if(i < fingerprint.length() - 2)
-		    stringBuffer.append(fingerprint.substring(i, i + 2)).
+		    StringBuilder.append(fingerprint.substring(i, i + 2)).
 			append(":");
 		else
-		    stringBuffer.append(fingerprint.substring(i, i + 2));
+		    StringBuilder.append(fingerprint.substring(i, i + 2));
 	}
 	catch(Exception exception)
 	{
 	}
 
-	return stringBuffer.toString();
+	return StringBuilder.toString();
     }
 
     public static String publicKeyFingerPrint(PublicKey publicKey)

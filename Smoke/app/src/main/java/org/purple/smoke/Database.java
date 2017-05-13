@@ -206,13 +206,13 @@ public class Database extends SQLiteOpenHelper
 			{
 			    error = true;
 
-			    StringBuffer stringBuffer = new StringBuffer();
+			    StringBuilder StringBuilder = new StringBuilder();
 
-			    stringBuffer.append("Database::readNeighbors(): ");
-			    stringBuffer.append("error on column ");
-			    stringBuffer.append(cursor.getColumnName(i));
-			    stringBuffer.append(".");
-			    writeLog(stringBuffer.toString());
+			    StringBuilder.append("Database::readNeighbors(): ");
+			    StringBuilder.append("error on column ");
+			    StringBuilder.append(cursor.getColumnName(i));
+			    StringBuilder.append(".");
+			    writeLog(StringBuilder.toString());
 			    break;
 			}
 
@@ -353,14 +353,14 @@ public class Database extends SQLiteOpenHelper
 			{
 			    error = true;
 
-			    StringBuffer stringBuffer = new StringBuffer();
+			    StringBuilder StringBuilder = new StringBuilder();
 
-			    stringBuffer.append
+			    StringBuilder.append
 				("Database::readParticipants(): ");
-			    stringBuffer.append("error on column ");
-			    stringBuffer.append(cursor.getColumnName(i));
-			    stringBuffer.append(".");
-			    writeLog(stringBuffer.toString());
+			    StringBuilder.append("error on column ");
+			    StringBuilder.append(cursor.getColumnName(i));
+			    StringBuilder.append(".");
+			    writeLog(StringBuilder.toString());
 			    break;
 			}
 
@@ -452,13 +452,14 @@ public class Database extends SQLiteOpenHelper
 			{
 			    error = true;
 
-			    StringBuffer stringBuffer = new StringBuffer();
+			    StringBuilder StringBuilder = new StringBuilder();
 
-			    stringBuffer.append("Database::readSipHashIds(): ");
-			    stringBuffer.append("error on column ");
-			    stringBuffer.append(cursor.getColumnName(i));
-			    stringBuffer.append(".");
-			    writeLog(stringBuffer.toString());
+			    StringBuilder.append
+				("Database::readSipHashIds(): ");
+			    StringBuilder.append("error on column ");
+			    StringBuilder.append(cursor.getColumnName(i));
+			    StringBuilder.append(".");
+			    writeLog(StringBuilder.toString());
 			    break;
 			}
 
@@ -1103,13 +1104,13 @@ public class Database extends SQLiteOpenHelper
 
 		if(bytes == null)
 		{
-		    StringBuffer stringBuffer = new StringBuffer();
+		    StringBuilder StringBuilder = new StringBuilder();
 
-		    stringBuffer.append
+		    StringBuilder.append
 			("Database::writeNeighbor(): error with ");
-		    stringBuffer.append(sparseArray.get(i));
-		    stringBuffer.append(" field.");
-		    writeLog(stringBuffer.toString());
+		    StringBuilder.append(sparseArray.get(i));
+		    StringBuilder.append(" field.");
+		    writeLog(StringBuilder.toString());
 		    throw new Exception();
 		}
 
@@ -1406,13 +1407,13 @@ public class Database extends SQLiteOpenHelper
 
 		if(bytes == null)
 		{
-		    StringBuffer stringBuffer = new StringBuffer();
+		    StringBuilder StringBuilder = new StringBuilder();
 
-		    stringBuffer.append
+		    StringBuilder.append
 			("Database::writeSipHashParticipant(): error with ");
-		    stringBuffer.append(sparseArray.get(i));
-		    stringBuffer.append(" field.");
-		    writeLog(stringBuffer.toString());
+		    StringBuilder.append(sparseArray.get(i));
+		    StringBuilder.append(" field.");
+		    writeLog(StringBuilder.toString());
 		    throw new Exception();
 		}
 
@@ -1572,11 +1573,11 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    StringBuffer stringBuffer = new StringBuffer();
+	    StringBuilder StringBuilder = new StringBuilder();
 
-	    stringBuffer.append("SELECT COUNT(*) FROM ");
-	    stringBuffer.append(table);
-	    cursor = m_db.rawQuery(stringBuffer.toString(), null);
+	    StringBuilder.append("SELECT COUNT(*) FROM ");
+	    StringBuilder.append(table);
+	    cursor = m_db.rawQuery(StringBuilder.toString(), null);
 
 	    if(cursor != null && cursor.moveToFirst())
 		c = cursor.getInt(0);

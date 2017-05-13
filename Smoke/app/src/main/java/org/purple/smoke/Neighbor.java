@@ -235,7 +235,7 @@ public abstract class Neighbor
     {
 	try
 	{
-	    StringBuffer message = new StringBuffer();
+	    StringBuilder message = new StringBuilder();
 
 	    message.append(m_uuid.toString());
 	    message.append("\n");
@@ -243,7 +243,7 @@ public abstract class Neighbor
 	    message.append("\n");
 	    message.append(m_echoMode);
 
-	    StringBuffer results = new StringBuffer();
+	    StringBuilder results = new StringBuilder();
 
 	    results.append("POST HTTP/1.1\r\n");
 	    results.append

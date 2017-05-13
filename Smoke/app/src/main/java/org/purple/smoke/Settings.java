@@ -167,7 +167,7 @@ public class Settings extends AppCompatActivity
     private void addParticipant()
     {
 	String string = "";
-	StringBuffer stringBuffer = new StringBuffer();
+	StringBuilder stringBuilder = new StringBuilder();
 	final TextView textView1 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
 	final TextView textView2 = (TextView) findViewById
@@ -180,20 +180,20 @@ public class Settings extends AppCompatActivity
 	{
 	    for(int i = 0; i < string.length(); i += 2)
 	    {
-		stringBuffer.append(string.charAt(i));
-		stringBuffer.append(string.charAt(i + 1));
-		stringBuffer.append(':');
+		stringBuilder.append(string.charAt(i));
+		stringBuilder.append(string.charAt(i + 1));
+		stringBuilder.append(':');
 	    }
 	}
 	catch(Exception exception)
 	{
 	}
 
-	if(stringBuffer.length() > 0 &&
-	   stringBuffer.charAt(stringBuffer.length() - 1) == ':')
-	    string = stringBuffer.substring(0, stringBuffer.length() - 1);
+	if(stringBuilder.length() > 0 &&
+	   stringBuilder.charAt(stringBuilder.length() - 1) == ':')
+	    string = stringBuilder.substring(0, stringBuilder.length() - 1);
 	else
-	    string = stringBuffer.toString();
+	    string = stringBuilder.toString();
 
 	if(string.length() != 23)
 	{
@@ -395,7 +395,7 @@ public class Settings extends AppCompatActivity
 
     private void populateFancyKeyData()
     {
-	StringBuffer stringBuffer = null;
+	StringBuilder stringBuilder = null;
 	TextView textView1 = null;
 
 	textView1 = (TextView) findViewById(R.id.chat_encryption_key_data);
@@ -405,13 +405,13 @@ public class Settings extends AppCompatActivity
 	    textView1.setVisibility(View.INVISIBLE);
 	else
 	{
-	    stringBuffer = new StringBuffer();
-	    stringBuffer.append("Chat Encryption Key\n");
-	    stringBuffer.append
+	    stringBuilder = new StringBuilder();
+	    stringBuilder.append("Chat Encryption Key\n");
+	    stringBuilder.append
 		(s_cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
 					   chatEncryptionKeyPair()));
-	    textView1.setText(stringBuffer);
+	    textView1.setText(stringBuilder);
 	    textView1.setVisibility(View.VISIBLE);
 	}
 
@@ -422,28 +422,28 @@ public class Settings extends AppCompatActivity
 	    textView1.setVisibility(View.INVISIBLE);
 	else
 	{
-	    if(stringBuffer == null)
-		stringBuffer = new StringBuffer();
+	    if(stringBuilder == null)
+		stringBuilder = new StringBuilder();
 	    else
-		stringBuffer.delete(0, stringBuffer.length());
+		stringBuilder.delete(0, stringBuilder.length());
 
-	    stringBuffer.append("Chat Signature Key\n");
-	    stringBuffer.append
+	    stringBuilder.append("Chat Signature Key\n");
+	    stringBuilder.append
 		(s_cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
 					   chatSignatureKeyPair()));
-	    textView1.setText(stringBuffer);
+	    textView1.setText(stringBuilder);
 	    textView1.setVisibility(View.VISIBLE);
 	}
 
 	textView1 = (TextView) findViewById(R.id.siphash_identity);
 
-	if(stringBuffer == null)
+	if(stringBuilder == null)
 	    textView1.setVisibility(View.INVISIBLE);
 	else
 	{
-	    stringBuffer.delete(0, stringBuffer.length());
-	    stringBuffer.append("SipHash Chat Identity\n");
+	    stringBuilder.delete(0, stringBuilder.length());
+	    stringBuilder.append("SipHash Chat Identity\n");
 
 	    byte bytes[] = Miscellaneous.joinByteArrays
 		(s_cryptography.chatEncryptionKeyPair().getPublic().
@@ -452,15 +452,15 @@ public class Settings extends AppCompatActivity
 		 getEncoded());
 
 	    if(bytes != null)
-		stringBuffer.append
+		stringBuilder.append
 		    (Miscellaneous.delimitString(Miscellaneous.
 						 sipHashIdFromData(bytes).
 						 replace(":", ""), '-', 4).
 		     toUpperCase());
 	    else
-		stringBuffer.append("0000-0000-0000-0000");
+		stringBuilder.append("0000-0000-0000-0000");
 
-	    textView1.setText(stringBuffer);
+	    textView1.setText(stringBuilder);
 	    textView1.setTextIsSelectable(true);
 	    textView1.setVisibility(View.VISIBLE);
 	}
@@ -480,7 +480,7 @@ public class Settings extends AppCompatActivity
 	}
 
 	CheckBox checkBox = (CheckBox) findViewById(R.id.neighbor_details);
-	StringBuffer stringBuffer = new StringBuffer();
+	StringBuilder stringBuilder = new StringBuilder();
 
 	for(int i = 0; i < arrayList.size(); i++)
 	{
@@ -501,14 +501,14 @@ public class Settings extends AppCompatActivity
 		if(t == null)
 		    continue;
 
-		stringBuffer.setLength(0);
-		stringBuffer.append(neighborElement.m_remoteIpAddress);
-		stringBuffer.append(":");
-		stringBuffer.append(neighborElement.m_remotePort);
-		stringBuffer.append(":");
-		stringBuffer.append(neighborElement.m_transport);
+		stringBuilder.setLength(0);
+		stringBuilder.append(neighborElement.m_remoteIpAddress);
+		stringBuilder.append(":");
+		stringBuilder.append(neighborElement.m_remotePort);
+		stringBuilder.append(":");
+		stringBuilder.append(neighborElement.m_transport);
 
-		if(t.getText().toString().contains(stringBuffer.toString()))
+		if(t.getText().toString().contains(stringBuilder.toString()))
 		{
 		    textView = t;
 		    break;
@@ -600,60 +600,60 @@ public class Settings extends AppCompatActivity
 	    else
 		textView.setTextColor(Color.rgb(139, 0, 0)); // Dark Red
 
-	    stringBuffer.setLength(0);
-	    stringBuffer.append("Control: ");
+	    stringBuilder.setLength(0);
+	    stringBuilder.append("Control: ");
 
 	    try
 	    {
-		stringBuffer.append
+		stringBuilder.append
 		    (neighborElement.m_statusControl.substring(0, 1).
 		     toUpperCase());
-		stringBuffer.append
+		stringBuilder.append
 		    (neighborElement.m_statusControl.substring(1));
 	    }
 	    catch(Exception exception)
 	    {
-		stringBuffer.append("Disconnect");
+		stringBuilder.append("Disconnect");
 	    }
 
-	    stringBuffer.append("\n");
-	    stringBuffer.append("Status: ");
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Status: ");
 
 	    try
 	    {
-		stringBuffer.append
+		stringBuilder.append
 		    (neighborElement.m_status.substring(0, 1).toUpperCase());
-		stringBuffer.append(neighborElement.m_status.substring(1));
+		stringBuilder.append(neighborElement.m_status.substring(1));
 	    }
 	    catch(Exception exception)
 	    {
-		stringBuffer.append("Disconnected");
+		stringBuilder.append("Disconnected");
 	    }
 
-	    stringBuffer.append("\n");
-	    stringBuffer.append(neighborElement.m_remoteIpAddress);
-	    stringBuffer.append(":");
-	    stringBuffer.append(neighborElement.m_remotePort);
-	    stringBuffer.append(":");
-	    stringBuffer.append(neighborElement.m_transport);
+	    stringBuilder.append("\n");
+	    stringBuilder.append(neighborElement.m_remoteIpAddress);
+	    stringBuilder.append(":");
+	    stringBuilder.append(neighborElement.m_remotePort);
+	    stringBuilder.append(":");
+	    stringBuilder.append(neighborElement.m_transport);
 
 	    if(!neighborElement.m_localIpAddress.isEmpty() &&
 	       !neighborElement.m_localPort.isEmpty())
 	    {
-		stringBuffer.append("\n");
-		stringBuffer.append(neighborElement.m_localIpAddress);
-		stringBuffer.append(":");
-		stringBuffer.append(neighborElement.m_localPort);
+		stringBuilder.append("\n");
+		stringBuilder.append(neighborElement.m_localIpAddress);
+		stringBuilder.append(":");
+		stringBuilder.append(neighborElement.m_localPort);
 	    }
 
-	    stringBuffer.append("\nProxy: ");
+	    stringBuilder.append("\nProxy: ");
 
 	    if(!neighborElement.m_proxyIpAddress.isEmpty() &&
 	       !neighborElement.m_proxyPort.isEmpty())
 	    {
-		stringBuffer.append(neighborElement.m_proxyIpAddress);
-		stringBuffer.append(":");
-		stringBuffer.append(neighborElement.m_proxyPort);
+		stringBuilder.append(neighborElement.m_proxyIpAddress);
+		stringBuilder.append(":");
+		stringBuilder.append(neighborElement.m_proxyPort);
 	    }
 
 	    if(checkBox.isChecked())
@@ -661,59 +661,59 @@ public class Settings extends AppCompatActivity
 		if(neighborElement.m_remoteCertificate != null &&
 		   neighborElement.m_remoteCertificate.length > 0)
 		{
-		    stringBuffer.append("\n");
-		    stringBuffer.append
+		    stringBuilder.append("\n");
+		    stringBuilder.append
 			("Remote Certificate's Fingerprint: ");
-		    stringBuffer.append
+		    stringBuilder.append
 			(Cryptography.
 			 fingerPrint(neighborElement.m_remoteCertificate));
 		}
 
 		if(!neighborElement.m_sessionCipher.isEmpty())
 		{
-		    stringBuffer.append("\n");
-		    stringBuffer.append("Session Cipher: ");
-		    stringBuffer.append(neighborElement.m_sessionCipher);
+		    stringBuilder.append("\n");
+		    stringBuilder.append("Session Cipher: ");
+		    stringBuilder.append(neighborElement.m_sessionCipher);
 		}
 	    }
 
-	    stringBuffer.append("\n");
-	    stringBuffer.append("Temporary Queue Size: ");
-	    stringBuffer.append(neighborElement.m_echoQueueSize);
-	    stringBuffer.append(" / ");
-	    stringBuffer.append(Neighbor.MAXIMUM_QUEUED_ECHO_PACKETS);
-	    stringBuffer.append("\n");
-	    stringBuffer.append("In: ");
-	    stringBuffer.append
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Temporary Queue Size: ");
+	    stringBuilder.append(neighborElement.m_echoQueueSize);
+	    stringBuilder.append(" / ");
+	    stringBuilder.append(Neighbor.MAXIMUM_QUEUED_ECHO_PACKETS);
+	    stringBuilder.append("\n");
+	    stringBuilder.append("In: ");
+	    stringBuilder.append
 		(Miscellaneous.
 		 formattedDigitalInformation(neighborElement.m_bytesRead));
-	    stringBuffer.append("\n");
-	    stringBuffer.append("Out: ");
-	    stringBuffer.append
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Out: ");
+	    stringBuilder.append
 		(Miscellaneous.
 		 formattedDigitalInformation(neighborElement.m_bytesWritten));
-	    stringBuffer.append("\n");
-	    stringBuffer.append("Uptime: ");
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Uptime: ");
 
 	    try
 	    {
 		DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-		stringBuffer.append
+		stringBuilder.append
 		    (decimalFormat.format(Integer.
 					  parseInt(neighborElement.m_uptime) /
 					  60000.0));
 	    }
 	    catch(Exception exception)
 	    {
-		stringBuffer.append("0.00");
+		stringBuilder.append("0.00");
 	    }
 
-	    stringBuffer.append(" Minutes\n");
+	    stringBuilder.append(" Minutes\n");
 	    textView.setGravity(Gravity.CENTER_VERTICAL);
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
-	    textView.setText(stringBuffer);
+	    textView.setText(stringBuilder);
 	    textView.setTextSize(TEXTVIEW_TEXT_SIZE);
 	    textView.setWidth(TEXTVIEW_WIDTH);
 
