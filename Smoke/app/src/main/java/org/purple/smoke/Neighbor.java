@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public abstract class Neighbor
 {
     private ArrayList<String> m_queue = null;
+    private ScheduledExecutorService m_parsingScheduler = null;
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
@@ -47,6 +48,7 @@ public abstract class Neighbor
     private final Object m_queueMutex = new Object();
     private final String m_echoMode = "full";
     private final static int LANE_WIDTH = 100000;
+    private final static int PARSING_INTERVAL = 100; // Milliseconds
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
@@ -127,6 +129,7 @@ public abstract class Neighbor
 	m_ipPort = ipPort;
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
+	m_parsingScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_queue = new ArrayList<> ();
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scopeId = scopeId;
@@ -136,9 +139,55 @@ public abstract class Neighbor
 	m_version = version;
 
 	/*
-	** Start schedules.
+	** Start the schedules.
 	*/
 
+	m_parsingScheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+
+	    public void run()
+	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
+		    else
+			Thread.sleep(5);
+		}
+		catch(InterruptedException exception)
+		{
+		    Thread.currentThread().interrupt();
+		}
+		catch(Exception exception)
+		{
+		}
+
+		synchronized(m_stringBuilder)
+		{
+		    /*
+		    ** Detect our end-of-message delimiter.
+		    */
+
+		    int indexOf = m_stringBuilder.indexOf(EOM);
+
+		    while(indexOf >= 0)
+		    {
+			String buffer = m_stringBuilder.
+			    substring(0, indexOf + EOM.length());
+
+			if(!Kernel.getInstance().ourMessage(buffer))
+			    echo(buffer);
+
+			m_stringBuilder.delete(0, buffer.length());
+			indexOf = m_stringBuilder.indexOf(EOM);
+		    }
+
+		    if(m_stringBuilder.length() > MAXIMUM_BYTES)
+			m_stringBuilder.setLength(MAXIMUM_BYTES);
+		}
+	    }
+	}, 0, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
 	m_scheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    private long m_accumulatedTime = System.nanoTime();
@@ -192,7 +241,6 @@ public abstract class Neighbor
 		terminateOnSilence();
 	    }
 	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
-
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    @Override
