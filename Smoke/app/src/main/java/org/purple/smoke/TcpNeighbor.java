@@ -311,27 +311,6 @@ public class TcpNeighbor extends Neighbor
 		    {
 			m_stringBuilder.append
 			    (new String(m_bytes, 0, (int) bytesRead));
-
-			/*
-			** Detect our end-of-message delimiter.
-			*/
-
-			int indexOf = m_stringBuilder.indexOf(EOM);
-
-			while(indexOf >= 0)
-			{
-			    String buffer = m_stringBuilder.
-				substring(0, indexOf + EOM.length());
-
-			    if(!Kernel.getInstance().ourMessage(buffer))
-				echo(buffer);
-
-			    m_stringBuilder.delete(0, buffer.length());
-			    indexOf = m_stringBuilder.indexOf(EOM);
-			}
-
-			if(m_stringBuilder.length() > MAXIMUM_BYTES)
-			    m_stringBuilder.setLength(MAXIMUM_BYTES);
 		    }
 		}
 		catch(java.net.SocketException exception)
