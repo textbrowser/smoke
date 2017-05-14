@@ -631,6 +631,14 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuilder.append("\n");
+
+	    if(!neighborElement.m_error.isEmpty())
+	    {
+		stringBuilder.append("Error: ");
+		stringBuilder.append(neighborElement.m_error);
+		stringBuilder.append("\n");
+	    }
+
 	    stringBuilder.append(neighborElement.m_remoteIpAddress);
 	    stringBuilder.append(":");
 	    stringBuilder.append(neighborElement.m_remotePort);

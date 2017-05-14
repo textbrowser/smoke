@@ -1991,7 +1991,7 @@ public class Database extends SQLiteOpenHelper
 		bytesRead = "";
 		bytesWritten = "";
 		echoQueueSize = "0";
-		error = "";
+		error = error; // Do not clear the error.
 		ipAddress = "";
 		ipPort = "";
 		sessionCipher = "";

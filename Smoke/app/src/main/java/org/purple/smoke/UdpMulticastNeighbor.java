@@ -78,6 +78,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("A socket error occurred on send().");
 	    disconnect();
 	    return false;
 	}
@@ -148,6 +149,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("A socket error occurred on sendCapabilities().");
 	    disconnect();
 	}
     }
@@ -218,6 +220,7 @@ public class UdpMulticastNeighbor extends Neighbor
 
 		    if(bytesRead < 0)
 		    {
+			setError("A socket receive() error occurred.");
 			disconnect();
 			return;
 		    }
@@ -282,6 +285,8 @@ public class UdpMulticastNeighbor extends Neighbor
 	if(connected())
 	    return;
 
+	setError("");
+
 	try
 	{
 	    m_bytesRead.set(0);
@@ -295,6 +300,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("An error occurred while attempting a connection.");
 	    disconnect();
 	}
     }

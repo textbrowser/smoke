@@ -90,6 +90,7 @@ public class UdpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("A socket error occurred on send().");
 	    disconnect();
 	    return false;
 	}
@@ -155,6 +156,7 @@ public class UdpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("A socket error occurred on sendCapabilities().");
 	    disconnect();
 	}
     }
@@ -225,6 +227,7 @@ public class UdpNeighbor extends Neighbor
 
 		    if(bytesRead < 0)
 		    {
+			setError("A socket receive() error occurred.");
 			disconnect();
 			return;
 		    }
@@ -289,6 +292,8 @@ public class UdpNeighbor extends Neighbor
 	if(connected())
 	    return;
 
+	setError("");
+
 	try
 	{
 	    if(m_inetAddress == null)
@@ -304,6 +309,7 @@ public class UdpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("An error occurred while attempting a connection.");
 	    disconnect();
 	}
     }

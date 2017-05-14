@@ -60,12 +60,11 @@ public abstract class Neighbor
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
     protected ScheduledExecutorService m_readSocketScheduler = null;
-    protected String m_error = "";
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
+    protected StringBuilder m_error = new StringBuilder();
     protected byte m_bytes[] = null;
-    protected final Object m_errorMutex = new Object();
     protected final StringBuilder m_stringBuilder = new StringBuilder();
     protected final static String EOM = "\r\n\r\n\r\n";
     protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
@@ -83,9 +82,9 @@ public abstract class Neighbor
 	boolean connected = connected();
 	long uptime = System.nanoTime() - m_startTime.get();
 
-	synchronized(m_errorMutex)
+	synchronized(m_error)
 	{
-	    error = m_error;
+	    error = m_error.toString();
 	}
 
 	synchronized(m_queueMutex)
@@ -369,6 +368,15 @@ public abstract class Neighbor
     protected void echo(String message)
     {
 	Kernel.getInstance().echo(message, m_oid.get());
+    }
+
+    protected void setError(String error)
+    {
+	synchronized(m_error)
+	{
+	    m_error.setLength(0);
+	    m_error.append(error);
+	}
     }
 
     public int getOid()

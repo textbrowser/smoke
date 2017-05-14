@@ -50,7 +50,7 @@ public class TcpNeighbor extends Neighbor
     private String m_proxyIpAddress = "";
     private String m_proxyType = "";
     private TrustManager m_trustManagers[] = null;
-    private final static int CONNECTION_TIMEOUT = 10000; // 10 Seconds
+    private final static int CONNECTION_TIMEOUT = 5000; // 5 Seconds
     private final static int HANDSHAKE_TIMEOUT = 10000; // 10 Seconds
     private int m_proxyPort = -1;
 
@@ -124,6 +124,7 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("A socket error occurred on send().");
 	    disconnect();
 	    return false;
 	}
@@ -193,6 +194,7 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("A socket error occurred on sendCapabilities().");
 	    disconnect();
 	}
     }
@@ -300,6 +302,7 @@ public class TcpNeighbor extends Neighbor
 
 		    if(bytesRead < 0)
 		    {
+			setError("A socket read() error occurred.");
 			disconnect();
 			return;
 		    }
@@ -315,6 +318,7 @@ public class TcpNeighbor extends Neighbor
 		}
 		catch(java.net.SocketException exception)
 		{
+		    setError("A socket error occurred while reading data.");
 		    disconnect();
 		}
 		catch(Exception exception)
@@ -363,17 +367,30 @@ public class TcpNeighbor extends Neighbor
 			    }
 			    else if(!Cryptography.memcmp(bytes,
 							 chain[0].getEncoded()))
+			    {
+				setError("The stored server's " +
+					 "certificate does not match the " +
+					 "certificate that was provided by " +
+					 "the server.");
 				m_isValidCertificate.set(0);
+			    }
 			    else
 				m_isValidCertificate.set(1);
 			}
 			catch(Exception exception)
 			{
-			    // Expired?
-
+			    setError("The server's certificate has expired.");
 			    m_isValidCertificate.set(0);
 			}
 		    }
+
+		    if(m_isValidCertificate.get() == 0)
+			synchronized(m_error)
+			{
+			    if(m_error.length() == 0)
+				m_error.append
+				    ("A generic certificate error occurred.");
+			}
 		}
 	    }
 	};
@@ -399,6 +416,8 @@ public class TcpNeighbor extends Neighbor
     {
 	if(connected())
 	    return;
+
+	setError("");
 
 	try
 	{
@@ -433,6 +452,7 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
+	    setError("An error occurred while attempting a connection.");
 	    disconnect();
 	}
     }
