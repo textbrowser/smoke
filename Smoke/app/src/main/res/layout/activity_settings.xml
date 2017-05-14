@@ -155,7 +155,6 @@
                         android:id="@+id/neighbors_port"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/port"
                         android:inputType="number" />

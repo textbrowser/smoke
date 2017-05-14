@@ -36,19 +36,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Base64;
-import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -1492,16 +1492,26 @@ public class Settings extends AppCompatActivity
 	    public void onCheckedChanged(RadioGroup group,
 					 int checkedId)
 	    {
+		int marginEnd = 0;
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
 		if(checkedId == R.id.neighbors_ipv4)
 		{
+		    marginEnd = 5;
 		    textView1.setText("");
 		    textView1.setVisibility(View.GONE);
 		}
 		else
 		    textView1.setVisibility(View.VISIBLE);
+
+		LayoutParams layoutParams = new LayoutParams
+		    (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final TextView textView2 = (TextView) findViewById
+		    (R.id.neighbors_port);
+
+		layoutParams.setMarginEnd(marginEnd);
+		textView2.setLayoutParams(layoutParams);
 	    }
 	});
 
@@ -1519,6 +1529,12 @@ public class Settings extends AppCompatActivity
         textView1 = (TextView) findViewById(R.id.neighbors_port);
         textView1.setEnabled(isAuthenticated);
 	textView1.setFilters(new InputFilter[] { s_portFilter });
+
+	LayoutParams layoutParams = new LayoutParams
+	    (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+	layoutParams.setMarginEnd(5);
+	textView1.setLayoutParams(layoutParams);
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 
