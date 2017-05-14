@@ -622,8 +622,8 @@ public class Chat extends AppCompatActivity
 		    (Chat.this,
 		     listener,
 		     "Are you sure that you " +
-		     "wish to reset the session for " +
-		     item.getTitle().toString().replace("Reset Session (", "").
+		     "wish to purge the session key stream for " +
+		     item.getTitle().toString().replace("Purge Session (", "").
 		     replace(")", "") + "?");
 		break;
 	    }
@@ -664,7 +664,7 @@ public class Chat extends AppCompatActivity
 		(1,
 		 v.getId(),
 		 0,
-		 "Reset Session (" +
+		 "Purge Session (" +
 		 Miscellaneous.
 		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
 		 toUpperCase() +
