@@ -1084,7 +1084,7 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("local_port_digest"))
 		    bytes = cryptography.hmac("".getBytes());
 		else if(sparseArray.get(i).equals("proxy_ip_address"))
-		    bytes = cryptography.etm(proxyIpAddress.getBytes());
+		    bytes = cryptography.etm(proxyIpAddress.trim().getBytes());
 		else if(sparseArray.get(i).equals("proxy_port"))
 		    bytes = cryptography.etm(proxyPort.getBytes());
 		else if(sparseArray.get(i).equals("proxy_type"))
