@@ -94,6 +94,8 @@ Completed Items
 70.    Dynamic DNS for home servers. Functional.
 71.    Custom key streams via context menus.
        Generate and separate.
+72.    Include network information in neighbors pertaining to
+       errors.
 
 Future Items
 
@@ -131,8 +133,6 @@ Remaining Items
 5.     Sign release.
 6.     Messages must be retained if the Chat activity is
        not active.
-7.     Include network information in neighbors pertaining to
-       errors.
+7.     Optional SipHash identities in received messages.
 8.     Validate the SipHash implementation.
 9.     Resolve DNS through a proxy if a proxy is defined.
-10.    Optional SipHash identities in received messages.
