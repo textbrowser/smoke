@@ -31,7 +31,8 @@ import android.os.Build;
 
 public class About
 {
-    private final static String s_about = "Version 2017.06.06\nAndroid " +
+    private final static String s_about =
+	"Version 2017.06.06 Jujube\nAndroid " +
 	Build.VERSION.BASE_OS + " " + Build.VERSION.RELEASE;
 
     private About()
