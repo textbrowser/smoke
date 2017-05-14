@@ -139,11 +139,6 @@ public class Chat extends AppCompatActivity
 
 	stringBuilder.append("] ");
 	stringBuilder.append(name);
-	stringBuilder.append(" (");
-       	stringBuilder.append
-	    (Miscellaneous.
-	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
-	stringBuilder.append(")");
 	stringBuilder.append(":");
 	stringBuilder.append(sequence);
 	stringBuilder.append(": ");
