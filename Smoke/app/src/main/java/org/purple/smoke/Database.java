@@ -1057,6 +1057,15 @@ public class Database extends SQLiteOpenHelper
             sparseArray.append(23, "uptime");
             sparseArray.append(24, "user_defined_digest");
 
+	    /*
+	    ** Proxy information.
+	    */
+
+	    proxyIpAddress = proxyIpAddress.trim();
+
+	    if(proxyIpAddress.isEmpty())
+		proxyPort = "";
+
 	    if(!remoteIpAddress.toLowerCase().trim().matches(".*[a-z].*"))
 	    {
 		Matcher matcher = Patterns.IP_ADDRESS.matcher
@@ -1084,7 +1093,7 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("local_port_digest"))
 		    bytes = cryptography.hmac("".getBytes());
 		else if(sparseArray.get(i).equals("proxy_ip_address"))
-		    bytes = cryptography.etm(proxyIpAddress.trim().getBytes());
+		    bytes = cryptography.etm(proxyIpAddress.getBytes());
 		else if(sparseArray.get(i).equals("proxy_port"))
 		    bytes = cryptography.etm(proxyPort.getBytes());
 		else if(sparseArray.get(i).equals("proxy_type"))
