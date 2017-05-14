@@ -18,7 +18,7 @@
 	}
 }
 
-[SHA-512] (3)							64 Bytes
+[SHA-512 HMAC] (3)						64 Bytes
 {
 	[PK] || [AES-256] (1)
 }
