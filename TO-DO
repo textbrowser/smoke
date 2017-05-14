@@ -102,6 +102,8 @@ Future Items
 3.     Socket channels. A lot of work.
 4.     (130 / 16 + 1) * 16 + 8 <= 154.
 5.     Themes, of course.
+6.     Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with
+       Long.BYTES.
 
 Ignored / Impossible Items
 
