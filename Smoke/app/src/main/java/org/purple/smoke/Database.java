@@ -1889,12 +1889,6 @@ public class Database extends SQLiteOpenHelper
     }
 
     @Override
-    public void onOpen(SQLiteDatabase db)
-    {
-	super.onOpen(db);
-    }
-
-    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         onCreate(db);
