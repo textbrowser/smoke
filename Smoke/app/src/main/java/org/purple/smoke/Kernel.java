@@ -399,9 +399,9 @@ public class Kernel
 
 	    byte array1[] = Arrays.copyOfRange
 		(bytes, 0, bytes.length - 128);
-	    byte array2[] = Arrays.copyOfRange
+	    byte array2[] = Arrays.copyOfRange // Second to the last block.
 		(bytes, bytes.length - 128, bytes.length - 64);
-	    byte array3[] = Arrays.copyOfRange // The destination.
+	    byte array3[] = Arrays.copyOfRange // The last block (destination).
 		(bytes, bytes.length - 64, bytes.length);
 
 	    if(!s_cryptography.iAmTheDestination(Miscellaneous.
@@ -424,13 +424,146 @@ public class Kernel
 
 		    Smoke.getApplication().sendBroadcast(intent);
 		}
+
+		return true;
 	    }
-	    else if((array1 = s_cryptography.pkiDecrypt(array1)) != null &&
-		    array1.length > 128)
+
+	    byte pk[] = s_cryptography.pkiDecrypt
+		(Arrays.
+		 copyOfRange(bytes,
+			     0,
+			     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
+
+	    if(pk == null)
+		return false;
+
+	    if(pk.length == 64)
+	    {
+		/*
+		** Chat
+		*/
+
+		byte keyStream[] = s_databaseHelper.participantKeyStream
+		    (s_cryptography, pk);
+
+		if(keyStream == null)
+		    return false;
+
+		byte hmac[] = Cryptography.hmac
+		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
+		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+		if(!Cryptography.memcmp(array2, hmac))
+		    return false;
+
+		bytes = Cryptography.decrypt
+		    (Arrays.
+		     copyOfRange(bytes,
+				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
+				 bytes.length - 128),
+		     Arrays.copyOfRange(keyStream, 0, 32));
+
+		if(bytes == null)
+		    return false;
+
+		String strings[] = new String(bytes).split("\\n");
+
+		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
+		    return false;
+
+		String message = null;
+		byte publicKeySignature[] = null;
+		int ii = 0;
+		long sequence = 0;
+		long timestamp = 0;
+
+		for(String string : strings)
+		    switch(ii)
+		    {
+		    case 0:
+			timestamp = Miscellaneous.byteArrayToLong
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+			ii += 1;
+			break;
+		    case 1:
+			message = new String
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
+			     "UTF-8");
+			ii += 1;
+			break;
+		    case 2:
+			sequence = Miscellaneous.byteArrayToLong
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+			ii += 1;
+			break;
+		    case 3:
+			publicKeySignature = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
+
+			PublicKey signatureKey = s_databaseHelper.
+			    signatureKeyForDigest(s_cryptography, pk);
+
+			if(signatureKey == null)
+			    return false;
+
+			if(!Cryptography.
+			   verifySignature(signatureKey,
+					   publicKeySignature,
+					   Miscellaneous.
+					   joinByteArrays(pk,
+							  strings[0].getBytes(),
+							  "\n".getBytes(),
+							  strings[1].getBytes(),
+							  "\n".getBytes(),
+							  strings[2].getBytes(),
+							  "\n".getBytes())))
+			    return false;
+
+			break;
+		    }
+
+		if(message == null)
+		    return false;
+
+		strings = s_databaseHelper.nameSipHashIdFromDigest
+		    (s_cryptography, pk);
+
+		if(strings == null || strings.length != 2)
+		    return false;
+
+		Intent intent = new Intent
+		    ("org.purple.smoke.chat_message");
+
+		intent.putExtra("org.purple.smoke.message", message);
+		intent.putExtra("org.purple.smoke.name", strings[0]);
+		intent.putExtra("org.purple.smoke.sequence", sequence);
+		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
+		intent.putExtra("org.purple.smoke.timestamp", timestamp);
+		Smoke.getApplication().sendBroadcast(intent);
+		return true;
+	    }
+	    else if(pk.length == 96)
 	    {
 		/*
 		** Organic Half-And-Half
 		*/
+
+		byte hmac[] = Cryptography.hmac
+		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
+		     Arrays.copyOfRange(pk, 32, pk.length));
+
+		if(!Cryptography.memcmp(array2, hmac))
+		    return false;
+
+		array1 = Cryptography.decrypt
+		    (Arrays.
+		     copyOfRange(bytes,
+				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
+				 bytes.length - 128),
+		     Arrays.copyOfRange(pk, 0, 32));
+
+		if(array1 == null)
+		    return false;
 
 		PublicKey signatureKey = s_databaseHelper.signatureKeyForDigest
 		    (s_cryptography,
@@ -447,9 +580,11 @@ public class Kernel
 					       Messages.
 					       CALL_HALF_AND_HALF_OFFSETS[6],
 					       array1.length),
-				   Arrays.copyOfRange(array1,
-						      0,
-						      129)))
+				   Miscellaneous.
+				   joinByteArrays(pk,
+						  Arrays.copyOfRange(array1,
+								     0,
+								     129))))
 		{
 		    long current = System.currentTimeMillis();
 		    long timestamp = Miscellaneous.byteArrayToLong
@@ -557,116 +692,9 @@ public class Kernel
 			    }
 			}
 		    }
+
+		    return true;
 		}
-	    }
-	    else
-	    {
-		byte pk[] = s_cryptography.pkiDecrypt
-		    (Arrays.
-		     copyOfRange(bytes,
-				 0,
-				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
-
-		if(pk == null)
-		    return false;
-
-		byte keyStream[] = s_databaseHelper.participantKeyStream
-		    (s_cryptography, pk);
-
-		if(keyStream == null)
-		    return false;
-
-		byte hmac[] = Cryptography.hmac
-		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
-		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
-
-		if(!Cryptography.memcmp(array2, hmac))
-		    return false;
-
-		bytes = Cryptography.decrypt
-		    (Arrays.
-		     copyOfRange(bytes,
-				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
-				 bytes.length - 128),
-		     Arrays.copyOfRange(keyStream, 0, 32));
-
-		if(bytes == null)
-		    return false;
-
-		String strings[] = new String(bytes).split("\\n");
-
-		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
-		    return false;
-
-		String message = null;
-		byte publicKeySignature[] = null;
-		int ii = 0;
-		long sequence = 0;
-		long timestamp = 0;
-
-		for(String string : strings)
-		    switch(ii)
-		    {
-		    case 0:
-			timestamp = Miscellaneous.byteArrayToLong
-			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
-			ii += 1;
-			break;
-		    case 1:
-			message = new String
-			    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
-			     "UTF-8");
-			ii += 1;
-			break;
-		    case 2:
-			sequence = Miscellaneous.byteArrayToLong
-			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
-			ii += 1;
-			break;
-		    case 3:
-			publicKeySignature = Base64.decode
-			    (string.getBytes(), Base64.NO_WRAP);
-
-			PublicKey signatureKey = s_databaseHelper.
-			    signatureKeyForDigest(s_cryptography, pk);
-
-			if(signatureKey == null)
-			    return false;
-
-			if(!Cryptography.
-			   verifySignature(signatureKey,
-					   publicKeySignature,
-					   Miscellaneous.
-					   joinByteArrays(pk,
-							  strings[0].getBytes(),
-							  "\n".getBytes(),
-							  strings[1].getBytes(),
-							  "\n".getBytes(),
-							  strings[2].getBytes(),
-							  "\n".getBytes())))
-			    return false;
-
-			break;
-		    }
-
-		if(message == null)
-		    return false;
-
-		strings = s_databaseHelper.nameSipHashIdFromDigest
-		    (s_cryptography, pk);
-
-		if(strings == null || strings.length != 2)
-		    return false;
-
-		Intent intent = new Intent
-		    ("org.purple.smoke.chat_message");
-
-		intent.putExtra("org.purple.smoke.message", message);
-		intent.putExtra("org.purple.smoke.name", strings[0]);
-		intent.putExtra("org.purple.smoke.sequence", sequence);
-		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
-		intent.putExtra("org.purple.smoke.timestamp", timestamp);
-		Smoke.getApplication().sendBroadcast(intent);
 	    }
 	}
 	catch(Exception exception)
@@ -674,7 +702,7 @@ public class Kernel
 	    return false;
 	}
 
-	return true;
+	return false;
     }
 
     public int callingStreamLength(String sipHashId)

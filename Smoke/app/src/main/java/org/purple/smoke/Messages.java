@@ -95,6 +95,32 @@ public class Messages
 
 	try
 	{
+	    /*
+	    ** [ Public Key Encryption ]
+	    */
+
+	    byte aesKey[] = Cryptography.aes256KeyBytes();
+
+	    if(aesKey == null)
+		return null;
+
+	    byte shaKey[] = Cryptography.sha512KeyBytes();
+
+	    if(shaKey == null)
+		return null;
+
+	    PublicKey publicKey = Database.getInstance().
+		publicKeyForSipHashId(cryptography, sipHashId);
+
+	    if(publicKey == null)
+		return null;
+
+	    byte pk[] = Cryptography.pkiEncrypt
+		(publicKey, Miscellaneous.joinByteArrays(aesKey, shaKey));
+
+	    if(pk == null)
+		return null;
+
 	    byte bytes[] = Miscellaneous.joinByteArrays
 		(
 		 /*
@@ -137,39 +163,38 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature(bytes);
+	    byte signature[] = cryptography.signViaChatSignature
+		(Miscellaneous.joinByteArrays(aesKey, shaKey, bytes));
 
 	    if(signature == null)
 		return null;
 
-	    PublicKey publicKey = Database.getInstance().
-		publicKeyForSipHashId(cryptography, sipHashId);
-
-	    if(publicKey == null)
-		return null;
-
-	    byte messageBytes[] = Cryptography.pkiEncrypt
-		(publicKey, Miscellaneous.joinByteArrays(bytes, signature));
+	    byte messageBytes[] = Cryptography.encrypt
+		(Miscellaneous.joinByteArrays(bytes, signature), aesKey);
 
 	    if(messageBytes == null)
 		return null;
 
 	    /*
-	    ** [ Random Bytes ]
+	    ** [ Digest ]
 	    */
 
-	    byte randomBytes[] = Cryptography.randomBytes(64);
+	    byte macBytes[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, messageBytes), shaKey);
+
+	    if(macBytes == null)
+		return null;
 
 	    /*
 	    ** [ Destination ]
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(messageBytes, randomBytes),
+		(Miscellaneous.joinByteArrays(pk, messageBytes, macBytes),
 		 Cryptography.sha512(sipHashId.getBytes()));
 
 	    return Miscellaneous.joinByteArrays
-		(messageBytes, randomBytes, destination);
+		(pk, messageBytes, macBytes, destination);
 	}
 	catch(Exception exception)
 	{
