@@ -397,16 +397,16 @@ public class Kernel
 	    if(bytes == null || bytes.length < 128)
 		return false;
 
-	    byte array1[] = Arrays.copyOfRange
+	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
 		(bytes, 0, bytes.length - 128);
 	    byte array2[] = Arrays.copyOfRange // Second to the last block.
 		(bytes, bytes.length - 128, bytes.length - 64);
 	    byte array3[] = Arrays.copyOfRange // The last block (destination).
 		(bytes, bytes.length - 64, bytes.length);
 
-	    if(!s_cryptography.iAmTheDestination(Miscellaneous.
-						 joinByteArrays(array1, array2),
-						 array3))
+	    if(!s_cryptography.
+	       iAmTheDestination(Miscellaneous.joinByteArrays(array1, array2),
+				 array3))
 		return false;
 
 	    if(s_cryptography.isValidSipHashMac(array1, array2))
