@@ -700,10 +700,7 @@ public class Cryptography
 		    else
 			generator = KeyFactory.getInstance("RSA");
 
-		    PublicKey publicKey = generator.generatePublic
-			(publicKeySpec);
-
-		    return publicKey;
+		    return generator.generatePublic(publicKeySpec);
 		}
 		catch(Exception exception)
 		{
