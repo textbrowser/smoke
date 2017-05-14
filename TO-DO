@@ -96,6 +96,7 @@ Completed Items
        Generate and separate.
 72.    Include network information in neighbors pertaining to
        errors.
+73.    Application icon.
 
 Future Items
 
@@ -128,11 +129,10 @@ Remaining Items
 
 1.     Source-level string translations.
 2.     pull-database for multiple devices.
-3.     Application icon.
+3.     Resolve DNS through a proxy if a proxy is defined.
 4.     Detect removal of neighbors.
 5.     Sign release.
 6.     Messages must be retained if the Chat activity is
        not active.
 7.     Optional SipHash identities in received messages.
 8.     Validate the SipHash implementation.
-9.     Resolve DNS through a proxy if a proxy is defined.
