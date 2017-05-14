@@ -155,14 +155,16 @@
                         android:id="@+id/neighbors_port"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/port"
                         android:inputType="number" />
 
                     <EditText
                         android:id="@+id/neighbors_scope_id"
-                        android:layout_width="125dp"
+                        android:layout_width="130dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/ipv6_scope_id"
                         android:inputType="textPersonName" />
@@ -321,6 +323,7 @@
                         android:id="@+id/participant_siphash_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/siphash_identity"
                         android:inputType="textPersonName" />
@@ -405,20 +408,22 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/password1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
+                    android:layout_marginEnd="5dp"
                     android:ems="10"
-                    android:id="@+id/password1"
-                    android:hint="@string/password" />
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
 
                 <EditText
+                    android:id="@+id/password2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
+                    android:layout_marginEnd="5dp"
                     android:ems="10"
-                    android:id="@+id/password2"
-                    android:hint="@string/password_confirmation" />
+                    android:hint="@string/password_confirmation"
+                    android:inputType="textPassword" />
 
                 <Button
                     android:text="@string/set_password"
