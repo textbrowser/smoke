@@ -53,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 
 public class Chat extends AppCompatActivity
 {
@@ -124,7 +125,7 @@ public class Chat extends AppCompatActivity
 			       long timestamp)
     {
 	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	final TextView textView = (TextView) findViewById
 	    (R.id.chat_messages);
@@ -158,7 +159,7 @@ public class Chat extends AppCompatActivity
 				 boolean refresh)
     {
 	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	final TextView textView = (TextView) findViewById
 	    (R.id.chat_messages);
@@ -345,7 +346,8 @@ public class Chat extends AppCompatActivity
 	    public void onClick(View view)
 	    {
 		SimpleDateFormat simpleDateFormat = new
-		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss",
+				     Locale.getDefault());
 		StringBuilder stringBuilder = new StringBuilder();
 		final TextView textView = (TextView) findViewById
 		    (R.id.chat_messages);
@@ -446,7 +448,8 @@ public class Chat extends AppCompatActivity
 		    (R.id.chat_messages);
 
 		SimpleDateFormat simpleDateFormat = new
-		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss",
+				     Locale.getDefault());
 		String str = textView1.getText().toString().trim();
 		StringBuilder stringBuilder = new StringBuilder();
 		final TableLayout tableLayout = (TableLayout) findViewById
