@@ -21,6 +21,7 @@
 [SHA-512] (3)							64 Bytes
 {
 	[PK] || [AES-256] (1)
+}
 
 /*
 ** The destination is created via the recipient's SipHash identity.
