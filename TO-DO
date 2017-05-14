@@ -122,8 +122,7 @@ Ignored / Impossible Items
 7.     Periodic data transfers may raise Android warnings.
        User is responsible for data limits.
 8.     Validate neighbor IP address. User is responsible.
-9.     Tab order.
-10.    Disable echo on low memory. Notify the user, although memory
+9.     Disable echo on low memory. Notify the user, although memory
        will be required.
 
 Remaining Items
@@ -136,3 +135,4 @@ Remaining Items
 6.     Messages must be retained if the Chat activity is
        not active.
 7.     Validate the SipHash implementation.
+8.     Next (Tab) order.
