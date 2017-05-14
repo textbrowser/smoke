@@ -23,7 +23,7 @@
 ** The destination is created via the recipient's identity.
 */
 
-[Destination SHA-512 HMAC] (3)					64 Bytes
+[Destination SHA-512 HMAC] (4)					64 Bytes
 {
 	[PK] || [AES-256] || [SHA-512 HMAC] (1)
 }
