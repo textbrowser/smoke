@@ -862,6 +862,21 @@ public class Cryptography
 	}
     }
 
+    public static byte[] aes256KeyBytes()
+    {
+	try
+	{
+	    KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+
+	    keyGenerator.init(256);
+	    return keyGenerator.generateKey().getEncoded();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+    }
+
     public static byte[] decrypt(byte data[], byte keyBytes[])
     {
 	if(data == null ||
@@ -1077,6 +1092,21 @@ public class Cryptography
 	    KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
 
 	    keyGenerator.init(256);
+	    return keyGenerator.generateKey().getEncoded();
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+    }
+
+    public static byte[] sha512KeyBytes()
+    {
+	try
+	{
+	    KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA512");
+
+	    keyGenerator.init(512);
 	    return keyGenerator.generateKey().getEncoded();
 	}
 	catch(Exception exception)
