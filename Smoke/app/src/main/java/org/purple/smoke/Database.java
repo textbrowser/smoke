@@ -163,6 +163,7 @@ public class Database extends SQLiteOpenHelper
 		 "bytes_written, " +
 		 "echo_queue_size, " +
 		 "ip_version, " +
+		 "last_error, " +
 		 "local_ip_address, " +
 		 "local_port, " +
 		 "proxy_ip_address, " +
@@ -231,49 +232,52 @@ public class Database extends SQLiteOpenHelper
 			    neighborElement.m_ipVersion = new String(bytes);
 			    break;
 			case 4:
+			    neighborElement.m_error = new String(bytes);
+			    break;
+			case 5:
 			    neighborElement.m_localIpAddress =
 				new String(bytes);
 			    break;
-			case 5:
+			case 6:
 			    neighborElement.m_localPort = new String(bytes);
 			    break;
-			case 6:
+			case 7:
 			    neighborElement.m_proxyIpAddress =
 				new String(bytes);
 			    break;
-			case 7:
+			case 8:
 			    neighborElement.m_proxyPort = new String(bytes);
 			    break;
-			case 8:
+			case 9:
 			    neighborElement.m_proxyType = new String(bytes);
 			    break;
-			case 9:
+			case 10:
 			    neighborElement.m_remoteCertificate =
 				Miscellaneous.deepCopy(bytes);
 			    break;
-			case 10:
+			case 11:
 			    neighborElement.m_remoteIpAddress =
 				new String(bytes);
 			    break;
-			case 11:
+			case 12:
 			    neighborElement.m_remotePort = new String(bytes);
 			    break;
-			case 12:
+			case 13:
 			    neighborElement.m_remoteScopeId = new String(bytes);
 			    break;
-			case 13:
+			case 14:
 			    neighborElement.m_sessionCipher = new String(bytes);
 			    break;
-			case 14:
+			case 15:
 			    neighborElement.m_status = new String(bytes);
 			    break;
-			case 15:
+			case 16:
 			    neighborElement.m_statusControl = new String(bytes);
 			    break;
-			case 16:
+			case 17:
 			    neighborElement.m_transport = new String(bytes);
 			    break;
-			case 17:
+			case 18:
 			    neighborElement.m_uptime = new String(bytes);
 			    break;
 			}
