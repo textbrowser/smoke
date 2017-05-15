@@ -64,7 +64,7 @@ public class Miscellaneous
 						       char delimiter,
 						       int offset)
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length <= 0 || offset < 0)
 	    return "";
 
 	String string = byteArrayAsHexString(bytes);
@@ -95,6 +95,9 @@ public class Miscellaneous
 				       char delimiter,
 				       int offset)
     {
+	if(offset < 0)
+	    return "";
+
 	try
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
