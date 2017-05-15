@@ -212,8 +212,6 @@ public class Kernel
 		m_neighbors.append(neighborElement.m_oid, neighbor);
 	    }
 	}
-
-	Runtime.getRuntime().runFinalization();
     }
 
     private void prepareSchedulers()
@@ -376,8 +374,6 @@ public class Kernel
 
 	    m_neighbors.clear();
 	}
-
-	Runtime.getRuntime().runFinalization();
     }
 
     public boolean ourMessage(String buffer)
