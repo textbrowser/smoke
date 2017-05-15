@@ -445,11 +445,11 @@ public class Kernel
 		if(keyStream == null)
 		    return false;
 
-		byte hmac[] = Cryptography.hmac
+		byte sha512[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-		if(!Cryptography.memcmp(array2, hmac))
+		if(!Cryptography.memcmp(array2, sha512))
 		    return false;
 
 		bytes = Cryptography.decrypt
@@ -544,11 +544,11 @@ public class Kernel
 		** Organic Half-And-Half
 		*/
 
-		byte hmac[] = Cryptography.hmac
+		byte sha512[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
 		     Arrays.copyOfRange(pk, 32, pk.length));
 
-		if(!Cryptography.memcmp(array2, hmac))
+		if(!Cryptography.memcmp(array2, sha512))
 		    return false;
 
 		array1 = Cryptography.decrypt
