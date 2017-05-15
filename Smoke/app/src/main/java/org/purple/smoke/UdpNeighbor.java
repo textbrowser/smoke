@@ -204,15 +204,13 @@ public class UdpNeighbor extends Neighbor
 
 		try
 		{
-		    ByteArrayOutputStream byteArrayOutputStream = null;
-		    int bytesRead = 0;
-
 		    if(m_socket == null)
 			return;
 
+		    ByteArrayOutputStream byteArrayOutputStream =
+			new ByteArrayOutputStream();
 		    DatagramPacket datagramPacket = null;
 
-		    byteArrayOutputStream = new ByteArrayOutputStream();
 		    datagramPacket = new DatagramPacket
 			(m_bytes, m_bytes.length);
 		    m_socket.receive(datagramPacket);
@@ -223,7 +221,7 @@ public class UdpNeighbor extends Neighbor
 			     0,
 			     datagramPacket.getLength());
 
-		    bytesRead += datagramPacket.getLength();
+		    int bytesRead = datagramPacket.getLength();
 
 		    if(bytesRead < 0)
 		    {
@@ -235,35 +233,11 @@ public class UdpNeighbor extends Neighbor
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
 
-		    if(byteArrayOutputStream != null &&
-		       byteArrayOutputStream.size() > 0)
-			synchronized(m_stringBuilder)
-			{
-			    m_stringBuilder.append
-				(new String(byteArrayOutputStream.
-					    toByteArray()));
-
-			    /*
-			    ** Detect our end-of-message delimiter.
-			    */
-
-			    int indexOf = m_stringBuilder.indexOf(EOM);
-
-			    while(indexOf >= 0)
-			    {
-				String buffer = m_stringBuilder.
-				    substring(0, indexOf + EOM.length());
-
-				if(!Kernel.getInstance().ourMessage(buffer))
-				    echo(buffer);
-
-				m_stringBuilder.delete(0, buffer.length());
-				indexOf = m_stringBuilder.indexOf(EOM);
-			    }
-
-			    if(m_stringBuilder.length() > MAXIMUM_BYTES)
-				m_stringBuilder.setLength(MAXIMUM_BYTES);
-			}
+		    synchronized(m_stringBuilder)
+		    {
+			m_stringBuilder.append
+			    (new String(byteArrayOutputStream.toByteArray()));
+		    }
 		}
 		catch(Exception exception)
 		{
