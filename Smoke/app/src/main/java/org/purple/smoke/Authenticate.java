@@ -54,8 +54,8 @@ public class Authenticate extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		final TextView textView1 = (TextView)
-		    findViewById(R.id.password);
+		final TextView textView1 = (TextView) findViewById
+		    (R.id.password);
 
 		textView1.setSelectAllOnFocus(true);
 
@@ -148,8 +148,8 @@ public class Authenticate extends AppCompatActivity
 
 		class SingleShot implements Runnable
 		{
+		    private String m_error = "";
 		    private String m_password = "";
-		    private boolean m_error = false;
 		    private byte m_encryptionSalt[] = null;
 		    private byte m_macSalt[] = null;
 		    private int m_iterationCount = 1000;
@@ -244,19 +244,38 @@ public class Authenticate extends AppCompatActivity
 				   chatSignatureKeyPair() == null ||
 				   s_cryptography.identity() == null)
 				{
-				    m_error = true;
+				    if(!e1)
+					m_error = "prepareSipHashIds() failure";
+				    else if(!e2)
+					m_error = "prepareSipHashKeys() " +
+					    "failure";
+				    else if(s_cryptography.
+					    chatEncryptionKeyPair() == null)
+					m_error = "chatEncryptionKeyPair() " +
+					    "returned zero";
+				    else
+					m_error = "chatSignatureKeyPair() " +
+					    "return zero";
+
 				    s_cryptography.reset();
 				}
 			    }
 			    else
 			    {
-				m_error = true;
+				if(encryptionKey == null)
+				    m_error = "generateEncryptionKey() " +
+					"failure";
+				else
+				    m_error = "generateMacKey() failure";
+
 				s_cryptography.reset();
 			    }
 			}
 			catch(Exception exception)
 			{
-			    m_error = true;
+			    m_error = exception.getMessage().
+				replaceAll("[^a-zA-Z ]", "").toLowerCase().
+				trim();
 			    s_cryptography.reset();
 			}
 
@@ -267,10 +286,11 @@ public class Authenticate extends AppCompatActivity
 			    {
 				dialog.dismiss();
 
-				if(m_error)
+				if(!m_error.isEmpty())
 				    Miscellaneous.showErrorDialog
 					(Authenticate.this,
-					 "An error occurred while " +
+					 "An error (" + m_error +
+					 ") occurred while " +
 					 "generating the confidential " +
 					 "data.");
 				else
@@ -328,7 +348,7 @@ public class Authenticate extends AppCompatActivity
 	    }
 	};
 
-	final Button button2 = (Button) findViewById(R.id.reset);
+	Button button2 = (Button) findViewById(R.id.reset);
 
 	button2.setOnClickListener(new View.OnClickListener()
 	{
@@ -345,14 +365,14 @@ public class Authenticate extends AppCompatActivity
 
     private void showChatActivity()
     {
-	final Intent intent = new Intent(Authenticate.this, Chat.class);
+	Intent intent = new Intent(Authenticate.this, Chat.class);
 
 	startActivity(intent);
     }
 
     private void showSettingsActivity()
     {
-	final Intent intent = new Intent(Authenticate.this, Settings.class);
+	Intent intent = new Intent(Authenticate.this, Settings.class);
 
 	startActivity(intent);
     }
@@ -364,16 +384,16 @@ public class Authenticate extends AppCompatActivity
 	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_authenticate);
 	State.getInstance().setNeighborsEcho
-	    (m_databaseHelper.readSetting(null, "neighbors_echo").
-	     equals("true"));
+	    (m_databaseHelper.readSetting(null,
+					  "neighbors_echo").equals("true"));
 	prepareListeners();
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
-	final Button button1 = (Button) findViewById(R.id.authenticate);
+	Button button1 = (Button) findViewById(R.id.authenticate);
 
 	button1.setEnabled(!isAuthenticated);
 
-	final TextView textView1 = (TextView) findViewById(R.id.password);
+	TextView textView1 = (TextView) findViewById(R.id.password);
 
 	textView1.setEnabled(!isAuthenticated);
     }
@@ -381,8 +401,6 @@ public class Authenticate extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
-
         getMenuInflater().inflate(R.menu.authenticate_menu, menu);
         return true;
     }
@@ -390,10 +408,6 @@ public class Authenticate extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
 	int id = item.getItemId();
 
         if(id == R.id.action_chat)

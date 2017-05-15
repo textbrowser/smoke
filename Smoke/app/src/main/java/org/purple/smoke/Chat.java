@@ -79,7 +79,7 @@ public class Chat extends AppCompatActivity
 		     intent.getLongExtra("org.purple.smoke.sequence", 1),
 		     intent.getLongExtra("org.purple.smoke.timestamp", 0));
 	    else if(intent.getAction().
-	       equals("org.purple.smoke.populate_participants"))
+		    equals("org.purple.smoke.populate_participants"))
 		populateParticipants();
 	    else if(intent.getAction().
 		    equals("org.purple.smoke.half_and_half_call"))

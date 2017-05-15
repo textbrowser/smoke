@@ -31,7 +31,7 @@ import android.os.Bundle;
 
 public class State
 {
-    private static Bundle s_bundle = new Bundle();
+    private static Bundle s_bundle = null;
     private static State s_instance = null;
 
     private State()
@@ -41,6 +41,9 @@ public class State
 
     public static synchronized State getInstance()
     {
+	if(s_bundle == null)
+	    s_bundle = new Bundle();
+
 	if(s_instance == null)
 	    s_instance = new State();
 
