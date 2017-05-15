@@ -127,8 +127,7 @@ public class Chat extends AppCompatActivity
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
-	final TextView textView = (TextView) findViewById
-	    (R.id.chat_messages);
+	TextView textView = (TextView) findViewById(R.id.chat_messages);
 
 	stringBuilder.append("[");
 
@@ -156,8 +155,7 @@ public class Chat extends AppCompatActivity
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
-	final TextView textView = (TextView) findViewById
-	    (R.id.chat_messages);
+	TextView textView = (TextView) findViewById(R.id.chat_messages);
 
 	if(name == null)
 	    name = "unknown";
@@ -197,7 +195,7 @@ public class Chat extends AppCompatActivity
     {
 	ArrayList<ParticipantElement> arrayList =
 	    m_databaseHelper.readParticipants(s_cryptography);
-	final TableLayout tableLayout = (TableLayout) findViewById
+	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
 	if(arrayList == null || arrayList.size() == 0)
@@ -344,9 +342,9 @@ public class Chat extends AppCompatActivity
 		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss",
 				     Locale.getDefault());
 		StringBuilder stringBuilder = new StringBuilder();
-		final TextView textView = (TextView) findViewById
+		TextView textView = (TextView) findViewById
 		    (R.id.chat_messages);
-		final TableLayout tableLayout = (TableLayout) findViewById
+		TableLayout tableLayout = (TableLayout) findViewById
 		    (R.id.participants);
 
 		for(int i = 0; i < tableLayout.getChildCount(); i++)
@@ -421,7 +419,7 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		final TextView textView = (TextView) findViewById
+		TextView textView = (TextView) findViewById
 		    (R.id.chat_messages);
 
 		textView.setText("");
@@ -433,22 +431,21 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		final TextView textView1 = (TextView) findViewById
+		TextView textView1 = (TextView) findViewById
 		    (R.id.chat_message);
 
 		if(textView1.getText().toString().trim().isEmpty())
 		    return;
-
-		final TextView textView2 = (TextView) findViewById
-		    (R.id.chat_messages);
 
 		SimpleDateFormat simpleDateFormat = new
 		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss",
 				     Locale.getDefault());
 		String str = textView1.getText().toString().trim();
 		StringBuilder stringBuilder = new StringBuilder();
-		final TableLayout tableLayout = (TableLayout) findViewById
+		TableLayout tableLayout = (TableLayout) findViewById
 		    (R.id.participants);
+		TextView textView2 = (TextView) findViewById
+		    (R.id.chat_messages);
 
 		for(int i = 0; i < tableLayout.getChildCount(); i++)
 		{
@@ -550,7 +547,7 @@ public class Chat extends AppCompatActivity
 	** Prepare a listener.
 	*/
 
-	final DialogInterface.OnCancelListener listener =
+	DialogInterface.OnCancelListener listener =
 	    new DialogInterface.OnCancelListener()
 	    {
 		public void onCancel(DialogInterface dialog)
@@ -683,7 +680,7 @@ public class Chat extends AppCompatActivity
 		("chat.messages", textView.getText());
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 
-            final Intent intent = new Intent(Chat.this, Settings.class);
+            Intent intent = new Intent(Chat.this, Settings.class);
 
             startActivity(intent);
             return true;

@@ -338,8 +338,7 @@ public class Authenticate extends AppCompatActivity
 		m_databaseHelper.resetAndDrop();
 		s_cryptography.reset();
 
-		final Intent intent = new Intent
-		    (Authenticate.this, Settings.class);
+		Intent intent = new Intent(Authenticate.this, Settings.class);
 
 		finish();
 		startActivity(intent);
