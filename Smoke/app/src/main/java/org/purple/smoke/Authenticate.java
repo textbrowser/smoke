@@ -54,28 +54,76 @@ public class Authenticate extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		byte encryptionSalt[] = null;
-		byte macSalt[] = null;
-		byte saltedPassword[] = null;
 		final TextView textView1 = (TextView)
 		    findViewById(R.id.password);
 
 		textView1.setSelectAllOnFocus(true);
-		encryptionSalt = Base64.decode
+
+		byte encryptionSalt[] = Base64.decode
 		    (m_databaseHelper.
 		     readSetting(null, "encryptionSalt").getBytes(),
 		     Base64.DEFAULT);
-		macSalt = Base64.decode
+
+		if(encryptionSalt == null)
+		{
+		    Miscellaneous.showErrorDialog
+			(Authenticate.this,
+			 "The encryption salt value is zero. System failure.");
+		    textView1.requestFocus();
+		    return;
+		}
+
+		byte macSalt[] = Base64.decode
 		    (m_databaseHelper.readSetting(null, "macSalt").getBytes(),
 		     Base64.DEFAULT);
-		saltedPassword = Cryptography.sha512
+
+		if(macSalt == null)
+		{
+		    Miscellaneous.showErrorDialog
+			(Authenticate.this,
+			 "The mac salt value is zero. System failure.");
+		    textView1.requestFocus();
+		    return;
+		}
+
+		byte saltedPassword[] = Cryptography.sha512
 		    (textView1.getText().toString().getBytes(),
 		     encryptionSalt,
 		     macSalt);
 
-		if(saltedPassword == null ||
-		   !Cryptography.memcmp(m_databaseHelper.
-					readSetting(null, "saltedPassword").
+		if(saltedPassword == null)
+		{
+		    Miscellaneous.showErrorDialog
+			(Authenticate.this,
+			 "An error occurred with sha512(). System failure.");
+		    textView1.requestFocus();
+		    return;
+		}
+
+		int iterationCount = 1000;
+
+		try
+		{
+		    iterationCount = Integer.parseInt
+			(m_databaseHelper.
+			 readSetting(null, "iterationCount"));
+		}
+		catch(Exception exception)
+		{
+		    iterationCount = -1;
+		}
+
+		if(iterationCount == -1)
+		{
+		    Miscellaneous.showErrorDialog
+			(Authenticate.this,
+			 "Invalid iteration count. System failure.");
+		    textView1.requestFocus();
+		    return;
+		}
+
+		if(!Cryptography.memcmp(m_databaseHelper.
+					readSetting(null,"saltedPassword").
 					getBytes(),
 					Base64.encode(saltedPassword,
 						      Base64.DEFAULT)))
@@ -84,201 +132,182 @@ public class Authenticate extends AppCompatActivity
 			(Authenticate.this,
 			 "Incorrect password. Please try again.");
 		    textView1.requestFocus();
+		    return;
 		}
-		else
+
+		final ProgressDialog dialog = new ProgressDialog
+		    (Authenticate.this);
+
+		dialog.setCancelable(false);
+		dialog.setIndeterminate(true);
+		dialog.setMessage
+		    ("Generating confidential data. Please be patient " +
+		     "and do not rotate the device while the process " +
+		     "executes.");
+		dialog.show();
+
+		class SingleShot implements Runnable
 		{
-		    final ProgressDialog dialog = new ProgressDialog
-			(Authenticate.this);
-		    int iterationCount = 1000;
+		    private String m_password = "";
+		    private boolean m_error = false;
+		    private byte m_encryptionSalt[] = null;
+		    private byte m_macSalt[] = null;
+		    private int m_iterationCount = 1000;
 
-		    try
+		    SingleShot(String password,
+			       byte encryptionSalt[],
+			       byte macSalt[],
+			       int iterationCount)
 		    {
-			iterationCount = Integer.parseInt
-			    (m_databaseHelper.
-			     readSetting(null, "iterationCount"));
+			m_encryptionSalt = encryptionSalt;
+			m_iterationCount = iterationCount;
+			m_macSalt = macSalt;
+			m_password = password;
 		    }
-		    catch(Exception exception)
+
+		    @Override
+		    public void run()
 		    {
-			iterationCount = 1000;
-		    }
+			SecretKey encryptionKey = null;
+			SecretKey macKey = null;
 
-		    dialog.setCancelable(false);
-		    dialog.setIndeterminate(true);
-		    dialog.setMessage
-			("Generating confidential data. Please be patient " +
-			 "and do not rotate the device while the process " +
-			 "executes.");
-		    dialog.show();
-
-		    class SingleShot implements Runnable
-		    {
-			private String m_password = "";
-			private boolean m_error = false;
-			private byte m_encryptionSalt[] = null;
-			private byte m_macSalt[] = null;
-			private int m_iterationCount = 1000;
-
-			SingleShot(String password,
-				   byte encryptionSalt[],
-				   byte macSalt[],
-				   int iterationCount)
+			try
 			{
-			    m_encryptionSalt = encryptionSalt;
-			    m_iterationCount = iterationCount;
-			    m_macSalt = macSalt;
-			    m_password = password;
-			}
+			    encryptionKey = Cryptography.generateEncryptionKey
+				(m_encryptionSalt,
+				 m_password.toCharArray(),
+				 m_iterationCount);
+			    macKey = Cryptography.generateMacKey
+				(m_macSalt,
+				 m_password.toCharArray(),
+				 m_iterationCount);
 
-			@Override
-			public void run()
-			{
-			    SecretKey encryptionKey = null;
-			    SecretKey macKey = null;
-
-			    try
+			    if(encryptionKey != null && macKey != null)
 			    {
-				encryptionKey = Cryptography.
-				    generateEncryptionKey
-				    (m_encryptionSalt,
-				     m_password.toCharArray(),
-				     m_iterationCount);
-				macKey = Cryptography.generateMacKey
-				    (m_macSalt,
-				     m_password.toCharArray(),
-				     m_iterationCount);
+				s_cryptography.setEncryptionKey(encryptionKey);
+				s_cryptography.setMacKey(macKey);
 
-				if(encryptionKey != null && macKey != null)
-				{
-				    s_cryptography.setEncryptionKey
-					(encryptionKey);
-				    s_cryptography.setMacKey(macKey);
+				String algorithm = "";
+				byte identity[] = Base64.decode
+				    (m_databaseHelper.
+				     readSetting(s_cryptography,
+						 "identity").
+				     getBytes(), Base64.DEFAULT);
+				byte privateBytes[] = Base64.decode
+				    (m_databaseHelper.
+				     readSetting(s_cryptography,
+						 "pki_chat_encryption_" +
+						 "private_key").
+				     getBytes(), Base64.DEFAULT);
+				byte publicBytes[] = Base64.decode
+				    (m_databaseHelper.
+				     readSetting(s_cryptography,
+						 "pki_chat_encryption_" +
+						 "public_key").
+				     getBytes(), Base64.DEFAULT);
 
-				    String algorithm = "";
-				    byte identity[] = Base64.decode
-					(m_databaseHelper.
-					 readSetting(s_cryptography,
-						     "identity").
-					 getBytes(), Base64.DEFAULT);
-				    byte privateBytes[] = Base64.decode
-					(m_databaseHelper.
-					 readSetting(s_cryptography,
-						     "pki_chat_encryption_" +
-						     "private_key").
-					 getBytes(), Base64.DEFAULT);
-				    byte publicBytes[] = Base64.decode
-					(m_databaseHelper.
-					 readSetting(s_cryptography,
-						     "pki_chat_encryption_" +
-						     "public_key").
-					 getBytes(), Base64.DEFAULT);
+				algorithm = m_databaseHelper.
+				    readSetting(s_cryptography,
+						"pki_chat_encryption_" +
+						"algorithm");
+				s_cryptography.setIdentity(identity);
+				s_cryptography.setChatEncryptionPublicKeyPair
+				    (algorithm, privateBytes, publicBytes);
+				privateBytes = Base64.decode
+				    (m_databaseHelper.
+				     readSetting(s_cryptography,
+						 "pki_chat_signature_" +
+						 "private_key").
+				     getBytes(), Base64.DEFAULT);
+				publicBytes = Base64.decode
+				    (m_databaseHelper.
+				     readSetting(s_cryptography,
+						 "pki_chat_signature_" +
+						 "public_key").
+				     getBytes(), Base64.DEFAULT);
+				algorithm = m_databaseHelper.
+				    readSetting(s_cryptography,
+						"pki_chat_signature_" +
+						"algorithm");
+				s_cryptography.setChatSignaturePublicKeyPair
+				    (algorithm, privateBytes, publicBytes);
 
-				    algorithm = m_databaseHelper.
-					readSetting(s_cryptography,
-						    "pki_chat_encryption_" +
-						    "algorithm");
-				    s_cryptography.setIdentity(identity);
-				    s_cryptography.
-					setChatEncryptionPublicKeyPair
-					(algorithm, privateBytes, publicBytes);
-				    privateBytes = Base64.decode
-					(m_databaseHelper.
-					 readSetting(s_cryptography,
-						     "pki_chat_signature_" +
-						     "private_key").
-					 getBytes(), Base64.DEFAULT);
-				    publicBytes = Base64.decode
-					(m_databaseHelper.
-					 readSetting(s_cryptography,
-						     "pki_chat_signature_" +
-						     "public_key").
-					 getBytes(), Base64.DEFAULT);
-				    algorithm = m_databaseHelper.
-					readSetting(s_cryptography,
-						    "pki_chat_signature_" +
-						    "algorithm");
-				    s_cryptography.
-					setChatSignaturePublicKeyPair
-					(algorithm, privateBytes, publicBytes);
+				boolean e1 = s_cryptography.
+				    prepareSipHashIds();
+				boolean e2 = s_cryptography.
+				    prepareSipHashKeys();
 
-				    boolean e1 = s_cryptography.
-					prepareSipHashIds();
-				    boolean e2 = s_cryptography.
-					prepareSipHashKeys();
-
-				    if(!e1 || !e2 ||
-				       s_cryptography.
-				       chatEncryptionKeyPair() == null ||
-				       s_cryptography.
-				       chatSignatureKeyPair() == null ||
-				       s_cryptography.identity() == null)
-				    {
-					m_error = true;
-					s_cryptography.reset();
-				    }
-				}
-				else
+				if(!e1 || !e2 ||
+				   s_cryptography.
+				   chatEncryptionKeyPair() == null ||
+				   s_cryptography.
+				   chatSignatureKeyPair() == null ||
+				   s_cryptography.identity() == null)
 				{
 				    m_error = true;
 				    s_cryptography.reset();
 				}
 			    }
-			    catch(Exception exception)
+			    else
 			    {
 				m_error = true;
 				s_cryptography.reset();
 			    }
-
-			    Authenticate.this.runOnUiThread(new Runnable()
-			    {
-				@Override
-				public void run()
-				{
-				    dialog.dismiss();
-
-				    if(m_error)
-					Miscellaneous.showErrorDialog
-					    (Authenticate.this,
-					     "An error occurred while " +
-					     "generating the confidential " +
-					     "data.");
-				    else
-				    {
-					Kernel.getInstance();
-					State.getInstance().
-					    setAuthenticated(true);
-
-					/*
-					** Disable some widgets.
-					*/
-
-					button1.setEnabled(false);
-					textView1.setEnabled(false);
-					textView1.setText("");
-
-					String str = m_databaseHelper.
-					    readSetting
-					    (null, "lastActivity");
-
-					if(str.equals("Chat"))
-					    showChatActivity();
-					else if(str.equals("Settings"))
-					    showSettingsActivity();
-				    }
-				}
-			    });
-
-			    m_password = "";
 			}
+			catch(Exception exception)
+			{
+			    m_error = true;
+			    s_cryptography.reset();
+			}
+
+			Authenticate.this.runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				dialog.dismiss();
+
+				if(m_error)
+				    Miscellaneous.showErrorDialog
+					(Authenticate.this,
+					 "An error occurred while " +
+					 "generating the confidential " +
+					 "data.");
+				else
+				{
+				    Kernel.getInstance();
+				    State.getInstance().setAuthenticated(true);
+
+				    /*
+				    ** Disable some widgets.
+				    */
+
+				    button1.setEnabled(false);
+				    textView1.setEnabled(false);
+				    textView1.setText("");
+
+				    String str = m_databaseHelper.
+					readSetting(null, "lastActivity");
+
+				    if(str.equals("Chat"))
+					showChatActivity();
+				    else if(str.equals("Settings"))
+					showSettingsActivity();
+				}
+			    }
+			});
+
+			m_password = "";
 		    }
-
-		    Thread thread = new Thread
-			(new SingleShot(textView1.getText().toString(),
-					encryptionSalt,
-					macSalt,
-					iterationCount));
-
-		    thread.start();
 		}
+
+		Thread thread = new Thread
+		    (new SingleShot(textView1.getText().toString(),
+				    encryptionSalt,
+				    macSalt,
+				    iterationCount));
+
+		thread.start();
 	    }
 	});
 

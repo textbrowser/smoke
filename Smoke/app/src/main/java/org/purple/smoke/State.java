@@ -31,12 +31,11 @@ import android.os.Bundle;
 
 public class State
 {
-    private static Bundle s_bundle = null;
+    private static Bundle s_bundle = new Bundle();
     private static State s_instance = null;
 
     private State()
     {
-	s_bundle = new Bundle();
 	setAuthenticated(false);
     }
 
@@ -103,8 +102,7 @@ public class State
 	s_bundle.putChar("is_authenticated", state ? '1' : '0');
     }
 
-    public synchronized void setChatCheckBoxSelected(int oid,
-						     boolean checked)
+    public synchronized void setChatCheckBoxSelected(int oid, boolean checked)
     {
 	if(checked)
 	    s_bundle.putChar(String.valueOf(oid), '1');
