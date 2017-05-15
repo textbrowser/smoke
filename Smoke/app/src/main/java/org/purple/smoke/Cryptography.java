@@ -602,7 +602,7 @@ public class Cryptography
 	    }
 	    catch(Exception exception)
 	    {
-		return null;
+		bytes = null;
 	    }
 
 	    return bytes;
@@ -639,7 +639,7 @@ public class Cryptography
 	    }
 	    catch(Exception exception)
 	    {
-		return null;
+		bytes = null;
 	    }
 
 	    return bytes;
