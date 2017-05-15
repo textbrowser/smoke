@@ -198,10 +198,9 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = Base64.decode
-			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
-
-			bytes = cryptography.mtd(bytes);
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
@@ -348,10 +347,9 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = Base64.decode
-			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
-
-			bytes = cryptography.mtd(bytes);
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
@@ -447,10 +445,9 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = Base64.decode
-			    (cursor.getString(i).getBytes(), Base64.DEFAULT);
-
-			bytes = cryptography.mtd(bytes);
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
@@ -536,10 +533,9 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-
-		bytes = cryptography.mtd(bytes);
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 
 		if(bytes != null)
 		    publicKey = KeyFactory.getInstance("RSA").
@@ -583,10 +579,9 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-
-		bytes = cryptography.mtd(bytes);
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 
 		if(bytes != null)
 		    for(int i = 0; i < 2; i++)
@@ -687,10 +682,9 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-
-		bytes = cryptography.mtd(bytes);
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 
 		if(bytes != null)
 		    name = new String(bytes);
@@ -726,10 +720,9 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-
-		bytes = cryptography.mtd(bytes);
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 
 		if(bytes != null)
 		    status = new String(bytes);
@@ -779,10 +772,9 @@ public class Database extends SQLiteOpenHelper
 		    str = cursor.getString(0);
 		else
 		{
-		    byte bytes[] = Base64.decode
-			(cursor.getString(0).getBytes(), Base64.DEFAULT);
-
-		    bytes = cryptography.mtd(bytes);
+		    byte bytes[] = cryptography.mtd
+			(Base64.decode(cursor.getString(0).getBytes(),
+				       Base64.DEFAULT));
 
 		    if(bytes != null)
 			str = new String(bytes);
@@ -824,18 +816,17 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-
-		bytes = cryptography.mtd(bytes);
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 
 		if(bytes != null)
 		{
 		    array = new String[2];
 		    array[0] = new String(bytes);
-		    bytes = Base64.decode
-			(cursor.getString(1).getBytes(), Base64.DEFAULT);
-		    bytes = cryptography.mtd(bytes);
+		    bytes = cryptography.mtd
+			(Base64.decode(cursor.getString(1).getBytes(),
+				       Base64.DEFAULT));
 
 		    if(bytes != null)
 			array[1] = new String(bytes, "UTF-8");
@@ -1479,11 +1470,9 @@ public class Database extends SQLiteOpenHelper
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())
-	    {
-		bytes = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-		bytes = cryptography.mtd(bytes);
-	    }
+		bytes = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 	}
 	catch(Exception exception)
 	{
@@ -1521,11 +1510,9 @@ public class Database extends SQLiteOpenHelper
 					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
-	    {
-		bytes = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-		bytes = cryptography.mtd(bytes);
-	    }
+		bytes = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 	}
 	catch(Exception exception)
 	{
@@ -1562,11 +1549,9 @@ public class Database extends SQLiteOpenHelper
 		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
-	    {
-		bytes = Base64.decode
-		    (cursor.getString(0).getBytes(), Base64.DEFAULT);
-		bytes = cryptography.mtd(bytes);
-	    }
+		bytes = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
 	}
 	catch(Exception exception)
 	{
