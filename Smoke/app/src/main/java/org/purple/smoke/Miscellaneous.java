@@ -177,9 +177,7 @@ public class Miscellaneous
 
 	byte array[] = new byte[bytes.length];
 
-	for(int i = 0; i < bytes.length; i++)
-	    array[i] = bytes[i];
-
+	System.arraycopy(bytes, 0, array, 0, array.length);
 	return array;
     }
 
