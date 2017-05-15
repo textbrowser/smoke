@@ -294,6 +294,9 @@ public class Messages
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
+	    stringBuilder.setLength(0);
+	    stringBuilder = null;
+
 	    if(aes256 == null)
 		return null;
 
@@ -385,7 +388,7 @@ public class Messages
 		return null;
 
 	    stringBuilder.append(Base64.encodeToString(publicKey.getEncoded(),
-						      Base64.NO_WRAP));
+						       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
@@ -409,26 +412,29 @@ public class Messages
 		return null;
 
 	    stringBuilder.append(Base64.encodeToString(publicKey.getEncoded(),
-						      Base64.NO_WRAP));
+						       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
-	    byte messageBytes[] = Cryptography.encrypt
+	    byte aes256[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
-	    if(messageBytes == null)
+	    stringBuilder.setLength(0);
+	    stringBuilder = null;
+
+	    if(aes256 == null)
 		return null;
 
 	    /*
-	    ** [ Digest ]
+	    ** [ SHA-512 HMAC ]
 	    */
 
-	    byte macBytes[] = Cryptography.hmac
-		(messageBytes,
+	    byte sha512[] = Cryptography.hmac
+		(aes256,
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-	    if(macBytes == null)
+	    if(sha512 == null)
 		return null;
 
 	    /*
@@ -436,11 +442,10 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(messageBytes, macBytes),
+		(Miscellaneous.joinByteArrays(aes256, sha512),
 		 Cryptography.sha512(sipHashId.getBytes()));
 
-	    return Miscellaneous.joinByteArrays
-		(messageBytes, macBytes, destination);
+	    return Miscellaneous.joinByteArrays(aes256, sha512, destination);
 	}
 	catch(Exception exception)
 	{
