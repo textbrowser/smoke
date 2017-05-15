@@ -273,9 +273,7 @@ public class Authenticate extends AppCompatActivity
 			}
 			catch(Exception exception)
 			{
-			    m_error = exception.getMessage().
-				replaceAll("[^a-zA-Z ]", "").toLowerCase().
-				trim();
+			    m_error = exception.getMessage().trim();
 			    s_cryptography.reset();
 			}
 
