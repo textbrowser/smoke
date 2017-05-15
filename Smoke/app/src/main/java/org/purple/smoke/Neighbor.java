@@ -344,6 +344,16 @@ public abstract class Neighbor
 
     protected synchronized void abort()
     {
+	m_parsingScheduler.shutdown();
+
+	try
+	{
+	    m_parsingScheduler.awaitTermination(60, TimeUnit.SECONDS);
+	}
+	catch(Exception exception)
+	{
+	}
+
 	m_scheduler.shutdown();
 
 	try
