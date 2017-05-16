@@ -163,10 +163,9 @@ public class Settings extends AppCompatActivity
     {
 	String string = "";
 	StringBuilder stringBuilder = new StringBuilder();
-	final TextView textView1 = (TextView) findViewById
+	TextView textView1 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
-	final TextView textView2 = (TextView) findViewById
-	    (R.id.siphash_identity);
+	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
 
 	string = textView1.getText().toString().
 	    replace(" ", "").replace("-", "").replace(":", "");
@@ -465,8 +464,8 @@ public class Settings extends AppCompatActivity
     {
 	ArrayList<NeighborElement> arrayList =
 	    m_databaseHelper.readNeighbors(s_cryptography);
-	final TableLayout tableLayout = (TableLayout) findViewById
-	    (R.id.neighbors);
+	final TableLayout tableLayout = (TableLayout)
+	    findViewById(R.id.neighbors);
 
 	if(arrayList == null || arrayList.size() == 0)
 	{
@@ -735,7 +734,7 @@ public class Settings extends AppCompatActivity
     {
 	ArrayList<SipHashIdElement> arrayList =
 	    m_databaseHelper.readSipHashIds(s_cryptography);
-	final TableLayout tableLayout = (TableLayout) findViewById
+	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
 	tableLayout.removeAllViews();
@@ -848,7 +847,7 @@ public class Settings extends AppCompatActivity
 		m_databaseHelper.resetAndDrop();
 		s_cryptography.reset();
 
-		final Intent intent = getIntent();
+		Intent intent = getIntent();
 
 		finish();
 		startActivity(intent);
@@ -873,19 +872,19 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		final RadioButton radioButton1 = (RadioButton) findViewById
+		RadioButton radioButton1 = (RadioButton) findViewById
 		    (R.id.neighbors_ipv4);
-		final Spinner spinner1 = (Spinner) findViewById
+		Spinner spinner1 = (Spinner) findViewById
 		    (R.id.neighbors_transport);
-		final TextView proxyIpAddress = (TextView) findViewById
+		TextView proxyIpAddress = (TextView) findViewById
 		    (R.id.proxy_ip_address);
-		final TextView proxyPort = (TextView) findViewById
+		TextView proxyPort = (TextView) findViewById
 		    (R.id.proxy_port);
-		final TextView textView1 = (TextView) findViewById
+		TextView textView1 = (TextView) findViewById
 		    (R.id.neighbors_ip_address);
-		final TextView textView2 = (TextView) findViewById
+		TextView textView2 = (TextView) findViewById
 		    (R.id.neighbors_port);
-		final TextView textView3 = (TextView) findViewById
+		TextView textView3 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
 		proxyIpAddress.setText("");
@@ -904,9 +903,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		final TextView textView1 = (TextView) findViewById
+		TextView textView1 = (TextView) findViewById
 		    (R.id.participant_name);
-		final TextView textView2 = (TextView) findViewById
+		TextView textView2 = (TextView) findViewById
 		    (R.id.participant_siphash_id);
 
 		textView1.setText("");
@@ -932,10 +931,8 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		final TextView textView1 = (TextView) findViewById
-		    (R.id.password1);
-		final TextView textView2 = (TextView) findViewById
-		    (R.id.password2);
+		TextView textView1 = (TextView) findViewById(R.id.password1);
+		TextView textView2 = (TextView) findViewById(R.id.password2);
 
 		textView1.setSelectAllOnFocus(true);
 		textView2.setSelectAllOnFocus(true);
@@ -1033,7 +1030,7 @@ public class Settings extends AppCompatActivity
 			m_databaseHelper.writeSetting
 			    (null, "neighbors_details", "false");
 
-		    final CheckBox checkBox = (CheckBox) findViewById
+		    CheckBox checkBox = (CheckBox) findViewById
 			(R.id.automatic_refresh);
 
 		    if(!checkBox.isChecked())
@@ -1050,11 +1047,11 @@ public class Settings extends AppCompatActivity
 					   int position,
 					   long id)
 		{
-		    final Spinner proxyType = (Spinner)
+		    Spinner proxyType = (Spinner)
 			findViewById(R.id.proxy_type);
-		    final TextView proxyIpAddress =
+		    TextView proxyIpAddress =
 			(TextView) findViewById(R.id.proxy_ip_address);
-		    final TextView proxyPort = (TextView) findViewById
+		    TextView proxyPort = (TextView) findViewById
 			(R.id.proxy_port);
 
 		    if(position == 0)
@@ -1319,14 +1316,14 @@ public class Settings extends AppCompatActivity
 
     private void showAuthenticateActivity()
     {
-	final Intent intent = new Intent(Settings.this, Authenticate.class);
+	Intent intent = new Intent(Settings.this, Authenticate.class);
 
 	startActivity(intent);
     }
 
     private void showChatActivity()
     {
-	final Intent intent = new Intent(Settings.this, Chat.class);
+	Intent intent = new Intent(Settings.this, Chat.class);
 
 	startActivity(intent);
     }
@@ -1490,7 +1487,7 @@ public class Settings extends AppCompatActivity
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
 	spinner1.setAdapter(arrayAdapter);
 
-        final RadioGroup radioGroup1 = (RadioGroup) findViewById
+        RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 
         radioGroup1.setOnCheckedChangeListener
@@ -1500,7 +1497,7 @@ public class Settings extends AppCompatActivity
 					 int checkedId)
 	    {
 		int marginEnd = 0;
-		final TextView textView1 = (TextView) findViewById
+		TextView textView1 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
 		if(checkedId == R.id.neighbors_ipv4)
@@ -1514,7 +1511,7 @@ public class Settings extends AppCompatActivity
 
 		LayoutParams layoutParams = new LayoutParams
 		    (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final TextView textView2 = (TextView) findViewById
+		TextView textView2 = (TextView) findViewById
 		    (R.id.neighbors_port);
 
 		layoutParams.setMarginEnd(marginEnd);
