@@ -214,7 +214,6 @@ public class Kernel
 	}
 
 	neighbors.clear();
-	neighbors = null;
     }
 
     private void prepareSchedulers()
@@ -323,8 +322,6 @@ public class Kernel
 
 			if(bytes != null)
 			    echo(Messages.bytesToMessageString(bytes), -1);
-
-			participantCall = null;
 		    }
 		    catch(Exception exception)
 		    {
@@ -805,8 +802,12 @@ public class Kernel
 	SparseIntArray neighbors = s_databaseHelper.readNeighborOids();
 
 	if(neighbors != null)
+	{
 	    for(int i = 0; i < neighbors.size(); i++)
 		s_databaseHelper.enqueueOutboundMessage
 		    (message, neighbors.get(i));
+
+	    neighbors.clear();
+	}
     }
 }

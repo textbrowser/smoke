@@ -732,6 +732,8 @@ public class Settings extends AppCompatActivity
 		tableLayout.addView(row, i);
 	    }
 	}
+
+	arrayList.clear();
     }
 
     private void populateParticipants()
@@ -743,7 +745,7 @@ public class Settings extends AppCompatActivity
 
 	tableLayout.removeAllViews();
 
-	if(arrayList == null)
+	if(arrayList == null || arrayList.size() == 0)
 	    return;
 
 	for(int i = 0; i < arrayList.size(); i++)
@@ -789,6 +791,8 @@ public class Settings extends AppCompatActivity
 
 	    tableLayout.addView(row, i);
 	}
+
+	arrayList.clear();
     }
 
     private void prepareListeners()
