@@ -99,6 +99,7 @@ Completed Items
 73.    Application icon.
 74.    Messages must be temporarily retained if the Chat activity
        loses focus.
+75.    HTTP proxy.
 
 Future Items
 
@@ -140,4 +141,3 @@ Remaining Items
 5.     Sign release.
 6.     Validate the SipHash implementation.
 7.     Next (Tab) order.
-8.     HTTP proxy.

@@ -437,8 +437,14 @@ public class TcpNeighbor extends Neighbor
 	    }
 	    else
 	    {
-		Socket socket = new Socket
-		    (new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
+		Socket socket = null;
+
+		if(m_proxyType.equals("HTTP"))
+		    socket = new Socket
+			(new Proxy(Proxy.Type.HTTP, m_proxyInetSocketAddress));
+		else
+		    socket = new Socket
+			(new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
 
 		socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
 		m_socket = (SSLSocket) sslContext.getSocketFactory().

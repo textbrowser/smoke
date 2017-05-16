@@ -129,6 +129,7 @@ public class Settings extends AppCompatActivity
 	RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
+	Spinner spinner2 = (Spinner) findViewById(R.id.proxy_type);
 	String ipVersion = "";
 	TextView proxyIpAddress = (TextView) findViewById
 	    (R.id.proxy_ip_address);
@@ -145,7 +146,8 @@ public class Settings extends AppCompatActivity
 	if(!m_databaseHelper.writeNeighbor(s_cryptography,
 					   proxyIpAddress.getText().toString(),
 					   proxyPort.getText().toString(),
-					   "SOCKS",
+					   spinner2.getSelectedItem().
+					   toString(),
 					   textView1.getText().toString(),
 					   textView2.getText().toString(),
 					   textView3.getText().toString(),
@@ -1436,7 +1438,7 @@ public class Settings extends AppCompatActivity
 	Spinner spinner1 = (Spinner) findViewById(R.id.proxy_type);
         String array[] = new String[]
 	{
-	    "SOCKS"
+	    "HTTP", "SOCKS"
 	};
 
 	spinner1.setEnabled(isAuthenticated);
