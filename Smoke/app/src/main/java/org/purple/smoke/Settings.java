@@ -125,22 +125,17 @@ public class Settings extends AppCompatActivity
 
     private void addNeighbor()
     {
-	String ipVersion = "";
-	final CheckBox checkBox1 = (CheckBox) findViewById
-	    (R.id.automatic_refresh);
-	final RadioGroup radioGroup1 = (RadioGroup) findViewById
+	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
+	RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
-	final Spinner spinner1 = (Spinner) findViewById
-	    (R.id.neighbors_transport);
-	final TextView proxyIpAddress = (TextView) findViewById
+	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
+	String ipVersion = "";
+	TextView proxyIpAddress = (TextView) findViewById
 	    (R.id.proxy_ip_address);
-	final TextView proxyPort = (TextView) findViewById(R.id.proxy_port);
-	final TextView textView1 = (TextView) findViewById
-	    (R.id.neighbors_ip_address);
-	final TextView textView2 = (TextView) findViewById
-	    (R.id.neighbors_port);
-	final TextView textView3 = (TextView) findViewById
-	    (R.id.neighbors_scope_id);
+	TextView proxyPort = (TextView) findViewById(R.id.proxy_port);
+	TextView textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
+	TextView textView2 = (TextView) findViewById(R.id.neighbors_port);
+	TextView textView3 = (TextView) findViewById(R.id.neighbors_scope_id);
 
 	if(radioGroup1.getCheckedRadioButtonId() == R.id.neighbors_ipv4)
 	    ipVersion = "IPv4";
