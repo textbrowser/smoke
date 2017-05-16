@@ -1221,6 +1221,19 @@ public class Cryptography
 	    m_sipHashEncryptionKey = null;
 	}
 
+	synchronized(m_sipHashIdDigestMutex)
+	{
+	    if(m_sipHashIdDigest != null)
+		Arrays.fill(m_sipHashIdDigest, (byte) 0);
+
+	    m_sipHashIdDigest = null;
+	}
+
+	synchronized(m_sipHashIdMutex)
+	{
+	    m_sipHashId = "00:00:00:00:00:00:00:00";
+	}
+
 	synchronized(m_sipHashMacKeyMutex)
 	{
 	    if(m_sipHashMacKey != null)
