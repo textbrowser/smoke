@@ -63,6 +63,7 @@ public class Cryptography
     private String m_sipHashId = "00:00:00:00:00:00:00:00";
     private byte m_identity[] = null;
     private byte m_sipHashEncryptionKey[] = null;
+    private byte m_sipHashIdDigest[] = null;
     private byte m_sipHashMacKey[] = null;
     private final Object m_chatEncryptionPublicKeyPairMutex = new Object();
     private final Object m_chatSignaturePublicKeyPairMutex = new Object();
@@ -70,6 +71,7 @@ public class Cryptography
     private final Object m_identityMutex = new Object();
     private final Object m_macKeyMutex = new Object();
     private final Object m_sipHashEncryptionKeyMutex = new Object();
+    private final Object m_sipHashIdDigestMutex = new Object();
     private final Object m_sipHashIdMutex = new Object();
     private final Object m_sipHashMacKeyMutex = new Object();
     private final static String HASH_ALGORITHM = "SHA-512";
@@ -260,9 +262,9 @@ public class Cryptography
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)
 	    return false;
 
-	synchronized(m_sipHashIdMutex)
+	synchronized(m_sipHashIdDigestMutex)
 	{
-	    return memcmp(hmac(data, sha512(m_sipHashId.getBytes())), mac);
+	    return memcmp(hmac(data, m_sipHashIdDigest), mac);
 	}
     }
 
@@ -271,11 +273,17 @@ public class Cryptography
 	try
 	{
 	    byte bytes[] = null;
-	    byte salt[] = sha512(m_sipHashId.trim().getBytes());
-	    byte temporary[] = pbkdf2(salt,
-				      m_sipHashId.toCharArray(),
-				      SIPHASH_STREAM_CREATION_ITERATION_COUNT,
-				      768); // 8 * (32 + 64) Bits
+	    byte salt[] = null;
+	    byte temporary[] = null;
+
+	    synchronized(m_sipHashIdMutex)
+	    {
+		salt = sha512(m_sipHashId.trim().getBytes());
+		temporary = pbkdf2(salt,
+				   m_sipHashId.toCharArray(),
+				   SIPHASH_STREAM_CREATION_ITERATION_COUNT,
+				   768); // 8 * (32 + 64) Bits
+	    }
 
 	    if(temporary != null)
 		bytes = pbkdf2(salt,
@@ -1153,8 +1161,19 @@ public class Cryptography
 		if(bytes == null || bytes.length < 0)
 		    return false;
 
-		m_sipHashId = Miscellaneous.
-		    byteArrayAsHexStringDelimited(bytes, ':', 2);
+		synchronized(m_sipHashIdDigestMutex)
+		{
+		    m_sipHashIdDigest = Miscellaneous.deepCopy
+			(sha512(Miscellaneous.
+				byteArrayAsHexStringDelimited(bytes, ':', 2).
+				getBytes()));
+		}
+
+		synchronized(m_sipHashIdMutex)
+		{
+		    m_sipHashId = Miscellaneous.
+			byteArrayAsHexStringDelimited(bytes, ':', 2);
+		}
 	    }
 	    else
 		return false;
