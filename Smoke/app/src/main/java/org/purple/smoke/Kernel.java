@@ -212,6 +212,9 @@ public class Kernel
 		m_neighbors.append(neighborElement.m_oid, neighbor);
 	    }
 	}
+
+	neighbors.clear();
+	neighbors = null;
     }
 
     private void prepareSchedulers()
@@ -320,6 +323,8 @@ public class Kernel
 
 			if(bytes != null)
 			    echo(Messages.bytesToMessageString(bytes), -1);
+
+			participantCall = null;
 		    }
 		    catch(Exception exception)
 		    {
