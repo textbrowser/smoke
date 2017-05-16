@@ -658,6 +658,8 @@ public class Settings extends AppCompatActivity
 		stringBuilder.append(neighborElement.m_proxyIpAddress);
 		stringBuilder.append(":");
 		stringBuilder.append(neighborElement.m_proxyPort);
+		stringBuilder.append(":");
+		stringBuilder.append(neighborElement.m_proxyType);
 	    }
 
 	    if(checkBox.isChecked())
