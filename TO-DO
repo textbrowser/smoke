@@ -100,7 +100,7 @@ Completed Items
 
 Future Items
 
-1.     Buzz-like page. Mumble.
+1.     Buzz-like page. Mumble. ("AES/CTS/PKCS7Padding")
 2.     Per request, include the source in the application bundle.
 3.     Socket channels. A lot of work.
 4.     (130 / 16 + 1) * 16 + 8 <= 154.
