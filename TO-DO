@@ -111,6 +111,7 @@ Future Items
 8.     Allow log clearing. New Log activity.
 9.     Optional SipHash identities in received messages.
 10.    It may be possible to replace m_neighborsScheduler.
+11.    Zero ports.
 
 Ignored / Impossible Items
 
