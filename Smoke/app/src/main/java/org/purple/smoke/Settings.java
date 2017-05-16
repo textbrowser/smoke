@@ -247,7 +247,7 @@ public class Settings extends AppCompatActivity
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
 				 "An error occurred while attempting " +
-				 "to save the SipHash Identity.");
+				 "to save the specified SipHash Identity.");
 			else
 			    populateParticipants();
 		    }
@@ -880,6 +880,8 @@ public class Settings extends AppCompatActivity
 		    (R.id.neighbors_ipv4);
 		Spinner spinner1 = (Spinner) findViewById
 		    (R.id.neighbors_transport);
+		Spinner spinner2 = (Spinner) findViewById
+		    (R.id.proxy_type);
 		TextView proxyIpAddress = (TextView) findViewById
 		    (R.id.proxy_ip_address);
 		TextView proxyPort = (TextView) findViewById
@@ -895,6 +897,7 @@ public class Settings extends AppCompatActivity
 		proxyPort.setText("");
 		radioButton1.setChecked(true);
 		spinner1.setSelection(0);
+		spinner2.setSelection(0);
 		textView1.setText("");
 		textView2.setText("4710");
 		textView3.setText("");
@@ -1115,9 +1118,9 @@ public class Settings extends AppCompatActivity
 	class SingleShot implements Runnable
 	{
 	    private String m_encryptionAlgorithm = "";
+	    private String m_error = "";
 	    private String m_password = "";
 	    private String m_signatureAlgorithm = "";
-	    private boolean m_error = false;
 	    private int m_iterationCount = 1000;
 
 	    SingleShot(String encryptionAlgorithm,
@@ -1153,6 +1156,14 @@ public class Settings extends AppCompatActivity
 			generatePrivatePublicKeyPair
 			(m_encryptionAlgorithm, PKI_ENCRYPTION_KEY_SIZES[0]);
 
+		    if(chatEncryptionKeyPair == null)
+		    {
+			m_error = "encryption " +
+			    "generatePrivatePublicKeyPair() failure";
+			s_cryptography.reset();
+			return;
+		    }
+
 		    if(m_signatureAlgorithm.equals("EC"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
@@ -1162,15 +1173,38 @@ public class Settings extends AppCompatActivity
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm, PKI_SIGNATURE_KEY_SIZES[1]);
 
+		    if(chatSignatureKeyPair == null)
+		    {
+			m_error = "signature " +
+			    "generatePrivatePublicKeyPair() failure";
+			s_cryptography.reset();
+			return;
+		    }
+
 		    encryptionKey = Cryptography.
 			generateEncryptionKey
 			(encryptionSalt,
 			 m_password.toCharArray(),
 			 m_iterationCount);
+
+		    if(encryptionSalt == null)
+		    {
+			m_error = "generateEncryptionKey() failure";
+			s_cryptography.reset();
+			return;
+		    }
+
 		    macKey = Cryptography.generateMacKey
 			(macSalt,
 			 m_password.toCharArray(),
 			 m_iterationCount);
+
+		    if(macKey == null)
+		    {
+			m_error = "generateMacKey() failure";
+			s_cryptography.reset();
+			return;
+		    }
 
 		    /*
 		    ** Prepare the Cryptography object's data.
@@ -1261,13 +1295,19 @@ public class Settings extends AppCompatActivity
 						   Base64.DEFAULT));
 		    else
 		    {
-			m_error = true;
+			if(!e1)
+			    m_error = "prepareSipHashIds() failure";
+			else if(!e2)
+			    m_error = "prepareSipHashKeys() failure";
+			else
+			    m_error = "sha512() failure";
+
 			s_cryptography.reset();
 		    }
 		}
 		catch(Exception exception)
 		{
-		    m_error = true;
+		    m_error = exception.getMessage().toLowerCase().trim();
 		    s_cryptography.reset();
 		}
 
@@ -1278,10 +1318,11 @@ public class Settings extends AppCompatActivity
 		    {
 			dialog.dismiss();
 
-			if(m_error)
+			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
-				 "An error occurred while " +
+				 "An error (" + m_error +
+				 ") occurred while " +
 				 "generating the confidential " +
 				 "data.");
 			else
