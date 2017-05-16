@@ -98,6 +98,7 @@ public class Chat extends AppCompatActivity
     private final static SipHash s_siphash = new SipHash
 	(new byte[] {1, 2, 3, 4, 5, 6, 7, 8,
 		     9, 10, 11, 12, 13, 14, 15, 16});
+    private final static int CUSTOM_SESSION_ITERATION_COUNT = 1000;
     private final static int CHECKBOX_TEXT_SIZE = 13;
 
     private String nameFromCheckBoxText(String text)
@@ -575,8 +576,8 @@ public class Chat extends AppCompatActivity
 				    (Cryptography.sha512(string.
 							 getBytes("UTF-8")),
 				     string.toCharArray(),
-				     1000,
-				     96 * 8);
+				     CUSTOM_SESSION_ITERATION_COUNT,
+				     96 * 8); // AES-256, SHA-512
 
 				if(m_databaseHelper.
 				   setParticipantKeyStream(s_cryptography,
