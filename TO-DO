@@ -97,6 +97,8 @@ Completed Items
 72.    Include network information in neighbors pertaining to
        errors.
 73.    Application icon.
+74.    Messages must be temporarily retained if the Chat activity
+       loses focus.
 
 Future Items
 
@@ -134,7 +136,5 @@ Remaining Items
 3.     Resolve DNS through a proxy if a proxy is defined.
 4.     Detect removal of neighbors.
 5.     Sign release.
-6.     Messages must be retained if the Chat activity is
-       not active.
-7.     Validate the SipHash implementation.
-8.     Next (Tab) order.
+6.     Validate the SipHash implementation.
+7.     Next (Tab) order.

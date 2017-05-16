@@ -389,6 +389,17 @@ public class Chat extends AppCompatActivity
         });
     }
 
+    private void saveState()
+    {
+	TextView textView = (TextView) findViewById(R.id.chat_message);
+
+	State.getInstance().writeCharSequence
+	    ("chat.message", textView.getText());
+	textView = (TextView) findViewById(R.id.chat_messages);
+	State.getInstance().writeCharSequence
+	    ("chat.messages", textView.getText());
+    }
+
     private void scrollMessagesView()
     {
 	final ScrollView scrollView = (ScrollView)
@@ -671,13 +682,7 @@ public class Chat extends AppCompatActivity
 
         if(id == R.id.action_settings)
 	{
-	    TextView textView = (TextView) findViewById(R.id.chat_message);
-
-	    State.getInstance().writeCharSequence
-		("chat.message", textView.getText());
-	    textView = (TextView) findViewById(R.id.chat_messages);
-	    State.getInstance().writeCharSequence
-		("chat.messages", textView.getText());
+	    saveState();
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 
             Intent intent = new Intent(Chat.this, Settings.class);
@@ -715,6 +720,8 @@ public class Chat extends AppCompatActivity
 	    unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
+
+	saveState();
     }
 
     @Override
@@ -732,5 +739,27 @@ public class Chat extends AppCompatActivity
 	    registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState)
+    {
+	/*
+	** Do not issue a super.onSaveInstanceState().
+	*/
+    }
+
+    @Override
+    public void onStop()
+    {
+	super.onStop();
+
+	if(m_receiverRegistered)
+	{
+	    unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+
+	saveState();
     }
 }
