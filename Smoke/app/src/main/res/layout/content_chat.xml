@@ -13,41 +13,37 @@
     tools:showIn="@layout/activity_chat">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chat_scrollview"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/call"
         android:layout_toStartOf="@+id/call"
         android:background="@drawable/sectiongradient"
         android:gravity="center_vertical"
         android:text="@string/chat"
         android:textColor="@android:color/white"
         android:textSize="25sp"
-        android:textStyle="normal|bold"
-        android:id="@+id/textView2" />
+        android:textStyle="normal|bold" />
 
     <Button
-        android:text="@string/clear"
+        android:id="@+id/clear_chat_messages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/clear_chat_messages"
-        android:textSize="14sp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="@string/clear"
+        android:textSize="14sp" />
 
     <ScrollView
+        android:id="@+id/chat_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/clear_chat_messages"
         android:layout_above="@+id/chat_message"
+        android:layout_below="@+id/clear_chat_messages"
         android:layout_toStartOf="@+id/call"
-        android:fadeScrollbars="false"
-        android:id="@+id/chat_scrollview"
-        android:layout_toLeftOf="@+id/call">
+        android:fadeScrollbars="false">
 
         <TextView
             android:id="@+id/chat_messages"
@@ -57,47 +53,41 @@
     </ScrollView>
 
     <EditText
+        android:id="@+id/chat_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
         android:layout_alignParentBottom="true"
-        android:id="@+id/chat_message"
-        android:hint="@string/please_type_a_message"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/send_chat_message"
-        android:layout_toLeftOf="@+id/send_chat_message" />
+        android:ems="10"
+        android:hint="@string/please_type_a_message"
+        android:inputType="textPersonName" />
 
     <Button
-        android:text="@string/send"
+        android:id="@+id/send_chat_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/send_chat_message"
         android:layout_alignBaseline="@+id/chat_message"
         android:layout_alignBottom="@+id/chat_message"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:text="@string/send" />
 
     <Button
+        android:id="@+id/call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chat_scrollview"
-        android:layout_toLeftOf="@+id/clear_chat_messages"
         android:layout_toStartOf="@+id/clear_chat_messages"
-        android:text="@string/call"
-        android:id="@+id/call" />
+        android:text="@string/call" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/clear_chat_messages"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textView2"
+        android:layout_below="@+id/clear_chat_messages"
         android:layout_toEndOf="@+id/textView2"
-        android:id="@+id/linearLayout">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/participant"
@@ -113,7 +103,6 @@
         android:layout_above="@+id/chat_message"
         android:layout_below="@+id/linearLayout"
         android:layout_toEndOf="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
         android:fadeScrollbars="false"
         android:scrollbars="vertical">
 
