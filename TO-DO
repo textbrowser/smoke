@@ -100,6 +100,7 @@ Completed Items
 74.    Messages must be temporarily retained if the Chat activity
        loses focus.
 75.    HTTP proxy.
+76.    Validate the SipHash implementation. Please see SipHash::test1().
 
 Future Items
 
@@ -139,6 +140,5 @@ Remaining Items
 3.     Resolve DNS through a proxy if a proxy is defined.
 4.     Detect removal of neighbors.
 5.     Sign release.
-6.     Validate the SipHash implementation.
-7.     Next (Tab) order.
-8.     Select All context menu in the Chat activity.
+6.     Next (Tab) order.
+7.     Select All context menu in the Chat activity.

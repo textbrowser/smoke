@@ -96,8 +96,10 @@ public class Chat extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static SipHash s_siphash = new SipHash
-	(new byte[] {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-		     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f});
+	(new byte[] {(byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03,
+		     (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07,
+		     (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,
+		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 1000;
     private final static int CHECKBOX_TEXT_SIZE = 13;
 
