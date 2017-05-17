@@ -1595,7 +1595,8 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
 	textView1.setEnabled(isAuthenticated);
-	textView1.setFilters(new InputFilter[] { s_sipHashInputFilter });
+	textView1.setFilters(new InputFilter[] { new InputFilter.AllCaps(),
+						 s_sipHashInputFilter });
 	textView1 = (TextView) findViewById(R.id.password1);
 
 	if(!isAuthenticated)

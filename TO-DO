@@ -103,6 +103,7 @@ Completed Items
 76.    Validate the SipHash implementation. Please see SipHash::test1().
 77.    Connect the state of the Call button to the number of selected
        participants (Chat).
+78.    Capitalize SipHash input.
 
 Future Items
 
@@ -145,4 +146,4 @@ Remaining Items
 6.     Next (Tab) order.
 7.     Select All context menu in the Chat activity.
 8.     Display exchange status in the Participants table.
-9.     Uppercase SipHash input and automatic hyphens.
+9.     Automatic SipHash hyphens.
