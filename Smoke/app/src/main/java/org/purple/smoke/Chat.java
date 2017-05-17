@@ -267,14 +267,10 @@ public class Chat extends AppCompatActivity
 	    }
 
 	    checkBox.setId(participantElement.m_oid);
-
-	    TableRow.LayoutParams checkBoxLayoutParams =
+	    checkBox.setLayoutParams
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
-
-	    checkBoxLayoutParams.setMarginEnd(5);
-	    checkBox.setLayoutParams(checkBoxLayoutParams);
 	    stringBuilder.append(participantElement.m_name);
 	    stringBuilder.append("\n");
 	    stringBuilder.append
