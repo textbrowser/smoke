@@ -198,11 +198,13 @@ public class Chat extends AppCompatActivity
     {
 	ArrayList<ParticipantElement> arrayList =
 	    m_databaseHelper.readParticipants(s_cryptography);
-	Button button = (Button) findViewById(R.id.send_chat_message);
+	Button button1 = (Button) findViewById(R.id.call);
+	Button button2 = (Button) findViewById(R.id.send_chat_message);
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
-	button.setEnabled(false);
+	button1.setEnabled(false);
+	button2.setEnabled(false);
 
 	if(arrayList == null || arrayList.size() == 0)
 	{
@@ -232,13 +234,20 @@ public class Chat extends AppCompatActivity
 		    State.getInstance().setChatCheckBoxSelected
 			(oid, isChecked);
 
-		    Button button = (Button) findViewById
+		    Button button1 = (Button) findViewById(R.id.call);
+		    Button button2 = (Button) findViewById
 			(R.id.send_chat_message);
 
 		    if(State.getInstance().chatCheckedParticipants() > 0)
-			button.setEnabled(true);
+		    {
+			button1.setEnabled(true);
+			button2.setEnabled(true);
+		    }
 		    else
-			button.setEnabled(false);
+		    {
+			button1.setEnabled(false);
+			button2.setEnabled(false);
+		    }
 		}
 	    });
 
@@ -252,7 +261,10 @@ public class Chat extends AppCompatActivity
 		(State.getInstance().chatCheckBoxIsSelected(oid));
 
 	    if(checkBox.isChecked())
-		button.setEnabled(true);
+	    {
+		button1.setEnabled(true);
+		button2.setEnabled(true);
+	    }
 
 	    checkBox.setId(participantElement.m_oid);
 
