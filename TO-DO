@@ -142,3 +142,5 @@ Remaining Items
 5.     Sign release.
 6.     Next (Tab) order.
 7.     Select All context menu in the Chat activity.
+8.     Connect the state of the Call button to the number of selected
+       participants (Chat).
