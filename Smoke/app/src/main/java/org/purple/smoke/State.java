@@ -62,7 +62,7 @@ public class State
 
     public synchronized boolean chatCheckBoxIsSelected(int oid)
     {
-	return s_bundle.getChar(String.valueOf(oid)) == '1';
+	return s_bundle.getChar("chat_checkbox_" + String.valueOf(oid)) == '1';
     }
 
     public synchronized boolean isAuthenticated()
@@ -73,6 +73,11 @@ public class State
     public synchronized boolean neighborsEcho()
     {
 	return s_bundle.getChar("neighbors_echo") == '1';
+    }
+
+    public synchronized int chatCheckedParticipants()
+    {
+	return s_bundle.getInt("chat_checkbox_counter", 0);
     }
 
     public synchronized long chatSequence(String sipHashId)
@@ -107,10 +112,31 @@ public class State
 
     public synchronized void setChatCheckBoxSelected(int oid, boolean checked)
     {
+	boolean contains = s_bundle.containsKey("chat_checkbox_" +
+						String.valueOf(oid));
+
 	if(checked)
-	    s_bundle.putChar(String.valueOf(oid), '1');
+	{
+	    s_bundle.putChar("chat_checkbox_" + String.valueOf(oid), '1');
+
+	    if(!contains)
+		s_bundle.putInt
+		    ("chat_checkbox_counter", chatCheckedParticipants() + 1);
+	}
 	else
-	    s_bundle.remove(String.valueOf(oid));
+	{
+	    s_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+
+	    if(contains)
+	    {
+		int counter = chatCheckedParticipants();
+
+		if(counter > 0)
+		    counter -= 1;
+
+		s_bundle.putInt("chat_checkbox_counter", counter);
+	    }
+	}
     }
 
     public synchronized void setNeighborsEcho(boolean state)

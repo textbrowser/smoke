@@ -198,32 +198,16 @@ public class Chat extends AppCompatActivity
     {
 	ArrayList<ParticipantElement> arrayList =
 	    m_databaseHelper.readParticipants(s_cryptography);
+	Button button = (Button) findViewById(R.id.send_chat_message);
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
+
+	button.setEnabled(false);
 
 	if(arrayList == null || arrayList.size() == 0)
 	{
 	    tableLayout.removeAllViews();
 	    return;
-	}
-
-	Hashtable<String, String> checked = new Hashtable<> ();
-
-	for(int i = 0; i < tableLayout.getChildCount(); i++)
-	{
-	    TableRow row = (TableRow) tableLayout.getChildAt(i);
-
-	    if(row == null)
-		continue;
-
-	    CheckBox checkBox = (CheckBox) row.getChildAt(0);
-
-	    if(checkBox == null)
-		continue;
-
-	    if(checkBox.getTag() != null)
-		checked.put(checkBox.getTag().toString(),
-			    String.valueOf(checkBox.isChecked()));
 	}
 
 	tableLayout.removeAllViews();
@@ -247,6 +231,14 @@ public class Chat extends AppCompatActivity
 		{
 		    State.getInstance().setChatCheckBoxSelected
 			(oid, isChecked);
+
+		    Button button = (Button) findViewById
+			(R.id.send_chat_message);
+
+		    if(State.getInstance().chatCheckedParticipants() > 0)
+			button.setEnabled(true);
+		    else
+			button.setEnabled(false);
 		}
 	    });
 
@@ -258,6 +250,10 @@ public class Chat extends AppCompatActivity
 	    registerForContextMenu(checkBox);
 	    checkBox.setChecked
 		(State.getInstance().chatCheckBoxIsSelected(oid));
+
+	    if(checkBox.isChecked())
+		button.setEnabled(true);
+
 	    checkBox.setId(participantElement.m_oid);
 
 	    TableRow.LayoutParams checkBoxLayoutParams =
@@ -318,10 +314,6 @@ public class Chat extends AppCompatActivity
 				   replace(":", ""), '-', 4).
 		     toUpperCase());
 	    }
-
-	    if(checked.containsKey(participantElement.m_sipHashId))
-		checkBox.setChecked(checked.get(participantElement.m_sipHashId).
-				    equals("true"));
 
 	    checkBox.setTag(participantElement.m_sipHashId);
 	    checkBox.setText(stringBuilder);
