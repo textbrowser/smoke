@@ -144,3 +144,5 @@ Remaining Items
 7.     Select All context menu in the Chat activity.
 8.     Connect the state of the Call button to the number of selected
        participants (Chat).
+9.     Display exchange status in the Participants table.
+10.    Uppercase SipHash input and automatic hyphens.
