@@ -465,6 +465,15 @@ public class Chat extends AppCompatActivity
 		TextView textView2 = (TextView) findViewById
 		    (R.id.chat_messages);
 
+		stringBuilder.append("[");
+		stringBuilder.append(simpleDateFormat.format(new Date()));
+		stringBuilder.append("] ");
+		stringBuilder.append("me: ");
+		stringBuilder.append(str);
+		stringBuilder.append("\n\n");
+		textView2.append(stringBuilder);
+		textView1.setText("");
+
 		for(int i = 0; i < tableLayout.getChildCount(); i++)
 		{
 		    TableRow row = (TableRow) tableLayout.getChildAt(i);
@@ -474,9 +483,7 @@ public class Chat extends AppCompatActivity
 
 		    CheckBox checkBox = (CheckBox) row.getChildAt(0);
 
-		    if(checkBox == null ||
-		       checkBox.getTag() == null ||
-		       !checkBox.isChecked())
+		    if(checkBox == null || checkBox.getTag() == null)
 			continue;
 
 		    String sipHashId = checkBox.getTag().toString();
@@ -485,16 +492,6 @@ public class Chat extends AppCompatActivity
 
 		    if(keyStream == null || keyStream.length != 96)
 			continue;
-
-		    stringBuilder.setLength(0);
-		    stringBuilder.append("[");
-		    stringBuilder.append(simpleDateFormat.format(new Date()));
-		    stringBuilder.append("] ");
-		    stringBuilder.append("me: ");
-		    stringBuilder.append(str);
-		    stringBuilder.append("\n\n");
-		    textView2.append(stringBuilder);
-		    textView1.setText("");
 
 		    byte bytes[] = null;
 
