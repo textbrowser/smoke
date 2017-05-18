@@ -763,6 +763,7 @@ public class Settings extends AppCompatActivity
 	    {
 		TextView textView = new TextView(Settings.this);
 
+		textView.setGravity(Gravity.CENTER_VERTICAL);
 		textView.setId(sipHashIdElement.m_oid);
 		textView.setLayoutParams
 		    (new TableRow.LayoutParams(0,
@@ -772,11 +773,17 @@ public class Settings extends AppCompatActivity
 		if(j == 0)
 		    textView.setText(sipHashIdElement.m_name);
 		else
+		{
+		    if(sipHashIdElement.m_epksCompleted)
+			textView.setCompoundDrawablesWithIntrinsicBounds
+			    (R.drawable.lock, 0, 0, 0);
+
 		    textView.setText
 			(Miscellaneous.
 			 delimitString(sipHashIdElement.m_sipHashId.
 				       replace(":", ""), '-', 4).
 			 toUpperCase());
+		}
 
 		textView.setTag(textView.getText());
 		textView.setTextSize(TEXTVIEW_TEXT_SIZE);
