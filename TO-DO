@@ -104,6 +104,7 @@ Completed Items
 77.    Connect the state of the Call button to the number of selected
        participants (Chat).
 78.    Capitalize SipHash input.
+79.    Display exchange status in the Participants table. Icons.
 
 Future Items
 
@@ -145,5 +146,4 @@ Remaining Items
 5.     Sign release.
 6.     Next (Tab) order.
 7.     Select All context menu in the Chat activity.
-8.     Display exchange status in the Participants table.
-9.     Automatic SipHash hyphens.
+8.     Automatic SipHash hyphens.
