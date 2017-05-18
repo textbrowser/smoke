@@ -483,7 +483,9 @@ public class Chat extends AppCompatActivity
 
 		    CheckBox checkBox = (CheckBox) row.getChildAt(0);
 
-		    if(checkBox == null || checkBox.getTag() == null)
+		    if(checkBox == null ||
+		       checkBox.getTag() == null ||
+		       !checkBox.isChecked())
 			continue;
 
 		    String sipHashId = checkBox.getTag().toString();
