@@ -457,12 +457,8 @@ public class Database extends SQLiteOpenHelper
 				 Base64.DEFAULT);
 
 			    string_b += string_b;
-
-			    if(string_a.equals(string_b))
-				sipHashIdElement.m_epksCompleted = false;
-			    else
-				sipHashIdElement.m_epksCompleted = true;
-
+			    sipHashIdElement.m_epksCompleted =
+				!string_a.equals(string_b);
 			    continue;
 			}
 			else if(i == cursor.getColumnCount() - 1)
