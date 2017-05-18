@@ -141,7 +141,7 @@ public class SipHash
 	case 2:
 	    b |= ((long) data[offset + 1]) << 8;
 	case 1:
-	    b |= ((long) data[offset + 0]);
+	    b |= ((long) data[offset]);
 	    break;
 	case 0:
 	    break;

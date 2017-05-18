@@ -45,8 +45,8 @@ public abstract class Neighbor
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
     private UUID m_uuid = null;
-    private final Object m_queueMutex = new Object();
     private final String m_echoMode = "full";
+    private final static Object m_queueMutex = new Object();
     private final static int LANE_WIDTH = 100000;
     private final static int PARSING_INTERVAL = 100; // Milliseconds
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
@@ -66,6 +66,7 @@ public abstract class Neighbor
     protected StringBuilder m_error = new StringBuilder();
     protected byte m_bytes[] = null;
     protected final StringBuilder m_stringBuilder = new StringBuilder();
+    protected final static Object m_errorMutex = new Object();
     protected final static String EOM = "\r\n\r\n\r\n";
     protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
     protected final static int READ_SOCKET_INTERVAL = 150; // 150 Milliseconds
@@ -82,7 +83,7 @@ public abstract class Neighbor
 	boolean connected = connected();
 	long uptime = System.nanoTime() - m_startTime.get();
 
-	synchronized(m_error)
+	synchronized(m_errorMutex)
 	{
 	    error = m_error.toString();
 	}
@@ -382,7 +383,7 @@ public abstract class Neighbor
 
     protected void setError(String error)
     {
-	synchronized(m_error)
+	synchronized(m_errorMutex)
 	{
 	    m_error.setLength(0);
 	    m_error.append(error);

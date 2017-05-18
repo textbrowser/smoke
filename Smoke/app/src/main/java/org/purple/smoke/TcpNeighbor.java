@@ -385,7 +385,7 @@ public class TcpNeighbor extends Neighbor
 		    }
 
 		    if(m_isValidCertificate.get() == 0)
-			synchronized(m_error)
+			synchronized(m_errorMutex)
 			{
 			    if(m_error.length() == 0)
 				m_error.append
