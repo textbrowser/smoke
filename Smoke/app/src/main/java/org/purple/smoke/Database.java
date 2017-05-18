@@ -555,8 +555,8 @@ public class Database extends SQLiteOpenHelper
 		 "FROM participants WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString(cryptography.
-					      hmac(sipHashId.trim().
-						   getBytes("UTF-8")),
+					      hmac(sipHashId.toLowerCase().
+						   trim().getBytes("UTF-8")),
 					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -704,8 +704,8 @@ public class Database extends SQLiteOpenHelper
 		("SELECT name FROM siphash_ids WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString(cryptography.
-					      hmac(sipHashId.trim().
-						   getBytes("UTF-8")),
+					      hmac(sipHashId.toLowerCase().
+						   trim().getBytes("UTF-8")),
 					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -1297,7 +1297,8 @@ public class Database extends SQLiteOpenHelper
 	    String sipHashId = Miscellaneous.
 		sipHashIdFromData(Miscellaneous.
 				  joinByteArrays(publicKey.getEncoded(),
-						 signatureKey.getEncoded()));
+						 signatureKey.getEncoded())).
+		toLowerCase();
 
 	    name = nameFromSipHashId(cryptography, sipHashId);
 
@@ -1409,6 +1410,7 @@ public class Database extends SQLiteOpenHelper
 	    if(name.isEmpty())
 		name = "unknown";
 
+	    sipHashId = sipHashId.toLowerCase().trim();
 	    sparseArray.append(0, "name");
 	    sparseArray.append(1, "siphash_id");
 	    sparseArray.append(2, "siphash_id_digest");
@@ -1533,8 +1535,8 @@ public class Database extends SQLiteOpenHelper
 		 "WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString(cryptography.
-					      hmac(sipHashId.trim().
-						   getBytes("UTF-8")),
+					      hmac(sipHashId.toLowerCase().
+						   trim().getBytes("UTF-8")),
 					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -2103,7 +2105,8 @@ public class Database extends SQLiteOpenHelper
 	    m_db.update("participants", values, "siphash_id_digest = ?",
 			new String[] {Base64.
 				      encodeToString(cryptography.
-						     hmac(sipHashId.trim().
+						     hmac(sipHashId.
+							  toLowerCase().trim().
 							  getBytes("UTF-8")),
 						     Base64.DEFAULT)});
 

@@ -248,7 +248,7 @@ public class Settings extends AppCompatActivity
 	    SingleShot(String name, String sipHashId)
 	    {
 		m_name = name;
-		m_siphashId = sipHashId.toLowerCase();
+		m_siphashId = sipHashId;
 	    }
 
 	    @Override
