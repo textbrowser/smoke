@@ -782,7 +782,7 @@ public class Settings extends AppCompatActivity
 
 	    row.setLayoutParams(layoutParams);
 
-	    for(int j = 0; j < 3; j++)
+	    for(int j = 0; j < 2; j++)
 	    {
 		TextView textView = new TextView(Settings.this);
 
@@ -800,19 +800,15 @@ public class Settings extends AppCompatActivity
 		    if(sipHashIdElement.m_epksCompleted)
 			textView.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.lock, 0, 0, 0);
+		    else
+			textView.setCompoundDrawablesWithIntrinsicBounds
+			    (R.drawable.lockless, 0, 0, 0);
 
 		    textView.setText
 			(Miscellaneous.
 			 delimitString(sipHashIdElement.m_sipHashId.
 				       replace(":", ""), '-', 4).
 			 toUpperCase());
-		}
-		else
-		{
-		    Button button = new Button(Settings.this);
-
-		    button.setText("EPKS");
-		    row.addView(button);
 		}
 
 		textView.setTag(textView.getText());
