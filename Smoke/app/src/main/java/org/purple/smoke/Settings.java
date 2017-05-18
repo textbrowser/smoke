@@ -28,8 +28,11 @@
 package org.purple.smoke;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -65,8 +68,28 @@ import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
+    private class SettingsBroadcastReceiver extends BroadcastReceiver
+    {
+	public SettingsBroadcastReceiver()
+	{
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent)
+	{
+	    if(intent == null)
+		return;
+
+	    if(intent.getAction().
+	       equals("org.purple.smoke.populate_participants"))
+		populateParticipants();
+	}
+    }
+
     private Database m_databaseHelper = null;
     private ScheduledExecutorService m_scheduler = null;
+    private SettingsBroadcastReceiver m_receiver = null;
+    private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static InputFilter s_portFilter = new InputFilter()
@@ -198,8 +221,8 @@ public class Settings extends AppCompatActivity
 		 "A SipHash Identity must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
-	else if(textView2.getText().toString().replace("-", "").
-		endsWith(string.replace(":", "")))
+	else if(textView2.getText().toString().toLowerCase().replace("-", "").
+		endsWith(string.replace(":", "").toLowerCase()))
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
@@ -225,7 +248,7 @@ public class Settings extends AppCompatActivity
 	    SingleShot(String name, String sipHashId)
 	    {
 		m_name = name;
-		m_siphashId = sipHashId;
+		m_siphashId = sipHashId.toLowerCase();
 	    }
 
 	    @Override
@@ -1435,6 +1458,7 @@ public class Settings extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_receiver = new SettingsBroadcastReceiver();
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -1761,10 +1785,49 @@ public class Settings extends AppCompatActivity
     }
 
     @Override
+    public void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+    }
+
+    @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
 	/*
 	** Empty.
 	*/
+    }
+
+    @Override
+    public void onResume()
+    {
+	super.onResume();
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.populate_participants");
+	    registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
+    }
+
+    @Override
+    public void onStop()
+    {
+	super.onStop();
+
+	if(m_receiverRegistered)
+	{
+	    unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
     }
 }
