@@ -422,11 +422,13 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT " +
+		 "(SELECT encryption_public_key || ',' || " +
+		 "signature_public_key FROM participants WHERE oid = a.oid), " +
 		 "name, " +
 		 "siphash_id, " +
 		 "stream, " +
 		 "OID " +
-		 "FROM siphash_ids", null);
+		 "FROM siphash_ids a", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -439,7 +441,38 @@ public class Database extends SQLiteOpenHelper
 
 		    for(int i = 0; i < cursor.getColumnCount(); i++)
 		    {
-			if(i == cursor.getColumnCount() - 1)
+			if(i == 0)
+			{
+			    if(cursor.isNull(i) ||
+			       cursor.getString(i).isEmpty())
+			    {
+				sipHashIdElement.m_epksCompleted = false;
+				continue;
+			    }
+
+			    String string[] = cursor.getString(i).split(",");
+
+			    if(string == null || string.length != 2)
+				sipHashIdElement.m_epksCompleted = false;
+			    else
+			    {
+				byte a[] = cryptography.mtd
+				    (Base64.decode(string[0].getBytes(),
+						   Base64.DEFAULT));
+				byte b[] = cryptography.mtd
+				    (Base64.decode(string[1].getBytes(),
+						   Base64.DEFAULT));
+
+				if(a == null || a.length <= 0 ||
+				   b == null || b.length <= 0)
+				    sipHashIdElement.m_epksCompleted = false;
+				else
+				    sipHashIdElement.m_epksCompleted = true;
+			    }
+
+			    continue;
+			}
+			else if(i == cursor.getColumnCount() - 1)
 			{
 			    sipHashIdElement.m_oid = cursor.getInt(i);
 			    continue;
@@ -467,13 +500,15 @@ public class Database extends SQLiteOpenHelper
 			switch(i)
 			{
 			case 0:
-			    sipHashIdElement.m_name = new String(bytes);
 			    break;
 			case 1:
+			    sipHashIdElement.m_name = new String(bytes);
+			    break;
+			case 2:
 			    sipHashIdElement.m_sipHashId = new String
 				(bytes, "UTF-8");
 			    break;
-			case 2:
+			case 3:
 			    sipHashIdElement.m_stream = Miscellaneous.
 				deepCopy(bytes);
 			    break;
