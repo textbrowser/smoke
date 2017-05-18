@@ -108,7 +108,7 @@ public class Chat extends AppCompatActivity
 	/*
 	** Name
 	** SipHash ID
-	** Percentage
+	** Text
 	*/
 
 	try
