@@ -147,3 +147,5 @@ Remaining Items
 6.     Next (Tab) order.
 7.     Select All context menu in the Chat activity.
 8.     Automatic SipHash hyphens.
+9.     Messages may arrive while in Settings. Chat must somehow
+       receive those messages.
