@@ -202,6 +202,8 @@ public class Chat extends AppCompatActivity
 	Button button2 = (Button) findViewById(R.id.send_chat_message);
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
+	boolean showDetails = m_databaseHelper.readSetting
+	    (null, "show_chat_details").equals("true");
 
 	button1.setEnabled(false);
 	button2.setEnabled(false);
@@ -273,11 +275,15 @@ public class Chat extends AppCompatActivity
 					   1));
 	    stringBuilder.append(participantElement.m_name);
 	    stringBuilder.append("\n");
-	    stringBuilder.append
-		(Miscellaneous.
-		 delimitString(participantElement.m_sipHashId.
-			       replace(":", ""), '-', 4).toUpperCase());
-	    stringBuilder.append("\n");
+
+	    if(showDetails)
+	    {
+		stringBuilder.append
+		    (Miscellaneous.
+		     delimitString(participantElement.m_sipHashId.
+				   replace(":", ""), '-', 4).toUpperCase());
+		stringBuilder.append("\n");
+	    }
 
 	    int guessedLength = Kernel.getInstance().callingStreamLength
 		(participantElement.m_sipHashId);
@@ -308,7 +314,8 @@ public class Chat extends AppCompatActivity
 		stringBuilder.append("Session Faulty");
 
 	    if(participantElement.m_keyStream != null &&
-	       participantElement.m_keyStream.length == 96)
+	       participantElement.m_keyStream.length == 96 &&
+	       showDetails)
 	    {
 		stringBuilder.append("\n");
 
@@ -637,7 +644,20 @@ public class Chat extends AppCompatActivity
 		break;
 	    }
 	else
-	    populateParticipants();
+	    switch(groupId)
+	    {
+	    case 0:
+		populateParticipants();
+		break;
+	    case 1:
+		item.setChecked(!item.isChecked());
+		m_databaseHelper.writeSetting
+		    (null,
+		     "show_chat_details",
+		     item.isChecked() ? "true" : "false");
+		populateParticipants();
+		break;
+	    }
 
 	return true;
     }
@@ -679,6 +699,12 @@ public class Chat extends AppCompatActivity
 	}
 
 	menu.add(0, -1, 0, "Refresh Participants Table");
+
+	MenuItem item = menu.add(1, -1, 0, "Show Details").setCheckable(true);
+
+	item.setChecked
+	    (m_databaseHelper.
+	     readSetting(null, "show_chat_details").equals("true"));
     }
 
     @Override
