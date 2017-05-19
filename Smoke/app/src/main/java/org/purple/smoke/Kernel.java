@@ -32,6 +32,8 @@ import android.util.Base64;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.net.InetAddress;
+import java.security.KeyPair;
+import java.security.PublicKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +47,7 @@ public class Kernel
 {
     private class ParticipantCall
     {
+	public KeyPair m_keyPair = null;
 	public String m_sipHashId = "";
 	public byte m_keyStream[] = null;
 	public int m_participantOid = -1;
@@ -57,11 +60,17 @@ public class Kernel
 	    m_startTime = System.nanoTime();
 	}
 
-	public void prepareHalfKeys()
+	public void preparePrivatePublicKey()
 	{
-	    m_keyStream = Miscellaneous.joinByteArrays
-		(Cryptography.aes128KeyBytes(),
-		 Cryptography.sha256KeyBytes());
+	    try
+	    {
+		m_keyPair = Cryptography.generatePrivatePublicKeyPair
+		    ("RSA", 2048);
+	    }
+	    catch(Exception exception)
+	    {
+		m_keyPair = null;
+	    }
 	}
     }
 
@@ -268,7 +277,7 @@ public class Kernel
 
 			    for(String string : m_callQueue.keySet())
 			    {
-				if(m_callQueue.get(string).m_keyStream != null)
+				if(m_callQueue.get(string).m_keyPair != null)
 				    continue;
 
 				participantOid = m_callQueue.get(string).
@@ -297,7 +306,7 @@ public class Kernel
 				return;
 
 			    participantCall = m_callQueue.get(sipHashId);
-			    participantCall.prepareHalfKeys();
+			    participantCall.preparePrivatePublicKey();
 			    m_callQueue.put(sipHashId, participantCall);
 			}
 
@@ -317,7 +326,7 @@ public class Kernel
 			byte bytes[] = Messages.callMessage
 			    (s_cryptography,
 			     participantCall.m_sipHashId,
-			     participantCall.m_keyStream,
+			     participantCall.m_keyPair.getPublic().getEncoded(),
 			     Messages.CALL_HALF_AND_HALF_TAGS[0]);
 
 			if(bytes != null)
@@ -563,136 +572,160 @@ public class Kernel
 		if(aes256 == null)
 		    return false;
 
-		PublicKey signatureKey = s_databaseHelper.signatureKeyForDigest
-		    (s_cryptography,
-		     Arrays.
-		     copyOfRange(aes256,
-				 Messages.CALL_HALF_AND_HALF_OFFSETS[5],
-				 Messages.CALL_HALF_AND_HALF_OFFSETS[5] + 64));
+		byte tag = aes256[0];
 
-		if(signatureKey != null &&
-		   Cryptography.
-		   verifySignature(signatureKey,
-				   Arrays.
-				   copyOfRange(aes256,
-					       Messages.
-					       CALL_HALF_AND_HALF_OFFSETS[6],
-					       aes256.length),
-				   Miscellaneous.
-				   joinByteArrays(pk,
-						  Arrays.copyOfRange(aes256,
-								     0,
-								     129))))
+		if(!(tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
+		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1]))
+		    return false;
+
+		PublicKey signatureKey = null;
+
+		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
+		    signatureKey = s_databaseHelper.signatureKeyForDigest
+			(s_cryptography,
+			 Arrays.copyOfRange(aes256, 311, 311 + 64));
+		else
+		    signatureKey = s_databaseHelper.signatureKeyForDigest
+			(s_cryptography,
+			 Arrays.copyOfRange(aes256, 273, 273 + 64));
+
+		if(signatureKey == null)
+		    return false;
+
+		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		{
-		    long current = System.currentTimeMillis();
-		    long timestamp = Miscellaneous.byteArrayToLong
-			(Arrays.
-			 copyOfRange(aes256,
-				     Messages.CALL_HALF_AND_HALF_OFFSETS[1],
-				     Messages.
-				     CALL_HALF_AND_HALF_OFFSETS[1] + 8));
+		    if(!Cryptography.
+		       verifySignature(signatureKey,
+				       Arrays.
+				       copyOfRange(aes256, 375, aes256.length),
+				       Miscellaneous.
+				       joinByteArrays(pk,
+						      Arrays.
+						      copyOfRange(aes256,
+								  0,
+								  375))))
+			return false;
+		}
+		else
+		{
+		    if(!Cryptography.
+		       verifySignature(signatureKey,
+				       Arrays.
+				       copyOfRange(aes256, 337, aes256.length),
+				       Miscellaneous.
+				       joinByteArrays(pk,
+						      Arrays.
+						      copyOfRange(aes256,
+								  0,
+								  337))))
+			return false;
+		}
 
-		    if(current - timestamp < 0)
+		long current = System.currentTimeMillis();
+		long timestamp = Miscellaneous.byteArrayToLong
+		    (Arrays.copyOfRange(aes256, 1, 1 + 8));
+
+		if(current - timestamp < 0)
+		{
+		    if(timestamp - current > CALL_LIFETIME)
+			return false;
+		}
+		else if(current - timestamp > CALL_LIFETIME)
+		    return false;
+
+		String array[] = null;
+
+		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
+		    array = s_databaseHelper.nameSipHashIdFromDigest
+			(s_cryptography,
+			 Arrays.copyOfRange(aes256, 311, 311 + 64));
+		else
+		    array = s_databaseHelper.nameSipHashIdFromDigest
+			(s_cryptography,
+			 Arrays.copyOfRange(aes256, 273, 273 + 64));
+
+		if(array != null && array.length == 2)
+		{
+		    PublicKey publicKey = null;
+		    byte keyStream[] = null;
+
+		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
-			if(timestamp - current > CALL_LIFETIME)
+			publicKey = Cryptography.publicRSAKeyFromBytes
+			    (Arrays.copyOfRange(aes256, 9, 9 + 294));
+
+			if(publicKey == null)
+			    return false;
+
+			/*
+			** Generate new AES-256 and SHA-512 keys.
+			*/
+
+			keyStream = Miscellaneous.joinByteArrays
+			    (Cryptography.aes256KeyBytes(),
+			     Cryptography.sha512KeyBytes());
+		    }
+		    else if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[1])
+		    {
+			ParticipantCall participantCall = null;
+
+			synchronized(m_callQueueMutex)
+			{
+			    participantCall = m_callQueue.get(array[1]);
+			}
+
+			if(participantCall == null)
+			    return false;
+
+			synchronized(m_callQueueMutex)
+			{
+			    m_callQueue.remove(array[1]);
+			}
+
+			keyStream = Cryptography.pkiDecrypt
+			    (participantCall.m_keyPair.getPrivate(),
+			     Arrays.copyOfRange(aes256, 9, 9 + 256));
+
+			if(keyStream == null)
 			    return false;
 		    }
-		    else if(current - timestamp > CALL_LIFETIME)
+		    else
 			return false;
 
-		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
-			(s_cryptography,
-			 Arrays.
-			 copyOfRange(aes256,
-				     Messages.CALL_HALF_AND_HALF_OFFSETS[5],
-				     Messages.CALL_HALF_AND_HALF_OFFSETS[5] +
-				     64));
+		    s_databaseHelper.writeCallKeys
+			(s_cryptography, array[1], keyStream);
 
-		    if(array != null && array.length == 2)
+		    Intent intent = new Intent
+			("org.purple.smoke.half_and_half_call");
+
+		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
+			intent.putExtra("org.purple.smoke.initial", true);
+		    else
+			intent.putExtra("org.purple.smoke.initial", false);
+
+		    intent.putExtra("org.purple.smoke.name", array[0]);
+		    intent.putExtra("org.purple.smoke.refresh", true);
+		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);
+		    Smoke.getApplication().sendBroadcast(intent);
+
+		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
-			byte keyStream[] = null;
+			/*
+			** Respond via all neighbors.
+			*/
 
-			if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
-			    keyStream = Miscellaneous.joinByteArrays
-				(Arrays.copyOfRange(aes256, 9, 25),
-				 Cryptography.aes128KeyBytes(),
-				 Arrays.copyOfRange(aes256, 25, 57),
-				 Cryptography.sha256KeyBytes());
-			else if(aes256[0] ==
-				Messages.CALL_HALF_AND_HALF_TAGS[1])
-			{
-			    ParticipantCall participantCall = null;
+			bytes = Messages.callMessage
+			    (s_cryptography,
+			     array[1],
+			     Cryptography.pkiEncrypt(publicKey, keyStream),
+			     Messages.CALL_HALF_AND_HALF_TAGS[1]);
 
-			    synchronized(m_callQueueMutex)
-			    {
-				participantCall = m_callQueue.get(array[1]);
-			    }
-
-			    if(participantCall == null)
-				return false;
-
-			    keyStream = Miscellaneous.joinByteArrays
-				(Arrays.copyOfRange(participantCall.m_keyStream,
-						    0,
-						    16),
-				 Arrays.copyOfRange(aes256, 9, 25),
-				 Arrays.copyOfRange(participantCall.m_keyStream,
-						    16,
-						    48),
-				 Arrays.copyOfRange(aes256, 25, 57));
-			}
-			else
-			    return false;
-
-			s_databaseHelper.writeCallKeys
-			    (s_cryptography, array[1], keyStream);
-
-			Intent intent = new Intent
-			    ("org.purple.smoke.half_and_half_call");
-
-			if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
-			    intent.putExtra("org.purple.smoke.initial", true);
-			else
-			    intent.putExtra("org.purple.smoke.initial", false);
-
-			intent.putExtra("org.purple.smoke.name", array[0]);
-			intent.putExtra("org.purple.smoke.refresh", true);
-			intent.putExtra("org.purple.smoke.sipHashId", array[1]);
-			Smoke.getApplication().sendBroadcast(intent);
-
-			if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
-			{
-			    /*
-			    ** Respond via all neighbors.
-			    */
-
-			    bytes = Messages.callMessage
-				(s_cryptography,
-				 array[1],
-				 Miscellaneous.
-				 joinByteArrays(Arrays.copyOfRange(keyStream,
-								   16,
-								   32),
-						Arrays.copyOfRange(keyStream,
-								   64,
-								   keyStream.
-								   length)),
-				 Messages.CALL_HALF_AND_HALF_TAGS[1]);
-
-			    if(bytes != null)
-				echo(Messages.bytesToMessageString(bytes), -1);
-			}
-			else
-			{
-			    synchronized(m_callQueueMutex)
-			    {
-				m_callQueue.remove(array[1]);
-			    }
-			}
+			if(bytes != null)
+			    echo(Messages.bytesToMessageString(bytes), -1);
 		    }
-
-		    return true;
 		}
+
+		return true;
 	    }
 	}
 	catch(Exception exception)

@@ -33,10 +33,9 @@ import java.util.Arrays;
 
 public class Messages
 {
-    public final static byte CALL_HALF_AND_HALF_TAGS[] = new byte[] {0, 1};
-    public final static byte CHAT_KEY_TYPE[] = new byte[] {0};
-    public final static int CALL_HALF_AND_HALF_OFFSETS[] = new int[]
-	{0, 1, 9, 25, 57, 65, 129};
+    public final static byte CALL_HALF_AND_HALF_TAGS[] =
+	new byte[] {0x00, 0x01};
+    public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
     public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 4;
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 6;
 
@@ -87,12 +86,6 @@ public class Messages
 	if(cryptography == null || keyStream == null || keyStream.length <= 0)
 	    return null;
 
-	/*
-	** keyStream
-	** [0 ... 15] - AES-128 Encryption Key
-	** [16 ... 47] - SHA-256 HMAC Key
-	*/
-
 	try
 	{
 	    /*
@@ -136,16 +129,10 @@ public class Messages
 		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
 
 		 /*
-		 ** [ AES-128 Key ]
+		 ** [ RSA 2048-Bit Public Key ]
 		 */
 
-		 Arrays.copyOfRange(keyStream, 0, 16),
-
-		 /*
-		 ** [ SHA-256 Key ]
-		 */
-
-		 Arrays.copyOfRange(keyStream, 16, keyStream.length),
+		 keyStream,
 
 		 /*
 		 ** [ Identity ]
