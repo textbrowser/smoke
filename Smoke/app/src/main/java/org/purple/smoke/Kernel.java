@@ -49,7 +49,6 @@ public class Kernel
     {
 	public KeyPair m_keyPair = null;
 	public String m_sipHashId = "";
-	public byte m_keyStream[] = null;
 	public int m_participantOid = -1;
 	public long m_startTime = -1; // Calls expire.
 
@@ -742,8 +741,7 @@ public class Kernel
 	{
 	    if(m_callQueue.containsKey(sipHashId) &&
 	       m_callQueue.get(sipHashId) != null)
-		return m_callQueue.get(sipHashId).m_keyStream == null ? -1 :
-		    m_callQueue.get(sipHashId).m_keyStream.length;
+		return m_callQueue.get(sipHashId).m_keyPair == null ? -1 : 48;
 	}
 
 	return -1;
