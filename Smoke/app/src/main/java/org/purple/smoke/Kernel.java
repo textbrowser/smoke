@@ -722,9 +722,9 @@ public class Kernel
 			if(bytes != null)
 			    echo(Messages.bytesToMessageString(bytes), -1);
 		    }
-		}
 
-		return true;
+		    return true;
+		}
 	    }
 	}
 	catch(Exception exception)

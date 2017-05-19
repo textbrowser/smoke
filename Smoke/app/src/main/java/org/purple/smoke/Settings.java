@@ -900,7 +900,7 @@ public class Settings extends AppCompatActivity
 					       listener1,
 					       "Are you sure that you " +
 					       "wish to reset Smoke? All " +
-					       "data will be removed.");
+					       "of the data will be removed.");
 	    }
 	});
 
