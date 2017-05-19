@@ -1524,7 +1524,6 @@ public class Settings extends AppCompatActivity
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 
         spinner1.setAdapter(arrayAdapter);
-
         spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
         array = new String[]
 	{
