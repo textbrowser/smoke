@@ -33,6 +33,7 @@ public class ParticipantElement
     public String m_sipHashId = "";
     public byte m_keyStream[] = null;
     public int m_oid = -1;
+    public long m_lastStatusTimestamp = -1;
 
     public ParticipantElement()
     {

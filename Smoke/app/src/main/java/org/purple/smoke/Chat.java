@@ -99,8 +99,9 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07,
 		     (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
-    private final static int CUSTOM_SESSION_ITERATION_COUNT = 1000;
     private final static int CHECKBOX_TEXT_SIZE = 13;
+    private final static int CUSTOM_SESSION_ITERATION_COUNT = 1000;
+    private final static int STATUS_WINDOW = 15000;
 
     private String nameFromCheckBoxText(String text)
     {
@@ -224,9 +225,16 @@ public class Chat extends AppCompatActivity
 
 	    CheckBox checkBox = new CheckBox(Chat.this);
 	    final int oid = participantElement.m_oid;
+	    long current = System.currentTimeMillis();
 
-	    checkBox.setCompoundDrawablesWithIntrinsicBounds
-		(R.drawable.chat_status_offline, 0, 0, 0);
+	    if(Math.abs(current - participantElement.m_lastStatusTimestamp) >
+	       STATUS_WINDOW)
+		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    (R.drawable.chat_status_offline, 0, 0, 0);
+	    else
+		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    (R.drawable.chat_status_online, 0, 0, 0);
+
 	    checkBox.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {

@@ -325,6 +325,7 @@ public class Database extends SQLiteOpenHelper
 		("SELECT " +
 		 "name, " +
 		 "keystream, " +
+		 "last_status_timestamp, " +
 		 "siphash_id, " +
 		 "OID " +
 		 "FROM participants", null);
@@ -376,6 +377,10 @@ public class Database extends SQLiteOpenHelper
 				Miscellaneous.deepCopy(bytes);
 			    break;
 			case 2:
+			    participantElement.m_lastStatusTimestamp =
+				Miscellaneous.byteArrayToLong(bytes);
+			    break;
+			case 3:
 			    participantElement.m_sipHashId = new String
 				(bytes, "UTF-8");
 			    break;
@@ -1309,11 +1314,12 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(2, "function_digest");
 	    sparseArray.append(3, "identity");
 	    sparseArray.append(4, "keystream");
-	    sparseArray.append(5, "name");
-	    sparseArray.append(6, "signature_public_key");
-	    sparseArray.append(7, "signature_public_key_digest");
-	    sparseArray.append(8, "siphash_id");
-	    sparseArray.append(9, "siphash_id_digest");
+	    sparseArray.append(5, "last_status_timestamp");
+	    sparseArray.append(6, "name");
+	    sparseArray.append(7, "signature_public_key");
+	    sparseArray.append(8, "signature_public_key_digest");
+	    sparseArray.append(9, "siphash_id");
+	    sparseArray.append(10, "siphash_id_digest");
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
@@ -1334,6 +1340,8 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("identity"))
 		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("keystream"))
+		    bytes = cryptography.etm("".getBytes());
+		else if(sparseArray.get(i).equals("last_status_timestamp"))
 		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("name"))
 		    bytes = cryptography.etm(name.getBytes());
