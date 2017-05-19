@@ -2107,6 +2107,14 @@ public class Database extends SQLiteOpenHelper
 		("keystream",
 		 Base64.encodeToString(cryptography.etm(keyStream),
 				       Base64.DEFAULT));
+	    values.put
+		("last_status_timestamp",
+		 Base64.
+		 encodeToString(cryptography.
+				etm(Miscellaneous.
+				    longToByteArray(System.
+						    currentTimeMillis())),
+				Base64.DEFAULT));
 	    m_db.update("participants", values, "siphash_id_digest = ?",
 			new String[] {Base64.
 				      encodeToString(cryptography.
