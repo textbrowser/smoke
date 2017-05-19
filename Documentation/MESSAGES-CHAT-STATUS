@@ -7,6 +7,10 @@
 {
 	A Timestamp (1)						8 Bytes
 	Status (2)						Variable (Ignored)
+	[PK Signature] (3)					Variable Bytes (Base-64)
+	{
+		[PK] (1) || [AES-256] (1 ... 2) (1)
+	}
 }
 
 [SHA-512 HMAC] (3)						64 Bytes
