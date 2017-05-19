@@ -1,0 +1,24 @@
+[PK] (1)							RSA Key Size / 8 Bytes
+{
+	Sender's Public Encryption Key SHA-512 Digest (1)	64 Bytes
+}
+
+[AES-256] (2)
+{
+	A Timestamp (1)						8 Bytes
+	Status (2)						Variable (Ignored)
+}
+
+[SHA-512 HMAC] (3)						64 Bytes
+{
+	[PK] || [AES-256] (1)
+}
+
+/*
+** The destination is created via the recipient's identity.
+*/
+
+[Destination SHA-512 HMAC] (4)					64 Bytes
+{
+	[PK] || [AES-256] || [SHA-512 HMAC] (1)
+}
