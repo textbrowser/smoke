@@ -726,8 +726,8 @@ public class Cryptography
 	try
 	{
 	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
+	    KeyFactory generator = KeyFactory.getInstance("RSA");
 
-	    generator = KeyFactory.getInstance("RSA");
 	    return generator.generatePublic(publicKeySpec);
 	}
 	catch(Exception exception)
