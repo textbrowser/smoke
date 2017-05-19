@@ -721,6 +721,22 @@ public class Cryptography
 	return null;
     }
 
+    public static PublicKey publicRSAKeyFromBytes(byte publicBytes[])
+    {
+	try
+	{
+	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
+
+	    generator = KeyFactory.getInstance("RSA");
+	    return generator.generatePublic(publicKeySpec);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
 						  int iterations)
