@@ -1096,9 +1096,16 @@ public class Settings extends AppCompatActivity
 
 		    if(position == 0)
 		    {
-			proxyIpAddress.setEnabled(true);
-			proxyPort.setEnabled(true);
-			proxyType.setEnabled(true);
+			/*
+			** Events may occur prematurely.
+			*/
+
+			boolean isAuthenticated = State.getInstance().
+			    isAuthenticated();
+
+			proxyIpAddress.setEnabled(isAuthenticated);
+			proxyPort.setEnabled(isAuthenticated);
+			proxyType.setEnabled(isAuthenticated);
 		    }
 		    else
 		    {
