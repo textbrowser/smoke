@@ -500,11 +500,10 @@ public class Settings extends AppCompatActivity
 
 	CheckBox checkBox = (CheckBox) findViewById(R.id.neighbor_details);
 	StringBuilder stringBuilder = new StringBuilder();
+	int i = 0;
 
-	for(int i = 0; i < arrayList.size(); i++)
+	for(NeighborElement neighborElement : arrayList)
 	{
-	    NeighborElement neighborElement = arrayList.get(i);
-
 	    if(neighborElement == null)
 		continue;
 
@@ -752,6 +751,8 @@ public class Settings extends AppCompatActivity
 		row.addView(textView);
 		tableLayout.addView(row, i);
 	    }
+
+	    i += 1;
 	}
 
 	arrayList.clear();
