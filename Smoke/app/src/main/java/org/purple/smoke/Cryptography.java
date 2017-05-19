@@ -1041,6 +1041,29 @@ public class Cryptography
 	}
     }
 
+    public static byte[] pkiDecrypt(PrivateKey key, byte data[])
+    {
+	if(data == null || data.length < 0 || key == null)
+	    return null;
+
+	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+
+	    cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
+	    cipher.init(Cipher.DECRYPT_MODE, key);
+	    bytes = cipher.doFinal(data);
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
     public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
     {
 	if(data == null || data.length < 0 || publicKey == null)
