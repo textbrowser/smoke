@@ -1849,6 +1849,7 @@ public class Database extends SQLiteOpenHelper
 	    "function_digest, " + // chat, e-mail, etc.
 	    "identity TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
+	    "last_status_timestamp TEXT NOT NULL, " +
 	    "name TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
