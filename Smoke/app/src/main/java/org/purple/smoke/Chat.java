@@ -53,6 +53,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
 {
@@ -91,6 +94,7 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
+    private ScheduledExecutorService m_populateScheduler = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -101,6 +105,7 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CHECKBOX_TEXT_SIZE = 13;
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 1000;
+    private final static int POPULATE_INTERVAL = 10000;
     private final static int STATUS_WINDOW = 15000;
 
     private String nameFromCheckBoxText(String text)
@@ -443,6 +448,23 @@ public class Chat extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_populateScheduler = Executors.
+	    newSingleThreadScheduledExecutor();
+	m_populateScheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		Chat.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			populateParticipants();
+		    }
+		});
+	    }
+	}, 1500, POPULATE_INTERVAL, TimeUnit.MILLISECONDS);
 	m_receiver = new ChatBroadcastReceiver();
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
