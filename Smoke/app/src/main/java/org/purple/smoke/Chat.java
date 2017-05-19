@@ -225,6 +225,8 @@ public class Chat extends AppCompatActivity
 	    CheckBox checkBox = new CheckBox(Chat.this);
 	    final int oid = participantElement.m_oid;
 
+	    checkBox.setCompoundDrawablesWithIntrinsicBounds
+		(R.drawable.chat_status_offline, 0, 0, 0);
 	    checkBox.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
