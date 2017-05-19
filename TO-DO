@@ -150,3 +150,4 @@ Remaining Items
 8.     Automatic SipHash hyphens.
 9.     Messages may arrive while in Settings. Chat must somehow
        receive those messages.
+10.    Simple binary status in Chat.
