@@ -125,6 +125,8 @@ Future Items
 13.    Bluetooth (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
 14.    XMPP.
 15.    Face authentication.
+16.    Source-level string translations.
+17.    Automatic SipHash hyphens.
 
 Ignored / Impossible Items
 
@@ -139,17 +141,15 @@ Ignored / Impossible Items
 8.     Validate neighbor IP address. User is responsible.
 9.     Disable echo on low memory. Notify the user, although memory
        will be required.
+10.    Select All context menu in the Chat activity.
 
 Remaining Items
 
-1.     Source-level string translations.
-2.     pull-database for multiple devices.
-3.     Resolve DNS through a proxy if a proxy is defined.
-4.     Detect removal of neighbors.
-5.     Sign release.
-6.     Next (Tab) order.
-7.     Select All context menu in the Chat activity.
-8.     Automatic SipHash hyphens.
-9.     Messages may arrive while in Settings. Chat must somehow
+1.     pull-database for multiple devices.
+2.     Resolve DNS through a proxy if a proxy is defined.
+3.     Detect removal of neighbors.
+4.     Sign release.
+5.     Next (Tab) order.
+6.     Messages may arrive while in Settings. Chat must somehow
        receive those messages.
-10.    Simple binary status in Chat.
+7.     Simple binary status in Chat.

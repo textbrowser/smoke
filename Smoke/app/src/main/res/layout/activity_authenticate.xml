@@ -33,7 +33,8 @@
             android:layout_below="@+id/textView"
             android:ems="10"
             android:hint="@string/authenticate_password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:selectAllOnFocus="true" />
 
         <Button
             android:id="@+id/authenticate"

@@ -57,8 +57,6 @@ public class Authenticate extends AppCompatActivity
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.password);
 
-		textView1.setSelectAllOnFocus(true);
-
 		byte encryptionSalt[] = Base64.decode
 		    (m_databaseHelper.
 		     readSetting(null, "encryptionSalt").getBytes(),
