@@ -155,6 +155,27 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append(message);
 	stringBuilder.append("\n\n");
 	textView.append(stringBuilder);
+
+	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
+	{
+	    CheckBox checkBox = (CheckBox)
+		((TableLayout) findViewById
+		 (R.id.participants)).findViewWithTag(sipHashId);
+
+	    if(checkBox != null)
+	    {
+		if(Math.abs(System.currentTimeMillis() - timestamp) >
+		   STATUS_WINDOW)
+		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+			(R.drawable.chat_status_offline, 0, 0, 0);
+		else
+		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+			(R.drawable.chat_status_online, 0, 0, 0);
+
+		checkBox.setCompoundDrawablePadding(5);
+	    }
+	}
+
 	scrollMessagesView();
     }
 
@@ -199,9 +220,7 @@ public class Chat extends AppCompatActivity
 	scrollMessagesView();
 
 	if(refresh)
-	    if(m_databaseHelper.readSetting(null, "show_chat_details").
-	       equals("true"))
-		refreshCheckBox(sipHashId);
+	    refreshCheckBox(sipHashId);
     }
 
     private void populateParticipants()
@@ -430,43 +449,61 @@ public class Chat extends AppCompatActivity
 	if(participantElement == null)
 	    return;
 
-	StringBuilder stringBuilder = new StringBuilder();
-
-	stringBuilder.append(participantElement.m_name);
-	stringBuilder.append("\n");
-	stringBuilder.append
-	    (Miscellaneous.
-	     delimitString(participantElement.m_sipHashId.
-			   replace(":", ""), '-', 4).toUpperCase());
-	stringBuilder.append("\n");
-
-	if(participantElement.m_keyStream == null ||
-	   participantElement.m_keyStream.length == 0)
-	    stringBuilder.append("Session Closed");
-	else if(participantElement.m_keyStream.length == 48)
-	    stringBuilder.append("Session Incomplete");
-	else if(participantElement.m_keyStream.length == 96)
-	    stringBuilder.append("Session Ready");
-	else
-	    stringBuilder.append("Session Faulty");
-
-	if(participantElement.m_keyStream != null &&
-	   participantElement.m_keyStream.length == 96)
+	if(m_databaseHelper.readSetting(null, "show_chat_details").
+	   equals("true"))
 	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append(participantElement.m_name);
 	    stringBuilder.append("\n");
-
-	    long value = s_siphash.hmac(participantElement.m_keyStream);
-
 	    stringBuilder.append
 		(Miscellaneous.
-		 delimitString(Miscellaneous.
-			       sipHashIdFromData(Miscellaneous.
-						 longToByteArray(value)).
-			       replace(":", ""), '-', 4).
-		 toUpperCase());
+		 delimitString(participantElement.m_sipHashId.
+			       replace(":", ""), '-', 4).toUpperCase());
+	    stringBuilder.append("\n");
+
+	    if(participantElement.m_keyStream == null ||
+	       participantElement.m_keyStream.length == 0)
+		stringBuilder.append("Session Closed");
+	    else if(participantElement.m_keyStream.length == 48)
+		stringBuilder.append("Session Incomplete");
+	    else if(participantElement.m_keyStream.length == 96)
+		stringBuilder.append("Session Ready");
+	    else
+		stringBuilder.append("Session Faulty");
+
+	    if(participantElement.m_keyStream != null &&
+	       participantElement.m_keyStream.length == 96)
+	    {
+		stringBuilder.append("\n");
+
+		long value = s_siphash.hmac(participantElement.m_keyStream);
+
+		stringBuilder.append
+		    (Miscellaneous.
+		     delimitString(Miscellaneous.
+				   sipHashIdFromData(Miscellaneous.
+						     longToByteArray(value)).
+				   replace(":", ""), '-', 4).
+		     toUpperCase());
+	    }
+
+	    checkBox.setText(stringBuilder);
 	}
 
-	checkBox.setText(stringBuilder);
+	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
+	{
+	    if(Math.abs(System.currentTimeMillis() -
+			participantElement.m_lastStatusTimestamp) >
+	       STATUS_WINDOW)
+		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    (R.drawable.chat_status_offline, 0, 0, 0);
+	    else
+		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    (R.drawable.chat_status_online, 0, 0, 0);
+
+	    checkBox.setCompoundDrawablePadding(5);
+	}
     }
 
     private void saveState()
@@ -668,10 +705,7 @@ public class Chat extends AppCompatActivity
 				   setParticipantKeyStream(s_cryptography,
 							   bytes,
 							   itemId))
-				    if(m_databaseHelper.
-				       readSetting(null, "show_chat_details").
-				       equals("true"))
-					refreshCheckBox(sipHashId);
+				    refreshCheckBox(sipHashId);
 			    }
 			    catch(Exception exception)
 			    {
@@ -684,10 +718,7 @@ public class Chat extends AppCompatActivity
 			       setParticipantKeyStream(s_cryptography,
 						       null,
 						       itemId))
-				if(m_databaseHelper.
-				   readSetting(null, "show_chat_details").
-				   equals("true"))
-				    refreshCheckBox(sipHashId);
+				refreshCheckBox(sipHashId);
 
 			    break;
 			}
