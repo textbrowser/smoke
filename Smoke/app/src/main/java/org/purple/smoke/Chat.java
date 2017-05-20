@@ -635,10 +635,10 @@ public class Chat extends AppCompatActivity
 	else
 	    switch(groupId)
 	    {
-	    case 0:
+	    case 0: // Refresh Participants Table
 		populateParticipants();
 		break;
-	    case 1:
+	    case 1: // Show Details
 		item.setChecked(!item.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,
