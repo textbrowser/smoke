@@ -805,6 +805,7 @@ public class Settings extends AppCompatActivity
 			textView.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.lockless, 0, 0, 0);
 
+		    textView.setCompoundDrawablePadding(5);
 		    textView.setText
 			(Miscellaneous.
 			 delimitString(sipHashIdElement.m_sipHashId.

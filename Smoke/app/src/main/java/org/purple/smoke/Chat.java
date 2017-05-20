@@ -227,6 +227,8 @@ public class Chat extends AppCompatActivity
 	StringBuilder stringBuilder = new StringBuilder();
 	boolean showDetails = m_databaseHelper.readSetting
 	    (null, "show_chat_details").equals("true");
+	boolean showIcons = m_databaseHelper.readSetting
+	    (null, "show_chat_icons").equals("true");
 	int i = 0;
 	long current = System.currentTimeMillis();
 
@@ -238,12 +240,18 @@ public class Chat extends AppCompatActivity
 	    CheckBox checkBox = new CheckBox(Chat.this);
 	    final int oid = participantElement.m_oid;
 
-	    if(Math.abs(current - participantElement.m_lastStatusTimestamp) >
-	       STATUS_WINDOW)
+	    if(showIcons)
 	    {
-	    }
-	    else
-	    {
+		if(Math.abs(current -
+			    participantElement.m_lastStatusTimestamp) >
+		   STATUS_WINDOW)
+		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+			(R.drawable.chat_status_offline, 0, 0, 0);
+		else
+		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+			(R.drawable.chat_status_online, 0, 0, 0);
+
+		checkBox.setCompoundDrawablePadding(5);
 	    }
 
 	    registerForContextMenu(checkBox);
@@ -682,8 +690,6 @@ public class Chat extends AppCompatActivity
 				    refreshCheckBox(sipHashId);
 
 			    break;
-			default:
-			    break;
 			}
 		}
 	    };
@@ -725,6 +731,14 @@ public class Chat extends AppCompatActivity
 		m_databaseHelper.writeSetting
 		    (null,
 		     "show_chat_details",
+		     item.isChecked() ? "true" : "false");
+		populateParticipants();
+		break;
+	    case 2: // Show Icons
+		item.setChecked(!item.isChecked());
+		m_databaseHelper.writeSetting
+		    (null,
+		     "show_chat_icons",
 		     item.isChecked() ? "true" : "false");
 		populateParticipants();
 		break;
@@ -776,6 +790,10 @@ public class Chat extends AppCompatActivity
 	item.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_details").equals("true"));
+	item = menu.add(2, -1, 0, "Show Icons").setCheckable(true);
+	item.setChecked
+	    (m_databaseHelper.
+	     readSetting(null, "show_chat_icons").equals("true"));
     }
 
     @Override

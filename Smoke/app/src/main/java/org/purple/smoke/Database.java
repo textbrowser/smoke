@@ -522,8 +522,6 @@ public class Database extends SQLiteOpenHelper
 			    sipHashIdElement.m_stream = Miscellaneous.
 				deepCopy(bytes);
 			    break;
-			default:
-			    break;
 			}
 		    }
 
