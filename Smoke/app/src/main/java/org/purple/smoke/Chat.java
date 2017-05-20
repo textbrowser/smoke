@@ -193,64 +193,7 @@ public class Chat extends AppCompatActivity
 	if(refresh)
 	    if(m_databaseHelper.readSetting(null, "show_chat_details").
 	       equals("true"))
-	    {
-		CheckBox checkBox = (CheckBox)
-		    ((TableLayout) findViewById
-		     (R.id.participants)).findViewWithTag(sipHashId);
-
-		if(checkBox == null)
-		    return;
-
-		ArrayList<ParticipantElement> arrayList =
-		    m_databaseHelper.readParticipants
-		    (s_cryptography, sipHashId);
-
-		if(arrayList == null || arrayList.size() == 0)
-		    return;
-
-		ParticipantElement participantElement = arrayList.get(0);
-
-		if(participantElement == null)
-		    return;
-
-		stringBuilder.setLength(0);
-		stringBuilder.append(participantElement.m_name);
-		stringBuilder.append("\n");
-		stringBuilder.append
-		    (Miscellaneous.
-		     delimitString(participantElement.m_sipHashId.
-				   replace(":", ""), '-', 4).toUpperCase());
-		stringBuilder.append("\n");
-
-		if(participantElement.m_keyStream == null ||
-		   participantElement.m_keyStream.length == 0)
-		    stringBuilder.append("Session Closed");
-		else if(participantElement.m_keyStream.length == 48)
-		    stringBuilder.append("Session Incomplete");
-		else if(participantElement.m_keyStream.length == 96)
-		    stringBuilder.append("Session Ready");
-		else
-		    stringBuilder.append("Session Faulty");
-
-		if(participantElement.m_keyStream != null &&
-		   participantElement.m_keyStream.length == 96)
-		{
-		    stringBuilder.append("\n");
-
-		    long value = s_siphash.hmac(participantElement.m_keyStream);
-
-		    stringBuilder.append
-			(Miscellaneous.
-			 delimitString(Miscellaneous.
-				       sipHashIdFromData(Miscellaneous.
-							 longToByteArray
-							 (value)).
-				       replace(":", ""), '-', 4).
-			 toUpperCase());
-		}
-
-		checkBox.setText(stringBuilder);
-	    }
+		refreshCheckBox(sipHashId);
     }
 
     private void populateParticipants()
@@ -451,6 +394,65 @@ public class Chat extends AppCompatActivity
         });
     }
 
+    private void refreshCheckBox(String sipHashId)
+    {
+	CheckBox checkBox = (CheckBox)
+	    ((TableLayout) findViewById
+	     (R.id.participants)).findViewWithTag(sipHashId);
+
+	if(checkBox == null)
+	    return;
+
+	ArrayList<ParticipantElement> arrayList =
+	    m_databaseHelper.readParticipants(s_cryptography, sipHashId);
+
+	if(arrayList == null || arrayList.size() == 0)
+	    return;
+
+	ParticipantElement participantElement = arrayList.get(0);
+
+	if(participantElement == null)
+	    return;
+
+	StringBuilder stringBuilder = new StringBuilder();
+
+	stringBuilder.append(participantElement.m_name);
+	stringBuilder.append("\n");
+	stringBuilder.append
+	    (Miscellaneous.
+	     delimitString(participantElement.m_sipHashId.
+			   replace(":", ""), '-', 4).toUpperCase());
+	stringBuilder.append("\n");
+
+	if(participantElement.m_keyStream == null ||
+	   participantElement.m_keyStream.length == 0)
+	    stringBuilder.append("Session Closed");
+	else if(participantElement.m_keyStream.length == 48)
+	    stringBuilder.append("Session Incomplete");
+	else if(participantElement.m_keyStream.length == 96)
+	    stringBuilder.append("Session Ready");
+	else
+	    stringBuilder.append("Session Faulty");
+
+	if(participantElement.m_keyStream != null &&
+	   participantElement.m_keyStream.length == 96)
+	{
+	    stringBuilder.append("\n");
+
+	    long value = s_siphash.hmac(participantElement.m_keyStream);
+
+	    stringBuilder.append
+		(Miscellaneous.
+		 delimitString(Miscellaneous.
+			       sipHashIdFromData(Miscellaneous.
+						 longToByteArray(value)).
+			       replace(":", ""), '-', 4).
+		 toUpperCase());
+	}
+
+	checkBox.setText(stringBuilder);
+    }
+
     private void saveState()
     {
 	TextView textView = (TextView) findViewById(R.id.chat_message);
@@ -612,6 +614,13 @@ public class Chat extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
+	if(item == null)
+	    return false;
+
+	final String sipHashId = Miscellaneous.delimitString
+	    (item.getTitle().toString().replace("Custom Session ", "").
+	     replace("Purge Session ", "").replace("(", "").replace(")", "").
+	     replace("-", ""), ':', 2).toLowerCase();
 	final int groupId = item.getGroupId();
 	final int itemId = item.getItemId();
 
@@ -646,7 +655,7 @@ public class Chat extends AppCompatActivity
 				    if(m_databaseHelper.
 				       readSetting(null, "show_chat_details").
 				       equals("true"))
-					populateParticipants();
+					refreshCheckBox(sipHashId);
 			    }
 			    catch(Exception exception)
 			    {
@@ -662,7 +671,7 @@ public class Chat extends AppCompatActivity
 				if(m_databaseHelper.
 				   readSetting(null, "show_chat_details").
 				   equals("true"))
-				    populateParticipants();
+				    refreshCheckBox(sipHashId);
 
 			    break;
 			default:

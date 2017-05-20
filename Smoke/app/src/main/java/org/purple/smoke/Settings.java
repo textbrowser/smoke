@@ -1699,6 +1699,9 @@ public class Settings extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
+	if(item == null)
+	    return false;
+
 	final int itemId = item.getItemId();
 
 	/*
