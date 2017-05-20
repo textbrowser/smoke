@@ -53,9 +53,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
 {
@@ -94,7 +91,6 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
-    private ScheduledExecutorService m_populateScheduler = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -105,7 +101,6 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CHECKBOX_TEXT_SIZE = 13;
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 1000;
-    private final static int POPULATE_INTERVAL = 10000;
     private final static int STATUS_WINDOW = 15000;
 
     private String nameFromCheckBoxText(String text)
@@ -223,6 +218,7 @@ public class Chat extends AppCompatActivity
 	boolean showDetails = m_databaseHelper.readSetting
 	    (null, "show_chat_details").equals("true");
 	int i = 0;
+	long current = System.currentTimeMillis();
 
 	for(ParticipantElement participantElement : arrayList)
 	{
@@ -231,17 +227,14 @@ public class Chat extends AppCompatActivity
 
 	    CheckBox checkBox = new CheckBox(Chat.this);
 	    final int oid = participantElement.m_oid;
-	    long current = System.currentTimeMillis();
 
 	    if(Math.abs(current - participantElement.m_lastStatusTimestamp) >
 	       STATUS_WINDOW)
-		checkBox.setCompoundDrawablesWithIntrinsicBounds
-		    (R.drawable.chat_status_offline, 0, 0, 0);
+	    {
+	    }
 	    else
-		checkBox.setCompoundDrawablesWithIntrinsicBounds
-		    (R.drawable.chat_status_online, 0, 0, 0);
-
-	    TableRow row = new TableRow(Chat.this);
+	    {
+	    }
 
 	    registerForContextMenu(checkBox);
 	    checkBox.setChecked
@@ -345,15 +338,16 @@ public class Chat extends AppCompatActivity
 	    checkBox.setTag(participantElement.m_sipHashId);
 	    checkBox.setText(stringBuilder);
 	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
+
+	    TableRow row = new TableRow(Chat.this);
+
 	    row.addView(checkBox);
 
 	    if(i % 2 == 0)
 		row.setBackgroundColor(Color.argb(100, 179, 230, 255));
 
-	    TableRow.LayoutParams layoutParams = new
-		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-
-	    row.setLayoutParams(layoutParams);
+	    row.setLayoutParams
+		(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT));
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
@@ -449,23 +443,6 @@ public class Chat extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
-	m_populateScheduler = Executors.
-	    newSingleThreadScheduledExecutor();
-	m_populateScheduler.scheduleAtFixedRate(new Runnable()
-	{
-	    @Override
-	    public void run()
-	    {
-		Chat.this.runOnUiThread(new Runnable()
-		{
-		    @Override
-		    public void run()
-		    {
-			populateParticipants();
-		    }
-		});
-	    }
-	}, 1500, POPULATE_INTERVAL, TimeUnit.MILLISECONDS);
 	m_receiver = new ChatBroadcastReceiver();
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

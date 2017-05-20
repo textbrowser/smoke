@@ -152,3 +152,4 @@ Remaining Items
 9.     Messages may arrive while in Settings. Chat must somehow
        receive those messages.
 10.    Simple binary status in Chat.
+11.    Less populateParticipants() in the Chat activity.
