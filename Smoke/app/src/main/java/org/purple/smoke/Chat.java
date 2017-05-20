@@ -119,9 +119,17 @@ public class Chat extends AppCompatActivity
 	** Text
 	*/
 
+	if(text.trim().isEmpty())
+	    return "unknown";
+
 	try
 	{
-	    return text.substring(0, text.indexOf('\n', 1));
+	    int indexOf = text.indexOf('\n', 1);
+
+	    if(indexOf > 0)
+		return text.substring(0, indexOf);
+	    else
+		return text;
 	}
 	catch(Exception exception)
 	{
