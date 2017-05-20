@@ -279,60 +279,42 @@ public class Chat extends AppCompatActivity
 					   1));
 	    stringBuilder.setLength(0);
 	    stringBuilder.append(participantElement.m_name);
-	    stringBuilder.append("\n");
 
 	    if(showDetails)
 	    {
+		stringBuilder.append("\n");
 		stringBuilder.append
 		    (Miscellaneous.
 		     delimitString(participantElement.m_sipHashId.
 				   replace(":", ""), '-', 4).toUpperCase());
 		stringBuilder.append("\n");
-	    }
 
-	    int guessedLength = Kernel.getInstance().callingStreamLength
-		(participantElement.m_sipHashId);
-
-	    if(guessedLength >= 0)
-		switch(100 * guessedLength / 96)
-		{
-		case 0:
+		if(participantElement.m_keyStream == null ||
+		   participantElement.m_keyStream.length == 0)
 		    stringBuilder.append("Session Closed");
-		    break;
-		case 50:
+		else if(participantElement.m_keyStream.length == 48)
 		    stringBuilder.append("Session Incomplete");
-		    break;
-		case 100:
+		else if(participantElement.m_keyStream.length == 96)
 		    stringBuilder.append("Session Ready");
-		    break;
-		default:
+		else
 		    stringBuilder.append("Session Faulty");
+
+		if(participantElement.m_keyStream != null &&
+		   participantElement.m_keyStream.length == 96)
+		{
+		    stringBuilder.append("\n");
+
+		    long value = s_siphash.hmac(participantElement.m_keyStream);
+
+		    stringBuilder.append
+			(Miscellaneous.
+			 delimitString(Miscellaneous.
+				       sipHashIdFromData(Miscellaneous.
+							 longToByteArray
+							 (value)).
+				       replace(":", ""), '-', 4).
+			 toUpperCase());
 		}
-	    else if(participantElement.m_keyStream == null ||
-		    participantElement.m_keyStream.length == 0)
-		stringBuilder.append("Session Closed");
-	    else if(participantElement.m_keyStream.length == 48)
-		stringBuilder.append("Session Incomplete");
-	    else if(participantElement.m_keyStream.length == 96)
-		stringBuilder.append("Session Ready");
-	    else
-		stringBuilder.append("Session Faulty");
-
-	    if(participantElement.m_keyStream != null &&
-	       participantElement.m_keyStream.length == 96 &&
-	       showDetails)
-	    {
-		stringBuilder.append("\n");
-
-		long value = s_siphash.hmac(participantElement.m_keyStream);
-
-		stringBuilder.append
-		    (Miscellaneous.
-		     delimitString(Miscellaneous.
-				   sipHashIdFromData(Miscellaneous.
-						     longToByteArray(value)).
-				   replace(":", ""), '-', 4).
-		     toUpperCase());
 	    }
 
 	    checkBox.setTag(participantElement.m_sipHashId);
@@ -346,8 +328,6 @@ public class Chat extends AppCompatActivity
 	    if(i % 2 == 0)
 		row.setBackgroundColor(Color.argb(100, 179, 230, 255));
 
-	    row.setLayoutParams
-		(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT));
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}

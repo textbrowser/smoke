@@ -735,18 +735,6 @@ public class Kernel
 	return false;
     }
 
-    public int callingStreamLength(String sipHashId)
-    {
-	synchronized(m_callQueueMutex)
-	{
-	    if(m_callQueue.containsKey(sipHashId) &&
-	       m_callQueue.get(sipHashId) != null)
-		return m_callQueue.get(sipHashId).m_keyPair == null ? -1 : 48;
-	}
-
-	return -1;
-    }
-
     public static synchronized Kernel getInstance()
     {
 	if(s_instance == null)
