@@ -191,7 +191,9 @@ public class Chat extends AppCompatActivity
 	scrollMessagesView();
 
 	if(refresh)
-	    populateParticipants();
+	    if(m_databaseHelper.readSetting(null, "show_chat_details").
+	       equals("true"))
+		populateParticipants();
     }
 
     private void populateParticipants()
@@ -584,7 +586,10 @@ public class Chat extends AppCompatActivity
 				   setParticipantKeyStream(s_cryptography,
 							   bytes,
 							   itemId))
-				    populateParticipants();
+				    if(m_databaseHelper.
+				       readSetting(null, "show_chat_details").
+				       equals("true"))
+					populateParticipants();
 			    }
 			    catch(Exception exception)
 			    {
@@ -597,7 +602,10 @@ public class Chat extends AppCompatActivity
 			       setParticipantKeyStream(s_cryptography,
 						       null,
 						       itemId))
-				populateParticipants();
+				if(m_databaseHelper.
+				   readSetting(null, "show_chat_details").
+				   equals("true"))
+				    populateParticipants();
 
 			    break;
 			default:
