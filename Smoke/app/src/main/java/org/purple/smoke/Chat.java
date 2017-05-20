@@ -79,7 +79,15 @@ public class Chat extends AppCompatActivity
 		     intent.getLongExtra("org.purple.smoke.timestamp", 0));
 	    else if(intent.getAction().
 		    equals("org.purple.smoke.populate_participants"))
-		populateParticipants();
+	    {
+		String sipHashId = intent.getStringExtra
+		    ("org.purple.smoke.sipHashId");
+
+		if(sipHashId.isEmpty())
+		    populateParticipants();
+		else
+		    refreshCheckBox(sipHashId);
+	    }
 	    else if(intent.getAction().
 		    equals("org.purple.smoke.half_and_half_call"))
 		halfAndHalfCall

@@ -237,6 +237,7 @@ public class Kernel
 		    try
 		    {
 			ParticipantCall participantCall = null;
+			String sipHashId = "";
 
 			synchronized(m_callQueueMutex)
 			{
@@ -249,7 +250,6 @@ public class Kernel
 
 			    Iterator<Hashtable.Entry<String, ParticipantCall> >
 				it = m_callQueue.entrySet().iterator();
-			    boolean notify = false;
 
 			    while(it.hasNext())
 			    {
@@ -261,17 +261,13 @@ public class Kernel
 
 				if((System.nanoTime() - entry.getValue().
 				    m_startTime) / 1000000 > CALL_LIFETIME)
-				{
 				    it.remove();
-				    notify = true;
-				}
 			    }
 
 			    /*
 			    ** Discover a pending call.
 			    */
 
-			    String sipHashId = "";
 			    int participantOid = -1;
 
 			    for(String string : m_callQueue.keySet())
@@ -283,18 +279,6 @@ public class Kernel
 				    m_participantOid;
 				sipHashId = string;
 				break;
-			    }
-
-			    if(notify)
-			    {
-				/*
-				** Expired call(s). Notify some activity.
-				*/
-
-				Intent intent = new Intent
-				    ("org.purple.smoke.populate_participants");
-
-				Smoke.getApplication().sendBroadcast(intent);
 			    }
 
 			    if(participantOid == -1)
@@ -316,6 +300,8 @@ public class Kernel
 			Intent intent = new Intent
 			    ("org.purple.smoke.populate_participants");
 
+			intent.putExtra
+			    ("org.purple.smoke.sipHashId", sipHashId);
 			Smoke.getApplication().sendBroadcast(intent);
 
 			/*
