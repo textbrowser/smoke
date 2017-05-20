@@ -207,8 +207,6 @@ public class Chat extends AppCompatActivity
 	Button button2 = (Button) findViewById(R.id.send_chat_message);
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
-	boolean showDetails = m_databaseHelper.readSetting
-	    (null, "show_chat_details").equals("true");
 
 	button1.setEnabled(false);
 	button2.setEnabled(false);
@@ -221,6 +219,9 @@ public class Chat extends AppCompatActivity
 
 	tableLayout.removeAllViews();
 
+	StringBuilder stringBuilder = new StringBuilder();
+	boolean showDetails = m_databaseHelper.readSetting
+	    (null, "show_chat_details").equals("true");
 	int i = 0;
 
 	for(ParticipantElement participantElement : arrayList)
@@ -240,41 +241,37 @@ public class Chat extends AppCompatActivity
 		checkBox.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_status_online, 0, 0, 0);
 
-	    checkBox.setOnCheckedChangeListener
-	    (new CompoundButton.OnCheckedChangeListener()
-	    {
-		@Override
-		public void onCheckedChanged
-		    (CompoundButton buttonView, boolean isChecked)
-		{
-		    State.getInstance().setChatCheckBoxSelected
-			(oid, isChecked);
-
-		    Button button1 = (Button) findViewById(R.id.call);
-		    Button button2 = (Button) findViewById
-			(R.id.send_chat_message);
-
-		    if(State.getInstance().chatCheckedParticipants() > 0)
-		    {
-			button1.setEnabled(true);
-			button2.setEnabled(true);
-		    }
-		    else
-		    {
-			button1.setEnabled(false);
-			button2.setEnabled(false);
-		    }
-		}
-	    });
-
-	    StringBuilder stringBuilder = new StringBuilder();
-	    TableRow.LayoutParams layoutParams = new
-		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Chat.this);
 
 	    registerForContextMenu(checkBox);
 	    checkBox.setChecked
 		(State.getInstance().chatCheckBoxIsSelected(oid));
+	    checkBox.setOnCheckedChangeListener
+		(new CompoundButton.OnCheckedChangeListener()
+		{
+		    @Override
+		    public void onCheckedChanged
+			(CompoundButton buttonView, boolean isChecked)
+		    {
+			State.getInstance().setChatCheckBoxSelected
+			    (buttonView.getId(), isChecked);
+
+			Button button1 = (Button) findViewById(R.id.call);
+			Button button2 = (Button) findViewById
+			    (R.id.send_chat_message);
+
+			if(State.getInstance().chatCheckedParticipants() > 0)
+			{
+			    button1.setEnabled(true);
+			    button2.setEnabled(true);
+			}
+			else
+			{
+			    button1.setEnabled(false);
+			    button2.setEnabled(false);
+			}
+		    }
+		});
 
 	    if(checkBox.isChecked())
 	    {
@@ -287,6 +284,7 @@ public class Chat extends AppCompatActivity
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
+	    stringBuilder.setLength(0);
 	    stringBuilder.append(participantElement.m_name);
 	    stringBuilder.append("\n");
 
@@ -351,6 +349,9 @@ public class Chat extends AppCompatActivity
 
 	    if(i % 2 == 0)
 		row.setBackgroundColor(Color.argb(100, 179, 230, 255));
+
+	    TableRow.LayoutParams layoutParams = new
+		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 
 	    row.setLayoutParams(layoutParams);
 	    tableLayout.addView(row, i);
