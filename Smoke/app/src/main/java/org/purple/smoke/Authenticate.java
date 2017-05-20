@@ -271,7 +271,8 @@ public class Authenticate extends AppCompatActivity
 			}
 			catch(Exception exception)
 			{
-			    m_error = exception.getMessage().trim();
+			    m_error = exception.getMessage().toLowerCase().
+				trim();
 			    s_cryptography.reset();
 			}
 

@@ -119,7 +119,7 @@ public class Chat extends AppCompatActivity
 	** Text
 	*/
 
-	if(text.trim().isEmpty())
+	if(text.isEmpty())
 	    return "unknown";
 
 	try

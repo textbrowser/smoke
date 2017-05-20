@@ -278,7 +278,7 @@ public class Cryptography
 
 	    synchronized(m_sipHashIdMutex)
 	    {
-		salt = sha512(m_sipHashId.trim().getBytes());
+		salt = sha512(m_sipHashId.getBytes());
 		temporary = pbkdf2(salt,
 				   m_sipHashId.toCharArray(),
 				   SIPHASH_STREAM_CREATION_ITERATION_COUNT,

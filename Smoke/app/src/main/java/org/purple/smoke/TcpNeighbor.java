@@ -241,7 +241,7 @@ public class TcpNeighbor extends Neighbor
 
 	m_isValidCertificate = new AtomicInteger(0);
 	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
-	m_proxyIpAddress = proxyIpAddress.trim();
+	m_proxyIpAddress = proxyIpAddress;
 	m_proxyType = proxyType;
 
 	if(!m_proxyIpAddress.isEmpty() && m_proxyPort != -1 &&

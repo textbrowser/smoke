@@ -585,6 +585,14 @@ public class Settings extends AppCompatActivity
 				    deleteEntry(String.valueOf(parent.getId()),
 						"neighbors"))
 			    {
+				/*
+				** Prepare the kernel's neighbors container
+				** if a neighbor was deleted as the OID
+				** field may represent a recycled value.
+				*/
+
+				Kernel.getInstance().prepareNeighbors();
+
 				TableRow row = (TableRow) findViewById
 				    (parent.getId());
 
