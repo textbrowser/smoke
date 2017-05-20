@@ -309,7 +309,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public ArrayList<ParticipantElement> readParticipants
-	(Cryptography cryptography)
+	(Cryptography cryptography, String sipHashId)
     {
 	prepareDb();
 
@@ -321,14 +321,30 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "name, " +
-		 "keystream, " +
-		 "last_status_timestamp, " +
-		 "siphash_id, " +
-		 "OID " +
-		 "FROM participants", null);
+	    if(sipHashId.isEmpty())
+		cursor = m_db.rawQuery
+		    ("SELECT " +
+		     "name, " +
+		     "keystream, " +
+		     "last_status_timestamp, " +
+		     "siphash_id, " +
+		     "OID " +
+		     "FROM participants", null);
+	    else
+		cursor = m_db.rawQuery
+		    ("SELECT " +
+		     "name, " +
+		     "keystream, " +
+		     "last_status_timestamp, " +
+		     "siphash_id, " +
+		     "OID " +
+		     "FROM participants WHERE siphash_id_digest = ?",
+		     new String[] {Base64.
+				   encodeToString(cryptography.
+						  hmac(sipHashId.toLowerCase().
+						       trim().
+						       getBytes("UTF-8")),
+						  Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {

@@ -193,13 +193,70 @@ public class Chat extends AppCompatActivity
 	if(refresh)
 	    if(m_databaseHelper.readSetting(null, "show_chat_details").
 	       equals("true"))
-		populateParticipants();
+	    {
+		CheckBox checkBox = (CheckBox)
+		    ((TableLayout) findViewById
+		     (R.id.participants)).findViewWithTag(sipHashId);
+
+		if(checkBox == null)
+		    return;
+
+		ArrayList<ParticipantElement> arrayList =
+		    m_databaseHelper.readParticipants
+		    (s_cryptography, sipHashId);
+
+		if(arrayList == null || arrayList.size() == 0)
+		    return;
+
+		ParticipantElement participantElement = arrayList.get(0);
+
+		if(participantElement == null)
+		    return;
+
+		stringBuilder.setLength(0);
+		stringBuilder.append(participantElement.m_name);
+		stringBuilder.append("\n");
+		stringBuilder.append
+		    (Miscellaneous.
+		     delimitString(participantElement.m_sipHashId.
+				   replace(":", ""), '-', 4).toUpperCase());
+		stringBuilder.append("\n");
+
+		if(participantElement.m_keyStream == null ||
+		   participantElement.m_keyStream.length == 0)
+		    stringBuilder.append("Session Closed");
+		else if(participantElement.m_keyStream.length == 48)
+		    stringBuilder.append("Session Incomplete");
+		else if(participantElement.m_keyStream.length == 96)
+		    stringBuilder.append("Session Ready");
+		else
+		    stringBuilder.append("Session Faulty");
+
+		if(participantElement.m_keyStream != null &&
+		   participantElement.m_keyStream.length == 96)
+		{
+		    stringBuilder.append("\n");
+
+		    long value = s_siphash.hmac(participantElement.m_keyStream);
+
+		    stringBuilder.append
+			(Miscellaneous.
+			 delimitString(Miscellaneous.
+				       sipHashIdFromData(Miscellaneous.
+							 longToByteArray
+							 (value)).
+				       replace(":", ""), '-', 4).
+			 toUpperCase());
+		}
+
+		checkBox.setText(stringBuilder);
+	    }
     }
 
     private void populateParticipants()
     {
 	ArrayList<ParticipantElement> arrayList =
-	    m_databaseHelper.readParticipants(s_cryptography);
+	    m_databaseHelper.readParticipants(s_cryptography, "");
 	Button button1 = (Button) findViewById(R.id.call);
 	Button button2 = (Button) findViewById(R.id.send_chat_message);
 	TableLayout tableLayout = (TableLayout) findViewById
