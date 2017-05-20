@@ -1417,7 +1417,6 @@ public class Settings extends AppCompatActivity
 			{
 			    Settings.this.enableWidgets(true);
 			    State.getInstance().setAuthenticated(true);
-			    spinner1.setSelection(0);
 			    spinner2.setSelection(0); // RSA
 			    spinner3.setSelection(1); // RSA
 			    textView1.requestFocus();
