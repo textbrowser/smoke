@@ -304,6 +304,14 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.reset_participants_fields);
 	button1.setEnabled(state);
 
+	CheckBox checkBox1 = null;
+
+	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
+	checkBox1.setChecked(!state);
+	checkBox1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.set_password);
+	button1.setEnabled(checkBox1.isChecked());
+
 	RadioButton radioButton1 = null;
 
 	radioButton1 = (RadioButton) findViewById(R.id.neighbors_ipv4);
@@ -401,7 +409,7 @@ public class Settings extends AppCompatActivity
 				 "An error (" + m_error + ") occurred while " +
 				 "preparing to transfer public key material. " +
 				 "Please verify that participant SipHash " +
-				 "identities have been defined.");
+				 "Identities have been defined.");
 		    }
 		});
 	    }
@@ -1004,14 +1012,29 @@ public class Settings extends AppCompatActivity
 		    return;
 		}
 
-		if(State.getInstance().isAuthenticated())
-		    Miscellaneous.showPromptDialog(Settings.this,
-						   listener2,
-						   "Are you sure that you " +
-						   "wish to create new " +
-						   "credentials? Existing " +
-						   "database values will be " +
-						   "removed.");
+		int iterationCount = 1000;
+
+		try
+		{
+		    final Spinner spinner1 = (Spinner) findViewById
+			(R.id.iteration_count);
+
+		    iterationCount = Integer.parseInt
+			(spinner1.getSelectedItem().toString());
+		}
+		catch(Exception exception)
+		{
+		    iterationCount = 1000;
+		}
+
+		if(iterationCount > 7500)
+		    Miscellaneous.showPromptDialog
+			(Settings.this,
+			 listener2,
+			 "You have selected an elevated iteration count. " +
+			 "If you proceed, the initialization process may " +
+			 "require a significant amount of time to complete. " +
+			 "Continue?");
 		else
 		    prepareCredentials();
 	    }
@@ -1085,6 +1108,21 @@ public class Settings extends AppCompatActivity
 
 		    if(!checkBox.isChecked())
 			populateNeighbors();
+		}
+	    });
+
+	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    Button button = (Button) findViewById
+			(R.id.set_password);
+
+		    button.setEnabled(isChecked);
 		}
 	    });
 
@@ -1618,8 +1656,14 @@ public class Settings extends AppCompatActivity
 	** Enable widgets.
 	*/
 
+	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
+	checkBox1.setChecked(!isAuthenticated);
+	checkBox1.setEnabled(isAuthenticated);
+
 	TextView textView1 = null;
 
+	textView1 = (TextView) findViewById(R.id.set_password);
+	textView1.setEnabled(checkBox1.isChecked());
 	textView1 = (TextView) findViewById(R.id.about);
 	textView1.setText(About.about());
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
