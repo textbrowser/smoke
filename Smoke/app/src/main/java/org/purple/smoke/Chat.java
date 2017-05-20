@@ -627,7 +627,7 @@ public class Chat extends AppCompatActivity
 		    if(itemId > -1)
 			switch(groupId)
 		        {
-			case 0:
+			case 0: // Custom Session
 			    try
 			    {
 				String string = State.getInstance().
@@ -654,7 +654,7 @@ public class Chat extends AppCompatActivity
 
 			    State.getInstance().removeKey("chat_secret_input");
 			    break;
-			case 1:
+			case 1: // Purge Session
 			    if(m_databaseHelper.
 			       setParticipantKeyStream(s_cryptography,
 						       null,
