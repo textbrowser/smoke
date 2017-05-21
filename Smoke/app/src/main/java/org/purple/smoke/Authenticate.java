@@ -54,13 +54,14 @@ public class Authenticate extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		final TextView textView1 = (TextView) findViewById
-		    (R.id.password);
-
 		byte encryptionSalt[] = Base64.decode
 		    (m_databaseHelper.
 		     readSetting(null, "encryptionSalt").getBytes(),
 		     Base64.DEFAULT);
+		final TextView textView1 = (TextView) findViewById
+		    (R.id.password);
+
+		textView1.setSelectAllOnFocus(true);
 
 		if(encryptionSalt == null)
 		{
