@@ -269,9 +269,13 @@ public class Chat extends AppCompatActivity
 
 	    if(showIcons)
 	    {
-		if(Math.abs(current -
-			    participantElement.m_lastStatusTimestamp) >
-		   STATUS_WINDOW)
+		if(participantElement.m_keyStream == null ||
+		   participantElement.m_keyStream.length != 96)
+		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+			(R.drawable.chat_faulty_session, 0, 0, 0);
+		else if(Math.abs(current -
+				 participantElement.m_lastStatusTimestamp) >
+			STATUS_WINDOW)
 		    checkBox.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_offline, 0, 0, 0);
 		else
@@ -501,9 +505,13 @@ public class Chat extends AppCompatActivity
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
-	    if(Math.abs(System.currentTimeMillis() -
-			participantElement.m_lastStatusTimestamp) >
-	       STATUS_WINDOW)
+	    if(participantElement.m_keyStream == null ||
+	       participantElement.m_keyStream.length != 96)
+		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    (R.drawable.chat_faulty_session, 0, 0, 0);
+	    else if(Math.abs(System.currentTimeMillis() -
+			     participantElement.m_lastStatusTimestamp) >
+		    STATUS_WINDOW)
 		checkBox.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_status_offline, 0, 0, 0);
 	    else
