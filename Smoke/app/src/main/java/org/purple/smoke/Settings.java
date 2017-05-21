@@ -226,7 +226,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "Please do not attempt to add your own SipHash Identity.");
+		 "Please do not assign your SipHash Identity.");
 	    return;
 	}
 
