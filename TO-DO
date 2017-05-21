@@ -108,6 +108,7 @@ Completed Items
 80.    Less populateParticipants() in the Chat activity.
 81.    Next (Tab) order; Settings.
 82.    Detect removal of neighbors.
+83.    Simple binary status in Chat. Kernel scheduler.
 
 Future Items
 
@@ -152,4 +153,3 @@ Remaining Items
 2.     Sign release.
 3.     Messages may arrive while the Settings activity is the primary
        activity.
-4.     Simple binary status in Chat. Kernel scheduler.

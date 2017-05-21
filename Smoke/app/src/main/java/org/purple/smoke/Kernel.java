@@ -237,6 +237,24 @@ public class Kernel
 		@Override
 		public void run()
 		{
+		    ArrayList<ParticipantElement> arrayList =
+			s_databaseHelper.readParticipants(s_cryptography, "");
+
+		    if(arrayList == null || arrayList.size() == 0)
+			return;
+
+		    for(ParticipantElement participantElement : arrayList)
+			if(participantElement != null)
+			{
+			    byte bytes[] = Messages.chatStatus
+				(s_cryptography,
+				 participantElement.m_sipHashId,
+				 participantElement.m_keyStream,
+				 System.currentTimeMillis());
+
+			    if(bytes != null)
+				echo(Messages.bytesToMessageString(bytes), -1);
+			}
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -322,7 +340,7 @@ public class Kernel
 	    if(pk.length == 64)
 	    {
 		/*
-		** Chat
+		** Chat, Chat Status
 		*/
 
 		byte keyStream[] = s_databaseHelper.participantKeyStream
@@ -347,6 +365,48 @@ public class Kernel
 
 		if(aes256 == null)
 		    return false;
+
+		byte abyte[] = new byte[] {aes256[0]};
+
+		if(abyte[0] == Messages.CHAT_STATUS_MESSAGE_TYPE[0])
+		{
+		    PublicKey signatureKey = s_databaseHelper.
+			signatureKeyForDigest(s_cryptography, pk);
+
+		    if(signatureKey == null)
+			return false;
+
+		    if(!Cryptography.
+		       verifySignature(signatureKey,
+				       Arrays.copyOfRange(aes256,
+							  10,
+							  aes256.length),
+				       Miscellaneous.
+				       joinByteArrays(pk,
+						      Arrays.
+						      copyOfRange(aes256,
+								  0,
+								  10))))
+			    return false;
+
+		    long current = System.currentTimeMillis();
+		    long timestamp = Miscellaneous.byteArrayToLong
+			(Arrays.copyOfRange(aes256, 1, 1 + 8));
+
+		    if(current - timestamp < 0)
+		    {
+			if(timestamp - current > Chat.STATUS_WINDOW)
+			    return false;
+		    }
+		    else if(current - timestamp > Chat.STATUS_WINDOW)
+			return false;
+
+		    s_databaseHelper.updateParticipantLastTimestamp
+			(s_cryptography, pk);
+		    return true;
+		}
+
+		aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
 
 		String strings[] = new String(aes256).split("\\n");
 
@@ -393,6 +453,7 @@ public class Kernel
 					   publicKeySignature,
 					   Miscellaneous.
 					   joinByteArrays(pk,
+							  abyte,
 							  strings[0].getBytes(),
 							  "\n".getBytes(),
 							  strings[1].getBytes(),

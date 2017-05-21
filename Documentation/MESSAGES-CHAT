@@ -5,12 +5,13 @@
 
 [AES-256] (2)
 {
-	A Timestamp (1)						8 Bytes (Base-64)
-	Message (2)						Variable Bytes (Base-64)
-	Sequence (3)						8 Bytes (Base-64)
-	[PK Signature] (4)					Variable Bytes (Base-64)
+	A Byte (1)						1 Byte
+	A Timestamp (2)						8 Bytes (Base-64)
+	Message (3)						Variable Bytes (Base-64)
+	Sequence (4)						8 Bytes (Base-64)
+	[PK Signature] (5)					Variable Bytes (Base-64)
 	{
-		[PK] (1) || [AES-256] (1 ... 3) (1)
+		[PK] (1) || [AES-256] (1 ... 4) (1)
 	}
 }
 

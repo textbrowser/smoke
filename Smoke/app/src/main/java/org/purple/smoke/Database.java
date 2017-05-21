@@ -2198,6 +2198,40 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void updateParticipantLastTimestamp(Cryptography cryptography,
+					       byte digest[])
+    {
+	prepareDb();
+
+	if(cryptography == null ||
+	   digest == null ||
+	   digest.length < 0 ||
+	   m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("last_status_timestamp",
+		 Base64.
+		 encodeToString(cryptography.
+				etm(Miscellaneous.
+				    longToByteArray(System.
+						    currentTimeMillis())),
+				Base64.DEFAULT));
+	    m_db.update("participants",
+			values,
+			"encryption_public_key_digest = ?",
+			new String[] {Base64.encodeToString(digest,
+							    Base64.DEFAULT)});
+	}
+	catch(Exception exception)
+        {
+	}
+    }
+
     public void writeCallKeys(Cryptography cryptography,
 			      String sipHashId,
 			      byte keyStream[])

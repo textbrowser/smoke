@@ -36,6 +36,8 @@ public class Messages
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
+    public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
+    public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 4;
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 6;
 
@@ -265,6 +267,7 @@ public class Messages
 	    byte signature[] = cryptography.signViaChatSignature
 		(Miscellaneous.
 		 joinByteArrays(cryptography.chatEncryptionPublicKeyDigest(),
+				CHAT_MESSAGE_TYPE,
 				stringBuilder.toString().getBytes()));
 
 	    if(signature == null)
@@ -278,7 +281,9 @@ public class Messages
 	    */
 
 	    byte aes256[] = Cryptography.encrypt
-		(stringBuilder.toString().getBytes(),
+		(Miscellaneous.
+		 joinByteArrays(CHAT_MESSAGE_TYPE,
+				stringBuilder.toString().getBytes()),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
 	    stringBuilder.setLength(0);
@@ -350,6 +355,12 @@ public class Messages
 
 	    byte bytes[] = Miscellaneous.joinByteArrays
 		(
+		 /*
+		 ** [ A Byte ]
+		 */
+
+		 CHAT_STATUS_MESSAGE_TYPE,
+
 		 /*
 		 ** [ A Timestamp ]
 		 */
