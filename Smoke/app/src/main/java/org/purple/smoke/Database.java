@@ -1078,12 +1078,18 @@ public class Database extends SQLiteOpenHelper
 		     Base64.encodeToString(cryptography.etm(keyStream),
 					   Base64.DEFAULT));
 
+	    m_db.beginTransactionNonExclusive();
 	    m_db.update("participants", values, "OID = ?",
 			new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
 	{
 	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
 
 	return true;
@@ -1241,10 +1247,16 @@ public class Database extends SQLiteOpenHelper
 	    ok = false;
 	}
 
+	if(ok)
+	    m_db.beginTransactionNonExclusive();
+
 	try
 	{
 	    if(ok)
+	    {
 		m_db.insert("neighbors", null, values);
+		m_db.setTransactionSuccessful();
+	    }
 	}
 	catch(SQLiteConstraintException exception)
 	{
@@ -1253,6 +1265,10 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
         {
 	    ok = false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
 
 	return ok;
@@ -1439,7 +1455,9 @@ public class Database extends SQLiteOpenHelper
 			   Base64.encodeToString(bytes, Base64.DEFAULT));
 	    }
 
+	    m_db.beginTransactionNonExclusive();
 	    m_db.insert("participants", null, values);
+	    m_db.setTransactionSuccessful();
 	}
 	catch(SQLiteConstraintException exception)
 	{
@@ -1448,6 +1466,10 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
 	{
 	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
 
 	return true;
@@ -1549,15 +1571,26 @@ public class Database extends SQLiteOpenHelper
 	    ok = false;
 	}
 
+	if(ok)
+	    m_db.beginTransactionNonExclusive();
+
 	try
 	{
 	    if(ok)
+	    {
 		if(m_db.replace("siphash_ids", null, values) == -1)
 		    ok = false;
+
+		m_db.setTransactionSuccessful();
+	    }
 	}
 	catch(Exception exception)
         {
 	    ok = false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
 
 	return ok;
@@ -1737,10 +1770,16 @@ public class Database extends SQLiteOpenHelper
 
 	    values.put("message", message);
 	    values.put("neighbor_oid", oid);
+	    m_db.beginTransactionNonExclusive();
 	    m_db.insert("outbound_queue", null, values);
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
         {
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -1762,10 +1801,16 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.
 				       etm(controlStatus.trim().getBytes()),
 				       Base64.DEFAULT));
+	    m_db.beginTransactionNonExclusive();
 	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
 	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -1793,10 +1838,16 @@ public class Database extends SQLiteOpenHelper
 		     Base64.encodeToString(cryptography.etm(certificate),
 					   Base64.DEFAULT));
 
+	    m_db.beginTransactionNonExclusive();
 	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
 	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2157,10 +2208,16 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.
 				       etm(uptime.trim().getBytes()),
 				       Base64.DEFAULT));
+	    m_db.beginTransactionNonExclusive();
 	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
 	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2184,6 +2241,7 @@ public class Database extends SQLiteOpenHelper
 				    longToByteArray(System.
 						    currentTimeMillis())),
 				Base64.DEFAULT));
+	    m_db.beginTransactionNonExclusive();
 	    m_db.update("participants", values, "siphash_id_digest = ?",
 			new String[] {Base64.
 				      encodeToString(cryptography.
@@ -2191,10 +2249,14 @@ public class Database extends SQLiteOpenHelper
 							  toLowerCase().trim().
 							  getBytes("UTF-8")),
 						     Base64.DEFAULT)});
-
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
         {
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2221,14 +2283,20 @@ public class Database extends SQLiteOpenHelper
 				    longToByteArray(System.
 						    currentTimeMillis())),
 				Base64.DEFAULT));
+	    m_db.beginTransactionNonExclusive();
 	    m_db.update("participants",
 			values,
 			"encryption_public_key_digest = ?",
 			new String[] {Base64.encodeToString(digest,
 							    Base64.DEFAULT)});
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
         {
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2260,6 +2328,7 @@ public class Database extends SQLiteOpenHelper
 				    longToByteArray(System.
 						    currentTimeMillis())),
 				Base64.DEFAULT));
+	    m_db.beginTransactionNonExclusive();
 	    m_db.update("participants", values, "siphash_id_digest = ?",
 			new String[] {Base64.
 				      encodeToString(cryptography.
@@ -2267,10 +2336,14 @@ public class Database extends SQLiteOpenHelper
 							  toLowerCase().trim().
 							  getBytes("UTF-8")),
 						     Base64.DEFAULT)});
-
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
         {
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2289,10 +2362,16 @@ public class Database extends SQLiteOpenHelper
 		("digest",
 		 Base64.encodeToString(Miscellaneous.
 				       longToByteArray(value), Base64.DEFAULT));
+	    m_db.beginTransactionNonExclusive();
 	    m_db.insert("congestion_control", null, values);
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
         {
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2308,10 +2387,16 @@ public class Database extends SQLiteOpenHelper
 	    ContentValues values = new ContentValues();
 
 	    values.put("event", event.trim());
+	    m_db.beginTransactionNonExclusive();
 	    m_db.insert("log", null, values);
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
         {
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2364,10 +2449,16 @@ public class Database extends SQLiteOpenHelper
 	    values.put("name", a);
 	    values.put("name_digest", b);
 	    values.put("value", c);
+	    m_db.beginTransactionNonExclusive();
 	    m_db.replace("settings", null, values);
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
         {
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 }

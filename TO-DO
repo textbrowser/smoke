@@ -109,6 +109,7 @@ Completed Items
 81.    Next (Tab) order; Settings.
 82.    Detect removal of neighbors.
 83.    Simple binary status in Chat. Kernel scheduler.
+84.    Non-exclusive database transactions.
 
 Future Items
 
