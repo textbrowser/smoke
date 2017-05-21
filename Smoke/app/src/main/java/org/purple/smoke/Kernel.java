@@ -77,6 +77,7 @@ public class Kernel
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
+    private ScheduledExecutorService m_statusScheduler = null;
     private final Object m_callQueueMutex = new Object();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -89,6 +90,10 @@ public class Kernel
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
+    private final static int STATUS_INTERVAL = 25000; /*
+						      ** Should be less than
+						      ** Chat.STATUS_WINDOW.
+						      */
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -222,6 +227,18 @@ public class Kernel
 		    prepareNeighbors();
 		}
 	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_statusScheduler == null)
+	{
+	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		}
+	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
