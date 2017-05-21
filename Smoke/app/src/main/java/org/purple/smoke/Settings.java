@@ -510,7 +510,7 @@ public class Settings extends AppCompatActivity
 	int i = 0;
 
 	/*
-	** Remove rows.
+	** Remove table entries which do not exist in smoke.db.
 	*/
 
 	for(i = 0; i < tableLayout.getChildCount(); i++)
