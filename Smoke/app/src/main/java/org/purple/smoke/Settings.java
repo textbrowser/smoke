@@ -37,6 +37,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spanned;
 import android.util.Base64;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -134,7 +135,7 @@ public class Settings extends AppCompatActivity
 		     (source.charAt(i) >= '0' && source.charAt(i) <= '9') ||
 		     (source.charAt(i) >= 'A' && source.charAt(i) <= 'F') ||
 		     (source.charAt(i) >= 'a' && source.charAt(i) <= 'f')))
-		    return "";
+		    return source.subSequence(start, i);
 
 	    return null;
 	}
@@ -1743,6 +1744,8 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(isAuthenticated);
 	textView1.setFilters(new InputFilter[] { new InputFilter.AllCaps(),
 						 s_sipHashInputFilter });
+	textView1.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
+			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 	textView1 = (TextView) findViewById(R.id.password1);
 
 	if(!isAuthenticated)
