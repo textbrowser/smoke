@@ -396,6 +396,9 @@ public class Kernel
 		if(strings == null || strings.length != 2)
 		    return false;
 
+		s_databaseHelper.updateParticipantLastTimestamp
+		    (s_cryptography, strings[1]);
+
 		Intent intent = new Intent
 		    ("org.purple.smoke.chat_message");
 

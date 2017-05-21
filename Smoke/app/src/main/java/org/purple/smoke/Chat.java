@@ -53,6 +53,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
 {
@@ -99,6 +102,7 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
+    private ScheduledExecutorService m_statusScheduler = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -109,7 +113,8 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CHECKBOX_TEXT_SIZE = 13;
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 1000;
-    private final static int STATUS_WINDOW = 15000;
+    private final static int STATUS_INTERVAL = 30000;
+    private final static int STATUS_WINDOW = 30000;
 
     private String nameFromCheckBoxText(String text)
     {
@@ -554,6 +559,40 @@ public class Chat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
+	m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
+	m_statusScheduler.scheduleAtFixedRate(new Runnable()
+        {
+	    @Override
+	    public void run()
+	    {
+		if(!m_databaseHelper.readSetting(null, "show_chat_icons").
+		   equals("true"))
+		    return;
+
+		ArrayList<String> arrayList =
+		    m_databaseHelper.readSipHashIdStrings(s_cryptography);
+
+		if(arrayList == null || arrayList.size() == 0)
+		    return;
+
+		for(String string : arrayList)
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
+
+		    final String sipHashId = string;
+
+		    Chat.this.runOnUiThread(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    refreshCheckBox(sipHashId);
+			}
+		    });
+		}
+	    }
+	}, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 

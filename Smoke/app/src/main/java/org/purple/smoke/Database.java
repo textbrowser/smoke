@@ -551,6 +551,69 @@ public class Database extends SQLiteOpenHelper
 	return arrayList;
     }
 
+    public ArrayList<String> readSipHashIdStrings(Cryptography cryptography)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	ArrayList<String> arrayList = null;
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT siphash_id FROM participants", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    StringBuilder StringBuilder = new StringBuilder();
+
+			    StringBuilder.append
+				("Database::readSipHashIds(): ");
+			    StringBuilder.append("error on column ");
+			    StringBuilder.append(cursor.getColumnName(i));
+			    StringBuilder.append(".");
+			    writeLog(StringBuilder.toString());
+			    break;
+			}
+
+			arrayList.add(new String(bytes, "UTF-8"));
+		    }
+
+		    cursor.moveToNext();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
     public PublicKey publicKeyForSipHashId(Cryptography cryptography,
 					   String sipHashId)
     {
@@ -2098,6 +2161,40 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
+	}
+    }
+
+    public void updateParticipantLastTimestamp(Cryptography cryptography,
+					       String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("last_status_timestamp",
+		 Base64.
+		 encodeToString(cryptography.
+				etm(Miscellaneous.
+				    longToByteArray(System.
+						    currentTimeMillis())),
+				Base64.DEFAULT));
+	    m_db.update("participants", values, "siphash_id_digest = ?",
+			new String[] {Base64.
+				      encodeToString(cryptography.
+						     hmac(sipHashId.
+							  toLowerCase().trim().
+							  getBytes("UTF-8")),
+						     Base64.DEFAULT)});
+
+	}
+	catch(Exception exception)
+        {
 	}
     }
 
