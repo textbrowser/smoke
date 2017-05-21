@@ -316,6 +316,104 @@ public class Messages
 	return null;
     }
 
+    public static byte[] chatStatus(Cryptography cryptography,
+				    String sipHashId,
+				    byte keyStream[],
+				    long timestamp)
+    {
+	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
+	*/
+
+	try
+	{
+	    PublicKey publicKey = Database.getInstance().
+		publicKeyForSipHashId(cryptography, sipHashId);
+
+	    if(publicKey == null)
+		return null;
+
+	    /*
+	    ** [ PK ]
+	    */
+
+	    byte pk[] = Cryptography.pkiEncrypt
+		(publicKey, cryptography.chatEncryptionPublicKeyDigest());
+
+	    if(pk == null)
+		return null;
+
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(
+		 /*
+		 ** [ A Timestamp ]
+		 */
+
+		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
+
+		 /*
+		 ** [ Status ]
+		 */
+
+		 new byte[] {0x00});
+
+	    /*
+	    ** [ Public Key Signature ]
+	    */
+
+	    byte signature[] = cryptography.signViaChatSignature
+		(Miscellaneous.
+		 joinByteArrays(cryptography.chatEncryptionPublicKeyDigest(),
+				bytes));
+
+	    if(signature == null)
+		return null;
+
+	    /*
+	    ** [ AES-256 ]
+	    */
+
+	    byte aes256[] = Cryptography.encrypt
+		(Miscellaneous.joinByteArrays(bytes, signature),
+		 Arrays.copyOfRange(keyStream, 0, 32));
+
+	    if(aes256 == null)
+		return null;
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, aes256),
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+	    if(sha512 == null)
+		return null;
+
+	    /*
+	    ** [ Destination ]
+	    */
+
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+
+	    return Miscellaneous.joinByteArrays
+		(pk, aes256, sha512, destination);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
     public static byte[] epksMessage(Cryptography cryptography,
 				     String sipHashId,
 				     byte keyStream[],
