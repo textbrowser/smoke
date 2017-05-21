@@ -506,9 +506,51 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 
-	CheckBox checkBox = (CheckBox) findViewById(R.id.neighbor_details);
 	StringBuilder stringBuilder = new StringBuilder();
 	int i = 0;
+
+	/*
+	** Remove rows.
+	*/
+
+	for(i = 0; i < tableLayout.getChildCount(); i++)
+	{
+	    TableRow row = (TableRow) tableLayout.getChildAt(i);
+
+	    if(row == null)
+		continue;
+
+	    TextView textView = (TextView) row.getChildAt(1);
+
+	    if(textView == null)
+		continue;
+
+	    boolean found = false;
+
+	    for(NeighborElement neighborElement : arrayList)
+	    {
+		stringBuilder.setLength(0);
+		stringBuilder.append(neighborElement.m_remoteIpAddress);
+		stringBuilder.append(":");
+		stringBuilder.append(neighborElement.m_remotePort);
+		stringBuilder.append(":");
+		stringBuilder.append(neighborElement.m_transport);
+
+		if(textView.getText().toString().
+		   contains(stringBuilder.toString()))
+		{
+		    found = true;
+		    break;
+		}
+	    }
+
+	    if(!found)
+		tableLayout.removeView(row);
+	}
+
+	CheckBox checkBox = (CheckBox) findViewById(R.id.neighbor_details);
+
+	i = 0;
 
 	for(NeighborElement neighborElement : arrayList)
 	{
@@ -522,6 +564,10 @@ public class Settings extends AppCompatActivity
 	    for(int j = 0; j < tableLayout.getChildCount(); j++)
 	    {
 		TableRow r = (TableRow) tableLayout.getChildAt(j);
+
+		if(r == null)
+		    continue;
+
 		TextView t = (TextView) r.getChildAt(1);
 
 		if(t == null)
