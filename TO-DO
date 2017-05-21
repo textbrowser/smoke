@@ -106,6 +106,7 @@ Completed Items
 78.    Capitalize SipHash input.
 79.    Display exchange status in the Participants table. Icons.
 80.    Less populateParticipants() in the Chat activity.
+81.    Next (Tab) order; Settings.
 
 Future Items
 
@@ -149,7 +150,6 @@ Remaining Items
 2.     Resolve DNS through a proxy if a proxy is defined.
 3.     Detect removal of neighbors.
 4.     Sign release.
-5.     Next (Tab) order.
-6.     Messages may arrive while in Settings. Chat must somehow
+5.     Messages may arrive while in Settings. Chat must somehow
        receive those messages.
-7.     Simple binary status in Chat.
+6.     Simple binary status in Chat.

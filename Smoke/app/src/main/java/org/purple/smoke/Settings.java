@@ -1637,9 +1637,15 @@ public class Settings extends AppCompatActivity
 		    marginEnd = 5;
 		    textView1.setText("");
 		    textView1.setVisibility(View.GONE);
+		    textView1 = (TextView) findViewById(R.id.neighbors_port);
+		    textView1.setNextFocusDownId(R.id.proxy_ip_address);
 		}
 		else
+		{
 		    textView1.setVisibility(View.VISIBLE);
+		    textView1 = (TextView) findViewById(R.id.neighbors_port);
+		    textView1.setNextFocusDownId(R.id.neighbors_scope_id);
+		}
 
 		LayoutParams layoutParams = new LayoutParams
 		    (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -1669,6 +1675,7 @@ public class Settings extends AppCompatActivity
         textView1.setEnabled(isAuthenticated);
         textView1.setVisibility(View.GONE);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
+	textView1.setNextFocusDownId(R.id.proxy_ip_address);
         textView1.setEnabled(isAuthenticated);
 	textView1.setFilters(new InputFilter[] { s_portFilter });
 
