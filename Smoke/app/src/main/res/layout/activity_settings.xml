@@ -149,7 +149,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/ip_address"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:nextFocusDown="@+id/neighbors_port" />
 
                     <EditText
                         android:id="@+id/neighbors_port"
@@ -166,7 +167,8 @@
                         android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/ipv6_scope_id"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:nextFocusDown="@+id/proxy_ip_address" />
                 </LinearLayout>
 
                 <RadioGroup
@@ -212,7 +214,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/proxy_ip_address"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:nextFocusDown="@+id/proxy_port" />
 
                     <EditText
                         android:id="@+id/proxy_port"
@@ -220,7 +223,8 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/proxy_port"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:nextFocusDown="@+id/participant_name" />
 
                     <Spinner
                         android:id="@+id/proxy_type"
@@ -325,7 +329,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/name"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:nextFocusDown="@+id/participant_siphash_id" />
 
                     <EditText
                         android:id="@+id/participant_siphash_id"
