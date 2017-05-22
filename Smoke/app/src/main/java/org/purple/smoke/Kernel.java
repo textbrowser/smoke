@@ -255,6 +255,8 @@ public class Kernel
 			    if(bytes != null)
 				echo(Messages.bytesToMessageString(bytes), -1);
 			}
+
+		    arrayList.clear();
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
