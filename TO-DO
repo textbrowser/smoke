@@ -112,27 +112,21 @@ Completed Items
 84.    Non-exclusive database transactions.
 85.    Zero ports are valid. If a system which is allowing
        connections on port zero, Smoke will be able to connect to it.
+86.    SipHash description bubble.
 
 Future Items
 
 1.     Mumble. ("AES/CTS/PKCS7Padding")
-2.     Per request, include the source in the application bundle.
-3.     Socket channels. A lot of work.
-4.     (130 / 16 + 1) * 16 + 8 <= 154.
-5.     Themes, of course.
-6.     Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with
+2.     (130 / 16 + 1) * 16 + 8 <= 154.
+3.     Themes, of course.
+4.     Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with
        Long.BYTES.
-7.     Remote storage of messages.
-8.     Allow log clearing. New Log activity.
-9.     Optional SipHash identities in received messages.
-10.    It may be possible to replace m_neighborsScheduler.
-11.    Resolve DNS through a proxy if a proxy is defined.
-12.    SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
-13.    Bluetooth (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
-14.    XMPP.
-15.    Face authentication.
-16.    Source-level string translations.
-17.    Automatic SipHash hyphens.
+5.     Remote storage of messages.
+6.     Allow log clearing. New Log activity?
+7.     Resolve DNS through a proxy if a proxy is defined.
+8.     SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
+9.     Bluetooth (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
+10.    Automatic SipHash hyphens.
 
 Ignored / Impossible Items
 
@@ -148,6 +142,13 @@ Ignored / Impossible Items
 9.     Disable echo on low memory. Notify the user, although memory
        will be required.
 10.    Select All context menu in the Chat activity.
+11.    Per request, include the source in the application bundle.
+12.    XMPP.
+13.    Face authentication.
+14.    Source-level string translations.
+15.    Socket channels. A lot of work.
+16.    Optional SipHash identities in received messages. Unique people.
+17.    It may be possible to replace m_neighborsScheduler.
 
 Remaining Items
 
@@ -155,4 +156,4 @@ Remaining Items
 2.     Sign release.
 3.     Messages may arrive while the Settings activity is the primary
        activity.
-4.     SipHash description bubble.
+4.     EPKS description bubble.
