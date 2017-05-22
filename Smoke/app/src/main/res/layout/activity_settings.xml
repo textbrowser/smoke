@@ -342,6 +342,14 @@
                         android:hint="@string/siphash_identity"
                         android:inputType="textPersonName" />
 
+                    <Button
+                        android:id="@+id/siphash_help"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="0"
+                        android:background="@android:color/transparent" />
+
                 </LinearLayout>
 
                 <LinearLayout

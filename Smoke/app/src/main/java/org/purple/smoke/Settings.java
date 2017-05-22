@@ -1581,6 +1581,9 @@ public class Settings extends AppCompatActivity
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.reset_participants_fields);
 	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.siphash_help);
+	button1.setCompoundDrawablesWithIntrinsicBounds
+	    (R.drawable.help, 0, 0, 0);
 
 	CheckBox checkBox1 = (CheckBox) findViewById
 	    (R.id.automatic_refresh);
