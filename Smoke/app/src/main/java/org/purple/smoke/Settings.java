@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -46,6 +47,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -1084,6 +1086,35 @@ public class Settings extends AppCompatActivity
 			 "Continue?");
 		else
 		    prepareCredentials();
+	    }
+	});
+
+	button1 = (Button) findViewById(R.id.siphash_help);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		Dialog dialog = new Dialog(Settings.this);
+		TextView textView = new TextView(Settings.this);
+
+		textView.setBackgroundColor(Color.rgb(0, 100, 0));
+		textView.setText
+		    ("A SipHash is a personal identifier, Smoke's " +
+		     "version of the telephone number. " +
+		     "SipHashes support the letters A through F and the " +
+		     "numbers 0 through 9. An example SipHash is " +
+		     "ABAB-0101-CDCD-0202.");
+		textView.setTextSize(16);
+		dialog.setContentView(textView);
+		dialog.setTitle("SipHash Help");
+
+		WindowManager.LayoutParams layoutParams =
+		    dialog.getWindow().getAttributes();
+
+		layoutParams.x = 300;
+		layoutParams.y = 100;
+		dialog.getWindow().setAttributes(layoutParams);
+		dialog.show();
 	    }
 	});
 
