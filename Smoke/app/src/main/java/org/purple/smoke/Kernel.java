@@ -34,7 +34,6 @@ import android.util.SparseIntArray;
 import java.net.InetAddress;
 import java.security.KeyPair;
 import java.security.PublicKey;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
