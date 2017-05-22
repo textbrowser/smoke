@@ -614,7 +614,7 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		TextView textView1 = (TextView) findViewById
+		final TextView textView1 = (TextView) findViewById
 		    (R.id.chat_message);
 
 		if(textView1.getText().toString().trim().isEmpty())
@@ -679,6 +679,14 @@ public class Chat extends AppCompatActivity
 		}
 
 		scrollMessagesView();
+		textView1.post(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			textView1.requestFocus();
+		    }
+		});
 	    }
 	});
 
