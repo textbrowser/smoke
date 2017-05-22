@@ -113,7 +113,7 @@ Completed Items
 
 Future Items
 
-1.     Buzz-like page. Mumble. ("AES/CTS/PKCS7Padding")
+1.     Mumble. ("AES/CTS/PKCS7Padding")
 2.     Per request, include the source in the application bundle.
 3.     Socket channels. A lot of work.
 4.     (130 / 16 + 1) * 16 + 8 <= 154.
@@ -154,3 +154,4 @@ Remaining Items
 2.     Sign release.
 3.     Messages may arrive while the Settings activity is the primary
        activity.
+4.     SipHash description bubble.
