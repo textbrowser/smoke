@@ -896,6 +896,13 @@ public class Database extends SQLiteOpenHelper
 		cursor.close();
 	}
 
+	/*
+	** Default values.
+	*/
+
+	if(name.equals("show_chat_icons") && str.isEmpty())
+	    return "true";
+
 	return str;
     }
 
