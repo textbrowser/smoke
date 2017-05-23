@@ -761,14 +761,13 @@ public class Kernel
 
 	SparseIntArray neighbors = s_databaseHelper.readNeighborOids();
 
-	if(neighbors != null)
-	{
-	    for(int i = 0; i < neighbors.size(); i++)
-		s_databaseHelper.enqueueOutboundMessage
-		    (message, neighbors.get(i));
+	if(neighbors == null || neighbors.size() == 0)
+	    return;
 
-	    neighbors.clear();
-	}
+	for(int i = 0; i < neighbors.size(); i++)
+	    s_databaseHelper.enqueueOutboundMessage(message, neighbors.get(i));
+
+	neighbors.clear();
     }
 
     public void prepareNeighbors()
