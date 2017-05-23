@@ -35,6 +35,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -82,7 +83,54 @@ public class Settings extends AppCompatActivity
 	    if(intent == null)
 		return;
 
-	    if(intent.getAction().
+	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
+	    {
+		String string = intent.getStringExtra
+		    ("org.purple.smoke.message").trim();
+		TextView textView = new TextView(Settings.this);
+		final PopupWindow popupWindow = new PopupWindow(Settings.this);
+
+		if(string.length() > 15)
+		{
+		    string = string.substring(0, 15);
+
+		    if(!string.endsWith("..."))
+		    {
+			if(string.endsWith(".."))
+			    string += ".";
+			else if(string.endsWith("."))
+			    string += "..";
+			else
+			    string += "...";
+		    }
+		}
+
+		textView.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView.setText
+		    ("A message (" + string + ") from " +
+		     intent.getStringExtra("org.purple.smoke.name") +
+		     " has arrived.");
+		textView.setTextSize(16);
+		popupWindow.setContentView(textView);
+		popupWindow.setOutsideTouchable(true);
+		popupWindow.showAtLocation
+		    (findViewById(R.id.main_layout),
+		     Gravity.LEFT | Gravity.TOP,
+		     75,
+		     75);
+
+		Handler handler = new Handler();
+
+		handler.postDelayed(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			popupWindow.dismiss();
+		    }
+		}, 10000); // 10 Seconds
+	    }
+	    else if(intent.getAction().
 	       equals("org.purple.smoke.populate_participants"))
 		populateParticipants();
 	}
@@ -1987,6 +2035,7 @@ public class Settings extends AppCompatActivity
 	{
 	    IntentFilter intentFilter = new IntentFilter();
 
+	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.populate_participants");
 	    registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
