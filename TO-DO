@@ -113,6 +113,7 @@ Completed Items
 85.    Zero ports are valid. If a system which is allowing
        connections on port zero, Smoke will be able to connect to it.
 86.    SipHash description bubble.
+87.    EPKS description bubble.
 
 Future Items
 
@@ -156,4 +157,3 @@ Remaining Items
 2.     Sign release.
 3.     Messages may arrive while the Settings activity is the primary
        activity.
-4.     EPKS description bubble.
