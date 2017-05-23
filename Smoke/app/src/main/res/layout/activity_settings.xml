@@ -52,7 +52,9 @@
                 <TextView
                     android:id="@+id/about"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:textIsSelectable="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -76,10 +78,11 @@
                         android:layout_weight="0.31" />
 
                     <TextView
-                        android:text="@string/remote"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.31" />
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="0.31"
+                        android:text="@string/remote" />
                 </LinearLayout>
 
                 <android.support.v4.widget.NestedScrollView
@@ -119,6 +122,7 @@
                         android:id="@+id/echo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:text="@string/echo" />
 
@@ -195,9 +199,10 @@
                         android:layout_weight="1" />
 
                     <Spinner
+                        android:id="@+id/neighbors_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/neighbors_transport"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1" />
 
                 </RadioGroup>
@@ -229,7 +234,8 @@
                     <Spinner
                         android:id="@+id/proxy_type"
                         android:layout_width="125dp"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -276,6 +282,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="0.13"
                         android:text="@string/siphash_identity" />
 
@@ -394,9 +401,10 @@
                         android:textSize="14sp" />
 
                     <Spinner
+                        android:id="@+id/iteration_count"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/iteration_count"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1" />
 
                 </LinearLayout>
@@ -418,15 +426,16 @@
                         android:id="@+id/pki_encryption_algorithm" />
 
                     <TextView
-                        android:text="@string/signature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2.01" />
+                        android:layout_weight="2.01"
+                        android:text="@string/signature" />
 
                     <Spinner
+                        android:id="@+id/pki_signature_algorithm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/pki_signature_algorithm" />
+                        android:layout_marginEnd="5dp" />
                 </LinearLayout>
 
                 <EditText
@@ -492,6 +501,7 @@
                     android:id="@+id/siphash_identity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:text="@string/siphashid" />
 
                 <LinearLayout
