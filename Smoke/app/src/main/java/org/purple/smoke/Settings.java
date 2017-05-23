@@ -1101,14 +1101,11 @@ public class Settings extends AppCompatActivity
 
 		textView.setBackgroundColor(Color.rgb(135, 206, 250));
 		textView.setText
-		    ("A SipHash Identity is similar " +
-		     "to a telephone number. " +
-		     "The per-participant token is used for enveloping " +
-		     "your public key pair(s) and transferring them " +
-		     "to the list of participants via the EPKS protocol. " +
-		     "SipHashes support the letters A through F and the " +
-		     "numbers 0 through 9. An example SipHash is " +
-		     "ABAB-0101-CDCD-0202.");
+		    ("A SipHash Identity is a sequence of digits and letters " +
+		     "assigned to a specific subscriber (public key pair). " +
+		     "The token allows participants to exchange public " +
+		     "key pairs via the EPKS protocol. " +
+		     "An example SipHash Identity is ABAB-0101-CDCD-0202.");
 		textView.setTextSize(16);
 		popupWindow.setContentView(textView);
 		popupWindow.setOutsideTouchable(true);
