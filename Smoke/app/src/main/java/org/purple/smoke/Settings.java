@@ -536,6 +536,14 @@ public class Settings extends AppCompatActivity
 	    {
 		stringBuilder.setLength(0);
 		stringBuilder.append(neighborElement.m_remoteIpAddress);
+
+		if(neighborElement.m_ipVersion.equals("IPv6"))
+		    if(!neighborElement.m_remoteScopeId.isEmpty())
+		    {
+			stringBuilder.append("-");
+			stringBuilder.append(neighborElement.m_remoteScopeId);
+		    }
+
 		stringBuilder.append(":");
 		stringBuilder.append(neighborElement.m_remotePort);
 		stringBuilder.append(":");
@@ -580,6 +588,14 @@ public class Settings extends AppCompatActivity
 
 		stringBuilder.setLength(0);
 		stringBuilder.append(neighborElement.m_remoteIpAddress);
+
+		if(neighborElement.m_ipVersion.equals("IPv6"))
+		    if(!neighborElement.m_remoteScopeId.isEmpty())
+		    {
+			stringBuilder.append("-");
+			stringBuilder.append(neighborElement.m_remoteScopeId);
+		    }
+
 		stringBuilder.append(":");
 		stringBuilder.append(neighborElement.m_remotePort);
 		stringBuilder.append(":");
@@ -725,6 +741,14 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuilder.append(neighborElement.m_remoteIpAddress);
+
+	    if(neighborElement.m_ipVersion.equals("IPv6"))
+		if(!neighborElement.m_remoteScopeId.isEmpty())
+		{
+		    stringBuilder.append("-");
+		    stringBuilder.append(neighborElement.m_remoteScopeId);
+		}
+
 	    stringBuilder.append(":");
 	    stringBuilder.append(neighborElement.m_remotePort);
 	    stringBuilder.append(":");
