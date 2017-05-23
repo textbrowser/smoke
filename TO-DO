@@ -131,7 +131,8 @@ Future Items
 8.     SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
 9.     Bluetooth (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
 10.    Automatic SipHash hyphens.
-11.    Names or PINs alongside SipHashes.
+11.    Names or PINs alongside SipHashes. The extra bits will increase
+       the possibilities.
 
 Ignored / Impossible Items
 
