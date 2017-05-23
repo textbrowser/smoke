@@ -59,7 +59,7 @@ purge:
 
 release:
 	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
-	--build-file Smoke/build.gradle assemble \
+	--build-file Smoke/build.gradle assembleRelease \
 	--configure-on-demand --daemon --parallel
 
 remove-database:
