@@ -908,24 +908,6 @@ public class Settings extends AppCompatActivity
 	    }
         });
 
-	button1 = (Button) findViewById(R.id.epks_help);
-	button1.setOnClickListener(new View.OnClickListener()
-	{
-	    public void onClick(View view)
-	    {
-		PopupWindow popupWindow = new PopupWindow(Settings.this);
-		TextView textView = new TextView(Settings.this);
-
-		textView.setBackgroundColor(Color.rgb(135, 206, 250));
-		textView.setText("Transfer your public key pair(s) to your " +
-				 "contacts via the EPKS protocol.");
-		textView.setTextSize(16);
-		popupWindow.setContentView(textView);
-		popupWindow.setOutsideTouchable(true);
-		popupWindow.showAsDropDown(view);
-	    }
-	});
-
 	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -1119,8 +1101,11 @@ public class Settings extends AppCompatActivity
 
 		textView.setBackgroundColor(Color.rgb(135, 206, 250));
 		textView.setText
-		    ("A SipHash is a personal identifier, Smoke's " +
-		     "version of the telephone number. " +
+		    ("A SipHash Identity is similar " +
+		     "to a telephone number. " +
+		     "The per-participant token is used for enveloping " +
+		     "your public key pair(s) and transferring them " +
+		     "to the list of participants via the EPKS protocol. " +
 		     "SipHashes support the letters A through F and the " +
 		     "numbers 0 through 9. An example SipHash is " +
 		     "ABAB-0101-CDCD-0202.");
@@ -1617,9 +1602,6 @@ public class Settings extends AppCompatActivity
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.epks);
 	button1.setEnabled(isAuthenticated);
-	button1 = (Button) findViewById(R.id.epks_help);
-	button1.setCompoundDrawablesWithIntrinsicBounds
-	    (R.drawable.help, 0, 0, 0);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
         button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.refresh_participants);
