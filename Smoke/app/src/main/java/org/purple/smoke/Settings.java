@@ -371,7 +371,7 @@ public class Settings extends AppCompatActivity
 		ArrayList<SipHashIdElement> arrayList =
 		    m_databaseHelper.readSipHashIds(s_cryptography);
 
-		if(arrayList == null)
+		if(arrayList == null || arrayList.size() == 0)
 		    m_error = "empty array list";
 		else
 		    for(SipHashIdElement sipHashIdElement : arrayList)
@@ -414,6 +414,9 @@ public class Settings extends AppCompatActivity
 				 "Identities have been defined.");
 		    }
 		});
+
+		if(arrayList != null)
+		    arrayList.clear();
 	    }
 	}
 

@@ -385,6 +385,8 @@ public class Chat extends AppCompatActivity
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
+
+	arrayList.clear();
     }
 
     private void prepareListeners()
@@ -525,6 +527,8 @@ public class Chat extends AppCompatActivity
 
 	    checkBox.setCompoundDrawablePadding(5);
 	}
+
+	arrayList.clear();
     }
 
     private void saveState()
@@ -591,6 +595,8 @@ public class Chat extends AppCompatActivity
 			}
 		    });
 		}
+
+		arrayList.clear();
 	    }
 	}, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
         setContentView(R.layout.activity_chat);
