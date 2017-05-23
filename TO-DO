@@ -114,6 +114,7 @@ Completed Items
        connections on port zero, Smoke will be able to connect to it.
 86.    SipHash description bubble.
 87.    EPKS description bubble.
+88.    A release target for the make files.
 
 Future Items
 

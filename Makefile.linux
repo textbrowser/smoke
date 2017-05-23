@@ -45,11 +45,22 @@ load-apk: all
 	-n org.purple.smoke/org.purple.smoke.Settings \
 	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 
+load-apk-release: release
+	./adb.bash install -r ./Smoke/app/build/apk/smoke.apk
+	./adb.bash shell am start -S -W \
+	-n org.purple.smoke/org.purple.smoke.Settings \
+	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+
 pull-database:
 	./adb.bash exec-out run-as org.purple.smoke cat /data/data/org.purple.smoke/databases/smoke.db > smoke.db
 
 purge:
 	find . -name '*~*' -exec rm -f {} \;
+
+release:
+	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
+	--build-file Smoke/build.gradle assemble \
+	--configure-on-demand --daemon --parallel
 
 remove-database:
 	./adb.bash shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db
