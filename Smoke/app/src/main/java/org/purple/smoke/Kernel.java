@@ -171,17 +171,6 @@ public class Kernel
 			}
 
 			/*
-			** Notify some activity to refresh itself.
-			*/
-
-			Intent intent = new Intent
-			    ("org.purple.smoke.populate_participants");
-
-			intent.putExtra
-			    ("org.purple.smoke.sipHashId", sipHashId);
-			Smoke.getApplication().sendBroadcast(intent);
-
-			/*
 			** Place a call request to all neighbors.
 			*/
 
