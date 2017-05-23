@@ -105,7 +105,7 @@ public class Settings extends AppCompatActivity
 		    }
 		}
 
-		textView.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView.setBackgroundColor(Color.rgb(244, 200, 117));
 		textView.setText
 		    ("A message (" + string + ") from " +
 		     intent.getStringExtra("org.purple.smoke.name") +
