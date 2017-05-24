@@ -162,15 +162,11 @@ public class Miscellaneous
     public static String sipHashIdFromData(byte bytes[])
     {
 	SipHash sipHash = new SipHash();
-	byte key[] = Cryptography.md5(bytes); /*
-					      ** Use the MD-5 digest
-					      ** of the public keys
-					      ** as the input key to
-					      ** SipHash.
-					      */
 
 	return byteArrayAsHexStringDelimited
-	    (longToByteArray(sipHash.hmac(bytes, key)), ':', 2);
+	    (longToByteArray(sipHash.
+			     hmac(bytes, Cryptography.keyForSipHash(bytes))),
+	     ':', 2);
     }
 
     public static byte[] deepCopy(byte bytes[])

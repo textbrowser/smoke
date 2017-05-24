@@ -968,6 +968,17 @@ public class Cryptography
 	return bytes;
     }
 
+    public static byte[] keyForSipHash(byte data[])
+    {
+	if(data == null || data.length < 0)
+	    return null;
+
+	return pbkdf2(sha512(data),
+		      Miscellaneous.byteArrayAsHexString(data).toCharArray(),
+		      1000,
+		      8 * SipHash.KEY_LENGTH);
+    }
+
     public static byte[] hmac(byte data[], byte keyBytes[])
     {
 	if(data == null ||
@@ -986,32 +997,6 @@ public class Cryptography
 	    mac = Mac.getInstance(HMAC_ALGORITHM);
 	    mac.init(key);
 	    bytes = mac.doFinal(data);
-	}
-	catch(Exception exception)
-	{
-	    bytes = null;
-	}
-
-	return bytes;
-    }
-
-    public static byte[] md5(byte[] ... data)
-    {
-	byte bytes[] = null;
-
-	try
-	{
-	    /*
-	    ** Thread-safe.
-	    */
-
-	    MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-
-	    for(byte b[] : data)
-		if(b != null)
-		    messageDigest.update(b);
-
-	    bytes = messageDigest.digest();
 	}
 	catch(Exception exception)
 	{
@@ -1180,11 +1165,7 @@ public class Cryptography
 
 	    if(bytes != null)
 	    {
-		byte key[] = md5(bytes); /*
-					 ** Use the MD-5 digest of the
-					 ** public keys as the input key to
-					 ** SipHash.
-					 */
+		byte key[] = keyForSipHash(bytes);
 
 		if(key == null || key.length < 0)
 		    return false;
