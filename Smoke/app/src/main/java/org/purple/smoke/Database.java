@@ -583,7 +583,7 @@ public class Database extends SQLiteOpenHelper
 			    StringBuilder StringBuilder = new StringBuilder();
 
 			    StringBuilder.append
-				("Database::readSipHashIds(): ");
+				("Database::readSipHashIdStrings(): ");
 			    StringBuilder.append("error on column ");
 			    StringBuilder.append(cursor.getColumnName(i));
 			    StringBuilder.append(".");
