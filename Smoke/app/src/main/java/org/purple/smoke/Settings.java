@@ -34,6 +34,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -1163,27 +1164,31 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	button1 = (Button) findViewById(R.id.siphash_help);
-	button1.setOnClickListener(new View.OnClickListener()
+	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 	{
-	    public void onClick(View view)
+	    button1 = (Button) findViewById(R.id.siphash_help);
+	    button1.setOnClickListener(new View.OnClickListener()
 	    {
-		PopupWindow popupWindow = new PopupWindow(Settings.this);
-		TextView textView = new TextView(Settings.this);
+		public void onClick(View view)
+		{
+		    PopupWindow popupWindow = new PopupWindow(Settings.this);
+		    TextView textView = new TextView(Settings.this);
 
-		textView.setBackgroundColor(Color.rgb(135, 206, 250));
-		textView.setText
-		    ("A SipHash Identity is a sequence of digits and letters " +
-		     "assigned to a specific subscriber (public key pair). " +
-		     "The token allows participants to exchange public " +
-		     "key pairs via the EPKS protocol. " +
-		     "An example SipHash Identity is ABAB-0101-CDCD-0202.");
-		textView.setTextSize(16);
-		popupWindow.setContentView(textView);
-		popupWindow.setOutsideTouchable(true);
-		popupWindow.showAsDropDown(view);
-	    }
-	});
+		    textView.setBackgroundColor(Color.rgb(135, 206, 250));
+		    textView.setText
+			("A SipHash Identity is a sequence of digits and " +
+			 "letters assigned to a specific subscriber " +
+			 "(public key pair). " +
+			 "The token allows participants to exchange public " +
+			 "key pairs via the EPKS protocol. " +
+			 "An example SipHash Identity is ABAB-0101-CDCD-0202.");
+		    textView.setTextSize(16);
+		    popupWindow.setContentView(textView);
+		    popupWindow.setOutsideTouchable(true);
+		    popupWindow.showAsDropDown(view);
+		}
+	    });
+	}
 
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 
@@ -1568,12 +1573,15 @@ public class Settings extends AppCompatActivity
 			    textView1.setText("");
 			    textView2.setText("");
 			    populateFancyKeyData();
+			    populateParticipants();
 			    startKernel();
 
 			    if(m_databaseHelper.
 			       readSetting(null, "automatic_neighbors_refresh").
 			       equals("true"))
 				startTimers();
+			    else
+				populateNeighbors();
 			}
 		    }
 		});
@@ -1680,8 +1688,12 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.reset_participants_fields);
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.siphash_help);
-	button1.setCompoundDrawablesWithIntrinsicBounds
-	    (R.drawable.help, 0, 0, 0);
+
+	if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+	    button1.setVisibility(View.GONE);
+	else
+	    button1.setCompoundDrawablesWithIntrinsicBounds
+		(R.drawable.help, 0, 0, 0);
 
 	CheckBox checkBox1 = (CheckBox) findViewById
 	    (R.id.automatic_refresh);
@@ -1930,6 +1942,7 @@ public class Settings extends AppCompatActivity
 		    {
 			State.getInstance().setChatCheckBoxSelected
 			    (itemId, false);
+			m_databaseHelper.cleanDanglingParticipants();
 			populateParticipants();
 		    }
 

@@ -34,8 +34,7 @@ public class About
     private final static String s_about =
 	"Version 2017.06.06 Jujube " +
 	(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
-	"\nAndroid " +
-	Build.VERSION.BASE_OS + " " + Build.VERSION.RELEASE;
+	"\nAndroid " + Build.VERSION.RELEASE;
 
     private About()
     {

@@ -1051,11 +1051,17 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
+	    m_db.beginTransactionNonExclusive();
 	    ok = m_db.delete(table, "OID = ?", new String[] {oid}) > 0;
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
 	{
 	    ok = false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
 
 	return ok;
@@ -1764,6 +1770,30 @@ public class Database extends SQLiteOpenHelper
 	return s_instance;
     }
 
+    public void cleanDanglingParticipants()
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return;
+
+	try
+	{
+	    m_db.beginTransactionNonExclusive();
+	    m_db.rawQuery("DELETE FROM participants WHERE siphash_id_digest " +
+			  "NOT IN (SELECT siphash_id_digest FROM siphash_ids)",
+			  null);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void enqueueOutboundMessage(String message, int oid)
     {
 	prepareDb();
@@ -2072,14 +2102,20 @@ public class Database extends SQLiteOpenHelper
 	    ** The bound string value must be cast to an integer.
 	    */
 
+	    m_db.beginTransactionNonExclusive();
 	    m_db.delete
 		("congestion_control",
 		 "ABS(STRFTIME('%s', 'now') - STRFTIME('%s', timestamp)) > " +
 		 "CAST(? AS INTEGER)",
 		 new String[] {String.valueOf(lifetime)});
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
 	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
@@ -2092,6 +2128,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
+	    m_db.beginTransactionNonExclusive();
 	    m_db.delete("congestion_control", null, null);
 	    m_db.delete("log", null, null);
 	    m_db.delete("neighbors", null, null);
@@ -2099,9 +2136,14 @@ public class Database extends SQLiteOpenHelper
 	    m_db.delete("participants", null, null);
 	    m_db.delete("settings", null, null);
 	    m_db.delete("siphash_ids", null, null);
+	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
 	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
 	}
     }
 
