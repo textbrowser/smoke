@@ -88,7 +88,13 @@ public class Settings extends AppCompatActivity
 	    {
 		String name = intent.getStringExtra("org.purple.smoke.name");
 		String string = intent.getStringExtra
-		    ("org.purple.smoke.message").trim();
+		    ("org.purple.smoke.message");
+
+		if(name == null || string == null)
+		    return;
+
+		string = string.trim();
+
 		TextView textView = new TextView(Settings.this);
 		final PopupWindow popupWindow = new PopupWindow(Settings.this);
 
