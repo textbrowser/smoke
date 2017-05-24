@@ -1469,7 +1469,7 @@ public class Database extends SQLiteOpenHelper
 	    }
 
 	    m_db.beginTransactionNonExclusive();
-	    m_db.insert("participants", null, values);
+	    m_db.replace("participants", null, values);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(SQLiteConstraintException exception)

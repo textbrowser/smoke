@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.os.Build;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -240,7 +241,12 @@ public class TcpNeighbor extends Neighbor
 	}
 
 	m_isValidCertificate = new AtomicInteger(0);
-	m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
+
+	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+	    m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
+	else
+	    m_protocols = new String[] {"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
+
 	m_proxyIpAddress = proxyIpAddress;
 	m_proxyType = proxyType;
 
@@ -425,7 +431,12 @@ public class TcpNeighbor extends Neighbor
 	    m_bytesWritten.set(0);
 	    m_lastTimeRead.set(System.nanoTime());
 
-	    SSLContext sslContext = SSLContext.getInstance("TLS");
+	    SSLContext sslContext = null;
+
+	    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+		sslContext = SSLContext.getInstance("TLS");
+	    else
+		sslContext = SSLContext.getInstance("SSL");
 
 	    sslContext.init(null, m_trustManagers, null);
 
