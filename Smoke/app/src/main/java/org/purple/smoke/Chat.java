@@ -86,10 +86,7 @@ public class Chat extends AppCompatActivity
 		String sipHashId = intent.getStringExtra
 		    ("org.purple.smoke.sipHashId");
 
-		if(sipHashId == null)
-		    return;
-
-		if(sipHashId.isEmpty())
+		if(sipHashId == null || sipHashId.isEmpty())
 		    populateParticipants();
 		else
 		    refreshCheckBox(sipHashId);
