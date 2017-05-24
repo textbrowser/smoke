@@ -86,10 +86,26 @@ public class Settings extends AppCompatActivity
 
 	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
 	    {
+		String name = intent.getStringExtra("org.purple.smoke.name");
 		String string = intent.getStringExtra
 		    ("org.purple.smoke.message").trim();
 		TextView textView = new TextView(Settings.this);
 		final PopupWindow popupWindow = new PopupWindow(Settings.this);
+
+		if(name.length() > 15)
+		{
+		    name = name.substring(0, 15);
+
+		    if(!name.endsWith("..."))
+		    {
+			if(name.endsWith(".."))
+			    name += ".";
+			else if(name.endsWith("."))
+			    name += "..";
+			else
+			    name += "...";
+		    }
+		}
 
 		if(string.length() > 15)
 		{
@@ -108,12 +124,18 @@ public class Settings extends AppCompatActivity
 
 		textView.setBackgroundColor(Color.rgb(244, 200, 117));
 		textView.setText
-		    ("A message (" + string + ") from " +
-		     intent.getStringExtra("org.purple.smoke.name") +
+		    ("A message (" + string + ") from " + name +
 		     " has arrived.");
 		textView.setTextSize(16);
 		popupWindow.setContentView(textView);
 		popupWindow.setOutsideTouchable(true);
+
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		{
+		    popupWindow.setHeight(300);
+		    popupWindow.setWidth(450);
+		}
+
 		popupWindow.showAtLocation
 		    (findViewById(R.id.main_layout),
 		     Gravity.LEFT | Gravity.TOP,
@@ -1164,31 +1186,35 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+	button1 = (Button) findViewById(R.id.siphash_help);
+	button1.setOnClickListener(new View.OnClickListener()
 	{
-	    button1 = (Button) findViewById(R.id.siphash_help);
-	    button1.setOnClickListener(new View.OnClickListener()
+	    public void onClick(View view)
 	    {
-		public void onClick(View view)
-		{
-		    PopupWindow popupWindow = new PopupWindow(Settings.this);
-		    TextView textView = new TextView(Settings.this);
+		PopupWindow popupWindow = new PopupWindow(Settings.this);
+		TextView textView = new TextView(Settings.this);
 
-		    textView.setBackgroundColor(Color.rgb(135, 206, 250));
-		    textView.setText
-			("A SipHash Identity is a sequence of digits and " +
-			 "letters assigned to a specific subscriber " +
-			 "(public key pair). " +
-			 "The token allows participants to exchange public " +
-			 "key pairs via the EPKS protocol. " +
-			 "An example SipHash Identity is ABAB-0101-CDCD-0202.");
-		    textView.setTextSize(16);
-		    popupWindow.setContentView(textView);
-		    popupWindow.setOutsideTouchable(true);
-		    popupWindow.showAsDropDown(view);
+		textView.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView.setText
+		    ("A SipHash Identity is a sequence of digits and " +
+		     "letters assigned to a specific subscriber " +
+		     "(public key pair). " +
+		     "The token allows participants to exchange public " +
+		     "key pairs via the EPKS protocol. " +
+		     "An example SipHash Identity is ABAB-0101-CDCD-0202.");
+		textView.setTextSize(16);
+		popupWindow.setContentView(textView);
+		popupWindow.setOutsideTouchable(true);
+
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		{
+		    popupWindow.setHeight(450);
+		    popupWindow.setWidth(700);
 		}
-	    });
-	}
+
+		popupWindow.showAsDropDown(view);
+	    }
+	});
 
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 
@@ -1688,12 +1714,8 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.reset_participants_fields);
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.siphash_help);
-
-	if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-	    button1.setVisibility(View.GONE);
-	else
-	    button1.setCompoundDrawablesWithIntrinsicBounds
-		(R.drawable.help, 0, 0, 0);
+	button1.setCompoundDrawablesWithIntrinsicBounds
+	    (R.drawable.help, 0, 0, 0);
 
 	CheckBox checkBox1 = (CheckBox) findViewById
 	    (R.id.automatic_refresh);
