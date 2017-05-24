@@ -86,6 +86,9 @@ public class Chat extends AppCompatActivity
 		String sipHashId = intent.getStringExtra
 		    ("org.purple.smoke.sipHashId");
 
+		if(sipHashId == null)
+		    return;
+
 		if(sipHashId.isEmpty())
 		    populateParticipants();
 		else
@@ -148,6 +151,9 @@ public class Chat extends AppCompatActivity
 			       long sequence,
 			       long timestamp)
     {
+	if(message == null || name == null || sipHashId == null)
+	    return;
+
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
@@ -197,6 +203,9 @@ public class Chat extends AppCompatActivity
 				 boolean initial,
 				 boolean refresh)
     {
+	if(name == null || sipHashId == null)
+	    return;
+
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
