@@ -2154,19 +2154,23 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
-	try
-	{
-	    m_db.execSQL("DROP TABLE IF EXISTS congestion_control");
-	    m_db.execSQL("DROP TABLE IF EXISTS log");
-	    m_db.execSQL("DROP TABLE IF EXISTS neighbors");
-	    m_db.execSQL("DROP TABLE IF EXISTS outbound_queue");
-	    m_db.execSQL("DROP TABLE IF EXISTS participants");
-	    m_db.execSQL("DROP TABLE IF EXISTS settings");
-	    m_db.execSQL("DROP TABLE IF EXISTS siphash_ids");
-	}
-	catch(Exception exception)
-	{
-	}
+	String strings[] = new String[]
+	    {"DROP TABLE IF EXISTS congestion_control",
+	     "DROP TABLE IF EXISTS log",
+	     "DROP TABLE IF EXISTS neighbors",
+	     "DROP TABLE IF EXISTS outbound_queue",
+	     "DROP TABLE IF EXISTS participants",
+	     "DROP TABLE IF EXISTS settings",
+	     "DROP TABLE IF EXISTS siphash_ids"};
+
+	for(String string : strings)
+	    try
+	    {
+		m_db.execSQL(string);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 
 	onCreate(m_db);
     }
