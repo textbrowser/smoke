@@ -1131,6 +1131,7 @@ public class Settings extends AppCompatActivity
 	    {
 		m_databaseHelper.reset();
 		populateFancyKeyData();
+		populateNeighbors();
 		populateParticipants();
 		prepareCredentials();
 	    }
