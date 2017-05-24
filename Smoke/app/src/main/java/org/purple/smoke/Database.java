@@ -1051,7 +1051,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    ok = m_db.delete(table, "OID = ?", new String[]{oid}) > 0;
+	    ok = m_db.delete(table, "OID = ?", new String[] {oid}) > 0;
 	}
 	catch(Exception exception)
 	{
