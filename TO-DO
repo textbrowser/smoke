@@ -117,6 +117,7 @@ Completed Items
 88.    A release target for the make files.
 89.    Broadcast a reminder to the Settings activity if a Chat message
        has been received while the Settings activity is active.
+90.    Bind recipient and sender.
 
 Future Items
 
@@ -163,4 +164,3 @@ Remaining Items
 2.     Sign release.
 3.     Messages may arrive while the Settings activity is the primary
        activity.
-4.     Bind recipient and sender.
