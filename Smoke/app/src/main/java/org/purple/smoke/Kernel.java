@@ -360,6 +360,13 @@ public class Kernel
 
 		if(abyte[0] == Messages.CHAT_STATUS_MESSAGE_TYPE[0])
 		{
+		    if(!Cryptography.
+		       memcmp(Arrays.copyOfRange(aes256,
+						 9,
+						 9 + 64),
+			      s_cryptography.chatEncryptionPublicKeyDigest()))
+			return false;
+
 		    PublicKey signatureKey = s_databaseHelper.
 			signatureKeyForDigest(s_cryptography, pk);
 
@@ -369,14 +376,14 @@ public class Kernel
 		    if(!Cryptography.
 		       verifySignature(signatureKey,
 				       Arrays.copyOfRange(aes256,
-							  10,
+							  74,
 							  aes256.length),
 				       Miscellaneous.
 				       joinByteArrays(pk,
 						      Arrays.
 						      copyOfRange(aes256,
 								  0,
-								  10))))
+								  74))))
 			    return false;
 
 		    long current = System.currentTimeMillis();
@@ -405,11 +412,16 @@ public class Kernel
 
 		String message = null;
 		byte publicKeySignature[] = null;
+		byte recipientDigest[] = null;
 		int ii = 0;
 		long sequence = 0;
 		long timestamp = 0;
 
 		for(String string : strings)
+		    /*
+		    ** Ignore byte 0, please see above.
+		    */
+
 		    switch(ii)
 		    {
 		    case 0:
@@ -424,11 +436,23 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 2:
+			recipientDigest = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
+
+			if(!Cryptography.
+			   memcmp(recipientDigest,
+				  s_cryptography.
+				  chatEncryptionPublicKeyDigest()))
+			    return false;
+
+			ii += 1;
+			break;
+		    case 3:
 			sequence = Miscellaneous.byteArrayToLong
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 			ii += 1;
 			break;
-		    case 3:
+		    case 4:
 			publicKeySignature = Base64.decode
 			    (string.getBytes(), Base64.NO_WRAP);
 
@@ -449,6 +473,8 @@ public class Kernel
 							  strings[1].getBytes(),
 							  "\n".getBytes(),
 							  strings[2].getBytes(),
+							  "\n".getBytes(),
+							  strings[3].getBytes(),
 							  "\n".getBytes())))
 			    return false;
 

@@ -38,7 +38,11 @@ public class Messages
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
-    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 4;
+    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 5; /*
+							      ** The first
+							      ** byte is not
+							      ** considered.
+							      */
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 6;
 
     public static String bytesToMessageString(byte bytes[])
@@ -257,6 +261,16 @@ public class Messages
 	    stringBuilder.append("\n");
 
 	    /*
+	    ** [ Recipient's Encryption Public Key Digest ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(Cryptography.
+				       sha512(publicKey.getEncoded()),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
 	    ** [ Sequence ]
 	    */
 
@@ -372,6 +386,12 @@ public class Messages
 		 */
 
 		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
+
+		 /*
+		 ** [ Recipient's Encryption Public Key Digest ]
+		 */
+
+		 Cryptography.sha512(publicKey.getEncoded()),
 
 		 /*
 		 ** [ Status ]
