@@ -81,7 +81,7 @@ public class Settings extends AppCompatActivity
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-	    if(intent == null)
+	    if(intent == null || intent.getAction() == null)
 		return;
 
 	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
