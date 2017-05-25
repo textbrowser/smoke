@@ -52,7 +52,7 @@ public class State
 
     public synchronized CharSequence getCharSequence(String key)
     {
-	return s_bundle.getCharSequence(key);
+	return s_bundle.getCharSequence(key, "");
     }
 
     public synchronized String getString(String key)
