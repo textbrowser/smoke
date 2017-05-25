@@ -163,3 +163,4 @@ Remaining Items
 2.     Sign release.
 3.     Messages may arrive while the Settings activity is the primary
        activity.
+4.     Bind recipient and sender.
