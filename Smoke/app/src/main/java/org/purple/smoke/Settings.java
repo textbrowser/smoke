@@ -1206,7 +1206,7 @@ public class Settings extends AppCompatActivity
 		    ("A SipHash Identity is a sequence of digits and " +
 		     "letters assigned to a specific subscriber " +
 		     "(public key pair). " +
-		     "The token allows participants to exchange public " +
+		     "The tokens allow participants to exchange public " +
 		     "key pairs via the EPKS protocol. " +
 		     "An example SipHash Identity is ABAB-0101-CDCD-0202.");
 		textView.setTextSize(16);
