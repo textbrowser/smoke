@@ -133,6 +133,7 @@ Future Items
 10.    Automatic SipHash hyphens.
 11.    Names or PINs alongside SipHashes. The extra bits will increase
        the possibilities.
+12.    Protocol-less snubbing without key revocation.
 
 Ignored / Impossible Items
 
