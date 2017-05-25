@@ -507,16 +507,35 @@ public class Kernel
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1]))
 		    return false;
 
+		/*
+		** Verify recipient.
+		*/
+
+		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
+		{
+		    if(!Cryptography.
+		       memcmp(Arrays.copyOfRange(aes256, 303, 303 + 64),
+			      s_cryptography.chatEncryptionPublicKeyDigest()))
+			return false;
+		}
+		else
+		{
+		    if(!Cryptography.
+		       memcmp(Arrays.copyOfRange(aes256, 265, 265 + 64),
+			      s_cryptography.chatEncryptionPublicKeyDigest()))
+			return false;
+		}
+
 		PublicKey signatureKey = null;
 
 		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    signatureKey = s_databaseHelper.signatureKeyForDigest
 			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 311, 311 + 64));
+			 Arrays.copyOfRange(aes256, 375, 375 + 64));
 		else
 		    signatureKey = s_databaseHelper.signatureKeyForDigest
 			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 273, 273 + 64));
+			 Arrays.copyOfRange(aes256, 337, 337 + 64));
 
 		if(signatureKey == null)
 		    return false;
@@ -526,13 +545,13 @@ public class Kernel
 		    if(!Cryptography.
 		       verifySignature(signatureKey,
 				       Arrays.
-				       copyOfRange(aes256, 375, aes256.length),
+				       copyOfRange(aes256, 439, aes256.length),
 				       Miscellaneous.
 				       joinByteArrays(pk,
 						      Arrays.
 						      copyOfRange(aes256,
 								  0,
-								  375))))
+								  439))))
 			return false;
 		}
 		else
@@ -540,13 +559,13 @@ public class Kernel
 		    if(!Cryptography.
 		       verifySignature(signatureKey,
 				       Arrays.
-				       copyOfRange(aes256, 337, aes256.length),
+				       copyOfRange(aes256, 401, aes256.length),
 				       Miscellaneous.
 				       joinByteArrays(pk,
 						      Arrays.
 						      copyOfRange(aes256,
 								  0,
-								  337))))
+								  401))))
 			return false;
 		}
 
@@ -567,11 +586,11 @@ public class Kernel
 		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    array = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 311, 311 + 64));
+			 Arrays.copyOfRange(aes256, 375, 375 + 64));
 		else
 		    array = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 273, 273 + 64));
+			 Arrays.copyOfRange(aes256, 337, 337 + 64));
 
 		if(array != null && array.length == 2)
 		{

@@ -137,6 +137,12 @@ public class Messages
 		 keyStream,
 
 		 /*
+		 ** [ Recipient's Encryption Public Key Digest ]
+		 */
+
+		 Cryptography.sha512(publicKey.getEncoded()),
+
+		 /*
 		 ** [ Identity ]
 		 */
 
