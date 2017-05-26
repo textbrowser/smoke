@@ -41,6 +41,11 @@ public class State
 	setAuthenticated(false);
     }
 
+    public static synchronized ArrayList<ChatMessageElement> chatLog()
+    {
+	return s_chatMessages;
+    }
+
     public static synchronized State getInstance()
     {
 	if(s_bundle == null)
@@ -88,6 +93,12 @@ public class State
 	    return s_bundle.getLong("chat_sequence" + sipHashId);
 	else
 	    return 1;
+    }
+
+    public synchronized void clearChatLog()
+    {
+	s_chatMessages.clear();
+	s_chatMessages = null;
     }
 
     public synchronized void incrementChatSequence(String sipHashId)

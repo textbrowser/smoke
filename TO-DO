@@ -119,6 +119,8 @@ Completed Items
        has been received while the Settings activity is active.
 90.    Bind recipient and sender.
 91.    Optional per-participant signatures.
+92.    Messages may arrive while the Settings activity is the primary
+       activity. Calls are not logged.
 
 Future Items
 
@@ -163,5 +165,3 @@ Remaining Items
 
 1.     pull-database for multiple devices.
 2.     Sign release.
-3.     Messages may arrive while the Settings activity is the primary
-       activity.

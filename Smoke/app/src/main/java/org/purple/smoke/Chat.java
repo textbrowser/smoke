@@ -242,6 +242,30 @@ public class Chat extends AppCompatActivity
 	    refreshCheckBox(sipHashId);
     }
 
+    private void populateChat()
+    {
+	ArrayList<ChatMessageElement> arrayList = State.getInstance().
+	    chatLog();
+
+	if(arrayList == null || arrayList.size() == 0)
+	    return;
+
+	for(ChatMessageElement chatMessageElement : arrayList)
+	{
+	    if(chatMessageElement == null)
+		continue;
+
+	    appendMessage(chatMessageElement.m_message,
+			  chatMessageElement.m_name,
+			  chatMessageElement.m_sipHashId,
+			  chatMessageElement.m_sequence,
+			  chatMessageElement.m_timestamp);
+	}
+
+	State.getInstance().clearChatLog();
+	arrayList.clear();
+    }
+
     private void populateParticipants()
     {
 	ArrayList<ParticipantElement> arrayList =
@@ -737,6 +761,8 @@ public class Chat extends AppCompatActivity
 	catch(Exception exception)
 	{
 	}
+
+	populateChat();
     }
 
     @Override
@@ -1020,6 +1046,8 @@ public class Chat extends AppCompatActivity
 	    registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
+
+	populateChat();
     }
 
     @Override
