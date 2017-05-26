@@ -103,7 +103,7 @@ public abstract class Neighbor
 	     localPort,
 	     sessionCiper,
 	     connected ? "connected" : "disconnected",
-	     String.valueOf(uptime / 1000000),
+	     String.valueOf(uptime),
 	     String.valueOf(m_oid.get()));
     }
 

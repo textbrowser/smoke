@@ -588,6 +588,7 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 
+	DecimalFormat decimalFormat = new DecimalFormat("0.00");
 	StringBuilder stringBuilder = new StringBuilder();
 	int i = 0;
 
@@ -893,12 +894,10 @@ public class Settings extends AppCompatActivity
 
 	    try
 	    {
-		DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
 		stringBuilder.append
-		    (decimalFormat.format(Integer.
-					  parseInt(neighborElement.m_uptime) /
-					  60000.0));
+		    (decimalFormat.format(Long.
+					  parseLong(neighborElement.m_uptime) /
+					  6e+10));
 	    }
 	    catch(Exception exception)
 	    {
