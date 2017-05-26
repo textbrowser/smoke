@@ -509,16 +509,11 @@ public class Kernel
 				return false;
 			}
 
+			strings = array;
 			break;
 		    }
 
 		if(message == null)
-		    return false;
-
-		strings = s_databaseHelper.nameSipHashIdFromDigest
-		    (s_cryptography, pk);
-
-		if(strings == null || strings.length != 2)
 		    return false;
 
 		s_databaseHelper.updateParticipantLastTimestamp
