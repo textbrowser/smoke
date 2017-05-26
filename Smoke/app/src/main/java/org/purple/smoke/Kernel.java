@@ -32,7 +32,6 @@ import android.util.Base64;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import java.net.InetAddress;
-import java.security.KeyPair;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,34 +43,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Kernel
 {
-    private class ParticipantCall
-    {
-	public KeyPair m_keyPair = null;
-	public String m_sipHashId = "";
-	public int m_participantOid = -1;
-	public long m_startTime = -1; // Calls expire.
-
-	public ParticipantCall(String sipHashId, int participantOid)
-	{
-	    m_participantOid = participantOid;
-	    m_sipHashId = sipHashId;
-	    m_startTime = System.nanoTime();
-	}
-
-	public void preparePrivatePublicKey()
-	{
-	    try
-	    {
-		m_keyPair = Cryptography.generatePrivatePublicKeyPair
-		    ("RSA", 2048);
-	    }
-	    catch(Exception exception)
-	    {
-		m_keyPair = null;
-	    }
-	}
-    }
-
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
