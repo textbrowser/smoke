@@ -86,14 +86,23 @@ public class Settings extends AppCompatActivity
 
 	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
 	    {
-		String name = intent.getStringExtra("org.purple.smoke.name");
-		String string = intent.getStringExtra
+		String message = intent.getStringExtra
 		    ("org.purple.smoke.message");
+		String name = intent.getStringExtra("org.purple.smoke.name");
+		String sipHashId = intent.getStringExtra
+		    ("org.purple.smoke.sipHashId");
 
-		if(name == null || string == null)
+		if(message == null || name == null || sipHashId == null)
 		    return;
 
-		string = string.trim();
+		long sequence = intent.getLongExtra
+		    ("org.purple.smoke.sequence", 1);
+		long timestamp = intent.getLongExtra
+		    ("org.purple.smoke.timestamp", 0);
+
+		State.getInstance().logChatMessage
+		    (message, name, sipHashId, sequence, timestamp);
+		message = message.trim();
 
 		TextView textView = new TextView(Settings.this);
 		final PopupWindow popupWindow = new PopupWindow(Settings.this);
@@ -113,24 +122,24 @@ public class Settings extends AppCompatActivity
 		    }
 		}
 
-		if(string.length() > 15)
+		if(message.length() > 15)
 		{
-		    string = string.substring(0, 15);
+		    message = message.substring(0, 15);
 
-		    if(!string.endsWith("..."))
+		    if(!message.endsWith("..."))
 		    {
-			if(string.endsWith(".."))
-			    string += ".";
-			else if(string.endsWith("."))
-			    string += "..";
+			if(message.endsWith(".."))
+			    message += ".";
+			else if(message.endsWith("."))
+			    message += "..";
 			else
-			    string += "...";
+			    message += "...";
 		    }
 		}
 
 		textView.setBackgroundColor(Color.rgb(244, 200, 117));
 		textView.setText
-		    ("A message (" + string + ") from " + name +
+		    ("A message (" + message + ") from " + name +
 		     " has arrived.");
 		textView.setTextSize(16);
 		popupWindow.setContentView(textView);

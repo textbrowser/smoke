@@ -28,9 +28,11 @@
 package org.purple.smoke;
 
 import android.os.Bundle;
+import java.util.ArrayList;
 
 public class State
 {
+    private static ArrayList<ChatMessageElement> s_chatMessages = null;
     private static Bundle s_bundle = null;
     private static State s_instance = null;
 
@@ -93,6 +95,28 @@ public class State
 	long sequence = chatSequence(sipHashId);
 
 	s_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
+    }
+
+    public synchronized void logChatMessage(String message,
+					    String name,
+					    String sipHashId,
+					    long sequence,
+					    long timestamp)
+    {
+	if(message == null || name == null || sipHashId == null)
+	    return;
+
+	if(s_chatMessages == null)
+	    s_chatMessages = new ArrayList<> ();
+
+	ChatMessageElement chatMessageElement = new ChatMessageElement();
+
+	chatMessageElement.m_message = message;
+	chatMessageElement.m_name = name;
+	chatMessageElement.m_sipHashId = sipHashId;
+	chatMessageElement.m_sequence = sequence;
+	chatMessageElement.m_timestamp = timestamp;
+	s_chatMessages.add(chatMessageElement);
     }
 
     public synchronized void removeKey(String key)

@@ -31,7 +31,7 @@ public class ChatMessageElement
 {
     public String m_message = "";
     public String m_name = "";
-    public String m_siphashId = "";
+    public String m_sipHashId = "";
     public long m_sequence = -1;
     public long m_timestamp = -1;
 
