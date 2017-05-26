@@ -118,6 +118,7 @@ Completed Items
 89.    Broadcast a reminder to the Settings activity if a Chat message
        has been received while the Settings activity is active.
 90.    Bind recipient and sender.
+91.    Optional per-participant signatures.
 
 Future Items
 

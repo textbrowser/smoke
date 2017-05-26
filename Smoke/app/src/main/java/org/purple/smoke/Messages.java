@@ -284,11 +284,19 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature
-		(Miscellaneous.
-		 joinByteArrays(cryptography.chatEncryptionPublicKeyDigest(),
-				CHAT_MESSAGE_TYPE,
-				stringBuilder.toString().getBytes()));
+	    byte signature[] = null;
+
+	    if(Database.getInstance().readParticipantOptions(cryptography,
+							     sipHashId).
+	       contains("optional_signatures = false"))
+		signature = cryptography.signViaChatSignature
+		    (Miscellaneous.
+		     joinByteArrays(cryptography.
+				    chatEncryptionPublicKeyDigest(),
+				    CHAT_MESSAGE_TYPE,
+				    stringBuilder.toString().getBytes()));
+	    else
+		signature = new byte[3072 / 8];
 
 	    if(signature == null)
 		return null;
@@ -403,10 +411,17 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature
-		(Miscellaneous.
-		 joinByteArrays(cryptography.chatEncryptionPublicKeyDigest(),
-				bytes));
+	    byte signature[] = null;
+
+	    if(Database.getInstance().readParticipantOptions(cryptography,
+							     sipHashId).
+	       contains("optional_signatures = false"))
+		signature = cryptography.signViaChatSignature
+		    (Miscellaneous.
+		     joinByteArrays(cryptography.
+				    chatEncryptionPublicKeyDigest(), bytes));
+	    else
+		signature = new byte[3072 / 8];
 
 	    if(signature == null)
 		return null;

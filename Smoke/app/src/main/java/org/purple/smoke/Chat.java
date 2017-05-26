@@ -747,6 +747,7 @@ public class Chat extends AppCompatActivity
 
 	final String sipHashId = Miscellaneous.delimitString
 	    (item.getTitle().toString().replace("Custom Session ", "").
+	     replace("Optional Signatures ", "").
 	     replace("Purge Session ", "").replace("(", "").replace(")", "").
 	     replace("-", ""), ':', 2).toLowerCase();
 	final int groupId = item.getGroupId();
@@ -817,6 +818,46 @@ public class Chat extends AppCompatActivity
 		     "Secret");
 		break;
 	    case 1:
+		item.setChecked(!item.isChecked());
+
+		String string = m_databaseHelper.
+		    readParticipantOptions(s_cryptography, sipHashId);
+		String strings[] = string.split(";");
+
+		if(strings == null || strings.length == 0)
+		{
+		    if(item.isChecked())
+			string += "optional_signatures = true";
+		    else
+			string += "optional_signatures = false";
+		}
+		else
+		{
+		    string = "";
+
+		    for(int i = 0; i < strings.length; i++)
+			if(strings[i].equals("optional_signatures = false") ||
+			   strings[i].equals("optional_signatures = true"))
+			    continue;
+			else
+			{
+			    string += strings[i];
+
+			    if(i != strings.length - 1)
+				string += ";";
+			}
+
+		    if(!string.isEmpty())
+			string += ";";
+
+		    string += "optional_signatures = " +
+			(item.isChecked() ? "true" : "false");
+		}
+
+		m_databaseHelper.writeParticipantOptions
+		    (s_cryptography, string, sipHashId);
+		break;
+	    case 2:
 		Miscellaneous.showPromptDialog
 		    (Chat.this,
 		     listener,
@@ -867,6 +908,8 @@ public class Chat extends AppCompatActivity
     {
 	super.onCreateContextMenu(menu, v, menuInfo);
 
+	MenuItem item = null;
+
 	if(v.getTag() != null)
 	{
 	    menu.add
@@ -878,8 +921,21 @@ public class Chat extends AppCompatActivity
 		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")");
-	    menu.add
+	    item = menu.add
 		(1,
+		 v.getId(),
+		 0,
+		 "Optional Signatures (" +
+		 Miscellaneous.
+		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
+		 toUpperCase() +
+		 ")").setCheckable(true);
+	    item.setChecked
+		(m_databaseHelper.
+		 readParticipantOptions(s_cryptography, v.getTag().toString()).
+		 contains("optional_signatures = true"));
+	    menu.add
+		(2,
 		 v.getId(),
 		 0,
 		 "Purge Session (" +
@@ -890,9 +946,7 @@ public class Chat extends AppCompatActivity
 	}
 
 	menu.add(0, -1, 0, "Refresh Participants Table");
-
-	MenuItem item = menu.add(1, -1, 0, "Show Details").setCheckable(true);
-
+	item = menu.add(1, -1, 0, "Show Details").setCheckable(true);
 	item.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_details").equals("true"));

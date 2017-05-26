@@ -846,6 +846,52 @@ public class Database extends SQLiteOpenHelper
 	return status;
     }
 
+    public String readParticipantOptions(Cryptography cryptography,
+					 String sipHashId)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return "";
+
+	Cursor cursor = null;
+	String string = "";
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT options " +
+		 "FROM participants WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toLowerCase().
+						   trim().
+						   getBytes("UTF-8")),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
+
+		if(bytes != null)
+		    string = new String(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    string = "";
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return string;
+    }
+
     public String readSetting(Cryptography cryptography, String name)
     {
 	prepareDb();
@@ -1422,10 +1468,11 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(4, "keystream");
 	    sparseArray.append(5, "last_status_timestamp");
 	    sparseArray.append(6, "name");
-	    sparseArray.append(7, "signature_public_key");
-	    sparseArray.append(8, "signature_public_key_digest");
-	    sparseArray.append(9, "siphash_id");
-	    sparseArray.append(10, "siphash_id_digest");
+	    sparseArray.append(7, "options");
+	    sparseArray.append(8, "signature_public_key");
+	    sparseArray.append(9, "signature_public_key_digest");
+	    sparseArray.append(10, "siphash_id");
+	    sparseArray.append(11, "siphash_id_digest");
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
@@ -1451,6 +1498,8 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("name"))
 		    bytes = cryptography.etm(name.getBytes());
+		else if(sparseArray.get(i).equals("options"))
+		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("signature_public_key"))
 		    bytes = cryptography.etm(signatureKey.getEncoded());
 		else if(sparseArray.get(i).
@@ -2024,6 +2073,7 @@ public class Database extends SQLiteOpenHelper
 	    "keystream TEXT NOT NULL, " +
 	    "last_status_timestamp TEXT NOT NULL, " +
 	    "name TEXT NOT NULL, " +
+	    "options TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
 	    "siphash_id TEXT NOT NULL, " +
@@ -2442,6 +2492,44 @@ public class Database extends SQLiteOpenHelper
 	    values.put("event", event.trim());
 	    m_db.beginTransactionNonExclusive();
 	    m_db.insert("log", null, values);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
+    public void writeParticipantOptions(Cryptography cryptography,
+					String options,
+					String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return;
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("options",
+		 Base64.encodeToString(cryptography.etm(options.getBytes()),
+				       Base64.DEFAULT));
+	    m_db.beginTransactionNonExclusive();
+	    m_db.update("participants",
+			values,
+			"siphash_id_digest = ?",
+			new String[] {Base64.
+				      encodeToString(cryptography.
+						     hmac(sipHashId.
+							  toLowerCase().trim().
+							  getBytes("UTF-8")),
+						     Base64.DEFAULT)});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)

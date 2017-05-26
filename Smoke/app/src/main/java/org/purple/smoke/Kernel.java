@@ -367,24 +367,37 @@ public class Kernel
 			      s_cryptography.chatEncryptionPublicKeyDigest()))
 			return false;
 
-		    PublicKey signatureKey = s_databaseHelper.
-			signatureKeyForDigest(s_cryptography, pk);
+		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
+			(s_cryptography, pk);
 
-		    if(signatureKey == null)
+		    if(array == null || array.length != 2)
 			return false;
 
-		    if(!Cryptography.
-		       verifySignature(signatureKey,
-				       Arrays.copyOfRange(aes256,
-							  74,
-							  aes256.length),
-				       Miscellaneous.
-				       joinByteArrays(pk,
-						      Arrays.
-						      copyOfRange(aes256,
-								  0,
-								  74))))
+		    String sipHashId = array[1];
+
+		    if(s_databaseHelper.readParticipantOptions(s_cryptography,
+							       sipHashId).
+		       contains("optional_signatures = false"))
+		    {
+			PublicKey signatureKey = s_databaseHelper.
+			    signatureKeyForDigest(s_cryptography, pk);
+
+			if(signatureKey == null)
 			    return false;
+
+			if(!Cryptography.
+			   verifySignature(signatureKey,
+					   Arrays.copyOfRange(aes256,
+							      74,
+							      aes256.length),
+					   Miscellaneous.
+					   joinByteArrays(pk,
+							  Arrays.
+							  copyOfRange(aes256,
+								      0,
+								      74))))
+			    return false;
+		    }
 
 		    long current = System.currentTimeMillis();
 		    long timestamp = Miscellaneous.byteArrayToLong
@@ -453,30 +466,48 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 4:
-			publicKeySignature = Base64.decode
-			    (string.getBytes(), Base64.NO_WRAP);
+			String array[] = s_databaseHelper.
+			    nameSipHashIdFromDigest(s_cryptography, pk);
 
-			PublicKey signatureKey = s_databaseHelper.
-			    signatureKeyForDigest(s_cryptography, pk);
-
-			if(signatureKey == null)
+			if(array == null || array.length != 2)
 			    return false;
 
-			if(!Cryptography.
-			   verifySignature(signatureKey,
-					   publicKeySignature,
-					   Miscellaneous.
-					   joinByteArrays(pk,
-							  abyte,
-							  strings[0].getBytes(),
-							  "\n".getBytes(),
-							  strings[1].getBytes(),
-							  "\n".getBytes(),
-							  strings[2].getBytes(),
-							  "\n".getBytes(),
-							  strings[3].getBytes(),
-							  "\n".getBytes())))
-			    return false;
+			String sipHashId = array[1];
+
+			if(s_databaseHelper.
+			   readParticipantOptions(s_cryptography,
+						  sipHashId).
+			   contains("optional_signatures = false"))
+			{
+			    publicKeySignature = Base64.decode
+				(string.getBytes(), Base64.NO_WRAP);
+
+			    PublicKey signatureKey = s_databaseHelper.
+				signatureKeyForDigest(s_cryptography, pk);
+
+			    if(signatureKey == null)
+				return false;
+
+			    if(!Cryptography.
+			       verifySignature(signatureKey,
+					       publicKeySignature,
+					       Miscellaneous.
+					       joinByteArrays(pk,
+							      abyte,
+							      strings[0].
+							      getBytes(),
+							      "\n".getBytes(),
+							      strings[1].
+							      getBytes(),
+							      "\n".getBytes(),
+							      strings[2].
+							      getBytes(),
+							      "\n".getBytes(),
+							      strings[3].
+							      getBytes(),
+							      "\n".getBytes())))
+				return false;
+			}
 
 			break;
 		    }
