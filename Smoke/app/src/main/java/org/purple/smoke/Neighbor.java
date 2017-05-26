@@ -190,8 +190,6 @@ public abstract class Neighbor
 	}, 0, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
 	m_scheduler.scheduleAtFixedRate(new Runnable()
 	{
-	    private long m_accumulatedTime = System.nanoTime();
-
 	    @Override
 	    public void run()
 	    {
@@ -231,18 +229,13 @@ public abstract class Neighbor
 		}
 
 		saveStatistics();
-
-		if(System.nanoTime() - m_accumulatedTime >= 1e+10)
-		{
-		    m_accumulatedTime = System.nanoTime();
-		    sendCapabilities();
-		}
-
 		terminateOnSilence();
 	    }
 	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
+	    private long m_accumulatedTime = System.nanoTime();
+
 	    @Override
 	    public void run()
 	    {
@@ -259,6 +252,12 @@ public abstract class Neighbor
 		}
 		catch(Exception exception)
 		{
+		}
+
+		if(System.nanoTime() - m_accumulatedTime >= 1e+10)
+		{
+		    m_accumulatedTime = System.nanoTime();
+		    sendCapabilities();
 		}
 
 		/*
