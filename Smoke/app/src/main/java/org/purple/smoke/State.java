@@ -97,7 +97,9 @@ public class State
 
     public synchronized void clearChatLog()
     {
-	s_chatMessages.clear();
+	if(s_chatMessages != null)
+	    s_chatMessages.clear();
+
 	s_chatMessages = null;
     }
 
