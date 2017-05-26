@@ -815,7 +815,7 @@ public class Chat extends AppCompatActivity
 
 			    State.getInstance().removeKey("chat_secret_input");
 			    break;
-			case 1: // Purge Session
+			case 2: // Purge Session
 			    if(m_databaseHelper.
 			       setParticipantKeyStream(s_cryptography,
 						       null,
