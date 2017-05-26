@@ -296,10 +296,18 @@ public class TcpNeighbor extends Neighbor
 		    if(m_socket == null ||
 		       m_socket.getInputStream() == null)
 			return;
-		    else
+		    else if(m_socket.getSoTimeout() == 0)
 			m_socket.setSoTimeout(SO_TIMEOUT);
 
-		    int i = m_socket.getInputStream().read(m_bytes);
+		    int i = 0;
+
+		    try
+		    {
+			i = m_socket.getInputStream().read(m_bytes);
+		    }
+		    catch(java.net.SocketTimeoutException exception)
+		    {
+		    }
 
 		    if(i < 0)
 			bytesRead = -1;
