@@ -296,7 +296,7 @@ public class Messages
 				    CHAT_MESSAGE_TYPE,
 				    stringBuilder.toString().getBytes()));
 	    else
-		signature = new byte[3072 / 8];
+		signature = new byte[1];
 
 	    if(signature == null)
 		return null;
@@ -421,7 +421,7 @@ public class Messages
 		     joinByteArrays(cryptography.
 				    chatEncryptionPublicKeyDigest(), bytes));
 	    else
-		signature = new byte[3072 / 8];
+		signature = new byte[1];
 
 	    if(signature == null)
 		return null;
