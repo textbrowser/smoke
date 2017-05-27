@@ -391,6 +391,8 @@ public class Settings extends AppCompatActivity
 	button1.setEnabled(state);
 	button1 = (Button) findViewById(R.id.reset_participants_fields);
 	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.save_ozone);
+	button1.setEnabled(state);
 
 	CheckBox checkBox1 = null;
 
@@ -422,6 +424,8 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(state);
+	textView1 = (TextView) findViewById(R.id.ozone);
+	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.participant_name);
 	textView1.setEnabled(state);
 	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
