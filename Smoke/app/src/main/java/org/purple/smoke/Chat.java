@@ -868,10 +868,8 @@ public class Chat extends AppCompatActivity
 		    string = "";
 
 		    for(int i = 0; i < strings.length; i++)
-			if(strings[i].equals("optional_signatures = false") ||
-			   strings[i].equals("optional_signatures = true"))
-			    continue;
-			else
+			if(!(strings[i].equals("optional_signatures = false") ||
+			     strings[i].equals("optional_signatures = true")))
 			{
 			    string += strings[i];
 
