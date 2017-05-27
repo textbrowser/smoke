@@ -1746,6 +1746,8 @@ public class Settings extends AppCompatActivity
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.reset_participants_fields);
 	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.save_ozone);
+	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.siphash_help);
 	button1.setCompoundDrawablesWithIntrinsicBounds
 	    (R.drawable.help, 0, 0, 0);
@@ -1905,6 +1907,8 @@ public class Settings extends AppCompatActivity
 	if(isAuthenticated)
 	    textView1.requestFocus();
 
+	textView1.setEnabled(isAuthenticated);
+	textView1 = (TextView) findViewById(R.id.ozone);
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.participant_name);
 	textView1.setEnabled(isAuthenticated);
