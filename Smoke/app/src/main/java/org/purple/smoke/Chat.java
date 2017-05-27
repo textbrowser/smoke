@@ -696,19 +696,43 @@ public class Chat extends AppCompatActivity
 
 		    byte bytes[] = null;
 
-		    bytes = Messages.chatMessage
-			(s_cryptography,
-			 str,
-			 sipHashId,
-			 keyStream,
-			 State.getInstance().chatSequence(sipHashId),
-			 System.currentTimeMillis());
+		    try
+		    {
+			bytes = Messages.chatMessage
+			    (s_cryptography,
+			     str,
+			     sipHashId,
+			     Cryptography.sha512(sipHashId.getBytes("UTF-8")),
+			     keyStream,
+			     State.getInstance().chatSequence(sipHashId),
+			     System.currentTimeMillis());
+		    }
+		    catch(Exception exception)
+		    {
+			bytes = null;
+		    }
 
 		    if(bytes != null)
 		    {
 			Kernel.getInstance().enqueueMessage
 			    (Messages.bytesToMessageString(bytes));
 			State.getInstance().incrementChatSequence(sipHashId);
+		    }
+
+		    if(s_cryptography.ozoneMacKey() != null)
+		    {
+			bytes = Messages.chatMessage
+			    (s_cryptography,
+			     str,
+			     sipHashId,
+			     s_cryptography.ozoneMacKey(),
+			     keyStream,
+			     State.getInstance().chatSequence(sipHashId),
+			     System.currentTimeMillis());
+
+			if(bytes != null)
+			    Kernel.getInstance().enqueueMessage
+				(Messages.bytesToMessageString(bytes));
 		    }
 		}
 
