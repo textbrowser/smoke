@@ -153,7 +153,7 @@ public class Settings extends AppCompatActivity
 
 		popupWindow.showAtLocation
 		    (findViewById(R.id.main_layout),
-		     Gravity.LEFT | Gravity.TOP,
+		     Gravity.START | Gravity.TOP,
 		     75,
 		     75);
 
