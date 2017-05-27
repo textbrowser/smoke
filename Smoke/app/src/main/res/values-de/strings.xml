@@ -5,10 +5,10 @@
     <string name="add">Hinzufügen</string>
     <string name="authenticate">Einloggen</string>
     <string name="authenticate_authenticate">Authentifiziere</string>
-    <string name="authenticate_password">Paswort</string>
-    <string name="automatic_refresh">Automatisch Erneuern</string>
-    <string name="call">Anruf</string>
-    <string name="chat">Chatten</string>
+    <string name="authenticate_password">Passwort</string>
+    <string name="automatic_refresh">Automatisch erneuern</string>
+    <string name="call">Crypto Call</string>
+    <string name="chat">Chat</string>
     <string name="chat_encryption_key_data">Schlüssel-Daten zur Chat Verschlüsselung</string>
     <string name="chat_signature_key_data">Schlüssel-Daten zur Chat Signatur</string>
     <string name="clear">Löschen</string>
@@ -33,14 +33,17 @@
     <string name="echo">Echo</string>
     <string name="ipv4">IPv4</string>
     <string name="ipv6">IPv6</string>
-    <string name="ipv6_scope_id">IPv6 Umfang Identität</string>
+    <string name="ipv6_scope_id">IPv6 Scope ID</string>
     <string name="iteration_count">Iterationszähler</string>
     <string name="name">Name</string>
-    <string name="port">Hafen</string>
+    <string name="port">Port</string>
     <string name="proxy_ip_address">Proxy IP Adresse</string>
-    <string name="proxy_port">Proxy Hafen</string>
-    <string name="remote">Fernbedienung</string>
-    <string name="reset_smoke">Zurücksetzen Smoke</string>
+    <string name="proxy_port">Proxy Port</string>
+    <string name="remote">Gegenstelle</string>
+    <string name="reset_smoke">Smoke zurücksetzen</string>
     <string name="siphash_identity">SipHash Identität</string>
     <string name="siphashid">SipHash Identität</string>
+    <string name="address">Adresse</string>
+    <string name="ozone">Ozon</string>
+    <string name="save">Speichern</string>
 </resources>
