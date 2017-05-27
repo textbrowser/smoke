@@ -42,4 +42,7 @@
     <string name="about">About</string>
     <string name="proxy_port">Proxy Port</string>
     <string name="proxy_ip_address">Proxy IP Address</string>
+    <string name="ozone">Ozone</string>
+    <string name="address">Address</string>
+    <string name="save">Save</string>
 </resources>

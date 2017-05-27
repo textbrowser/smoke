@@ -461,6 +461,10 @@ public class Settings extends AppCompatActivity
 		    arrayList = new ArrayList<> ();
 
 		{
+		    /*
+		    ** Self-sending.
+		    */
+
 		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
 
 		    sipHashIdElement.m_sipHashId = s_cryptography.sipHashId();
