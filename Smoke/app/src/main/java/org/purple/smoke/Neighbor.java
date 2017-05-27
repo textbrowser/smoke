@@ -63,8 +63,8 @@ public abstract class Neighbor
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
-    protected StringBuilder m_error = new StringBuilder();
     protected byte m_bytes[] = null;
+    protected final StringBuilder m_error = new StringBuilder();
     protected final StringBuilder m_stringBuilder = new StringBuilder();
     protected final static Object m_errorMutex = new Object();
     protected final static String EOM = "\r\n\r\n\r\n";

@@ -824,24 +824,6 @@ public class Cryptography
 	    return fingerPrint(publicKey.getEncoded());
     }
 
-    public static String randomBytesAsBase64(int length)
-    {
-	prepareSecureRandom();
-
-	try
-	{
-	    byte bytes[] = new byte[length];
-
-	    s_secureRandom.nextBytes(bytes);
-	    return Base64.encodeToString(bytes, Base64.DEFAULT);
-	}
-	catch(Exception exception)
-	{
-	}
-
-	return "";
-    }
-
     public static boolean memcmp(byte a[], byte b[])
     {
 	if(a == null || a.length < 0 || b == null || b.length < 0)
@@ -890,22 +872,7 @@ public class Cryptography
 	return ok;
     }
 
-    public static byte[] aes128KeyBytes()
-    {
-	try
-	{
-	    KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-
-	    keyGenerator.init(128);
-	    return keyGenerator.generateKey().getEncoded();
-	}
-	catch(Exception exception)
-	{
-	    return null;
-	}
-    }
-
-    public static byte[] aes256KeyBytes()
+	public static byte[] aes256KeyBytes()
     {
 	try
 	{
@@ -1136,22 +1103,7 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] sha256KeyBytes()
-    {
-	try
-	{
-	    KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
-
-	    keyGenerator.init(256);
-	    return keyGenerator.generateKey().getEncoded();
-	}
-	catch(Exception exception)
-	{
-	    return null;
-	}
-    }
-
-    public static byte[] sha512KeyBytes()
+	public static byte[] sha512KeyBytes()
     {
 	try
 	{
