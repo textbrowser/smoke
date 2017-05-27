@@ -96,7 +96,6 @@ public class Cryptography
 
     private Cryptography()
     {
-	m_ozoneMacKey = new byte[64];
     }
 
     private static synchronized void prepareSecureRandom()
@@ -1205,7 +1204,10 @@ public class Cryptography
 
 	synchronized(m_ozoneMacKeyMutex)
 	{
-	    Arrays.fill(m_ozoneMacKey, (byte) 0);
+	    if(m_ozoneMacKey != null)
+		Arrays.fill(m_ozoneMacKey, (byte) 0);
+
+	    m_ozoneMacKey = null;
 	}
 
 	synchronized(m_sipHashEncryptionKeyMutex)
