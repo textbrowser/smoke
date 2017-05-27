@@ -227,7 +227,7 @@ public class Settings extends AppCompatActivity
 	    return null;
 	}
     };
-    private final static int OZONE_STREAM_CREATION_ITERATION_COUNT = 1000;
+    private final static int OZONE_STREAM_CREATION_ITERATION_COUNT = 4096;
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
@@ -1156,6 +1156,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onCancel(DialogInterface dialog)
 	    {
+		TextView textView = (TextView) findViewById(R.id.ozone);
+
+		textView.setText("");
 		m_databaseHelper.reset();
 		populateFancyKeyData();
 		populateNeighbors();

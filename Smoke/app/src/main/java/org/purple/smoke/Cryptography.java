@@ -89,7 +89,7 @@ public class Cryptography
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
-    private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 1000;
+    private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
 
@@ -991,7 +991,7 @@ public class Cryptography
 
 	return pbkdf2(sha512(data),
 		      Miscellaneous.byteArrayAsHexString(data).toCharArray(),
-		      1000,
+		      4096,
 		      8 * SipHash.KEY_LENGTH);
     }
 

@@ -124,7 +124,7 @@ public class Database extends SQLiteOpenHelper
 	};
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
-    private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 1000;
+    private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private final static int WRITE_PARTICIPANT_TIME_DELTA = 60000; // 60 Seconds
     private static Database s_instance = null;
 
