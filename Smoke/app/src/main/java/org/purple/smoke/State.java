@@ -32,82 +32,80 @@ import java.util.ArrayList;
 
 public class State
 {
-    private static ArrayList<ChatMessageElement> s_chatMessages = null;
-    private static Bundle s_bundle = null;
+    private ArrayList<ChatMessageElement> m_chatMessages = null;
+    private Bundle m_bundle = null;
     private static State s_instance = null;
 
     private State()
     {
+	m_bundle = new Bundle();
 	setAuthenticated(false);
-    }
-
-    public static synchronized ArrayList<ChatMessageElement> chatLog()
-    {
-	return s_chatMessages;
     }
 
     public static synchronized State getInstance()
     {
-	if(s_bundle == null)
-	    s_bundle = new Bundle();
-
 	if(s_instance == null)
 	    s_instance = new State();
 
 	return s_instance;
     }
 
+    public synchronized ArrayList<ChatMessageElement> chatLog()
+    {
+	return m_chatMessages;
+    }
+
     public synchronized CharSequence getCharSequence(String key)
     {
-	return s_bundle.getCharSequence(key, "");
+	return m_bundle.getCharSequence(key, "");
     }
 
     public synchronized String getString(String key)
     {
-	return s_bundle.getString(key, "");
+	return m_bundle.getString(key, "");
     }
 
     public synchronized boolean chatCheckBoxIsSelected(int oid)
     {
-	return s_bundle.getChar("chat_checkbox_" + String.valueOf(oid)) == '1';
+	return m_bundle.getChar("chat_checkbox_" + String.valueOf(oid)) == '1';
     }
 
     public synchronized boolean isAuthenticated()
     {
-	return s_bundle.getChar("is_authenticated") == '1';
+	return m_bundle.getChar("is_authenticated") == '1';
     }
 
     public synchronized boolean neighborsEcho()
     {
-	return s_bundle.getChar("neighbors_echo") == '1';
+	return m_bundle.getChar("neighbors_echo") == '1';
     }
 
     public synchronized int chatCheckedParticipants()
     {
-	return s_bundle.getInt("chat_checkbox_counter", 0);
+	return m_bundle.getInt("chat_checkbox_counter", 0);
     }
 
     public synchronized long chatSequence(String sipHashId)
     {
-	if(s_bundle.containsKey("chat_sequence" + sipHashId))
-	    return s_bundle.getLong("chat_sequence" + sipHashId);
+	if(m_bundle.containsKey("chat_sequence" + sipHashId))
+	    return m_bundle.getLong("chat_sequence" + sipHashId);
 	else
 	    return 1;
     }
 
     public synchronized void clearChatLog()
     {
-	if(s_chatMessages != null)
-	    s_chatMessages.clear();
+	if(m_chatMessages != null)
+	    m_chatMessages.clear();
 
-	s_chatMessages = null;
+	m_chatMessages = null;
     }
 
     public synchronized void incrementChatSequence(String sipHashId)
     {
 	long sequence = chatSequence(sipHashId);
 
-	s_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
+	m_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
     }
 
     public synchronized void logChatMessage(String message,
@@ -119,8 +117,8 @@ public class State
 	if(message == null || name == null || sipHashId == null)
 	    return;
 
-	if(s_chatMessages == null)
-	    s_chatMessages = new ArrayList<> ();
+	if(m_chatMessages == null)
+	    m_chatMessages = new ArrayList<> ();
 
 	ChatMessageElement chatMessageElement = new ChatMessageElement();
 
@@ -129,40 +127,40 @@ public class State
 	chatMessageElement.m_sipHashId = sipHashId;
 	chatMessageElement.m_sequence = sequence;
 	chatMessageElement.m_timestamp = timestamp;
-	s_chatMessages.add(chatMessageElement);
+	m_chatMessages.add(chatMessageElement);
     }
 
     public synchronized void removeKey(String key)
     {
-	s_bundle.remove(key);
+	m_bundle.remove(key);
     }
 
     public synchronized void reset()
     {
-	s_bundle.clear();
+	m_bundle.clear();
     }
 
     public synchronized void setAuthenticated(boolean state)
     {
-	s_bundle.putChar("is_authenticated", state ? '1' : '0');
+	m_bundle.putChar("is_authenticated", state ? '1' : '0');
     }
 
     public synchronized void setChatCheckBoxSelected(int oid, boolean checked)
     {
-	boolean contains = s_bundle.containsKey("chat_checkbox_" +
+	boolean contains = m_bundle.containsKey("chat_checkbox_" +
 						String.valueOf(oid));
 
 	if(checked)
 	{
-	    s_bundle.putChar("chat_checkbox_" + String.valueOf(oid), '1');
+	    m_bundle.putChar("chat_checkbox_" + String.valueOf(oid), '1');
 
 	    if(!contains)
-		s_bundle.putInt
+		m_bundle.putInt
 		    ("chat_checkbox_counter", chatCheckedParticipants() + 1);
 	}
 	else
 	{
-	    s_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+	    m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
 
 	    if(contains)
 	    {
@@ -171,23 +169,23 @@ public class State
 		if(counter > 0)
 		    counter -= 1;
 
-		s_bundle.putInt("chat_checkbox_counter", counter);
+		m_bundle.putInt("chat_checkbox_counter", counter);
 	    }
 	}
     }
 
     public synchronized void setNeighborsEcho(boolean state)
     {
-	s_bundle.putChar("neighbors_echo", state ? '1' : '0');
+	m_bundle.putChar("neighbors_echo", state ? '1' : '0');
     }
 
     public synchronized void setString(String key, String value)
     {
-	s_bundle.putString(key, value);
+	m_bundle.putString(key, value);
     }
 
     public synchronized void writeCharSequence(String key, CharSequence text)
     {
-	s_bundle.putCharSequence(key, text);
+	m_bundle.putCharSequence(key, text);
     }
 }

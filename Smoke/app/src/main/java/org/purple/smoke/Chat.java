@@ -86,7 +86,7 @@ public class Chat extends AppCompatActivity
 		String sipHashId = intent.getStringExtra
 		    ("org.purple.smoke.sipHashId");
 
-		if(sipHashId == null || sipHashId.isEmpty())
+		if(sipHashId == null || sipHashId.trim().isEmpty())
 		    populateParticipants();
 		else
 		    refreshCheckBox(sipHashId);
@@ -150,6 +150,10 @@ public class Chat extends AppCompatActivity
     {
 	if(message == null || name == null || sipHashId == null)
 	    return;
+	else if(message.trim().length() == 0 ||
+		name.trim().length() == 0 ||
+		sipHashId.trim().length() == 0)
+	    return;
 
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
@@ -175,8 +179,7 @@ public class Chat extends AppCompatActivity
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
 	    CheckBox checkBox = (CheckBox)
-		((TableLayout) findViewById
-		 (R.id.participants)).findViewWithTag(sipHashId);
+		findViewById(R.id.participants).findViewWithTag(sipHashId);
 
 	    if(checkBox != null)
 	    {
@@ -202,17 +205,13 @@ public class Chat extends AppCompatActivity
     {
 	if(name == null || sipHashId == null)
 	    return;
+	else if(name.trim().length() == 0 || sipHashId.trim().length() == 0)
+	    return;
 
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView = (TextView) findViewById(R.id.chat_messages);
-
-	if(name == null)
-	    name = "unknown";
-
-	if(sipHashId == null)
-	    sipHashId = "00:00:00:00";
 
 	stringBuilder.append("[");
 	stringBuilder.append(simpleDateFormat.format(new Date()));
@@ -481,8 +480,7 @@ public class Chat extends AppCompatActivity
     private void refreshCheckBox(String sipHashId)
     {
 	CheckBox checkBox = (CheckBox)
-	    ((TableLayout) findViewById
-	     (R.id.participants)).findViewWithTag(sipHashId);
+	    findViewById(R.id.participants).findViewWithTag(sipHashId);
 
 	if(checkBox == null)
 	    return;
