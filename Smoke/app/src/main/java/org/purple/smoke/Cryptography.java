@@ -282,13 +282,13 @@ public class Cryptography
 		temporary = pbkdf2(salt,
 				   m_sipHashId.toCharArray(),
 				   SIPHASH_STREAM_CREATION_ITERATION_COUNT,
-				   768); // 8 * (32 + 64) Bits
+				   160); // SHA-1
 	    }
 
 	    if(temporary != null)
 		bytes = pbkdf2(salt,
 			       new String(temporary).toCharArray(),
-			       SIPHASH_STREAM_CREATION_ITERATION_COUNT,
+			       1,
 			       768); // 8 * (32 + 64) Bits
 
 	    if(bytes != null)

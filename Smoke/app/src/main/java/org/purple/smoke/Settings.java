@@ -227,6 +227,7 @@ public class Settings extends AppCompatActivity
 	    return null;
 	}
     };
+    private final static int OZONE_STREAM_CREATION_ITERATION_COUNT = 1000;
     private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
@@ -1163,6 +1164,67 @@ public class Settings extends AppCompatActivity
 	    }
 	};
 
+	button1 = (Button) findViewById(R.id.save_ozone);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		String string = "";
+		TextView textView = (TextView) findViewById(R.id.ozone);
+		boolean ok = true;
+		byte bytes[] = null;
+		byte salt[] = null;
+
+		try
+		{
+		    string = textView.getText().toString().trim();
+		    salt = Cryptography.sha512(string.getBytes("UTF-8"));
+
+		    if(salt != null)
+			bytes = Cryptography.pbkdf2
+			    (salt,
+			     string.toCharArray(),
+			     OZONE_STREAM_CREATION_ITERATION_COUNT,
+			     160); // SHA-1
+		    else
+			ok = false;
+
+		    if(bytes != null)
+			bytes = s_cryptography.etm
+			    (Cryptography.
+			     pbkdf2(salt,
+				    new String(bytes).toCharArray(),
+				    1,
+				    768)); // 8 * (32 + 64) Bits
+		    else
+			ok = false;
+
+		    if(bytes != null)
+		    {
+			m_databaseHelper.writeSetting
+			    (s_cryptography, "ozone_address", string);
+			m_databaseHelper.writeSetting
+			    (s_cryptography,
+			     "ozone_address_stream",
+			     Base64.encodeToString(bytes, Base64.DEFAULT));
+		    }
+		}
+		catch(Exception exception)
+		{
+		    ok = false;
+		}
+
+		if(!ok)
+		{
+		    Miscellaneous.showErrorDialog
+			(Settings.this,
+			 "An error occurred while processing the Ozone data. " +
+			 "Perhaps a value should be provided.");
+		    textView.requestFocus();
+		}
+	    }
+	});
+
 	button1 = (Button) findViewById(R.id.set_password);
         button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -1960,6 +2022,10 @@ public class Settings extends AppCompatActivity
 	if(isAuthenticated)
 	{
 	    checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
+	    textView1 = (TextView) findViewById(R.id.ozone);
+	    textView1.setText
+		(m_databaseHelper.readSetting(s_cryptography,
+					      "ozone_address"));
 	    populateNeighbors();
 	    populateParticipants();
 	    startKernel();

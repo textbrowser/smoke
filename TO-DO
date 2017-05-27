@@ -121,6 +121,10 @@ Completed Items
 91.    Optional per-participant signatures.
 92.    Messages may arrive while the Settings activity is the primary
        activity. Calls are not logged.
+93.    Improve PBKDF2 uses. Initially, generate a temporary stream of
+       20 bytes (SHA-1). Afterwards, generate a stream using the
+       temporary stream as password material. The length of the second
+       stream varies per application.
 
 Future Items
 
@@ -165,4 +169,3 @@ Remaining Items
 
 1.     pull-database for multiple devices.
 2.     Sign release.
-3.     Improve PBKDF2 uses.

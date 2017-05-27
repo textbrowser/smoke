@@ -1599,15 +1599,14 @@ public class Database extends SQLiteOpenHelper
 			pbkdf2(salt,
 			       sipHashId.toCharArray(),
 			       SIPHASH_STREAM_CREATION_ITERATION_COUNT,
-			       768); // 8 * (32 + 64) Bits
+			       160); // SHA-1
 
 		    if(temporary != null)
 			bytes = cryptography.etm
 			    (Cryptography.
 			     pbkdf2(salt,
-				    new String(temporary, "UTF-8").
-				    toCharArray(),
-				    SIPHASH_STREAM_CREATION_ITERATION_COUNT,
+				    new String(temporary).toCharArray(),
+				    1,
 				    768)); // 8 * (32 + 64) Bits
 		}
 
