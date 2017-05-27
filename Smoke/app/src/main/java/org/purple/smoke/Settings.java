@@ -42,14 +42,14 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
 import android.util.Base64;
-import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -65,6 +65,7 @@ import android.widget.TextView;
 import java.security.KeyPair;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -1210,6 +1211,8 @@ public class Settings extends AppCompatActivity
 			    (s_cryptography,
 			     "ozone_address_stream",
 			     Base64.encodeToString(bytes, Base64.DEFAULT));
+			s_cryptography.setOzoneMacKey
+			    (Arrays.copyOfRange(bytes, 32, bytes.length));
 		    }
 		}
 		catch(Exception exception)
