@@ -457,32 +457,42 @@ public class Settings extends AppCompatActivity
 		ArrayList<SipHashIdElement> arrayList =
 		    m_databaseHelper.readSipHashIds(s_cryptography);
 
-		if(arrayList == null || arrayList.size() == 0)
-		    m_error = "empty array list";
-		else
-		    for(SipHashIdElement sipHashIdElement : arrayList)
+		if(arrayList == null)
+		    arrayList = new ArrayList<> ();
+
+		{
+		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
+
+		    sipHashIdElement.m_sipHashId = s_cryptography.sipHashId();
+		    sipHashIdElement.m_stream = Miscellaneous.joinByteArrays
+			(s_cryptography.sipHashEncryptionKey(),
+			 s_cryptography.sipHashMacKey());
+		    arrayList.add(sipHashIdElement);
+		}
+
+		for(SipHashIdElement sipHashIdElement : arrayList)
+		{
+		    if(sipHashIdElement == null)
 		    {
-			if(sipHashIdElement == null)
-			{
-			    m_error = "zero element";
-			    break;
-			}
-
-			byte bytes[] = Messages.epksMessage
-			    (s_cryptography,
-			     sipHashIdElement.m_sipHashId,
-			     sipHashIdElement.m_stream,
-			     Messages.CHAT_KEY_TYPE);
-
-			if(bytes == null)
-			{
-			    m_error = "epksMessage() failure";
-			    break;
-			}
-
-			Kernel.getInstance().enqueueMessage
-			    (Messages.bytesToMessageString(bytes));
+			m_error = "zero element";
+			break;
 		    }
+
+		    byte bytes[] = Messages.epksMessage
+			(s_cryptography,
+			 sipHashIdElement.m_sipHashId,
+			 sipHashIdElement.m_stream,
+			 Messages.CHAT_KEY_TYPE);
+
+		    if(bytes == null)
+		    {
+			m_error = "epksMessage() failure";
+			break;
+		    }
+
+		    Kernel.getInstance().enqueueMessage
+			(Messages.bytesToMessageString(bytes));
+		}
 
 		Settings.this.runOnUiThread(new Runnable()
 		{
