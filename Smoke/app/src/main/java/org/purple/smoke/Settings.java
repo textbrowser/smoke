@@ -539,7 +539,7 @@ public class Settings extends AppCompatActivity
 
 	if(s_cryptography.chatEncryptionKeyPair() == null ||
 	   s_cryptography.chatEncryptionKeyPair().getPublic() == null)
-	    textView1.setVisibility(View.INVISIBLE);
+	    textView1.setVisibility(View.GONE);
 	else
 	{
 	    stringBuilder = new StringBuilder();
@@ -556,7 +556,7 @@ public class Settings extends AppCompatActivity
 
 	if(s_cryptography.chatSignatureKeyPair() == null ||
 	   s_cryptography.chatSignatureKeyPair().getPublic() == null)
-	    textView1.setVisibility(View.INVISIBLE);
+	    textView1.setVisibility(View.GONE);
 	else
 	{
 	    if(stringBuilder == null)
@@ -576,7 +576,7 @@ public class Settings extends AppCompatActivity
 	textView1 = (TextView) findViewById(R.id.siphash_identity);
 
 	if(stringBuilder == null)
-	    textView1.setVisibility(View.INVISIBLE);
+	    textView1.setVisibility(View.GONE);
 	else
 	{
 	    stringBuilder.delete(0, stringBuilder.length());
