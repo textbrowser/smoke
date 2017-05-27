@@ -1194,25 +1194,38 @@ public class Settings extends AppCompatActivity
 			ok = false;
 
 		    if(bytes != null)
-			bytes = s_cryptography.etm
-			    (Cryptography.
-			     pbkdf2(salt,
-				    new String(bytes).toCharArray(),
-				    1,
-				    768)); // 8 * (32 + 64) Bits
+			bytes = Cryptography.
+			    pbkdf2(salt,
+				   new String(bytes).toCharArray(),
+				   1,
+				   768); // 8 * (32 + 64) Bits
 		    else
 			ok = false;
 
-		    if(bytes != null)
+		    if(bytes != null || string.isEmpty())
 		    {
 			m_databaseHelper.writeSetting
 			    (s_cryptography, "ozone_address", string);
-			m_databaseHelper.writeSetting
-			    (s_cryptography,
-			     "ozone_address_stream",
-			     Base64.encodeToString(bytes, Base64.DEFAULT));
-			s_cryptography.setOzoneMacKey
-			    (Arrays.copyOfRange(bytes, 32, bytes.length));
+
+			if(string.isEmpty())
+			{
+			    m_databaseHelper.writeSetting
+				(s_cryptography,
+				 "ozone_address_stream",
+				 "");
+			    ok = true;
+			    s_cryptography.setOzoneMacKey(null);
+			}
+			else
+			{
+			    m_databaseHelper.writeSetting
+				(s_cryptography,
+				 "ozone_address_stream",
+				 Base64.encodeToString(bytes,
+						       Base64.DEFAULT));
+			    s_cryptography.setOzoneMacKey
+				(Arrays.copyOfRange(bytes, 32, bytes.length));
+			}
 		    }
 		}
 		catch(Exception exception)

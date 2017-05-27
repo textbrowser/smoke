@@ -337,6 +337,8 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		 cryptography.ozoneMacKey() != null ?
+		 cryptography.ozoneMacKey() :
 		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
 
 	    return Miscellaneous.joinByteArrays

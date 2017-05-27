@@ -193,11 +193,11 @@ public class Authenticate extends AppCompatActivity
 				     readSetting(s_cryptography,
 						 "identity").
 				     getBytes(), Base64.DEFAULT);
-				byte ozoneMacKey[] = Base64.
-				    decode(m_databaseHelper.
-					   readSetting(s_cryptography,
-						       "ozone_address_stream").
-					   getBytes(), Base64.DEFAULT);
+				byte ozoneMacKey[] = Base64.decode
+				    (m_databaseHelper.
+				     readSetting(s_cryptography,
+						 "ozone_address_stream").
+						 getBytes(), Base64.DEFAULT);
 				byte privateBytes[] = Base64.decode
 				    (m_databaseHelper.
 				     readSetting(s_cryptography,

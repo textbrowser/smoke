@@ -263,10 +263,19 @@ public class Cryptography
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)
 	    return false;
 
+	synchronized(m_ozoneMacKeyMutex)
+	{
+	    if(memcmp(hmac(data, m_ozoneMacKey), mac))
+		return true;
+	}
+
 	synchronized(m_sipHashIdDigestMutex)
 	{
-	    return memcmp(hmac(data, m_sipHashIdDigest), mac);
+	    if(memcmp(hmac(data, m_sipHashIdDigest), mac))
+		return true;
 	}
+
+	return false;
     }
 
     public boolean prepareSipHashKeys()
@@ -552,6 +561,14 @@ public class Cryptography
 	}
 
 	return bytes;
+    }
+
+    public byte[] ozoneMacKey()
+    {
+	synchronized(m_ozoneMacKeyMutex)
+	{
+	    return m_ozoneMacKey;
+	}
     }
 
     public byte[] pkiDecrypt(byte data[])
@@ -1304,12 +1321,17 @@ public class Cryptography
 
     public void setOzoneMacKey(byte bytes[])
     {
-	if(bytes == null || bytes.length != 64)
-	    return;
-
 	synchronized(m_ozoneMacKeyMutex)
 	{
-	    m_ozoneMacKey = Miscellaneous.deepCopy(bytes);
+	    if(bytes != null && bytes.length == 64)
+		m_ozoneMacKey = Miscellaneous.deepCopy(bytes);
+	    else
+	    {
+		if(m_ozoneMacKey != null)
+		    Arrays.fill(m_ozoneMacKey, (byte) 0);
+
+		m_ozoneMacKey = null;
+	    }
 	}
     }
 }
