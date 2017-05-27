@@ -351,8 +351,7 @@ public class Messages
 
     public static byte[] chatStatus(Cryptography cryptography,
 				    String sipHashId,
-				    byte keyStream[],
-				    long timestamp)
+				    byte keyStream[])
     {
 	if(cryptography == null || keyStream == null || keyStream.length <= 0)
 	    return null;

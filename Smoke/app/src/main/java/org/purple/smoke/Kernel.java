@@ -208,8 +208,7 @@ public class Kernel
 			    byte bytes[] = Messages.chatStatus
 				(s_cryptography,
 				 participantElement.m_sipHashId,
-				 participantElement.m_keyStream,
-				 System.currentTimeMillis());
+				 participantElement.m_keyStream);
 
 			    if(bytes != null)
 				echo(Messages.bytesToMessageString(bytes), -1);
