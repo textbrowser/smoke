@@ -971,10 +971,10 @@ public class Settings extends AppCompatActivity
 	if(arrayList == null || arrayList.size() == 0)
 	    return;
 
-	for(int i = 0; i < arrayList.size(); i++)
-	{
-	    SipHashIdElement sipHashIdElement = arrayList.get(i);
+	int i = 0;
 
+	for(SipHashIdElement sipHashIdElement : arrayList)
+	{
 	    if(sipHashIdElement == null)
 		continue;
 
@@ -1024,6 +1024,7 @@ public class Settings extends AppCompatActivity
 		row.setBackgroundColor(Color.argb(100, 179, 230, 255));
 
 	    tableLayout.addView(row, i);
+	    i += 1;
 	}
 
 	arrayList.clear();
