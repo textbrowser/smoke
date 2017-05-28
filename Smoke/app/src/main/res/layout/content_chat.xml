@@ -29,6 +29,7 @@
 
     <Button
         android:id="@+id/clear_chat_messages"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -66,6 +67,7 @@
 
     <Button
         android:id="@+id/send_chat_message"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/chat_message"
@@ -75,6 +77,7 @@
 
     <Button
         android:id="@+id/call"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chat_scrollview"
