@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.util.Base64;
 import java.security.PublicKey;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class Messages
 {
@@ -209,6 +210,7 @@ public class Messages
     public static byte[] chatMessage(Cryptography cryptography,
 				     String message,
 				     String sipHashId,
+				     boolean thirdParty,
 				     byte destinationKey[],
 				     byte keyStream[],
 				     long sequence,
@@ -336,9 +338,25 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
-		 destinationKey);
+	    byte destination[] = null;
+
+	    if(thirdParty)
+	    {
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp);
+
+		destination = Cryptography.hmac
+		    (Miscellaneous.joinByteArrays(pk,
+						  aes256,
+						  sha512,
+						  sipHashId.getBytes("UTF-8"),
+						  Miscellaneous.
+						  longToByteArray(minutes)),
+		     destinationKey);
+	    }
+	    else
+		destination = Cryptography.hmac
+		    (Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		     destinationKey);
 
 	    return Miscellaneous.joinByteArrays
 		(pk, aes256, sha512, destination);
