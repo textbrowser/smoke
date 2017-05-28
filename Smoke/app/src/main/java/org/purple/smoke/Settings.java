@@ -1242,8 +1242,7 @@ public class Settings extends AppCompatActivity
 		{
 		    Miscellaneous.showErrorDialog
 			(Settings.this,
-			 "An error occurred while processing the Ozone data. " +
-			 "Perhaps a value should be provided.");
+			 "An error occurred while processing the Ozone data.");
 		    textView.requestFocus();
 		}
 	    }
