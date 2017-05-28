@@ -248,14 +248,10 @@ public class Cryptography
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)
 	    return false;
 
-	byte bytes[] = null;
-
 	synchronized(m_sipHashMacKeyMutex)
 	{
-	    bytes = hmac(data, m_sipHashMacKey);
+	    return memcmp(hmac(data, m_sipHashMacKey), mac);
 	}
-
-	return memcmp(bytes, mac);
     }
 
     public boolean iAmTheDestination(byte data[], byte mac[])
@@ -263,19 +259,10 @@ public class Cryptography
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)
 	    return false;
 
-	synchronized(m_ozoneMacKeyMutex)
-	{
-	    if(memcmp(hmac(data, m_ozoneMacKey), mac))
-		return true;
-	}
-
 	synchronized(m_sipHashIdDigestMutex)
 	{
-	    if(memcmp(hmac(data, m_sipHashIdDigest), mac))
-		return true;
+	    return memcmp(hmac(data, m_sipHashIdDigest), mac);
 	}
-
-	return false;
     }
 
     public boolean prepareSipHashKeys()
