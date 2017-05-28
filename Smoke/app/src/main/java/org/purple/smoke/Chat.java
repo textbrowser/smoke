@@ -158,7 +158,7 @@ public class Chat extends AppCompatActivity
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
-	TextView textView = (TextView) findViewById(R.id.chat_messages);
+	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 
 	stringBuilder.append("[");
 
@@ -174,7 +174,7 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append(": ");
 	stringBuilder.append(message);
 	stringBuilder.append("\n\n");
-	textView.append(stringBuilder);
+	textView1.append(stringBuilder);
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
@@ -196,6 +196,17 @@ public class Chat extends AppCompatActivity
 	}
 
 	scrollMessagesView();
+
+	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
+
+	textView2.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		textView2.requestFocus();
+	    }
+	});
     }
 
     private void halfAndHalfCall(String name,
@@ -211,7 +222,7 @@ public class Chat extends AppCompatActivity
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
-	TextView textView = (TextView) findViewById(R.id.chat_messages);
+	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 
 	stringBuilder.append("[");
 	stringBuilder.append(simpleDateFormat.format(new Date()));
@@ -234,11 +245,22 @@ public class Chat extends AppCompatActivity
 	    stringBuilder.append(" Dispatching a response. Please be patient.");
 
 	stringBuilder.append("\n\n");
-	textView.append(stringBuilder);
+	textView1.append(stringBuilder);
 	scrollMessagesView();
 
 	if(refresh)
 	    refreshCheckBox(sipHashId);
+
+	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
+
+	textView2.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		textView2.requestFocus();
+	    }
+	});
     }
 
     private void populateChat()
@@ -430,7 +452,7 @@ public class Chat extends AppCompatActivity
 		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss",
 				     Locale.getDefault());
 		StringBuilder stringBuilder = new StringBuilder();
-		TextView textView = (TextView) findViewById
+		TextView textView1 = (TextView) findViewById
 		    (R.id.chat_messages);
 		TableLayout tableLayout = (TableLayout) findViewById
 		    (R.id.participants);
@@ -467,12 +489,26 @@ public class Chat extends AppCompatActivity
 					   replace(":", ""), '-', 4).
 			     toUpperCase());
 			stringBuilder.append("). Please be patient.\n\n");
-			textView.append(stringBuilder);
+			textView1.append(stringBuilder);
 		    }
 		}
 
 		if(tableLayout.getChildCount() > 0)
+		{
 		    scrollMessagesView();
+
+		    final TextView textView2 = (TextView)
+			findViewById(R.id.chat_message);
+
+		    textView2.post(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    textView2.requestFocus();
+			}
+		    });
+		}
 	    }
         });
     }
