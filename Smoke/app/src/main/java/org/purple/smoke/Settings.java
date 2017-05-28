@@ -256,17 +256,22 @@ public class Settings extends AppCompatActivity
 	else
 	    ipVersion = "IPv6";
 
-	if(!m_databaseHelper.writeNeighbor(s_cryptography,
-					   proxyIpAddress.getText().toString(),
-					   proxyPort.getText().toString(),
-					   spinner2.getSelectedItem().
-					   toString(),
-					   textView1.getText().toString(),
-					   textView2.getText().toString(),
-					   textView3.getText().toString(),
-					   spinner1.getSelectedItem().
-					   toString(),
-					   ipVersion))
+	if(textView1.getText().toString().trim().isEmpty())
+	    Miscellaneous.showErrorDialog
+		(Settings.this,
+		 "Please complete the IP Address field.");
+	else if(!m_databaseHelper.
+		writeNeighbor(s_cryptography,
+			      proxyIpAddress.getText().toString(),
+			      proxyPort.getText().toString(),
+			      spinner2.getSelectedItem().
+			      toString(),
+			      textView1.getText().toString(),
+			      textView2.getText().toString(),
+			      textView3.getText().toString(),
+			      spinner1.getSelectedItem().
+			      toString(),
+			      ipVersion))
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
 		 "An error occurred while saving the neighbor information.");
