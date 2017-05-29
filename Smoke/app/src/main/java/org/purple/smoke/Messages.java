@@ -341,18 +341,16 @@ public class Messages
 	    byte destination[] = null;
 
 	    if(thirdParty)
-	    {
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp);
-
 		destination = Cryptography.hmac
-		    (Miscellaneous.joinByteArrays(pk,
-						  aes256,
-						  sha512,
-						  sipHashId.getBytes("UTF-8"),
-						  Miscellaneous.
-						  longToByteArray(minutes)),
+		    (Miscellaneous.
+		     joinByteArrays(pk,
+				    aes256,
+				    sha512,
+				    sipHashId.getBytes("UTF-8"),
+				    Miscellaneous.
+				    longToByteArray(TimeUnit.MILLISECONDS.
+						    toMinutes(timestamp))),
 		     destinationKey);
-	    }
 	    else
 		destination = Cryptography.hmac
 		    (Miscellaneous.joinByteArrays(pk, aes256, sha512),
