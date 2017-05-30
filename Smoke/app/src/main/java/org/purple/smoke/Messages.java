@@ -396,10 +396,10 @@ public class Messages
 		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
 
 		 /*
-		 ** [ SipHash Identity ]
+		 ** [ Encryption Public Key Digest ]
 		 */
 
-		 cryptography.sipHashId().getBytes("UTF-8"));
+		 cryptography.chatEncryptionPublicKeyDigest());
 
 	    /*
 	    ** [ Public Key Signature ]
