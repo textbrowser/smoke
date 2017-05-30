@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Kernel
 {
@@ -49,6 +50,8 @@ public class Kernel
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private final Object m_callQueueMutex = new Object();
+    private final ReentrantReadWriteLock m_neighborsMutex =
+	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final static Database s_databaseHelper = Database.getInstance();
     private final static Cryptography s_cryptography =
@@ -226,7 +229,9 @@ public class Kernel
 	** Disconnect all existing sockets.
 	*/
 
-	synchronized(m_neighbors)
+	m_neighborsMutex.writeLock().lock();
+
+	try
 	{
 	    for(int i = 0; i < m_neighbors.size(); i++)
 	    {
@@ -237,6 +242,10 @@ public class Kernel
 	    }
 
 	    m_neighbors.clear();
+	}
+	finally
+	{
+	    m_neighborsMutex.writeLock().unlock();
 	}
     }
 
@@ -750,7 +759,9 @@ public class Kernel
 
     public void clearNeighborQueues()
     {
-	synchronized(m_neighbors)
+	m_neighborsMutex.readLock().lock();
+
+	try
 	{
 	    for(int i = 0; i < m_neighbors.size(); i++)
 	    {
@@ -759,6 +770,10 @@ public class Kernel
 		if(m_neighbors.get(j) != null)
 		    m_neighbors.get(j).clearQueue();
 	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
 	}
     }
 
@@ -773,7 +788,9 @@ public class Kernel
 							     getBytes())))
 	    return;
 
-	synchronized(m_neighbors)
+	m_neighborsMutex.readLock().lock();
+
+	try
 	{
 	    for(int i = 0; i < m_neighbors.size(); i++)
 	    {
@@ -783,6 +800,10 @@ public class Kernel
 		   m_neighbors.get(j).getOid() != oid)
 		    m_neighbors.get(j).scheduleSend(message);
 	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
 	}
     }
 
@@ -813,7 +834,9 @@ public class Kernel
 	    return;
 	}
 
-	synchronized(m_neighbors)
+	m_neighborsMutex.writeLock().lock();
+
+	try
 	{
 	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
 	    {
@@ -841,6 +864,10 @@ public class Kernel
 		}
 	    }
 	}
+	finally
+	{
+	    m_neighborsMutex.writeLock().unlock();
+	}
 
 	for(NeighborElement neighborElement : neighbors)
 	{
@@ -848,10 +875,16 @@ public class Kernel
 		continue;
 	    else
 	    {
-		synchronized(m_neighbors)
+		m_neighborsMutex.readLock().lock();
+
+		try
 		{
 		    if(m_neighbors.get(neighborElement.m_oid) != null)
 			continue;
+		}
+		finally
+		{
+		    m_neighborsMutex.readLock().unlock();
 		}
 
 		if(neighborElement.m_statusControl.toLowerCase().
@@ -920,9 +953,15 @@ public class Kernel
 	    if(neighbor == null)
 		continue;
 
-	    synchronized(m_neighbors)
+	    m_neighborsMutex.writeLock().lock();
+
+	    try
 	    {
 		m_neighbors.append(neighborElement.m_oid, neighbor);
+	    }
+	    finally
+	    {
+		m_neighborsMutex.writeLock().unlock();
 	    }
 	}
 
@@ -931,7 +970,9 @@ public class Kernel
 
     public void retrieveChatMessages()
     {
-	synchronized(m_neighbors)
+	m_neighborsMutex.readLock().lock();
+
+	try
 	{
 	    if(m_neighbors.size() == 0)
 		return;
@@ -946,6 +987,10 @@ public class Kernel
 		if(m_neighbors.get(j) != null)
 		    m_neighbors.get(j).scheduleSend(message);
 	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
 	}
     }
 }
