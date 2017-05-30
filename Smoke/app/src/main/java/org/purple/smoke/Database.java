@@ -443,9 +443,9 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT " +
-		 "(SELECT encryption_public_key_digest || " +
-		 "signature_public_key_digest FROM participants p " +
-		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS c, " +
+		 "(SELECT p.encryption_public_key_digest || " +
+		 "p.signature_public_key_digest FROM participants p " +
+		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
 		 "s.name, " +
 		 "s.siphash_id, " +
 		 "s.stream, " +

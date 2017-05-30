@@ -60,7 +60,7 @@ public class Kernel
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
-    private final static int STATUS_INTERVAL = 25000; /*
+    private final static int STATUS_INTERVAL = 15000; /*
 						      ** Should be less than
 						      ** Chat.STATUS_WINDOW.
 						      */
