@@ -61,6 +61,7 @@ public class Cryptography
     private SecretKey m_macKey = null;
     private String m_sipHashId = "00:00:00:00:00:00:00:00";
     private byte m_identity[] = null;
+    private byte m_ozoneEncryptionKey[] = null;
     private byte m_ozoneMacKey[] = null;
     private byte m_sipHashEncryptionKey[] = null;
     private byte m_sipHashIdDigest[] = null;
@@ -70,6 +71,7 @@ public class Cryptography
     private final Object m_encryptionKeyMutex = new Object();
     private final Object m_identityMutex = new Object();
     private final Object m_macKeyMutex = new Object();
+    private final Object m_ozoneEncryptionKeyMutex = new Object();
     private final Object m_ozoneMacKeyMutex = new Object();
     private final Object m_sipHashEncryptionKeyMutex = new Object();
     private final Object m_sipHashIdDigestMutex = new Object();
@@ -548,6 +550,14 @@ public class Cryptography
 	}
 
 	return bytes;
+    }
+
+    public byte[] ozoneEncryptionKey()
+    {
+	synchronized(m_ozoneEncryptionKeyMutex)
+	{
+	    return m_ozoneEncryptionKey;
+	}
     }
 
     public byte[] ozoneMacKey()
@@ -1206,6 +1216,14 @@ public class Cryptography
 	    m_macKey = null;
 	}
 
+	synchronized(m_ozoneEncryptionKeyMutex)
+	{
+	    if(m_ozoneEncryptionKey != null)
+		Arrays.fill(m_ozoneEncryptionKey, (byte) 0);
+
+	    m_ozoneEncryptionKey = null;
+	}
+
 	synchronized(m_ozoneMacKeyMutex)
 	{
 	    if(m_ozoneMacKey != null)
@@ -1303,6 +1321,22 @@ public class Cryptography
 	synchronized(m_macKeyMutex)
 	{
 	    m_macKey = key;
+	}
+    }
+
+    public void setOzoneEncryptionKey(byte bytes[])
+    {
+	synchronized(m_ozoneEncryptionKeyMutex)
+	{
+	    if(bytes != null && bytes.length == 64)
+		m_ozoneEncryptionKey = Miscellaneous.deepCopy(bytes);
+	    else
+	    {
+		if(m_ozoneEncryptionKey != null)
+		    Arrays.fill(m_ozoneEncryptionKey, (byte) 0);
+
+		m_ozoneEncryptionKey = null;
+	    }
 	}
     }
 

@@ -926,4 +926,27 @@ public class Kernel
 
 	neighbors.clear();
     }
+
+    public void retrieveChatMessages()
+    {
+	synchronized(m_neighbors)
+	{
+	    if(m_neighbors.size() == 0)
+		return;
+
+	    String message = Messages.bytesToMessageString
+		(Messages.chatMessageRetrieval(s_cryptography));
+
+	    if(message.isEmpty())
+		return;
+
+	    for(int i = 0; i < m_neighbors.size(); i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null)
+		    m_neighbors.get(j).scheduleSend(message);
+	    }
+	}
+    }
 }

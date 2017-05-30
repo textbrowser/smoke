@@ -368,10 +368,9 @@ public class Messages
 	return null;
     }
 
-    public static byte[] chatMessageRetrieval(Cryptography cryptography,
-					      byte keyStream[])
+    public static byte[] chatMessageRetrieval(Cryptography cryptography)
     {
-	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	if(cryptography == null)
 	    return null;
 
 	/*
@@ -417,7 +416,7 @@ public class Messages
 
 	    byte aes256[] = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
-		 Arrays.copyOfRange(keyStream, 0, 32));
+		 cryptography.ozoneEncryptionKey());
 
 	    if(aes256 == null)
 		return null;
@@ -427,7 +426,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(aes256, Arrays.copyOfRange(keyStream, 32, keyStream.length));
+		(aes256, cryptography.ozoneMacKey());
 
 	    if(sha512 == null)
 		return null;

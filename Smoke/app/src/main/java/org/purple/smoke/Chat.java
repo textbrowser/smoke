@@ -968,7 +968,10 @@ public class Chat extends AppCompatActivity
 	    case 0: // Refresh Participants Table
 		populateParticipants();
 		break;
-	    case 1: // Show Details
+	    case 1: // Retrieve Messages
+		Kernel.getInstance().retrieveChatMessages();
+		break;
+	    case 2: // Show Details
 		item.setChecked(!item.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,
@@ -976,7 +979,7 @@ public class Chat extends AppCompatActivity
 		     item.isChecked() ? "true" : "false");
 		populateParticipants();
 		break;
-	    case 2: // Show Icons
+	    case 3: // Show Icons
 		item.setChecked(!item.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,
@@ -1041,11 +1044,12 @@ public class Chat extends AppCompatActivity
 	}
 
 	menu.add(0, -1, 0, "Refresh Participants Table");
-	item = menu.add(1, -1, 0, "Show Details").setCheckable(true);
+	menu.add(1, -1, 0, "Retrieve Messages");
+	item = menu.add(2, -1, 0, "Show Details").setCheckable(true);
 	item.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_details").equals("true"));
-	item = menu.add(2, -1, 0, "Show Icons").setCheckable(true);
+	item = menu.add(3, -1, 0, "Show Icons").setCheckable(true);
 	item.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_icons").equals("true"));
