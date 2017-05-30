@@ -172,3 +172,4 @@ Remaining Items
 3.     Describe the Ozone feature.
 4.     Disable Chat:Send if there is at least one selected participant
        without a session.
+5.     New date format: YYYY-MM-DD.
