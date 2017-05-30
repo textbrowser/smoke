@@ -1220,6 +1220,7 @@ public class Settings extends AppCompatActivity
 				 "ozone_address_stream",
 				 "");
 			    ok = true;
+			    s_cryptography.setOzoneEncryptionKey(null);
 			    s_cryptography.setOzoneMacKey(null);
 			}
 			else
@@ -1229,6 +1230,8 @@ public class Settings extends AppCompatActivity
 				 "ozone_address_stream",
 				 Base64.encodeToString(bytes,
 						       Base64.DEFAULT));
+			    s_cryptography.setOzoneEncryptionKey
+				(Arrays.copyOfRange(bytes, 0, 32));
 			    s_cryptography.setOzoneMacKey
 				(Arrays.copyOfRange(bytes, 32, bytes.length));
 			}

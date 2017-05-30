@@ -193,7 +193,7 @@ public class Authenticate extends AppCompatActivity
 				     readSetting(s_cryptography,
 						 "identity").
 				     getBytes(), Base64.DEFAULT);
-				byte ozoneMacKey[] = Base64.decode
+				byte ozoneKeyStream[] = Base64.decode
 				    (m_databaseHelper.
 				     readSetting(s_cryptography,
 						 "ozone_address_stream").
@@ -237,12 +237,24 @@ public class Authenticate extends AppCompatActivity
 				s_cryptography.setChatSignaturePublicKeyPair
 				    (algorithm, privateBytes, publicBytes);
 
-				if(ozoneMacKey != null &&
-				   ozoneMacKey.length == 96)
-				    ozoneMacKey = Arrays.copyOfRange
-					(ozoneMacKey, 32, ozoneMacKey.length);
-
-				s_cryptography.setOzoneMacKey(ozoneMacKey);
+				if(ozoneKeyStream != null &&
+				   ozoneKeyStream.length == 96)
+				{
+				    s_cryptography.setOzoneEncryptionKey
+					(Arrays.copyOfRange(ozoneKeyStream,
+							    0,
+							    32));
+				    s_cryptography.setOzoneMacKey
+					(Arrays.copyOfRange(ozoneKeyStream,
+							    32,
+							    ozoneKeyStream.
+							    length));
+				}
+				else
+				{
+				    s_cryptography.setOzoneEncryptionKey(null);
+				    s_cryptography.setOzoneMacKey(null);
+				}
 
 				boolean e1 = s_cryptography.
 				    prepareSipHashIds();

@@ -937,9 +937,6 @@ public class Kernel
 	    String message = Messages.bytesToMessageString
 		(Messages.chatMessageRetrieval(s_cryptography));
 
-	    if(message.isEmpty())
-		return;
-
 	    for(int i = 0; i < m_neighbors.size(); i++)
 	    {
 		int j = m_neighbors.keyAt(i);
