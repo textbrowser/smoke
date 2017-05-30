@@ -313,7 +313,6 @@ public class Chat extends AppCompatActivity
 	boolean showIcons = m_databaseHelper.readSetting
 	    (null, "show_chat_icons").equals("true");
 	int i = 0;
-	long current = System.currentTimeMillis();
 
 	for(ParticipantElement participantElement : arrayList)
 	{
@@ -325,6 +324,8 @@ public class Chat extends AppCompatActivity
 
 	    if(showIcons)
 	    {
+		long current = System.currentTimeMillis();
+
 		if(participantElement.m_keyStream == null ||
 		   participantElement.m_keyStream.length != 96)
 		    checkBox.setCompoundDrawablesWithIntrinsicBounds
@@ -576,6 +577,8 @@ public class Chat extends AppCompatActivity
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
+	    long current = System.currentTimeMillis();
+
 	    if(participantElement.m_keyStream == null ||
 	       participantElement.m_keyStream.length != 96)
 		checkBox.setCompoundDrawablesWithIntrinsicBounds
