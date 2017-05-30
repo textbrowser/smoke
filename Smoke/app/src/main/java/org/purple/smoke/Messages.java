@@ -37,6 +37,8 @@ public class Messages
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
+    public final static byte CHAT_MESSAGE_RETRIEVAL[] =
+	new byte[] {0x00, 0x01};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 5; /*
@@ -358,6 +360,79 @@ public class Messages
 
 	    return Miscellaneous.joinByteArrays
 		(pk, aes256, sha512, destination);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public static byte[] chatMessageRetrieval(Cryptography cryptography,
+					      byte keyStream[])
+    {
+	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
+	*/
+
+	try
+	{
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(
+		 /*
+		 ** [ A Byte ]
+		 */
+
+		 new byte[] {CHAT_MESSAGE_RETRIEVAL[0]},
+
+		 /*
+		 ** [ A Timestamp ]
+		 */
+
+		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
+
+		 /*
+		 ** [ SipHash Identity ]
+		 */
+
+		 cryptography.sipHashId().getBytes("UTF-8"));
+
+	    /*
+	    ** [ Public Key Signature ]
+	    */
+
+	    byte signature[] = cryptography.signViaChatSignature(bytes);
+
+	    if(signature == null)
+		return null;
+
+	    /*
+	    ** [ AES-256 ]
+	    */
+
+	    byte aes256[] = Cryptography.encrypt
+		(Miscellaneous.joinByteArrays(bytes, signature),
+		 Arrays.copyOfRange(keyStream, 0, 32));
+
+	    if(aes256 == null)
+		return null;
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(aes256, Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+	    if(sha512 == null)
+		return null;
+
+	    return Miscellaneous.joinByteArrays(aes256, sha512);
 	}
 	catch(Exception exception)
 	{
