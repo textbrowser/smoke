@@ -49,7 +49,8 @@ public class Kernel
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
-    private final Object m_callQueueMutex = new Object();
+    private final ReentrantReadWriteLock m_callQueueMutex =
+	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
@@ -90,7 +91,9 @@ public class Kernel
 			ParticipantCall participantCall = null;
 			String sipHashId = "";
 
-			synchronized(m_callQueueMutex)
+			m_callQueueMutex.writeLock().lock();
+
+			try
 			{
 			    if(m_callQueue.isEmpty())
 				return;
@@ -142,6 +145,10 @@ public class Kernel
 			    participantCall = m_callQueue.get(sipHashId);
 			    participantCall.preparePrivatePublicKey();
 			    m_callQueue.put(sipHashId, participantCall);
+			}
+			finally
+			{
+			    m_callQueueMutex.writeLock().unlock();
 			}
 
 			/*
@@ -256,13 +263,19 @@ public class Kernel
 	** as they are considered temporary.
 	*/
 
-	synchronized(m_callQueueMutex)
+	m_callQueueMutex.writeLock().lock();
+
+	try
 	{
 	    if(m_callQueue.containsKey(sipHashId))
 		return false;
 
 	    m_callQueue.put
 		(sipHashId, new ParticipantCall(sipHashId, participantOid));
+	}
+	finally
+	{
+	    m_callQueueMutex.writeLock().unlock();
 	}
 
 	return true;
@@ -667,17 +680,29 @@ public class Kernel
 		    {
 			ParticipantCall participantCall = null;
 
-			synchronized(m_callQueueMutex)
+			m_callQueueMutex.readLock().lock();
+
+			try
 			{
 			    participantCall = m_callQueue.get(array[1]);
+			}
+			finally
+			{
+			    m_callQueueMutex.readLock().unlock();
 			}
 
 			if(participantCall == null)
 			    return false;
 
-			synchronized(m_callQueueMutex)
+			m_callQueueMutex.writeLock().lock();
+
+			try
 			{
 			    m_callQueue.remove(array[1]);
+			}
+			finally
+			{
+			    m_callQueueMutex.writeLock().unlock();
 			}
 
 			keyStream = Cryptography.pkiDecrypt

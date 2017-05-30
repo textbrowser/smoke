@@ -44,6 +44,7 @@ import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
@@ -66,17 +67,28 @@ public class Cryptography
     private byte m_sipHashEncryptionKey[] = null;
     private byte m_sipHashIdDigest[] = null;
     private byte m_sipHashMacKey[] = null;
-    private final Object m_chatEncryptionPublicKeyPairMutex = new Object();
-    private final Object m_chatSignaturePublicKeyPairMutex = new Object();
-    private final Object m_encryptionKeyMutex = new Object();
-    private final Object m_identityMutex = new Object();
-    private final Object m_macKeyMutex = new Object();
-    private final Object m_ozoneEncryptionKeyMutex = new Object();
-    private final Object m_ozoneMacKeyMutex = new Object();
-    private final Object m_sipHashEncryptionKeyMutex = new Object();
-    private final Object m_sipHashIdDigestMutex = new Object();
-    private final Object m_sipHashIdMutex = new Object();
-    private final Object m_sipHashMacKeyMutex = new Object();
+    private final ReentrantReadWriteLock m_chatEncryptionPublicKeyPairMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_chatSignaturePublicKeyPairMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_encryptionKeyMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_identityMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_macKeyMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_ozoneEncryptionKeyMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_ozoneMacKeyMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_sipHashEncryptionKeyMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_sipHashIdDigestMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_sipHashIdMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_sipHashMacKeyMutex =
+	new ReentrantReadWriteLock();
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
@@ -121,39 +133,63 @@ public class Cryptography
 
     public KeyPair chatEncryptionKeyPair()
     {
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    return m_chatEncryptionPublicKeyPair;
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
 	}
     }
 
     public KeyPair chatSignatureKeyPair()
     {
-	synchronized(m_chatSignaturePublicKeyPairMutex)
+	m_chatSignaturePublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    return m_chatSignaturePublicKeyPair;
+	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.readLock().unlock();
 	}
     }
 
     public PublicKey chatEncryptionPublicKey()
     {
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    if(m_chatEncryptionPublicKeyPair != null)
 		return m_chatEncryptionPublicKeyPair.getPublic();
 	    else
 		return null;
 	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
+	}
     }
 
     public PublicKey chatSignaturePublicKey()
     {
-	synchronized(m_chatSignaturePublicKeyPairMutex)
+	m_chatSignaturePublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    if(m_chatSignaturePublicKeyPair != null)
 		return m_chatSignaturePublicKeyPair.getPublic();
 	    else
 		return null;
+	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.readLock().unlock();
 	}
     }
 
@@ -205,9 +241,15 @@ public class Cryptography
 
     public String sipHashId()
     {
-	synchronized(m_sipHashIdMutex)
+	m_sipHashIdMutex.readLock().lock();
+
+	try
 	{
 	    return m_sipHashId;
+	}
+	finally
+	{
+	    m_sipHashIdMutex.readLock().unlock();
 	}
     }
 
@@ -216,13 +258,19 @@ public class Cryptography
 	if(key == null)
 	    return false;
 
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    if(key.equals(m_chatEncryptionPublicKeyPair.getPublic()))
 		return true;
 	    else if(key.hashCode() ==
 		    m_chatEncryptionPublicKeyPair.getPublic().hashCode())
 	    return true;
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
 	}
 
 	return false;
@@ -233,13 +281,19 @@ public class Cryptography
 	if(key == null)
 	    return false;
 
-	synchronized(m_chatSignaturePublicKeyPairMutex)
+	m_chatSignaturePublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    if(key.equals(m_chatSignaturePublicKeyPair.getPublic()))
 		return true;
 	    else if(key.hashCode() ==
 		    m_chatSignaturePublicKeyPair.getPublic().hashCode())
 		return true;
+	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.readLock().unlock();
 	}
 
 	return false;
@@ -250,9 +304,15 @@ public class Cryptography
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)
 	    return false;
 
-	synchronized(m_sipHashMacKeyMutex)
+	m_sipHashMacKeyMutex.readLock().lock();
+
+	try
 	{
 	    return memcmp(hmac(data, m_sipHashMacKey), mac);
+	}
+	finally
+	{
+	    m_sipHashMacKeyMutex.readLock().unlock();
 	}
     }
 
@@ -261,9 +321,15 @@ public class Cryptography
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)
 	    return false;
 
-	synchronized(m_sipHashIdDigestMutex)
+	m_sipHashIdDigestMutex.readLock().lock();
+
+	try
 	{
 	    return memcmp(hmac(data, m_sipHashIdDigest), mac);
+	}
+	finally
+	{
+	    m_sipHashIdDigestMutex.readLock().unlock();
 	}
     }
 
@@ -275,13 +341,19 @@ public class Cryptography
 	    byte salt[] = null;
 	    byte temporary[] = null;
 
-	    synchronized(m_sipHashIdMutex)
+	    m_sipHashIdMutex.readLock().lock();
+
+	    try
 	    {
 		salt = sha512(m_sipHashId.getBytes("UTF-8"));
 		temporary = pbkdf2(salt,
 				   m_sipHashId.toCharArray(),
 				   SIPHASH_STREAM_CREATION_ITERATION_COUNT,
 				   160); // SHA-1
+	    }
+	    finally
+	    {
+		m_sipHashIdMutex.readLock().unlock();
 	    }
 
 	    if(temporary != null)
@@ -292,14 +364,26 @@ public class Cryptography
 
 	    if(bytes != null)
 	    {
-		synchronized(m_sipHashEncryptionKeyMutex)
+		m_sipHashEncryptionKeyMutex.writeLock().lock();
+
+		try
 		{
 		    m_sipHashEncryptionKey = Arrays.copyOfRange(bytes, 0, 32);
 		}
+		finally
+		{
+		    m_sipHashEncryptionKeyMutex.writeLock().unlock();
+		}
 
-		synchronized(m_sipHashMacKeyMutex)
+		m_sipHashMacKeyMutex.writeLock().lock();
+
+		try
 		{
 		    m_sipHashMacKey = Arrays.copyOfRange(bytes, 32, 96);
+		}
+		finally
+		{
+		    m_sipHashMacKeyMutex.writeLock().unlock();
 		}
 	    }
 	    else
@@ -315,7 +399,9 @@ public class Cryptography
 
     public byte[] chatEncryptionPublicKeyDigest()
     {
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    if(m_chatEncryptionPublicKeyPair == null ||
 	       m_chatEncryptionPublicKeyPair.getPublic() == null)
@@ -323,6 +409,10 @@ public class Cryptography
 
 	    return sha512(m_chatEncryptionPublicKeyPair.getPublic().
 			  getEncoded());
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
 	}
     }
 
@@ -335,7 +425,9 @@ public class Cryptography
 
 	try
 	{
-	    synchronized(m_sipHashEncryptionKeyMutex)
+	    m_sipHashEncryptionKeyMutex.readLock().lock();
+
+	    try
 	    {
 		if(m_sipHashEncryptionKey == null)
 		    return null;
@@ -351,6 +443,10 @@ public class Cryptography
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal
 		    (Arrays.copyOfRange(data, 16, data.length));
+	    }
+	    finally
+	    {
+		m_sipHashEncryptionKeyMutex.readLock().unlock();
 	    }
 	}
 	catch(Exception exception)
@@ -370,16 +466,28 @@ public class Cryptography
 	if(data == null || data.length < 0)
 	    return null;
 
-	synchronized(m_encryptionKeyMutex)
+	m_encryptionKeyMutex.readLock().lock();
+
+	try
 	{
 	    if(m_encryptionKey == null)
 		return null;
 	}
+	finally
+	{
+	    m_encryptionKeyMutex.readLock().unlock();
+	}
 
-	synchronized(m_macKeyMutex)
+	m_macKeyMutex.readLock().lock();
+
+	try
 	{
 	    if(m_macKey == null)
 		return null;
+	}
+	finally
+	{
+	    m_macKeyMutex.readLock().unlock();
 	}
 
 	prepareSecureRandom();
@@ -388,7 +496,9 @@ public class Cryptography
 
 	try
 	{
-	    synchronized(m_encryptionKeyMutex)
+	    m_encryptionKeyMutex.readLock().lock();
+
+	    try
 	    {
 		if(m_encryptionKey == null)
 		    return null;
@@ -404,8 +514,14 @@ public class Cryptography
 		bytes = cipher.doFinal(data);
 		bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	    }
+	    finally
+	    {
+		m_encryptionKeyMutex.readLock().unlock();
+	    }
 
-	    synchronized(m_macKeyMutex)
+	    m_macKeyMutex.readLock().lock();
+
+	    try
 	    {
 		if(m_macKey == null)
 		    return null;
@@ -415,6 +531,10 @@ public class Cryptography
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
 		bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
+	    }
+	    finally
+	    {
+		m_macKeyMutex.readLock().unlock();
 	    }
 	}
 	catch(Exception exception)
@@ -430,7 +550,9 @@ public class Cryptography
 	if(data == null || data.length < 0)
 	    return null;
 
-	synchronized(m_macKeyMutex)
+	m_macKeyMutex.readLock().lock();
+
+	try
 	{
 	    if(m_macKey == null)
 		return null;
@@ -452,13 +574,18 @@ public class Cryptography
 
 	    return bytes;
 	}
+	finally
+	{
+	    m_macKeyMutex.readLock().unlock();
+	}
     }
 
     public byte[] identity()
     {
 	prepareSecureRandom();
+	m_identityMutex.writeLock().lock();
 
-	synchronized(m_identityMutex)
+	try
 	{
 	    if(m_identity == null)
 	    {
@@ -467,6 +594,10 @@ public class Cryptography
 	    }
 
 	    return m_identity;
+	}
+	finally
+	{
+	    m_identityMutex.writeLock().unlock();
 	}
     }
 
@@ -479,16 +610,28 @@ public class Cryptography
 	if(data == null || data.length < 0)
 	    return null;
 
-	synchronized(m_encryptionKeyMutex)
+	m_encryptionKeyMutex.readLock().lock();
+
+	try
 	{
 	    if(m_encryptionKey == null)
 		return null;
 	}
+	finally
+	{
+	    m_encryptionKeyMutex.readLock().unlock();
+	}
 
-	synchronized(m_macKeyMutex)
+	m_macKeyMutex.readLock().lock();
+
+	try
 	{
 	    if(m_macKey == null)
 		return null;
+	}
+	finally
+	{
+	    m_macKeyMutex.readLock().unlock();
 	}
 
 	try
@@ -503,7 +646,9 @@ public class Cryptography
 	    digest1 = Arrays.copyOfRange
 		(data, data.length - 512 / 8, data.length);
 
-	    synchronized(m_macKeyMutex)
+	    m_macKeyMutex.readLock().lock();
+
+	    try
 	    {
 		if(m_macKey == null)
 		    return null;
@@ -514,6 +659,10 @@ public class Cryptography
 		mac.init(m_macKey);
 		digest2 = mac.doFinal
 		    (Arrays.copyOf(data, data.length - 512 / 8));
+	    }
+	    finally
+	    {
+		m_macKeyMutex.readLock().unlock();
 	    }
 
 	    if(!memcmp(digest1, digest2))
@@ -528,7 +677,9 @@ public class Cryptography
 
 	try
 	{
-	    synchronized(m_encryptionKeyMutex)
+	    m_encryptionKeyMutex.readLock().lock();
+
+	    try
 	    {
 		if(m_encryptionKey == null)
 		    return null;
@@ -543,6 +694,10 @@ public class Cryptography
 		bytes = cipher.doFinal
 		    (Arrays.copyOfRange(data, 16, data.length - 512 / 8));
 	    }
+	    finally
+	    {
+		m_encryptionKeyMutex.readLock().unlock();
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -554,17 +709,29 @@ public class Cryptography
 
     public byte[] ozoneEncryptionKey()
     {
-	synchronized(m_ozoneEncryptionKeyMutex)
+	m_ozoneEncryptionKeyMutex.readLock().lock();
+
+	try
 	{
 	    return m_ozoneEncryptionKey;
+	}
+	finally
+	{
+	    m_ozoneEncryptionKeyMutex.readLock().unlock();
 	}
     }
 
     public byte[] ozoneMacKey()
     {
-	synchronized(m_ozoneMacKeyMutex)
+	m_ozoneMacKeyMutex.readLock().lock();
+
+	try
 	{
 	    return m_ozoneMacKey;
+	}
+	finally
+	{
+	    m_ozoneMacKeyMutex.readLock().unlock();
 	}
     }
 
@@ -573,7 +740,9 @@ public class Cryptography
 	if(data == null || data.length < 0)
 	    return null;
 
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    byte bytes[] = null;
 
@@ -593,6 +762,10 @@ public class Cryptography
 
 	    return bytes;
 	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
+	}
     }
 
     public byte[] signViaChatEncryption(byte data[])
@@ -600,7 +773,9 @@ public class Cryptography
 	if(data == null || data.length < 0)
 	    return null;
 
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    if(m_chatEncryptionPublicKeyPair == null ||
 	       m_chatEncryptionPublicKeyPair.getPrivate() == null)
@@ -630,6 +805,10 @@ public class Cryptography
 
 	    return bytes;
 	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
+	}
     }
 
     public byte[] signViaChatSignature(byte data[])
@@ -637,7 +816,9 @@ public class Cryptography
 	if(data == null || data.length < 0)
 	    return null;
 
-	synchronized(m_chatSignaturePublicKeyPairMutex)
+	m_chatSignaturePublicKeyPairMutex.readLock().lock();
+
+	try
 	{
 	    if(m_chatSignaturePublicKeyPair == null ||
 	       m_chatSignaturePublicKeyPair.getPrivate() == null)
@@ -667,21 +848,37 @@ public class Cryptography
 
 	    return bytes;
 	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.readLock().unlock();
+	}
     }
 
     public byte[] sipHashEncryptionKey()
     {
-	synchronized(m_sipHashEncryptionKeyMutex)
+	m_sipHashEncryptionKeyMutex.readLock().lock();
+
+	try
 	{
 	    return m_sipHashEncryptionKey;
+	}
+	finally
+	{
+	    m_sipHashEncryptionKeyMutex.readLock().unlock();
 	}
     }
 
     public byte[] sipHashMacKey()
     {
-	synchronized(m_sipHashMacKeyMutex)
+	m_sipHashMacKeyMutex.readLock().lock();
+
+	try
 	{
 	    return m_sipHashMacKey;
+	}
+	finally
+	{
+	    m_sipHashMacKeyMutex.readLock().unlock();
 	}
     }
 
@@ -1164,18 +1361,30 @@ public class Cryptography
 		if(bytes == null || bytes.length < 0)
 		    return false;
 
-		synchronized(m_sipHashIdDigestMutex)
+		m_sipHashIdDigestMutex.writeLock().lock();
+
+		try
 		{
 		    m_sipHashIdDigest = Miscellaneous.deepCopy
 			(sha512(Miscellaneous.
 				byteArrayAsHexStringDelimited(bytes, ':', 2).
 				getBytes()));
 		}
+		finally
+		{
+		    m_sipHashIdDigestMutex.writeLock().unlock();
+		}
 
-		synchronized(m_sipHashIdMutex)
+		m_sipHashIdMutex.writeLock().lock();
+
+		try
 		{
 		    m_sipHashId = Miscellaneous.
 			byteArrayAsHexStringDelimited(bytes, ':', 2);
+		}
+		finally
+		{
+		    m_sipHashIdMutex.writeLock().unlock();
 		}
 	    }
 	    else
@@ -1191,82 +1400,154 @@ public class Cryptography
 
     public void reset()
     {
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
+
+	try
 	{
 	    m_chatEncryptionPublicKeyPair = null;
 	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.writeLock().unlock();
+	}
 
-	synchronized(m_chatSignaturePublicKeyPairMutex)
+	m_chatSignaturePublicKeyPairMutex.writeLock().lock();
+
+	try
 	{
 	    m_chatSignaturePublicKeyPair = null;
 	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.writeLock().unlock();
+	}
 
-	synchronized(m_encryptionKeyMutex)
+	m_encryptionKeyMutex.writeLock().lock();
+
+	try
 	{
 	    m_encryptionKey = null;
 	}
+	finally
+	{
+	    m_encryptionKeyMutex.writeLock().unlock();
+	}
 
-	synchronized(m_identityMutex)
+	m_identityMutex.writeLock().lock();
+
+	try
 	{
 	    m_identity = null;
 	}
+	finally
+	{
+	    m_identityMutex.writeLock().unlock();
+	}
 
-	synchronized(m_macKeyMutex)
+	m_macKeyMutex.writeLock().lock();
+
+	try
 	{
 	    m_macKey = null;
 	}
+	finally
+	{
+	    m_macKeyMutex.writeLock().unlock();
+	}
 
-	synchronized(m_ozoneEncryptionKeyMutex)
+	m_ozoneEncryptionKeyMutex.writeLock().lock();
+
+	try
 	{
 	    if(m_ozoneEncryptionKey != null)
 		Arrays.fill(m_ozoneEncryptionKey, (byte) 0);
 
 	    m_ozoneEncryptionKey = null;
 	}
+	finally
+	{
+	    m_ozoneEncryptionKeyMutex.writeLock().unlock();
+	}
 
-	synchronized(m_ozoneMacKeyMutex)
+	m_ozoneMacKeyMutex.writeLock().lock();
+
+	try
 	{
 	    if(m_ozoneMacKey != null)
 		Arrays.fill(m_ozoneMacKey, (byte) 0);
 
 	    m_ozoneMacKey = null;
 	}
+	finally
+	{
+	    m_ozoneMacKeyMutex.writeLock().unlock();
+	}
 
-	synchronized(m_sipHashEncryptionKeyMutex)
+	m_sipHashEncryptionKeyMutex.writeLock().lock();
+
+	try
 	{
 	    if(m_sipHashEncryptionKey != null)
 		Arrays.fill(m_sipHashEncryptionKey, (byte) 0);
 
 	    m_sipHashEncryptionKey = null;
 	}
+	finally
+	{
+	    m_sipHashEncryptionKeyMutex.writeLock().unlock();
+	}
 
-	synchronized(m_sipHashIdDigestMutex)
+	m_sipHashIdDigestMutex.writeLock().lock();
+
+	try
 	{
 	    if(m_sipHashIdDigest != null)
 		Arrays.fill(m_sipHashIdDigest, (byte) 0);
 
 	    m_sipHashIdDigest = null;
 	}
+	finally
+	{
+	    m_sipHashIdDigestMutex.writeLock().unlock();
+	}
 
-	synchronized(m_sipHashIdMutex)
+	m_sipHashIdMutex.writeLock().lock();
+
+	try
 	{
 	    m_sipHashId = "00:00:00:00:00:00:00:00";
 	}
+	finally
+	{
+	    m_sipHashIdMutex.writeLock().unlock();
+	}
 
-	synchronized(m_sipHashMacKeyMutex)
+	m_sipHashMacKeyMutex.writeLock().lock();
+
+	try
 	{
 	    if(m_sipHashMacKey != null)
 		Arrays.fill(m_sipHashMacKey, (byte) 0);
 
 	    m_sipHashMacKey = null;
 	}
+	finally
+	{
+	    m_sipHashMacKeyMutex.writeLock().unlock();
+	}
     }
 
     public void setChatEncryptionPublicKeyPair(KeyPair keyPair)
     {
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
+
+	try
 	{
 	    m_chatEncryptionPublicKeyPair = keyPair;
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.writeLock().unlock();
 	}
     }
 
@@ -1274,18 +1555,30 @@ public class Cryptography
 					       byte privateBytes[],
 					       byte publicBytes[])
     {
-	synchronized(m_chatEncryptionPublicKeyPairMutex)
+	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
+
+	try
 	{
 	    m_chatEncryptionPublicKeyPair = generatePrivatePublicKeyPair
 		(algorithm, privateBytes, publicBytes);
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.writeLock().unlock();
 	}
     }
 
     public void setChatSignaturePublicKeyPair(KeyPair keyPair)
     {
-	synchronized(m_chatSignaturePublicKeyPairMutex)
+	m_chatSignaturePublicKeyPairMutex.writeLock().lock();
+
+	try
 	{
 	    m_chatSignaturePublicKeyPair = keyPair;
+	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.writeLock().unlock();
 	}
     }
 
@@ -1293,40 +1586,66 @@ public class Cryptography
 					      byte privateBytes[],
 					      byte publicBytes[])
     {
-	synchronized(m_chatSignaturePublicKeyPairMutex)
+	m_chatSignaturePublicKeyPairMutex.writeLock().lock();
+
+	try
 	{
 	    m_chatSignaturePublicKeyPair = generatePrivatePublicKeyPair
 		(algorithm, privateBytes, publicBytes);
+	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.writeLock().unlock();
 	}
     }
 
     public void setEncryptionKey(SecretKey key)
     {
-	synchronized(m_encryptionKeyMutex)
+	m_encryptionKeyMutex.writeLock().lock();
+
+	try
 	{
 	    m_encryptionKey = key;
+	}
+	finally
+	{
+	    m_encryptionKeyMutex.writeLock().unlock();
 	}
     }
 
     public void setIdentity(byte identity[])
     {
-	synchronized(m_identityMutex)
+	m_identityMutex.writeLock().lock();
+
+	try
 	{
 	    m_identity = Miscellaneous.deepCopy(identity);
+	}
+	finally
+	{
+	    m_identityMutex.writeLock().unlock();
 	}
     }
 
     public void setMacKey(SecretKey key)
     {
-	synchronized(m_macKeyMutex)
+	m_macKeyMutex.writeLock().lock();
+
+	try
 	{
 	    m_macKey = key;
+	}
+	finally
+	{
+	    m_macKeyMutex.writeLock().unlock();
 	}
     }
 
     public void setOzoneEncryptionKey(byte bytes[])
     {
-	synchronized(m_ozoneEncryptionKeyMutex)
+	m_ozoneEncryptionKeyMutex.writeLock().lock();
+
+	try
 	{
 	    if(bytes != null && bytes.length == 64)
 		m_ozoneEncryptionKey = Miscellaneous.deepCopy(bytes);
@@ -1338,11 +1657,17 @@ public class Cryptography
 		m_ozoneEncryptionKey = null;
 	    }
 	}
+	finally
+	{
+	    m_ozoneEncryptionKeyMutex.writeLock().unlock();
+	}
     }
 
     public void setOzoneMacKey(byte bytes[])
     {
-	synchronized(m_ozoneMacKeyMutex)
+	m_ozoneMacKeyMutex.writeLock().lock();
+
+	try
 	{
 	    if(bytes != null && bytes.length == 64)
 		m_ozoneMacKey = Miscellaneous.deepCopy(bytes);
@@ -1353,6 +1678,10 @@ public class Cryptography
 
 		m_ozoneMacKey = null;
 	    }
+	}
+	finally
+	{
+	    m_ozoneMacKeyMutex.writeLock().unlock();
 	}
     }
 }
