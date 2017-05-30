@@ -472,14 +472,22 @@ public class Chat extends AppCompatActivity
 
 		    if(checkBox.getTag() != null && checkBox.isChecked())
 		    {
-			Kernel.getInstance().call
+			boolean ok = Kernel.getInstance().call
 			    (checkBox.getId(), checkBox.getTag().toString());
+
 			stringBuilder.setLength(0);
 			stringBuilder.append("[");
 			stringBuilder.append
 			    (simpleDateFormat.format(new Date()));
 			stringBuilder.append("] ");
-			stringBuilder.append("Initiating a session with ");
+
+			if(ok)
+			    stringBuilder.append("Initiating a session with ");
+			else
+			    stringBuilder.append
+				("Smoke is currently attempting to " +
+				 "establish a session with ");
+
 			stringBuilder.append
 			    (nameFromCheckBoxText(checkBox.getText().
 						  toString()));

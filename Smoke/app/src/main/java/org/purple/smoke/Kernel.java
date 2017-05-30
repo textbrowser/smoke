@@ -240,6 +240,25 @@ public class Kernel
 	}
     }
 
+    public boolean call(int participantOid, String sipHashId)
+    {
+	/*
+	** Calling messages are not placed in the outbound_queue
+	** as they are considered temporary.
+	*/
+
+	synchronized(m_callQueueMutex)
+	{
+	    if(m_callQueue.containsKey(sipHashId))
+		return false;
+
+	    m_callQueue.put
+		(sipHashId, new ParticipantCall(sipHashId, participantOid));
+	}
+
+	return true;
+    }
+
     public boolean ourMessage(String buffer)
     {
 	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.
@@ -727,23 +746,6 @@ public class Kernel
 					      ** Zero on hmac() failure.
 					      ** Acceptable.
 					      */
-    }
-
-    public void call(int participantOid, String sipHashId)
-    {
-	/*
-	** Calling messages are not placed in the outbound_queue
-	** as they are considered temporary.
-	*/
-
-	synchronized(m_callQueueMutex)
-	{
-	    if(m_callQueue.containsKey(sipHashId))
-		m_callQueue.remove(sipHashId);
-
-	    m_callQueue.put
-		(sipHashId, new ParticipantCall(sipHashId, participantOid));
-	}
     }
 
     public void clearNeighborQueues()
