@@ -29,11 +29,14 @@ package org.purple.smoke;
 
 import android.os.Bundle;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class State
 {
     private ArrayList<ChatMessageElement> m_chatMessages = null;
     private Bundle m_bundle = null;
+    private final ReentrantReadWriteLock m_bundleMutex =
+	new ReentrantReadWriteLock();
     private static State s_instance = null;
 
     private State()
@@ -55,42 +58,103 @@ public class State
 	return m_chatMessages;
     }
 
-    public synchronized CharSequence getCharSequence(String key)
+    public CharSequence getCharSequence(String key)
     {
-	return m_bundle.getCharSequence(key, "");
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getCharSequence(key, "");
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
     }
 
-    public synchronized String getString(String key)
+    public String getString(String key)
     {
-	return m_bundle.getString(key, "");
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getString(key, "");
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
     }
 
-    public synchronized boolean chatCheckBoxIsSelected(int oid)
+    public boolean chatCheckBoxIsSelected(int oid)
     {
-	return m_bundle.getChar("chat_checkbox_" + String.valueOf(oid)) == '1';
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getChar
+		("chat_checkbox_" + String.valueOf(oid), '0') == '1';
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
     }
 
-    public synchronized boolean isAuthenticated()
+    public boolean isAuthenticated()
     {
-	return m_bundle.getChar("is_authenticated") == '1';
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getChar("is_authenticated", '0') == '1';
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
     }
 
-    public synchronized boolean neighborsEcho()
+    public boolean neighborsEcho()
     {
-	return m_bundle.getChar("neighbors_echo") == '1';
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getChar("neighbors_echo", '0') == '1';
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
     }
 
-    public synchronized int chatCheckedParticipants()
+    public int chatCheckedParticipants()
     {
-	return m_bundle.getInt("chat_checkbox_counter", 0);
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getInt("chat_checkbox_counter", 0);
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
     }
 
-    public synchronized long chatSequence(String sipHashId)
+    public long chatSequence(String sipHashId)
     {
-	if(m_bundle.containsKey("chat_sequence" + sipHashId))
-	    return m_bundle.getLong("chat_sequence" + sipHashId);
-	else
-	    return 1;
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getLong("chat_sequence" + sipHashId, 1);
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
     }
 
     public synchronized void clearChatLog()
@@ -99,13 +163,6 @@ public class State
 	    m_chatMessages.clear();
 
 	m_chatMessages = null;
-    }
-
-    public synchronized void incrementChatSequence(String sipHashId)
-    {
-	long sequence = chatSequence(sipHashId);
-
-	m_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
     }
 
     public synchronized void logChatMessage(String message,
@@ -130,62 +187,171 @@ public class State
 	m_chatMessages.add(chatMessageElement);
     }
 
-    public synchronized void removeKey(String key)
+    public void incrementChatSequence(String sipHashId)
     {
-	m_bundle.remove(key);
+	long sequence = chatSequence(sipHashId);
+
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
     }
 
-    public synchronized void reset()
+    public void removeKey(String key)
     {
-	m_bundle.clear();
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.remove(key);
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
     }
 
-    public synchronized void setAuthenticated(boolean state)
+    public void reset()
     {
-	m_bundle.putChar("is_authenticated", state ? '1' : '0');
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.clear();
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
     }
 
-    public synchronized void setChatCheckBoxSelected(int oid, boolean checked)
+    public void setAuthenticated(boolean state)
     {
-	boolean contains = m_bundle.containsKey("chat_checkbox_" +
-						String.valueOf(oid));
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.putChar("is_authenticated", state ? '1' : '0');
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
+    }
+
+    public void setChatCheckBoxSelected(int oid, boolean checked)
+    {
+	boolean contains = false;
+
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    contains = m_bundle.containsKey
+		("chat_checkbox_" + String.valueOf(oid));
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
 
 	if(checked)
 	{
-	    m_bundle.putChar("chat_checkbox_" + String.valueOf(oid), '1');
+	    m_bundleMutex.writeLock().lock();
 
-	    if(!contains)
-		m_bundle.putInt
-		    ("chat_checkbox_counter", chatCheckedParticipants() + 1);
+	    try
+	    {
+		m_bundle.putChar("chat_checkbox_" + String.valueOf(oid), '1');
+
+		if(!contains)
+		    m_bundle.putInt
+			("chat_checkbox_counter",
+			 chatCheckedParticipants() + 1);
+	    }
+	    finally
+	    {
+		m_bundleMutex.writeLock().unlock();
+	    }
 	}
 	else
 	{
-	    m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+	    m_bundleMutex.writeLock().lock();
+
+	    try
+	    {
+		m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+	    }
+	    finally
+	    {
+		m_bundleMutex.writeLock().unlock();
+	    }
 
 	    if(contains)
 	    {
-		int counter = chatCheckedParticipants();
+		int counter = chatCheckedParticipants(); // Read lock.
 
 		if(counter > 0)
 		    counter -= 1;
 
-		m_bundle.putInt("chat_checkbox_counter", counter);
+		m_bundleMutex.writeLock().lock();
+
+		try
+		{
+		    m_bundle.putInt("chat_checkbox_counter", counter);
+		}
+		finally
+		{
+		    m_bundleMutex.writeLock().unlock();
+		}
 	    }
 	}
     }
 
-    public synchronized void setNeighborsEcho(boolean state)
+    public void setNeighborsEcho(boolean state)
     {
-	m_bundle.putChar("neighbors_echo", state ? '1' : '0');
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{ 
+	    m_bundle.putChar("neighbors_echo", state ? '1' : '0');
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
     }
 
-    public synchronized void setString(String key, String value)
+    public void setString(String key, String value)
     {
-	m_bundle.putString(key, value);
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.putString(key, value);
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
     }
 
-    public synchronized void writeCharSequence(String key, CharSequence text)
+    public void writeCharSequence(String key, CharSequence text)
     {
-	m_bundle.putCharSequence(key, text);
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.putCharSequence(key, text);
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
     }
 }
