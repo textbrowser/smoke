@@ -116,11 +116,12 @@ public class TcpNeighbor extends Neighbor
 	    if(m_socket == null || m_socket.getOutputStream() == null)
 		return false;
 
+	    Kernel.writeCongestionDigest(message);
+
 	    OutputStream outputStream = m_socket.getOutputStream();
 
 	    outputStream.write(message.getBytes());
 	    outputStream.flush();
-	    Kernel.writeCongestionDigest(message);
 	    m_bytesWritten.getAndAdd(message.length());
 	}
 	catch(Exception exception)

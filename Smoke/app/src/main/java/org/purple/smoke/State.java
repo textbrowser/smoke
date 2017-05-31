@@ -318,7 +318,7 @@ public class State
 	m_bundleMutex.writeLock().lock();
 
 	try
-	{ 
+	{
 	    m_bundle.putChar("neighbors_echo", state ? '1' : '0');
 	}
 	finally
