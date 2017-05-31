@@ -156,7 +156,7 @@ public class Chat extends AppCompatActivity
 	    return;
 
 	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 
@@ -220,7 +220,7 @@ public class Chat extends AppCompatActivity
 	    return;
 
 	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 
@@ -450,7 +450,7 @@ public class Chat extends AppCompatActivity
 	    public void onClick(View view)
 	    {
 		SimpleDateFormat simpleDateFormat = new
-		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss",
+		    SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				     Locale.getDefault());
 		StringBuilder stringBuilder = new StringBuilder();
 		TextView textView1 = (TextView) findViewById
@@ -702,7 +702,7 @@ public class Chat extends AppCompatActivity
 		    return;
 
 		SimpleDateFormat simpleDateFormat = new
-		    SimpleDateFormat("MM/dd/yyyy HH:mm:ss",
+		    SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				     Locale.getDefault());
 		String str = textView1.getText().toString().trim();
 		StringBuilder stringBuilder = new StringBuilder();

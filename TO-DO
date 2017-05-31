@@ -125,6 +125,7 @@ Completed Items
        20 bytes (SHA-1). Afterwards, generate a stream using the
        temporary stream as password material. The length of the second
        stream varies per application.
+94.    New date format: YYYY-MM-DD. ISO 8601.
 
 Future Items
 
@@ -172,4 +173,3 @@ Remaining Items
 3.     Describe the Ozone feature.
 4.     Disable Chat:Send if there is at least one selected participant
        without a session.
-5.     New date format: YYYY-MM-DD.
