@@ -407,8 +407,8 @@ public class Cryptography
 	       m_chatEncryptionPublicKeyPair.getPublic() == null)
 		return null;
 
-	    return sha512(m_chatEncryptionPublicKeyPair.getPublic().
-			  getEncoded());
+	    return sha512
+		(m_chatEncryptionPublicKeyPair.getPublic().getEncoded());
 	}
 	finally
 	{
@@ -645,7 +645,6 @@ public class Cryptography
 
 	    digest1 = Arrays.copyOfRange
 		(data, data.length - 512 / 8, data.length);
-
 	    m_macKeyMutex.readLock().lock();
 
 	    try
