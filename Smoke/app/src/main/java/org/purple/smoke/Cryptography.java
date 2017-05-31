@@ -1646,7 +1646,7 @@ public class Cryptography
 
 	try
 	{
-	    if(bytes != null && bytes.length == 64)
+	    if(bytes != null && bytes.length == 32)
 		m_ozoneEncryptionKey = Miscellaneous.deepCopy(bytes);
 	    else
 	    {
