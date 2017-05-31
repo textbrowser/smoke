@@ -91,6 +91,12 @@ public class Kernel
 			ParticipantCall participantCall = null;
 			String sipHashId = "";
 
+			/*
+			** Allow the UI to respond to calling requests
+			** while the kernel attempts to generate
+			** ephemeral RSA keys.
+			*/
+
 			m_callQueueMutex.writeLock().lock();
 
 			try
@@ -144,7 +150,22 @@ public class Kernel
 
 			    participantCall = m_callQueue.get(sipHashId);
 			    participantCall.preparePrivatePublicKey();
-			    m_callQueue.put(sipHashId, participantCall);
+			}
+			finally
+			{
+			    m_callQueueMutex.writeLock().unlock();
+			}
+
+			m_callQueueMutex.writeLock().lock();
+
+			try
+			{
+			    /*
+			    ** The entry may have been removed.
+			    */
+
+			    if(m_callQueue.containsKey(sipHashId))
+				m_callQueue.put(sipHashId, participantCall);
 			}
 			finally
 			{
