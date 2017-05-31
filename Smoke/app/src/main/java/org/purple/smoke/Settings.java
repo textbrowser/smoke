@@ -1061,6 +1061,33 @@ public class Settings extends AppCompatActivity
 	    }
         });
 
+	button1 = (Button) findViewById(R.id.ozone_help);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		PopupWindow popupWindow = new PopupWindow(Settings.this);
+		TextView textView = new TextView(Settings.this);
+
+		textView.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView.setText
+		    ("An Ozone Address defines a virtual location, " +
+		     "a separate device where messages are to be stored for " +
+		     "later retrieval. A virtual post office.");
+		textView.setTextSize(16);
+		popupWindow.setContentView(textView);
+		popupWindow.setOutsideTouchable(true);
+
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		{
+		    popupWindow.setHeight(450);
+		    popupWindow.setWidth(700);
+		}
+
+		popupWindow.showAsDropDown(view);
+	    }
+	});
+
 	button1 = (Button) findViewById(R.id.refresh_neighbors);
 	button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -1827,6 +1854,9 @@ public class Settings extends AppCompatActivity
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.epks);
 	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.ozone_help);
+	button1.setCompoundDrawablesWithIntrinsicBounds
+	    (R.drawable.help, 0, 0, 0);
         button1 = (Button) findViewById(R.id.refresh_neighbors);
         button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.refresh_participants);

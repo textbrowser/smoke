@@ -279,6 +279,13 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
+                    <Button
+                        android:id="@+id/ozone_help"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@android:color/transparent" />
+
                     <EditText
                         android:id="@+id/ozone"
                         android:layout_width="0dp"
