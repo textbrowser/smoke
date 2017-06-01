@@ -36,6 +36,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -111,6 +114,7 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07,
 		     (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
+    private final static int CHAT_WINDOW = 30000; // 30 Seconds
     private final static int CHECKBOX_TEXT_SIZE = 13;
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     private final static int STATUS_INTERVAL = 30000; // 30 Seconds
@@ -174,7 +178,21 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append(": ");
 	stringBuilder.append(message);
 	stringBuilder.append("\n\n");
-	textView1.append(stringBuilder);
+
+	long current = System.currentTimeMillis();
+
+	if(Math.abs(System.currentTimeMillis() - timestamp) > CHAT_WINDOW)
+	{
+	    Spannable spannable = new SpannableStringBuilder
+		(stringBuilder.toString());
+
+	    spannable.setSpan
+		(new ForegroundColorSpan(Color.rgb(75, 0, 130)),
+		 0, stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    textView1.append(spannable);
+	}
+	else
+	    textView1.append(stringBuilder);
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
