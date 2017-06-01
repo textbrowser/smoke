@@ -183,7 +183,7 @@ public class Kernel
 			     Messages.CALL_HALF_AND_HALF_TAGS[0]);
 
 			if(bytes != null)
-			    echo(Messages.bytesToMessageString(bytes), -1);
+			    scheduleSend(Messages.bytesToMessageString(bytes));
 		    }
 		    catch(Exception exception)
 		    {
@@ -242,7 +242,8 @@ public class Kernel
 				 participantElement.m_keyStream);
 
 			    if(bytes != null)
-				echo(Messages.bytesToMessageString(bytes), -1);
+				scheduleSend
+				    (Messages.bytesToMessageString(bytes));
 			}
 
 		    arrayList.clear();
@@ -274,6 +275,34 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.writeLock().unlock();
+	}
+    }
+
+    private void scheduleSend(String message)
+    {
+	if(message.trim().isEmpty())
+	    return;
+
+	if(s_databaseHelper.
+	   containsCongestionDigest(s_congestionSipHash.hmac(message.
+							     getBytes())))
+	    return;
+
+	m_neighborsMutex.readLock().lock();
+
+	try
+	{
+	    for(int i = 0; i < m_neighbors.size(); i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null)
+		    m_neighbors.get(j).scheduleSend(message);
+	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
 	}
     }
 
@@ -765,7 +794,7 @@ public class Kernel
 			     Messages.CALL_HALF_AND_HALF_TAGS[1]);
 
 			if(bytes != null)
-			    echo(Messages.bytesToMessageString(bytes), -1);
+			    scheduleSend(Messages.bytesToMessageString(bytes));
 		    }
 
 		    return true;
@@ -814,7 +843,10 @@ public class Kernel
 		int j = m_neighbors.keyAt(i);
 
 		if(m_neighbors.get(j) != null)
+		{
+		    m_neighbors.get(j).clearEchoQueue();
 		    m_neighbors.get(j).clearQueue();
+		}
 	    }
 	}
 	finally
@@ -825,8 +857,7 @@ public class Kernel
 
     public void echo(String message, int oid)
     {
-	if((!State.getInstance().neighborsEcho() && oid != -1) ||
-	   message.trim().isEmpty())
+	if(!State.getInstance().neighborsEcho() || message.trim().isEmpty())
 	    return;
 
 	if(s_databaseHelper.
@@ -844,7 +875,7 @@ public class Kernel
 
 		if(m_neighbors.get(j) != null &&
 		   m_neighbors.get(j).getOid() != oid)
-		    m_neighbors.get(j).scheduleSend(message);
+		    m_neighbors.get(j).scheduleEchoSend(message);
 	    }
 	}
 	finally
