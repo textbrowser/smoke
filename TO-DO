@@ -173,3 +173,4 @@ Remaining Items
 2.     Sign release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
+4.     Display a short digest with each message.

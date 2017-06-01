@@ -2519,7 +2519,7 @@ public class Database extends SQLiteOpenHelper
 		("options",
 		 Base64.encodeToString(cryptography.etm(options.getBytes()),
 				       Base64.DEFAULT));
-	    m_db.beginTransactionNonExclusive();
+	    m_db.beginTransaction();
 	    m_db.update("participants",
 			values,
 			"siphash_id_digest = ?",
