@@ -162,28 +162,30 @@ public class Chat extends AppCompatActivity
 
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
+	boolean purple = Math.abs(System.currentTimeMillis() - timestamp) >
+	    CHAT_WINDOW;
 
-	stringBuilder.append("[");
-
-	if(timestamp == 0)
-	    stringBuilder.append(simpleDateFormat.format(new Date()));
-	else
-	    stringBuilder.append(simpleDateFormat.format(new Date(timestamp)));
-
-	stringBuilder.append("] ");
-	stringBuilder.append(name);
-	stringBuilder.append(":");
-	stringBuilder.append(sequence);
-	stringBuilder.append(": ");
-	stringBuilder.append(message);
-	stringBuilder.append("\n\n");
-
-	long current = System.currentTimeMillis();
-
-	if(Math.abs(System.currentTimeMillis() - timestamp) > CHAT_WINDOW)
+	if(purple)
 	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append("[");
+
+	    if(timestamp == 0)
+		stringBuilder.append(simpleDateFormat.format(new Date()));
+	    else
+		stringBuilder.append
+		    (simpleDateFormat.format(new Date(timestamp)));
+
+	    stringBuilder.append("] ");
+	    stringBuilder.append(name);
+	    stringBuilder.append(":");
+	    stringBuilder.append(sequence);
+	    stringBuilder.append(": ");
+	    stringBuilder.append(message);
+	    stringBuilder.append("\n\n");
+
 	    Spannable spannable = new SpannableStringBuilder
 		(stringBuilder.toString());
 
@@ -193,7 +195,29 @@ public class Chat extends AppCompatActivity
 	    textView1.append(spannable);
 	}
 	else
-	    textView1.append(stringBuilder);
+	{
+	    textView1.append("[");
+
+	    if(timestamp == 0)
+		textView1.append(simpleDateFormat.format(new Date()));
+	    else
+		textView1.append
+		    (simpleDateFormat.format(new Date(timestamp)));
+
+	    textView1.append("] ");
+
+	    Spannable spannable = new SpannableStringBuilder(name);
+
+	    spannable.setSpan
+		(new StyleSpan(android.graphics.Typeface.BOLD),
+		 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    textView1.append(spannable);
+	    textView1.append(":");
+	    textView1.append(String.valueOf(sequence));
+	    textView1.append(": ");
+	    textView1.append(message);
+	    textView1.append("\n\n");
+	}
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
@@ -735,15 +759,15 @@ public class Chat extends AppCompatActivity
 		textView2.append("] ");
 
 		{
-		    Spannable spannable = new SpannableStringBuilder(":me:");
+		    Spannable spannable = new SpannableStringBuilder("me");
 
 		    spannable.setSpan
 			(new StyleSpan(android.graphics.Typeface.BOLD),
-			 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		    textView2.append(spannable);
 		}
 
-		stringBuilder.append(" ");
+		stringBuilder.append(": ");
 		stringBuilder.append(str);
 		stringBuilder.append("\n\n");
 		textView2.append(stringBuilder);
