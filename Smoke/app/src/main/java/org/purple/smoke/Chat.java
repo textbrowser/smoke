@@ -39,6 +39,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -729,10 +730,20 @@ public class Chat extends AppCompatActivity
 		TextView textView2 = (TextView) findViewById
 		    (R.id.chat_messages);
 
-		stringBuilder.append("[");
-		stringBuilder.append(simpleDateFormat.format(new Date()));
-		stringBuilder.append("] ");
-		stringBuilder.append("me: ");
+		textView2.append("[");
+		textView2.append(simpleDateFormat.format(new Date()));
+		textView2.append("] ");
+
+		{
+		    Spannable spannable = new SpannableStringBuilder(":me:");
+
+		    spannable.setSpan
+			(new StyleSpan(android.graphics.Typeface.BOLD),
+			 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    textView2.append(spannable);
+		}
+
+		stringBuilder.append(" ");
 		stringBuilder.append(str);
 		stringBuilder.append("\n\n");
 		textView2.append(stringBuilder);
