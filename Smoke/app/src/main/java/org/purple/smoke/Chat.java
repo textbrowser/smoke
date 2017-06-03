@@ -55,6 +55,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executors;
@@ -115,7 +116,7 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07,
 		     (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
-    private final static int CHAT_MESSAGE_PREFERRED_SIZE = 16 * 1024;
+    private final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     private final static int CHAT_WINDOW = 60000; // 1 Minute
     private final static int CHECKBOX_TEXT_SIZE = 13;
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
@@ -669,7 +670,7 @@ public class Chat extends AppCompatActivity
 
 	spannable.setSpan
 	    (new ForegroundColorSpan(Color.rgb(75, 0, 130)),
-	     0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 	textView1.append(spannable);
 	textView1.append(".\n\n");
@@ -801,7 +802,9 @@ public class Chat extends AppCompatActivity
 
 		    spannable.setSpan
 			(new StyleSpan(android.graphics.Typeface.BOLD),
-			 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			 0,
+			 spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		    textView2.append(spannable);
 		}
 
@@ -816,8 +819,12 @@ public class Chat extends AppCompatActivity
 				    (1.0 * CHAT_MESSAGE_PREFERRED_SIZE));
 
 		if(size > str.length())
-		    str += String.format("%0" + (size - str.length()) + "d", 0).
-			replace("0", " ");
+		{
+		    char a[] = new char[size - str.length()];
+
+		    Arrays.fill(a, ' ');
+		    str += new String(a);
+		}
 
 		for(int i = 0; i < tableLayout.getChildCount(); i++)
 		{

@@ -127,7 +127,7 @@ Completed Items
        stream varies per application.
 94.    New date format: YYYY-MM-DD. ISO 8601.
 95.    Describe the Ozone feature.
-96.    Expand messages to multiples of 16 KiB.
+96.    Expand messages to multiples of 8 KiB.
 97.    Display message-retrieval action.
 
 Future Items
