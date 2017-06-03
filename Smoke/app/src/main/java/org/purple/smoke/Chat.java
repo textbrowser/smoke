@@ -650,6 +650,43 @@ public class Chat extends AppCompatActivity
 	arrayList.clear();
     }
 
+    private void requestMessages()
+    {
+	SimpleDateFormat simpleDateFormat = new
+	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+	StringBuilder stringBuilder = new StringBuilder();
+	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
+
+	stringBuilder.append("[");
+	stringBuilder.append(simpleDateFormat.format(new Date()));
+	stringBuilder.append("] ");
+	stringBuilder.append("A request for retrieving offline messages ");
+	stringBuilder.append("has been submitted. Offline messages will be ");
+	stringBuilder.append("marked by the color ");
+	textView1.append(stringBuilder);
+
+	Spannable spannable = new SpannableStringBuilder("purple");
+
+	spannable.setSpan
+	    (new ForegroundColorSpan(Color.rgb(75, 0, 130)),
+	     0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+	textView1.append(spannable);
+	textView1.append(".\n\n");
+	scrollMessagesView();
+
+	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
+
+	textView2.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		textView2.requestFocus();
+	    }
+	});
+    }
+
     private void saveState()
     {
 	TextView textView = (TextView) findViewById(R.id.chat_message);
@@ -1040,6 +1077,7 @@ public class Chat extends AppCompatActivity
 		break;
 	    case 1: // Retrieve Messages
 		Kernel.getInstance().retrieveChatMessages();
+		requestMessages();
 		break;
 	    case 2: // Show Details
 		item.setChecked(!item.isChecked());

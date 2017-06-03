@@ -128,6 +128,7 @@ Completed Items
 94.    New date format: YYYY-MM-DD. ISO 8601.
 95.    Describe the Ozone feature.
 96.    Expand messages to multiples of 16 KiB.
+97.    Display message-retrieval action.
 
 Future Items
 
@@ -174,4 +175,3 @@ Remaining Items
 2.     Sign release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
-4.     Display message-retrieval action.
