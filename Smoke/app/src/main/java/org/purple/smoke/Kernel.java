@@ -506,7 +506,7 @@ public class Kernel
 		    case 1:
 			message = new String
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
-			     "UTF-8");
+			     "UTF-8").trim();
 			ii += 1;
 			break;
 		    case 2:

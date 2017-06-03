@@ -115,7 +115,7 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07,
 		     (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
-    private final static int CHAT_WINDOW = 30000; // 30 Seconds
+    private final static int CHAT_WINDOW = 60000; // 1 Minute
     private final static int CHECKBOX_TEXT_SIZE = 13;
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     private final static int STATUS_INTERVAL = 30000; // 30 Seconds
@@ -772,6 +772,12 @@ public class Chat extends AppCompatActivity
 		stringBuilder.append("\n\n");
 		textView2.append(stringBuilder);
 		textView1.setText("");
+
+		int size = (16 * 1024) *
+		    (int) Math.ceil((1.0 * str.length()) / (16.0 * 1024.0));
+
+		str += String.format("%0" + (size - str.length()) + "d", 0).
+		    replace("0", " ");
 
 		for(int i = 0; i < tableLayout.getChildCount(); i++)
 		{
