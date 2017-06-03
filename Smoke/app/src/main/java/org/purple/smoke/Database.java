@@ -1223,10 +1223,22 @@ public class Database extends SQLiteOpenHelper
 	    ** Proxy information.
 	    */
 
-	    proxyIpAddress = proxyIpAddress.trim();
-
-	    if(proxyIpAddress.isEmpty())
+	    if(!transport.toLowerCase().equals("tcp"))
+	    {
+		proxyIpAddress = "";
 		proxyPort = "";
+		proxyType = "HTTP";
+	    }
+	    else
+	    {
+		proxyIpAddress = proxyIpAddress.trim();
+
+		if(proxyIpAddress.isEmpty())
+		{
+		    proxyPort = "";
+		    proxyType = "HTTP";
+		}
+	    }
 
 	    if(!remoteIpAddress.toLowerCase().trim().matches(".*[a-z].*"))
 	    {
