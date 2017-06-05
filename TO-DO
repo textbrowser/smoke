@@ -175,3 +175,6 @@ Remaining Items
 2.     Sign release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
+4.     Key sharing messages should be written to smoke.db.
+5.     Prompt for neighbor removal.
+6.     Connecting status until in/out data has been received.
