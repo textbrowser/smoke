@@ -408,7 +408,8 @@ public class Settings extends AppCompatActivity
 			    findViewById(R.id.neighbors);
 			TableRow row = (TableRow) findViewById(oid);
 
-			tableLayout.removeView(row);
+			if(row != null)
+			    tableLayout.removeView(row);
 		    }
 	        }
 	    };
