@@ -130,6 +130,7 @@ Completed Items
 96.    Expand messages to multiples of 8 KiB.
 97.    Display message-retrieval action.
 98.    Prompt for neighbor removal.
+99.    Connecting status until in/out data has been received/transmitted.
 
 Future Items
 
@@ -177,4 +178,3 @@ Remaining Items
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
 4.     Key-sharing messages should be written to smoke.db.
-5.     Connecting status until in/out data has been received/transmitted.
