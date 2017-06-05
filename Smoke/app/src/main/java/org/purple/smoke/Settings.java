@@ -1349,7 +1349,8 @@ public class Settings extends AppCompatActivity
 		     "letters assigned to a specific subscriber " +
 		     "(public key pair). " +
 		     "The tokens allow participants to exchange public " +
-		     "key pairs via the Share Keys (EPKS) protocol. " +
+		     "key pairs via the Echo Public Key Sharing (EPKS) " +
+		     "protocol. " +
 		     "An example SipHash Identity is ABAB-0101-CDCD-0202.");
 		textView.setTextSize(16);
 		popupWindow.setContentView(textView);
