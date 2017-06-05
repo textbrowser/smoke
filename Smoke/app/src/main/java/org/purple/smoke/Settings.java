@@ -380,6 +380,46 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
+    private void deleteNeighbor(String ipPort, int id)
+    {
+	final int oid = id;
+
+	/*
+	** Prepare a response.
+	*/
+
+	final DialogInterface.OnCancelListener listener =
+	    new DialogInterface.OnCancelListener()
+	    {
+		public void onCancel(DialogInterface dialog)
+		{
+		    if(m_databaseHelper.
+		       deleteEntry(String.valueOf(oid), "neighbors"))
+		    {
+			/*
+			** Prepare the kernel's neighbors container
+			** if a neighbor was deleted as the OID
+			** field may represent a recycled value.
+			*/
+
+			Kernel.getInstance().prepareNeighbors();
+
+			TableLayout tableLayout = (TableLayout)
+			    findViewById(R.id.neighbors);
+			TableRow row = (TableRow) findViewById(oid);
+
+			tableLayout.removeView(row);
+		    }
+	        }
+	    };
+
+	Miscellaneous.showPromptDialog
+	    (Settings.this,
+	     listener,
+	     "Are you sure that you wish to " +
+	     "delete the neighbor " + ipPort + "?");
+    }
+
     private void enableWidgets(boolean state)
     {
 	Button button1 = null;
@@ -732,6 +772,8 @@ public class Settings extends AppCompatActivity
 
 		ArrayAdapter<String> arrayAdapter = null;
 		String array[] = null;
+		final String ipPort = neighborElement.m_remoteIpAddress + ":" +
+		    neighborElement.m_remotePort;
 
 		if(neighborElement.m_transport.equals("TCP"))
 		    array = new String[]
@@ -767,24 +809,8 @@ public class Settings extends AppCompatActivity
 				    (s_cryptography,
 				     "connect",
 				     String.valueOf(parent.getId()));
-			    else if(position == 2 && // Delete
-				    m_databaseHelper.
-				    deleteEntry(String.valueOf(parent.getId()),
-						"neighbors"))
-			    {
-				/*
-				** Prepare the kernel's neighbors container
-				** if a neighbor was deleted as the OID
-				** field may represent a recycled value.
-				*/
-
-				Kernel.getInstance().prepareNeighbors();
-
-				TableRow row = (TableRow) findViewById
-				    (parent.getId());
-
-				tableLayout.removeView(row);
-			    }
+			    else if(position == 2) // Delete
+				deleteNeighbor(ipPort, parent.getId());
 			    else if(position == 3) // Disconnect
 				m_databaseHelper.neighborControlStatus
 				    (s_cryptography,
@@ -1108,19 +1134,19 @@ public class Settings extends AppCompatActivity
 
 	final DialogInterface.OnCancelListener listener1 =
 	    new DialogInterface.OnCancelListener()
-	{
-	    public void onCancel(DialogInterface dialog)
 	    {
-		State.getInstance().reset();
-		m_databaseHelper.resetAndDrop();
-		s_cryptography.reset();
+		public void onCancel(DialogInterface dialog)
+		{
+		    State.getInstance().reset();
+		    m_databaseHelper.resetAndDrop();
+		    s_cryptography.reset();
 
-		Intent intent = getIntent();
+		    Intent intent = getIntent();
 
-		finish();
-		startActivity(intent);
-	    }
-	};
+		    finish();
+		    startActivity(intent);
+		}
+	    };
 
 	button1 = (Button) findViewById(R.id.reset);
         button1.setOnClickListener(new View.OnClickListener()
@@ -1187,19 +1213,19 @@ public class Settings extends AppCompatActivity
 
 	final DialogInterface.OnCancelListener listener2 =
 	    new DialogInterface.OnCancelListener()
-	{
-	    public void onCancel(DialogInterface dialog)
 	    {
-		TextView textView = (TextView) findViewById(R.id.ozone);
+		public void onCancel(DialogInterface dialog)
+		{
+		    TextView textView = (TextView) findViewById(R.id.ozone);
 
-		textView.setText("");
-		m_databaseHelper.reset();
-		populateFancyKeyData();
-		populateNeighbors();
-		populateParticipants();
-		prepareCredentials();
-	    }
-	};
+		    textView.setText("");
+		    m_databaseHelper.reset();
+		    populateFancyKeyData();
+		    populateNeighbors();
+		    populateParticipants();
+		    prepareCredentials();
+		}
+	    };
 
 	button1 = (Button) findViewById(R.id.save_ozone);
 	button1.setOnClickListener(new View.OnClickListener()
@@ -2114,25 +2140,25 @@ public class Settings extends AppCompatActivity
 
 	final DialogInterface.OnCancelListener listener =
 	    new DialogInterface.OnCancelListener()
-	{
-	    public void onCancel(DialogInterface dialog)
 	    {
-		switch(itemId)
-	        {
-		default:
-		    if(m_databaseHelper.deleteEntry(String.valueOf(itemId),
-						    "siphash_ids"))
+		public void onCancel(DialogInterface dialog)
+		{
+		    switch(itemId)
 		    {
-			State.getInstance().setChatCheckBoxSelected
-			    (itemId, false);
-			m_databaseHelper.cleanDanglingParticipants();
-			populateParticipants();
-		    }
+		    default:
+			if(m_databaseHelper.deleteEntry(String.valueOf(itemId),
+							"siphash_ids"))
+			{
+			    State.getInstance().setChatCheckBoxSelected
+				(itemId, false);
+			    m_databaseHelper.cleanDanglingParticipants();
+			    populateParticipants();
+			}
 
-		    break;
+			break;
+		    }
 		}
-	    }
-	};
+	    };
 
 	/*
 	** Regular expression?

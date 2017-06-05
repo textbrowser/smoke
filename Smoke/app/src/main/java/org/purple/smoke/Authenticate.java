@@ -356,19 +356,20 @@ public class Authenticate extends AppCompatActivity
 
 	final DialogInterface.OnCancelListener listener1 =
 	    new DialogInterface.OnCancelListener()
-	{
-	    public void onCancel(DialogInterface dialog)
 	    {
-		State.getInstance().reset();
-		m_databaseHelper.resetAndDrop();
-		s_cryptography.reset();
+		public void onCancel(DialogInterface dialog)
+		{
+		    State.getInstance().reset();
+		    m_databaseHelper.resetAndDrop();
+		    s_cryptography.reset();
 
-		Intent intent = new Intent(Authenticate.this, Settings.class);
+		    Intent intent = new Intent
+			(Authenticate.this, Settings.class);
 
-		finish();
-		startActivity(intent);
-	    }
-	};
+		    finish();
+		    startActivity(intent);
+		}
+	    };
 
 	Button button2 = (Button) findViewById(R.id.reset);
 
