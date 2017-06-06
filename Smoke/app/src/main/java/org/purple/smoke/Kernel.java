@@ -577,8 +577,20 @@ public class Kernel
 		if(message == null)
 		    return false;
 
-		s_databaseHelper.updateParticipantLastTimestamp
-		    (s_cryptography, strings[1]);
+		boolean updateTimeStamp = true;
+		long current = System.currentTimeMillis();
+
+		if(current - timestamp < 0)
+		{
+		    if(timestamp - current > Chat.CHAT_WINDOW)
+			updateTimeStamp = false;
+		}
+		else if(current - timestamp > Chat.CHAT_WINDOW)
+		    updateTimeStamp = false;
+
+		if(updateTimeStamp)
+		    s_databaseHelper.updateParticipantLastTimestamp
+			(s_cryptography, strings[1]);
 
 		Intent intent = new Intent
 		    ("org.purple.smoke.chat_message");
