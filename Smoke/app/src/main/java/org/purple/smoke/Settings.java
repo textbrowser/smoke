@@ -64,7 +64,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import java.security.KeyPair;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
@@ -664,7 +663,6 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 
-	DecimalFormat decimalFormat = new DecimalFormat("0.00");
 	StringBuilder stringBuilder = new StringBuilder();
 	int i = 0;
 
@@ -958,17 +956,23 @@ public class Settings extends AppCompatActivity
 
 	    try
 	    {
+		long uptime = Long.parseLong(neighborElement.m_uptime);
+
 		stringBuilder.append
-		    (decimalFormat.format(Long.
-					  parseLong(neighborElement.m_uptime) /
-					  6e+10));
+		    (String.
+		     format("%d:%02d",
+			    TimeUnit.NANOSECONDS.toMinutes(uptime),
+			    TimeUnit.NANOSECONDS.toSeconds(uptime) -
+			    TimeUnit.MINUTES.
+			    toSeconds(TimeUnit.NANOSECONDS.
+				      toMinutes(uptime))));
 	    }
 	    catch(Exception exception)
 	    {
-		stringBuilder.append("0.00");
+		stringBuilder.append("0:00");
 	    }
 
-	    stringBuilder.append(" Minutes\n");
+	    stringBuilder.append(" Minutes:Seconds\n");
 	    textView.setGravity(Gravity.CENTER_VERTICAL);
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
