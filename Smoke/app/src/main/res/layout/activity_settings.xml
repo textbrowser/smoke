@@ -387,6 +387,15 @@
                         android:inputType="textPersonName"
                         android:nextFocusDown="@+id/participant_siphash_id" />
 
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:text="\@"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
                     <EditText
                         android:id="@+id/participant_siphash_id"
                         android:layout_width="0dp"
