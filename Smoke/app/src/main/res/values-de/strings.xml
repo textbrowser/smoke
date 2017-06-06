@@ -16,7 +16,6 @@
     <string name="details">Details</string>
     <string name="encryption">Verschlüsselung</string>
     <string name="ip_address">IP Adresse</string>
-    <string name="neighbors">Nachbarn</string>
     <string name="participants">Teilnehmer</string>
     <string name="password">Passwort</string>
     <string name="password_confirmation">Passwort Bestätigung</string>

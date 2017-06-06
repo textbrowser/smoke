@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/sectiongradient"
-                    android:text="@string/neighbors"
+                    android:text="@string/neighbors_remote_servers"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="normal|bold" />
