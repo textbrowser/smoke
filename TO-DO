@@ -179,3 +179,4 @@ Remaining Items
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
 4.     Introduce real-time participant typing status.
+5.     Messages from the past may trigger presence.

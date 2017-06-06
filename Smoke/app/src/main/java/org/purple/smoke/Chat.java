@@ -676,7 +676,8 @@ public class Chat extends AppCompatActivity
 	     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 	textView1.append(spannable);
-	textView1.append(".\n\n");
+	textView1.append(". Please note that recently-received messages ");
+	textView1.append("may be discarded because of congestion control.\n\n");
 	scrollMessagesView();
 
 	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
