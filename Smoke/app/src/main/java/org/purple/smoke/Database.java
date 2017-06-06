@@ -1288,7 +1288,7 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("status"))
 		    bytes = cryptography.etm("disconnected".getBytes());
 		else if(sparseArray.get(i).equals("status_control"))
-		    bytes = cryptography.etm("Disconnect".getBytes());
+		    bytes = cryptography.etm("connect".getBytes());
 		else if(sparseArray.get(i).equals("transport"))
 		    bytes = cryptography.etm(transport.trim().getBytes());
 		else if(sparseArray.get(i).equals("transport_digest"))
