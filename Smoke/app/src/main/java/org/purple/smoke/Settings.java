@@ -48,6 +48,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -1770,6 +1771,7 @@ public class Settings extends AppCompatActivity
 				 "data.");
 			else
 			{
+			    Settings.this.showWidgets();
 			    Settings.this.enableWidgets(true);
 			    State.getInstance().setAuthenticated(true);
 			    spinner2.setSelection(0); // RSA
@@ -1816,6 +1818,23 @@ public class Settings extends AppCompatActivity
 	Intent intent = new Intent(Settings.this, Chat.class);
 
 	startActivity(intent);
+    }
+
+    private void showWidgets()
+    {
+	for(int i = 0;
+	    i < ((ViewGroup) findViewById(R.id.linear_layout)).
+		getChildCount();
+	    i++)
+	{
+	    View child = ((ViewGroup) findViewById(R.id.linear_layout)).
+		getChildAt(i);
+
+	    if(child != findViewById(R.id.neighbors_scope_id))
+		child.setVisibility(View.VISIBLE);
+	}
+
+	findViewById(R.id.overwrite).setVisibility(View.VISIBLE);
     }
 
     private void startKernel()
@@ -2119,6 +2138,28 @@ public class Settings extends AppCompatActivity
 
 	    if(checkBox1.isChecked())
 		startTimers();
+	}
+	else
+	{
+	    for(int i = 0;
+		i < ((ViewGroup) findViewById(R.id.linear_layout)).
+		    getChildCount();
+		i++)
+	    {
+		View child = ((ViewGroup) findViewById(R.id.linear_layout)).
+		    getChildAt(i);
+
+		if(!(child == findViewById(R.id.
+					   iteration_count_linear_layout) ||
+		     child == findViewById(R.id.password1) ||
+		     child == findViewById(R.id.password2) ||
+		     child == findViewById(R.id.password_separator) ||
+		     child == findViewById(R.id.pki_linear_layout) ||
+		     child == findViewById(R.id.set_password_linear_layout)))
+		    child.setVisibility(View.GONE);
+	    }
+
+	    findViewById(R.id.overwrite).setVisibility(View.GONE);
 	}
     }
 

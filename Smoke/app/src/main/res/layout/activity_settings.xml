@@ -36,6 +36,7 @@
             android:fadeScrollbars="false">
 
             <LinearLayout
+                android:id="@+id/linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -438,6 +439,7 @@
                     android:textStyle="normal|bold" />
 
                 <LinearLayout
+                    android:id="@+id/iteration_count_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -458,6 +460,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/pki_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -505,6 +508,7 @@
                     android:inputType="textPassword" />
 
                 <LinearLayout
+                    android:id="@+id/set_password_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
