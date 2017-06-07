@@ -973,7 +973,7 @@ public class Settings extends AppCompatActivity
 		stringBuilder.append("0:00");
 	    }
 
-	    stringBuilder.append(" Minutes:Seconds\n");
+	    stringBuilder.append(" Minute(s):Second(s)\n");
 	    textView.setGravity(Gravity.CENTER_VERTICAL);
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
