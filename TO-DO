@@ -179,4 +179,5 @@ Remaining Items
 2.     Sign release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
-4.     Introduce real-time participant typing status.
+4.     Introduce real-time typing status.
+5.     Depict connection status in the Chat activity.
