@@ -133,6 +133,7 @@ Completed Items
 99.    Connecting status until in/out data has been received/transmitted.
 100.   Key-sharing messages should be written to smoke.db.
 101.   Messages from the past may trigger presence.
+102.   Outbound queues must be purged on parent neighbor removal.
 
 Future Items
 

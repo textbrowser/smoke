@@ -397,6 +397,8 @@ public class Settings extends AppCompatActivity
 		    if(m_databaseHelper.
 		       deleteEntry(String.valueOf(oid), "neighbors"))
 		    {
+			m_databaseHelper.cleanDanglingOutboundQueued();
+
 			/*
 			** Prepare the kernel's neighbors container
 			** if a neighbor was deleted as the OID
@@ -547,8 +549,12 @@ public class Settings extends AppCompatActivity
 			break;
 		    }
 
-		    Kernel.getInstance().enqueueMessage
-			(Messages.bytesToMessageString(bytes));
+		    if(!Kernel.getInstance().
+		       enqueueMessage(Messages.bytesToMessageString(bytes)))
+		    {
+			m_error = "enqueueMessage() failure";
+			break;
+		    }
 		}
 
 		Settings.this.runOnUiThread(new Runnable()
@@ -974,6 +980,9 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuilder.append(" Minute(s):Second(s)\n");
+	    stringBuilder.append("Outbound Queued: ");
+	    stringBuilder.append(neighborElement.m_outboundQueued);
+	    stringBuilder.append("\n");
 	    textView.setGravity(Gravity.CENTER_VERTICAL);
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
@@ -1815,6 +1824,7 @@ public class Settings extends AppCompatActivity
     {
 	Intent intent = new Intent(Settings.this, Authenticate.class);
 
+	finish();
 	startActivity(intent);
     }
 
@@ -1822,6 +1832,7 @@ public class Settings extends AppCompatActivity
     {
 	Intent intent = new Intent(Settings.this, Chat.class);
 
+	finish();
 	startActivity(intent);
     }
 
@@ -2129,6 +2140,7 @@ public class Settings extends AppCompatActivity
 	    spinner1.setSelection(1); // RSA
 
 	m_databaseHelper.cleanDanglingParticipants();
+	m_databaseHelper.cleanDanglingOutboundQueued();
 	populateFancyKeyData();
 
 	if(isAuthenticated)

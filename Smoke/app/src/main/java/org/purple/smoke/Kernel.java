@@ -331,6 +331,23 @@ public class Kernel
 	return true;
     }
 
+    public boolean enqueueMessage(String message)
+    {
+	if(message.trim().isEmpty())
+	    return false;
+
+	SparseIntArray neighbors = s_databaseHelper.readNeighborOids();
+
+	if(neighbors == null || neighbors.size() == 0)
+	    return false;
+
+	for(int i = 0; i < neighbors.size(); i++)
+	    s_databaseHelper.enqueueOutboundMessage(message, neighbors.get(i));
+
+	neighbors.clear();
+	return true;
+    }
+
     public boolean ourMessage(String buffer)
     {
 	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.
@@ -894,22 +911,6 @@ public class Kernel
 	{
 	    m_neighborsMutex.readLock().unlock();
 	}
-    }
-
-    public void enqueueMessage(String message)
-    {
-	if(message.trim().isEmpty())
-	    return;
-
-	SparseIntArray neighbors = s_databaseHelper.readNeighborOids();
-
-	if(neighbors == null || neighbors.size() == 0)
-	    return;
-
-	for(int i = 0; i < neighbors.size(); i++)
-	    s_databaseHelper.enqueueOutboundMessage(message, neighbors.get(i));
-
-	neighbors.clear();
     }
 
     public void prepareNeighbors()

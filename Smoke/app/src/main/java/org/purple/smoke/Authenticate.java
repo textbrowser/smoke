@@ -390,6 +390,7 @@ public class Authenticate extends AppCompatActivity
     {
 	Intent intent = new Intent(Authenticate.this, Chat.class);
 
+	finish();
 	startActivity(intent);
     }
 
@@ -397,6 +398,7 @@ public class Authenticate extends AppCompatActivity
     {
 	Intent intent = new Intent(Authenticate.this, Settings.class);
 
+	finish();
 	startActivity(intent);
     }
 

@@ -159,27 +159,29 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT " +
-		 "bytes_read, " +
-		 "bytes_written, " +
-		 "echo_queue_size, " +
-		 "ip_version, " +
-		 "last_error, " +
-		 "local_ip_address, " +
-		 "local_port, " +
-		 "proxy_ip_address, " +
-		 "proxy_port, " +
-		 "proxy_type, " +
-		 "remote_certificate, " +
-		 "remote_ip_address, " +
-		 "remote_port, " +
-		 "remote_scope_id, " +
-		 "session_cipher, " +
-		 "status, " +
-		 "status_control, " +
-		 "transport, " +
-		 "uptime, " +
-		 "OID " +
-		 "FROM neighbors", null);
+		 "(SELECT COUNT(*) FROM outbound_queue o WHERE " +
+		 "o.neighbor_oid = n.OID), " +
+		 "n.bytes_read, " +
+		 "n.bytes_written, " +
+		 "n.echo_queue_size, " +
+		 "n.ip_version, " +
+		 "n.last_error, " +
+		 "n.local_ip_address, " +
+		 "n.local_port, " +
+		 "n.proxy_ip_address, " +
+		 "n.proxy_port, " +
+		 "n.proxy_type, " +
+		 "n.remote_certificate, " +
+		 "n.remote_ip_address, " +
+		 "n.remote_port, " +
+		 "n.remote_scope_id, " +
+		 "n.session_cipher, " +
+		 "n.status, " +
+		 "n.status_control, " +
+		 "n.transport, " +
+		 "n.uptime, " +
+		 "n.OID " +
+		 "FROM neighbors n ORDER BY n.OID", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -198,11 +200,14 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = cryptography.mtd
-			    (Base64.decode(cursor.getString(i).getBytes(),
-					   Base64.DEFAULT));
+			byte bytes[] = null;
 
-			if(bytes == null)
+			if(i != 0)
+			    bytes = cryptography.mtd
+				(Base64.decode(cursor.getString(i).getBytes(),
+					       Base64.DEFAULT));
+
+			if(bytes == null && i != 0)
 			{
 			    error = true;
 
@@ -219,64 +224,68 @@ public class Database extends SQLiteOpenHelper
 			switch(i)
 			{
 			case 0:
-			    neighborElement.m_bytesRead = new String(bytes);
+			    neighborElement.m_outboundQueued =
+				cursor.getInt(i);
 			    break;
 			case 1:
-			    neighborElement.m_bytesWritten = new String(bytes);
+			    neighborElement.m_bytesRead = new String(bytes);
 			    break;
 			case 2:
-			    neighborElement.m_echoQueueSize = new String(bytes);
+			    neighborElement.m_bytesWritten = new String(bytes);
 			    break;
 			case 3:
-			    neighborElement.m_ipVersion = new String(bytes);
+			    neighborElement.m_echoQueueSize = new String(bytes);
 			    break;
 			case 4:
-			    neighborElement.m_error = new String(bytes);
+			    neighborElement.m_ipVersion = new String(bytes);
 			    break;
 			case 5:
+			    neighborElement.m_error = new String(bytes);
+			    break;
+			case 6:
 			    neighborElement.m_localIpAddress =
 				new String(bytes);
 			    break;
-			case 6:
+			case 7:
 			    neighborElement.m_localPort = new String(bytes);
 			    break;
-			case 7:
+			case 8:
 			    neighborElement.m_proxyIpAddress =
 				new String(bytes);
 			    break;
-			case 8:
+			case 9:
 			    neighborElement.m_proxyPort = new String(bytes);
 			    break;
-			case 9:
+			case 10:
 			    neighborElement.m_proxyType = new String(bytes);
 			    break;
-			case 10:
+			case 11:
 			    neighborElement.m_remoteCertificate =
 				Miscellaneous.deepCopy(bytes);
 			    break;
-			case 11:
+			case 12:
 			    neighborElement.m_remoteIpAddress =
 				new String(bytes);
 			    break;
-			case 12:
+			case 13:
 			    neighborElement.m_remotePort = new String(bytes);
 			    break;
-			case 13:
+			case 14:
 			    neighborElement.m_remoteScopeId = new String(bytes);
 			    break;
-			case 14:
+			case 15:
 			    neighborElement.m_sessionCipher = new String(bytes);
 			    break;
-			case 15:
+			case 16:
 			    neighborElement.m_status = new String(bytes);
 			    break;
-			case 16:
+			case 17:
 			    neighborElement.m_statusControl = new String(bytes);
 			    break;
-			case 17:
+			case 18:
 			    neighborElement.m_transport = new String(bytes);
 			    break;
-			case 18:
+			case 19:
 			    neighborElement.m_uptime = new String(bytes);
 			    break;
 			}
@@ -1856,6 +1865,31 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void cleanDanglingOutboundQueued()
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    m_db.rawQuery("DELETE FROM outbound_queue WHERE neighbor_oid " +
+			  "NOT IN (SELECT OID FROM neighbors)",
+			  null);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void enqueueOutboundMessage(String message, int oid)
     {
 	prepareDb();
@@ -2084,6 +2118,8 @@ public class Database extends SQLiteOpenHelper
 
 	/*
 	** Create the outbound_queue table.
+	** A foreign-key constraint on the OID of the neighbors
+	** table cannot be assigned.
 	*/
 
 	str = "CREATE TABLE IF NOT EXISTS outbound_queue (" +
@@ -2117,7 +2153,7 @@ public class Database extends SQLiteOpenHelper
 	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
-	    "siphash_ids(siphash_id_digest) ON DELETE CASCADE, " +
+	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
 	    "signature_public_key_digest))";
 
