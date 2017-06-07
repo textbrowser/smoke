@@ -366,8 +366,8 @@ public class Authenticate extends AppCompatActivity
 		    Intent intent = new Intent
 			(Authenticate.this, Settings.class);
 
-		    finish();
 		    startActivity(intent);
+		    finish();
 		}
 	    };
 
@@ -390,16 +390,16 @@ public class Authenticate extends AppCompatActivity
     {
 	Intent intent = new Intent(Authenticate.this, Chat.class);
 
-	finish();
 	startActivity(intent);
+	finish();
     }
 
     private void showSettingsActivity()
     {
 	Intent intent = new Intent(Authenticate.this, Settings.class);
 
-	finish();
 	startActivity(intent);
+	finish();
     }
 
     @Override

@@ -1186,8 +1186,8 @@ public class Chat extends AppCompatActivity
 
             Intent intent = new Intent(Chat.this, Settings.class);
 
-	    finish();
             startActivity(intent);
+	    finish();
             return true;
         }
 

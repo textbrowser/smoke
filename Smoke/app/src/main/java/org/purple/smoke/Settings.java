@@ -1161,8 +1161,8 @@ public class Settings extends AppCompatActivity
 
 		    Intent intent = getIntent();
 
-		    finish();
 		    startActivity(intent);
+		    finish();
 		}
 	    };
 
@@ -1824,16 +1824,16 @@ public class Settings extends AppCompatActivity
     {
 	Intent intent = new Intent(Settings.this, Authenticate.class);
 
-	finish();
 	startActivity(intent);
+	finish();
     }
 
     private void showChatActivity()
     {
 	Intent intent = new Intent(Settings.this, Chat.class);
 
-	finish();
 	startActivity(intent);
+	finish();
     }
 
     private void showWidgets()
