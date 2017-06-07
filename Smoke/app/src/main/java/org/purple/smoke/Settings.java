@@ -959,6 +959,9 @@ public class Settings extends AppCompatActivity
 		(Miscellaneous.
 		 formattedDigitalInformation(neighborElement.m_bytesWritten));
 	    stringBuilder.append("\n");
+	    stringBuilder.append("Outbound Queued: ");
+	    stringBuilder.append(neighborElement.m_outboundQueued);
+	    stringBuilder.append("\n");
 	    stringBuilder.append("Uptime: ");
 
 	    try
@@ -980,9 +983,6 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuilder.append(" Minute(s):Second(s)\n");
-	    stringBuilder.append("Outbound Queued: ");
-	    stringBuilder.append(neighborElement.m_outboundQueued);
-	    stringBuilder.append("\n");
 	    textView.setGravity(Gravity.CENTER_VERTICAL);
 	    textView.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
