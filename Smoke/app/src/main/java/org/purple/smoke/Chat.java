@@ -739,6 +739,15 @@ public class Chat extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
+			Button button = (Button) findViewById
+			    (R.id.connection_status);
+
+			if(Kernel.getInstance().isConnected())
+			    button.setCompoundDrawablesWithIntrinsicBounds
+				(R.drawable.connected, 0, 0, 0);
+			else
+			    button.setCompoundDrawablesWithIntrinsicBounds
+				(R.drawable.disconnected, 0, 0, 0);
 		    }
 		});
 	    }

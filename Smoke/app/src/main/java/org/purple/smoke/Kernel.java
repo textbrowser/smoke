@@ -348,6 +348,33 @@ public class Kernel
 	return true;
     }
 
+    public boolean isConnected()
+    {
+	m_neighborsMutex.readLock().lock();
+
+	try
+	{
+	    if(m_neighbors.size() == 0)
+		return false;
+
+	    for(int i = 0; i < m_neighbors.size(); i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null)
+		    if(m_neighbors.get(j).connected() &&
+		       m_neighbors.get(j).hasReceivedSent())
+			return true;
+	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
+	}
+
+	return false;
+    }
+
     public boolean ourMessage(String buffer)
     {
 	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.

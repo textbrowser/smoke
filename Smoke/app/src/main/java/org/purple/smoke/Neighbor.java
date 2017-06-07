@@ -405,6 +405,11 @@ public abstract class Neighbor
 	}
     }
 
+    public boolean hasReceivedSent()
+    {
+	return m_bytesRead.get() > 0 && m_bytesWritten.get() > 0;
+    }
+
     public int getOid()
     {
 	return m_oid.get();
