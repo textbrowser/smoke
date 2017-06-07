@@ -117,4 +117,12 @@
 
         </TableLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/connection_status"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_scrollview"
+        android:layout_toStartOf="@+id/call"
+        android:background="@android:color/transparent" />
 </RelativeLayout>

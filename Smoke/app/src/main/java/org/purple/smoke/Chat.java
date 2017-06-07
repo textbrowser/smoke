@@ -108,6 +108,7 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
+    private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
@@ -119,6 +120,7 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     private final static int CHECKBOX_TEXT_SIZE = 13;
+    private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     private final static int STATUS_INTERVAL = 30000; // 30 Seconds
     public final static int CHAT_WINDOW = 60000; // 1 Minute
@@ -722,6 +724,25 @@ public class Chat extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	m_connectionStatusScheduler = Executors.
+	    newSingleThreadScheduledExecutor();
+	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
+        {
+	    @Override
+	    public void run()
+	    {
+		if(Thread.currentThread().isInterrupted())
+		    return;
+
+		Chat.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+		    }
+		});
+	    }
+	}, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
 	m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -776,6 +797,9 @@ public class Chat extends AppCompatActivity
 	    }
 	});
 
+	button1 = (Button) findViewById(R.id.connection_status);
+	button1.setCompoundDrawablesWithIntrinsicBounds
+	    (R.drawable.disconnected, 0, 0, 0);
         button1 = (Button) findViewById(R.id.send_chat_message);
         button1.setOnClickListener(new View.OnClickListener()
 	{
