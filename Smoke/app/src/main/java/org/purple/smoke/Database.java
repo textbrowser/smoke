@@ -483,7 +483,7 @@ public class Database extends SQLiteOpenHelper
 
 			    String string_a = cursor.getString(i);
 			    String string_b = Base64.encodeToString
-				(cryptography.sha512("".getBytes()),
+				(Cryptography.sha512("".getBytes()),
 				 Base64.DEFAULT);
 
 			    string_b += string_b;
