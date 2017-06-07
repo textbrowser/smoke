@@ -216,12 +216,12 @@ public class Settings extends AppCompatActivity
 	{
 	    for(int i = start; i < end; i++)
 		/*
-		** Allow hexadecimal characters only.
+		** Allow hexadecimal characters only and some delimiters.
 		*/
 
 		if(!((source.charAt(i) == ' ' || source.charAt(i) == '-') ||
 		     (source.charAt(i) >= '0' && source.charAt(i) <= '9') ||
-		     (source.charAt(i) >= 'A' && source.charAt(i) <= 'F') ||
+		     (source.charAt(i) >= '@' && source.charAt(i) <= 'F') ||
 		     (source.charAt(i) >= 'a' && source.charAt(i) <= 'f')))
 		    return source.subSequence(start, i);
 
@@ -288,7 +288,7 @@ public class Settings extends AppCompatActivity
 	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
 
 	string = textView1.getText().toString().
-	    replace(" ", "").replace("-", "").replace(":", "");
+	    replace(" ", "").replace("-", "").replace(":", "").replace("@", "");
 
 	try
 	{
@@ -317,7 +317,8 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 	else if(textView2.getText().toString().toLowerCase().replace("-", "").
-		endsWith(string.replace(":", "").toLowerCase()))
+		endsWith(string.replace(":", "").replace("@", "").
+			 toLowerCase()))
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
@@ -627,7 +628,7 @@ public class Settings extends AppCompatActivity
 	else
 	{
 	    stringBuilder.delete(0, stringBuilder.length());
-	    stringBuilder.append("SipHash Chat Identity\n");
+	    stringBuilder.append("SipHash Chat Identity\n@");
 
 	    byte bytes[] = Miscellaneous.joinByteArrays
 		(s_cryptography.chatEncryptionKeyPair().getPublic().
