@@ -1523,7 +1523,8 @@ public class Database extends SQLiteOpenHelper
 		else if(sparseArray.get(i).equals("name"))
 		    bytes = cryptography.etm(name.getBytes());
 		else if(sparseArray.get(i).equals("options"))
-		    bytes = cryptography.etm("".getBytes());
+		    bytes = cryptography.etm
+			("optional_signatures = false".getBytes());
 		else if(sparseArray.get(i).equals("signature_public_key"))
 		    bytes = cryptography.etm(signatureKey.getEncoded());
 		else if(sparseArray.get(i).
