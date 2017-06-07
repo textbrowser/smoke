@@ -483,7 +483,7 @@ public class Database extends SQLiteOpenHelper
 
 			    String string_a = cursor.getString(i);
 			    String string_b = Base64.encodeToString
-				(cryptography.hmac("".getBytes()),
+				(cryptography.sha512("".getBytes()),
 				 Base64.DEFAULT);
 
 			    string_b += string_b;
@@ -1794,7 +1794,7 @@ public class Database extends SQLiteOpenHelper
 	return bytes;
     }
 
-    public int count(String table)
+    public long count(String table)
     {
 	prepareDb();
 
@@ -1802,7 +1802,7 @@ public class Database extends SQLiteOpenHelper
 	    return -1;
 
 	Cursor cursor = null;
-	int c = 0;
+	long c = 0;
 
 	try
 	{
@@ -1813,7 +1813,7 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery(stringBuilder.toString(), null);
 
 	    if(cursor != null && cursor.moveToFirst())
-		c = cursor.getInt(0);
+		c = cursor.getLong(0);
 	}
 	catch(Exception exception)
 	{
@@ -2155,7 +2155,7 @@ public class Database extends SQLiteOpenHelper
 	str = "CREATE TABLE IF NOT EXISTS participants (" +
 	    "encryption_public_key TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
-	    "function_digest, " + // chat, e-mail, etc.
+	    "function_digest NOT NULL, " + // chat, e-mail, etc.
 	    "identity TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
 	    "last_status_timestamp TEXT NOT NULL, " +
