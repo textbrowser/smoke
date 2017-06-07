@@ -947,9 +947,6 @@ public class Chat extends AppCompatActivity
 	if(State.getInstance().isAuthenticated())
 	    populateParticipants();
 
-	textView1 = (TextView) findViewById(R.id.participant);
-	registerForContextMenu(textView1);
-
 	/*
 	** Preparse some event listeners.
 	*/

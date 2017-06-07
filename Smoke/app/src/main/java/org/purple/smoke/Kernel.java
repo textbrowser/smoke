@@ -362,8 +362,7 @@ public class Kernel
 		int j = m_neighbors.keyAt(i);
 
 		if(m_neighbors.get(j) != null)
-		    if(m_neighbors.get(j).connected() &&
-		       m_neighbors.get(j).hasReceivedSent())
+		    if(m_neighbors.get(j).connected())
 			return true;
 	    }
 	}
