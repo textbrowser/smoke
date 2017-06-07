@@ -2127,6 +2127,7 @@ public class Settings extends AppCompatActivity
 	if(spinner1.getAdapter().getCount() > 1)
 	    spinner1.setSelection(1); // RSA
 
+	m_databaseHelper.cleanDanglingParticipants();
 	populateFancyKeyData();
 
 	if(isAuthenticated)
@@ -2134,8 +2135,7 @@ public class Settings extends AppCompatActivity
 	    checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 	    textView1 = (TextView) findViewById(R.id.ozone);
 	    textView1.setText
-		(m_databaseHelper.readSetting(s_cryptography,
-					      "ozone_address"));
+		(m_databaseHelper.readSetting(s_cryptography, "ozone_address"));
 	    populateNeighbors();
 	    populateParticipants();
 	    startKernel();
