@@ -740,14 +740,14 @@ public class Chat extends AppCompatActivity
 		    public void run()
 		    {
 			Button button = (Button) findViewById
-			    (R.id.connection_status);
+			    (R.id.send_chat_message);
 
 			if(Kernel.getInstance().isConnected())
-			    button.setCompoundDrawablesWithIntrinsicBounds
-				(R.drawable.connected, 0, 0, 0);
+			    button.setBackgroundColor
+				(Color.rgb(153, 204, 0));
 			else
-			    button.setCompoundDrawablesWithIntrinsicBounds
-				(R.drawable.disconnected, 0, 0, 0);
+			    button.setBackgroundColor
+				(Color.rgb(255, 68, 68));
 		    }
 		});
 	    }
@@ -806,9 +806,6 @@ public class Chat extends AppCompatActivity
 	    }
 	});
 
-	button1 = (Button) findViewById(R.id.connection_status);
-	button1.setCompoundDrawablesWithIntrinsicBounds
-	    (R.drawable.disconnected, 0, 0, 0);
         button1 = (Button) findViewById(R.id.send_chat_message);
         button1.setOnClickListener(new View.OnClickListener()
 	{
