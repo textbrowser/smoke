@@ -734,6 +734,8 @@ public class Chat extends AppCompatActivity
 		if(Thread.currentThread().isInterrupted())
 		    return;
 
+		final boolean state = Kernel.getInstance().isConnected();
+
 		Chat.this.runOnUiThread(new Runnable()
 		{
 		    @Override
@@ -742,7 +744,7 @@ public class Chat extends AppCompatActivity
 			Button button = (Button) findViewById
 			    (R.id.send_chat_message);
 
-			if(Kernel.getInstance().isConnected())
+			if(state)
 			    button.setBackgroundColor
 				(Color.rgb(153, 204, 0));
 			else
