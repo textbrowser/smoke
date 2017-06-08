@@ -19,7 +19,7 @@
         android:layout_above="@+id/chat_scrollview"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/connection_status"
+        android:layout_toStartOf="@+id/call"
         android:background="@drawable/sectiongradient"
         android:gravity="center_vertical"
         android:text="@string/chat"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/send_chat_message"
+        android:layout_toStartOf="@+id/connection_status"
         android:ems="10"
         android:hint="@string/please_type_a_message"
         android:inputType="textPersonName" />
@@ -116,7 +116,7 @@
         android:id="@+id/connection_status"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chat_scrollview"
-        android:layout_toStartOf="@+id/call"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/send_chat_message"
         android:background="@android:color/transparent" />
 </RelativeLayout>
