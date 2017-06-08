@@ -44,5 +44,6 @@
     <string name="address">Address</string>
     <string name="save">Save</string>
     <string name="share_keys">Share Keys</string>
-    <string name="neighbors_remote_servers">Neighbors (Remote Servers)</string>
+    <string name="neighbor_servers">Neighbor Servers</string>
+    <string name="at">\@</string>
 </resources>
