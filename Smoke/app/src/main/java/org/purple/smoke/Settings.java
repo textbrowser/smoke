@@ -233,7 +233,7 @@ public class Settings extends AppCompatActivity
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
-    private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
+    private final static int TIMER_INTERVAL = 2000; // 2 Seconds
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {3072}; // RSA
 
     private void addNeighbor()
@@ -944,7 +944,7 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuilder.append("\n");
-	    stringBuilder.append("Temporary Queue Size: ");
+	    stringBuilder.append("Temp. Queue Size: ");
 	    stringBuilder.append(neighborElement.m_echoQueueSize);
 	    stringBuilder.append(" / ");
 	    stringBuilder.append(Neighbor.MAXIMUM_QUEUED_ECHO_PACKETS);
