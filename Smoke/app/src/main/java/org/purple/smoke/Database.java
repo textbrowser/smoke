@@ -731,6 +731,102 @@ public class Database extends SQLiteOpenHelper
 	return publicKey;
     }
 
+    public SipHashIdElement readSipHashId(Cryptography cryptography,
+					  String oid)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	SipHashIdElement sipHashIdElement = null;
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "(SELECT p.encryption_public_key FROM participants p " +
+		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
+		 "(SELECT p.signature_public_key FROM participants p " +
+		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
+		 "s.siphash_id, " +
+		 "s.stream, " +
+		 "s.OID " +
+		 "FROM siphash_ids s WHERE s.OID = ? ORDER BY s.oid",
+		 new String[] {oid});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		sipHashIdElement = new SipHashIdElement();
+
+		boolean error = false;
+
+		for(int i = 0; i < cursor.getColumnCount(); i++)
+		{
+		    if(i == cursor.getColumnCount() - 1)
+		    {
+			sipHashIdElement.m_oid = cursor.getInt(i);
+			continue;
+		    }
+
+		    byte bytes[] = cryptography.mtd
+			(Base64.decode(cursor.getString(i).getBytes(),
+				       Base64.DEFAULT));
+
+		    if(bytes == null)
+		    {
+			error = true;
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			stringBuilder.append
+			    ("Database::readSipHashId(): ");
+			stringBuilder.append("error on column ");
+			stringBuilder.append(cursor.getColumnName(i));
+			stringBuilder.append(".");
+			writeLog(stringBuilder.toString());
+			break;
+		    }
+
+		    switch(i)
+		    {
+		    case 0:
+			sipHashIdElement.m_encryptionPublicKey =
+			    Miscellaneous.deepCopy(bytes);
+			break;
+		    case 1:
+			sipHashIdElement.m_signaturePublicKey =
+			    Miscellaneous.deepCopy(bytes);
+			break;
+		    case 2:
+			sipHashIdElement.m_sipHashId = new String
+			    (bytes, "UTF-8");
+			break;
+		    case 3:
+			sipHashIdElement.m_stream = Miscellaneous.
+			    deepCopy(bytes);
+			break;
+		    }
+		}
+
+		if(error)
+		    sipHashIdElement = null;
+	    }
+	}
+	catch(Exception exception)
+	{
+	    sipHashIdElement = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return sipHashIdElement;
+    }
+
     public SparseIntArray readNeighborOids()
     {
 	prepareDb();

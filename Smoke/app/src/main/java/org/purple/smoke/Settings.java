@@ -1822,9 +1822,10 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
-    private void shareKeysOf(int oid)
+    private void shareKeysOf(int o)
     {
 	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+	final String oid = String.valueOf(o);
 
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
@@ -1844,34 +1845,26 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		ArrayList<SipHashIdElement> arrayList =
-		    m_databaseHelper.readSipHashIds(s_cryptography);
+		SipHashIdElement sipHashIdElement =
+		    m_databaseHelper.readSipHashId(s_cryptography, oid);
 
-		if(arrayList == null)
-		    return;
-
-		for(SipHashIdElement sipHashIdElement : arrayList)
+		if(sipHashIdElement == null)
+		    m_error = "readSipHashId() failure";
+		else
 		{
-		    if(sipHashIdElement == null)
-		    {
-			m_error = "zero element";
-			break;
-		    }
-
-		    byte bytes[] = null;
+		    byte bytes[] = Messages.epksMessage
+			(sipHashIdElement.m_encryptionPublicKey,
+			 sipHashIdElement.m_signaturePublicKey,
+			 sipHashIdElement.m_sipHashId,
+			 sipHashIdElement.m_stream,
+			 Messages.CHAT_KEY_TYPE);
 
 		    if(bytes == null)
-		    {
 			m_error = "epksMessage() failure";
-			break;
-		    }
-
-		    if(!Kernel.getInstance().
-		       enqueueMessage(Messages.bytesToMessageString(bytes)))
-		    {
+		    else if(!Kernel.getInstance().
+			    enqueueMessage(Messages.
+					   bytesToMessageString(bytes)))
 			m_error = "enqueueMessage() failure";
-			break;
-		    }
 		}
 
 		Settings.this.runOnUiThread(new Runnable()
@@ -1888,8 +1881,6 @@ public class Settings extends AppCompatActivity
 				 "preparing to transfer public key material.");
 		    }
 		});
-
-		arrayList.clear();
 	    }
 	}
 

@@ -556,12 +556,122 @@ public class Messages
 	return null;
     }
 
+    public static byte[] epksMessage(byte encryptionPublicKey[],
+				     byte signaturePublicKey[],
+				     String sipHashId,
+				     byte keyStream[],
+				     byte keyType[])
+    {
+	if(encryptionPublicKey == null ||
+	   encryptionPublicKey.length <= 0 ||
+	   keyStream == null ||
+	   keyStream.length <= 0 ||
+	   keyType == null ||
+	   keyType.length <= 0 ||
+	   signaturePublicKey == null ||
+	   signaturePublicKey.length <= 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
+	*/
+
+	try
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    /*
+	    ** [ A Timestamp ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(Miscellaneous.
+				       longToByteArray(System.
+						       currentTimeMillis()),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Key Type ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(keyType, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    byte bytes[] = {0};
+
+	    /*
+	    ** [ Encryption Public Key ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(encryptionPublicKey,
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Signature Public Key ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(signaturePublicKey,
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
+
+	    byte aes256[] = Cryptography.encrypt
+		(stringBuilder.toString().getBytes(),
+		 Arrays.copyOfRange(keyStream, 0, 32));
+
+	    stringBuilder.setLength(0);
+	    stringBuilder = null;
+
+	    if(aes256 == null)
+		return null;
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(aes256,
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+	    if(sha512 == null)
+		return null;
+
+	    /*
+	    ** [ Destination ]
+	    */
+
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(aes256, sha512),
+		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+
+	    return Miscellaneous.joinByteArrays(aes256, sha512, destination);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
     public static byte[] epksMessage(Cryptography cryptography,
 				     String sipHashId,
 				     byte keyStream[],
 				     byte keyType[])
     {
-	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	if(cryptography == null ||
+	   keyStream == null ||
+	   keyStream.length <= 0 ||
+	   keyType == null ||
+	   keyType.length <= 0)
 	    return null;
 
 	/*
