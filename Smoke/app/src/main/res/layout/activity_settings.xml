@@ -158,15 +158,6 @@
                         android:nextFocusDown="@+id/neighbors_port" />
 
                     <EditText
-                        android:id="@+id/neighbors_port"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:hint="@string/port"
-                        android:inputType="number" />
-
-                    <EditText
                         android:id="@+id/neighbors_scope_id"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -176,7 +167,16 @@
                         android:hint="@string/ipv6_scope_id"
                         android:inputType="textPersonName"
                         android:nextFocusDown="@+id/proxy_ip_address" />
+
                 </LinearLayout>
+
+                <EditText
+                    android:id="@+id/neighbors_port"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/port"
+                    android:inputType="number" />
 
                 <RadioGroup
                     android:id="@+id/neighbors_ipv_radio_group"
