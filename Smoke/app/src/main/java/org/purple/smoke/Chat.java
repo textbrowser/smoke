@@ -759,7 +759,8 @@ public class Chat extends AppCompatActivity
 	    newSingleThreadScheduledExecutor();
 	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
         {
-	    private AtomicInteger m_messageWritten = new AtomicInteger(0);
+	    private AtomicInteger m_greenWritten = new AtomicInteger(0);
+	    private AtomicInteger m_redWritten = new AtomicInteger(0);
 
 	    @Override
 	    public void run()
@@ -779,23 +780,32 @@ public class Chat extends AppCompatActivity
 
 			if(state)
 			{
+			    if(m_greenWritten.get() == 0)
+			    {
+				appendMessage
+				    ("The network is active.",
+				     Color.rgb(0, 100, 0));
+				m_greenWritten.set(1);
+			    }
+
 			    button.setBackgroundColor
 				(Color.rgb(153, 204, 0));
-			    m_messageWritten.set(0);
+			    m_redWritten.set(0);
 			}
 			else
 			{
-			    if(m_messageWritten.get() == 0)
+			    if(m_redWritten.get() == 0)
 			    {
 				appendMessage
 				    ("The device is unable to access the " +
 				     "network.",
 				     Color.rgb(139, 0, 0));
-				m_messageWritten.set(1);
+				m_redWritten.set(1);
 			    }
 
 			    button.setBackgroundColor
 				(Color.rgb(255, 68, 68));
+			    m_greenWritten.set(0);
 			}
 		    }
 		});
