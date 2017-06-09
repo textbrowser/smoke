@@ -574,8 +574,7 @@ public class Settings extends AppCompatActivity
 		    }
 		});
 
-		if(arrayList != null)
-		    arrayList.clear();
+		arrayList.clear();
 	    }
 	}
 
