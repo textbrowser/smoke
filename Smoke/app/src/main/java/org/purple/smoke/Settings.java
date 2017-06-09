@@ -2322,6 +2322,15 @@ public class Settings extends AppCompatActivity
 	    registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
+
+	/*
+	** Resume the Chat activity if necessary.
+	*/
+
+	String str = m_databaseHelper.readSetting(null, "lastActivity");
+
+	if(str.equals("Chat"))
+	    showChatActivity();
     }
 
     @Override
