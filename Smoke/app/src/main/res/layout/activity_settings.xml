@@ -136,9 +136,9 @@
 
                     <Button
                         android:id="@+id/refresh_neighbors"
+                        style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/holo_green_light"
                         android:text="@string/refresh_neighbors" />
                 </LinearLayout>
 
@@ -253,8 +253,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:background="@android:color/holo_green_light"
                         android:text="@string/add" />
 
                     <Button
@@ -262,9 +260,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/holo_green_light"
-                        android:paddingEnd="5dp"
-                        android:paddingStart="5dp"
                         android:text="@string/reset_fields" />
 
                 </LinearLayout>
@@ -303,10 +298,10 @@
 
                     <Button
                         android:id="@+id/save_ozone"
+                        style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:background="@android:color/holo_green_light"
                         android:text="@string/save" />
                 </LinearLayout>
 
@@ -366,8 +361,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:background="@android:color/holo_green_light"
                         android:text="@string/refresh_participants" />
 
                     <Button
@@ -375,9 +368,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/holo_green_light"
-                        android:paddingEnd="5dp"
-                        android:paddingStart="5dp"
                         android:text="@string/share_keys" />
 
                 </LinearLayout>
@@ -435,8 +425,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:background="@android:color/holo_green_light"
                         android:text="@string/add" />
 
                     <Button
@@ -444,9 +432,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/holo_green_light"
-                        android:paddingEnd="5dp"
-                        android:paddingStart="5dp"
                         android:text="@string/reset_fields" />
                 </LinearLayout>
 
@@ -546,9 +531,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/holo_green_light"
-                        android:paddingEnd="5dp"
-                        android:paddingStart="5dp"
                         android:text="@string/set_password" />
                 </LinearLayout>
 
@@ -592,9 +574,6 @@
                         android:id="@+id/reset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/holo_red_light"
-                        android:paddingEnd="5dp"
-                        android:paddingStart="5dp"
                         android:text="@string/reset_smoke" />
 
                 </LinearLayout>

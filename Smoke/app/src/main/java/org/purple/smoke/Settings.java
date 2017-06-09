@@ -1819,6 +1819,82 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
+    private void shareKeysOf(int oid)
+    {
+	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+
+	dialog.setCancelable(false);
+	dialog.setIndeterminate(true);
+	dialog.setMessage
+	    ("Transferring public key material. Please be patient " +
+	     "and do not rotate the device while the process executes.");
+	dialog.show();
+
+	class SingleShot implements Runnable
+	{
+	    private String m_error = "";
+
+	    SingleShot()
+	    {
+	    }
+
+	    @Override
+	    public void run()
+	    {
+		ArrayList<SipHashIdElement> arrayList =
+		    m_databaseHelper.readSipHashIds(s_cryptography);
+
+		if(arrayList == null)
+		    return;
+
+		for(SipHashIdElement sipHashIdElement : arrayList)
+		{
+		    if(sipHashIdElement == null)
+		    {
+			m_error = "zero element";
+			break;
+		    }
+
+		    byte bytes[] = null;
+
+		    if(bytes == null)
+		    {
+			m_error = "epksMessage() failure";
+			break;
+		    }
+
+		    if(!Kernel.getInstance().
+		       enqueueMessage(Messages.bytesToMessageString(bytes)))
+		    {
+			m_error = "enqueueMessage() failure";
+			break;
+		    }
+		}
+
+		Settings.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			dialog.dismiss();
+
+			if(!m_error.isEmpty())
+			    Miscellaneous.showErrorDialog
+				(Settings.this,
+				 "An error (" + m_error + ") occurred while " +
+				 "preparing to transfer public key material.");
+		    }
+		});
+
+		arrayList.clear();
+	    }
+	}
+
+	Thread thread = new Thread(new SingleShot());
+
+	thread.start();
+    }
+
     private void showAuthenticateActivity()
     {
 	Intent intent = new Intent(Settings.this, Authenticate.class);
@@ -2192,6 +2268,7 @@ public class Settings extends AppCompatActivity
 	if(item == null)
 	    return false;
 
+	final int groupId = item.getGroupId();
 	final int itemId = item.getItemId();
 
 	/*
@@ -2203,20 +2280,22 @@ public class Settings extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
-		    switch(itemId)
-		    {
-		    default:
-			if(m_databaseHelper.deleteEntry(String.valueOf(itemId),
-							"siphash_ids"))
+		    if(groupId == 0)
+			switch(itemId)
 			{
-			    State.getInstance().setChatCheckBoxSelected
-				(itemId, false);
-			    m_databaseHelper.cleanDanglingParticipants();
-			    populateParticipants();
-			}
+			default:
+			    if(m_databaseHelper.
+			       deleteEntry(String.valueOf(itemId),
+					   "siphash_ids"))
+			    {
+				State.getInstance().setChatCheckBoxSelected
+				    (itemId, false);
+				m_databaseHelper.cleanDanglingParticipants();
+				populateParticipants();
+			    }
 
-			break;
-		    }
+			    break;
+			}
 		}
 	    };
 
@@ -2224,13 +2303,22 @@ public class Settings extends AppCompatActivity
 	** Regular expression?
 	*/
 
-	Miscellaneous.showPromptDialog
-	    (Settings.this,
-	     listener,
-	     "Are you sure that you " +
-	     "wish to delete the participant " +
-	     item.getTitle().toString().replace("Delete (", "").
-	     replace(")", "") + "?");
+	switch(groupId)
+	{
+	case 0:
+	    Miscellaneous.showPromptDialog
+		(Settings.this,
+		 listener,
+		 "Are you sure that you " +
+		 "wish to delete the participant " +
+		 item.getTitle().toString().replace("Delete (", "").
+		 replace(")", "") + "?");
+	    break;
+	case 1:
+	    shareKeysOf(itemId);
+	    break;
+	}
+
 	return true;
     }
 
@@ -2285,6 +2373,7 @@ public class Settings extends AppCompatActivity
 	{
 	    super.onCreateContextMenu(menu, v, menuInfo);
 	    menu.add(0, v.getId(), 0, "Delete (" + v.getTag() + ")");
+	    menu.add(1, v.getId(), 0, "Share Keys Of (" + v.getTag() + ")");
 	}
     }
 
