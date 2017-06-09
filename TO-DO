@@ -136,6 +136,7 @@ Completed Items
 102.   Outbound queues must be purged on parent neighbor removal.
 103.   Depict connection status in the Chat activity.
        Status messages.
+104.   Allow sharing of participant pairs.
 
 Future Items
 
@@ -183,4 +184,3 @@ Remaining Items
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
 4.     Introduce real-time typing status.
-5.     Allow sharing of participant pairs.
