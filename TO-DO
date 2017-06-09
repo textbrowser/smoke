@@ -134,6 +134,8 @@ Completed Items
 100.   Key-sharing messages should be written to smoke.db.
 101.   Messages from the past may trigger presence.
 102.   Outbound queues must be purged on parent neighbor removal.
+103.   Depict connection status in the Chat activity.
+       Status messages.
 
 Future Items
 
@@ -181,6 +183,4 @@ Remaining Items
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
 4.     Introduce real-time typing status.
-5.     Depict connection status in the Chat activity.
-       Status messages.
-6.     Allow sharing of participant pairs.
+5.     Allow sharing of participant pairs.

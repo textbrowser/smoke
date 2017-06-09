@@ -61,6 +61,7 @@ import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Chat extends AppCompatActivity
 {
@@ -244,6 +245,41 @@ public class Chat extends AppCompatActivity
 	    }
 	}
 
+	scrollMessagesView();
+
+	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
+
+	textView2.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		textView2.requestFocus();
+	    }
+	});
+    }
+
+    private void appendMessage(String message,
+			       int color)
+    {
+	SimpleDateFormat simpleDateFormat = new
+	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+	StringBuilder stringBuilder = new StringBuilder();
+	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
+
+	stringBuilder.append("[");
+	stringBuilder.append(simpleDateFormat.format(new Date()));
+	stringBuilder.append("] ");
+	stringBuilder.append(message);
+	stringBuilder.append("\n\n");
+
+	Spannable spannable = new SpannableStringBuilder
+	    (stringBuilder.toString());
+
+	spannable.setSpan
+	    (new ForegroundColorSpan(color),
+	     0, stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	textView1.append(spannable);
 	scrollMessagesView();
 
 	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
@@ -723,6 +759,8 @@ public class Chat extends AppCompatActivity
 	    newSingleThreadScheduledExecutor();
 	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
         {
+	    private AtomicInteger m_messageWritten = new AtomicInteger(0);
+
 	    @Override
 	    public void run()
 	    {
@@ -740,11 +778,25 @@ public class Chat extends AppCompatActivity
 			    (R.id.send_chat_message);
 
 			if(state)
+			{
 			    button.setBackgroundColor
 				(Color.rgb(153, 204, 0));
+			    m_messageWritten.set(0);
+			}
 			else
+			{
+			    if(m_messageWritten.get() == 0)
+			    {
+				appendMessage
+				    ("The device is unable to access the " +
+				     "network.",
+				     Color.rgb(139, 0, 0));
+				m_messageWritten.set(1);
+			    }
+
 			    button.setBackgroundColor
 				(Color.rgb(255, 68, 68));
+			}
 		    }
 		});
 	    }
