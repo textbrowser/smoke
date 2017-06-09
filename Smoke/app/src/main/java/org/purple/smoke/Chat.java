@@ -464,12 +464,9 @@ public class Chat extends AppCompatActivity
 
 		    stringBuilder.append
 			(Miscellaneous.
-			 delimitString(Miscellaneous.
-				       sipHashIdFromData(Miscellaneous.
-							 longToByteArray
-							 (value)).
-				       replace(":", ""), '-', 4).
-			 toUpperCase());
+			 byteArrayAsHexStringDelimited(Miscellaneous.
+						       longToByteArray(value),
+						       '-', 4).toUpperCase());
 		}
 	    }
 
@@ -623,11 +620,9 @@ public class Chat extends AppCompatActivity
 
 		stringBuilder.append
 		    (Miscellaneous.
-		     delimitString(Miscellaneous.
-				   sipHashIdFromData(Miscellaneous.
-						     longToByteArray(value)).
-				   replace(":", ""), '-', 4).
-		     toUpperCase());
+		     byteArrayAsHexStringDelimited(Miscellaneous.
+						   longToByteArray(value),
+						   '-', 4).toUpperCase());
 	    }
 
 	    checkBox.setText(stringBuilder);
