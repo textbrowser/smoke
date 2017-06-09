@@ -1057,7 +1057,10 @@ public class Settings extends AppCompatActivity
 			 toUpperCase());
 		}
 
-		textView.setTag(textView.getText());
+		textView.setTag(R.id.participants, textView.getText());
+		textView.setTag
+		    (R.id.refresh_participants,
+		     sipHashIdElement.m_epksCompleted);
 		textView.setTextSize(TEXTVIEW_TEXT_SIZE);
 		registerForContextMenu(textView);
 		row.addView(textView);
@@ -2367,13 +2370,15 @@ public class Settings extends AppCompatActivity
 				    View v,
 				    ContextMenuInfo menuInfo)
     {
-	Object tag = v.getTag();
+	Object tag1 = v.getTag(R.id.participants);
+	Object tag2 = v.getTag(R.id.refresh_participants);
 
-	if(tag != null)
+	if(tag1 != null && tag2 != null)
 	{
 	    super.onCreateContextMenu(menu, v, menuInfo);
-	    menu.add(0, v.getId(), 0, "Delete (" + v.getTag() + ")");
-	    menu.add(1, v.getId(), 0, "Share Keys Of (" + v.getTag() + ")");
+	    menu.add(0, v.getId(), 0, "Delete (" + tag1 + ")");
+	    menu.add(1, v.getId(), 0, "Share Keys Of (" + tag1 + ")").
+		setEnabled((boolean) tag2);
 	}
     }
 
