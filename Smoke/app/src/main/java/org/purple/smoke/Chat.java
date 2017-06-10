@@ -373,11 +373,6 @@ public class Chat extends AppCompatActivity
 
 	State.getInstance().clearChatLog();
 	arrayList.clear();
-
-	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
-
-	if(textView1.getText().length() > 0)
-	    scrollMessagesView();
     }
 
     private void populateParticipants()
