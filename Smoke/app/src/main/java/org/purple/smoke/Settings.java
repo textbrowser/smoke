@@ -2098,32 +2098,22 @@ public class Settings extends AppCompatActivity
 	    public void onCheckedChanged(RadioGroup group,
 					 int checkedId)
 	    {
-		int marginEnd = 0;
 		TextView textView1 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
 		if(checkedId == R.id.neighbors_ipv4)
 		{
-		    marginEnd = 5;
+		    textView1.setEnabled(false);
 		    textView1.setText("");
-		    textView1.setVisibility(View.GONE);
 		    textView1 = (TextView) findViewById(R.id.neighbors_port);
 		    textView1.setNextFocusDownId(R.id.proxy_ip_address);
 		}
 		else
 		{
-		    textView1.setVisibility(View.VISIBLE);
+		    textView1.setEnabled(true);
 		    textView1 = (TextView) findViewById(R.id.neighbors_port);
 		    textView1.setNextFocusDownId(R.id.neighbors_scope_id);
 		}
-
-		LayoutParams layoutParams = new LayoutParams
-		    (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		TextView textView2 = (TextView) findViewById
-		    (R.id.neighbors_port);
-
-		layoutParams.setMarginEnd(marginEnd);
-		textView2.setLayoutParams(layoutParams);
 	    }
 	});
 
@@ -2142,18 +2132,10 @@ public class Settings extends AppCompatActivity
 	textView1 = (TextView) findViewById(R.id.about);
 	textView1.setText(About.about());
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
-        textView1.setEnabled(isAuthenticated);
-        textView1.setVisibility(View.GONE);
+        textView1.setEnabled(false);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
-	textView1.setNextFocusDownId(R.id.proxy_ip_address);
         textView1.setEnabled(isAuthenticated);
 	textView1.setFilters(new InputFilter[] { s_portFilter });
-
-	LayoutParams layoutParams = new LayoutParams
-	    (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-	layoutParams.setMarginEnd(5);
-	textView1.setLayoutParams(layoutParams);
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 
