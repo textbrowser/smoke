@@ -131,6 +131,7 @@ public class Authenticate extends AppCompatActivity
 		    Miscellaneous.showErrorDialog
 			(Authenticate.this,
 			 "Incorrect password. Please try again.");
+		    textView1.setText("");
 		    textView1.requestFocus();
 		    return;
 		}
