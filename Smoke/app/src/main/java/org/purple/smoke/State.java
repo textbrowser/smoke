@@ -129,6 +129,20 @@ public class State
 	}
     }
 
+    public char getChar(String key)
+    {
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getChar(key, '0');
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
+    }
+
     public int chatCheckedParticipants()
     {
 	m_bundleMutex.readLock().lock();
@@ -334,6 +348,20 @@ public class State
 	try
 	{
 	    m_bundle.putString(key, value);
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
+    }
+
+    public void writeChar(String key, char character)
+    {
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.putChar(key, character);
 	}
 	finally
 	{
