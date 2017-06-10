@@ -743,14 +743,14 @@ public class Chat extends AppCompatActivity
 	final ScrollView scrollView = (ScrollView)
 	    findViewById(R.id.chat_scrollview);
 
-	scrollView.post(new Runnable()
+	scrollView.postDelayed(new Runnable()
 	{
 	    @Override
 	    public void run()
 	    {
 		scrollView.fullScroll(ScrollView.FOCUS_DOWN);
 	    }
-	});
+	}, 100);
     }
 
     @Override
