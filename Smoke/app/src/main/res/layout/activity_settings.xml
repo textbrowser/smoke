@@ -238,7 +238,7 @@
                         android:ems="10"
                         android:hint="@string/proxy_port"
                         android:inputType="number"
-                        android:nextFocusDown="@+id/participant_name" />
+                        android:nextFocusDown="@+id/ozone" />
 
                     <Spinner
                         android:id="@+id/proxy_type"
