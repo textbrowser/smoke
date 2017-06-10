@@ -86,7 +86,6 @@ public class Chat extends AppCompatActivity
 		    (intent.getStringExtra("org.purple.smoke.message"),
 		     intent.getStringExtra("org.purple.smoke.name"),
 		     intent.getStringExtra("org.purple.smoke.sipHashId"),
-		     false,
 		     intent.getLongExtra("org.purple.smoke.sequence", 1),
 		     intent.getLongExtra("org.purple.smoke.timestamp", 0));
 	    else if(intent.getAction().
@@ -158,7 +157,6 @@ public class Chat extends AppCompatActivity
     private void appendMessage(String message,
 			       String name,
 			       String sipHashId,
-			       boolean fromChatLog,
 			       long sequence,
 			       long timestamp)
     {
@@ -172,7 +170,7 @@ public class Chat extends AppCompatActivity
 	SimpleDateFormat simpleDateFormat = new
 	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
-	boolean purple = fromChatLog ? false :
+	boolean purple =
 	    Math.abs(System.currentTimeMillis() - timestamp) > CHAT_WINDOW;
 
 	if(purple)
@@ -366,7 +364,6 @@ public class Chat extends AppCompatActivity
 	    appendMessage(chatMessageElement.m_message,
 			  chatMessageElement.m_name,
 			  chatMessageElement.m_sipHashId,
-			  true,
 			  chatMessageElement.m_sequence,
 			  chatMessageElement.m_timestamp);
 	}
