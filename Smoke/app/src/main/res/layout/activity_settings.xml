@@ -215,20 +215,20 @@
 
                 </RadioGroup>
 
+                <EditText
+                    android:id="@+id/proxy_ip_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:ems="10"
+                    android:hint="@string/proxy_ip_address"
+                    android:inputType="textPersonName"
+                    android:nextFocusDown="@+id/proxy_port" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/proxy_ip_address"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:ems="10"
-                        android:hint="@string/proxy_ip_address"
-                        android:inputType="textPersonName"
-                        android:nextFocusDown="@+id/proxy_port" />
 
                     <EditText
                         android:id="@+id/proxy_port"
