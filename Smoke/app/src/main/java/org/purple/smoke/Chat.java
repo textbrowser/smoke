@@ -65,6 +65,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Chat extends AppCompatActivity
 {
+    private AtomicInteger m_greenWritten = new AtomicInteger(0);
+    private AtomicInteger m_redWritten = new AtomicInteger(0);
     private Database m_databaseHelper = null;
 
     private class ChatBroadcastReceiver extends BroadcastReceiver
@@ -732,6 +734,12 @@ public class Chat extends AppCompatActivity
 
 	State.getInstance().writeCharSequence
 	    ("chat.message", textView.getText());
+	State.getInstance().writeChar
+	    ("chat_network_status_green_written",
+	     m_greenWritten.get() == 0 ? '0' : '1');
+	State.getInstance().writeChar
+	    ("chat_network_status_red_written",
+	     m_redWritten.get() == 0 ? '0' : '1');
 	textView = (TextView) findViewById(R.id.chat_messages);
 	State.getInstance().writeCharSequence
 	    ("chat.messages", textView.getText());
@@ -756,13 +764,16 @@ public class Chat extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	m_greenWritten.set
+	    (State.getInstance().
+	     getChar("chat_network_status_green_written") == '0' ? 0 : 1);
+	m_redWritten.set
+	    (State.getInstance().
+	     getChar("chat_network_status_red_written") == '0' ? 0 : 1);
 	m_connectionStatusScheduler = Executors.
 	    newSingleThreadScheduledExecutor();
 	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
         {
-	    private AtomicInteger m_greenWritten = new AtomicInteger(0);
-	    private AtomicInteger m_redWritten = new AtomicInteger(0);
-
 	    @Override
 	    public void run()
 	    {
@@ -791,7 +802,9 @@ public class Chat extends AppCompatActivity
 
 			    button.setBackgroundColor
 				(Color.rgb(153, 204, 0));
-			    m_redWritten.set(0);
+
+			    if(m_redWritten.get() == 1)
+				m_redWritten.set(0);
 			}
 			else
 			{
@@ -806,7 +819,9 @@ public class Chat extends AppCompatActivity
 
 			    button.setBackgroundColor
 				(Color.rgb(255, 68, 68));
-			    m_greenWritten.set(0);
+
+			    if(m_greenWritten.get() == 1)
+				m_greenWritten.set(0);
 			}
 		    }
 		});
@@ -1318,6 +1333,12 @@ public class Chat extends AppCompatActivity
     public void onResume()
     {
 	super.onResume();
+	m_greenWritten.set
+	    (State.getInstance().
+	     getChar("chat_network_status_green_written") == '0' ? 0 : 1);
+	m_redWritten.set
+	    (State.getInstance().
+	     getChar("chat_network_status_red_written") == '0' ? 0 : 1);
 
 	if(!m_receiverRegistered)
 	{
