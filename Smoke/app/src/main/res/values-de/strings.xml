@@ -31,7 +31,6 @@
     <string name="echo">Echo</string>
     <string name="ipv4">IPv4</string>
     <string name="ipv6">IPv6</string>
-    <string name="ipv6_scope_id">IPv6 Scope ID</string>
     <string name="iteration_count">Iterationszähler</string>
     <string name="name">Name</string>
     <string name="port">Port</string>

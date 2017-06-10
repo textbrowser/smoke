@@ -5,7 +5,6 @@
     <string name="clear">Clear</string>
     <string name="please_type_a_message">Please type a message…</string>
     <string name="send">Send</string>
-    <string name="ipv6_scope_id">IPv6 Scope ID</string>
     <string name="ip_address">IP Address</string>
     <string name="port">Port</string>
     <string name="reset_fields">Reset Fields</string>

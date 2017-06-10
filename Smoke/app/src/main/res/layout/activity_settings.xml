@@ -177,7 +177,7 @@
                         android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="@string/ipv6_scope_id"
+                        android:hint="Scope ID"
                         android:inputType="textPersonName"
                         android:nextFocusDown="@+id/proxy_ip_address" />
 
