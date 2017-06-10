@@ -785,7 +785,7 @@ public class Chat extends AppCompatActivity
 			    {
 				appendMessage
 				    ("The network is active.",
-				     Color.rgb(0, 100, 0));
+				     Color.rgb(153, 204, 0));
 				m_greenWritten.set(1);
 			    }
 
@@ -800,7 +800,7 @@ public class Chat extends AppCompatActivity
 				appendMessage
 				    ("The device is unable to access the " +
 				     "network.",
-				     Color.rgb(139, 0, 0));
+				     Color.rgb(255, 68, 68));
 				m_redWritten.set(1);
 			    }
 
