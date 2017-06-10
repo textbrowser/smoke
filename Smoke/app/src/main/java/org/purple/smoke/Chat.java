@@ -516,10 +516,6 @@ public class Chat extends AppCompatActivity
 	    TableRow row = new TableRow(Chat.this);
 
 	    row.addView(checkBox);
-
-	    if(i % 2 == 0)
-		row.setBackgroundColor(Color.argb(100, 179, 230, 255));
-
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
