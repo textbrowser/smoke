@@ -197,7 +197,7 @@ public class Chat extends AppCompatActivity
 		(stringBuilder.toString());
 
 	    spannable.setSpan
-		(new ForegroundColorSpan(Color.rgb(75, 0, 130)),
+		(new ForegroundColorSpan(Color.rgb(30, 144, 255)),
 		 0, stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    textView1.append(spannable);
 	}
@@ -508,6 +508,7 @@ public class Chat extends AppCompatActivity
 
 	    checkBox.setTag(participantElement.m_sipHashId);
 	    checkBox.setText(stringBuilder);
+	    checkBox.setTextColor(Color.rgb(255, 255, 255));
 	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
 
 	    TableRow row = new TableRow(Chat.this);
@@ -702,10 +703,10 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append("marked by the color ");
 	textView1.append(stringBuilder);
 
-	Spannable spannable = new SpannableStringBuilder("purple");
+	Spannable spannable = new SpannableStringBuilder("blue");
 
 	spannable.setSpan
-	    (new ForegroundColorSpan(Color.rgb(75, 0, 130)),
+	    (new ForegroundColorSpan(Color.rgb(30, 144, 255)),
 	     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 	textView1.append(spannable);
@@ -1002,6 +1003,9 @@ public class Chat extends AppCompatActivity
 
 	if(State.getInstance().isAuthenticated())
 	    populateParticipants();
+
+	findViewById(R.id.view).setBackgroundColor
+	    (Color.rgb(36, 52, 71));
 
 	/*
 	** Preparse some event listeners.
