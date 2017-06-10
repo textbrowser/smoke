@@ -1119,7 +1119,9 @@ public class Settings extends AppCompatActivity
 		textView.setText
 		    ("An Ozone Address defines a virtual location, " +
 		     "a separate device where messages are to be stored for " +
-		     "later retrieval. A virtual post office.");
+		     "later retrieval. A virtual post office. " +
+		     "Please remember to share your Ozone Address with your " +
+		     "friends as well as at least one SmokeStack.");
 		textView.setTextSize(16);
 		popupWindow.setContentView(textView);
 		popupWindow.setOutsideTouchable(true);
