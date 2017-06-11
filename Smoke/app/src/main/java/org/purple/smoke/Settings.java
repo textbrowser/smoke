@@ -381,7 +381,7 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
-    private void deleteNeighbor(String ipPort, int id)
+    private void deleteNeighbor(String ipAndPort, int id)
     {
 	final int oid = id;
 
@@ -421,7 +421,7 @@ public class Settings extends AppCompatActivity
 	    (Settings.this,
 	     listener,
 	     "Are you sure that you wish to " +
-	     "delete the neighbor " + ipPort + "?");
+	     "delete the neighbor " + ipAndPort + "?");
     }
 
     private void enableWidgets(boolean state)
@@ -781,8 +781,8 @@ public class Settings extends AppCompatActivity
 
 		ArrayAdapter<String> arrayAdapter = null;
 		String array[] = null;
-		final String ipPort = neighborElement.m_remoteIpAddress + ":" +
-		    neighborElement.m_remotePort;
+		final String ipAndPort = neighborElement.
+		    m_remoteIpAddress + ":" + neighborElement.m_remotePort;
 
 		if(neighborElement.m_transport.equals("TCP"))
 		    array = new String[]
@@ -819,7 +819,7 @@ public class Settings extends AppCompatActivity
 				     "connect",
 				     String.valueOf(parent.getId()));
 			    else if(position == 2) // Delete
-				deleteNeighbor(ipPort, parent.getId());
+				deleteNeighbor(ipAndPort, parent.getId());
 			    else if(position == 3) // Disconnect
 				m_databaseHelper.neighborControlStatus
 				    (s_cryptography,
