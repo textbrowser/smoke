@@ -51,7 +51,7 @@ public abstract class Neighbor
     private final static Object m_queueMutex = new Object();
     private final static int LANE_WIDTH = 100000;
     private final static int PARSING_INTERVAL = 100; // Milliseconds
-    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
+    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 100; // Milliseconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
     protected AtomicInteger m_oid = null;

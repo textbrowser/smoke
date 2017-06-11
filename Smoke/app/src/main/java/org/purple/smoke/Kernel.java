@@ -44,12 +44,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Kernel
 {
+    private ArrayList<ChatMessageElement> m_chatMessages = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private ScheduledExecutorService m_callScheduler = null;
+    private ScheduledExecutorService m_chatScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private final ReentrantReadWriteLock m_callQueueMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_chatMessagesMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
@@ -61,6 +65,7 @@ public class Kernel
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
     private final static int CALL_LIFETIME = 15000; // 15 Seconds
+    private final static int CHAT_INTERVAL = 100; // 100 Milliseconds
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
@@ -73,6 +78,7 @@ public class Kernel
     private Kernel()
     {
 	m_callQueue = new Hashtable<> ();
+	m_chatMessages = new ArrayList<> ();
 	prepareSchedulers();
     }
 
@@ -190,6 +196,90 @@ public class Kernel
 		    }
 		}
 	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_chatScheduler == null)
+	{
+	    m_chatScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_chatScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    m_chatMessagesMutex.writeLock().lock();
+
+		    try
+		    {
+			for(int i = m_chatMessages.size() - 1; i >= 0; i--)
+			{
+			    ChatMessageElement chatMessageElement =
+				m_chatMessages.get(i);
+
+			    m_chatMessages.remove(i);
+
+			    if(chatMessageElement == null)
+				continue;
+
+			    byte bytes[] = null;
+
+			    try
+			    {
+				bytes = Messages.chatMessage
+				    (s_cryptography,
+				     chatMessageElement.m_message,
+				     chatMessageElement.m_sipHashId,
+				     false,
+				     Cryptography.
+				     sha512(chatMessageElement.m_sipHashId.
+					    getBytes("UTF-8")),
+				     chatMessageElement.m_keyStream,
+				     State.getInstance().
+				     chatSequence(chatMessageElement.
+						  m_sipHashId),
+				     System.currentTimeMillis());
+			    }
+			    catch(Exception exception)
+			    {
+				bytes = null;
+			    }
+
+			    if(bytes != null)
+			    {
+				enqueueMessage
+				    (Messages.bytesToMessageString(bytes));
+				State.getInstance().incrementChatSequence
+				    (chatMessageElement.m_sipHashId);
+			    }
+
+			    if(s_cryptography.ozoneMacKey() != null)
+			    {
+				bytes = Messages.chatMessage
+				    (s_cryptography,
+				     chatMessageElement.m_message,
+				     chatMessageElement.m_sipHashId,
+				     true,
+				     s_cryptography.ozoneMacKey(),
+				     chatMessageElement.m_keyStream,
+				     State.getInstance().
+				     chatSequence(chatMessageElement.
+						  m_sipHashId),
+				     System.currentTimeMillis());
+
+				if(bytes != null)
+				    Kernel.getInstance().enqueueMessage
+					(Messages.bytesToMessageString(bytes));
+			    }
+			}
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_chatMessagesMutex.writeLock().unlock();
+		    }
+		}
+	    }, 1500, CHAT_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_congestionScheduler == null)
@@ -936,6 +1026,27 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
+	}
+    }
+
+    public void enqueueChatMessage(String message,
+				   String sipHashId,
+				   byte keystream[])
+    {
+	m_chatMessagesMutex.writeLock().lock();
+
+	try
+	{
+	    ChatMessageElement chatMessageElement = new ChatMessageElement();
+
+	    chatMessageElement.m_message = message;
+	    chatMessageElement.m_sipHashId = sipHashId;
+	    chatMessageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    m_chatMessages.add(chatMessageElement);
+	}
+	finally
+	{
+	    m_chatMessagesMutex.writeLock().unlock();
 	}
     }
 

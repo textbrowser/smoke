@@ -949,48 +949,8 @@ public class Chat extends AppCompatActivity
 		    if(keyStream == null || keyStream.length != 96)
 			continue;
 
-		    byte bytes[] = null;
-
-		    try
-		    {
-			bytes = Messages.chatMessage
-			    (s_cryptography,
-			     str,
-			     sipHashId,
-			     false,
-			     Cryptography.sha512(sipHashId.getBytes("UTF-8")),
-			     keyStream,
-			     State.getInstance().chatSequence(sipHashId),
-			     System.currentTimeMillis());
-		    }
-		    catch(Exception exception)
-		    {
-			bytes = null;
-		    }
-
-		    if(bytes != null)
-		    {
-			Kernel.getInstance().enqueueMessage
-			    (Messages.bytesToMessageString(bytes));
-			State.getInstance().incrementChatSequence(sipHashId);
-		    }
-
-		    if(s_cryptography.ozoneMacKey() != null)
-		    {
-			bytes = Messages.chatMessage
-			    (s_cryptography,
-			     str,
-			     sipHashId,
-			     true,
-			     s_cryptography.ozoneMacKey(),
-			     keyStream,
-			     State.getInstance().chatSequence(sipHashId),
-			     System.currentTimeMillis());
-
-			if(bytes != null)
-			    Kernel.getInstance().enqueueMessage
-				(Messages.bytesToMessageString(bytes));
-		    }
+		    Kernel.getInstance().enqueueChatMessage
+			(str, sipHashId, keyStream);
 		}
 
 		scrollMessagesView();
