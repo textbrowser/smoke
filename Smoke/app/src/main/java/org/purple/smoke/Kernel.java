@@ -206,77 +206,77 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    m_chatMessagesMutex.writeLock().lock();
-
-		    try
+		    while(true)
 		    {
-			for(int i = m_chatMessages.size() - 1; i >= 0; i--)
+			ChatMessageElement chatMessageElement = null;
+
+			m_chatMessagesMutex.writeLock().lock();
+
+			try
 			{
-			    ChatMessageElement chatMessageElement =
-				m_chatMessages.get(i);
-
-			    m_chatMessages.remove(i);
-
-			    if(chatMessageElement == null)
-				continue;
-
-			    byte bytes[] = null;
-
-			    try
+			    if(!m_chatMessages.isEmpty())
 			    {
-				bytes = Messages.chatMessage
-				    (s_cryptography,
-				     chatMessageElement.m_message,
-				     chatMessageElement.m_sipHashId,
-				     false,
-				     Cryptography.
-				     sha512(chatMessageElement.m_sipHashId.
-					    getBytes("UTF-8")),
-				     chatMessageElement.m_keyStream,
-				     State.getInstance().
-				     chatSequence(chatMessageElement.
-						  m_sipHashId),
-				     System.currentTimeMillis());
+				chatMessageElement = m_chatMessages.get(0);
+				m_chatMessages.remove(0);
 			    }
-			    catch(Exception exception)
-			    {
-				bytes = null;
-			    }
+			    else
+				break;
+			}
+			finally
+			{
+			    m_chatMessagesMutex.writeLock().unlock();
+			}
+
+			if(chatMessageElement == null)
+			    continue;
+
+			byte bytes[] = null;
+
+			try
+			{
+			    bytes = Messages.chatMessage
+				(s_cryptography,
+				 chatMessageElement.m_message,
+				 chatMessageElement.m_sipHashId,
+				 false,
+				 Cryptography.
+				 sha512(chatMessageElement.m_sipHashId.
+					getBytes("UTF-8")),
+				 chatMessageElement.m_keyStream,
+				 State.getInstance().
+				 chatSequence(chatMessageElement.m_sipHashId),
+				 System.currentTimeMillis());
+			}
+			catch(Exception exception)
+			{
+			    bytes = null;
+			}
+
+			if(bytes != null)
+			{
+			    enqueueMessage
+				(Messages.bytesToMessageString(bytes));
+			    State.getInstance().incrementChatSequence
+				(chatMessageElement.m_sipHashId);
+			}
+
+			if(s_cryptography.ozoneMacKey() != null)
+			{
+			    bytes = Messages.chatMessage
+				(s_cryptography,
+				 chatMessageElement.m_message,
+				 chatMessageElement.m_sipHashId,
+				 true,
+				 s_cryptography.ozoneMacKey(),
+				 chatMessageElement.m_keyStream,
+				 State.getInstance().
+				 chatSequence(chatMessageElement.m_sipHashId),
+				 System.currentTimeMillis());
 
 			    if(bytes != null)
-			    {
-				enqueueMessage
+				Kernel.getInstance().enqueueMessage
 				    (Messages.bytesToMessageString(bytes));
-				State.getInstance().incrementChatSequence
-				    (chatMessageElement.m_sipHashId);
-			    }
-
-			    if(s_cryptography.ozoneMacKey() != null)
-			    {
-				bytes = Messages.chatMessage
-				    (s_cryptography,
-				     chatMessageElement.m_message,
-				     chatMessageElement.m_sipHashId,
-				     true,
-				     s_cryptography.ozoneMacKey(),
-				     chatMessageElement.m_keyStream,
-				     State.getInstance().
-				     chatSequence(chatMessageElement.
-						  m_sipHashId),
-				     System.currentTimeMillis());
-
-				if(bytes != null)
-				    Kernel.getInstance().enqueueMessage
-					(Messages.bytesToMessageString(bytes));
-			    }
 			}
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		    finally
-		    {
-			m_chatMessagesMutex.writeLock().unlock();
 		    }
 		}
 	    }, 1500, CHAT_INTERVAL, TimeUnit.MILLISECONDS);
