@@ -185,3 +185,4 @@ Remaining Items
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
 4.     Introduce real-time typing status.
+5.     Prevent-sleep option in Settings.
