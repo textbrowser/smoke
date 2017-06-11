@@ -2192,8 +2192,8 @@ public class Settings extends AppCompatActivity
 	if(spinner1.getAdapter().getCount() > 1)
 	    spinner1.setSelection(1); // RSA
 
-	m_databaseHelper.cleanDanglingParticipants();
 	m_databaseHelper.cleanDanglingOutboundQueued();
+	m_databaseHelper.cleanDanglingParticipants();
 	populateFancyKeyData();
 
 	if(isAuthenticated)

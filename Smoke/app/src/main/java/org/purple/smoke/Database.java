@@ -1937,37 +1937,6 @@ public class Database extends SQLiteOpenHelper
 	return s_instance;
     }
 
-    public void cleanDanglingParticipants()
-    {
-	prepareDb();
-
-	if(m_db == null)
-	    return;
-
-	Cursor cursor = null;
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
-	    cursor = m_db.rawQuery
-		("DELETE FROM participants WHERE siphash_id_digest " +
-		 "NOT IN (SELECT siphash_id_digest FROM siphash_ids)",
-		 null);
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-        {
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-
-	    m_db.endTransaction();
-	}
-    }
-
     public void cleanDanglingOutboundQueued()
     {
 	prepareDb();
@@ -1984,6 +1953,37 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery
 		("DELETE FROM outbound_queue WHERE neighbor_oid " +
 		 "NOT IN (SELECT OID FROM neighbors)",
+		 null);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+
+	    m_db.endTransaction();
+	}
+    }
+
+    public void cleanDanglingParticipants()
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return;
+
+	Cursor cursor = null;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("DELETE FROM participants WHERE siphash_id_digest " +
+		 "NOT IN (SELECT siphash_id_digest FROM siphash_ids)",
 		 null);
 	    m_db.setTransactionSuccessful();
 	}
