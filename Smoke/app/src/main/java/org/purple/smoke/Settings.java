@@ -676,7 +676,7 @@ public class Settings extends AppCompatActivity
 	** Remove table entries which do not exist in smoke.db.
 	*/
 
-	for(i = 0; i < tableLayout.getChildCount(); i++)
+	for(i = tableLayout.getChildCount() - 1; i >= 0; i--)
 	{
 	    TableRow row = (TableRow) tableLayout.getChildAt(i);
 
@@ -686,7 +686,10 @@ public class Settings extends AppCompatActivity
 	    TextView textView = (TextView) row.getChildAt(1);
 
 	    if(textView == null)
+	    {
+		tableLayout.removeView(row);
 		continue;
+	    }
 
 	    boolean found = false;
 
