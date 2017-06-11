@@ -19,7 +19,7 @@
     <string name="participants">Teilnehmer</string>
     <string name="password">Passwort</string>
     <string name="password_confirmation">Passwort Bestätigung</string>
-    <string name="please_type_a_message">Bitte gebe eine Nachricht ein...</string>
+    <string name="please_type_a_message">Schreibe Nachricht...</string>
     <string name="public_data">Öffentliche Daten</string>
     <string name="refresh_neighbors">Erneuern</string>
     <string name="refresh_participants">Erneuern</string>
@@ -43,4 +43,8 @@
     <string name="address">Adresse</string>
     <string name="ozone">Ozon</string>
     <string name="save">Speichern</string>
+    <string name="at">\@</string>
+    <string name="neighbor_servers">Nachbar/Server</string>
+    <string name="scope_id">Scope ID</string>
+    <string name="share_keys">Sende Schlüssel</string>
 </resources>
