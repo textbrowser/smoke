@@ -137,6 +137,7 @@ Completed Items
 103.   Depict connection status in the Chat activity.
        Status messages.
 104.   Allow sharing of participant pairs.
+105.   Remote storage of messages. SmokeStack.
 
 Future Items
 
@@ -145,7 +146,7 @@ Future Items
 3.     Themes, of course.
 4.     Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with
        Long.BYTES.
-5.     Remote storage of messages.
+5.     SMP.
 6.     Allow log clearing. New Log activity?
 7.     Resolve DNS through a proxy if a proxy is defined.
 8.     SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
