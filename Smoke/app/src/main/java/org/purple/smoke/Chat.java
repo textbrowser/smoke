@@ -743,14 +743,14 @@ public class Chat extends AppCompatActivity
 	final ScrollView scrollView = (ScrollView)
 	    findViewById(R.id.chat_scrollview);
 
-	scrollView.postDelayed(new Runnable()
+	scrollView.post(new Runnable()
 	{
 	    @Override
 	    public void run()
 	    {
 		scrollView.fullScroll(ScrollView.FOCUS_DOWN);
 	    }
-	}, 100);
+	});
     }
 
     @Override
@@ -1013,7 +1013,7 @@ public class Chat extends AppCompatActivity
 	    populateParticipants();
 
 	findViewById(R.id.view).setBackgroundColor
-	    (Color.rgb(36, 52, 71));
+	    (Color.rgb(27, 40, 54));
 
 	/*
 	** Preparse some event listeners.
