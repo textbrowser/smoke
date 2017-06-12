@@ -1462,6 +1462,8 @@ public class Database extends SQLiteOpenHelper
 	   m_db == null)
 	    return false;
 
+	boolean ok = true;
+
 	m_db.beginTransactionNonExclusive();
 
 	try
@@ -1638,7 +1640,7 @@ public class Database extends SQLiteOpenHelper
 			   Base64.encodeToString(bytes, Base64.DEFAULT));
 	    }
 
-	    m_db.insert("participants", null, values);
+	    ok = m_db.insert("participants", null, values) > 0;
 	    m_db.setTransactionSuccessful();
 	}
 	catch(SQLiteConstraintException exception)
@@ -1654,7 +1656,7 @@ public class Database extends SQLiteOpenHelper
 	    m_db.endTransaction();
 	}
 
-	return true;
+	return ok;
     }
 
     public boolean writeSipHashParticipant(Cryptography cryptography,
