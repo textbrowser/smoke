@@ -551,13 +551,6 @@ public class Kernel
 
 		if(abyte[0] == Messages.CHAT_STATUS_MESSAGE_TYPE[0])
 		{
-		    if(!Cryptography.
-		       memcmp(Arrays.copyOfRange(aes256,
-						 9,
-						 9 + 64),
-			      s_cryptography.chatEncryptionPublicKeyDigest()))
-			return false;
-
 		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography, pk);
 
@@ -577,16 +570,19 @@ public class Kernel
 			    return false;
 
 			if(!Cryptography.
-			   verifySignature(signatureKey,
-					   Arrays.copyOfRange(aes256,
-							      74,
-							      aes256.length),
-					   Miscellaneous.
-					   joinByteArrays(pk,
-							  Arrays.
-							  copyOfRange(aes256,
-								      0,
-								      74))))
+			   verifySignature
+			   (signatureKey,
+			    Arrays.copyOfRange(aes256,
+					       10,
+					       aes256.length),
+			    Miscellaneous.
+			    joinByteArrays(pk,
+					   Arrays.
+					   copyOfRange(aes256,
+						       0,
+						       10),
+					   s_cryptography.
+					   chatEncryptionPublicKeyDigest())))
 			    return false;
 		    }
 
