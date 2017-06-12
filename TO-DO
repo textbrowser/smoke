@@ -186,3 +186,4 @@ Remaining Items
        without a session.
 4.     Introduce real-time typing status.
 5.     Prevent-sleep option in Settings.
+6.     When verifying signatures, recipients should retrieve appropriate personal identity digests.
