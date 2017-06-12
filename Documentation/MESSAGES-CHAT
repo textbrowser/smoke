@@ -5,7 +5,7 @@
 
 [AES-256] (2)
 {
-	A Byte (1)						1 Byte
+	0x00 (1)						1 Byte
 	A Timestamp (2)						8 Bytes (Base-64)
 	Message (3)						Variable Bytes (Base-64)
 	Sequence (4)						8 Bytes (Base-64)
