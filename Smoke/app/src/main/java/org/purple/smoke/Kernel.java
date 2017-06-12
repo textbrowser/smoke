@@ -812,7 +812,7 @@ public class Kernel
 		else
 		    array = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 237, 273 + 64));
+			 Arrays.copyOfRange(aes256, 273, 273 + 64));
 
 		if(array != null && array.length == 2)
 		{
