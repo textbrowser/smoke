@@ -41,7 +41,7 @@ public class Messages
 	new byte[] {0x00, 0x01};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
-    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 5; /*
+    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 4; /*
 							      ** The first
 							      ** byte is not
 							      ** considered.

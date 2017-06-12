@@ -636,23 +636,11 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 2:
-			recipientDigest = Base64.decode
-			    (string.getBytes(), Base64.NO_WRAP);
-
-			if(!Cryptography.
-			   memcmp(recipientDigest,
-				  s_cryptography.
-				  chatEncryptionPublicKeyDigest()))
-			    return false;
-
-			ii += 1;
-			break;
-		    case 3:
 			sequence = Miscellaneous.byteArrayToLong
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 			ii += 1;
 			break;
-		    case 4:
+		    case 3:
 			String array[] = s_databaseHelper.
 			    nameSipHashIdFromDigest(s_cryptography, pk);
 
@@ -676,23 +664,21 @@ public class Kernel
 				return false;
 
 			    if(!Cryptography.
-			       verifySignature(signatureKey,
-					       publicKeySignature,
-					       Miscellaneous.
-					       joinByteArrays(pk,
-							      abyte,
-							      strings[0].
-							      getBytes(),
-							      "\n".getBytes(),
-							      strings[1].
-							      getBytes(),
-							      "\n".getBytes(),
-							      strings[2].
-							      getBytes(),
-							      "\n".getBytes(),
-							      strings[3].
-							      getBytes(),
-							      "\n".getBytes())))
+			       verifySignature
+			       (signatureKey,
+				publicKeySignature,
+				Miscellaneous.
+				joinByteArrays
+				(pk,
+				 abyte,
+				 strings[0].getBytes(),
+				 "\n".getBytes(),
+				 strings[1].getBytes(),
+				 "\n".getBytes(),
+				 strings[2].getBytes(),
+				 "\n".getBytes(),
+				 s_cryptography.
+				 chatEncryptionPublicKeyDigest())))
 				return false;
 			}
 
