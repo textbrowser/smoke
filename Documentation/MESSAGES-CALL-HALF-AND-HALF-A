@@ -9,12 +9,11 @@
 	0x00 (1)						1 Byte
 	A Timestamp (2)						8 Bytes
 	RSA 2048-Bit Public Key (3)				294 Bytes
-	Recipient's Public Encryption Key SHA-512 Digest (4)	64 Bytes
-	Sender's Identity (5)					8 Bytes
-	Sender's Public Encryption Key SHA-512 Digest (6)	64 Bytes
-	[PK Signature] (7)					Variable Bytes
+	Sender's Identity (4)					8 Bytes
+	Sender's Public Encryption Key SHA-512 Digest (5)	64 Bytes
+	[PK Signature] (6)					Variable Bytes
 	{
-		[PK] (1 ... 2) || [AES-256] (1 ... 6) (1)
+		[PK] (1 ... 2) || [AES-256] (1 ... 5) (1)
 	}
 }
 

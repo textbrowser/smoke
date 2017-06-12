@@ -8,11 +8,10 @@
 	A Byte (1)						1 Byte
 	A Timestamp (2)						8 Bytes (Base-64)
 	Message (3)						Variable Bytes (Base-64)
-	Recipient's Public Encryption Key SHA-512 Digest (4)	64 Bytes (Base-64)
-	Sequence (5)						8 Bytes (Base-64)
-	[PK Signature] (6)					Variable Bytes (Base-64)
+	Sequence (4)						8 Bytes (Base-64)
+	[PK Signature] (5)					Variable Bytes (Base-64)
 	{
-		[PK] (1) || [AES-256] (1 ... 5) (1)
+		[PK] (1) || [AES-256] (1 ... 4) (1)
 	}
 }
 

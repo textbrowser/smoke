@@ -13,12 +13,11 @@
 		AES-256 Key (1)
 		SHA-512 Key (2)
 	}
-	Recipient's Public Encryption Key SHA-512 Digest (4)	64 Bytes
-	Sender's Identity (5)					8 Bytes
-	Sender's Public Encryption Key SHA-512 Digest (6)	64 Bytes
-	[PK Signature] (7)					Variable Bytes
+	Sender's Identity (4)					8 Bytes
+	Sender's Public Encryption Key SHA-512 Digest (5)	64 Bytes
+	[PK Signature] (6)					Variable Bytes
 	{
-		[PK] (1 ... 2) || [AES-256] (1 ... 6) (1)
+		[PK] (1 ... 2) || [AES-256] (1 ... 5) (1)
 	}
 }
 
