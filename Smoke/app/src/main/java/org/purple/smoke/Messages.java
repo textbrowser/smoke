@@ -144,12 +144,6 @@ public class Messages
 		 keyStream,
 
 		 /*
-		 ** [ Recipient's Encryption Public Key Digest ]
-		 */
-
-		 Cryptography.sha512(publicKey.getEncoded()),
-
-		 /*
 		 ** [ Identity ]
 		 */
 
@@ -166,7 +160,11 @@ public class Messages
 	    */
 
 	    byte signature[] = cryptography.signViaChatSignature
-		(Miscellaneous.joinByteArrays(aesKey, shaKey, bytes));
+		(Miscellaneous.
+		 joinByteArrays(aesKey,
+				shaKey,
+				bytes,
+				Cryptography.sha512(publicKey.getEncoded())));
 
 	    if(signature == null)
 		return null;
@@ -266,16 +264,6 @@ public class Messages
 	    stringBuilder.append("\n");
 
 	    /*
-	    ** [ Recipient's Encryption Public Key Digest ]
-	    */
-
-	    stringBuilder.append
-		(Base64.encodeToString(Cryptography.
-				       sha512(publicKey.getEncoded()),
-				       Base64.NO_WRAP));
-	    stringBuilder.append("\n");
-
-	    /*
 	    ** [ Sequence ]
 	    */
 
@@ -299,7 +287,9 @@ public class Messages
 		     joinByteArrays(cryptography.
 				    chatEncryptionPublicKeyDigest(),
 				    CHAT_MESSAGE_TYPE,
-				    stringBuilder.toString().getBytes()));
+				    stringBuilder.toString().getBytes(),
+				    Cryptography.sha512(publicKey.
+							getEncoded())));
 	    else
 		signature = new byte[1];
 
@@ -486,12 +476,6 @@ public class Messages
 		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
 
 		 /*
-		 ** [ Recipient's Encryption Public Key Digest ]
-		 */
-
-		 Cryptography.sha512(publicKey.getEncoded()),
-
-		 /*
 		 ** [ Status ]
 		 */
 
@@ -509,7 +493,10 @@ public class Messages
 		signature = cryptography.signViaChatSignature
 		    (Miscellaneous.
 		     joinByteArrays(cryptography.
-				    chatEncryptionPublicKeyDigest(), bytes));
+				    chatEncryptionPublicKeyDigest(),
+				    bytes,
+				    Cryptography.sha512(publicKey.
+							getEncoded())));
 	    else
 		signature = new byte[1];
 
