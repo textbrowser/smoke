@@ -215,10 +215,7 @@ public class Kernel
 			try
 			{
 			    if(!m_chatMessages.isEmpty())
-			    {
-				chatMessageElement = m_chatMessages.get(0);
-				m_chatMessages.remove(0);
-			    }
+				chatMessageElement = m_chatMessages.remove(0);
 			    else
 				break;
 			}
