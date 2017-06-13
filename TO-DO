@@ -138,6 +138,8 @@ Completed Items
        Status messages.
 104.   Allow sharing of participant pairs.
 105.   Remote storage of messages. SmokeStack.
+106.   When verifying signatures, recipients should retrieve
+       appropriate personal identity digests.
 
 Future Items
 
@@ -186,4 +188,3 @@ Remaining Items
        without a session.
 4.     Introduce real-time typing status.
 5.     Prevent-sleep option in Settings.
-6.     When verifying signatures, recipients should retrieve appropriate personal identity digests.
