@@ -124,9 +124,9 @@ public class Database extends SQLiteOpenHelper
 	};
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
-    private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private final static int WRITE_PARTICIPANT_TIME_DELTA = 60000; // 60 Seconds
     private static Database s_instance = null;
+    public final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
 
     private Database(Context context)
     {
@@ -1057,6 +1057,212 @@ public class Database extends SQLiteOpenHelper
 	return str;
     }
 
+    public String writeParticipant(Cryptography cryptography,
+				   byte data[])
+    {
+	prepareDb();
+
+	if(cryptography == null ||
+	   data == null ||
+	   data.length < 0 ||
+	   m_db == null)
+	    return "";
+
+	String sipHashId = "";
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    String strings[] = new String(data).split("\\n");
+
+	    if(strings.length != Messages.EPKS_GROUP_ONE_ELEMENT_COUNT)
+		return "";
+
+	    PublicKey publicKey = null;
+	    PublicKey signatureKey = null;
+	    byte keyType[] = null;
+	    byte publicKeySignature[] = null;
+	    byte signatureKeySignature[] = null;
+	    int ii = 0;
+
+	    for(String string : strings)
+		switch(ii)
+		{
+		case 0:
+		    long current = System.currentTimeMillis();
+		    long timestamp = Miscellaneous.byteArrayToLong
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
+
+		    if(current - timestamp < 0)
+		    {
+			if(timestamp - current > WRITE_PARTICIPANT_TIME_DELTA)
+			    return "";
+		    }
+		    else if(current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
+			return "";
+
+		    ii += 1;
+		    break;
+		case 1:
+		    keyType = Base64.decode
+			(string.getBytes(), Base64.NO_WRAP);
+
+		    if(keyType == null ||
+		       keyType.length != 1 ||
+		       keyType[0] != Messages.CHAT_KEY_TYPE[0])
+			return "";
+
+		    ii += 1;
+		    break;
+		case 2:
+		    publicKey = Cryptography.publicKeyFromBytes
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
+
+		    if(publicKey == null)
+			return "";
+		    else if(cryptography.
+			    compareChatEncryptionPublicKey(publicKey))
+			return "";
+		    else if(cryptography.
+			    compareChatSignaturePublicKey(publicKey))
+			return "";
+
+		    ii += 1;
+		    break;
+		case 3:
+		    publicKeySignature = Base64.decode
+			(string.getBytes(), Base64.NO_WRAP);
+
+		    if(!Cryptography.verifySignature(publicKey,
+						     publicKeySignature,
+						     publicKey.getEncoded()))
+			return "";
+
+		    ii += 1;
+		    break;
+		case 4:
+		    signatureKey = Cryptography.publicKeyFromBytes
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
+
+		    if(signatureKey == null)
+			return "";
+		    else if(cryptography.
+			    compareChatEncryptionPublicKey(signatureKey))
+			return "";
+		    else if(cryptography.
+			    compareChatSignaturePublicKey(signatureKey))
+			return "";
+
+		    ii += 1;
+		    break;
+		case 5:
+		    signatureKeySignature = Base64.decode
+			(string.getBytes(), Base64.NO_WRAP);
+
+		    if(!Cryptography.verifySignature(signatureKey,
+						     signatureKeySignature,
+						     signatureKey.getEncoded()))
+			return "";
+
+		    break;
+		}
+
+	    /*
+	    ** We shall use the two public keys to generate the
+	    ** provider's SipHash ID. If a SipHash ID is not defined,
+	    ** we'll reject the data.
+	    */
+
+	    String name = "";
+
+	    sipHashId = Miscellaneous.
+		sipHashIdFromData(Miscellaneous.
+				  joinByteArrays(publicKey.getEncoded(),
+						 signatureKey.getEncoded())).
+		toLowerCase();
+	    name = nameFromSipHashId(cryptography, sipHashId);
+
+	    if(name.isEmpty())
+		return "";
+
+	    ContentValues values = new ContentValues();
+	    SparseArray<String> sparseArray = new SparseArray<> ();
+
+	    sparseArray.append(0, "encryption_public_key");
+	    sparseArray.append(1, "encryption_public_key_digest");
+	    sparseArray.append(2, "function_digest");
+	    sparseArray.append(3, "identity");
+	    sparseArray.append(4, "keystream");
+	    sparseArray.append(5, "last_status_timestamp");
+	    sparseArray.append(6, "name");
+	    sparseArray.append(7, "options");
+	    sparseArray.append(8, "signature_public_key");
+	    sparseArray.append(9, "signature_public_key_digest");
+	    sparseArray.append(10, "siphash_id");
+	    sparseArray.append(11, "siphash_id_digest");
+
+	    for(int i = 0; i < sparseArray.size(); i++)
+	    {
+		byte bytes[] = null;
+
+		if(sparseArray.get(i).equals("encryption_public_key"))
+		    bytes = cryptography.etm(publicKey.getEncoded());
+		else if(sparseArray.get(i).
+			equals("encryption_public_key_digest"))
+		    bytes = Cryptography.sha512(publicKey.getEncoded());
+		else if(sparseArray.get(i).equals("function_digest"))
+		{
+		    if(keyType != null &&
+		       keyType.length == 1 &&
+		       keyType[0] == Messages.CHAT_KEY_TYPE[0])
+			bytes = cryptography.hmac("chat".getBytes());
+		}
+		else if(sparseArray.get(i).equals("identity"))
+		    bytes = cryptography.etm("".getBytes());
+		else if(sparseArray.get(i).equals("keystream"))
+		    bytes = cryptography.etm("".getBytes());
+		else if(sparseArray.get(i).equals("last_status_timestamp"))
+		    bytes = cryptography.etm("".getBytes());
+		else if(sparseArray.get(i).equals("name"))
+		    bytes = cryptography.etm(name.getBytes());
+		else if(sparseArray.get(i).equals("options"))
+		    bytes = cryptography.etm
+			("optional_signatures = false".getBytes());
+		else if(sparseArray.get(i).equals("signature_public_key"))
+		    bytes = cryptography.etm(signatureKey.getEncoded());
+		else if(sparseArray.get(i).
+			equals("signature_public_key_digest"))
+		    bytes = Cryptography.sha512(signatureKey.getEncoded());
+		else if(sparseArray.get(i).equals("siphash_id"))
+		    bytes = cryptography.etm(sipHashId.getBytes("UTF-8"));
+		else if(sparseArray.get(i).equals("siphash_id_digest"))
+		    bytes = cryptography.hmac(sipHashId.getBytes("UTF-8"));
+
+		if(bytes == null)
+		    return "";
+
+		values.put(sparseArray.get(i),
+			   Base64.encodeToString(bytes, Base64.DEFAULT));
+	    }
+
+	    if(m_db.insert("participants", null, values) <= 0)
+		sipHashId = "";
+
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return sipHashId;
+    }
+
     public String[] nameSipHashIdFromDigest(Cryptography cryptography,
 					    byte digest[])
     {
@@ -1442,214 +1648,6 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
         {
 	    ok = false;
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
-
-	return ok;
-    }
-
-    public boolean writeParticipant(Cryptography cryptography,
-				    byte data[])
-    {
-	prepareDb();
-
-	if(cryptography == null ||
-	   data == null ||
-	   data.length < 0 ||
-	   m_db == null)
-	    return false;
-
-	boolean ok = true;
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
-	    String strings[] = new String(data).split("\\n");
-
-	    if(strings.length != Messages.EPKS_GROUP_ONE_ELEMENT_COUNT)
-		return false;
-
-	    PublicKey publicKey = null;
-	    PublicKey signatureKey = null;
-	    byte keyType[] = null;
-	    byte publicKeySignature[] = null;
-	    byte signatureKeySignature[] = null;
-	    int ii = 0;
-
-	    for(String string : strings)
-		switch(ii)
-		{
-		case 0:
-		    long current = System.currentTimeMillis();
-		    long timestamp = Miscellaneous.byteArrayToLong
-			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
-
-		    if(current - timestamp < 0)
-		    {
-			if(timestamp - current > WRITE_PARTICIPANT_TIME_DELTA)
-			    return false;
-		    }
-		    else if(current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
-			return false;
-
-		    ii += 1;
-		    break;
-		case 1:
-		    keyType = Base64.decode
-			(string.getBytes(), Base64.NO_WRAP);
-
-		    if(keyType == null ||
-		       keyType.length != 1 ||
-		       keyType[0] != Messages.CHAT_KEY_TYPE[0])
-			return false;
-
-		    ii += 1;
-		    break;
-		case 2:
-		    publicKey = Cryptography.publicKeyFromBytes
-			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
-
-		    if(publicKey == null)
-			return false;
-		    else if(cryptography.
-			    compareChatEncryptionPublicKey(publicKey))
-			return false;
-		    else if(cryptography.
-			    compareChatSignaturePublicKey(publicKey))
-			return false;
-
-		    ii += 1;
-		    break;
-		case 3:
-		    publicKeySignature = Base64.decode
-			(string.getBytes(), Base64.NO_WRAP);
-
-		    if(!Cryptography.verifySignature(publicKey,
-						     publicKeySignature,
-						     publicKey.getEncoded()))
-			return false;
-
-		    ii += 1;
-		    break;
-		case 4:
-		    signatureKey = Cryptography.publicKeyFromBytes
-			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
-
-		    if(signatureKey == null)
-			return false;
-		    else if(cryptography.
-			    compareChatEncryptionPublicKey(signatureKey))
-			return false;
-		    else if(cryptography.
-			    compareChatSignaturePublicKey(signatureKey))
-			return false;
-
-		    ii += 1;
-		    break;
-		case 5:
-		    signatureKeySignature = Base64.decode
-			(string.getBytes(), Base64.NO_WRAP);
-
-		    if(!Cryptography.verifySignature(signatureKey,
-						     signatureKeySignature,
-						     signatureKey.getEncoded()))
-			return false;
-
-		    break;
-		}
-
-	    /*
-	    ** We shall use the two public keys to generate the
-	    ** provider's SipHash ID. If a SipHash ID is not defined,
-	    ** we'll reject the data.
-	    */
-
-	    String name = "";
-	    String sipHashId = Miscellaneous.
-		sipHashIdFromData(Miscellaneous.
-				  joinByteArrays(publicKey.getEncoded(),
-						 signatureKey.getEncoded())).
-		toLowerCase();
-
-	    name = nameFromSipHashId(cryptography, sipHashId);
-
-	    if(name.isEmpty())
-		return false;
-
-	    ContentValues values = new ContentValues();
-	    SparseArray<String> sparseArray = new SparseArray<> ();
-
-	    sparseArray.append(0, "encryption_public_key");
-	    sparseArray.append(1, "encryption_public_key_digest");
-	    sparseArray.append(2, "function_digest");
-	    sparseArray.append(3, "identity");
-	    sparseArray.append(4, "keystream");
-	    sparseArray.append(5, "last_status_timestamp");
-	    sparseArray.append(6, "name");
-	    sparseArray.append(7, "options");
-	    sparseArray.append(8, "signature_public_key");
-	    sparseArray.append(9, "signature_public_key_digest");
-	    sparseArray.append(10, "siphash_id");
-	    sparseArray.append(11, "siphash_id_digest");
-
-	    for(int i = 0; i < sparseArray.size(); i++)
-	    {
-		byte bytes[] = null;
-
-		if(sparseArray.get(i).equals("encryption_public_key"))
-		    bytes = cryptography.etm(publicKey.getEncoded());
-		else if(sparseArray.get(i).
-			equals("encryption_public_key_digest"))
-		    bytes = Cryptography.sha512(publicKey.getEncoded());
-		else if(sparseArray.get(i).equals("function_digest"))
-		{
-		    if(keyType != null &&
-		       keyType.length == 1 &&
-		       keyType[0] == Messages.CHAT_KEY_TYPE[0])
-			bytes = cryptography.hmac("chat".getBytes());
-		}
-		else if(sparseArray.get(i).equals("identity"))
-		    bytes = cryptography.etm("".getBytes());
-		else if(sparseArray.get(i).equals("keystream"))
-		    bytes = cryptography.etm("".getBytes());
-		else if(sparseArray.get(i).equals("last_status_timestamp"))
-		    bytes = cryptography.etm("".getBytes());
-		else if(sparseArray.get(i).equals("name"))
-		    bytes = cryptography.etm(name.getBytes());
-		else if(sparseArray.get(i).equals("options"))
-		    bytes = cryptography.etm
-			("optional_signatures = false".getBytes());
-		else if(sparseArray.get(i).equals("signature_public_key"))
-		    bytes = cryptography.etm(signatureKey.getEncoded());
-		else if(sparseArray.get(i).
-			equals("signature_public_key_digest"))
-		    bytes = Cryptography.sha512(signatureKey.getEncoded());
-		else if(sparseArray.get(i).equals("siphash_id"))
-		    bytes = cryptography.etm(sipHashId.getBytes("UTF-8"));
-		else if(sparseArray.get(i).equals("siphash_id_digest"))
-		    bytes = cryptography.hmac(sipHashId.getBytes("UTF-8"));
-
-		if(bytes == null)
-		    return false;
-
-		values.put(sparseArray.get(i),
-			   Base64.encodeToString(bytes, Base64.DEFAULT));
-	    }
-
-	    ok = m_db.insert("participants", null, values) > 0;
-	    m_db.setTransactionSuccessful();
-	}
-	catch(SQLiteConstraintException exception)
-	{
-	    return exception.getMessage().toLowerCase().contains("unique");
-	}
-	catch(Exception exception)
-	{
-	    return false;
 	}
 	finally
 	{

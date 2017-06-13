@@ -498,12 +498,52 @@ public class Kernel
 
 		array1 = s_cryptography.decryptWithSipHashKey(array1);
 
-		if(s_databaseHelper.writeParticipant(s_cryptography, array1))
+		String sipHashId = s_databaseHelper.writeParticipant
+		    (s_cryptography, array1);
+
+		if(!sipHashId.isEmpty())
 		{
+		    /*
+		    ** New participant.
+		    */
+
 		    Intent intent = new Intent
 			("org.purple.smoke.populate_participants");
 
 		    Smoke.getApplication().sendBroadcast(intent);
+
+		    /*
+		    ** Response-share.
+		    */
+
+		    byte salt[] = Cryptography.sha512
+			(sipHashId.trim().getBytes("UTF-8"));
+		    byte temporary[] = Cryptography.
+			pbkdf2(salt,
+			       sipHashId.toCharArray(),
+			       Database.
+			       SIPHASH_STREAM_CREATION_ITERATION_COUNT,
+			       160); // SHA-1
+
+		    if(temporary != null)
+			bytes = Cryptography.
+			    pbkdf2(salt,
+				   new String(temporary).toCharArray(),
+				   1,
+				   768); // 8 * (32 + 64) Bits
+		    else
+			bytes = null;
+
+		    if(bytes != null)
+			bytes = Messages.epksMessage
+			    (s_cryptography,
+			     sipHashId,
+			     bytes,
+			     Messages.CHAT_KEY_TYPE);
+
+		    if(bytes != null)
+			enqueueMessage
+			    (Messages.bytesToMessageString(bytes));
 		}
 
 		return true;
