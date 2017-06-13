@@ -480,7 +480,9 @@ public class TcpNeighbor extends Neighbor
 	}
 	catch(Exception exception)
 	{
-	    setError("An error occurred while attempting a connection.");
+	    setError("An error (" +
+		     exception.getMessage() +
+		     ") occurred while attempting a connection.");
 	    disconnect();
 	}
     }
