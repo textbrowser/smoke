@@ -1307,7 +1307,7 @@ public class Settings extends AppCompatActivity
 			    s_cryptography.setOzoneEncryptionKey(null);
 			    s_cryptography.setOzoneMacKey(null);
 			}
-			else
+			else if(bytes != null && bytes.length == 96)
 			{
 			    m_databaseHelper.writeSetting
 				(s_cryptography,
