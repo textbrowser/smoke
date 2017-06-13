@@ -843,12 +843,18 @@ public class Settings extends AppCompatActivity
 		textView = new TextView(Settings.this);
 	    }
 
-	    if(neighborElement.m_status.equals("connected"))
-		textView.setTextColor(Color.rgb(0, 100, 0)); // Dark Green
-	    else if(neighborElement.m_status.equals("connecting"))
-		textView.setTextColor(Color.rgb(255, 140, 0)); // Dark Orange
-	    else
-		textView.setTextColor(Color.rgb(139, 0, 0)); // Dark Red
+	    switch (neighborElement.m_status)
+	    {
+            case "connected":
+                textView.setTextColor(Color.rgb(0, 100, 0)); // Dark Green
+                break;
+            case "connecting":
+                textView.setTextColor(Color.rgb(255, 140, 0)); // Dark Orange
+                break;
+            default:
+                textView.setTextColor(Color.rgb(139, 0, 0)); // Dark Red
+                break;
+	    }
 
 	    stringBuilder.setLength(0);
 	    stringBuilder.append("Control: ");

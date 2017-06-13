@@ -65,8 +65,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Chat extends AppCompatActivity
 {
-    private AtomicInteger m_greenWritten = new AtomicInteger(0);
-    private AtomicInteger m_redWritten = new AtomicInteger(0);
+    private final AtomicInteger m_greenWritten = new AtomicInteger(0);
+    private final AtomicInteger m_redWritten = new AtomicInteger(0);
     private Database m_databaseHelper = null;
 
     private class ChatBroadcastReceiver extends BroadcastReceiver
