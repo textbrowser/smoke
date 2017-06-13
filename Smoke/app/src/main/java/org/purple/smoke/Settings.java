@@ -843,7 +843,7 @@ public class Settings extends AppCompatActivity
 		textView = new TextView(Settings.this);
 	    }
 
-	    switch (neighborElement.m_status)
+	    switch(neighborElement.m_status)
 	    {
             case "connected":
                 textView.setTextColor(Color.rgb(0, 100, 0)); // Dark Green
