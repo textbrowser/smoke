@@ -38,8 +38,7 @@
     <string name="proxy_port">Proxy Port</string>
     <string name="remote">Gegenstelle</string>
     <string name="reset_smoke">Smoke resetten</string>
-    <string name="siphash_identity">SipHash Identität</string>
-    <string name="siphashid">SipHash Identität</string>
+    <string name="siphashid">SipHash ID</string>
     <string name="address">Adresse</string>
     <string name="ozone">Ozon</string>
     <string name="save">Speichern</string>

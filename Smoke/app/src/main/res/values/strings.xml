@@ -33,9 +33,8 @@
     <string name="name">Name</string>
     <string name="reset_smoke">Reset Smoke</string>
     <string name="call">Call</string>
-    <string name="siphashid">SipHash Identity</string>
+    <string name="siphashid">SipHash ID</string>
     <string name="echo">Echo</string>
-    <string name="siphash_identity">SipHash Identity</string>
     <string name="about">About</string>
     <string name="proxy_port">Proxy Port</string>
     <string name="proxy_ip_address">Proxy IP Address</string>

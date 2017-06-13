@@ -313,7 +313,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "A SipHash Identity must be of the form 0102-0304-0506-0708.");
+		 "A SipHash ID must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
 	else if(textView2.getText().toString().toLowerCase().replace("-", "").
@@ -322,7 +322,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "Please do not assign your SipHash Identity.");
+		 "Please do not assign your SipHash ID.");
 	    return;
 	}
 
@@ -366,7 +366,7 @@ public class Settings extends AppCompatActivity
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
 				 "An error occurred while attempting " +
-				 "to save the specified SipHash Identity.");
+				 "to save the specified SipHash ID.");
 			else
 			    populateParticipants();
 		    }
@@ -633,7 +633,7 @@ public class Settings extends AppCompatActivity
 	else
 	{
 	    stringBuilder.delete(0, stringBuilder.length());
-	    stringBuilder.append("SipHash Chat Identity\n@");
+	    stringBuilder.append("SipHash Chat ID\n@");
 
 	    byte bytes[] = Miscellaneous.joinByteArrays
 		(s_cryptography.chatEncryptionKeyPair().getPublic().
@@ -1402,13 +1402,13 @@ public class Settings extends AppCompatActivity
 
 		textView.setBackgroundColor(Color.rgb(135, 206, 250));
 		textView.setText
-		    ("A SipHash Identity is a sequence of digits and " +
+		    ("A SipHash ID is a sequence of digits and " +
 		     "letters assigned to a specific subscriber " +
 		     "(public key pair). " +
 		     "The tokens allow participants to exchange public " +
 		     "key pairs via the Echo Public Key Sharing (EPKS) " +
 		     "protocol. " +
-		     "An example SipHash Identity is ABAB-0101-CDCD-0202.");
+		     "An example SipHash ID is ABAB-0101-CDCD-0202.");
 		textView.setTextSize(16);
 		popupWindow.setContentView(textView);
 		popupWindow.setOutsideTouchable(true);

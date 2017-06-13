@@ -340,7 +340,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
                         android:layout_weight="0.13"
-                        android:text="@string/siphash_identity" />
+                        android:text="@string/siphashid" />
 
                 </LinearLayout>
 
@@ -411,7 +411,7 @@
                         android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="@string/siphash_identity"
+                        android:hint="@string/siphashid"
                         android:inputType="textPersonName" />
 
                     <Button
