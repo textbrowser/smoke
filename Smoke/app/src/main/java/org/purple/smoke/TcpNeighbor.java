@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -447,7 +448,8 @@ public class TcpNeighbor extends Neighbor
 	    else
 		sslContext = SSLContext.getInstance("SSL");
 
-	    sslContext.init(null, m_trustManagers, null);
+	    sslContext.init
+		(null, m_trustManagers, SecureRandom.getInstance("SHA1PRNG"));
 
 	    if(m_proxyInetSocketAddress == null)
 	    {
