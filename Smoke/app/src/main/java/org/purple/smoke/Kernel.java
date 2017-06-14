@@ -467,9 +467,6 @@ public class Kernel
 						     hmac(buffer.getBytes())))
 	    return true;
 
-	s_databaseHelper.writeCongestionDigest
-	    (s_congestionSipHash.hmac(buffer.getBytes()));
-
 	try
 	{
 	    byte bytes[] =
@@ -546,6 +543,8 @@ public class Kernel
 			    (Messages.bytesToMessageString(bytes));
 		}
 
+		s_databaseHelper.writeCongestionDigest
+		    (s_congestionSipHash.hmac(buffer.getBytes()));
 		return true;
 	    }
 
@@ -640,6 +639,8 @@ public class Kernel
 
 		    s_databaseHelper.updateParticipantLastTimestamp
 			(s_cryptography, pk);
+		    s_databaseHelper.writeCongestionDigest
+			(s_congestionSipHash.hmac(buffer.getBytes()));
 		    return true;
 		}
 
@@ -753,6 +754,8 @@ public class Kernel
 		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		intent.putExtra("org.purple.smoke.timestamp", timestamp);
 		Smoke.getApplication().sendBroadcast(intent);
+		s_databaseHelper.writeCongestionDigest
+		    (s_congestionSipHash.hmac(buffer.getBytes()));
 		return true;
 	    }
 	    else if(pk.length == 96)
@@ -946,6 +949,8 @@ public class Kernel
 			    scheduleSend(Messages.bytesToMessageString(bytes));
 		    }
 
+		    s_databaseHelper.writeCongestionDigest
+			(s_congestionSipHash.hmac(buffer.getBytes()));
 		    return true;
 		}
 	    }
