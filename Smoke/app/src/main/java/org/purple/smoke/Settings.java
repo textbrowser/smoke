@@ -2272,6 +2272,9 @@ public class Settings extends AppCompatActivity
 
 	    findViewById(R.id.overwrite).setVisibility(View.GONE);
 	}
+
+	Kernel.getInstance().setWakeLock
+	    (m_databaseHelper.readSetting(null, "always_awake").equals("true"));
     }
 
     @Override

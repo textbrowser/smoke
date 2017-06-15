@@ -1251,10 +1251,12 @@ public class Kernel
 	    {
 		if(state)
 		{
-		    m_wakeLock.release();
+		    if(m_wakeLock.isHeld())
+			m_wakeLock.release();
+
 		    m_wakeLock.acquire();
 		}
-		else
+		else if(m_wakeLock.isHeld())
 		    m_wakeLock.release();
 	    }
 	}
