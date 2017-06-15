@@ -360,15 +360,19 @@ public class Authenticate extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
-		    State.getInstance().reset();
-		    m_databaseHelper.resetAndDrop();
-		    s_cryptography.reset();
+		    if(State.getInstance().getString("dialog_accepted").
+		       equals("true"))
+		    {
+			State.getInstance().reset();
+			m_databaseHelper.resetAndDrop();
+			s_cryptography.reset();
 
-		    Intent intent = new Intent
-			(Authenticate.this, Settings.class);
+			Intent intent = new Intent
+			    (Authenticate.this, Settings.class);
 
-		    startActivity(intent);
-		    finish();
+			startActivity(intent);
+			finish();
+		    }
 		}
 	    };
 

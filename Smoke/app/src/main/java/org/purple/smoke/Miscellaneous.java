@@ -301,12 +301,14 @@ public class Miscellaneous
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 	CheckBox checkBox = new CheckBox(context);
 
+	State.getInstance().removeKey("dialog_accepted");
 	alertDialog.setButton
 	    (AlertDialog.BUTTON_NEGATIVE, "No",
 	     new DialogInterface.OnClickListener()
 	     {
 		 public void onClick(DialogInterface dialog, int which)
 		 {
+		     State.getInstance().removeKey("dialog_accepted");
 		     dialog.dismiss();
 		 }
 	     });
@@ -316,6 +318,7 @@ public class Miscellaneous
 	     {
 		 public void onClick(DialogInterface dialog, int which)
 		 {
+		     State.getInstance().setString("dialog_accepted", "true");
 		     dialog.cancel();
 		 }
 	     });
@@ -325,7 +328,6 @@ public class Miscellaneous
 							 ** for a response.
 							 */
 	alertDialog.setTitle("Confirmation");
-	checkBox.setText("Confirm");
 	alertDialog.setView(checkBox);
 	alertDialog.show();
 
@@ -343,6 +345,7 @@ public class Miscellaneous
 		    button.setEnabled(isChecked);
 		}
 	    });
+	checkBox.setText("Confirm");
     }
 
     public static void showTextInputDialog

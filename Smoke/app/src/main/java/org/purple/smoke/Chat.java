@@ -1061,11 +1061,13 @@ public class Chat extends AppCompatActivity
 			    State.getInstance().removeKey("chat_secret_input");
 			    break;
 			case 2: // Purge Session
-			    if(m_databaseHelper.
-			       setParticipantKeyStream(s_cryptography,
-						       null,
-						       itemId))
-				refreshCheckBox(sipHashId);
+			    if(State.getInstance().getString("dialog_accepted").
+			       equals("true"))
+				if(m_databaseHelper.
+				   setParticipantKeyStream(s_cryptography,
+							   null,
+							   itemId))
+				    refreshCheckBox(sipHashId);
 
 			    break;
 			}

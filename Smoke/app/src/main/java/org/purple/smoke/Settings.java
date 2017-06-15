@@ -394,26 +394,28 @@ public class Settings extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
-		    if(m_databaseHelper.
-		       deleteEntry(String.valueOf(oid), "neighbors"))
-		    {
-			m_databaseHelper.cleanDanglingOutboundQueued();
+		    if(State.getInstance().getString("dialog_accepted").
+		       equals("true"))
+			if(m_databaseHelper.
+			   deleteEntry(String.valueOf(oid), "neighbors"))
+			{
+			    m_databaseHelper.cleanDanglingOutboundQueued();
 
-			/*
-			** Prepare the kernel's neighbors container
-			** if a neighbor was deleted as the OID
-			** field may represent a recycled value.
-			*/
+			    /*
+			    ** Prepare the kernel's neighbors container
+			    ** if a neighbor was deleted as the OID
+			    ** field may represent a recycled value.
+			    */
 
-			Kernel.getInstance().prepareNeighbors();
+			    Kernel.getInstance().prepareNeighbors();
 
-			TableLayout tableLayout = (TableLayout)
-			    findViewById(R.id.neighbors);
-			TableRow row = (TableRow) findViewById(oid);
+			    TableLayout tableLayout = (TableLayout)
+				findViewById(R.id.neighbors);
+			    TableRow row = (TableRow) findViewById(oid);
 
-			if(row != null)
-			    tableLayout.removeView(row);
-		    }
+			    if(row != null)
+				tableLayout.removeView(row);
+			}
 	        }
 	    };
 
@@ -1168,14 +1170,18 @@ public class Settings extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
-		    State.getInstance().reset();
-		    m_databaseHelper.resetAndDrop();
-		    s_cryptography.reset();
+		    if(State.getInstance().getString("dialog_accepted").
+		       equals("true"))
+		    {
+			State.getInstance().reset();
+			m_databaseHelper.resetAndDrop();
+			s_cryptography.reset();
 
-		    Intent intent = getIntent();
+			Intent intent = getIntent();
 
-		    startActivity(intent);
-		    finish();
+			startActivity(intent);
+			finish();
+		    }
 		}
 	    };
 
@@ -1247,14 +1253,18 @@ public class Settings extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
-		    TextView textView = (TextView) findViewById(R.id.ozone);
+		    if(State.getInstance().getString("dialog_accepted").
+		       equals("true"))
+		    {
+			TextView textView = (TextView) findViewById(R.id.ozone);
 
-		    textView.setText("");
-		    m_databaseHelper.reset();
-		    populateFancyKeyData();
-		    populateNeighbors();
-		    populateParticipants();
-		    prepareCredentials();
+			textView.setText("");
+			m_databaseHelper.reset();
+			populateFancyKeyData();
+			populateNeighbors();
+			populateParticipants();
+			prepareCredentials();
+		    }
 		}
 	    };
 
@@ -2271,15 +2281,18 @@ public class Settings extends AppCompatActivity
 			switch(itemId)
 			{
 			default:
-			    if(m_databaseHelper.
-			       deleteEntry(String.valueOf(itemId),
-					   "siphash_ids"))
-			    {
-				State.getInstance().setChatCheckBoxSelected
-				    (itemId, false);
-				m_databaseHelper.cleanDanglingParticipants();
-				populateParticipants();
-			    }
+			    if(State.getInstance().getString("dialog_accepted").
+			       equals("true"))
+				if(m_databaseHelper.
+				   deleteEntry(String.valueOf(itemId),
+					       "siphash_ids"))
+				{
+				    State.getInstance().setChatCheckBoxSelected
+					(itemId, false);
+				    m_databaseHelper.
+					cleanDanglingParticipants();
+				    populateParticipants();
+				}
 
 			    break;
 			}
