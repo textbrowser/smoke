@@ -1519,6 +1519,20 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
+	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    Kernel.getInstance().setWakeLock(isChecked);
+		    m_databaseHelper.writeSetting
+			(null, "always_awake", isChecked ? "true" : "false");
+		}
+	    });
+
 	spinner1.setOnItemSelectedListener
 	    (new OnItemSelectedListener()
 	    {
@@ -2026,8 +2040,9 @@ public class Settings extends AppCompatActivity
 	button1.setCompoundDrawablesWithIntrinsicBounds
 	    (R.drawable.help, 0, 0, 0);
 
-	CheckBox checkBox1 = (CheckBox) findViewById
-	    (R.id.automatic_refresh);
+	CheckBox checkBox1 = null;
+
+	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 
 	if(m_databaseHelper.
 	   readSetting(null, "automatic_neighbors_refresh").equals("true"))
@@ -2046,6 +2061,13 @@ public class Settings extends AppCompatActivity
 
 	if(m_databaseHelper.
 	   readSetting(null, "neighbors_details").equals("true"))
+	    checkBox1.setChecked(true);
+	else
+	    checkBox1.setChecked(false);
+
+	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
+
+	if(m_databaseHelper.readSetting(null, "always_awake").equals("true"))
 	    checkBox1.setChecked(true);
 	else
 	    checkBox1.setChecked(false);

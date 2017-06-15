@@ -319,7 +319,10 @@ public class Authenticate extends AppCompatActivity
 					 "data.");
 				else
 				{
-				    Kernel.getInstance();
+				    Kernel.getInstance().setWakeLock
+					(m_databaseHelper.
+					 readSetting(null, "always_awake").
+					 equals("true"));
 				    State.getInstance().setAuthenticated(true);
 
 				    /*

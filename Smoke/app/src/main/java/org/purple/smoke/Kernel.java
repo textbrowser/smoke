@@ -27,7 +27,10 @@
 
 package org.purple.smoke;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager.WakeLock;
+import android.os.PowerManager;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -51,6 +54,7 @@ public class Kernel
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private WakeLock m_wakeLock = null;
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessagesMutex =
@@ -271,7 +275,7 @@ public class Kernel
 				 System.currentTimeMillis());
 
 			    if(bytes != null)
-				Kernel.getInstance().enqueueMessage
+				enqueueMessage
 				    (Messages.bytesToMessageString(bytes));
 			}
 		    }
@@ -1222,6 +1226,40 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
+	}
+    }
+
+    public void setWakeLock(boolean state)
+    {
+	if(m_wakeLock == null)
+	    try
+	    {
+		PowerManager powerManager = (PowerManager)
+		    Smoke.getApplication().getSystemService
+		    (Context.POWER_SERVICE);
+
+		m_wakeLock = powerManager.newWakeLock
+		    (PowerManager.PARTIAL_WAKE_LOCK, "SmokeLockTag");
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	try
+	{
+	    if(m_wakeLock != null)
+	    {
+		if(state)
+		{
+		    m_wakeLock.release();
+		    m_wakeLock.acquire();
+		}
+		else
+		    m_wakeLock.release();
+	    }
+	}
+	catch(Exception exception)
+	{
 	}
     }
 }
