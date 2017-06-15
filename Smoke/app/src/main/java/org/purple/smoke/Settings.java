@@ -2222,10 +2222,6 @@ public class Settings extends AppCompatActivity
 	else
 	    spinner1.setSelection(0);
 
-	if(!State.getInstance().isAuthenticated())
-	    if(m_databaseHelper.accountPrepared())
-		showAuthenticateActivity();
-
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
 	spinner1.setSelection(0); // RSA
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
@@ -2275,6 +2271,14 @@ public class Settings extends AppCompatActivity
 
 	Kernel.getInstance().setWakeLock
 	    (m_databaseHelper.readSetting(null, "always_awake").equals("true"));
+
+	/*
+	** Show the Authenticate activity if an account is present.
+	*/
+
+	if(!State.getInstance().isAuthenticated())
+	    if(m_databaseHelper.accountPrepared())
+		showAuthenticateActivity();
     }
 
     @Override
