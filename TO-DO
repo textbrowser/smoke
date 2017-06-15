@@ -140,6 +140,7 @@ Completed Items
 105.   Remote storage of messages. SmokeStack.
 106.   When verifying signatures, recipients should retrieve
        appropriate personal identity digests.
+107.   Prevent-sleep option in Settings.
 
 Future Items
 
@@ -187,4 +188,3 @@ Remaining Items
 2.     Sign release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
-4.     Prevent-sleep option in Settings.
