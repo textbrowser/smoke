@@ -31,6 +31,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.InputType;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
@@ -296,6 +299,7 @@ public class Miscellaneous
 	 String prompt)
     {
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+	CheckBox checkBox = new CheckBox(context);
 
 	alertDialog.setButton
 	    (AlertDialog.BUTTON_NEGATIVE, "No",
@@ -321,7 +325,24 @@ public class Miscellaneous
 							 ** for a response.
 							 */
 	alertDialog.setTitle("Confirmation");
+	checkBox.setText("Confirm");
+	alertDialog.setView(checkBox);
 	alertDialog.show();
+
+	final Button button = alertDialog.getButton
+	    (AlertDialog.BUTTON_POSITIVE);
+
+	button.setEnabled(false);
+	checkBox.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    button.setEnabled(isChecked);
+		}
+	    });
     }
 
     public static void showTextInputDialog
