@@ -67,6 +67,8 @@ public class Chat extends AppCompatActivity
 {
     private final AtomicInteger m_greenWritten = new AtomicInteger(0);
     private final AtomicInteger m_redWritten = new AtomicInteger(0);
+    private final SimpleDateFormat m_simpleDateFormat = new
+	SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private Database m_databaseHelper = null;
 
     private class ChatBroadcastReceiver extends BroadcastReceiver
@@ -167,8 +169,6 @@ public class Chat extends AppCompatActivity
 		sipHashId.trim().length() == 0)
 	    return;
 
-	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 	boolean purple =
 	    Math.abs(System.currentTimeMillis() - timestamp) > CHAT_WINDOW;
@@ -180,10 +180,10 @@ public class Chat extends AppCompatActivity
 	    stringBuilder.append("[");
 
 	    if(timestamp == 0)
-		stringBuilder.append(simpleDateFormat.format(new Date()));
+		stringBuilder.append(m_simpleDateFormat.format(new Date()));
 	    else
 		stringBuilder.append
-		    (simpleDateFormat.format(new Date(timestamp)));
+		    (m_simpleDateFormat.format(new Date(timestamp)));
 
 	    stringBuilder.append("] ");
 	    stringBuilder.append(name);
@@ -206,10 +206,10 @@ public class Chat extends AppCompatActivity
 	    textView1.append("[");
 
 	    if(timestamp == 0)
-		textView1.append(simpleDateFormat.format(new Date()));
+		textView1.append(m_simpleDateFormat.format(new Date()));
 	    else
 		textView1.append
-		    (simpleDateFormat.format(new Date(timestamp)));
+		    (m_simpleDateFormat.format(new Date(timestamp)));
 
 	    textView1.append("] ");
 
@@ -262,13 +262,11 @@ public class Chat extends AppCompatActivity
     private void appendMessage(String message,
 			       int color)
     {
-	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 
 	stringBuilder.append("[");
-	stringBuilder.append(simpleDateFormat.format(new Date()));
+	stringBuilder.append(m_simpleDateFormat.format(new Date()));
 	stringBuilder.append("] ");
 	stringBuilder.append(message);
 	stringBuilder.append("\n\n");
@@ -304,13 +302,11 @@ public class Chat extends AppCompatActivity
 	else if(name.trim().length() == 0 || sipHashId.trim().length() == 0)
 	    return;
 
-	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 
 	stringBuilder.append("[");
-	stringBuilder.append(simpleDateFormat.format(new Date()));
+	stringBuilder.append(m_simpleDateFormat.format(new Date()));
 	stringBuilder.append("] ");
 
 	if(initial)
@@ -528,9 +524,6 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		SimpleDateFormat simpleDateFormat = new
-		    SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				     Locale.getDefault());
 		StringBuilder stringBuilder = new StringBuilder();
 		TextView textView1 = (TextView) findViewById
 		    (R.id.chat_messages);
@@ -557,7 +550,7 @@ public class Chat extends AppCompatActivity
 			stringBuilder.setLength(0);
 			stringBuilder.append("[");
 			stringBuilder.append
-			    (simpleDateFormat.format(new Date()));
+			    (m_simpleDateFormat.format(new Date()));
 			stringBuilder.append("] ");
 
 			if(ok)
@@ -685,13 +678,11 @@ public class Chat extends AppCompatActivity
 
     private void requestMessages()
     {
-	SimpleDateFormat simpleDateFormat = new
-	    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
 
 	stringBuilder.append("[");
-	stringBuilder.append(simpleDateFormat.format(new Date()));
+	stringBuilder.append(m_simpleDateFormat.format(new Date()));
 	stringBuilder.append("] ");
 	stringBuilder.append("A request for retrieving offline messages ");
 	stringBuilder.append("has been submitted. Offline messages will be ");
@@ -885,9 +876,6 @@ public class Chat extends AppCompatActivity
 		if(textView1.getText().toString().trim().isEmpty())
 		    return;
 
-		SimpleDateFormat simpleDateFormat = new
-		    SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				     Locale.getDefault());
 		String str = textView1.getText().toString().trim();
 		StringBuilder stringBuilder = new StringBuilder();
 		TableLayout tableLayout = (TableLayout) findViewById
@@ -896,7 +884,7 @@ public class Chat extends AppCompatActivity
 		    (R.id.chat_messages);
 
 		textView2.append("[");
-		textView2.append(simpleDateFormat.format(new Date()));
+		textView2.append(m_simpleDateFormat.format(new Date()));
 		textView2.append("] ");
 
 		{
