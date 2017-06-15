@@ -157,6 +157,7 @@ Future Items
 11.    Names or PINs alongside SipHashes. The extra bits will increase
        the possibilities.
 12.    Protocol-less snubbing without key revocation.
+13.    Introduce real-time typing status.
 
 Ignored / Impossible Items
 
@@ -186,5 +187,4 @@ Remaining Items
 2.     Sign release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
-4.     Introduce real-time typing status.
-5.     Prevent-sleep option in Settings.
+4.     Prevent-sleep option in Settings.
