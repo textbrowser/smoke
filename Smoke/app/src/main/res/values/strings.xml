@@ -45,4 +45,5 @@
     <string name="neighbor_servers">Neighbor Servers</string>
     <string name="at">\@</string>
     <string name="scope_id">Scope ID</string>
+    <string name="always_awake">Always Awake</string>
 </resources>
