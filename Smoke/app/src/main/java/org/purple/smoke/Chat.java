@@ -91,6 +91,7 @@ public class Chat extends AppCompatActivity
 		    (intent.getStringExtra("org.purple.smoke.message"),
 		     intent.getStringExtra("org.purple.smoke.name"),
 		     intent.getStringExtra("org.purple.smoke.sipHashId"),
+		     false,
 		     intent.getLongExtra("org.purple.smoke.sequence", 1),
 		     intent.getLongExtra("org.purple.smoke.timestamp", 0));
 	    else if(intent.getAction().
@@ -163,6 +164,7 @@ public class Chat extends AppCompatActivity
     private void appendMessage(String message,
 			       String name,
 			       String sipHashId,
+			       boolean viaChatLog,
 			       long sequence,
 			       long timestamp)
     {
@@ -251,19 +253,20 @@ public class Chat extends AppCompatActivity
 
 	scrollMessagesView();
 
-	try
-	{
-	    Ringtone ringtone = null;
-	    Uri notification = m_ringtoneManager.getDefaultUri
-		(RingtoneManager.TYPE_NOTIFICATION);
+	if(!viaChatLog)
+	    try
+	    {
+		Ringtone ringtone = null;
+		Uri notification = m_ringtoneManager.getDefaultUri
+		    (RingtoneManager.TYPE_NOTIFICATION);
 
-	    ringtone = m_ringtoneManager.getRingtone
-		(getApplicationContext(), notification);
-	    ringtone.play();
-	}
-	catch (Exception e)
-	{
-	}
+		ringtone = m_ringtoneManager.getRingtone
+		    (getApplicationContext(), notification);
+		ringtone.play();
+	    }
+	    catch(Exception e)
+	    {
+	    }
 
 	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
 
@@ -378,6 +381,7 @@ public class Chat extends AppCompatActivity
 	    appendMessage(chatMessageElement.m_message,
 			  chatMessageElement.m_name,
 			  chatMessageElement.m_sipHashId,
+			  true,
 			  chatMessageElement.m_sequence,
 			  chatMessageElement.m_timestamp);
 	}

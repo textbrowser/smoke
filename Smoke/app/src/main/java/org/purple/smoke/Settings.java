@@ -171,7 +171,7 @@ public class Settings extends AppCompatActivity
 			(getApplicationContext(), notification);
 		    ringtone.play();
 		}
-		catch (Exception e)
+		catch(Exception e)
 		{
 		}
 
