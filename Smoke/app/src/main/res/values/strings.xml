@@ -45,5 +45,5 @@
     <string name="neighbor_servers">Neighbor Servers</string>
     <string name="at">\@</string>
     <string name="scope_id">Scope ID</string>
-    <string name="cpu_always_awake">CPU Always Awake</string>
+    <string name="prefer_active_cpu">Prefer Active CPU</string>
 </resources>
