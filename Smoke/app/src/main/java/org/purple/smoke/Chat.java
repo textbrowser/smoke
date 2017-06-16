@@ -33,6 +33,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,8 +43,8 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -112,6 +115,7 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
+    private RingtoneManager m_ringtoneManager = null;
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private boolean m_receiverRegistered = false;
@@ -246,6 +250,20 @@ public class Chat extends AppCompatActivity
 	}
 
 	scrollMessagesView();
+
+	try
+	{
+	    Ringtone ringtone = null;
+	    Uri notification = m_ringtoneManager.getDefaultUri
+		(RingtoneManager.TYPE_NOTIFICATION);
+
+	    ringtone = m_ringtoneManager.getRingtone
+		(getApplicationContext(), notification);
+	    ringtone.play();
+	}
+	catch (Exception e)
+	{
+	}
 
 	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
 
@@ -813,6 +831,7 @@ public class Chat extends AppCompatActivity
 	}, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
+	m_ringtoneManager = new RingtoneManager(getApplicationContext());
 	m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_statusScheduler.scheduleAtFixedRate(new Runnable()
         {
