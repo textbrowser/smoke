@@ -64,7 +64,7 @@
                     android:id="@+id/sleepless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/always_awake" />
+                    android:text="@string/cpu_always_awake" />
 
                 <TextView
                     android:layout_width="match_parent"
