@@ -11,7 +11,7 @@
     <string name="chat">Chat</string>
     <string name="chat_encryption_key_data">Schlüssel-Daten zur Chat Verschlüsselung</string>
     <string name="chat_signature_key_data">Schlüssel-Daten zur Chat Signatur</string>
-    <string name="clear">Löschen</string>
+    <string name="clear">Del</string>
     <string name="control">Steuerung</string>
     <string name="details">Details</string>
     <string name="encryption">Verschlüsselung</string>
@@ -19,7 +19,7 @@
     <string name="participants">Teilnehmer</string>
     <string name="password">Passwort</string>
     <string name="password_confirmation">Passwort Bestätigung</string>
-    <string name="please_type_a_message">Schreibe Nachricht...</string>
+    <string name="please_type_a_message">Nachricht schreiben...</string>
     <string name="public_data">Öffentliche Daten</string>
     <string name="refresh_neighbors">Erneuern</string>
     <string name="refresh_participants">Erneuern</string>
@@ -46,4 +46,5 @@
     <string name="neighbor_servers">Nachbar/Server</string>
     <string name="scope_id">Scope ID</string>
     <string name="share_keys">Sende Schlüssel</string>
+    <string name="prefer_active_cpu">Bevorzuge eine aktive CPU</string>
 </resources>
