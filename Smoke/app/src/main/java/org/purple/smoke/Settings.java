@@ -34,6 +34,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -158,6 +161,20 @@ public class Settings extends AppCompatActivity
 		     75,
 		     75);
 
+		try
+		{
+		    Ringtone ringtone = null;
+		    Uri notification = m_ringtoneManager.getDefaultUri
+			(RingtoneManager.TYPE_NOTIFICATION);
+
+		    ringtone = m_ringtoneManager.getRingtone
+			(getApplicationContext(), notification);
+		    ringtone.play();
+		}
+		catch (Exception e)
+		{
+		}
+
 		Handler handler = new Handler();
 
 		handler.postDelayed(new Runnable()
@@ -176,6 +193,7 @@ public class Settings extends AppCompatActivity
     }
 
     private Database m_databaseHelper = null;
+    private RingtoneManager m_ringtoneManager = null;
     private ScheduledExecutorService m_scheduler = null;
     private SettingsBroadcastReceiver m_receiver = null;
     private boolean m_receiverRegistered = false;
@@ -2013,6 +2031,7 @@ public class Settings extends AppCompatActivity
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SettingsBroadcastReceiver();
+	m_ringtoneManager = new RingtoneManager(getApplicationContext());
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
