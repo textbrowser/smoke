@@ -469,16 +469,16 @@ public class Kernel
 
     public boolean ourMessage(String buffer)
     {
-	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.
-						     hmac(buffer.getBytes())))
+	long value = s_congestionSipHash.hmac(buffer.getBytes());
+
+	if(s_databaseHelper.containsCongestionDigest(value))
 	    return true;
 
 	m_genericMutex.writeLock().lock();
 
 	try
 	{
-	    s_databaseHelper.writeCongestionDigest
-		(s_congestionSipHash.hmac(buffer.getBytes()));
+	    s_databaseHelper.writeCongestionDigest(value);
 	}
 	finally
 	{
