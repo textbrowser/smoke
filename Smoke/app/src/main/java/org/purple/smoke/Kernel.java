@@ -59,6 +59,8 @@ public class Kernel
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessagesMutex =
 	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_genericMutex =
+	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
@@ -471,8 +473,17 @@ public class Kernel
 						     hmac(buffer.getBytes())))
 	    return true;
 
-	s_databaseHelper.writeCongestionDigest
-	    (s_congestionSipHash.hmac(buffer.getBytes()));
+	m_genericMutex.writeLock().lock();
+
+	try
+	{
+	    s_databaseHelper.writeCongestionDigest
+		(s_congestionSipHash.hmac(buffer.getBytes()));
+	}
+	finally
+	{
+	    m_genericMutex.writeLock().unlock();
+	}
 
 	try
 	{

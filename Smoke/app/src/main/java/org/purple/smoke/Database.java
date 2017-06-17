@@ -2628,9 +2628,7 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
-	m_db.beginTransaction(); /* Exclusive transaction. Improves
-				 ** congestion control.
-				 */
+	m_db.beginTransactionNonExclusive();
 
 	try
 	{
