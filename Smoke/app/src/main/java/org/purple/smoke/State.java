@@ -233,6 +233,7 @@ public class State
 
     public void reset()
     {
+	clearChatLog();
 	m_bundleMutex.writeLock().lock();
 
 	try
