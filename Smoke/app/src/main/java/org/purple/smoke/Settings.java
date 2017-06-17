@@ -2335,8 +2335,8 @@ public class Settings extends AppCompatActivity
 				   deleteEntry(String.valueOf(itemId),
 					       "siphash_ids"))
 				{
-				    State.getInstance().setChatCheckBoxSelected
-					(itemId, false);
+				    State.getInstance().
+					removeChatCheckBoxOid(itemId);
 				    m_databaseHelper.
 					cleanDanglingParticipants();
 				    populateParticipants();

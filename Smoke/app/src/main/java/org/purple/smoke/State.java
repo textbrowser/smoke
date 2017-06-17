@@ -217,6 +217,20 @@ public class State
 	}
     }
 
+    public void removeChatCheckBoxOid(int oid)
+    {
+	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
+	}
+    }
+
     public void removeKey(String key)
     {
 	m_bundleMutex.writeLock().lock();
