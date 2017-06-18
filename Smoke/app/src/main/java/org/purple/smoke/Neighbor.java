@@ -263,6 +263,7 @@ public abstract class Neighbor
 		{
 		    m_accumulatedTime = System.nanoTime();
 		    sendCapabilities();
+		    sendIdentities();
 		}
 
 		/*
@@ -345,6 +346,40 @@ public abstract class Neighbor
 	}
     }
 
+    protected String getIdentities()
+    {
+	try
+	{
+	    StringBuilder results = new StringBuilder();
+
+	    results.append("POST HTTP/1.1\r\n");
+	    results.append
+		("Content-Type: application/x-www-form-urlencoded\r\n");
+	    results.append("Content-Length: %1\r\n");
+	    results.append("\r\n");
+	    results.append("type=0095&content=%2\r\n");
+	    results.append("\r\n\r\n");
+
+	    String base64 = Base64.encodeToString
+		(Cryptography.
+		 sha512(m_cryptography.sipHashId().getBytes("UTF-8")),
+		 Base64.DEFAULT);
+	    int indexOf = results.indexOf("%1");
+	    int length = base64.length() +
+		"type=0095&content=\r\n\r\n\r\n".length();
+
+	    results = results.replace
+		(indexOf, indexOf + 2, String.valueOf(length));
+	    indexOf = results.indexOf("%2");
+	    results = results.replace(indexOf, indexOf + 2, base64);
+	    return results.toString();
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
+    }
+
     protected String getSessionCipher()
     {
 	return "";
@@ -357,6 +392,7 @@ public abstract class Neighbor
     protected abstract void connect();
     protected abstract void disconnect();
     protected abstract void sendCapabilities();
+    protected abstract void sendIdentities();
 
     protected synchronized void abort()
     {

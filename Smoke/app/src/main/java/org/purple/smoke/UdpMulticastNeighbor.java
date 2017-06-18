@@ -131,10 +131,10 @@ public class UdpMulticastNeighbor extends Neighbor
 
 	try
 	{
-	    String capabilities = "";
-
 	    if(m_inetAddress == null || m_socket == null)
 		return;
+
+	    String capabilities = "";
 
 	    capabilities = getCapabilities();
 
@@ -150,6 +150,36 @@ public class UdpMulticastNeighbor extends Neighbor
 	catch(Exception exception)
 	{
 	    setError("A socket error occurred on sendCapabilities().");
+	    disconnect();
+	}
+    }
+
+    protected void sendIdentities()
+    {
+	if(!connected())
+	    return;
+
+	try
+	{
+	    if(m_inetAddress == null || m_socket == null)
+		return;
+
+	    String identities = "";
+
+	    identities = getIdentities();
+
+	    DatagramPacket datagramPacket = new DatagramPacket
+		(identities.getBytes(),
+		 identities.getBytes().length,
+		 m_inetAddress,
+		 Integer.parseInt(m_ipPort));
+
+	    m_socket.send(datagramPacket);
+	    m_bytesWritten.getAndAdd(identities.length());
+	}
+	catch(Exception exception)
+	{
+	    setError("A socket error occurred on sendIdentities().");
 	    disconnect();
 	}
     }
