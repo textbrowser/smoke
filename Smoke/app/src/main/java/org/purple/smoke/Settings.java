@@ -76,6 +76,22 @@ import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
+    private class PopulateNeighbors implements Runnable
+    {
+	private ArrayList<NeighborElement> m_arrayList = null;
+
+	public PopulateNeighbors(ArrayList<NeighborElement> arrayList)
+	{
+	    m_arrayList = arrayList;
+	}
+
+	@Override
+	public void run()
+	{
+	    populateNeighbors(m_arrayList);
+	}
+    }
+
     private class SettingsBroadcastReceiver extends BroadcastReceiver
     {
 	public SettingsBroadcastReceiver()
@@ -294,7 +310,7 @@ public class Settings extends AppCompatActivity
 		(Settings.this,
 		 "An error occurred while saving the neighbor information.");
 	else if(!checkBox1.isChecked())
-	    populateNeighbors();
+	    populateNeighbors(null);
     }
 
     private void addParticipant()
@@ -676,10 +692,11 @@ public class Settings extends AppCompatActivity
 	}
     }
 
-    private void populateNeighbors()
+    private void populateNeighbors(ArrayList<NeighborElement> arrayList)
     {
-	ArrayList<NeighborElement> arrayList =
-	    m_databaseHelper.readNeighbors(s_cryptography);
+	if(arrayList == null)
+	    arrayList = m_databaseHelper.readNeighbors(s_cryptography);
+
 	final TableLayout tableLayout = (TableLayout)
 	    findViewById(R.id.neighbors);
 
@@ -1170,7 +1187,7 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		populateNeighbors();
+		populateNeighbors(null);
 	    }
         });
 
@@ -1279,7 +1296,7 @@ public class Settings extends AppCompatActivity
 			textView.setText("");
 			m_databaseHelper.reset();
 			populateFancyKeyData();
-			populateNeighbors();
+			populateNeighbors(null);
 			populateParticipants();
 			prepareCredentials();
 		    }
@@ -1518,7 +1535,7 @@ public class Settings extends AppCompatActivity
 			(R.id.automatic_refresh);
 
 		    if(!checkBox.isChecked())
-			populateNeighbors();
+			populateNeighbors(null);
 		}
 	    });
 
@@ -1857,7 +1874,7 @@ public class Settings extends AppCompatActivity
 			       equals("true"))
 				startTimers();
 			    else
-				populateNeighbors();
+				populateNeighbors(null);
 			}
 		    }
 		});
@@ -1987,19 +2004,12 @@ public class Settings extends AppCompatActivity
 	    m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	    m_scheduler.scheduleAtFixedRate(new Runnable()
 	    {
-		private final Runnable runnable = new Runnable()
-		{
-		    @Override
-		    public void run()
-		    {
-			populateNeighbors();
-		    }
-		};
-
 		@Override
 		public void run()
 		{
-		    Settings.this.runOnUiThread(runnable);
+		    Settings.this.runOnUiThread
+			(new PopulateNeighbors(m_databaseHelper.
+					       readNeighbors(s_cryptography)));
 		}
 	    }, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
         }
@@ -2258,7 +2268,7 @@ public class Settings extends AppCompatActivity
 	    textView1 = (TextView) findViewById(R.id.ozone);
 	    textView1.setText
 		(m_databaseHelper.readSetting(s_cryptography, "ozone_address"));
-	    populateNeighbors();
+	    populateNeighbors(null);
 	    populateParticipants();
 	    startKernel();
 
