@@ -1467,6 +1467,45 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public boolean writeCongestionDigest(long value)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("digest",
+		 Base64.encodeToString(Miscellaneous.
+				       longToByteArray(value), Base64.DEFAULT));
+	    m_db.insert("congestion_control", null, values);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(SQLiteConstraintException exception)
+	{
+	    /*
+	    ** An unlikely improvement.
+	    */
+
+	    return true;
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return false;
+    }
+
     public boolean writeNeighbor(Cryptography cryptography,
 				 String proxyIpAddress,
 				 String proxyPort,
@@ -2610,35 +2649,6 @@ public class Database extends SQLiteOpenHelper
 							  toLowerCase().trim().
 							  getBytes("UTF-8")),
 						     Base64.DEFAULT)});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-        {
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
-    }
-
-    public void writeCongestionDigest(long value)
-    {
-	prepareDb();
-
-	if(m_db == null)
-	    return;
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
-	    values.put
-		("digest",
-		 Base64.encodeToString(Miscellaneous.
-				       longToByteArray(value), Base64.DEFAULT));
-	    m_db.insert("congestion_control", null, values);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
