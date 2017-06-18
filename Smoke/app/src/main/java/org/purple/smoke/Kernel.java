@@ -59,8 +59,6 @@ public class Kernel
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessagesMutex =
 	new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock m_genericMutex =
-	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
@@ -474,16 +472,7 @@ public class Kernel
 	if(s_databaseHelper.containsCongestionDigest(value))
 	    return true;
 
-	m_genericMutex.writeLock().lock();
-
-	try
-	{
-	    s_databaseHelper.writeCongestionDigest(value);
-	}
-	finally
-	{
-	    m_genericMutex.writeLock().unlock();
-	}
+	s_databaseHelper.writeCongestionDigest(value);
 
 	try
 	{
