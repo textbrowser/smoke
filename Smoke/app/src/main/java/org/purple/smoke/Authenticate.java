@@ -55,6 +55,9 @@ public class Authenticate extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Authenticate.this.isFinishing())
+		    return;
+
 		byte encryptionSalt[] = Base64.decode
 		    (m_databaseHelper.
 		     readSetting(null, "encryptionSalt").getBytes(),

@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -277,6 +278,9 @@ public class Miscellaneous
 
     public static void showErrorDialog(Context context, String error)
     {
+	if(((Activity) context).isFinishing())
+	    return;
+
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 
 	alertDialog.setButton
@@ -298,6 +302,9 @@ public class Miscellaneous
 	 DialogInterface.OnCancelListener cancelListener,
 	 String prompt)
     {
+	if(((Activity) context).isFinishing())
+	    return;
+
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 	CheckBox checkBox = new CheckBox(context);
 
@@ -354,6 +361,9 @@ public class Miscellaneous
 	 String prompt,
 	 String title)
     {
+	if(((Activity) context).isFinishing())
+	    return;
+
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 	final EditText editText = new EditText(context);
 	final boolean contextIsChat = context instanceof Chat;
