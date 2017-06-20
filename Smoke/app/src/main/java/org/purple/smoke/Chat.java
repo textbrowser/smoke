@@ -64,12 +64,12 @@ import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Chat extends AppCompatActivity
 {
-    private final AtomicInteger m_greenWritten = new AtomicInteger(0);
-    private final AtomicInteger m_redWritten = new AtomicInteger(0);
+    private final AtomicBoolean m_greenWritten = new AtomicBoolean(false);
+    private final AtomicBoolean m_redWritten = new AtomicBoolean(false);
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private Database m_databaseHelper = null;
@@ -742,10 +742,10 @@ public class Chat extends AppCompatActivity
 	    ("chat.message", textView.getText());
 	State.getInstance().writeChar
 	    ("chat_network_status_green_written",
-	     m_greenWritten.get() == 0 ? '0' : '1');
+	     !m_greenWritten.get() ? '0' : '1');
 	State.getInstance().writeChar
 	    ("chat_network_status_red_written",
-	     m_redWritten.get() == 0 ? '0' : '1');
+	     !m_redWritten.get() ? '0' : '1');
 	textView = (TextView) findViewById(R.id.chat_messages);
 	State.getInstance().writeCharSequence
 	    ("chat.messages", textView.getText());
@@ -772,10 +772,12 @@ public class Chat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
 	m_greenWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_green_written") == '0' ? 0 : 1);
+	     getChar("chat_network_status_green_written") == '0' ?
+	     false : true);
 	m_redWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_red_written") == '0' ? 0 : 1);
+	     getChar("chat_network_status_red_written") == '0' ?
+	     false : true);
 	m_connectionStatusScheduler = Executors.
 	    newSingleThreadScheduledExecutor();
 	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
@@ -798,36 +800,36 @@ public class Chat extends AppCompatActivity
 
 			if(state)
 			{
-			    if(m_greenWritten.get() == 0)
+			    if(!m_greenWritten.get())
 			    {
 				appendMessage
 				    ("The network is active.",
 				     Color.rgb(153, 204, 0));
-				m_greenWritten.set(1);
+				m_greenWritten.set(true);
 			    }
 
 			    button.setBackgroundColor
 				(Color.rgb(153, 204, 0));
 
-			    if(m_redWritten.get() == 1)
-				m_redWritten.set(0);
+			    if(m_redWritten.get())
+				m_redWritten.set(false);
 			}
 			else
 			{
-			    if(m_redWritten.get() == 0)
+			    if(!m_redWritten.get())
 			    {
 				appendMessage
 				    ("The device is unable to access the " +
 				     "network.",
 				     Color.rgb(255, 68, 68));
-				m_redWritten.set(1);
+				m_redWritten.set(true);
 			    }
 
 			    button.setBackgroundColor
 				(Color.rgb(255, 68, 68));
 
-			    if(m_greenWritten.get() == 1)
-				m_greenWritten.set(0);
+			    if(m_greenWritten.get())
+				m_greenWritten.set(false);
 			}
 		    }
 		});
@@ -1299,10 +1301,12 @@ public class Chat extends AppCompatActivity
 	super.onResume();
 	m_greenWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_green_written") == '0' ? 0 : 1);
+	     getChar("chat_network_status_green_written") == '0' ?
+	     false : true);
 	m_redWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_red_written") == '0' ? 0 : 1);
+	     getChar("chat_network_status_red_written") == '0' ?
+	     false : true);
 
 	if(!m_receiverRegistered)
 	{

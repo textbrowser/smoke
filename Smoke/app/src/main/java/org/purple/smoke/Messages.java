@@ -50,27 +50,37 @@ public class Messages
 
     public static String bytesToMessageString(byte bytes[])
     {
-	StringBuilder results = new StringBuilder();
+	try
+	{
+	    StringBuilder results = new StringBuilder();
 
-	results.append("POST HTTP/1.1\r\n");
-	results.append("Content-Type: application/x-www-form-urlencoded\r\n");
-	results.append("Content-Length: %1\r\n");
-	results.append("\r\n");
-	results.append("content=%2\r\n");
-	results.append("\r\n\r\n");
+	    results.append("POST HTTP/1.1\r\n");
+	    results.append
+		("Content-Type: application/x-www-form-urlencoded\r\n");
+	    results.append("Content-Length: %1\r\n");
+	    results.append("\r\n");
+	    results.append("content=%2\r\n");
+	    results.append("\r\n\r\n");
 
-	String base64 = "";
+	    String base64 = "";
 
-	if(bytes != null)
-	    base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+	    if(bytes != null)
+		base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-	int indexOf = results.indexOf("%1");
-	int length = base64.length() + "content=\r\n\r\n\r\n".length();
+	    int indexOf = results.indexOf("%1");
+	    int length = base64.length() + "content=\r\n\r\n\r\n".length();
 
-	results = results.replace(indexOf, indexOf + 2, String.valueOf(length));
-	indexOf = results.indexOf("%2");
-	results = results.replace(indexOf, indexOf + 2, base64);
-	return results.toString();
+	    results = results.replace
+		(indexOf, indexOf + 2, String.valueOf(length));
+	    indexOf = results.indexOf("%2");
+	    results = results.replace(indexOf, indexOf + 2, base64);
+	    return results.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
     }
 
     public static String stripMessage(String message)
