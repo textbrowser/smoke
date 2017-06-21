@@ -69,7 +69,6 @@ public abstract class Neighbor
     protected final StringBuilder m_error = new StringBuilder();
     protected final StringBuilder m_stringBuilder = new StringBuilder();
     protected final static Object m_errorMutex = new Object();
-    protected final static String EOM = "\r\n\r\n\r\n";
     protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
     protected final static int READ_SOCKET_INTERVAL = 150; // 150 Milliseconds
     protected final static int SO_TIMEOUT = 100; // 100 Milliseconds
@@ -174,18 +173,18 @@ public abstract class Neighbor
 		    ** Detect our end-of-message delimiter.
 		    */
 
-		    int indexOf = m_stringBuilder.indexOf(EOM);
+		    int indexOf = m_stringBuilder.indexOf(Messages.EOM);
 
 		    while(indexOf >= 0)
 		    {
 			String buffer = m_stringBuilder.
-			    substring(0, indexOf + EOM.length());
+			    substring(0, indexOf + Messages.EOM.length());
 
 			if(!Kernel.getInstance().ourMessage(buffer))
 			    echo(buffer);
 
 			m_stringBuilder.delete(0, buffer.length());
-			indexOf = m_stringBuilder.indexOf(EOM);
+			indexOf = m_stringBuilder.indexOf(Messages.EOM);
 		    }
 
 		    if(m_stringBuilder.length() > MAXIMUM_BYTES)
@@ -357,7 +356,7 @@ public abstract class Neighbor
 		("Content-Type: application/x-www-form-urlencoded\r\n");
 	    results.append("Content-Length: %1\r\n");
 	    results.append("\r\n");
-	    results.append("type=0095&content=%2\r\n");
+	    results.append("type=0095a&content=%2\r\n");
 	    results.append("\r\n\r\n");
 
 	    String base64 = Base64.encodeToString
@@ -366,7 +365,7 @@ public abstract class Neighbor
 		 Base64.DEFAULT);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() +
-		"type=0095&content=\r\n\r\n\r\n".length();
+		"type=0095a&content=\r\n\r\n\r\n".length();
 
 	    results = results.replace
 		(indexOf, indexOf + 2, String.valueOf(length));

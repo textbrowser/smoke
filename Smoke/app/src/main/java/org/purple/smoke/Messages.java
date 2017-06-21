@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Messages
 {
+    public final static String EOM = "\r\n\r\n\r\n";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
