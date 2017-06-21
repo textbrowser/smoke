@@ -173,35 +173,6 @@ public class TcpNeighbor extends Neighbor
 	}
     }
 
-    protected void sendCapabilities()
-    {
-	if(!m_isValidCertificate.get())
-	    return;
-
-	if(!connected())
-	    return;
-
-	try
-	{
-	    String capabilities = "";
-
-	    if(m_socket == null || m_socket.getOutputStream() == null)
-		return;
-
-	    OutputStream outputStream = m_socket.getOutputStream();
-
-	    capabilities = getCapabilities();
-	    outputStream.write(capabilities.getBytes());
-	    outputStream.flush();
-	    m_bytesWritten.getAndAdd(capabilities.length());
-	}
-	catch(Exception exception)
-	{
-	    setError("A socket error occurred on sendCapabilities().");
-	    disconnect();
-	}
-    }
-
     public TcpNeighbor(String proxyIpAddress,
 		       String proxyPort,
 		       String proxyType,
