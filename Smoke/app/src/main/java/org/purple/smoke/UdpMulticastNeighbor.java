@@ -154,36 +154,6 @@ public class UdpMulticastNeighbor extends Neighbor
 	}
     }
 
-    protected void sendIdentities()
-    {
-	if(!connected())
-	    return;
-
-	try
-	{
-	    if(m_inetAddress == null || m_socket == null)
-		return;
-
-	    String identities = "";
-
-	    identities = getIdentities();
-
-	    DatagramPacket datagramPacket = new DatagramPacket
-		(identities.getBytes(),
-		 identities.getBytes().length,
-		 m_inetAddress,
-		 Integer.parseInt(m_ipPort));
-
-	    m_socket.send(datagramPacket);
-	    m_bytesWritten.getAndAdd(identities.length());
-	}
-	catch(Exception exception)
-	{
-	    setError("A socket error occurred on sendIdentities().");
-	    disconnect();
-	}
-    }
-
     public UdpMulticastNeighbor(String ipAddress,
 				String ipPort,
 				String scopeId,
