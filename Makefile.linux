@@ -11,6 +11,8 @@ all:
 	--configure-on-demand --daemon --parallel
 
 clean:
+	rm -f Smoke/app/src/main/assets/smoke.src.d.zip
+	rm -f smoke.src.d.zip
 	$(GRADLEW) --build-file Smoke/build.gradle clean
 
 clear-smoke:
@@ -57,10 +59,23 @@ pull-database:
 purge:
 	find . -name '*~*' -exec rm -f {} \;
 
-release:
+release: clean
+	rm -rf Smoke/build Smoke/captures
+	mkdir -p Smoke/app/src/main/assets
+	zip -r smoke.src.d.zip \
+	Android \
+	Documentation \
+	Makefile \
+	Makefile.linux \
+	Smoke \
+	TO-DO \
+	adb.bash \
+	-x *.git* -x *.gradle* -x *.idea* \
+	&& mv smoke.src.d.zip Smoke/app/src/main/assets/.
 	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
 	--build-file Smoke/build.gradle assembleRelease \
 	--configure-on-demand --daemon --parallel
+	rm -f Smoke/app/src/main/assets/smoke.src.d.zip
 
 remove-database:
 	./adb.bash shell run-as org.purple.smoke rm -f /data/data/org.purple.smoke/databases/smoke.db
