@@ -174,13 +174,12 @@ Ignored / Impossible Items
 9.     Disable echo on low memory. Notify the user, although memory
        will be required.
 10.    Select All context menu in the Chat activity.
-11.    Per request, include the source in the application bundle.
+11.    It may be possible to replace m_neighborsScheduler.
 12.    XMPP.
 13.    Face authentication.
 14.    Source-level string translations.
 15.    Socket channels. A lot of work.
 16.    Optional SipHash identities in received messages. Unique people.
-17.    It may be possible to replace m_neighborsScheduler.
 
 Remaining Items
 
@@ -188,3 +187,4 @@ Remaining Items
 2.     Sign release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
+4.     Per request, include the source in the application bundle.
