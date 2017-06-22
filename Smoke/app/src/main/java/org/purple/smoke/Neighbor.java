@@ -265,10 +265,10 @@ public abstract class Neighbor
 		{
 		    m_accumulatedTime = System.nanoTime();
 		    send(getCapabilities());
-
-		    if(!m_identitiesSent.get())
-			m_identitiesSent.set(send(getIdentities()));
 		}
+
+		if(!m_identitiesSent.get())
+		    m_identitiesSent.set(send(getIdentities()));
 
 		/*
 		** Retrieve a database message.
