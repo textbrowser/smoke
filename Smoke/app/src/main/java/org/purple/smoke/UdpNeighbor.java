@@ -126,6 +126,7 @@ public class UdpNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
+	    m_identitiesSent.set(false);
 	    m_socket = null;
 	    m_startTime.set(System.nanoTime());
 	}

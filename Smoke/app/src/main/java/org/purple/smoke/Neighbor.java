@@ -42,7 +42,6 @@ public abstract class Neighbor
 {
     private ArrayList<String> m_echoQueue = null;
     private ArrayList<String> m_queue = null;
-    private AtomicBoolean m_identitiesSent = null;
     private ScheduledExecutorService m_parsingScheduler = null;
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
@@ -56,6 +55,7 @@ public abstract class Neighbor
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 100; // Milliseconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
+    protected AtomicBoolean m_identitiesSent = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
