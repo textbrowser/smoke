@@ -42,7 +42,6 @@ public abstract class Neighbor
 {
     private ArrayList<String> m_echoQueue = null;
     private ArrayList<String> m_queue = null;
-    private AtomicBoolean m_identitiesSent = null;
     private ScheduledExecutorService m_parsingScheduler = null;
     private ScheduledExecutorService m_scheduler = null;
     private ScheduledExecutorService m_sendOutboundScheduler = null;
@@ -131,7 +130,6 @@ public abstract class Neighbor
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
 	m_echoQueue = new ArrayList<> ();
-	m_identitiesSent = new AtomicBoolean(false);
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
@@ -265,10 +263,8 @@ public abstract class Neighbor
 		{
 		    m_accumulatedTime = System.nanoTime();
 		    send(getCapabilities());
+		    send(getIdentities());
 		}
-
-		if(!m_identitiesSent.get())
-		    m_identitiesSent.set(send(getIdentities()));
 
 		/*
 		** Retrieve a database message.
