@@ -34,7 +34,6 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -55,7 +54,6 @@ public abstract class Neighbor
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 100; // Milliseconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
-    protected AtomicBoolean m_identitiesSent = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
@@ -131,7 +129,6 @@ public abstract class Neighbor
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
 	m_echoQueue = new ArrayList<> ();
-	m_identitiesSent = new AtomicBoolean(false);
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
@@ -265,9 +262,7 @@ public abstract class Neighbor
 		{
 		    m_accumulatedTime = System.nanoTime();
 		    send(getCapabilities());
-
-		    if(!m_identitiesSent.get())
-			m_identitiesSent.set(send(getIdentities()));
+		    send(getIdentities());
 		}
 
 		/*
