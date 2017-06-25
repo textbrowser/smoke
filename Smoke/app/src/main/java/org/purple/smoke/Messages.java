@@ -51,6 +51,9 @@ public class Messages
 
     public static String bytesToMessageString(byte bytes[])
     {
+	if(bytes == null || bytes.length <= 0)
+	    return "";
+
 	try
 	{
 	    StringBuilder results = new StringBuilder();
@@ -63,11 +66,7 @@ public class Messages
 	    results.append("content=%2\r\n");
 	    results.append("\r\n\r\n");
 
-	    String base64 = "";
-
-	    if(bytes != null)
-		base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
-
+	    String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() + "content=\r\n\r\n\r\n".length();
 

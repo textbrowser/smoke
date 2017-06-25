@@ -180,11 +180,11 @@ public abstract class Neighbor
 			String buffer = m_stringBuilder.
 			    substring(0, indexOf + Messages.EOM.length());
 
-			if(!Kernel.getInstance().ourMessage(buffer))
-			    echo(buffer);
-
 			m_stringBuilder.delete(0, buffer.length());
 			indexOf = m_stringBuilder.indexOf(Messages.EOM);
+
+			if(!Kernel.getInstance().ourMessage(buffer))
+			    echo(buffer);
 		    }
 
 		    if(m_stringBuilder.length() > MAXIMUM_BYTES)
@@ -289,7 +289,7 @@ public abstract class Neighbor
 		synchronized(m_echoQueueMutex)
 		{
 		    if(!m_echoQueue.isEmpty())
-			send(m_echoQueue.remove(0)); // Ignore results.
+			send(m_echoQueue.remove(0)); // Ignore the results.
 		}
 
 		/*
@@ -299,7 +299,7 @@ public abstract class Neighbor
 		synchronized(m_queueMutex)
 		{
 		    if(!m_queue.isEmpty())
-			send(m_queue.remove(0)); // Ignore results.
+			send(m_queue.remove(0)); // Ignore the results.
 		}
 	    }
 	}, 0, SEND_OUTBOUND_TIMER_INTERVAL, TimeUnit.MILLISECONDS);
