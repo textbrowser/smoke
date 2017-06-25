@@ -980,10 +980,7 @@ public class Kernel
     public static void writeCongestionDigest(byte data[])
     {
 	s_databaseHelper.writeCongestionDigest
-	    (s_congestionSipHash.hmac(data)); /*
-					      ** Zero on hmac() failure.
-					      ** Acceptable.
-					      */
+	    (s_congestionSipHash.hmac(data));
     }
 
     public void clearNeighborQueues()
