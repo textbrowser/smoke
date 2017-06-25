@@ -188,3 +188,4 @@ Remaining Items
 2.     Signed release.
 3.     Disable Chat:Send if there is at least one selected participant
        without a session.
+4.     Do not enqueue messages in disconnected neighbors.
