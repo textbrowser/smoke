@@ -145,6 +145,89 @@ public class Database extends SQLiteOpenHelper
 	    }
     }
 
+    public ArrayList<NeighborElement> readNeighborOids
+	(Cryptography cryptography)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	ArrayList<NeighborElement> arrayList = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT status_control, OID FROM neighbors", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    NeighborElement neighborElement = new NeighborElement();
+		    boolean error = false;
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    neighborElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    error = true;
+
+			    StringBuilder stringBuilder = new StringBuilder();
+
+			    stringBuilder.append
+				("Database::readNeighborOids(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append(cursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    neighborElement.m_statusControl = new String(bytes);
+			    break;
+			}
+		    }
+
+		    if(!error)
+			arrayList.add(neighborElement);
+
+		    cursor.moveToNext();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
     public ArrayList<NeighborElement> readNeighbors(Cryptography cryptography)
     {
 	prepareDb();
@@ -825,50 +908,6 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return sipHashIdElement;
-    }
-
-    public SparseIntArray readNeighborOids()
-    {
-	prepareDb();
-
-	if(m_db == null)
-	    return null;
-
-	Cursor cursor = null;
-	SparseIntArray sparseArray = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery("SELECT OID FROM neighbors", null);
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		int index = -1;
-
-		sparseArray = new SparseIntArray();
-
-		while(!cursor.isAfterLast())
-		{
-		    index += 1;
-		    sparseArray.append(index, cursor.getInt(0));
-		    cursor.moveToNext();
-		}
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(sparseArray != null)
-		sparseArray.clear();
-
-	    sparseArray = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return sparseArray;
     }
 
     public String nameFromSipHashId(Cryptography cryptography, String sipHashId)

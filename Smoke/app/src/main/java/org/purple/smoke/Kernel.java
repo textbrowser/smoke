@@ -427,15 +427,19 @@ public class Kernel
 	if(message.trim().isEmpty())
 	    return false;
 
-	SparseIntArray neighbors = s_databaseHelper.readNeighborOids();
+	ArrayList<NeighborElement> arrayList =
+	    s_databaseHelper.readNeighborOids(s_cryptography);
 
-	if(neighbors == null || neighbors.size() == 0)
+	if(arrayList == null || arrayList.size() == 0)
 	    return false;
 
-	for(int i = 0; i < neighbors.size(); i++)
-	    s_databaseHelper.enqueueOutboundMessage(message, neighbors.get(i));
+	for(int i = 0; i < arrayList.size(); i++)
+	    if(arrayList.get(i) != null &&
+	       arrayList.get(i).m_statusControl.toLowerCase().equals("connect"))
+		s_databaseHelper.enqueueOutboundMessage
+		    (message, arrayList.get(i).m_oid);
 
-	neighbors.clear();
+	arrayList.clear();
 	return true;
     }
 
