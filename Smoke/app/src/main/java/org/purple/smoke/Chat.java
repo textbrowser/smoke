@@ -116,7 +116,6 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
-    private RingtoneManager m_ringtoneManager = null;
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private boolean m_receiverRegistered = false;
@@ -257,10 +256,10 @@ public class Chat extends AppCompatActivity
 	    try
 	    {
 		Ringtone ringtone = null;
-		Uri notification = m_ringtoneManager.getDefaultUri
+		Uri notification = RingtoneManager.getDefaultUri
 		    (RingtoneManager.TYPE_NOTIFICATION);
 
-		ringtone = m_ringtoneManager.getRingtone
+		ringtone = RingtoneManager.getRingtone
 		    (getApplicationContext(), notification);
 		ringtone.play();
 	    }
@@ -837,7 +836,6 @@ public class Chat extends AppCompatActivity
 	}, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
-	m_ringtoneManager = new RingtoneManager(getApplicationContext());
 	m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_statusScheduler.scheduleAtFixedRate(new Runnable()
         {

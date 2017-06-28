@@ -183,10 +183,10 @@ public class Settings extends AppCompatActivity
 		try
 		{
 		    Ringtone ringtone = null;
-		    Uri notification = m_ringtoneManager.getDefaultUri
+		    Uri notification = RingtoneManager.getDefaultUri
 			(RingtoneManager.TYPE_NOTIFICATION);
 
-		    ringtone = m_ringtoneManager.getRingtone
+		    ringtone = RingtoneManager.getRingtone
 			(getApplicationContext(), notification);
 		    ringtone.play();
 		}
@@ -212,7 +212,6 @@ public class Settings extends AppCompatActivity
     }
 
     private Database m_databaseHelper = null;
-    private RingtoneManager m_ringtoneManager = null;
     private ScheduledExecutorService m_scheduler = null;
     private SettingsBroadcastReceiver m_receiver = null;
     private boolean m_receiverRegistered = false;
@@ -2068,7 +2067,6 @@ public class Settings extends AppCompatActivity
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SettingsBroadcastReceiver();
-	m_ringtoneManager = new RingtoneManager(getApplicationContext());
         setContentView(R.layout.activity_settings);
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
