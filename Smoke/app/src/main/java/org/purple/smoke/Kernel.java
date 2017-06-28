@@ -33,7 +33,6 @@ import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 import android.util.Base64;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 import java.net.InetAddress;
 import java.security.PublicKey;
 import java.util.ArrayList;

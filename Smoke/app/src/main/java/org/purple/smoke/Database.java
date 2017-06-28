@@ -36,7 +36,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
 import android.util.Patterns;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 import java.net.InetAddress;
 import java.security.KeyFactory;
 import java.security.PublicKey;
