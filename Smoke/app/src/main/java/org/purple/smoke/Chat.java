@@ -940,6 +940,13 @@ public class Chat extends AppCompatActivity
 		    Arrays.fill(a, ' ');
 		    str += new String(a);
 		}
+		else if(str.length() > 0)
+		{
+		    char a[] = new char[1024 + str.length() % 2];
+
+		    Arrays.fill(a, ' ');
+		    str += new String(a);
+		}
 
 		for(int i = 0; i < tableLayout.getChildCount(); i++)
 		{
