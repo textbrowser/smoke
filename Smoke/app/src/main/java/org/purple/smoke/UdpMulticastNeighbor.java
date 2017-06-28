@@ -38,6 +38,7 @@ public class UdpMulticastNeighbor extends Neighbor
 {
     private InetAddress m_inetAddress = null;
     private MulticastSocket m_socket = null;
+    private final static int TTL = 255;
 
     protected String getLocalIp()
     {
@@ -240,6 +241,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	    m_socket.joinGroup(m_inetAddress);
 	    m_socket.setLoopbackMode(true);
 	    m_socket.setSoTimeout(SO_TIMEOUT);
+	    m_socket.setTimeToLive(TTL);
 	    m_startTime.set(System.nanoTime());
 	}
 	catch(Exception exception)
