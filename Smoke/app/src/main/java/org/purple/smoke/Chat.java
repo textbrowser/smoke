@@ -366,23 +366,23 @@ public class Chat extends AppCompatActivity
 
     private void populateChat()
     {
-	ArrayList<ChatMessageElement> arrayList = State.getInstance().
+	ArrayList<MessageElement> arrayList = State.getInstance().
 	    chatLog();
 
 	if(arrayList == null || arrayList.size() == 0)
 	    return;
 
-	for(ChatMessageElement chatMessageElement : arrayList)
+	for(MessageElement messageElement : arrayList)
 	{
-	    if(chatMessageElement == null)
+	    if(messageElement == null)
 		continue;
 
-	    appendMessage(chatMessageElement.m_message,
-			  chatMessageElement.m_name,
-			  chatMessageElement.m_sipHashId,
+	    appendMessage(messageElement.m_message,
+			  messageElement.m_name,
+			  messageElement.m_sipHashId,
 			  true,
-			  chatMessageElement.m_sequence,
-			  chatMessageElement.m_timestamp);
+			  messageElement.m_sequence,
+			  messageElement.m_timestamp);
 	}
 
 	State.getInstance().clearChatLog();

@@ -27,16 +27,17 @@
 
 package org.purple.smoke;
 
-public class ChatMessageElement
+public class MessageElement
 {
     public String m_message = "";
     public String m_name = "";
     public String m_sipHashId = "";
     public byte m_keyStream[] = null;
+    public int m_messageType = -1;
     public long m_sequence = -1;
     public long m_timestamp = -1;
 
-    public ChatMessageElement()
+    public MessageElement()
     {
     }
 }

@@ -33,7 +33,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class State
 {
-    private ArrayList<ChatMessageElement> m_chatMessages = null;
+    private ArrayList<MessageElement> m_chatMessages = null;
     private Bundle m_bundle = null;
     private final ReentrantReadWriteLock m_bundleMutex =
 	new ReentrantReadWriteLock();
@@ -53,7 +53,7 @@ public class State
 	return s_instance;
     }
 
-    public synchronized ArrayList<ChatMessageElement> chatLog()
+    public synchronized ArrayList<MessageElement> chatLog()
     {
 	return m_chatMessages;
     }
@@ -191,14 +191,14 @@ public class State
 	if(m_chatMessages == null)
 	    m_chatMessages = new ArrayList<> ();
 
-	ChatMessageElement chatMessageElement = new ChatMessageElement();
+	MessageElement messageElement = new MessageElement();
 
-	chatMessageElement.m_message = message;
-	chatMessageElement.m_name = name;
-	chatMessageElement.m_sipHashId = sipHashId;
-	chatMessageElement.m_sequence = sequence;
-	chatMessageElement.m_timestamp = timestamp;
-	m_chatMessages.add(chatMessageElement);
+	messageElement.m_message = message;
+	messageElement.m_name = name;
+	messageElement.m_sipHashId = sipHashId;
+	messageElement.m_sequence = sequence;
+	messageElement.m_timestamp = timestamp;
+	m_chatMessages.add(messageElement);
     }
 
     public void incrementChatSequence(String sipHashId)

@@ -46,7 +46,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Kernel
 {
-    private ArrayList<ChatMessageElement> m_chatMessages = null;
+    private ArrayList<MessageElement> m_chatMessages = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_chatScheduler = null;
@@ -211,14 +211,14 @@ public class Kernel
 		{
 		    while(true)
 		    {
-			ChatMessageElement chatMessageElement = null;
+			MessageElement messageElement = null;
 
 			m_chatMessagesMutex.writeLock().lock();
 
 			try
 			{
 			    if(!m_chatMessages.isEmpty())
-				chatMessageElement = m_chatMessages.remove(0);
+				messageElement = m_chatMessages.remove(0);
 			    else
 				break;
 			}
@@ -227,7 +227,7 @@ public class Kernel
 			    m_chatMessagesMutex.writeLock().unlock();
 			}
 
-			if(chatMessageElement == null)
+			if(messageElement == null)
 			    continue;
 
 			byte bytes[] = null;
@@ -236,15 +236,15 @@ public class Kernel
 			{
 			    bytes = Messages.chatMessage
 				(s_cryptography,
-				 chatMessageElement.m_message,
-				 chatMessageElement.m_sipHashId,
+				 messageElement.m_message,
+				 messageElement.m_sipHashId,
 				 false,
 				 Cryptography.
-				 sha512(chatMessageElement.m_sipHashId.
+				 sha512(messageElement.m_sipHashId.
 					getBytes("UTF-8")),
-				 chatMessageElement.m_keyStream,
+				 messageElement.m_keyStream,
 				 State.getInstance().
-				 chatSequence(chatMessageElement.m_sipHashId),
+				 chatSequence(messageElement.m_sipHashId),
 				 System.currentTimeMillis());
 			}
 			catch(Exception exception)
@@ -257,20 +257,20 @@ public class Kernel
 			    enqueueMessage
 				(Messages.bytesToMessageString(bytes));
 			    State.getInstance().incrementChatSequence
-				(chatMessageElement.m_sipHashId);
+				(messageElement.m_sipHashId);
 			}
 
 			if(s_cryptography.ozoneMacKey() != null)
 			{
 			    bytes = Messages.chatMessage
 				(s_cryptography,
-				 chatMessageElement.m_message,
-				 chatMessageElement.m_sipHashId,
+				 messageElement.m_message,
+				 messageElement.m_sipHashId,
 				 true,
 				 s_cryptography.ozoneMacKey(),
-				 chatMessageElement.m_keyStream,
+				 messageElement.m_keyStream,
 				 State.getInstance().
-				 chatSequence(chatMessageElement.m_sipHashId),
+				 chatSequence(messageElement.m_sipHashId),
 				 System.currentTimeMillis());
 
 			    if(bytes != null)
@@ -1046,7 +1046,7 @@ public class Kernel
 
 	try
 	{
-	    ChatMessageElement chatMessageElement = new ChatMessageElement();
+	    MessageElement chatMessageElement = new MessageElement();
 
 	    chatMessageElement.m_message = message;
 	    chatMessageElement.m_sipHashId = sipHashId;
