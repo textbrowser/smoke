@@ -46,17 +46,17 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Kernel
 {
-    private ArrayList<MessageElement> m_chatMessages = null;
+    private ArrayList<MessageElement> m_messagesToSend = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private ScheduledExecutorService m_callScheduler = null;
-    private ScheduledExecutorService m_chatScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
+    private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private WakeLock m_wakeLock = null;
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock m_chatMessagesMutex =
+    private final ReentrantReadWriteLock m_messagesToSendMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
@@ -68,9 +68,10 @@ public class Kernel
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
     private final static int CALL_LIFETIME = 15000; // 15 Seconds
-    private final static int CHAT_INTERVAL = 100; // 100 Milliseconds
     private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
     private final static int CONGESTION_LIFETIME = 30;
+    private final static int MESSAGES_TO_SEND_INTERVAL =
+	100; // 100 Milliseconds
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
     private final static int STATUS_INTERVAL = 15000; /*
 						      ** Should be less than
@@ -81,7 +82,7 @@ public class Kernel
     private Kernel()
     {
 	m_callQueue = new Hashtable<> ();
-	m_chatMessages = new ArrayList<> ();
+	m_messagesToSend = new ArrayList<> ();
 	prepareSchedulers();
     }
 
@@ -201,87 +202,6 @@ public class Kernel
 	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
-	if(m_chatScheduler == null)
-	{
-	    m_chatScheduler = Executors.newSingleThreadScheduledExecutor();
-	    m_chatScheduler.scheduleAtFixedRate(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    while(true)
-		    {
-			MessageElement messageElement = null;
-
-			m_chatMessagesMutex.writeLock().lock();
-
-			try
-			{
-			    if(!m_chatMessages.isEmpty())
-				messageElement = m_chatMessages.remove(0);
-			    else
-				break;
-			}
-			finally
-			{
-			    m_chatMessagesMutex.writeLock().unlock();
-			}
-
-			if(messageElement == null)
-			    continue;
-
-			byte bytes[] = null;
-
-			try
-			{
-			    bytes = Messages.chatMessage
-				(s_cryptography,
-				 messageElement.m_message,
-				 messageElement.m_sipHashId,
-				 false,
-				 Cryptography.
-				 sha512(messageElement.m_sipHashId.
-					getBytes("UTF-8")),
-				 messageElement.m_keyStream,
-				 State.getInstance().
-				 chatSequence(messageElement.m_sipHashId),
-				 System.currentTimeMillis());
-			}
-			catch(Exception exception)
-			{
-			    bytes = null;
-			}
-
-			if(bytes != null)
-			{
-			    enqueueMessage
-				(Messages.bytesToMessageString(bytes));
-			    State.getInstance().incrementChatSequence
-				(messageElement.m_sipHashId);
-			}
-
-			if(s_cryptography.ozoneMacKey() != null)
-			{
-			    bytes = Messages.chatMessage
-				(s_cryptography,
-				 messageElement.m_message,
-				 messageElement.m_sipHashId,
-				 true,
-				 s_cryptography.ozoneMacKey(),
-				 messageElement.m_keyStream,
-				 State.getInstance().
-				 chatSequence(messageElement.m_sipHashId),
-				 System.currentTimeMillis());
-
-			    if(bytes != null)
-				enqueueMessage
-				    (Messages.bytesToMessageString(bytes));
-			}
-		    }
-		}
-	    }, 1500, CHAT_INTERVAL, TimeUnit.MILLISECONDS);
-	}
-
 	if(m_congestionScheduler == null)
 	{
 	    m_congestionScheduler = Executors.
@@ -294,6 +214,108 @@ public class Kernel
 		    s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
 		}
 	    }, 1500, CONGESTION_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_messagesToSendScheduler == null)
+	{
+	    m_messagesToSendScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_messagesToSendScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    while(true)
+		    {
+			MessageElement messageElement = null;
+
+			m_messagesToSendMutex.writeLock().lock();
+
+			try
+			{
+			    if(!m_messagesToSend.isEmpty())
+				messageElement = m_messagesToSend.remove(0);
+			    else
+				break;
+			}
+			finally
+			{
+			    m_messagesToSendMutex.writeLock().unlock();
+			}
+
+			if(messageElement == null)
+			    continue;
+
+			byte bytes[] = null;
+
+			try
+			{
+			    switch(messageElement.m_messageType)
+			    {
+			    case MessageElement.CHAT_MESSAGE_TYPE:
+				bytes = Messages.chatMessage
+				    (s_cryptography,
+				     messageElement.m_message,
+				     messageElement.m_sipHashId,
+				     false,
+				     Cryptography.
+				     sha512(messageElement.m_sipHashId.
+					    getBytes("UTF-8")),
+				     messageElement.m_keyStream,
+				     State.getInstance().
+				     chatSequence(messageElement.m_sipHashId),
+				     System.currentTimeMillis());
+				break;
+			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
+				bytes = Messages.chatMessageRetrieval
+				    (s_cryptography);
+				break;
+			    }
+			}
+			catch(Exception exception)
+			{
+			    bytes = null;
+			}
+
+			if(bytes != null)
+			{
+			    switch(messageElement.m_messageType)
+			    {
+			    case MessageElement.CHAT_MESSAGE_TYPE:
+				enqueueMessage
+				    (Messages.bytesToMessageString(bytes));
+				State.getInstance().incrementChatSequence
+				    (messageElement.m_sipHashId);
+				break;
+			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
+				scheduleSend
+				    (Messages.bytesToMessageString(bytes));
+				break;
+			    }
+			}
+
+			if(messageElement.m_messageType ==
+			   MessageElement.CHAT_MESSAGE_TYPE)
+			    if(s_cryptography.ozoneMacKey() != null)
+			    {
+				bytes = Messages.chatMessage
+				    (s_cryptography,
+				     messageElement.m_message,
+				     messageElement.m_sipHashId,
+				     true,
+				     s_cryptography.ozoneMacKey(),
+				     messageElement.m_keyStream,
+				     State.getInstance().
+				     chatSequence(messageElement.m_sipHashId),
+				     System.currentTimeMillis());
+
+				if(bytes != null)
+				    enqueueMessage
+					(Messages.bytesToMessageString(bytes));
+			    }
+		    }
+		}
+	    }, 1500, MESSAGES_TO_SEND_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_neighborsScheduler == null)
@@ -1042,20 +1064,21 @@ public class Kernel
 				   String sipHashId,
 				   byte keystream[])
     {
-	m_chatMessagesMutex.writeLock().lock();
+	m_messagesToSendMutex.writeLock().lock();
 
 	try
 	{
-	    MessageElement chatMessageElement = new MessageElement();
+	    MessageElement messageElement = new MessageElement();
 
-	    chatMessageElement.m_message = message;
-	    chatMessageElement.m_sipHashId = sipHashId;
-	    chatMessageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
-	    m_chatMessages.add(chatMessageElement);
+	    messageElement.m_message = message;
+	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
+	    messageElement.m_sipHashId = sipHashId;
+	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    m_messagesToSend.add(messageElement);
 	}
 	finally
 	{
-	    m_chatMessagesMutex.writeLock().unlock();
+	    m_messagesToSendMutex.writeLock().unlock();
 	}
     }
 
@@ -1206,27 +1229,19 @@ public class Kernel
 
     public void retrieveChatMessages()
     {
-	m_neighborsMutex.readLock().lock();
+	m_messagesToSendMutex.writeLock().lock();
 
 	try
 	{
-	    if(m_neighbors.size() == 0)
-		return;
+	    MessageElement messageElement = new MessageElement();
 
-	    String message = Messages.bytesToMessageString
-		(Messages.chatMessageRetrieval(s_cryptography));
-
-	    for(int i = 0; i < m_neighbors.size(); i++)
-	    {
-		int j = m_neighbors.keyAt(i);
-
-		if(m_neighbors.get(j) != null)
-		    m_neighbors.get(j).scheduleSend(message);
-	    }
+	    messageElement.m_messageType =
+		MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE;
+	    m_messagesToSend.add(messageElement);
 	}
 	finally
 	{
-	    m_neighborsMutex.readLock().unlock();
+	    m_messagesToSendMutex.writeLock().unlock();
 	}
     }
 
