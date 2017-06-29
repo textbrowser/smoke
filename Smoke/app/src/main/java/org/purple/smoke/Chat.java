@@ -715,7 +715,6 @@ public class Chat extends AppCompatActivity
 	spannable.setSpan
 	    (new ForegroundColorSpan(Color.rgb(30, 144, 255)),
 	     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 	textView1.append(spannable);
 	textView1.append(". Please note that recently-received messages ");
 	textView1.append("may be discarded because of congestion control.\n\n");
