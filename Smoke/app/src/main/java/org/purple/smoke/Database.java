@@ -2733,7 +2733,7 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || m_db == null)
 	    return;
 
-	m_db.beginTransaction();
+	m_db.beginTransactionNonExclusive();
 
 	try
 	{
