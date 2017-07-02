@@ -1525,14 +1525,6 @@ public class Database extends SQLiteOpenHelper
 	    m_db.replace("congestion_control", null, values);
 	    m_db.setTransactionSuccessful();
 	}
-	catch(SQLiteConstraintException exception)
-	{
-	    /*
-	    ** An unlikely improvement.
-	    */
-
-	    return true;
-	}
 	catch(Exception exception)
         {
 	}
