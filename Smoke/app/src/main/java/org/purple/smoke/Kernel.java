@@ -68,8 +68,8 @@ public class Kernel
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
     private final static int CALL_LIFETIME = 15000; // 15 Seconds
-    private final static int CONGESTION_INTERVAL = 15000; // 15 Seconds
-    private final static int CONGESTION_LIFETIME = 30;
+    private final static int CONGESTION_INTERVAL = 5000; // 5 Seconds
+    private final static int CONGESTION_LIFETIME = 60; // Seconds
     private final static int MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
@@ -492,6 +492,10 @@ public class Kernel
 
     public boolean ourMessage(String buffer)
     {
+	/*
+	** Return false if the contents of buffer could not be assessed.
+	*/
+
 	long value = s_congestionSipHash.hmac(buffer.getBytes());
 
 	if(s_databaseHelper.containsCongestionDigest(value))
@@ -586,7 +590,7 @@ public class Kernel
 			     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
 
 	    if(pk == null)
-		return false;
+		return true;
 
 	    if(pk.length == 64)
 	    {
@@ -598,14 +602,14 @@ public class Kernel
 		    (s_cryptography, pk);
 
 		if(keyStream == null)
-		    return false;
+		    return true;
 
 		byte sha512[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
-		    return false;
+		    return true;
 
 		byte aes256[] = Cryptography.decrypt
 		    (Arrays.
@@ -615,7 +619,7 @@ public class Kernel
 		     Arrays.copyOfRange(keyStream, 0, 32));
 
 		if(aes256 == null)
-		    return false;
+		    return true;
 
 		byte abyte[] = new byte[] {aes256[0]};
 
@@ -625,7 +629,7 @@ public class Kernel
 			(s_cryptography, pk);
 
 		    if(array == null || array.length != 2)
-			return false;
+			return true;
 
 		    String sipHashId = array[1];
 
@@ -637,7 +641,7 @@ public class Kernel
 			    signatureKeyForDigest(s_cryptography, pk);
 
 			if(signatureKey == null)
-			    return false;
+			    return true;
 
 			if(!Cryptography.
 			   verifySignature
@@ -653,7 +657,7 @@ public class Kernel
 						       10),
 					   s_cryptography.
 					   chatEncryptionPublicKeyDigest())))
-			    return false;
+			    return true;
 		    }
 
 		    long current = System.currentTimeMillis();
@@ -663,10 +667,10 @@ public class Kernel
 		    if(current - timestamp < 0)
 		    {
 			if(timestamp - current > Chat.STATUS_WINDOW)
-			    return false;
+			    return true;
 		    }
 		    else if(current - timestamp > Chat.STATUS_WINDOW)
-			return false;
+			return true;
 
 		    s_databaseHelper.updateParticipantLastTimestamp
 			(s_cryptography, pk);
@@ -678,7 +682,7 @@ public class Kernel
 		String strings[] = new String(aes256).split("\\n");
 
 		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
-		    return false;
+		    return true;
 
 		String message = null;
 		byte publicKeySignature[] = null;
@@ -715,7 +719,7 @@ public class Kernel
 			    nameSipHashIdFromDigest(s_cryptography, pk);
 
 			if(array == null || array.length != 2)
-			    return false;
+			    return true;
 
 			String sipHashId = array[1];
 
@@ -731,7 +735,7 @@ public class Kernel
 				signatureKeyForDigest(s_cryptography, pk);
 
 			    if(signatureKey == null)
-				return false;
+				return true;
 
 			    if(!Cryptography.
 			       verifySignature
@@ -749,7 +753,7 @@ public class Kernel
 				 "\n".getBytes(),
 				 s_cryptography.
 				 chatEncryptionPublicKeyDigest())))
-				return false;
+				return true;
 			}
 
 			strings = array;
@@ -757,7 +761,7 @@ public class Kernel
 		    }
 
 		if(message == null)
-		    return false;
+		    return true;
 
 		boolean updateTimeStamp = true;
 		long current = System.currentTimeMillis();
@@ -796,7 +800,7 @@ public class Kernel
 		     Arrays.copyOfRange(pk, 32, pk.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
-		    return false;
+		    return true;
 
 		byte aes256[] = Cryptography.decrypt
 		    (Arrays.
@@ -806,13 +810,13 @@ public class Kernel
 		     Arrays.copyOfRange(pk, 0, 32));
 
 		if(aes256 == null)
-		    return false;
+		    return true;
 
 		byte tag = aes256[0];
 
 		if(!(tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1]))
-		    return false;
+		    return true;
 
 		PublicKey signatureKey = null;
 
@@ -826,7 +830,7 @@ public class Kernel
 			 Arrays.copyOfRange(aes256, 273, 273 + 64));
 
 		if(signatureKey == null)
-		    return false;
+		    return true;
 
 		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		{
@@ -842,7 +846,7 @@ public class Kernel
 						   375),
 				       s_cryptography.
 				       chatEncryptionPublicKeyDigest())))
-			return false;
+			return true;
 		}
 		else
 		{
@@ -858,7 +862,7 @@ public class Kernel
 						   337),
 				       s_cryptography.
 				       chatEncryptionPublicKeyDigest())))
-			return false;
+			return true;
 		}
 
 		long current = System.currentTimeMillis();
@@ -868,10 +872,10 @@ public class Kernel
 		if(current - timestamp < 0)
 		{
 		    if(timestamp - current > CALL_LIFETIME)
-			return false;
+			return true;
 		}
 		else if(current - timestamp > CALL_LIFETIME)
-		    return false;
+		    return true;
 
 		String array[] = null;
 
@@ -895,7 +899,7 @@ public class Kernel
 			    (Arrays.copyOfRange(aes256, 9, 9 + 294));
 
 			if(publicKey == null)
-			    return false;
+			    return true;
 
 			/*
 			** Generate new AES-256 and SHA-512 keys.
@@ -921,7 +925,7 @@ public class Kernel
 			}
 
 			if(participantCall == null)
-			    return false;
+			    return true;
 
 			m_callQueueMutex.writeLock().lock();
 
@@ -939,10 +943,10 @@ public class Kernel
 			     Arrays.copyOfRange(aes256, 9, 9 + 256));
 
 			if(keyStream == null)
-			    return false;
+			    return true;
 		    }
 		    else
-			return false;
+			return true;
 
 		    s_databaseHelper.writeCallKeys
 			(s_cryptography, array[1], keyStream);
