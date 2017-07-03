@@ -291,6 +291,22 @@ public class Kernel
 				    (messageElement.m_sipHashId);
 				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
+				m_chatMessageRetrievalIdentityMutex.readLock().
+				    lock();
+
+				try
+				{
+				    scheduleSend
+					(Messages.
+					 identityMessage
+					 (m_chatMessageRetrievalIdentity));
+				}
+				finally
+				{
+				    m_chatMessageRetrievalIdentityMutex.
+					readLock().unlock();
+				}
+
 				scheduleSend
 				    (Messages.bytesToMessageString(bytes));
 				break;
@@ -515,6 +531,7 @@ public class Kernel
 	    if(bytes == null || bytes.length < 128)
 		return false;
 
+	    boolean ok = false;
 	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
 		(bytes, 0, bytes.length - 128);
 	    byte array2[] = Arrays.copyOfRange // Second to the last block.
@@ -522,10 +539,30 @@ public class Kernel
 	    byte array3[] = Arrays.copyOfRange // The last block (destination).
 		(bytes, bytes.length - 64, bytes.length);
 
-	    if(!s_cryptography.
-	       iAmTheDestination(Miscellaneous.joinByteArrays(array1, array2),
-				 array3))
-		return false;
+	    m_chatMessageRetrievalIdentityMutex.readLock().lock();
+
+	    try
+	    {
+		if(Cryptography.
+		   memcmp(Cryptography.hmac(Arrays.
+					    copyOfRange(bytes,
+							0,
+							bytes.length - 64),
+					    m_chatMessageRetrievalIdentity),
+			  array3))
+		    ok = true;
+	    }
+	    finally
+	    {
+		m_chatMessageRetrievalIdentityMutex.readLock().unlock();
+	    }
+
+	    if(!ok)
+		if(!s_cryptography.
+		   iAmTheDestination(Miscellaneous.joinByteArrays(array1,
+								  array2),
+				     array3))
+		    return false;
 
 	    if(s_cryptography.isValidSipHashMac(array1, array2))
 	    {

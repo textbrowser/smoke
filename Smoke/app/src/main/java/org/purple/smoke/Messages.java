@@ -788,4 +788,39 @@ public class Messages
 
 	return null;
     }
+
+    public static String identityMessage(byte bytes[])
+    {
+	if(bytes == null || bytes.length <= 0)
+	    return "";
+
+	try
+	{
+	    StringBuilder results = new StringBuilder();
+
+	    results.append("POST HTTP/1.1\r\n");
+	    results.append
+		("Content-Type: application/x-www-form-urlencoded\r\n");
+	    results.append("Content-Length: %1\r\n");
+	    results.append("\r\n");
+	    results.append("type=0095a&content=%2\r\n");
+	    results.append("\r\n\r\n");
+
+	    String base64 = Base64.encodeToString(bytes, Base64.NO_WRAP);
+	    int indexOf = results.indexOf("%1");
+	    int length = base64.length() +
+		"type=0095a&content=\r\n\r\n\r\n".length();
+
+	    results = results.replace
+		(indexOf, indexOf + 2, String.valueOf(length));
+	    indexOf = results.indexOf("%2");
+	    results = results.replace(indexOf, indexOf + 2, base64);
+	    return results.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
+    }
 }
