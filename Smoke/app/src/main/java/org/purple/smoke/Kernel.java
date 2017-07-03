@@ -291,22 +291,10 @@ public class Kernel
 				    (messageElement.m_sipHashId);
 				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
-				m_chatMessageRetrievalIdentityMutex.readLock().
-				    lock();
-
-				try
-				{
-				    scheduleSend
-					(Messages.
-					 identityMessage
-					 (m_chatMessageRetrievalIdentity));
-				}
-				finally
-				{
-				    m_chatMessageRetrievalIdentityMutex.
-					readLock().unlock();
-				}
-
+				scheduleSend
+				    (Messages.
+				     identityMessage
+				     (messageRetrievalIdentity()));
 				scheduleSend
 				    (Messages.bytesToMessageString(bytes));
 				break;
