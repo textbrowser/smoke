@@ -394,6 +394,7 @@ public class Messages
 		 */
 
 		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
+		 Kernel.getInstance().messageRetrievalIdentity(),
 
 		 /*
 		 ** [ Encryption Public Key Digest ]

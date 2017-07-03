@@ -54,7 +54,10 @@ public class Kernel
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private WakeLock m_wakeLock = null;
+    private byte m_chatMessageRetrievalIdentity[] = null;
     private final ReentrantReadWriteLock m_callQueueMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_messagesToSendMutex =
 	new ReentrantReadWriteLock();
@@ -990,6 +993,24 @@ public class Kernel
 	}
 
 	return false;
+    }
+
+    public byte[] messageRetrievalIdentity()
+    {
+	m_chatMessageRetrievalIdentityMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_chatMessageRetrievalIdentity == null)
+		m_chatMessageRetrievalIdentity = Miscellaneous.deepCopy
+		    (Cryptography.randomBytes(64));
+
+	    return m_chatMessageRetrievalIdentity;
+	}
+	finally
+	{
+	    m_chatMessageRetrievalIdentityMutex.writeLock().unlock();
+	}
     }
 
     public static synchronized Kernel getInstance()
