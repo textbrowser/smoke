@@ -1827,8 +1827,19 @@ public class Database extends SQLiteOpenHelper
 	{
 	    if(ok)
 	    {
-		if(m_db.replace("siphash_ids", null, values) == -1)
-		    ok = false;
+		if(m_db.
+		   update("siphash_ids",
+			  values,
+			  "siphash_id_digest = ?",
+			  new String[] {Base64.
+					encodeToString(cryptography.
+						       hmac(sipHashId.
+							    toLowerCase().
+							    trim().
+							    getBytes("UTF-8")),
+						       Base64.DEFAULT)}) <= 0)
+		    if(m_db.replace("siphash_ids", null, values) == -1)
+			ok = false;
 
 		m_db.setTransactionSuccessful();
 	    }
