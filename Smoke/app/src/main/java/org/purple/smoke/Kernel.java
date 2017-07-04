@@ -547,8 +547,9 @@ public class Kernel
 
 	    if(!ok)
 		if(!s_cryptography.
-		   iAmTheDestination(Miscellaneous.joinByteArrays(array1,
-								  array2),
+		   iAmTheDestination(Arrays.copyOfRange(bytes,
+							0,
+							bytes.length - 64),
 				     array3))
 		    return false;
 
