@@ -164,6 +164,7 @@ Future Items
 13.    Introduce real-time typing status.
 14.    Disable Chat:Send if there is at least one selected participant
        without a session.
+15.    Allow exporting of smoke.db to other devices.
 
 Ignored / Impossible Items
 
