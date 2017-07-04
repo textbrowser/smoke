@@ -214,6 +214,18 @@ public class Kernel
 		@Override
 		public void run()
 		{
+		    m_chatMessageRetrievalIdentityMutex.writeLock().lock();
+
+		    try
+		    {
+			m_chatMessageRetrievalIdentity = null;
+		    }
+		    finally
+		    {
+			m_chatMessageRetrievalIdentityMutex.writeLock().
+			    unlock();
+		    }
+
 		    s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
 		}
 	    }, 1500, CONGESTION_INTERVAL, TimeUnit.MILLISECONDS);
@@ -531,14 +543,15 @@ public class Kernel
 
 	    try
 	    {
-		if(Cryptography.
-		   memcmp(Cryptography.hmac(Arrays.
-					    copyOfRange(bytes,
-							0,
-							bytes.length - 64),
-					    m_chatMessageRetrievalIdentity),
-			  array3))
-		    ok = true;
+		if(m_chatMessageRetrievalIdentity != null)
+		    if(Cryptography.
+		       memcmp(Cryptography.hmac(Arrays.
+						copyOfRange(bytes,
+							    0,
+							    bytes.length - 64),
+						m_chatMessageRetrievalIdentity),
+			      array3))
+			ok = true;
 	    }
 	    finally
 	    {
