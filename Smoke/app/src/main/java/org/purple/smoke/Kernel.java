@@ -49,6 +49,7 @@ public class Kernel
     private ArrayList<MessageElement> m_messagesToSend = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private ScheduledExecutorService m_callScheduler = null;
+    private ScheduledExecutorService m_chatTemporaryIdentityScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
@@ -71,6 +72,8 @@ public class Kernel
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
     private final static int CALL_LIFETIME = 15000; // 15 Seconds
+    private final static int CHAT_TEMPORARY_IDENTITY_INTERVAL =
+	60000; // 60 Seconds
     private final static int CONGESTION_INTERVAL = 5000; // 5 Seconds
     private final static int CONGESTION_LIFETIME = 60; // Seconds
     private final static int MESSAGES_TO_SEND_INTERVAL =
@@ -205,11 +208,11 @@ public class Kernel
 	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
-	if(m_congestionScheduler == null)
+	if(m_chatTemporaryIdentityScheduler == null)
 	{
-	    m_congestionScheduler = Executors.
+	    m_chatTemporaryIdentityScheduler = Executors.
 		newSingleThreadScheduledExecutor();
-	    m_congestionScheduler.scheduleAtFixedRate(new Runnable()
+	    m_chatTemporaryIdentityScheduler.scheduleAtFixedRate(new Runnable()
 	    {
 		@Override
 		public void run()
@@ -225,7 +228,19 @@ public class Kernel
 			m_chatMessageRetrievalIdentityMutex.writeLock().
 			    unlock();
 		    }
+		}
+	    }, 1500, CHAT_TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
+	}
 
+	if(m_congestionScheduler == null)
+	{
+	    m_congestionScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_congestionScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
 		    s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
 		}
 	    }, 1500, CONGESTION_INTERVAL, TimeUnit.MILLISECONDS);
@@ -531,7 +546,7 @@ public class Kernel
 	    if(bytes == null || bytes.length < 128)
 		return false;
 
-	    boolean ok = false;
+	    boolean ourMessageViaChatTemporaryIdentity = false;
 	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
 		(bytes, 0, bytes.length - 128);
 	    byte array2[] = Arrays.copyOfRange // Second to the last block.
@@ -551,14 +566,14 @@ public class Kernel
 							    bytes.length - 64),
 						m_chatMessageRetrievalIdentity),
 			      array3))
-			ok = true;
+			ourMessageViaChatTemporaryIdentity = true;
 	    }
 	    finally
 	    {
 		m_chatMessageRetrievalIdentityMutex.readLock().unlock();
 	    }
 
-	    if(!ok)
+	    if(!ourMessageViaChatTemporaryIdentity)
 		if(!s_cryptography.
 		   iAmTheDestination(Arrays.copyOfRange(bytes,
 							0,
@@ -727,6 +742,7 @@ public class Kernel
 		    return true;
 
 		String message = null;
+		boolean updateTimeStamp = true;
 		byte publicKeySignature[] = null;
 		byte recipientDigest[] = null;
 		int ii = 0;
@@ -743,6 +759,27 @@ public class Kernel
 		    case 0:
 			timestamp = Miscellaneous.byteArrayToLong
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+
+			long current = System.currentTimeMillis();
+
+			if(current - timestamp < 0)
+			{
+			    if(timestamp - current > Chat.CHAT_WINDOW)
+				updateTimeStamp = false;
+			}
+			else if(current - timestamp > Chat.CHAT_WINDOW)
+			    updateTimeStamp = false;
+
+			if(!updateTimeStamp)
+			    /*
+			    ** Ignore expired messages unless the messages
+			    ** were discharged by SmokeStack per our
+			    ** temporary identity.
+			    */
+
+			    if(!ourMessageViaChatTemporaryIdentity)
+				return true;
+
 			ii += 1;
 			break;
 		    case 1:
@@ -804,17 +841,6 @@ public class Kernel
 
 		if(message == null)
 		    return true;
-
-		boolean updateTimeStamp = true;
-		long current = System.currentTimeMillis();
-
-		if(current - timestamp < 0)
-		{
-		    if(timestamp - current > Chat.CHAT_WINDOW)
-			updateTimeStamp = false;
-		}
-		else if(current - timestamp > Chat.CHAT_WINDOW)
-		    updateTimeStamp = false;
 
 		if(updateTimeStamp)
 		    s_databaseHelper.updateParticipantLastTimestamp
