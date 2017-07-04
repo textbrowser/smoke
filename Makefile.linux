@@ -18,6 +18,24 @@ clean:
 clear-smoke:
 	./adb.bash shell pm clear org.purple.smoke
 
+debug-with-source: all
+	rm -rf Smoke/build Smoke/captures
+	mkdir -p Smoke/app/src/main/assets
+	zip -r smoke.src.d.zip \
+	Android \
+	Documentation \
+	Makefile \
+	Makefile.linux \
+	Smoke \
+	TO-DO \
+	adb.bash \
+	-x *.git* -x *.gradle* -x *.idea* \
+	&& mv smoke.src.d.zip Smoke/app/src/main/assets/.
+	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
+	--build-file Smoke/build.gradle assembleDebug \
+	--configure-on-demand --daemon --parallel
+	rm -f Smoke/app/src/main/assets/smoke.src.d.zip
+
 distclean: clean kill-adb-server kill-gradle-daemon
 	rm -f smoke.db
 
