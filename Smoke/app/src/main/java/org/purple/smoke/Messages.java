@@ -66,7 +66,7 @@ public class Messages
 	    results.append("content=%2\r\n");
 	    results.append("\r\n\r\n");
 
-	    String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+	    String base64 = Base64.encodeToString(bytes, Base64.NO_WRAP);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() + "content=\r\n\r\n\r\n".length();
 
