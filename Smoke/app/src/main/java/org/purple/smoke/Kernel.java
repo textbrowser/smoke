@@ -42,11 +42,13 @@ import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Kernel
 {
     private ArrayList<MessageElement> m_messagesToSend = null;
+    private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_chatTemporaryIdentityScheduler = null;
@@ -73,6 +75,8 @@ public class Kernel
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
     private final static int CALL_LIFETIME = 15000; // 15 Seconds
     private final static int CHAT_TEMPORARY_IDENTITY_INTERVAL =
+	5000; // 5 Seconds
+    private final static int CHAT_TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
     private final static int CONGESTION_INTERVAL = 5000; // 5 Seconds
     private final static int CONGESTION_LIFETIME = 60; // Seconds
@@ -88,6 +92,8 @@ public class Kernel
     private Kernel()
     {
 	m_callQueue = new Hashtable<> ();
+	m_chatTemporaryIdentityLastTick = new AtomicLong
+	    (System.currentTimeMillis());
 	m_messagesToSend = new ArrayList<> ();
 	prepareSchedulers();
     }
@@ -221,7 +227,10 @@ public class Kernel
 
 		    try
 		    {
-			m_chatMessageRetrievalIdentity = null;
+			if(System.currentTimeMillis() -
+			   m_chatTemporaryIdentityLastTick.get() >
+			   CHAT_TEMPORARY_IDENTITY_LIFETIME)
+			    m_chatMessageRetrievalIdentity = null;
 		    }
 		    finally
 		    {
@@ -566,7 +575,11 @@ public class Kernel
 							    bytes.length - 64),
 						m_chatMessageRetrievalIdentity),
 			      array3))
+		    {
+			m_chatTemporaryIdentityLastTick.set
+			    (System.currentTimeMillis());
 			ourMessageViaChatTemporaryIdentity = true;
+		    }
 	    }
 	    finally
 	    {
@@ -1067,8 +1080,11 @@ public class Kernel
 	try
 	{
 	    if(m_chatMessageRetrievalIdentity == null)
+	    {
 		m_chatMessageRetrievalIdentity = Miscellaneous.deepCopy
 		    (Cryptography.randomBytes(64));
+		m_chatTemporaryIdentityLastTick.set(System.currentTimeMillis());
+	    }
 
 	    return m_chatMessageRetrievalIdentity;
 	}
