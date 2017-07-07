@@ -1915,13 +1915,16 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
-    private void shareKeysOf(int o)
+    private void requestKeysOf(final String oid)
+    {
+    }
+
+    private void shareKeysOf(final String oid)
     {
 	if(Settings.this.isFinishing())
 	    return;
 
 	final ProgressDialog dialog = new ProgressDialog(Settings.this);
-	final String oid = String.valueOf(o);
 
 	dialog.setCancelable(false);
 	dialog.setIndeterminate(true);
@@ -2343,13 +2346,13 @@ public class Settings extends AppCompatActivity
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item)
+    public boolean onContextItemSelected(MenuItem menuItem)
     {
-	if(item == null)
+	if(menuItem == null)
 	    return false;
 
-	final int groupId = item.getGroupId();
-	final int itemId = item.getItemId();
+	final int groupId = menuItem.getGroupId();
+	final int itemId = menuItem.getItemId();
 
 	/*
 	** Prepare a listener.
@@ -2394,11 +2397,14 @@ public class Settings extends AppCompatActivity
 		 listener,
 		 "Are you sure that you " +
 		 "wish to delete the participant " +
-		 item.getTitle().toString().replace("Delete (", "").
+		 menuItem.getTitle().toString().replace("Delete (", "").
 		 replace(")", "") + "?");
 	    break;
 	case 1:
-	    shareKeysOf(itemId);
+	    requestKeysOf(String.valueOf(itemId));
+	    break;
+	case 2:
+	    shareKeysOf(String.valueOf(itemId));
 	    break;
 	}
 
@@ -2413,9 +2419,9 @@ public class Settings extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(MenuItem menuItem)
     {
-        int id = item.getItemId();
+        int id = menuItem.getItemId();
 
 	if(id == R.id.action_chat)
 	{
@@ -2424,7 +2430,7 @@ public class Settings extends AppCompatActivity
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -2457,7 +2463,17 @@ public class Settings extends AppCompatActivity
 	{
 	    super.onCreateContextMenu(menu, v, menuInfo);
 	    menu.add(0, v.getId(), 0, "Delete (" + tag1 + ")");
-	    menu.add(1, v.getId(), 0, "Share Keys Of (" + tag1 + ")").
+
+	    MenuItem menuItem = menu.add
+		(1, v.getId(), 0, "Request Keys via Ozone (" + tag1 + ")");
+
+	    if(s_cryptography.ozoneEncryptionKey() == null ||
+	       s_cryptography.ozoneEncryptionKey().length != 32 ||
+	       s_cryptography.ozoneMacKey() == null ||
+	       s_cryptography.ozoneMacKey().length != 64)
+		menuItem.setEnabled(false);
+
+	    menu.add(2, v.getId(), 0, "Share Keys (" + tag1 + ")").
 		setEnabled((boolean) tag2);
 	}
     }
