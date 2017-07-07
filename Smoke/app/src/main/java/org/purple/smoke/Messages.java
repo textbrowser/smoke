@@ -831,7 +831,7 @@ public class Messages
     }
 
     public static byte[] pkpRequestMessage(Cryptography cryptography,
-					   String sipHashId)
+					   String requestedSipHashId)
     {
 	if(cryptography == null)
 	    return null;
@@ -853,10 +853,16 @@ public class Messages
 		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
 
 		 /*
-		 ** [ SipHash Identity ]
+		 ** [ Destination SipHash Identity ]
 		 */
 
-		 sipHashId.getBytes("UTF-8"));
+		 cryptography.sipHashId().getBytes("UTF-8"),
+
+		 /*
+		 ** [ Requested SipHash Identity ]
+		 */
+
+		 requestedSipHashId.getBytes("UTF-8"));
 
 	    /*
 	    ** [ AES-256 ]
