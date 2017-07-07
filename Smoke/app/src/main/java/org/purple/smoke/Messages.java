@@ -38,8 +38,7 @@ public class Messages
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
-    public final static byte CHAT_MESSAGE_RETRIEVAL[] =
-	new byte[] {0x00, 0x01};
+    public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
@@ -423,7 +422,7 @@ public class Messages
 		 ** [ A Byte ]
 		 */
 
-		 new byte[] {CHAT_MESSAGE_RETRIEVAL[0]},
+		 CHAT_MESSAGE_RETRIEVAL,
 
 		 /*
 		 ** [ A Timestamp ]
@@ -844,7 +843,7 @@ public class Messages
 		 ** [ A Byte ]
 		 */
 
-		 new byte[] {PKP_MESSAGE_REQUEST[0]},
+		 PKP_MESSAGE_REQUEST,
 
 		 /*
 		 ** [ A Timestamp ]

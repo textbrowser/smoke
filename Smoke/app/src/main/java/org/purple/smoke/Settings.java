@@ -1940,15 +1940,15 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		SipHashIdElement sipHashIdElement =
-		    m_databaseHelper.readSipHashId(s_cryptography, oid);
+		String sipHashId = m_databaseHelper.readSipHashIdString
+		    (s_cryptography, oid);
 
-		if(sipHashIdElement == null)
-		    m_error = "readSipHashId() failure";
+		if(sipHashId.isEmpty())
+		    m_error = "readSipHashIdString() failure";
 		else
 		{
 		    byte bytes[] = Messages.pkpRequestMessage
-			(s_cryptography, sipHashIdElement.m_sipHashId);
+			(s_cryptography, sipHashId);
 
 		    if(bytes == null)
 			m_error = "pkpRequestMessage() failure";
@@ -1969,7 +1969,7 @@ public class Settings extends AppCompatActivity
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
 				 "An error (" + m_error + ") occurred while " +
-				 "preparing to request public key material.");
+				 "preparing a request of public key material.");
 		    }
 		});
 	    }

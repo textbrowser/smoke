@@ -1095,6 +1095,44 @@ public class Database extends SQLiteOpenHelper
 	return str;
     }
 
+    public String readSipHashIdString(Cryptography cryptography,
+				      String oid)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT siphash_id FROM siphash_ids WHERE OID = ?",
+		 new String[] {oid});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
+
+		if(bytes != null)
+		    return new String(bytes, "UTF-8");
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return "";
+    }
+
     public String writeParticipant(Cryptography cryptography,
 				   byte data[])
     {
