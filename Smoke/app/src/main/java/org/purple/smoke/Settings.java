@@ -1917,6 +1917,67 @@ public class Settings extends AppCompatActivity
 
     private void requestKeysOf(final String oid)
     {
+	if(Settings.this.isFinishing())
+	    return;
+
+	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+
+	dialog.setCancelable(false);
+	dialog.setIndeterminate(true);
+	dialog.setMessage
+	    ("Requesting public key material. Please be patient " +
+	     "and do not rotate the device while the process executes.");
+	dialog.show();
+
+	class SingleShot implements Runnable
+	{
+	    private String m_error = "";
+
+	    SingleShot()
+	    {
+	    }
+
+	    @Override
+	    public void run()
+	    {
+		SipHashIdElement sipHashIdElement =
+		    m_databaseHelper.readSipHashId(s_cryptography, oid);
+
+		if(sipHashIdElement == null)
+		    m_error = "readSipHashId() failure";
+		else
+		{
+		    byte bytes[] = Messages.pkpRequestMessage
+			(s_cryptography, sipHashIdElement.m_sipHashId);
+
+		    if(bytes == null)
+			m_error = "pkpRequestMessage() failure";
+		    else if(!Kernel.getInstance().
+			    enqueueMessage(Messages.
+					   bytesToMessageString(bytes)))
+			m_error = "enqueueMessage() failure";
+		}
+
+		Settings.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			dialog.dismiss();
+
+			if(!m_error.isEmpty())
+			    Miscellaneous.showErrorDialog
+				(Settings.this,
+				 "An error (" + m_error + ") occurred while " +
+				 "preparing to request public key material.");
+		    }
+		});
+	    }
+	}
+
+	Thread thread = new Thread(new SingleShot());
+
+	thread.start();
     }
 
     private void shareKeysOf(final String oid)
