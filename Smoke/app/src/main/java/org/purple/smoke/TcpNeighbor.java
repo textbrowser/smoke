@@ -355,19 +355,27 @@ public class TcpNeighbor extends Neighbor
 			    else if(!Cryptography.memcmp(bytes,
 							 chain[0].getEncoded()))
 			    {
+				Database.getInstance().neighborControlStatus
+				    (Cryptography.getInstance(),
+				     "disconnect",
+				     String.valueOf(m_oid.get()));
+				m_isValidCertificate.set(false);
 				setError("The stored server's " +
 					 "certificate does not match the " +
 					 "certificate that was provided by " +
 					 "the server.");
-				m_isValidCertificate.set(false);
 			    }
 			    else
 				m_isValidCertificate.set(true);
 			}
 			catch(Exception exception)
 			{
-			    setError("The server's certificate has expired.");
+			    Database.getInstance().neighborControlStatus
+				(Cryptography.getInstance(),
+				 "disconnect",
+				 String.valueOf(m_oid.get()));
 			    m_isValidCertificate.set(false);
+			    setError("The server's certificate has expired.");
 			}
 		    }
 
