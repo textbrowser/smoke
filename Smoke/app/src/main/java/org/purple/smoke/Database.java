@@ -1144,10 +1144,9 @@ public class Database extends SQLiteOpenHelper
 	   m_db == null)
 	    return "";
 
+	ContentValues values = null;
 	Cursor cursor = null;
 	String sipHashId = "";
-
-	m_db.beginTransactionNonExclusive();
 
 	try
 	{
@@ -1303,7 +1302,8 @@ public class Database extends SQLiteOpenHelper
 	    if(name.isEmpty())
 		return "";
 
-	    ContentValues values = new ContentValues();
+	    values = new ContentValues();
+
 	    SparseArray<String> sparseArray = new SparseArray<> ();
 
 	    sparseArray.append(0, "encryption_public_key");
@@ -1329,12 +1329,7 @@ public class Database extends SQLiteOpenHelper
 			equals("encryption_public_key_digest"))
 		    bytes = Cryptography.sha512(publicKey.getEncoded());
 		else if(sparseArray.get(i).equals("function_digest"))
-		{
-		    if(keyType != null &&
-		       keyType.length == 1 &&
-		       keyType[0] == Messages.CHAT_KEY_TYPE[0])
-			bytes = cryptography.hmac("chat".getBytes());
-		}
+		    bytes = cryptography.hmac("chat".getBytes());
 		else if(sparseArray.get(i).equals("identity"))
 		    bytes = cryptography.etm("".getBytes());
 		else if(sparseArray.get(i).equals("keystream"))
@@ -1362,7 +1357,24 @@ public class Database extends SQLiteOpenHelper
 		values.put(sparseArray.get(i),
 			   Base64.encodeToString(bytes, Base64.DEFAULT));
 	    }
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
 
+	if(values == null)
+	    return "";
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
 	    if(m_db.insert("participants", null, values) <= 0)
 		sipHashId = "";
 
@@ -1374,9 +1386,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	finally
 	{
-	    if(cursor != null)
-		cursor.close();
-
 	    m_db.endTransaction();
 	}
 
