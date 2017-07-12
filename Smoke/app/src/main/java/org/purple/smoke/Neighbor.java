@@ -464,6 +464,9 @@ public abstract class Neighbor
 
     public void scheduleEchoSend(String message)
     {
+	if(!connected())
+	    return;
+
 	synchronized(m_echoQueueMutex)
 	{
 	    if(m_echoQueue.size() < MAXIMUM_QUEUED_ECHO_PACKETS)
@@ -473,6 +476,9 @@ public abstract class Neighbor
 
     public void scheduleSend(String message)
     {
+	if(!connected())
+	    return;
+
 	synchronized(m_queueMutex)
 	{
 	    m_queue.add(message);
