@@ -103,6 +103,8 @@ public class UdpMulticastNeighbor extends Neighbor
 
     protected void disconnect()
     {
+	super.disconnect();
+
 	try
 	{
 	    if(m_socket != null)

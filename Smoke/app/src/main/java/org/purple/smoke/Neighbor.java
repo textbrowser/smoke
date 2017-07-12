@@ -167,6 +167,9 @@ public abstract class Neighbor
 		{
 		}
 
+		if(!connected())
+		    return;
+
 		synchronized(m_stringBuilder)
 		{
 		    /*
@@ -257,6 +260,9 @@ public abstract class Neighbor
 		catch(Exception exception)
 		{
 		}
+
+		if(!connected())
+		    return;
 
 		if(System.nanoTime() - m_accumulatedTime >= 1e+10)
 		{
@@ -369,7 +375,6 @@ public abstract class Neighbor
     protected abstract boolean send(String message);
     protected abstract int getLocalPort();
     protected abstract void connect();
-    protected abstract void disconnect();
 
     protected synchronized void abort()
     {
@@ -401,6 +406,24 @@ public abstract class Neighbor
 	}
 	catch(Exception exception)
 	{
+	}
+    }
+
+    protected void disconnect()
+    {
+	synchronized(m_echoQueueMutex)
+	{
+	    m_echoQueue.clear();
+	}
+
+	synchronized(m_queueMutex)
+	{
+	    m_queue.clear();
+	}
+
+	synchronized(m_stringBuilder)
+	{
+	    m_stringBuilder.setLength(0);
 	}
     }
 
