@@ -32,7 +32,7 @@ import android.os.Build;
 public class About
 {
     private final static String s_about =
-	"Version 2017.07.12 Radiate " +
+	"Version 2017.07.16 Radiate " +
 	(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 	"\nAndroid " + Build.VERSION.RELEASE;
 
