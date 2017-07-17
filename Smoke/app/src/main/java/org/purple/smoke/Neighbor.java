@@ -66,8 +66,8 @@ public abstract class Neighbor
     protected String m_ipPort = "";
     protected String m_version = "";
     protected byte m_bytes[] = null;
+    protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
-    protected final StringBuilder m_stringBuilder = new StringBuilder();
     protected final static Object m_errorMutex = new Object();
     protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
     protected final static int READ_SOCKET_INTERVAL = 150; // 150 Milliseconds
@@ -170,29 +170,26 @@ public abstract class Neighbor
 		if(!connected())
 		    return;
 
-		synchronized(m_stringBuilder)
+		/*
+		** Detect our end-of-message delimiter.
+		*/
+
+		int indexOf = m_stringBuffer.indexOf(Messages.EOM);
+
+		while(indexOf >= 0)
 		{
-		    /*
-		    ** Detect our end-of-message delimiter.
-		    */
+		    String buffer = m_stringBuffer.
+			substring(0, indexOf + Messages.EOM.length());
 
-		    int indexOf = m_stringBuilder.indexOf(Messages.EOM);
+		    m_stringBuffer.delete(0, buffer.length());
+		    indexOf = m_stringBuffer.indexOf(Messages.EOM);
 
-		    while(indexOf >= 0)
-		    {
-			String buffer = m_stringBuilder.
-			    substring(0, indexOf + Messages.EOM.length());
-
-			m_stringBuilder.delete(0, buffer.length());
-			indexOf = m_stringBuilder.indexOf(Messages.EOM);
-
-			if(!Kernel.getInstance().ourMessage(buffer))
-			    echo(buffer);
-		    }
-
-		    if(m_stringBuilder.length() > MAXIMUM_BYTES)
-			m_stringBuilder.setLength(MAXIMUM_BYTES);
+		    if(!Kernel.getInstance().ourMessage(buffer))
+			echo(buffer);
 		}
+
+		if(m_stringBuffer.length() > MAXIMUM_BYTES)
+		    m_stringBuffer.setLength(MAXIMUM_BYTES);
 	    }
 	}, 0, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
 	m_scheduler.scheduleAtFixedRate(new Runnable()
@@ -421,10 +418,7 @@ public abstract class Neighbor
 	    m_queue.clear();
 	}
 
-	synchronized(m_stringBuilder)
-	{
-	    m_stringBuilder.setLength(0);
-	}
+	m_stringBuffer.setLength(0);
     }
 
     protected void echo(String message)

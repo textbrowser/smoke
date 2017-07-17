@@ -298,12 +298,8 @@ public class TcpNeighbor extends Neighbor
 
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
-
-		    synchronized(m_stringBuilder)
-		    {
-			m_stringBuilder.append
-			    (new String(m_bytes, 0, (int) bytesRead));
-		    }
+		    m_stringBuffer.append
+			(new String(m_bytes, 0, (int) bytesRead));
 		}
 		catch(java.net.SocketException exception)
 		{
