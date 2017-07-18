@@ -251,17 +251,15 @@ public class TcpNeighbor extends Neighbor
 
 		try
 		{
-		    long bytesRead = 0;
-
 		    if(m_socket == null ||
 		       m_socket.getInputStream() == null)
 			return;
-		    else if(m_socket.getSoTimeout() != 0)
+		    else if(m_socket.getSoTimeout() == HANDSHAKE_TIMEOUT)
 			/*
 			** Reset SO_TIMEOUT from HANDSHAKE_TIMEOUT.
 			*/
 
-			m_socket.setSoTimeout(0);
+			m_socket.setSoTimeout(SO_TIMEOUT);
 
 		    int i = 0;
 
@@ -272,6 +270,12 @@ public class TcpNeighbor extends Neighbor
 		    catch(java.net.SocketTimeoutException exception)
 		    {
 		    }
+		    catch(Exception exception)
+		    {
+			i = -1;
+		    }
+
+		    long bytesRead = 0;
 
 		    if(i < 0)
 			bytesRead = -1;
