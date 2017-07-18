@@ -156,21 +156,6 @@ public class UdpNeighbor extends Neighbor
 	    @Override
 	    public void run()
 	    {
-		try
-		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-		    else
-			Thread.sleep(5);
-		}
-		catch(InterruptedException exception)
-		{
-		    Thread.currentThread().interrupt();
-		}
-		catch(Exception exception)
-		{
-		}
-
 		if(!connected())
 		    return;
 

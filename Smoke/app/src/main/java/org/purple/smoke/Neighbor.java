@@ -152,21 +152,6 @@ public abstract class Neighbor
 
 	    public void run()
 	    {
-		try
-		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-		    else
-			Thread.sleep(5);
-		}
-		catch(InterruptedException exception)
-		{
-		    Thread.currentThread().interrupt();
-		}
-		catch(Exception exception)
-		{
-		}
-
 		if(!connected())
 		    return;
 
@@ -197,21 +182,6 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
-		try
-		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-		    else
-			Thread.sleep(5);
-		}
-		catch(InterruptedException exception)
-		{
-		    Thread.currentThread().interrupt();
-		}
-		catch(Exception exception)
-		{
-		}
-
 		String statusControl = m_databaseHelper.
 		    readNeighborStatusControl(m_cryptography, m_oid.get());
 
@@ -243,21 +213,6 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
-		try
-		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-		    else
-			Thread.sleep(5);
-		}
-		catch(InterruptedException exception)
-		{
-		    Thread.currentThread().interrupt();
-		}
-		catch(Exception exception)
-		{
-		}
-
 		if(!connected())
 		    return;
 
@@ -280,7 +235,7 @@ public abstract class Neighbor
 		** from the database.
 		*/
 
-		if(array != null)
+		if(array != null && array.length == 2)
 		    if(send(array[0]))
 			m_databaseHelper.deleteEntry
 			    (array[1], "outbound_queue");
