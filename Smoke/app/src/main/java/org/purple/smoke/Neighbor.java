@@ -51,7 +51,7 @@ public abstract class Neighbor
     private final static Object m_queueMutex = new Object();
     private final static int LANE_WIDTH = 100000;
     private final static int PARSING_INTERVAL = 100; // Milliseconds
-    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 100; // Milliseconds
+    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
     private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
     protected AtomicInteger m_oid = null;
@@ -70,7 +70,7 @@ public abstract class Neighbor
     protected final StringBuilder m_error = new StringBuilder();
     protected final static Object m_errorMutex = new Object();
     protected final static int MAXIMUM_BYTES = 32 * 1024 * 1024; // 32 MiB
-    protected final static int READ_SOCKET_INTERVAL = 150; // 150 Milliseconds
+    protected final static int READ_SOCKET_INTERVAL = 100; // 100 Milliseconds
     protected final static int SO_TIMEOUT = 0; // Never
     public final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
 

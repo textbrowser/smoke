@@ -1094,6 +1094,15 @@ public class Kernel
 	}
     }
 
+    public static boolean containsCongestion(String message)
+    {
+	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.
+						     hmac(message.getBytes())))
+	    return true;
+
+	return false;
+    }
+
     public static synchronized Kernel getInstance()
     {
 	if(s_instance == null)

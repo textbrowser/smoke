@@ -67,6 +67,9 @@ public class UdpMulticastNeighbor extends Neighbor
 	    if(m_socket == null)
 		return false;
 
+	    if(Kernel.containsCongestion(message))
+		return true;
+
 	    DatagramPacket datagramPacket = new DatagramPacket
 		(message.getBytes(),
 		 message.getBytes().length,

@@ -117,6 +117,9 @@ public class TcpNeighbor extends Neighbor
 	    if(m_socket == null || m_socket.getOutputStream() == null)
 		return false;
 
+	    if(Kernel.containsCongestion(message))
+		return true;
+
 	    Kernel.writeCongestionDigest(message);
 
 	    OutputStream outputStream = m_socket.getOutputStream();
@@ -444,6 +447,7 @@ public class TcpNeighbor extends Neighbor
 	    }
 
 	    m_socket.setEnabledProtocols(m_protocols);
+	    m_socket.setSoLinger(false, 0);
 	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
 	    m_socket.setTcpNoDelay(true);
 	    m_startTime.set(System.nanoTime());
