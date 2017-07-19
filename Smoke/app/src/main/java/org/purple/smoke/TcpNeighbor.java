@@ -159,11 +159,25 @@ public class TcpNeighbor extends Neighbor
 	try
 	{
 	    if(m_socket != null)
-	    {
 		m_socket.getInputStream().close();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
+	    if(m_socket != null)
 		m_socket.getOutputStream().close();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
+	    if(m_socket != null)
 		m_socket.close();
-	    }
 	}
 	catch(Exception exception)
 	{
