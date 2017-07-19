@@ -159,24 +159,6 @@ public class TcpNeighbor extends Neighbor
 	try
 	{
 	    if(m_socket != null)
-		m_socket.getInputStream().close();
-	}
-	catch(Exception exception)
-	{
-	}
-
-	try
-	{
-	    if(m_socket != null)
-		m_socket.getOutputStream().close();
-	}
-	catch(Exception exception)
-	{
-	}
-
-	try
-	{
-	    if(m_socket != null)
 		m_socket.close();
 	}
 	catch(Exception exception)
@@ -461,7 +443,6 @@ public class TcpNeighbor extends Neighbor
 	    }
 
 	    m_socket.setEnabledProtocols(m_protocols);
-	    m_socket.setSoLinger(false, 0);
 	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
 	    m_socket.setTcpNoDelay(true);
 	    m_startTime.set(System.nanoTime());
