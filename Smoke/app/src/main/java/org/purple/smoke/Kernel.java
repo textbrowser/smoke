@@ -29,6 +29,8 @@ package org.purple.smoke;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager.WifiLock;
+import android.net.wifi.WifiManager;
 import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 import android.util.Base64;
@@ -57,6 +59,7 @@ public class Kernel
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private WakeLock m_wakeLock = null;
+    private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
@@ -95,6 +98,23 @@ public class Kernel
 	m_chatTemporaryIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
 	m_messagesToSend = new ArrayList<> ();
+
+	try
+	{
+	    WifiManager wifiManager = (WifiManager)
+		Smoke.getApplication().getSystemService(Context.WIFI_SERVICE);
+
+	    if(wifiManager != null)
+		m_wifiLock = wifiManager.createWifiLock
+		    (WifiManager.WIFI_MODE_FULL_HIGH_PERF, "SmokeWifiLockTag");
+
+	    if(m_wifiLock != null)
+		m_wifiLock.acquire();
+	}
+	catch(Exception exception)
+	{
+	}
+
 	prepareSchedulers();
     }
 
@@ -1370,7 +1390,7 @@ public class Kernel
 		    (Context.POWER_SERVICE);
 
 		m_wakeLock = powerManager.newWakeLock
-		    (PowerManager.PARTIAL_WAKE_LOCK, "SmokeLockTag");
+		    (PowerManager.PARTIAL_WAKE_LOCK, "SmokeWakeLockTag");
 	    }
 	    catch(Exception exception)
 	    {
