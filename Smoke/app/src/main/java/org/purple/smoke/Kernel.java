@@ -110,7 +110,10 @@ public class Kernel
 		    (WifiManager.WIFI_MODE_FULL_HIGH_PERF, "SmokeWifiLockTag");
 
 	    if(m_wifiLock != null)
+	    {
+		m_wifiLock.setReferenceCounted(false);
 		m_wifiLock.acquire();
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -1390,8 +1393,12 @@ public class Kernel
 		    Smoke.getApplication().getApplicationContext().
 		    getSystemService(Context.POWER_SERVICE);
 
-		m_wakeLock = powerManager.newWakeLock
-		    (PowerManager.PARTIAL_WAKE_LOCK, "SmokeWakeLockTag");
+		if(powerManager != null)
+		    m_wakeLock = powerManager.newWakeLock
+			(PowerManager.PARTIAL_WAKE_LOCK, "SmokeWakeLockTag");
+
+		if(m_wakeLock != null)
+		    m_wakeLock.setReferenceCounted(false);
 	    }
 	    catch(Exception exception)
 	    {
