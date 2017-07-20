@@ -209,7 +209,6 @@ public abstract class Neighbor
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    private long m_accumulatedTime = System.nanoTime();
-	    private long m_delta = 10000000000L;
 
 	    @Override
 	    public void run()
@@ -217,10 +216,9 @@ public abstract class Neighbor
 		if(!connected())
 		    return;
 
-		if(System.nanoTime() - m_accumulatedTime >= m_delta)
+		if(System.nanoTime() - m_accumulatedTime >= 10000000000L)
 		{
 		    m_accumulatedTime = System.nanoTime();
-		    m_delta = 60000000000L;
 		    send(getCapabilities());
 		    send(getIdentities());
 		}
