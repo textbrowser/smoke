@@ -102,7 +102,8 @@ public class Kernel
 	try
 	{
 	    WifiManager wifiManager = (WifiManager)
-		Smoke.getApplication().getSystemService(Context.WIFI_SERVICE);
+		Smoke.getApplication().getApplicationContext().
+		getSystemService(Context.WIFI_SERVICE);
 
 	    if(wifiManager != null)
 		m_wifiLock = wifiManager.createWifiLock
@@ -1386,8 +1387,8 @@ public class Kernel
 	    try
 	    {
 		PowerManager powerManager = (PowerManager)
-		    Smoke.getApplication().getSystemService
-		    (Context.POWER_SERVICE);
+		    Smoke.getApplication().getApplicationContext().
+		    getSystemService(Context.POWER_SERVICE);
 
 		m_wakeLock = powerManager.newWakeLock
 		    (PowerManager.PARTIAL_WAKE_LOCK, "SmokeWakeLockTag");
