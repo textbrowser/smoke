@@ -1585,6 +1585,19 @@ public class Settings extends AppCompatActivity
 		    Kernel.getInstance().setWakeLock(isChecked);
 		    m_databaseHelper.writeSetting
 			(null, "always_awake", isChecked ? "true" : "false");
+
+		    TextView textView1 = (TextView) findViewById(R.id.about);
+		    textView1.setText(About.about());
+		    textView1.append("\n");
+		    textView1.append
+			("WakeLock Locked: " +
+			 Miscellaneous.niceBoolean(Kernel.getInstance().
+						   wakeLocked()));
+		    textView1.append("\n");
+		    textView1.append
+			("WiFiLock Locked: " +
+			 Miscellaneous.niceBoolean(Kernel.getInstance().
+						   wifiLocked()));
 		}
 	    });
 
@@ -2292,6 +2305,14 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(checkBox1.isChecked());
 	textView1 = (TextView) findViewById(R.id.about);
 	textView1.setText(About.about());
+	textView1.append("\n");
+	textView1.append
+	    ("WakeLock Locked: " +
+	     Miscellaneous.niceBoolean(Kernel.getInstance().wakeLocked()));
+	textView1.append("\n");
+	textView1.append
+	    ("WiFiLock Locked: " +
+	     Miscellaneous.niceBoolean(Kernel.getInstance().wifiLocked()));
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(false);
         textView1 = (TextView) findViewById(R.id.neighbors_port);

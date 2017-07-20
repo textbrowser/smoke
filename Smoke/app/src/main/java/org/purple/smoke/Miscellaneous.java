@@ -163,6 +163,14 @@ public class Miscellaneous
 	}
     }
 
+    public static String niceBoolean(boolean state)
+    {
+	if(state)
+	    return "True";
+	else
+	    return "False";
+    }
+
     public static String sipHashIdFromData(byte bytes[])
     {
 	SipHash sipHash = new SipHash();

@@ -1097,6 +1097,22 @@ public class Kernel
 	return false;
     }
 
+    public boolean wakeLocked()
+    {
+	if(m_wakeLock != null)
+	    return m_wakeLock.isHeld();
+
+	return false;
+    }
+
+    public boolean wifiLocked()
+    {
+	if(m_wifiLock != null)
+	    return m_wifiLock.isHeld();
+
+	return false;
+    }
+
     public byte[] messageRetrievalIdentity()
     {
 	m_chatMessageRetrievalIdentityMutex.writeLock().lock();
