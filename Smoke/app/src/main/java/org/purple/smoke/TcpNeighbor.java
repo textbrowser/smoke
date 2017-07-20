@@ -93,7 +93,8 @@ public class TcpNeighbor extends Neighbor
     {
 	try
 	{
-	    return m_socket != null && !m_socket.isClosed() &&
+	    return m_isValidCertificate.get() &&
+		m_socket != null && !m_socket.isClosed() &&
 		m_socket.getSession() != null &&
 		m_socket.getSession().isValid();
 	}
@@ -106,9 +107,6 @@ public class TcpNeighbor extends Neighbor
 
     protected boolean send(String message)
     {
-	if(!m_isValidCertificate.get())
-	    return false;
-
 	if(!connected())
 	    return false;
 
@@ -242,9 +240,6 @@ public class TcpNeighbor extends Neighbor
 	    @Override
 	    public void run()
 	    {
-		if(!m_isValidCertificate.get())
-		    return;
-
 		if(!connected())
 		    return;
 
