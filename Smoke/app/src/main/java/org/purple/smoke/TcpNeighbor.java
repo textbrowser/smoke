@@ -325,14 +325,14 @@ public class TcpNeighbor extends Neighbor
 			{
 			    chain[0].checkValidity();
 
-			    byte bytes[] = Database.getInstance().
+			    byte bytes[] = m_databaseHelper.
 				neighborRemoteCertificate
-				(Cryptography.getInstance(), m_oid.get());
+				(m_cryptography, m_oid.get());
 
 			    if(bytes == null || bytes.length == 0)
 			    {
-				Database.getInstance().neighborRecordCertificate
-				    (Cryptography.getInstance(),
+				m_databaseHelper.neighborRecordCertificate
+				    (m_cryptography,
 				     String.valueOf(m_oid.get()),
 				     chain[0].getEncoded());
 				m_isValidCertificate.set(true);
@@ -340,8 +340,8 @@ public class TcpNeighbor extends Neighbor
 			    else if(!Cryptography.memcmp(bytes,
 							 chain[0].getEncoded()))
 			    {
-				Database.getInstance().neighborControlStatus
-				    (Cryptography.getInstance(),
+				m_databaseHelper.neighborControlStatus
+				    (m_cryptography,
 				     "disconnect",
 				     String.valueOf(m_oid.get()));
 				m_isValidCertificate.set(false);
@@ -355,8 +355,8 @@ public class TcpNeighbor extends Neighbor
 			}
 			catch(Exception exception)
 			{
-			    Database.getInstance().neighborControlStatus
-				(Cryptography.getInstance(),
+			    m_databaseHelper.neighborControlStatus
+				(m_cryptography,
 				 "disconnect",
 				 String.valueOf(m_oid.get()));
 			    m_isValidCertificate.set(false);
