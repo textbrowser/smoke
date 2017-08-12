@@ -2170,6 +2170,29 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void cleanNeighborStatistics(Cryptography cryptography)
+    {
+	ArrayList<NeighborElement> arrayList = readNeighborOids(cryptography);
+
+	if(arrayList == null || arrayList.isEmpty())
+	    return;
+
+	for(NeighborElement neighborElement : arrayList)
+	    saveNeighborInformation(cryptography,
+				    "0",             // Bytes Read
+				    "0",             // Bytes Written
+				    "0",             // Queue Size
+				    "",              // Error
+				    "",              // IP Address
+				    "0",             // Port
+				    "",              // Session Cipher
+				    "disconnected",  // Status
+				    "0",             // Uptime
+				    String.valueOf(neighborElement.m_oid));
+
+	arrayList.clear();
+    }
+
     public void enqueueOutboundMessage(String message, int oid)
     {
 	prepareDb();

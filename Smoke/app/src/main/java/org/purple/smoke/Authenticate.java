@@ -322,6 +322,8 @@ public class Authenticate extends AppCompatActivity
 					 "data.");
 				else
 				{
+				    m_databaseHelper.cleanNeighborStatistics
+					(s_cryptography);
 				    Kernel.getInstance();
 				    State.getInstance().setAuthenticated(true);
 
