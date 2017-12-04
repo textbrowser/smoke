@@ -16,7 +16,8 @@
             android:noHistory="true" />
         <activity
             android:name=".Chat"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Fire"
             android:noHistory="true" />

@@ -340,6 +340,8 @@ public class Authenticate extends AppCompatActivity
 
 				    if(str.equals("Chat"))
 					showChatActivity();
+				    else if(str.equals("Fire"))
+					showFireActivity();
 				    else if(str.equals("Settings"))
 					showSettingsActivity();
 				}
