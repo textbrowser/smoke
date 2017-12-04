@@ -32,12 +32,38 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
+import android.view.View;
 
 public class Fire extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+
+    private void prepareListeners()
+    {
+	Button button1 = null;
+
+	button1 = (Button) findViewById(R.id.reset_fields);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		TextView textView1 = (TextView) findViewById(R.id.channel);
+
+		textView1.setText("");
+		textView1 = (TextView) findViewById(R.id.digest);
+		textView1.setText("");
+		textView1 = (TextView) findViewById(R.id.name);
+		textView1.requestFocus();
+		textView1.setText("");
+		textView1 = (TextView) findViewById(R.id.salt);
+		textView1.setText("");
+	    }
+	});
+    }
 
     private void showChatActivity()
     {
@@ -63,6 +89,7 @@ public class Fire extends AppCompatActivity
 	m_databaseHelper.cleanDanglingOutboundQueued();
 	m_databaseHelper.cleanDanglingParticipants();
         setContentView(R.layout.activity_fire);
+	prepareListeners();
     }
 
     @Override
