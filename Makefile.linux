@@ -62,7 +62,7 @@ list-files:
 
 load-apk: all
 	./adb.bash install -r \
-	./Smoke/app/build/outputs/apk/release/apk/smoke.apk
+	./Smoke/app/build/outputs/apk/debug/apk/smoke.apk
 	./adb.bash shell am start -S -W \
 	-n org.purple.smoke/org.purple.smoke.Settings \
 	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
