@@ -404,6 +404,14 @@ public class Authenticate extends AppCompatActivity
 	finish();
     }
 
+    private void showFireActivity()
+    {
+	Intent intent = new Intent(Authenticate.this, Fire.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showSettingsActivity()
     {
 	Intent intent = new Intent(Authenticate.this, Settings.class);
@@ -453,6 +461,12 @@ public class Authenticate extends AppCompatActivity
 	    showChatActivity();
             return true;
         }
+	else if(id == R.id.action_fire)
+        {
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+	    showFireActivity();
+	    return true;
+	}
         else if(id == R.id.action_settings)
 	{
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
@@ -476,6 +490,7 @@ public class Authenticate extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
+	menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
 	return true;
     }

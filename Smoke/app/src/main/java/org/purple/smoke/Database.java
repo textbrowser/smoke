@@ -2362,6 +2362,23 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	/*
+	** Create the fire table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS fire (" +
+	    "name TEXT NOT NULL, " +
+	    "stream TEXT NOT NULL, " +
+	    "stream_digest TEXT NOT NULL PRIMARY KEY)";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	/*
 	** Create the log table.
 	*/
 
@@ -2541,6 +2558,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    m_db.delete("congestion_control", null, null);
+	    m_db.delete("fire", null, null);
 	    m_db.delete("log", null, null);
 	    m_db.delete("neighbors", null, null);
 	    m_db.delete("outbound_queue", null, null);
@@ -2567,6 +2585,7 @@ public class Database extends SQLiteOpenHelper
 
 	String strings[] = new String[]
 	    {"DROP TABLE IF EXISTS congestion_control",
+	     "DROP TABLE IF EXISTS fire",
 	     "DROP TABLE IF EXISTS log",
 	     "DROP TABLE IF EXISTS neighbors",
 	     "DROP TABLE IF EXISTS outbound_queue",

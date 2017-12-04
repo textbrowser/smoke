@@ -1254,7 +1254,18 @@ public class Chat extends AppCompatActivity
     {
 	int id = item.getItemId();
 
-        if(id == R.id.action_settings)
+	if(id == R.id.action_fire)
+	{
+	    saveState();
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+
+	    Intent intent = new Intent(Chat.this, Fire.class);
+
+            startActivity(intent);
+	    finish();
+	    return true;
+	}
+	else if(id == R.id.action_settings)
 	{
 	    saveState();
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");

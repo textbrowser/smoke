@@ -5,6 +5,9 @@
     <item
         android:id="@+id/action_chat"
         android:orderInCategory="101"
-        android:title="@string/chat"
-        app:showAsAction="never" />
+        android:title="@string/chat" />
+    <item
+        android:id="@+id/action_fire"
+        android:orderInCategory="102"
+        android:title="@string/fire" />
 </menu>

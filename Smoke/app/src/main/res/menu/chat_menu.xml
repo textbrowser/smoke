@@ -5,6 +5,9 @@
     <item android:title="@string/authenticate"
         android:id="@+id/action_authenticate" />
     <item
+        android:id="@+id/action_fire"
+        android:title="@string/fire" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

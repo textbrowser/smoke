@@ -61,16 +61,19 @@ list-files:
 	./adb.bash shell run-as org.purple.smoke ls -l /data/data/org.purple.smoke/databases
 
 load-apk: all
-	./adb.bash install -r ./Smoke/app/build/apk/smoke.apk
+	./adb.bash install -r \
+	./Smoke/app/build/outputs/apk/release/apk/smoke.apk
 	./adb.bash shell am start -S -W \
 	-n org.purple.smoke/org.purple.smoke.Settings \
 	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 
 load-apk-release: release
 	$(JARSIGNER) -verbose -keystore ~/Android-Keys/smoke-release.keystore \
-	./Smoke/app/build/apk/smoke.apk smoke-release
-	$(JARSIGNER) -verify ./Smoke/app/build/apk/smoke.apk
-	./adb.bash install -r ./Smoke/app/build/apk/smoke.apk
+	./Smoke/app/build/outputs/apk/release/apk/smoke.apk smoke-release
+	$(JARSIGNER) -verify \
+	./Smoke/app/build/outputs/apk/release/apk/smoke.apk
+	./adb.bash install -r \
+	./Smoke/app/build/outputs/apk/release/apk/smoke.apk
 	./adb.bash shell am start -S -W \
 	-n org.purple.smoke/org.purple.smoke.Settings \
 	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER

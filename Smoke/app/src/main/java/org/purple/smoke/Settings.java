@@ -2078,6 +2078,14 @@ public class Settings extends AppCompatActivity
 	finish();
     }
 
+    private void showFireActivity()
+    {
+	Intent intent = new Intent(Settings.this, Fire.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showWidgets()
     {
 	for(int i = 0;
@@ -2511,6 +2519,12 @@ public class Settings extends AppCompatActivity
 	    showChatActivity();
             return true;
         }
+	else if(id == R.id.action_fire)
+	{
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+	    showFireActivity();
+            return true;
+	}
 
         return super.onOptionsItemSelected(menuItem);
     }
@@ -2529,6 +2543,8 @@ public class Settings extends AppCompatActivity
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	menu.findItem(R.id.action_chat).setEnabled
+	    (State.getInstance().isAuthenticated());
+	menu.findItem(R.id.action_fire).setEnabled
 	    (State.getInstance().isAuthenticated());
 	return true;
     }

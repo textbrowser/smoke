@@ -157,7 +157,7 @@ Future Items
 5.     SMP.
 6.     Allow log clearing. New Log activity?
 7.     Resolve DNS through a proxy if a proxy is defined.
-8.     SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
+8.     Allow exporting of smoke.db to other devices.
 9.     Bluetooth (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
 10.    Automatic SipHash hyphens.
 11.    Names or PINs alongside SipHashes. The extra bits will increase
@@ -166,7 +166,6 @@ Future Items
 13.    Introduce real-time typing status.
 14.    Disable Chat:Send if there is at least one selected participant
        without a session.
-15.    Allow exporting of smoke.db to other devices.
 
 Ignored / Impossible Items
 
@@ -188,6 +187,7 @@ Ignored / Impossible Items
 14.    Source-level string translations.
 15.    Socket channels. A lot of work.
 16.    Optional SipHash identities in received messages. Unique people.
+17.    SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
 
 Remaining Items
 
