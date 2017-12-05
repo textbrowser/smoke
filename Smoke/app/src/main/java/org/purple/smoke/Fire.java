@@ -46,6 +46,25 @@ public class Fire extends AppCompatActivity
     {
 	Button button1 = null;
 
+	button1 = (Button) findViewById(R.id.add_channel);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		TextView textView1 = (TextView) findViewById(R.id.name);
+
+		if(textView1.getText().toString().trim().isEmpty())
+		{
+		    Miscellaneous.showErrorDialog
+			(Fire.this, "Please complete the Name field.");
+		    textView1.requestFocus();
+		}
+		else
+		{
+		}
+	    }
+	});
+
 	button1 = (Button) findViewById(R.id.reset_fields);
         button1.setOnClickListener(new View.OnClickListener()
 	{

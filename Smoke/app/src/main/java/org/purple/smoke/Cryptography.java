@@ -545,6 +545,34 @@ public class Cryptography
 	return bytes;
     }
 
+    public byte[] generateFireKey(String channel,
+				  String salt)
+    {
+	byte c[] = null;
+
+	try
+	{
+	    c = channel.getBytes("ISO-8859-1"); // Latin-1.
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
+	byte s[] = null;
+
+	try
+	{
+	    channel.getBytes("ISO-8859-1"); // Latin-1.
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
+	return null;
+    }
+
     public byte[] hmac(byte data[])
     {
 	if(data == null || data.length < 0)
