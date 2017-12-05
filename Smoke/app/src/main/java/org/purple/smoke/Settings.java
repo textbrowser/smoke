@@ -2612,13 +2612,15 @@ public class Settings extends AppCompatActivity
 	}
 
 	/*
-	** Resume the Chat activity if necessary.
+	** Resume the last activity, if necessary.
 	*/
 
 	String str = m_databaseHelper.readSetting(null, "lastActivity");
 
 	if(str.equals("Chat"))
 	    showChatActivity();
+	else if(str.equals("Fire"))
+	    showFireActivity();
     }
 
     @Override
