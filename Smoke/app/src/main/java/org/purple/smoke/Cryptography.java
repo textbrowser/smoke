@@ -104,6 +104,7 @@ public class Cryptography
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
+    private final static int FIRE_STREAM_CREATION_ITERATION_COUNT = 10000;
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
@@ -548,6 +549,17 @@ public class Cryptography
     public byte[] generateFireKey(String channel,
 				  String salt)
     {
+	byte aes256[] = null;
+
+	try
+	{
+	    aes256 = "aes256".getBytes("ISO-8859-1"); // Latin-1.
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
 	byte c[] = null;
 
 	try
@@ -563,14 +575,30 @@ public class Cryptography
 
 	try
 	{
-	    channel.getBytes("ISO-8859-1"); // Latin-1.
+	    s = salt.getBytes("ISO-8859-1"); // Latin-1.
 	}
 	catch(Exception exception)
 	{
 	    return null;
 	}
 
-	return null;
+	byte key[] = null;
+
+	try
+	{
+	    key = pbkdf2
+		(s,
+		 new String(new String(Miscellaneous.joinByteArrays(c, aes256)).
+			    getBytes("UTF-8")).toCharArray(),
+		 FIRE_STREAM_CREATION_ITERATION_COUNT,
+		 2304);
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
+	return key;
     }
 
     public byte[] hmac(byte data[])

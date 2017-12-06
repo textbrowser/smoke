@@ -27,14 +27,16 @@
 
 package org.purple.smoke;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.view.View;
 
 public class Fire extends AppCompatActivity
 {
@@ -61,6 +63,61 @@ public class Fire extends AppCompatActivity
 		}
 		else
 		{
+		    textView1 = (TextView) findViewById(R.id.channel);
+
+		    final String channel = textView1.getText().toString().
+			trim();
+
+		    textView1 = (TextView) findViewById(R.id.salt);
+
+		    final String salt = textView1.getText().toString().trim();
+		    final ProgressDialog dialog = new ProgressDialog
+			(Fire.this);
+
+		    dialog.setCancelable(false);
+		    dialog.setIndeterminate(true);
+		    dialog.setMessage
+			("Generating key material. Please be patient " +
+			 "and do not rotate the device while the process " +
+			 "executes.");
+		    dialog.show();
+
+		    class SingleShot implements Runnable
+		    {
+			private String m_error = "";
+			private byte m_bytes[] = null;
+
+			SingleShot()
+			{
+			}
+
+			@Override
+			public void run()
+			{
+			    m_bytes = s_cryptography.generateFireKey
+				(channel, salt);
+
+			    Fire.this.runOnUiThread(new Runnable()
+			    {
+				@Override
+				public void run()
+				{
+				    dialog.dismiss();
+
+				    if(m_bytes != null)
+				    {
+					TextView textView1 =
+					    (TextView) findViewById
+					    (R.id.digest);
+				    }
+				}
+			    });
+			}
+		    }
+
+		    Thread thread = new Thread(new SingleShot());
+
+		    thread.start();
 		}
 	    }
 	});
