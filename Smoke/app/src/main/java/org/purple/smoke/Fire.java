@@ -36,6 +36,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 public class Fire extends AppCompatActivity
@@ -139,6 +141,44 @@ public class Fire extends AppCompatActivity
 		textView1.setText("");
 	    }
 	});
+
+	CheckBox checkBox1 = (CheckBox) findViewById(R.id.show_details);
+
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    Button button1 = (Button) findViewById(R.id.add_channel);
+		    Button button2 = (Button) findViewById(R.id.reset_fields);
+		    View linearLayout1 = (View) findViewById
+			(R.id.channel_layout);
+		    View linearLayout2 = (View) findViewById
+			(R.id.digest_layout);
+		    View linearLayout3 = (View) findViewById
+			(R.id.name_layout);
+		    View linearLayout4 = (View) findViewById
+			(R.id.salt_layout);
+
+		    button1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+		    button2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+		    linearLayout1.setVisibility
+			(isChecked ? View.VISIBLE : View.GONE);
+		    linearLayout2.setVisibility
+			(isChecked ? View.VISIBLE : View.GONE);
+		    linearLayout3.setVisibility
+			(isChecked ? View.VISIBLE : View.GONE);
+		    linearLayout4.setVisibility
+			(isChecked ? View.VISIBLE : View.GONE);
+
+		    TextView textView1 = (TextView) findViewById
+			(R.id.name);
+
+		    textView1.requestFocus();
+		}
+	    });
     }
 
     private void showChatActivity()

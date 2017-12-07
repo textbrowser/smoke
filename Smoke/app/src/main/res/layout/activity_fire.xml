@@ -41,20 +41,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/sectiongradient"
-                    android:paddingEnd="5dp"
-                    android:paddingStart="5dp"
-                    android:text="@string/fire"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:textStyle="normal|bold" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/sectiongradient"
+                        android:paddingEnd="5dp"
+                        android:paddingStart="5dp"
+                        android:text="@string/fire"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="normal|bold" />
+
+                    <CheckBox
+                        android:id="@+id/show_details"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:checked="true" />
+                </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/name_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -78,6 +92,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/channel_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -101,6 +116,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/digest_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -125,6 +141,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/salt_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
