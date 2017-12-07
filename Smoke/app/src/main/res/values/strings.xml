@@ -52,4 +52,5 @@
     <string name="share_keys">Share Keys</string>
     <string name="signature">Signature</string>
     <string name="siphashid">SipHash ID</string>
+    <string name="join">Join</string>
 </resources>

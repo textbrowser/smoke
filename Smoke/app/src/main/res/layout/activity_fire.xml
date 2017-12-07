@@ -216,6 +216,13 @@
                         android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:text="@string/delete" />
+
+                    <Button
+                        android:id="@+id/join"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/join" />
                 </LinearLayout>
 
             </LinearLayout>
