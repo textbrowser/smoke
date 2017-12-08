@@ -111,6 +111,15 @@ public class Fire extends AppCompatActivity
 					TextView textView1 =
 					    (TextView) findViewById
 					    (R.id.digest);
+					TextView textView2 =
+					    (TextView) findViewById
+					    (R.id.name);
+
+					m_databaseHelper.saveFireChannel
+					    (s_cryptography,
+					     textView1.getText().toString(),
+					     textView2.getText().toString(),
+					     m_bytes);
 				    }
 				}
 			    });

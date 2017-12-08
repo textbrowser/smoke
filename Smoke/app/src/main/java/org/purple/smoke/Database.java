@@ -2605,6 +2605,48 @@ public class Database extends SQLiteOpenHelper
 	onCreate(m_db);
     }
 
+    public void saveFireChannel(Cryptography cryptography,
+				String digest,
+				String name,
+				byte stream[])
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null || stream == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(stream, digest.getBytes("ISO-8859-1"));
+
+	    values.put
+		("name",
+		 Base64.encodeToString(cryptography.etm(name.getBytes("UTF-8")),
+				       Base64.DEFAULT));
+	    values.put
+		("stream",
+		 Base64.encodeToString(cryptography.etm(bytes),
+				       Base64.DEFAULT));
+	    values.put
+		("stream_digest",
+		 Base64.encodeToString(cryptography.hmac(bytes),
+				       Base64.DEFAULT));
+	    m_db.insert("fire", null, values);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void saveNeighborInformation(Cryptography cryptography,
 					String bytesRead,
 					String bytesWritten,
