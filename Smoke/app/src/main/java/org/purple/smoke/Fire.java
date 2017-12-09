@@ -154,6 +154,7 @@ public class Fire extends AppCompatActivity
 					     textView1.getText().toString(),
 					     textView2.getText().toString(),
 					     m_bytes);
+					populateFires();
 				    }
 				}
 			    });
