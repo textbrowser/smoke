@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,10 +36,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -75,6 +78,17 @@ public class Fire extends AppCompatActivity
 	     listener,
 	     "Are you sure that you wish to " +
 	     "delete the Fire channel " + name + "?");
+    }
+
+    private void joinFire(String name, final Integer oid)
+    {
+	FireChannel fireChannel = new FireChannel(Fire.this);
+	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
+
+	viewGroup.addView
+	    (fireChannel.getView(),
+	     new LayoutParams(LayoutParams.WRAP_CONTENT, 250));
+	viewGroup.requestLayout();
     }
 
     private void populateFires()
@@ -207,6 +221,21 @@ public class Fire extends AppCompatActivity
 		if(spinner.getAdapter() != null &&
 		   spinner.getAdapter().getCount() > 0)
 		    deleteFire
+			(spinner.getSelectedItem().toString(),
+			 m_fireHash.get(spinner.getSelectedItem().toString()));
+	    }
+	});
+
+	button1 = (Button) findViewById(R.id.join);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		Spinner spinner = (Spinner) findViewById(R.id.fires);
+
+		if(spinner.getAdapter() != null &&
+		   spinner.getAdapter().getCount() > 0)
+		    joinFire
 			(spinner.getSelectedItem().toString(),
 			 m_fireHash.get(spinner.getSelectedItem().toString()));
 	    }
