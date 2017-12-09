@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +50,32 @@ public class Fire extends AppCompatActivity
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+
+    private void deleteFire(String name, final Integer oid)
+    {
+	/*
+	** Prepare a response.
+	*/
+
+	final DialogInterface.OnCancelListener listener =
+	    new DialogInterface.OnCancelListener()
+	    {
+		public void onCancel(DialogInterface dialog)
+		{
+		    if(State.getInstance().
+		       getString("dialog_accepted").equals("true"))
+			if(m_databaseHelper.
+			   deleteEntry(String.valueOf(oid), "fire"))
+			    populateFires();
+	        }
+	    };
+
+	Miscellaneous.showPromptDialog
+	    (Fire.this,
+	     listener,
+	     "Are you sure that you wish to " +
+	     "delete the Fire channel " + name + "?");
+    }
 
     private void populateFires()
     {
@@ -179,13 +206,9 @@ public class Fire extends AppCompatActivity
 
 		if(spinner.getAdapter() != null &&
 		   spinner.getAdapter().getCount() > 0)
-		    if(m_databaseHelper.
-		       deleteEntry(String.valueOf(m_fireHash.
-						  get(spinner.
-						      getSelectedItem().
-						      toString())),
-				   "fire"))
-			populateFires();
+		    deleteFire
+			(spinner.getSelectedItem().toString(),
+			 m_fireHash.get(spinner.getSelectedItem().toString()));
 	    }
 	});
 
