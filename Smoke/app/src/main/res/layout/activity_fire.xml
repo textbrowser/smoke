@@ -204,7 +204,7 @@
                     android:orientation="horizontal">
 
                     <Spinner
-                        android:id="@+id/spinner"
+                        android:id="@+id/fires"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />

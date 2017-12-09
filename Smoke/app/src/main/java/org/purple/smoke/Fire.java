@@ -35,16 +35,50 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import java.util.ArrayList;
 
 public class Fire extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+
+    private void populateFires()
+    {
+	ArrayList<FireElement> arrayList =
+	    m_databaseHelper.readFires(s_cryptography);
+	Spinner spinner = (Spinner) findViewById(R.id.fires);
+
+	spinner.setAdapter(null);
+
+	if(arrayList == null || arrayList.size() == 0)
+	    return;
+
+	ArrayList<String> array = new ArrayList<String> ();
+
+	for(FireElement fireElement : arrayList)
+	{
+	    if(fireElement == null)
+		continue;
+
+	    array.add(fireElement.m_name);
+	}
+
+	ArrayAdapter arrayAdapter = null;
+
+	arrayAdapter = new ArrayAdapter<String>
+	    (Fire.this,
+	     android.R.layout.simple_spinner_item,
+	     array);
+	spinner.setAdapter(arrayAdapter);
+	arrayList.clear();
+    }
 
     private void prepareListeners()
     {
@@ -214,6 +248,10 @@ public class Fire extends AppCompatActivity
 	m_databaseHelper.cleanDanglingOutboundQueued();
 	m_databaseHelper.cleanDanglingParticipants();
         setContentView(R.layout.activity_fire);
+
+	if(State.getInstance().isAuthenticated())
+	    populateFires();
+
 	prepareListeners();
     }
 

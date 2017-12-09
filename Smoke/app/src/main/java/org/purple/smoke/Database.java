@@ -48,6 +48,15 @@ import java.util.regex.Matcher;
 public class Database extends SQLiteOpenHelper
 {
     private SQLiteDatabase m_db = null;
+    private final static Comparator<FireElement>
+	s_readFiresComparator = new Comparator<FireElement> ()
+	{
+	    @Override
+	    public int compare(FireElement e1, FireElement e2)
+	    {
+		return e1.m_name.compareTo(e2.m_name);
+	    }
+	};
     private final static Comparator<NeighborElement>
 	s_readNeighborsComparator = new Comparator<NeighborElement> ()
 	{
@@ -142,6 +151,93 @@ public class Database extends SQLiteOpenHelper
 	    catch(Exception exception)
 	    {
 	    }
+    }
+
+    public ArrayList<FireElement> readFires(Cryptography cryptography)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	ArrayList<FireElement> arrayList = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery("SELECT name, stream, OID FROM fire", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    FireElement fireElement = new FireElement();
+		    boolean error = false;
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    fireElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null && i != 0)
+			{
+			    error = true;
+
+			    StringBuilder stringBuilder = new StringBuilder();
+
+			    stringBuilder.append("Database::readFires(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append(cursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    fireElement.m_name = new String(bytes, "UTF-8");
+			    break;
+			case 1:
+			    fireElement.m_stream =
+				Miscellaneous.deepCopy(bytes);
+			    break;
+			}
+		    }
+
+		    if(!error)
+			arrayList.add(fireElement);
+
+		    cursor.moveToNext();
+		}
+
+		if(arrayList.size() > 1)
+		    Collections.sort(arrayList, s_readFiresComparator);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
     }
 
     public ArrayList<NeighborElement> readNeighborOids
