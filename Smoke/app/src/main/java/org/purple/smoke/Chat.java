@@ -676,8 +676,6 @@ public class Chat extends AppCompatActivity
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
-	    long current = System.currentTimeMillis();
-
 	    if(participantElement.m_keyStream == null ||
 	       participantElement.m_keyStream.length != 96)
 		checkBox.setCompoundDrawablesWithIntrinsicBounds
@@ -770,12 +768,10 @@ public class Chat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
 	m_greenWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_green_written") == '0' ?
-	     false : true);
+	     getChar("chat_network_status_green_written") != '0');
 	m_redWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_red_written") == '0' ?
-	     false : true);
+	     getChar("chat_network_status_red_written") != '0');
 	m_connectionStatusScheduler = Executors.
 	    newSingleThreadScheduledExecutor();
 	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
@@ -1316,12 +1312,10 @@ public class Chat extends AppCompatActivity
 	super.onResume();
 	m_greenWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_green_written") == '0' ?
-	     false : true);
+	     getChar("chat_network_status_green_written") != '0');
 	m_redWritten.set
 	    (State.getInstance().
-	     getChar("chat_network_status_red_written") == '0' ?
-	     false : true);
+	     getChar("chat_network_status_red_written") != '0');
 
 	if(!m_receiverRegistered)
 	{

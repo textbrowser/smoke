@@ -1720,7 +1720,7 @@ public class Database extends SQLiteOpenHelper
 	    m_db.endTransaction();
 	}
 
-	return false;
+	return false; // Not an error.
     }
 
     public boolean writeNeighbor(Cryptography cryptography,

@@ -31,7 +31,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,10 +41,12 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class Fire extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
 
@@ -55,12 +56,13 @@ public class Fire extends AppCompatActivity
 	    m_databaseHelper.readFires(s_cryptography);
 	Spinner spinner = (Spinner) findViewById(R.id.fires);
 
+	m_fireHash.clear();
 	spinner.setAdapter(null);
 
 	if(arrayList == null || arrayList.size() == 0)
 	    return;
 
-	ArrayList<String> array = new ArrayList<String> ();
+	ArrayList<String> array = new ArrayList<>();
 
 	for(FireElement fireElement : arrayList)
 	{
@@ -68,14 +70,15 @@ public class Fire extends AppCompatActivity
 		continue;
 
 	    array.add(fireElement.m_name);
+	    m_fireHash.put(fireElement.m_name, fireElement.m_oid);
 	}
 
 	ArrayAdapter arrayAdapter = null;
 
-	arrayAdapter = new ArrayAdapter<String>
-	    (Fire.this,
-	     android.R.layout.simple_spinner_item,
-	     array);
+	arrayAdapter = new ArrayAdapter<>
+			(Fire.this,
+					android.R.layout.simple_spinner_item,
+					array);
 	spinner.setAdapter(arrayAdapter);
 	arrayList.clear();
     }
@@ -120,7 +123,6 @@ public class Fire extends AppCompatActivity
 
 		    class SingleShot implements Runnable
 		    {
-			private String m_error = "";
 			private byte m_bytes[] = null;
 
 			SingleShot()
@@ -168,6 +170,25 @@ public class Fire extends AppCompatActivity
 	    }
 	});
 
+	button1 = (Button) findViewById(R.id.delete);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		Spinner spinner = (Spinner) findViewById(R.id.fires);
+
+		if(spinner.getAdapter() != null &&
+		   spinner.getAdapter().getCount() > 0)
+		    if(m_databaseHelper.
+		       deleteEntry(String.valueOf(m_fireHash.
+						  get(spinner.
+						      getSelectedItem().
+						      toString())),
+				   "fire"))
+			populateFires();
+	    }
+	});
+
 	button1 = (Button) findViewById(R.id.reset_fields);
         button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -197,13 +218,13 @@ public class Fire extends AppCompatActivity
 		{
 		    Button button1 = (Button) findViewById(R.id.add_channel);
 		    Button button2 = (Button) findViewById(R.id.reset_fields);
-		    View linearLayout1 = (View) findViewById
+		    View linearLayout1 = findViewById
 			(R.id.channel_layout);
-		    View linearLayout2 = (View) findViewById
+		    View linearLayout2 = findViewById
 			(R.id.digest_layout);
-		    View linearLayout3 = (View) findViewById
+		    View linearLayout3 = findViewById
 			(R.id.name_layout);
-		    View linearLayout4 = (View) findViewById
+		    View linearLayout4 = findViewById
 			(R.id.salt_layout);
 
 		    button1.setVisibility(isChecked ? View.VISIBLE : View.GONE);

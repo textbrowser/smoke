@@ -781,7 +781,6 @@ public class Kernel
 		String message = null;
 		boolean updateTimeStamp = true;
 		byte publicKeySignature[] = null;
-		byte recipientDigest[] = null;
 		int ii = 0;
 		long sequence = 0;
 		long timestamp = 0;
@@ -1136,11 +1135,8 @@ public class Kernel
 
     public static boolean containsCongestion(String message)
     {
-	if(s_databaseHelper.containsCongestionDigest(s_congestionSipHash.
-						     hmac(message.getBytes())))
-	    return true;
-
-	return false;
+        return s_databaseHelper.containsCongestionDigest
+	    (s_congestionSipHash.hmac(message.getBytes()));
     }
 
     public static synchronized Kernel getInstance()
