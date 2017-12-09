@@ -93,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_message"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/clear_chat_messages"
         android:layout_toEndOf="@+id/chat_scrollview"
         android:fadeScrollbars="false"
         android:scrollbars="vertical">
