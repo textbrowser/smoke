@@ -216,32 +216,14 @@ public class Fire extends AppCompatActivity
 		public void onCheckedChanged
 		    (CompoundButton buttonView, boolean isChecked)
 		{
-		    Button button1 = (Button) findViewById(R.id.add_channel);
-		    Button button2 = (Button) findViewById(R.id.reset_fields);
-		    View linearLayout1 = findViewById
-			(R.id.channel_layout);
-		    View linearLayout2 = findViewById
-			(R.id.digest_layout);
-		    View linearLayout3 = findViewById
-			(R.id.name_layout);
-		    View linearLayout4 = findViewById
-			(R.id.salt_layout);
+		    showFireDetails(isChecked);
 
-		    button1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-		    button2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-		    linearLayout1.setVisibility
-			(isChecked ? View.VISIBLE : View.GONE);
-		    linearLayout2.setVisibility
-			(isChecked ? View.VISIBLE : View.GONE);
-		    linearLayout3.setVisibility
-			(isChecked ? View.VISIBLE : View.GONE);
-		    linearLayout4.setVisibility
-			(isChecked ? View.VISIBLE : View.GONE);
-
-		    TextView textView1 = (TextView) findViewById
-			(R.id.name);
-
-		    textView1.requestFocus();
+		    if(isChecked)
+			m_databaseHelper.writeSetting
+			    (null, "fire_show_details", "true");
+		    else
+			m_databaseHelper.writeSetting
+			    (null, "fire_show_details", "false");
 		}
 	    });
     }
@@ -252,6 +234,27 @@ public class Fire extends AppCompatActivity
 
 	startActivity(intent);
 	finish();
+    }
+
+    private void showFireDetails(boolean isChecked)
+    {
+	Button button1 = (Button) findViewById(R.id.add_channel);
+	Button button2 = (Button) findViewById(R.id.reset_fields);
+	View linearLayout1 = findViewById(R.id.channel_layout);
+	View linearLayout2 = findViewById(R.id.digest_layout);
+	View linearLayout3 = findViewById(R.id.name_layout);
+	View linearLayout4 = findViewById(R.id.salt_layout);
+
+	button1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	button2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	linearLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	linearLayout2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	linearLayout3.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	linearLayout4.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+
+	TextView textView1 = (TextView) findViewById(R.id.name);
+
+	textView1.requestFocus();
     }
 
     private void showSettingsActivity()
@@ -274,7 +277,15 @@ public class Fire extends AppCompatActivity
 	if(State.getInstance().isAuthenticated())
 	    populateFires();
 
+	CheckBox checkBox1 = (CheckBox) findViewById(R.id.show_details);
+
+	checkBox1.setChecked
+	    (m_databaseHelper.readSetting(null, "fire_show_details").
+	     equals("true"));
 	prepareListeners();
+	showFireDetails
+	    (m_databaseHelper.readSetting(null, "fire_show_details").
+	     equals("true"));
     }
 
     @Override
