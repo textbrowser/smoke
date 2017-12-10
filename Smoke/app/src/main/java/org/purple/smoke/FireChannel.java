@@ -32,6 +32,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 public class FireChannel extends View
 {
@@ -76,7 +77,13 @@ public class FireChannel extends View
     public View getView()
     {
 	if(m_view == null)
+	{
 	    m_view = m_inflater.inflate(R.layout.fire_channel, null);
+
+	    TextView textView1 = (TextView) m_view.findViewById(R.id.fire_name);
+
+	    textView1.setText(m_name);
+	}
 
 	return m_view;
     }
