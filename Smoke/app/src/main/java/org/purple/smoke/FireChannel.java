@@ -74,7 +74,12 @@ public class FireChannel extends View
 	    (Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public View getView()
+    public String name()
+    {
+	return m_name;
+    }
+
+    public View view()
     {
 	if(m_view == null)
 	{

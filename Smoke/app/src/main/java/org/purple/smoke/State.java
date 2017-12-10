@@ -34,6 +34,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class State
 {
     private ArrayList<MessageElement> m_chatMessages = null;
+    private ArrayList<FireChannel> m_fireChannels = null;
     private Bundle m_bundle = null;
     private final ReentrantReadWriteLock m_bundleMutex =
 	new ReentrantReadWriteLock();
@@ -99,6 +100,21 @@ public class State
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+    }
+
+    public boolean containsFire(String name)
+    {
+	if(m_fireChannels == null)
+	    return false;
+
+	for(FireChannel fireChannel : m_fireChannels)
+	{
+	    if(fireChannel != null)
+		if(fireChannel.name().equals(name))
+		    return true;
+	}
+
+	return false;
     }
 
     public boolean isAuthenticated()
@@ -199,6 +215,17 @@ public class State
 	messageElement.m_sequence = sequence;
 	messageElement.m_timestamp = timestamp;
 	m_chatMessages.add(messageElement);
+    }
+
+    public void addFire(FireChannel fireChannel)
+    {
+	if(fireChannel == null)
+	    return;
+
+	if(m_fireChannels == null)
+	    m_fireChannels = new ArrayList<> ();
+
+	m_fireChannels.add(fireChannel);
     }
 
     public void incrementChatSequence(String sipHashId)

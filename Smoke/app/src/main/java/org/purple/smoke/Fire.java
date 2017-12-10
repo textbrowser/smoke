@@ -50,8 +50,6 @@ import java.util.Hashtable;
 public class Fire extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
-    private final Hashtable<String, Integer> m_burningFires =
-	new Hashtable<> ();
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -85,17 +83,18 @@ public class Fire extends AppCompatActivity
 
     private void joinFire(String name, final Integer oid)
     {
-	if(m_burningFires.containsKey(name))
+	if(State.getInstance().containsFire(name))
 	    return;
-	else
-	    m_burningFires.put(name, oid);
 
 	FireChannel fireChannel = new FireChannel
 	    (name, oid.intValue(), Fire.this);
+
+	State.getInstance().addFire(fireChannel);
+
 	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
 
 	viewGroup.addView
-	    (fireChannel.getView(),
+	    (fireChannel.view(),
 	     new LayoutParams(LayoutParams.WRAP_CONTENT, FIRE_CHANNEL_HEIGHT));
 	viewGroup.requestLayout();
     }
@@ -127,8 +126,8 @@ public class Fire extends AppCompatActivity
 
 	arrayAdapter = new ArrayAdapter<>
 			(Fire.this,
-					android.R.layout.simple_spinner_item,
-					array);
+			 android.R.layout.simple_spinner_item,
+			 array);
 	spinner.setAdapter(arrayAdapter);
 	arrayList.clear();
     }
