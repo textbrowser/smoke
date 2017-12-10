@@ -37,7 +37,9 @@ public class FireChannel extends View
 {
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
+    private String m_name = "";
     private View m_view = null;
+    private int m_oid = -1;
 
     @Override
     protected void onDraw(Canvas canvas)
@@ -45,12 +47,14 @@ public class FireChannel extends View
 	super.onDraw(canvas);
     }
 
-    public FireChannel(Context context)
+    public FireChannel(String name, int oid, Context context)
     {
 	super(context);
 	m_context = context;
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
+	m_name = name;
+	m_oid = oid;
     }
 
     public FireChannel(Context context, AttributeSet attrs)

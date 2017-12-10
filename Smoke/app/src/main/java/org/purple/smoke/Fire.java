@@ -50,6 +50,8 @@ import java.util.Hashtable;
 public class Fire extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private final Hashtable<String, Integer> m_burningFires =
+	new Hashtable<> ();
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -69,7 +71,7 @@ public class Fire extends AppCompatActivity
 		    if(State.getInstance().
 		       getString("dialog_accepted").equals("true"))
 			if(m_databaseHelper.
-			   deleteEntry(String.valueOf(oid), "fire"))
+			   deleteEntry(String.valueOf(oid.intValue()), "fire"))
 			    populateFires();
 	        }
 	    };
@@ -83,7 +85,13 @@ public class Fire extends AppCompatActivity
 
     private void joinFire(String name, final Integer oid)
     {
-	FireChannel fireChannel = new FireChannel(Fire.this);
+	if(m_burningFires.containsKey(name))
+	    return;
+	else
+	    m_burningFires.put(name, oid);
+
+	FireChannel fireChannel = new FireChannel
+	    (name, oid.intValue(), Fire.this);
 	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
 
 	viewGroup.addView
