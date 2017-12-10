@@ -346,6 +346,30 @@ public class Fire extends AppCompatActivity
 	showFireDetails
 	    (m_databaseHelper.readSetting(null, "fire_show_details").
 	     equals("true"));
+
+	ArrayList<FireChannel> arrayList = State.getInstance().fireChannels();
+
+	if(arrayList != null)
+	{
+	    ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
+
+	    for(FireChannel fireChannel : arrayList)
+	    {
+		if(fireChannel == null)
+		    continue;
+
+		ViewGroup parent = (ViewGroup) fireChannel.view().
+		    getParent();
+
+		parent.removeView(fireChannel.view());
+		viewGroup.addView
+		    (fireChannel.view(),
+		     new LayoutParams(LayoutParams.WRAP_CONTENT,
+				      FIRE_CHANNEL_HEIGHT));
+	    }
+
+	    viewGroup.requestLayout();
+	}
     }
 
     @Override

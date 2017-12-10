@@ -46,17 +46,9 @@ public class State
 	setAuthenticated(false);
     }
 
-    public static synchronized State getInstance()
+    public ArrayList<FireChannel> fireChannels()
     {
-	if(s_instance == null)
-	    s_instance = new State();
-
-	return s_instance;
-    }
-
-    public synchronized ArrayList<MessageElement> chatLog()
-    {
-	return m_chatMessages;
+	return m_fireChannels;
     }
 
     public CharSequence getCharSequence(String key)
@@ -185,6 +177,19 @@ public class State
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+    }
+
+    public static synchronized State getInstance()
+    {
+	if(s_instance == null)
+	    s_instance = new State();
+
+	return s_instance;
+    }
+
+    public synchronized ArrayList<MessageElement> chatLog()
+    {
+	return m_chatMessages;
     }
 
     public synchronized void clearChatLog()
