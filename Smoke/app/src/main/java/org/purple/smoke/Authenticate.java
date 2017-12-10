@@ -338,12 +338,18 @@ public class Authenticate extends AppCompatActivity
 				    String str = m_databaseHelper.
 					readSetting(null, "lastActivity");
 
-				    if(str.equals("Chat"))
+				    switch(str)
+				    {
+				    case "Chat":
 					showChatActivity();
-				    else if(str.equals("Fire"))
+					break;
+				    case "Fire":
 					showFireActivity();
-				    else if(str.equals("Settings"))
+					break;
+				    case "Settings":
 					showSettingsActivity();
+					break;
+				    }
 				}
 			    }
 			});
