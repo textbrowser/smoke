@@ -53,6 +53,7 @@ public class Fire extends AppCompatActivity
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static int FIRE_CHANNEL_HEIGHT = 250;
 
     private void deleteFire(String name, final Integer oid)
     {
@@ -87,7 +88,7 @@ public class Fire extends AppCompatActivity
 
 	viewGroup.addView
 	    (fireChannel.getView(),
-	     new LayoutParams(LayoutParams.WRAP_CONTENT, 250));
+	     new LayoutParams(LayoutParams.WRAP_CONTENT, FIRE_CHANNEL_HEIGHT));
 	viewGroup.requestLayout();
     }
 
