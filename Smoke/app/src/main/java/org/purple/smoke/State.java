@@ -263,6 +263,20 @@ public class State
 	}
     }
 
+    public void removeFireChannel(String name)
+    {
+	if(m_fireChannels == null)
+	    return;
+
+	for(int i = 0; i < m_fireChannels.size(); i++)
+	    if(m_fireChannels.get(i) != null)
+		if(m_fireChannels.get(i).name().equals(name))
+		{
+		    m_fireChannels.remove(i);
+		    break;
+		}
+    }
+
     public void removeKey(String key)
     {
 	m_bundleMutex.writeLock().lock();

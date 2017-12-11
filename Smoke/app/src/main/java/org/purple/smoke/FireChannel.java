@@ -32,6 +32,8 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class FireChannel extends View
@@ -41,6 +43,26 @@ public class FireChannel extends View
     private String m_name = "";
     private View m_view = null;
     private int m_oid = -1;
+
+    private void prepareListeners()
+    {
+	if(m_view == null)
+	    return;
+
+	Button button1 = null;
+
+	button1 = (Button) m_view.findViewById(R.id.close);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		ViewGroup parent = (ViewGroup) m_view.getParent();
+
+		parent.removeView(m_view);
+		State.getInstance().removeFireChannel(m_name);
+	    }
+	});
+    }
 
     @Override
     protected void onDraw(Canvas canvas)
@@ -84,6 +106,7 @@ public class FireChannel extends View
 	if(m_view == null)
 	{
 	    m_view = m_inflater.inflate(R.layout.fire_channel, null);
+	    prepareListeners();
 
 	    TextView textView1 = (TextView) m_view.findViewById(R.id.fire_name);
 
