@@ -140,12 +140,12 @@ public class Fire extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		TextView textView1 = (TextView) findViewById(R.id.name);
+		TextView textView1 = (TextView) findViewById(R.id.channel);
 
 		if(textView1.getText().toString().trim().isEmpty())
 		{
 		    Miscellaneous.showErrorDialog
-			(Fire.this, "Please complete the Name field.");
+			(Fire.this, "Please complete the Channel field.");
 		    textView1.requestFocus();
 		}
 		else
@@ -197,7 +197,7 @@ public class Fire extends AppCompatActivity
 					    (R.id.digest);
 					TextView textView2 =
 					    (TextView) findViewById
-					    (R.id.name);
+					    (R.id.channel);
 
 					m_databaseHelper.saveFireChannel
 					    (s_cryptography,
@@ -255,11 +255,9 @@ public class Fire extends AppCompatActivity
 	    {
 		TextView textView1 = (TextView) findViewById(R.id.channel);
 
+		textView1.requestFocus();
 		textView1.setText("");
 		textView1 = (TextView) findViewById(R.id.digest);
-		textView1.setText("");
-		textView1 = (TextView) findViewById(R.id.name);
-		textView1.requestFocus();
 		textView1.setText("");
 		textView1 = (TextView) findViewById(R.id.salt);
 		textView1.setText("");
