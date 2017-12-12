@@ -314,7 +314,7 @@ public class Miscellaneous
 	    return;
 
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-	CheckBox checkBox = new CheckBox(context);
+	CheckBox checkBox1 = new CheckBox(context);
 
 	State.getInstance().removeKey("dialog_accepted");
 	alertDialog.setButton
@@ -343,24 +343,24 @@ public class Miscellaneous
 							 ** for a response.
 							 */
 	alertDialog.setTitle("Confirmation");
-	alertDialog.setView(checkBox);
+	alertDialog.setView(checkBox1);
 	alertDialog.show();
 
-	final Button button = alertDialog.getButton
+	final Button button1 = alertDialog.getButton
 	    (AlertDialog.BUTTON_POSITIVE);
 
-	button.setEnabled(false);
-	checkBox.setOnCheckedChangeListener
+	button1.setEnabled(false);
+	checkBox1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
 		public void onCheckedChanged
 		    (CompoundButton buttonView, boolean isChecked)
 		{
-		    button.setEnabled(isChecked);
+		    button1.setEnabled(isChecked);
 		}
 	    });
-	checkBox.setText("Confirm");
+	checkBox1.setText("Confirm");
     }
 
     public static void showTextInputDialog

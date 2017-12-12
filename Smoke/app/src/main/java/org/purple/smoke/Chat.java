@@ -233,20 +233,20 @@ public class Chat extends AppCompatActivity
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
-	    CheckBox checkBox = (CheckBox)
+	    CheckBox checkBox1 = (CheckBox)
 		findViewById(R.id.participants).findViewWithTag(sipHashId);
 
-	    if(checkBox != null)
+	    if(checkBox1 != null)
 	    {
 		if(Math.abs(System.currentTimeMillis() - timestamp) >
 		   STATUS_WINDOW)
-		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_offline, 0, 0, 0);
 		else
-		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_online, 0, 0, 0);
 
-		checkBox.setCompoundDrawablePadding(5);
+		checkBox1.setCompoundDrawablePadding(5);
 	    }
 	}
 
@@ -421,7 +421,7 @@ public class Chat extends AppCompatActivity
 	    if(participantElement == null)
 		continue;
 
-	    CheckBox checkBox = new CheckBox(Chat.this);
+	    CheckBox checkBox1 = new CheckBox(Chat.this);
 	    final int oid = participantElement.m_oid;
 
 	    if(showIcons)
@@ -430,24 +430,24 @@ public class Chat extends AppCompatActivity
 
 		if(participantElement.m_keyStream == null ||
 		   participantElement.m_keyStream.length != 96)
-		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_faulty_session, 0, 0, 0);
 		else if(Math.abs(current -
 				 participantElement.m_lastStatusTimestamp) >
 			STATUS_WINDOW)
-		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_offline, 0, 0, 0);
 		else
-		    checkBox.setCompoundDrawablesWithIntrinsicBounds
+		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_online, 0, 0, 0);
 
-		checkBox.setCompoundDrawablePadding(5);
+		checkBox1.setCompoundDrawablePadding(5);
 	    }
 
-	    registerForContextMenu(checkBox);
-	    checkBox.setChecked
+	    registerForContextMenu(checkBox1);
+	    checkBox1.setChecked
 		(State.getInstance().chatCheckBoxIsSelected(oid));
-	    checkBox.setOnCheckedChangeListener
+	    checkBox1.setOnCheckedChangeListener
 		(new CompoundButton.OnCheckedChangeListener()
 		{
 		    @Override
@@ -474,14 +474,14 @@ public class Chat extends AppCompatActivity
 		    }
 		});
 
-	    if(checkBox.isChecked())
+	    if(checkBox1.isChecked())
 	    {
 		button1.setEnabled(true);
 		button2.setEnabled(true);
 	    }
 
-	    checkBox.setId(participantElement.m_oid);
-	    checkBox.setLayoutParams
+	    checkBox1.setId(participantElement.m_oid);
+	    checkBox1.setLayoutParams
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
@@ -522,14 +522,14 @@ public class Chat extends AppCompatActivity
 		}
 	    }
 
-	    checkBox.setTag(participantElement.m_sipHashId);
-	    checkBox.setText(stringBuilder);
-	    checkBox.setTextColor(Color.rgb(255, 255, 255));
-	    checkBox.setTextSize(CHECKBOX_TEXT_SIZE);
+	    checkBox1.setTag(participantElement.m_sipHashId);
+	    checkBox1.setText(stringBuilder);
+	    checkBox1.setTextColor(Color.rgb(255, 255, 255));
+	    checkBox1.setTextSize(CHECKBOX_TEXT_SIZE);
 
 	    TableRow row = new TableRow(Chat.this);
 
-	    row.addView(checkBox);
+	    row.addView(checkBox1);
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
@@ -558,15 +558,15 @@ public class Chat extends AppCompatActivity
 		    if(row == null)
 			continue;
 
-		    CheckBox checkBox = (CheckBox) row.getChildAt(0);
+		    CheckBox checkBox1 = (CheckBox) row.getChildAt(0);
 
-		    if(checkBox == null)
+		    if(checkBox1 == null)
 			continue;
 
-		    if(checkBox.getTag() != null && checkBox.isChecked())
+		    if(checkBox1.getTag() != null && checkBox1.isChecked())
 		    {
 			boolean ok = Kernel.getInstance().call
-			    (checkBox.getId(), checkBox.getTag().toString());
+			    (checkBox1.getId(), checkBox1.getTag().toString());
 
 			stringBuilder.setLength(0);
 			stringBuilder.append("[");
@@ -582,12 +582,12 @@ public class Chat extends AppCompatActivity
 				 "establish a session with ");
 
 			stringBuilder.append
-			    (nameFromCheckBoxText(checkBox.getText().
+			    (nameFromCheckBoxText(checkBox1.getText().
 						  toString()));
 			stringBuilder.append(" (");
 			stringBuilder.append
 			    (Miscellaneous.
-			     delimitString(checkBox.getTag().toString().
+			     delimitString(checkBox1.getTag().toString().
 					   replace(":", ""), '-', 4).
 			     toUpperCase());
 			stringBuilder.append("). Please be patient.\n\n");
@@ -617,10 +617,10 @@ public class Chat extends AppCompatActivity
 
     private void refreshCheckBox(String sipHashId)
     {
-	CheckBox checkBox = (CheckBox)
+	CheckBox checkBox1 = (CheckBox)
 	    findViewById(R.id.participants).findViewWithTag(sipHashId);
 
-	if(checkBox == null)
+	if(checkBox1 == null)
 	    return;
 
 	ArrayList<ParticipantElement> arrayList =
@@ -671,25 +671,25 @@ public class Chat extends AppCompatActivity
 						   '-', 4).toUpperCase());
 	    }
 
-	    checkBox.setText(stringBuilder);
+	    checkBox1.setText(stringBuilder);
 	}
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
 	    if(participantElement.m_keyStream == null ||
 	       participantElement.m_keyStream.length != 96)
-		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		checkBox1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_faulty_session, 0, 0, 0);
 	    else if(Math.abs(System.currentTimeMillis() -
 			     participantElement.m_lastStatusTimestamp) >
 		    STATUS_WINDOW)
-		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		checkBox1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_status_offline, 0, 0, 0);
 	    else
-		checkBox.setCompoundDrawablesWithIntrinsicBounds
+		checkBox1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_status_online, 0, 0, 0);
 
-	    checkBox.setCompoundDrawablePadding(5);
+	    checkBox1.setCompoundDrawablePadding(5);
 	}
 
 	arrayList.clear();
@@ -732,19 +732,19 @@ public class Chat extends AppCompatActivity
 
     private void saveState()
     {
-	TextView textView = (TextView) findViewById(R.id.chat_message);
+	TextView textView1 = (TextView) findViewById(R.id.chat_message);
 
 	State.getInstance().writeCharSequence
-	    ("chat.message", textView.getText());
+	    ("chat.message", textView1.getText());
 	State.getInstance().writeChar
 	    ("chat_network_status_green_written",
 	     !m_greenWritten.get() ? '0' : '1');
 	State.getInstance().writeChar
 	    ("chat_network_status_red_written",
 	     !m_redWritten.get() ? '0' : '1');
-	textView = (TextView) findViewById(R.id.chat_messages);
+	textView1 = (TextView) findViewById(R.id.chat_messages);
 	State.getInstance().writeCharSequence
-	    ("chat.messages", textView.getText());
+	    ("chat.messages", textView1.getText());
     }
 
     private void scrollMessagesView()
@@ -789,7 +789,7 @@ public class Chat extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
-			Button button = (Button) findViewById
+			Button button1 = (Button) findViewById
 			    (R.id.send_chat_message);
 
 			if(state)
@@ -802,7 +802,7 @@ public class Chat extends AppCompatActivity
 				m_greenWritten.set(true);
 			    }
 
-			    button.setBackgroundColor
+			    button1.setBackgroundColor
 				(Color.rgb(153, 204, 0));
 
 			    if(m_redWritten.get())
@@ -819,7 +819,7 @@ public class Chat extends AppCompatActivity
 				m_redWritten.set(true);
 			    }
 
-			    button.setBackgroundColor
+			    button1.setBackgroundColor
 				(Color.rgb(255, 68, 68));
 
 			    if(m_greenWritten.get())
@@ -876,10 +876,10 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		TextView textView = (TextView) findViewById
+		TextView textView1 = (TextView) findViewById
 		    (R.id.chat_messages);
 
-		textView.setText("");
+		textView1.setText("");
 	    }
 	});
 
@@ -948,14 +948,14 @@ public class Chat extends AppCompatActivity
 		    if(row == null)
 			continue;
 
-		    CheckBox checkBox = (CheckBox) row.getChildAt(0);
+		    CheckBox checkBox1 = (CheckBox) row.getChildAt(0);
 
-		    if(checkBox == null ||
-		       checkBox.getTag() == null ||
-		       !checkBox.isChecked())
+		    if(checkBox1 == null ||
+		       checkBox1.getTag() == null ||
+		       !checkBox1.isChecked())
 			continue;
 
-		    String sipHashId = checkBox.getTag().toString();
+		    String sipHashId = checkBox1.getTag().toString();
 		    byte keyStream[] = m_databaseHelper.participantKeyStream
 			(s_cryptography, sipHashId);
 

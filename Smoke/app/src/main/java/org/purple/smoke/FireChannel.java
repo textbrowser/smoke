@@ -46,16 +46,28 @@ public class FireChannel extends View
 
     private void prepareListeners()
     {
-	if(m_view == null)
-	    return;
-
 	Button button1 = null;
+
+	button1 = (Button) m_view.findViewById(R.id.clear_chat_messages);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		TextView textView1 = (TextView) m_view.findViewById
+		    (R.id.chat_messages);
+
+		textView1.setText("");
+	    }
+	});
 
 	button1 = (Button) m_view.findViewById(R.id.close);
         button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
+		if(m_view == null)
+		    return;
+
 		ViewGroup parent = (ViewGroup) m_view.getParent();
 
 		parent.removeView(m_view);

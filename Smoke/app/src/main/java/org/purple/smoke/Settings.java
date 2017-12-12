@@ -127,7 +127,7 @@ public class Settings extends AppCompatActivity
 		    (message, name, sipHashId, sequence, timestamp);
 		message = message.trim();
 
-		TextView textView = new TextView(Settings.this);
+		TextView textView1 = new TextView(Settings.this);
 		final PopupWindow popupWindow = new PopupWindow(Settings.this);
 
 		if(name.length() > 15)
@@ -160,12 +160,12 @@ public class Settings extends AppCompatActivity
 		    }
 		}
 
-		textView.setBackgroundColor(Color.rgb(244, 200, 117));
-		textView.setText
+		textView1.setBackgroundColor(Color.rgb(244, 200, 117));
+		textView1.setText
 		    ("A message (" + message + ") from " + name +
 		     " has arrived.");
-		textView.setTextSize(16);
-		popupWindow.setContentView(textView);
+		textView1.setTextSize(16);
+		popupWindow.setContentView(textView1);
 		popupWindow.setOutsideTouchable(true);
 
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
@@ -728,9 +728,9 @@ public class Settings extends AppCompatActivity
 	    if(row == null)
 		continue;
 
-	    TextView textView = (TextView) row.getChildAt(1);
+	    TextView textView1 = (TextView) row.getChildAt(1);
 
-	    if(textView == null)
+	    if(textView1 == null)
 	    {
 		tableLayout.removeView(row);
 		continue;
@@ -755,7 +755,7 @@ public class Settings extends AppCompatActivity
 		stringBuilder.append(":");
 		stringBuilder.append(neighborElement.m_transport);
 
-		if(textView.getText().toString().
+		if(textView1.getText().toString().
 		   contains(stringBuilder.toString()))
 		{
 		    found = true;
@@ -767,7 +767,7 @@ public class Settings extends AppCompatActivity
 		tableLayout.removeView(row);
 	}
 
-	CheckBox checkBox = (CheckBox) findViewById(R.id.neighbor_details);
+	CheckBox checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
 
 	i = 0;
 
@@ -778,7 +778,7 @@ public class Settings extends AppCompatActivity
 
 	    Spinner spinner = null;
 	    TableRow row = null;
-	    TextView textView = null;
+	    TextView textView1 = null;
 
 	    for(int j = 0; j < tableLayout.getChildCount(); j++)
 	    {
@@ -809,12 +809,12 @@ public class Settings extends AppCompatActivity
 
 		if(t.getText().toString().contains(stringBuilder.toString()))
 		{
-		    textView = t;
+		    textView1 = t;
 		    break;
 		}
 	    }
 
-	    if(textView == null)
+	    if(textView1 == null)
 	    {
 		TableRow.LayoutParams layoutParams = new
 		    TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -891,19 +891,19 @@ public class Settings extends AppCompatActivity
 			}
 		    });
 
-		textView = new TextView(Settings.this);
+		textView1 = new TextView(Settings.this);
 	    }
 
 	    switch(neighborElement.m_status)
 	    {
             case "connected":
-                textView.setTextColor(Color.rgb(0, 100, 0)); // Dark Green
+                textView1.setTextColor(Color.rgb(0, 100, 0)); // Dark Green
                 break;
             case "connecting":
-                textView.setTextColor(Color.rgb(255, 140, 0)); // Dark Orange
+                textView1.setTextColor(Color.rgb(255, 140, 0)); // Dark Orange
                 break;
             default:
-                textView.setTextColor(Color.rgb(139, 0, 0)); // Dark Red
+                textView1.setTextColor(Color.rgb(139, 0, 0)); // Dark Red
                 break;
 	    }
 
@@ -981,7 +981,7 @@ public class Settings extends AppCompatActivity
 		stringBuilder.append(neighborElement.m_proxyType);
 	    }
 
-	    if(checkBox.isChecked())
+	    if(checkBox1.isChecked())
 	    {
 		if(neighborElement.m_remoteCertificate != null &&
 		   neighborElement.m_remoteCertificate.length > 0)
@@ -1042,17 +1042,17 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    stringBuilder.append(" Min.\n");
-	    textView.setGravity(Gravity.CENTER_VERTICAL);
-	    textView.setLayoutParams
+	    textView1.setGravity(Gravity.CENTER_VERTICAL);
+	    textView1.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
-	    textView.setText(stringBuilder);
-	    textView.setTextSize(TEXTVIEW_TEXT_SIZE);
-	    textView.setWidth(TEXTVIEW_WIDTH);
+	    textView1.setText(stringBuilder);
+	    textView1.setTextSize(TEXTVIEW_TEXT_SIZE);
+	    textView1.setWidth(TEXTVIEW_WIDTH);
 
 	    if(row != null)
 	    {
 		row.addView(spinner);
-		row.addView(textView);
+		row.addView(textView1);
 		tableLayout.addView(row, i);
 	    }
 
@@ -1089,41 +1089,41 @@ public class Settings extends AppCompatActivity
 
 	    for(int j = 0; j < 2; j++)
 	    {
-		TextView textView = new TextView(Settings.this);
+		TextView textView1 = new TextView(Settings.this);
 
-		textView.setGravity(Gravity.CENTER_VERTICAL);
-		textView.setId(sipHashIdElement.m_oid);
-		textView.setLayoutParams
+		textView1.setGravity(Gravity.CENTER_VERTICAL);
+		textView1.setId(sipHashIdElement.m_oid);
+		textView1.setLayoutParams
 		    (new TableRow.LayoutParams(0,
 					       LayoutParams.WRAP_CONTENT,
 					       1));
 
 		if(j == 0)
-		    textView.setText(sipHashIdElement.m_name);
+		    textView1.setText(sipHashIdElement.m_name);
 		else if(j == 1)
 		{
 		    if(sipHashIdElement.m_epksCompleted)
-			textView.setCompoundDrawablesWithIntrinsicBounds
+			textView1.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.lock, 0, 0, 0);
 		    else
-			textView.setCompoundDrawablesWithIntrinsicBounds
+			textView1.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.lockless, 0, 0, 0);
 
-		    textView.setCompoundDrawablePadding(5);
-		    textView.setText
+		    textView1.setCompoundDrawablePadding(5);
+		    textView1.setText
 			(Miscellaneous.
 			 delimitString(sipHashIdElement.m_sipHashId.
 				       replace(":", ""), '-', 4).
 			 toUpperCase());
 		}
 
-		textView.setTag(R.id.participants, textView.getText());
-		textView.setTag
+		textView1.setTag(R.id.participants, textView1.getText());
+		textView1.setTag
 		    (R.id.refresh_participants,
 		     sipHashIdElement.m_epksCompleted);
-		textView.setTextSize(TEXTVIEW_TEXT_SIZE);
-		registerForContextMenu(textView);
-		row.addView(textView);
+		textView1.setTextSize(TEXTVIEW_TEXT_SIZE);
+		registerForContextMenu(textView1);
+		row.addView(textView1);
 	    }
 
 	    if(i % 2 == 0)
@@ -1176,17 +1176,17 @@ public class Settings extends AppCompatActivity
 		    return;
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
-		TextView textView = new TextView(Settings.this);
+		TextView textView1 = new TextView(Settings.this);
 
-		textView.setBackgroundColor(Color.rgb(135, 206, 250));
-		textView.setText
+		textView1.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView1.setText
 		    ("An Ozone Address defines a virtual location, " +
 		     "a separate device where messages are to be stored for " +
 		     "later retrieval. A virtual post office. " +
 		     "Please remember to share your Ozone Address with your " +
 		     "friends as well as at least one SmokeStack.");
-		textView.setTextSize(16);
-		popupWindow.setContentView(textView);
+		textView1.setTextSize(16);
+		popupWindow.setContentView(textView1);
 		popupWindow.setOutsideTouchable(true);
 
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
@@ -1308,9 +1308,10 @@ public class Settings extends AppCompatActivity
 		    if(State.getInstance().getString("dialog_accepted").
 		       equals("true"))
 		    {
-			TextView textView = (TextView) findViewById(R.id.ozone);
+			TextView textView1 = (TextView) findViewById
+			    (R.id.ozone);
 
-			textView.setText("");
+			textView1.setText("");
 			m_databaseHelper.reset();
 			populateFancyKeyData();
 			populateNeighbors(null);
@@ -1326,14 +1327,14 @@ public class Settings extends AppCompatActivity
 	    public void onClick(View view)
 	    {
 		String string = "";
-		TextView textView = (TextView) findViewById(R.id.ozone);
+		TextView textView1 = (TextView) findViewById(R.id.ozone);
 		boolean ok = true;
 		byte bytes[] = null;
 		byte salt[] = null;
 
 		try
 		{
-		    string = textView.getText().toString().trim();
+		    string = textView1.getText().toString().trim();
 		    salt = Cryptography.sha512(string.getBytes("UTF-8"));
 
 		    if(salt != null)
@@ -1393,7 +1394,7 @@ public class Settings extends AppCompatActivity
 		    Miscellaneous.showErrorDialog
 			(Settings.this,
 			 "An error occurred while processing the Ozone data.");
-		    textView.requestFocus();
+		    textView1.requestFocus();
 		}
 	    }
 	});
@@ -1463,10 +1464,10 @@ public class Settings extends AppCompatActivity
 		    return;
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
-		TextView textView = new TextView(Settings.this);
+		TextView textView1 = new TextView(Settings.this);
 
-		textView.setBackgroundColor(Color.rgb(135, 206, 250));
-		textView.setText
+		textView1.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView1.setText
 		    ("A SipHash ID is a sequence of digits and " +
 		     "letters assigned to a specific subscriber " +
 		     "(public key pair). " +
@@ -1474,8 +1475,8 @@ public class Settings extends AppCompatActivity
 		     "key pairs via the Echo Public Key Sharing (EPKS) " +
 		     "protocol. " +
 		     "An example SipHash ID is ABAB-0101-CDCD-0202.");
-		textView.setTextSize(16);
-		popupWindow.setContentView(textView);
+		textView1.setTextSize(16);
+		popupWindow.setContentView(textView1);
 		popupWindow.setOutsideTouchable(true);
 
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
@@ -1551,10 +1552,10 @@ public class Settings extends AppCompatActivity
 			m_databaseHelper.writeSetting
 			    (null, "neighbors_details", "false");
 
-		    CheckBox checkBox = (CheckBox) findViewById
+		    CheckBox checkBox1 = (CheckBox) findViewById
 			(R.id.automatic_refresh);
 
-		    if(!checkBox.isChecked())
+		    if(!checkBox1.isChecked())
 			populateNeighbors(null);
 		}
 	    });
@@ -1567,10 +1568,10 @@ public class Settings extends AppCompatActivity
 		public void onCheckedChanged
 		    (CompoundButton buttonView, boolean isChecked)
 		{
-		    Button button = (Button) findViewById
+		    Button button1 = (Button) findViewById
 			(R.id.set_password);
 
-		    button.setEnabled(isChecked);
+		    button1.setEnabled(isChecked);
 		}
 	    });
 
