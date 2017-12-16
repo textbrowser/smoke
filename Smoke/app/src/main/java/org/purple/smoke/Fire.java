@@ -264,6 +264,20 @@ public class Fire extends AppCompatActivity
 	    }
 	});
 
+	button1 = (Button) findViewById(R.id.save_name);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		TextView textView1 = (TextView) findViewById(R.id.name);
+
+		m_databaseHelper.writeSetting
+		    (s_cryptography,
+		     "fire_user_name",
+		     textView1.getText().toString());
+	    }
+	});
+
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.show_details);
 
 	checkBox1.setOnCheckedChangeListener
@@ -306,10 +320,6 @@ public class Fire extends AppCompatActivity
 	linearLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	linearLayout2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	linearLayout3.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-
-	TextView textView1 = (TextView) findViewById(R.id.name);
-
-	textView1.requestFocus();
     }
 
     private void showSettingsActivity()
@@ -365,6 +375,12 @@ public class Fire extends AppCompatActivity
 
 	    viewGroup.requestLayout();
 	}
+
+	TextView textView1 = (TextView) findViewById(R.id.name);
+
+	textView1.setText
+	    (m_databaseHelper.readSetting(s_cryptography, "fire_user_name").
+	     toString());
     }
 
     @Override
