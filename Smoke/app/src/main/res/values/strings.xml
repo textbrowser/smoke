@@ -15,10 +15,12 @@
     <string name="chat_encryption_key_data">Chat Encryption Key Data</string>
     <string name="chat_signature_key_data">Chat Signature Key Data</string>
     <string name="clear">Clear</string>
+    <string name="close">Close</string>
     <string name="control">Control</string>
     <string name="delete">Delete</string>
     <string name="details">Details</string>
     <string name="digest">Digest</string>
+    <string name="digest_key">Digest Key</string>
     <string name="echo">Echo</string>
     <string name="encryption">Encryption</string>
     <string name="fire">Fire</string>
@@ -27,6 +29,7 @@
     <string name="ipv4">IPv4</string>
     <string name="ipv6">IPv6</string>
     <string name="iteration_count">Iteration Count</string>
+    <string name="join">Join</string>
     <string name="name">Name</string>
     <string name="neighbor_servers">Neighbor Servers</string>
     <string name="ozone">Ozone</string>
@@ -45,15 +48,12 @@
     <string name="reset_fields">Reset Fields</string>
     <string name="reset_smoke">Reset Smoke</string>
     <string name="salt">Salt</string>
+    <string name="save">Save</string>
     <string name="scope_id">Scope ID</string>
     <string name="send">Send</string>
     <string name="set_password">Set Password</string>
     <string name="share_keys">Share Keys</string>
     <string name="signature">Signature</string>
     <string name="siphashid">SipHash ID</string>
-    <string name="join">Join</string>
-    <string name="digest_key">Digest Key</string>
-    <string name="close">Close</string>
     <string name="your_name">Your Name</string>
-    <string name="save">Save</string>
 </resources>
