@@ -2326,7 +2326,7 @@ public class Settings extends AppCompatActivity
         textView1.setEnabled(false);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
         textView1.setEnabled(isAuthenticated);
-	textView1.setFilters(new InputFilter[] { s_portFilter });
+	textView1.setFilters(new InputFilter[] {s_portFilter});
         textView1.setText("4710");
         textView1 = (TextView) findViewById(R.id.neighbors_ip_address);
 
@@ -2340,8 +2340,8 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.participant_siphash_id);
 	textView1.setEnabled(isAuthenticated);
-	textView1.setFilters(new InputFilter[] { new InputFilter.AllCaps(),
-						 s_sipHashInputFilter });
+	textView1.setFilters(new InputFilter[] {new InputFilter.AllCaps(),
+						s_sipHashInputFilter});
 	textView1.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
 			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 	textView1 = (TextView) findViewById(R.id.password1);
@@ -2356,7 +2356,7 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(isAuthenticated);
 	textView1 = (TextView) findViewById(R.id.proxy_port);
 	textView1.setEnabled(isAuthenticated);
-	textView1.setFilters(new InputFilter[] { s_portFilter });
+	textView1.setFilters(new InputFilter[] {s_portFilter});
 	prepareListeners();
 
 	/*

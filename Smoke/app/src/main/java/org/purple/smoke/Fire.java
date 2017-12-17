@@ -32,6 +32,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +46,8 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -50,8 +55,31 @@ public class Fire extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
+    private final static CharsetEncoder s_latin1Encoder = Charset.
+	forName("ISO-8859-1").newEncoder();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static InputFilter s_Latin1InputFilter = new InputFilter()
+    {
+	public CharSequence filter(CharSequence source,
+				   int start,
+				   int end,
+				   Spanned dest,
+				   int dstart,
+				   int dend)
+	{
+
+	    for(int i = start; i < end; i++)
+		/*
+		** Allow hexadecimal characters only and some delimiters.
+		*/
+
+		if(!s_latin1Encoder.canEncode(source.charAt(i)))
+		    return source.subSequence(start, i);
+
+	    return null;
+	}
+    };
     private final static int FIRE_CHANNEL_HEIGHT = 250;
 
     private void deleteFire(String name, final Integer oid)
@@ -390,11 +418,23 @@ public class Fire extends AppCompatActivity
 	    viewGroup.requestLayout();
 	}
 
-	TextView textView1 = (TextView) findViewById(R.id.name);
+	TextView textView1 = (TextView) findViewById(R.id.channel);
 
+	textView1.setFilters(new InputFilter[] {s_Latin1InputFilter});
+	textView1.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
+			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+	textView1 = (TextView) findViewById(R.id.digest);
+	textView1.setFilters(new InputFilter[] {s_Latin1InputFilter});
+	textView1.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
+			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+	textView1 = (TextView) findViewById(R.id.name);
 	textView1.setText
 	    (m_databaseHelper.readSetting(s_cryptography, "fire_user_name").
 	     toString());
+	textView1 = (TextView) findViewById(R.id.salt);
+	textView1.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
+			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+	textView1.setFilters(new InputFilter[] {s_Latin1InputFilter});
     }
 
     @Override
