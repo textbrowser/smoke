@@ -50,6 +50,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class Fire extends AppCompatActivity
 {
@@ -394,23 +395,23 @@ public class Fire extends AppCompatActivity
 	    (m_databaseHelper.readSetting(null, "fire_show_details").
 	     equals("true"));
 
-	ArrayList<FireChannel> arrayList = State.getInstance().fireChannels();
+	Map<String, FireChannel> map = State.getInstance().fireChannels();
 
-	if(arrayList != null)
+	if(map != null)
 	{
 	    ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
 
-	    for(FireChannel fireChannel : arrayList)
+	    for(Map.Entry<String, FireChannel> entry : map.entrySet())
 	    {
-		if(fireChannel == null)
+		if(entry.getValue() == null)
 		    continue;
 
-		ViewGroup parent = (ViewGroup) fireChannel.view().
+		ViewGroup parent = (ViewGroup) entry.getValue().view().
 		    getParent();
 
-		parent.removeView(fireChannel.view());
+		parent.removeView(entry.getValue().view());
 		viewGroup.addView
-		    (fireChannel.view(),
+		    (entry.getValue().view(),
 		     new LayoutParams(LayoutParams.WRAP_CONTENT,
 				      FIRE_CHANNEL_HEIGHT));
 	    }

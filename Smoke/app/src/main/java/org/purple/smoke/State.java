@@ -30,13 +30,15 @@ package org.purple.smoke;
 import android.os.Bundle;
 import android.view.View;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class State
 {
     private ArrayList<MessageElement> m_chatMessages = null;
-    private ArrayList<FireChannel> m_fireChannels = null;
     private Bundle m_bundle = null;
+    private Map<String, FireChannel> m_fireChannels = null;
     private final ReentrantReadWriteLock m_bundleMutex =
 	new ReentrantReadWriteLock();
     private static State s_instance = null;
@@ -45,11 +47,6 @@ public class State
     {
 	m_bundle = new Bundle();
 	setAuthenticated(false);
-    }
-
-    public ArrayList<FireChannel> fireChannels()
-    {
-	return m_fireChannels;
     }
 
     public CharSequence getCharSequence(String key)
@@ -64,6 +61,11 @@ public class State
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+    }
+
+    public Map<String, FireChannel> fireChannels()
+    {
+	return m_fireChannels;
     }
 
     public String getString(String key)
@@ -85,10 +87,10 @@ public class State
 	if(m_fireChannels == null || view == null)
 	    return "";
 
-	for(FireChannel fireChannel : m_fireChannels)
-	    if(fireChannel != null)
-		if(fireChannel.view() == view)
-		    return fireChannel.name();
+	for(Map.Entry<String, FireChannel> entry : m_fireChannels.entrySet())
+	    if(entry.getValue() != null)
+		if(entry.getValue().view() == view)
+		    return entry.getValue().name();
 
 	return "";
     }
@@ -113,14 +115,7 @@ public class State
 	if(m_fireChannels == null)
 	    return false;
 
-	for(FireChannel fireChannel : m_fireChannels)
-	{
-	    if(fireChannel != null)
-		if(fireChannel.name().equals(name))
-		    return true;
-	}
-
-	return false;
+	return m_fireChannels.containsKey(name);
     }
 
     public boolean isAuthenticated()
@@ -242,9 +237,11 @@ public class State
 	    return;
 
 	if(m_fireChannels == null)
-	    m_fireChannels = new ArrayList<> ();
+	    m_fireChannels = new TreeMap<> ();
+	else if(m_fireChannels.containsKey(fireChannel.name()))
+	    return;
 
-	m_fireChannels.add(fireChannel);
+	m_fireChannels.put(fireChannel.name(), fireChannel);
     }
 
     public void incrementChatSequence(String sipHashId)
@@ -282,13 +279,7 @@ public class State
 	if(m_fireChannels == null)
 	    return;
 
-	for(int i = 0; i < m_fireChannels.size(); i++)
-	    if(m_fireChannels.get(i) != null)
-		if(m_fireChannels.get(i).name().equals(name))
-		{
-		    m_fireChannels.remove(i);
-		    break;
-		}
+	m_fireChannels.remove(name);
     }
 
     public void removeKey(String key)
