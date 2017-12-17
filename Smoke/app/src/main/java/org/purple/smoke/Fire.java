@@ -91,9 +91,23 @@ public class Fire extends AppCompatActivity
 	State.getInstance().addFire(fireChannel);
 
 	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
+	int index = -1;
+
+	for(int i = 0; i < viewGroup.getChildCount(); i++)
+	{
+	    String other = State.getInstance().nameOfFireFromView
+		(viewGroup.getChildAt(i));
+
+	    if(name.compareTo(other) < 0 && name.length() > 0)
+	    {
+		index = i;
+		break;
+	    }
+	}
 
 	viewGroup.addView
 	    (fireChannel.view(),
+	     index,
 	     new LayoutParams(LayoutParams.WRAP_CONTENT, FIRE_CHANNEL_HEIGHT));
 	viewGroup.requestLayout();
     }

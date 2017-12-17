@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.os.Bundle;
+import android.view.View;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -77,6 +78,19 @@ public class State
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+    }
+
+    public String nameOfFireFromView(View view)
+    {
+	if(m_fireChannels == null || view == null)
+	    return "";
+
+	for(FireChannel fireChannel : m_fireChannels)
+	    if(fireChannel != null)
+		if(fireChannel.view() == view)
+		    return fireChannel.name();
+
+	return "";
     }
 
     public boolean chatCheckBoxIsSelected(int oid)
