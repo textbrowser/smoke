@@ -29,12 +29,19 @@ package org.purple.smoke;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class FireChannel extends View
 {
@@ -43,6 +50,8 @@ public class FireChannel extends View
     private String m_name = "";
     private View m_view = null;
     private int m_oid = -1;
+    private final SimpleDateFormat m_simpleDateFormat = new
+	SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     private void prepareListeners()
     {
@@ -67,6 +76,8 @@ public class FireChannel extends View
 	    {
 		if(m_view == null)
 		    return;
+
+		Kernel.getInstance().extinguishFire(m_name);
 
 		ViewGroup parent = (ViewGroup) m_view.getParent();
 
@@ -123,6 +134,36 @@ public class FireChannel extends View
 	    TextView textView1 = (TextView) m_view.findViewById(R.id.fire_name);
 
 	    textView1.setText(m_name);
+
+	    if(!Kernel.getInstance().igniteFire(m_name))
+	    {
+		Button button1 = (Button) m_view.findViewById
+		    (R.id.clear_chat_messages);
+
+		button1.setEnabled(false);
+		button1 = (Button) m_view.findViewById(R.id.send_chat_message);
+		button1.setEnabled(false);
+		textView1 = (TextView) m_view.findViewById(R.id.chat_messages);
+
+		StringBuilder stringBuilder = new StringBuilder();
+
+		stringBuilder.append("[");
+		stringBuilder.append(m_simpleDateFormat.format(new Date()));
+		stringBuilder.append("] ");
+		stringBuilder.append("The Fire channel ");
+		stringBuilder.append(m_name);
+		stringBuilder.append(" cannot be registered with the Kernel.");
+		stringBuilder.append("\n\n");
+
+		Spannable spannable = new SpannableStringBuilder
+		    (stringBuilder.toString());
+
+		spannable.setSpan
+		    (new ForegroundColorSpan(Color.rgb(255, 68, 68)),
+		     0, stringBuilder.length(),
+		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		textView1.append(spannable);
+	    }
 	}
 
 	return m_view;

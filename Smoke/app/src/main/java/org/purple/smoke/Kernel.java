@@ -52,6 +52,7 @@ public class Kernel
     private ArrayList<MessageElement> m_messagesToSend = null;
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
+    private Hashtable<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_chatTemporaryIdentityScheduler = null;
     private ScheduledExecutorService m_congestionScheduler = null;
@@ -64,6 +65,8 @@ public class Kernel
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_fireStreamsMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_messagesToSendMutex =
 	new ReentrantReadWriteLock();
@@ -97,6 +100,7 @@ public class Kernel
 	m_callQueue = new Hashtable<> ();
 	m_chatTemporaryIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
+	m_fireStreams = new Hashtable<> ();
 	m_messagesToSend = new ArrayList<> ();
 
 	try
@@ -529,6 +533,11 @@ public class Kernel
 
 	arrayList.clear();
 	return true;
+    }
+
+    public boolean igniteFire(String name)
+    {
+	return false;
     }
 
     public boolean isConnected()
@@ -1230,6 +1239,20 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
+	}
+    }
+
+    public void extinguishFire(String name)
+    {
+	m_fireStreamsMutex.writeLock().lock();
+
+	try
+	{
+	    m_fireStreams.remove(name);
+	}
+	finally
+	{
+	    m_fireStreamsMutex.writeLock().unlock();
 	}
     }
 
