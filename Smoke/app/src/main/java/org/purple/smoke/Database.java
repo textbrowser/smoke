@@ -205,7 +205,8 @@ public class Database extends SQLiteOpenHelper
 			switch(i)
 			{
 			case 0:
-			    fireElement.m_name = new String(bytes, "UTF-8");
+			    fireElement.m_name = new String
+				(bytes, "ISO-8859-1");
 			    break;
 			case 1:
 			    fireElement.m_stream =
@@ -2463,6 +2464,7 @@ public class Database extends SQLiteOpenHelper
 
 	str = "CREATE TABLE IF NOT EXISTS fire (" +
 	    "name TEXT NOT NULL, " +
+	    "name_digest TEXT NOT NULL, " +
 	    "stream TEXT NOT NULL, " +
 	    "stream_digest TEXT NOT NULL PRIMARY KEY)";
 
@@ -2721,7 +2723,13 @@ public class Database extends SQLiteOpenHelper
 
 	    values.put
 		("name",
-		 Base64.encodeToString(cryptography.etm(name.getBytes("UTF-8")),
+		 Base64.encodeToString(cryptography.
+				       etm(name.getBytes("ISO-8859-1")),
+				       Base64.DEFAULT));
+	    values.put
+		("name_digest",
+		 Base64.encodeToString(cryptography.
+				       hmac(name.getBytes("ISO-8859-1")),
 				       Base64.DEFAULT));
 	    values.put
 		("stream",
