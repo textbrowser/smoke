@@ -81,7 +81,7 @@ public class Fire extends AppCompatActivity
 	    return null;
 	}
     };
-    private final static int FIRE_CHANNEL_HEIGHT = 250;
+    public final static int FIRE_CHANNEL_HEIGHT = 500;
 
     private void deleteFire(String name, final Integer oid)
     {
