@@ -38,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -83,6 +84,21 @@ public class FireChannel extends View
 
 		parent.removeView(m_view);
 		State.getInstance().removeFireChannel(m_name);
+	    }
+	});
+    }
+
+    private void scrollMessagesView()
+    {
+	final ScrollView scrollView = (ScrollView)
+	    findViewById(R.id.chat_scrollview);
+
+	scrollView.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		scrollView.fullScroll(ScrollView.FOCUS_DOWN);
 	    }
 	});
     }
