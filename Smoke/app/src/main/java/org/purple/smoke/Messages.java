@@ -29,12 +29,19 @@ package org.purple.smoke;
 
 import android.util.Base64;
 import java.security.PublicKey;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class Messages
 {
+    private final static SimpleDateFormat s_fireSimpleDateFormat = new
+	SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
     public final static String EOM = "\r\n\r\n\r\n";
+    public final static String FIRE_CHAT_MESSAGE_TYPE = "004b";
+    public final static String FIRE_STATUS_MESSAGE_TYPE = "004a";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
@@ -821,6 +828,75 @@ public class Messages
 		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
 
 	    return Miscellaneous.joinByteArrays(aes256, sha512, destination);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public static byte[] fireMessage(Cryptography cryptography,
+				     String id,
+				     String message,
+				     String name,
+				     byte keyStream[])
+    {
+	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... N] - SHA-1 HMAC Key
+	*/
+
+	try
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(FIRE_CHAT_MESSAGE_TYPE.getBytes("ISO-8859-1"),
+				Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(name.getBytes("UTF-8"), Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(id.getBytes("ISO-8859-1"),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(message.getBytes("UTF-8"),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(s_fireSimpleDateFormat.format(new Date()).
+				getBytes("ISO-8859-1"), Base64.NO_WRAP));
+
+	    byte aes256[] = Cryptography.encryptFire
+		(stringBuilder.toString().getBytes(),
+		 Arrays.copyOfRange(keyStream, 0, 32));
+
+	    if(aes256 == null)
+		return null;
+
+	    byte sha1[] = Cryptography.hmacFire
+		(aes256,
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+	    if(sha1 == null)
+		return null;
+
+	    stringBuilder.setLength(0);
+	    stringBuilder.append
+		(Base64.encodeToString(aes256, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(sha1, Base64.NO_WRAP));
+	    return stringBuilder.toString().getBytes("ISO-8859-1");
 	}
 	catch(Exception exception)
 	{

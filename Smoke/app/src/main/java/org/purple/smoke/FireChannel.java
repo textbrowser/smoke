@@ -227,6 +227,9 @@ public class FireChannel extends View
 		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		textView1.append(spannable);
 	    }
+
+	    textView1 = (TextView) m_view.findViewById(R.id.chat_message);
+	    textView1.requestFocus();
 	}
 
 	return m_view;

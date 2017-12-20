@@ -92,6 +92,7 @@ public class Cryptography
     private final static String FIRE_ALGORITHM = "AES";
     private final static String FIRE_CIPHER_TRANSFORMATION =
 	"AES/CTS/PKCS7Padding";
+    private final static String FIRE_HASH_ALGORITHM = "SHA-1";
     private final static String FIRE_HMAC_ALGORITHM = "HmacSHA1";
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
@@ -1283,6 +1284,33 @@ public class Cryptography
 	    SecretKey key = new SecretKeySpec(keyBytes, HASH_ALGORITHM);
 
 	    mac = Mac.getInstance(HMAC_ALGORITHM);
+	    mac.init(key);
+	    bytes = mac.doFinal(data);
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
+    public static byte[] hmacFire(byte data[], byte keyBytes[])
+    {
+	if(data == null ||
+	   data.length < 0 ||
+	   keyBytes == null ||
+	   keyBytes.length < 0)
+	    return null;
+
+	byte bytes[] = null;
+
+	try
+	{
+	    Mac mac = null;
+	    SecretKey key = new SecretKeySpec(keyBytes, FIRE_HASH_ALGORITHM);
+
+	    mac = Mac.getInstance(FIRE_HMAC_ALGORITHM);
 	    mac.init(key);
 	    bytes = mac.doFinal(data);
 	}

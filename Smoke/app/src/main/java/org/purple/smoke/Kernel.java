@@ -334,6 +334,14 @@ public class Kernel
 				     System.currentTimeMillis());
 				break;
 			    case MessageElement.FIRE_MESSAGE_TYPE:
+				bytes = Messages.fireMessage
+				    (s_cryptography,
+				     messageElement.m_id,
+				     messageElement.m_message,
+				     s_databaseHelper.
+				     readSetting(s_cryptography,
+						 "fire_user_name").toString(),
+				     messageElement.m_keyStream);
 				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				bytes = Messages.chatMessageRetrieval
