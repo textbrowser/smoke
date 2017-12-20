@@ -309,6 +309,9 @@ public class State
 	{
 	    m_bundleMutex.writeLock().unlock();
 	}
+
+	if(m_fireChannels != null)
+	    m_fireChannels.clear();
     }
 
     public void setAuthenticated(boolean state)
