@@ -267,7 +267,7 @@ public class Cryptography
 		return true;
 	    else if(key.hashCode() ==
 		    m_chatEncryptionPublicKeyPair.getPublic().hashCode())
-	    return true;
+		return true;
 	}
 	finally
 	{

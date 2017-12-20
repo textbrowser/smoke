@@ -2044,6 +2044,41 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
+    public byte[] fireStream(Cryptography cryptography, String name)
+    {
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	byte bytes[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT stream FROM fire WHERE name_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(name.getBytes("ISO-8859-1")),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		bytes = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return bytes;
+    }
+
     public byte[] neighborRemoteCertificate(Cryptography cryptography,
 					    int oid)
     {

@@ -537,6 +537,27 @@ public class Kernel
 
     public boolean igniteFire(String name)
     {
+	m_fireStreamsMutex.writeLock().lock();
+
+	try
+	{
+	    if(!m_fireStreams.containsKey(name))
+	    {
+		byte bytes[] = s_databaseHelper.fireStream
+		    (s_cryptography, name);
+
+		if(bytes != null)
+		{
+		    m_fireStreams.put(name, bytes);
+		    return true;
+		}
+	    }
+	}
+	finally
+	{
+	    m_fireStreamsMutex.writeLock().unlock();
+	}
+
 	return false;
     }
 
