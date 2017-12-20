@@ -89,6 +89,10 @@ public class Cryptography
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_sipHashMacKeyMutex =
 	new ReentrantReadWriteLock();
+    private final static String FIRE_ALGORITHM = "AES";
+    private final static String FIRE_CIPHER_TRANSFORMATION =
+	"AES/CTS/PKCS7Padding";
+    private final static String FIRE_HMAC_ALGORITHM = "HmacSHA1";
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
@@ -1203,6 +1207,40 @@ public class Cryptography
 	    byte iv[] = new byte[16];
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+	    s_secureRandom.nextBytes(iv);
+	    cipher.init(Cipher.ENCRYPT_MODE,
+			secretKey,
+			new IvParameterSpec(iv));
+	    bytes = cipher.doFinal(data);
+	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
+    public static byte[] encryptFire(byte data[], byte keyBytes[])
+    {
+	if(data == null ||
+	   data.length < 0 ||
+	   keyBytes == null ||
+	   keyBytes.length < 0)
+	    return null;
+
+	prepareSecureRandom();
+
+	byte bytes[] = null;
+
+	try
+	{
+	    Cipher cipher = null;
+	    SecretKey secretKey = new SecretKeySpec(keyBytes, FIRE_ALGORITHM);
+	    byte iv[] = new byte[16];
+
+	    cipher = Cipher.getInstance(FIRE_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
 	    cipher.init(Cipher.ENCRYPT_MODE,
 			secretKey,

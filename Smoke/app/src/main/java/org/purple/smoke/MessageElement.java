@@ -37,7 +37,8 @@ public class MessageElement
     public long m_sequence = -1;
     public long m_timestamp = -1;
     public final static int CHAT_MESSAGE_TYPE = 0;
-    public final static int RETRIEVE_MESSAGES_MESSAGE_TYPE = 1;
+    public final static int FIRE_MESSAGE_TYPE = 1;
+    public final static int RETRIEVE_MESSAGES_MESSAGE_TYPE = 2;
 
     public MessageElement()
     {

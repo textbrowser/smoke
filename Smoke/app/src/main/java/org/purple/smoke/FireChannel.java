@@ -33,6 +33,7 @@ import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,10 +53,13 @@ public class FireChannel extends View
     private View m_view = null;
     private int m_oid = -1;
     private final SimpleDateFormat m_simpleDateFormat = new
-	SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+	SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
 
     private void prepareListeners()
     {
+	if(m_view == null)
+	    return;
+
 	Button button1 = null;
 
 	button1 = (Button) m_view.findViewById(R.id.clear_chat_messages);
@@ -75,15 +79,52 @@ public class FireChannel extends View
 	{
 	    public void onClick(View view)
 	    {
-		if(m_view == null)
-		    return;
-
 		Kernel.getInstance().extinguishFire(m_name);
 
 		ViewGroup parent = (ViewGroup) m_view.getParent();
 
 		parent.removeView(m_view);
 		State.getInstance().removeFireChannel(m_name);
+	    }
+	});
+
+	button1 = (Button) m_view.findViewById(R.id.send_chat_message);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		TextView textView1 = (TextView) m_view.findViewById
+		    (R.id.chat_message);
+
+		if(textView1.getText().toString().trim().isEmpty())
+		    return;
+
+		String str = textView1.getText().toString().trim();
+		StringBuilder stringBuilder = new StringBuilder();
+		TextView textView2 = (TextView) m_view.findViewById
+		    (R.id.chat_messages);
+
+		textView2.append("[");
+		textView2.append(m_simpleDateFormat.format(new Date()));
+		textView2.append("] ");
+
+		{
+		    Spannable spannable = new SpannableStringBuilder("me");
+
+		    spannable.setSpan
+			(new StyleSpan(android.graphics.Typeface.BOLD),
+			 0,
+			 spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    textView2.append(spannable);
+		}
+
+		stringBuilder.append(": ");
+		stringBuilder.append(str);
+		stringBuilder.append("\n\n");
+		textView2.append(stringBuilder);
+		textView1.setText("");
+		Kernel.getInstance().enqueueFireMessage(str, m_name);
 	    }
 	});
     }

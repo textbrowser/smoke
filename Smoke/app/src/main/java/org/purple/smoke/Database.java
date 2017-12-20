@@ -1290,9 +1290,9 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case 2:
 		    cursor = m_db.rawQuery
-			("SELECT COUNT(*) " +
+			("SELECT EXISTS(SELECT 1 " +
 			 "FROM participants WHERE " +
-			 "encryption_public_key_digest = ?",
+			 "encryption_public_key_digest = ?)",
 			 new String[] {Base64.
 				       encodeToString(Cryptography.
 						      sha512(Base64.
@@ -1303,7 +1303,7 @@ public class Database extends SQLiteOpenHelper
 						      Base64.DEFAULT)});
 
 		    if(cursor != null && cursor.moveToFirst())
-			if(cursor.getLong(0) > 0)
+			if(cursor.getInt(0) == 1)
 			    return "";
 
 		    if(cursor != null)
@@ -1336,9 +1336,9 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case 4:
 		    cursor = m_db.rawQuery
-			("SELECT COUNT(*) " +
+			("SELECT EXISTS(SELECT 1 " +
 			 "FROM participants WHERE " +
-			 "signature_public_key_digest = ?",
+			 "signature_public_key_digest = ?)",
 			 new String[] {Base64.
 				       encodeToString(Cryptography.
 						      sha512(Base64.
@@ -1349,7 +1349,7 @@ public class Database extends SQLiteOpenHelper
 						      Base64.DEFAULT)});
 
 		    if(cursor != null && cursor.moveToFirst())
-			if(cursor.getLong(0) > 0)
+			if(cursor.getInt(0) == 1)
 			    return "";
 
 		    if(cursor != null)

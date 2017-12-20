@@ -333,6 +333,8 @@ public class Kernel
 				     chatSequence(messageElement.m_sipHashId),
 				     System.currentTimeMillis());
 				break;
+			    case MessageElement.FIRE_MESSAGE_TYPE:
+				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				bytes = Messages.chatMessageRetrieval
 				    (s_cryptography);
@@ -1254,6 +1256,43 @@ public class Kernel
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
 	    messageElement.m_sipHashId = sipHashId;
+	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    m_messagesToSend.add(messageElement);
+	}
+	finally
+	{
+	    m_messagesToSendMutex.writeLock().unlock();
+	}
+    }
+
+    public void enqueueFireMessage(String message,
+				   String name)
+    {
+	byte keystream[] = null;
+
+	m_fireStreamsMutex.readLock().lock();
+
+	try
+	{
+	    if(m_fireStreams.containsKey(name))
+		keystream = m_fireStreams.get(name);
+	}
+	finally
+	{
+	    m_fireStreamsMutex.readLock().unlock();
+	}
+
+	if(keystream == null)
+	    return;
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
+	    MessageElement messageElement = new MessageElement();
+
+	    messageElement.m_message = message;
+	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
 	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    m_messagesToSend.add(messageElement);
 	}
