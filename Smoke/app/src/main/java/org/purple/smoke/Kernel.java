@@ -1253,10 +1253,10 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
 	    messageElement.m_sipHashId = sipHashId;
-	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    m_messagesToSend.add(messageElement);
 	}
 	finally
@@ -1266,6 +1266,7 @@ public class Kernel
     }
 
     public void enqueueFireMessage(String message,
+				   String id,
 				   String name)
     {
 	byte keystream[] = null;
@@ -1291,9 +1292,10 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
-	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    messageElement.m_sipHashId = id;
 	    m_messagesToSend.add(messageElement);
 	}
 	finally

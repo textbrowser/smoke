@@ -49,6 +49,7 @@ public class FireChannel extends View
 {
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
+    private String m_id;
     private String m_name = "";
     private View m_view = null;
     private int m_oid = -1;
@@ -124,7 +125,7 @@ public class FireChannel extends View
 		stringBuilder.append("\n\n");
 		textView2.append(stringBuilder);
 		textView1.setText("");
-		Kernel.getInstance().enqueueFireMessage(str, m_name);
+		Kernel.getInstance().enqueueFireMessage(str, m_id, m_name);
 	    }
 	});
     }
@@ -188,6 +189,8 @@ public class FireChannel extends View
     {
 	if(m_view == null)
 	{
+	    m_id = Miscellaneous.byteArrayAsHexString
+		(Cryptography.randomBytes(128));
 	    m_view = m_inflater.inflate(R.layout.fire_channel, null);
 	    prepareListeners();
 
