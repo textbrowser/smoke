@@ -379,7 +379,7 @@ public class Chat extends AppCompatActivity
 
 	    appendMessage(messageElement.m_message,
 			  messageElement.m_name,
-			  messageElement.m_sipHashId,
+			  messageElement.m_id,
 			  true,
 			  messageElement.m_sequence,
 			  messageElement.m_timestamp);

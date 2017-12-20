@@ -223,9 +223,9 @@ public class State
 
 	MessageElement messageElement = new MessageElement();
 
+	messageElement.m_id = sipHashId;
 	messageElement.m_message = message;
 	messageElement.m_name = name;
-	messageElement.m_sipHashId = sipHashId;
 	messageElement.m_sequence = sequence;
 	messageElement.m_timestamp = timestamp;
 	m_chatMessages.add(messageElement);

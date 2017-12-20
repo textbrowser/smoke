@@ -323,14 +323,14 @@ public class Kernel
 				bytes = Messages.chatMessage
 				    (s_cryptography,
 				     messageElement.m_message,
-				     messageElement.m_sipHashId,
+				     messageElement.m_id,
 				     false,
 				     Cryptography.
-				     sha512(messageElement.m_sipHashId.
+				     sha512(messageElement.m_id.
 					    getBytes("UTF-8")),
 				     messageElement.m_keyStream,
 				     State.getInstance().
-				     chatSequence(messageElement.m_sipHashId),
+				     chatSequence(messageElement.m_id),
 				     System.currentTimeMillis());
 				break;
 			    case MessageElement.FIRE_MESSAGE_TYPE:
@@ -354,7 +354,7 @@ public class Kernel
 				enqueueMessage
 				    (Messages.bytesToMessageString(bytes));
 				State.getInstance().incrementChatSequence
-				    (messageElement.m_sipHashId);
+				    (messageElement.m_id);
 				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				scheduleSend
@@ -374,12 +374,12 @@ public class Kernel
 				bytes = Messages.chatMessage
 				    (s_cryptography,
 				     messageElement.m_message,
-				     messageElement.m_sipHashId,
+				     messageElement.m_id,
 				     true,
 				     s_cryptography.ozoneMacKey(),
 				     messageElement.m_keyStream,
 				     State.getInstance().
-				     chatSequence(messageElement.m_sipHashId),
+				     chatSequence(messageElement.m_id),
 				     System.currentTimeMillis());
 
 				if(bytes != null)
@@ -1253,10 +1253,10 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
-	    messageElement.m_sipHashId = sipHashId;
 	    m_messagesToSend.add(messageElement);
 	}
 	finally
@@ -1292,10 +1292,10 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_id = id;
 	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
-	    messageElement.m_sipHashId = id;
 	    m_messagesToSend.add(messageElement);
 	}
 	finally
