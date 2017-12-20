@@ -90,8 +90,11 @@ public class FireChannel extends View
 
     private void scrollMessagesView()
     {
+	if(m_view == null)
+	    return;
+
 	final ScrollView scrollView = (ScrollView)
-	    findViewById(R.id.chat_scrollview);
+	    m_view.findViewById(R.id.chat_scrollview);
 
 	scrollView.post(new Runnable()
 	{
