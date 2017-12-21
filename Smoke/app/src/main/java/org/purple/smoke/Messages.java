@@ -33,15 +33,16 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class Messages
 {
     private final static SimpleDateFormat s_fireSimpleDateFormat = new
-	SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+	SimpleDateFormat("MMddyyyyhhmmss");
     public final static String EOM = "\r\n\r\n\r\n";
-    public final static String FIRE_CHAT_MESSAGE_TYPE = "004b";
-    public final static String FIRE_STATUS_MESSAGE_TYPE = "004a";
+    public final static String FIRE_CHAT_MESSAGE_TYPE = "0040b";
+    public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
@@ -904,6 +905,10 @@ public class Messages
 		(Base64.encodeToString(message.getBytes("UTF-8"),
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
+
+	    TimeZone utc = TimeZone.getTimeZone("UTC");
+
+	    s_fireSimpleDateFormat.setTimeZone(utc);
 	    stringBuilder.append
 		(Base64.
 		 encodeToString(s_fireSimpleDateFormat.format(new Date()).
