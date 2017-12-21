@@ -91,7 +91,7 @@ public class Cryptography
 	new ReentrantReadWriteLock();
     private final static String FIRE_ALGORITHM = "AES";
     private final static String FIRE_CIPHER_TRANSFORMATION =
-	"AES/CTS/PKCS7Padding";
+	"AES/CTS/NoPadding";
     private final static String FIRE_HASH_ALGORITHM = "SHA-1";
     private final static String FIRE_HMAC_ALGORITHM = "HmacSHA1";
     private final static String HASH_ALGORITHM = "SHA-512";
@@ -1247,7 +1247,10 @@ public class Cryptography
 	    cipher.init(Cipher.ENCRYPT_MODE,
 			secretKey,
 			new IvParameterSpec(iv));
-	    bytes = cipher.doFinal(data);
+	    bytes = cipher.doFinal
+		(Miscellaneous.
+		 joinByteArrays(data,
+				Miscellaneous.intToByteArray(data.length)));
 	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	}
 	catch(Exception exception)
