@@ -90,6 +90,39 @@ public class Messages
 	return "";
     }
 
+    public static String bytesToMessageStringNonBase64(byte bytes[])
+    {
+	if(bytes == null || bytes.length <= 0)
+	    return "";
+
+	try
+	{
+	    StringBuilder results = new StringBuilder();
+
+	    results.append("POST HTTP/1.1\r\n");
+	    results.append
+		("Content-Type: application/x-www-form-urlencoded\r\n");
+	    results.append("Content-Length: %1\r\n");
+	    results.append("\r\n");
+	    results.append("content=%2\r\n");
+	    results.append("\r\n\r\n");
+
+	    int indexOf = results.indexOf("%1");
+	    int length = bytes.length + "content=\r\n\r\n\r\n".length();
+
+	    results = results.replace
+		(indexOf, indexOf + 2, String.valueOf(length));
+	    indexOf = results.indexOf("%2");
+	    results = results.replace(indexOf, indexOf + 2, new String(bytes));
+	    return results.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
+    }
+
     public static String identityMessage(byte bytes[])
     {
 	if(bytes == null || bytes.length <= 0)
@@ -877,7 +910,7 @@ public class Messages
 				getBytes("ISO-8859-1"), Base64.NO_WRAP));
 
 	    byte aes256[] = Cryptography.encryptFire
-		(stringBuilder.toString().getBytes(),
+		(stringBuilder.toString().getBytes("ISO-8859-1"),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
 	    if(aes256 == null)

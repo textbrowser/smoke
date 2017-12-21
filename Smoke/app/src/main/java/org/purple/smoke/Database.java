@@ -165,7 +165,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    cursor = m_db.rawQuery("SELECT name, stream, OID FROM fire", null);
+	    cursor = m_db.rawQuery("SELECT name, OID FROM fire", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -207,10 +207,6 @@ public class Database extends SQLiteOpenHelper
 			case 0:
 			    fireElement.m_name = new String
 				(bytes, "ISO-8859-1");
-			    break;
-			case 1:
-			    fireElement.m_stream =
-				Miscellaneous.deepCopy(bytes);
 			    break;
 			}
 		    }

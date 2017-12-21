@@ -364,6 +364,11 @@ public class Kernel
 				State.getInstance().incrementChatSequence
 				    (messageElement.m_id);
 				break;
+			    case MessageElement.FIRE_MESSAGE_TYPE:
+				enqueueMessage
+				    (Messages.
+				     bytesToMessageStringNonBase64(bytes));
+				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				scheduleSend
 				    (Messages.

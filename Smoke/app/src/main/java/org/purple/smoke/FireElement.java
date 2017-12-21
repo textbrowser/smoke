@@ -30,7 +30,6 @@ package org.purple.smoke;
 public class FireElement
 {
     public String m_name = "";
-    public byte m_stream[] = null;
     public int m_oid = -1;
 
     public FireElement()
