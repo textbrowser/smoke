@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class Messages
@@ -904,6 +905,10 @@ public class Messages
 		(Base64.encodeToString(message.getBytes("UTF-8"),
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
+
+	    TimeZone utc = TimeZone.getTimeZone("UTC");
+
+	    s_fireSimpleDateFormat.setTimeZone(utc);
 	    stringBuilder.append
 		(Base64.
 		 encodeToString(s_fireSimpleDateFormat.
