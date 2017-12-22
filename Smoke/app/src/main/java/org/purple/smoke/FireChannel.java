@@ -126,6 +126,19 @@ public class FireChannel extends View
 		textView2.append(stringBuilder);
 		textView1.setText("");
 		Kernel.getInstance().enqueueFireMessage(str, m_id, m_name);
+		scrollMessagesView();
+
+		final TextView textView3 = (TextView) m_view.findViewById
+		    (R.id.chat_message);
+
+		textView2.post(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			textView3.requestFocus();
+		    }
+		});
 	    }
 	});
     }
