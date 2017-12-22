@@ -324,6 +324,9 @@ public class Database extends SQLiteOpenHelper
     {
 	prepareDb();
 
+	if(!State.getInstance().isAuthenticated())
+	    return null;
+
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -496,6 +499,9 @@ public class Database extends SQLiteOpenHelper
 	(Cryptography cryptography, String sipHashId)
     {
 	prepareDb();
+
+	if(!State.getInstance().isAuthenticated())
+	    return null;
 
 	if(cryptography == null || m_db == null)
 	    return null;
