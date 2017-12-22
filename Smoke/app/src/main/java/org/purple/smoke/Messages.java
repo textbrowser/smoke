@@ -33,13 +33,12 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class Messages
 {
     private final static SimpleDateFormat s_fireSimpleDateFormat = new
-	SimpleDateFormat("MMddyyyyhhmmss");
+	SimpleDateFormat("MMddyyyyHHmmss");
     public final static String EOM = "\r\n\r\n\r\n";
     public final static String FIRE_CHAT_MESSAGE_TYPE = "0040b";
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
@@ -882,7 +881,7 @@ public class Messages
 	/*
 	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
-	** [32 ... N] - SHA-1 HMAC Key
+	** [32 ... N] - SHA-256 HMAC Key
 	*/
 
 	try
@@ -905,13 +904,10 @@ public class Messages
 		(Base64.encodeToString(message.getBytes("UTF-8"),
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
-
-	    TimeZone utc = TimeZone.getTimeZone("UTC");
-
-	    s_fireSimpleDateFormat.setTimeZone(utc);
 	    stringBuilder.append
 		(Base64.
-		 encodeToString(s_fireSimpleDateFormat.format(new Date()).
+		 encodeToString(s_fireSimpleDateFormat.
+				format(new Date(System.currentTimeMillis())).
 				getBytes("ISO-8859-1"), Base64.NO_WRAP));
 
 	    byte aes256[] = Cryptography.encryptFire
@@ -921,11 +917,11 @@ public class Messages
 	    if(aes256 == null)
 		return null;
 
-	    byte sha1[] = Cryptography.hmacFire
+	    byte sha256[] = Cryptography.hmacFire
 		(aes256,
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-	    if(sha1 == null)
+	    if(sha256 == null)
 		return null;
 
 	    stringBuilder.setLength(0);
@@ -933,7 +929,7 @@ public class Messages
 		(Base64.encodeToString(aes256, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(sha1, Base64.NO_WRAP));
+		(Base64.encodeToString(sha256, Base64.NO_WRAP));
 	    return stringBuilder.toString().getBytes("ISO-8859-1");
 	}
 	catch(Exception exception)

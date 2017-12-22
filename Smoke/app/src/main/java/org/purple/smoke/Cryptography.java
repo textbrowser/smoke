@@ -89,11 +89,11 @@ public class Cryptography
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_sipHashMacKeyMutex =
 	new ReentrantReadWriteLock();
-    private final static String FIRE_ALGORITHM = "AES";
     private final static String FIRE_CIPHER_TRANSFORMATION =
 	"AES/CTS/NoPadding";
-    private final static String FIRE_HASH_ALGORITHM = "SHA-1";
-    private final static String FIRE_HMAC_ALGORITHM = "HmacSHA1";
+    private final static String FIRE_HASH_ALGORITHM = "SHA-256";
+    private final static String FIRE_HMAC_ALGORITHM = "HmacSHA256";
+    private final static String FIRE_SYMMETRIC_ALGORITHM = "AES";
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
@@ -587,13 +587,29 @@ public class Cryptography
 	    return null;
 	}
 
+	byte sha256[] = null;
+
+	try
+	{
+	    sha256 = "sha256".getBytes("ISO-8859-1"); // Latin-1.
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
+	/*
+	** Now, a key.
+	*/
+
 	byte key[] = null;
 
 	try
 	{
 	    key = pbkdf2
 		(s,
-		 new String(new String(Miscellaneous.joinByteArrays(c, aes256)).
+		 new String(new String(Miscellaneous.
+				       joinByteArrays(c, aes256, sha256)).
 			    getBytes("UTF-8")).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
 		 2304);
@@ -1239,7 +1255,8 @@ public class Cryptography
 	try
 	{
 	    Cipher cipher = null;
-	    SecretKey secretKey = new SecretKeySpec(keyBytes, FIRE_ALGORITHM);
+	    SecretKey secretKey = new SecretKeySpec
+		(keyBytes, FIRE_SYMMETRIC_ALGORITHM);
 	    byte iv[] = new byte[16];
 
 	    cipher = Cipher.getInstance(FIRE_CIPHER_TRANSFORMATION);
