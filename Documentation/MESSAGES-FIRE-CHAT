@@ -1,0 +1,16 @@
+[AES-256] (1)
+{
+	0040b (1)	Base-64
+	\n
+	Name (2)	Base-64
+	\n
+	ID (3)		Base-64
+	\n
+	UTC Date (4)	Base-64
+}
+
+[SHA-256 HMAC] (2)	32 Bytes
+{
+	[AES-256] (1)
+}
+
