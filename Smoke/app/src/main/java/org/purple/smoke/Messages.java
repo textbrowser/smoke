@@ -922,6 +922,10 @@ public class Messages
 	    if(aes256 == null)
 		return null;
 
+	    /*
+	    ** [ SHA-256 HMAC ]
+	    */
+
 	    byte sha256[] = Cryptography.hmacFire
 		(aes256,
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
