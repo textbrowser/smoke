@@ -1138,16 +1138,8 @@ public class Settings extends AppCompatActivity
 
     private void prepareListeners()
     {
-	Button button1 = (Button) findViewById(R.id.epks);
+	Button button1 = null;
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
-
-	button1.setOnClickListener(new View.OnClickListener()
-	{
-	    public void onClick(View view)
-	    {
-		epks();
-	    }
-        });
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setOnClickListener(new View.OnClickListener()
@@ -1164,6 +1156,24 @@ public class Settings extends AppCompatActivity
 	    public void onClick(View view)
 	    {
 		addParticipant();
+	    }
+        });
+
+	button1 = (Button) findViewById(R.id.clear_log);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		m_databaseHelper.clearTable("log");
+	    }
+	});
+
+	button1 = (Button) findViewById(R.id.epks);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		epks();
 	    }
         });
 
