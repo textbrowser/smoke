@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.support.v4.widget.NestedScrollView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -39,7 +40,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -148,15 +148,15 @@ public class FireChannel extends View
 	if(m_view == null)
 	    return;
 
-	final ScrollView scrollView = (ScrollView)
+	final NestedScrollView nestedScrollView = (NestedScrollView)
 	    m_view.findViewById(R.id.chat_scrollview);
 
-	scrollView.post(new Runnable()
+	nestedScrollView.post(new Runnable()
 	{
 	    @Override
 	    public void run()
 	    {
-		scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+		nestedScrollView.fullScroll(NestedScrollView.FOCUS_DOWN);
 	    }
 	});
     }
