@@ -948,6 +948,79 @@ public class Messages
 	return null;
     }
 
+    public static byte[] fireStatus(Cryptography cryptography,
+				    String id,
+				    String name,
+				    byte keyStream[])
+    {
+	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... N] - SHA-256 HMAC Key
+	*/
+
+	try
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(FIRE_STATUS_MESSAGE_TYPE.getBytes("ISO-8859-1"),
+				Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(name.getBytes("UTF-8"), Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(id.getBytes("ISO-8859-1"),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    TimeZone utc = TimeZone.getTimeZone("UTC");
+
+	    s_fireSimpleDateFormat.setTimeZone(utc);
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(s_fireSimpleDateFormat.
+				format(new Date(System.currentTimeMillis())).
+				getBytes("ISO-8859-1"), Base64.NO_WRAP));
+
+	    byte aes256[] = Cryptography.encryptFire
+		(stringBuilder.toString().getBytes("ISO-8859-1"),
+		 Arrays.copyOfRange(keyStream, 0, 32));
+
+	    if(aes256 == null)
+		return null;
+
+	    /*
+	    ** [ SHA-256 HMAC ]
+	    */
+
+	    byte sha256[] = Cryptography.hmacFire
+		(aes256,
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+	    if(sha256 == null)
+		return null;
+
+	    stringBuilder.setLength(0);
+	    stringBuilder.append
+		(Base64.encodeToString(aes256, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(sha256, Base64.NO_WRAP));
+	    return stringBuilder.toString().getBytes("ISO-8859-1");
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
     public static byte[] pkpRequestMessage(Cryptography cryptography,
 					   String requestedSipHashId)
     {

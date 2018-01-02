@@ -35,7 +35,8 @@ public class MessageElement
     public byte m_keyStream[] = null;
     public final static int CHAT_MESSAGE_TYPE = 0;
     public final static int FIRE_MESSAGE_TYPE = 1;
-    public final static int RETRIEVE_MESSAGES_MESSAGE_TYPE = 2;
+    public final static int FIRE_STATUS_MESSAGE_TYPE = 2;
+    public final static int RETRIEVE_MESSAGES_MESSAGE_TYPE = 3;
     public int m_messageType = -1;
     public long m_sequence = -1;
     public long m_timestamp = -1;

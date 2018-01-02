@@ -44,17 +44,38 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class FireChannel extends View
 {
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
+    private ScheduledExecutorService m_statusScheduler = null;
     private String m_id;
     private String m_name = "";
     private View m_view = null;
     private int m_oid = -1;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+    private final int STATUS_INTERVAL = 30000;
+
+    private void createSchedulers()
+    {
+	if(m_statusScheduler == null)
+	{
+	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    Kernel.getInstance().enqueueFireStatus(m_id, m_name);
+		}
+	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+    }
 
     private void prepareListeners()
     {
@@ -175,6 +196,7 @@ public class FireChannel extends View
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_name = name;
 	m_oid = oid;
+	createSchedulers();
     }
 
     public FireChannel(Context context, AttributeSet attrs)
@@ -183,6 +205,7 @@ public class FireChannel extends View
 	m_context = context;
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
+	createSchedulers();
     }
 
     public FireChannel(Context context, AttributeSet attrs, int defStyle)
@@ -191,6 +214,7 @@ public class FireChannel extends View
 	m_context = context;
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
+	createSchedulers();
     }
 
     public String name()

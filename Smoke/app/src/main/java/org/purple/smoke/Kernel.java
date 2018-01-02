@@ -343,6 +343,15 @@ public class Kernel
 						 "fire_user_name").toString(),
 				     messageElement.m_keyStream);
 				break;
+			    case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
+				bytes = Messages.fireStatus
+				    (s_cryptography,
+				     messageElement.m_id,
+				     s_databaseHelper.
+				     readSetting(s_cryptography,
+						 "fire_user_name").toString(),
+				     messageElement.m_keyStream);
+				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				bytes = Messages.chatMessageRetrieval
 				    (s_cryptography);
@@ -365,6 +374,11 @@ public class Kernel
 				    (messageElement.m_id);
 				break;
 			    case MessageElement.FIRE_MESSAGE_TYPE:
+				enqueueMessage
+				    (Messages.
+				     bytesToMessageStringNonBase64(bytes));
+				break;
+			    case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
 				enqueueMessage
 				    (Messages.
 				     bytesToMessageStringNonBase64(bytes));
@@ -1278,9 +1292,7 @@ public class Kernel
 	}
     }
 
-    public void enqueueFireMessage(String message,
-				   String id,
-				   String name)
+    public void enqueueFireMessage(String message, String id, String name)
     {
 	byte keystream[] = null;
 
@@ -1309,6 +1321,43 @@ public class Kernel
 	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
+	    m_messagesToSend.add(messageElement);
+	}
+	finally
+	{
+	    m_messagesToSendMutex.writeLock().unlock();
+	}
+    }
+
+    public void enqueueFireStatus(String id, String name)
+    {
+	byte keystream[] = null;
+
+	m_fireStreamsMutex.readLock().lock();
+
+	try
+	{
+	    if(m_fireStreams.containsKey(name))
+		keystream = m_fireStreams.get(name);
+	}
+	finally
+	{
+	    m_fireStreamsMutex.readLock().unlock();
+	}
+
+	if(keystream == null)
+	    return;
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
+	    MessageElement messageElement = new MessageElement();
+
+	    messageElement.m_id = id;
+	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    messageElement.m_messageType =
+		MessageElement.FIRE_STATUS_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
 	finally
