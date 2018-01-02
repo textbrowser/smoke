@@ -53,7 +53,8 @@ public class FireChannel extends View
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
     private ScheduledExecutorService m_statusScheduler = null;
-    private String m_id;
+    private String m_id = Miscellaneous.byteArrayAsHexString
+	(Cryptography.randomBytes(128));
     private String m_name = "";
     private View m_view = null;
     private int m_oid = -1;
@@ -102,6 +103,24 @@ public class FireChannel extends View
 	    public void onClick(View view)
 	    {
 		Kernel.getInstance().extinguishFire(m_name);
+
+		if(m_statusScheduler != null)
+	        {
+		    m_statusScheduler.shutdown();
+
+		    try
+		    {
+			m_statusScheduler.awaitTermination
+			    (60, TimeUnit.SECONDS);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_statusScheduler = null;
+		    }
+		}
 
 		ViewGroup parent = (ViewGroup) m_view.getParent();
 
@@ -226,8 +245,6 @@ public class FireChannel extends View
     {
 	if(m_view == null)
 	{
-	    m_id = Miscellaneous.byteArrayAsHexString
-		(Cryptography.randomBytes(128));
 	    m_view = m_inflater.inflate(R.layout.fire_channel, null);
 	    prepareListeners();
 
