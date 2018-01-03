@@ -53,14 +53,14 @@ public class FireChannel extends View
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
     private ScheduledExecutorService m_statusScheduler = null;
-    private String m_id = Miscellaneous.byteArrayAsHexString
-	(Cryptography.randomBytes(128));
     private String m_name = "";
     private View m_view = null;
+    private final SimpleDateFormat m_simpleDateFormat =
+	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+    private final String m_id = Miscellaneous.byteArrayAsHexString
+	(Cryptography.randomBytes(128));
+    private final static int STATUS_INTERVAL = 30000;
     private int m_oid = -1;
-    private final SimpleDateFormat m_simpleDateFormat = new
-	SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-    private final int STATUS_INTERVAL = 30000;
 
     private void createSchedulers()
     {
