@@ -2139,21 +2139,21 @@ public class Settings extends AppCompatActivity
 
     private void stopTimers()
     {
-	if(m_scheduler == null)
-	    return;
+	if(m_scheduler != null)
+	{
+	    m_scheduler.shutdown();
 
-	m_scheduler.shutdown();
-
-	try
-	{
-	    m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_scheduler = null;
+	    try
+	    {
+		m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_scheduler = null;
+	    }
 	}
     }
 
