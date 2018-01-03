@@ -340,7 +340,7 @@ public class Kernel
 				     messageElement.m_message,
 				     s_databaseHelper.
 				     readSetting(s_cryptography,
-						 "fire_user_name").toString(),
+						 "fire_user_name"),
 				     messageElement.m_keyStream);
 				break;
 			    case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
@@ -349,7 +349,7 @@ public class Kernel
 				     messageElement.m_id,
 				     s_databaseHelper.
 				     readSetting(s_cryptography,
-						 "fire_user_name").toString(),
+						 "fire_user_name"),
 				     messageElement.m_keyStream);
 				break;
 			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:

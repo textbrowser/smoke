@@ -613,7 +613,9 @@ public class Cryptography
 			    getBytes("UTF-8")).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
 		 2304);
-	    key = Arrays.copyOfRange(key, 0, 32);
+
+	    if(key != null)
+		key = Arrays.copyOfRange(key, 0, 32);
 	}
 	catch(Exception exception)
 	{

@@ -114,8 +114,7 @@ public class Fire extends AppCompatActivity
 	if(State.getInstance().containsFire(name))
 	    return;
 
-	FireChannel fireChannel = new FireChannel
-	    (name, oid.intValue(), Fire.this);
+	FireChannel fireChannel = new FireChannel(name, oid, Fire.this);
 
 	State.getInstance().addFire(fireChannel);
 
@@ -430,8 +429,7 @@ public class Fire extends AppCompatActivity
 			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 	textView1 = (TextView) findViewById(R.id.name);
 	textView1.setText
-	    (m_databaseHelper.readSetting(s_cryptography, "fire_user_name").
-	     toString());
+	    (m_databaseHelper.readSetting(s_cryptography, "fire_user_name"));
 	textView1 = (TextView) findViewById(R.id.salt);
 	textView1.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
 			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);

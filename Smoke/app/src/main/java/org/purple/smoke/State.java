@@ -112,10 +112,7 @@ public class State
 
     public boolean containsFire(String name)
     {
-	if(m_fireChannels == null)
-	    return false;
-
-	return m_fireChannels.containsKey(name);
+	return m_fireChannels != null && m_fireChannels.containsKey(name);
     }
 
     public boolean isAuthenticated()

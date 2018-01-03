@@ -205,8 +205,10 @@ public class Database extends SQLiteOpenHelper
 			switch(i)
 			{
 			case 0:
-			    fireElement.m_name = new String
-				(bytes, "ISO-8859-1");
+			    if(bytes != null)
+				fireElement.m_name = new String
+				    (bytes, "ISO-8859-1");
+
 			    break;
 			}
 		    }
@@ -699,8 +701,6 @@ public class Database extends SQLiteOpenHelper
 
 			switch(i)
 			{
-			case 0:
-			    break;
 			case 1:
 			    sipHashIdElement.m_name = new String(bytes);
 			    break;
