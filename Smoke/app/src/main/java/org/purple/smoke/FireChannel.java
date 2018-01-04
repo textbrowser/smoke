@@ -40,8 +40,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -58,6 +62,15 @@ public class FireChannel extends View
 	public long m_timestamp = 0;
     }
 
+    private final static Comparator<Participant>
+	s_participantComparator = new Comparator<Participant> ()
+        {
+	    @Override
+	    public int compare(Participant p1, Participant p2)
+	    {
+		return p1.m_name.compareTo(p2.m_name);
+	    }
+	};
     private Context m_context = null;
     private Hashtable<String, Participant> m_participants = new Hashtable<> ();
     private LayoutInflater m_inflater = null;
@@ -85,6 +98,44 @@ public class FireChannel extends View
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
+    }
+
+    private void populateParticipants()
+    {
+	if(m_view == null)
+	    return;
+
+	final TableLayout tableLayout = (TableLayout)
+	    m_view.findViewById(R.id.participants);
+
+	if(m_participants.isEmpty())
+	{
+	    tableLayout.removeAllViews();
+	    return;
+	}
+	else
+	    tableLayout.removeAllViews();
+
+	ArrayList<Participant> arrayList = new ArrayList<>
+	    (m_participants.values());
+
+	Collections.sort(arrayList, s_participantComparator);
+
+	for(Participant participant : arrayList)
+	{
+	    if(participant == null)
+		continue;
+
+	    TextView textView = new TextView(m_context);
+
+	    textView.setText(participant.m_name);
+	    tableLayout.addView(textView);
+
+	    if(m_id.equals(participant.m_id))
+		textView.setBackgroundColor(Color.rgb(254, 229, 172));
+	}
+
+	arrayList.clear();
     }
 
     private void prepareListeners()
@@ -269,6 +320,15 @@ public class FireChannel extends View
 	    m_view = m_inflater.inflate(R.layout.fire_channel, null);
 	    prepareListeners();
 
+	    Participant participant = new Participant();
+
+	    participant.m_id = m_id;
+	    participant.m_name = Database.getInstance().
+		readSetting(Cryptography.getInstance(), "fire_user_name");
+	    participant.m_timestamp = System.currentTimeMillis();
+	    m_participants.put(m_id, participant);
+	    populateParticipants();
+
 	    TextView textView1 = (TextView) m_view.findViewById(R.id.fire_name);
 
 	    textView1.setText(m_name);
@@ -314,6 +374,7 @@ public class FireChannel extends View
     {
 	if(id == null ||
 	   id.isEmpty() ||
+	   m_view == null ||
 	   message == null ||
 	   message.isEmpty() ||
 	   name == null ||
@@ -379,5 +440,6 @@ public class FireChannel extends View
 	participant.m_name = name;
 	participant.m_timestamp = System.currentTimeMillis();
 	m_participants.put(id, participant);
+	populateParticipants();
     }
 }
