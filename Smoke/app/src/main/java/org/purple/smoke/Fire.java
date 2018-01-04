@@ -78,14 +78,27 @@ public class Fire extends AppCompatActivity
 	    {
 		FireChannel fireChannel = State.getInstance().fireChannel
 		    (intent.getStringExtra("org.purple.smoke.channel"));
-		String message = intent.getStringExtra
-		    ("org.purple.smoke.message");
-		String name = intent.getStringExtra("org.purple.smoke.name");
 
-		if(fireChannel != null && message != null && name != null)
-		    fireChannel.append(message, name);
+		if(fireChannel != null)
+		{
+		    String id = intent.getStringExtra("org.purple.smoke.id");
+		    String name = intent.getStringExtra
+			("org.purple.smoke.name");
+
+		    if(intent.getStringExtra("org.purple.smoke.message_type").
+		       equals(Messages.FIRE_CHAT_MESSAGE_TYPE))
+		    {
+			String message = intent.getStringExtra
+			    ("org.purple.smoke.message");
+
+			fireChannel.append(id, message, name);
+		    }
+		    else if(intent.
+			    getStringExtra("org.purple.smoke.message_type").
+			    equals(Messages.FIRE_STATUS_MESSAGE_TYPE))
+			fireChannel.status(id, name);
+		}
 	    }
-
 	}
     }
 

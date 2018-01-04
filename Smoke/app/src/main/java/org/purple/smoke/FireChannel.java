@@ -43,6 +43,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,7 +51,15 @@ import java.util.concurrent.TimeUnit;
 
 public class FireChannel extends View
 {
+    private class Participant
+    {
+	public String m_id = "";
+	public String m_name = "";
+	public long m_timestamp = 0;
+    }
+
     private Context m_context = null;
+    private Hashtable<String, Participant> m_participants = new Hashtable<> ();
     private LayoutInflater m_inflater = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_name = "";
@@ -289,11 +298,20 @@ public class FireChannel extends View
 	return m_view;
     }
 
-    public void append(String message, String name)
+    public void append(String id, String message, String name)
     {
+	if(id == null ||
+	   id.isEmpty() ||
+	   message == null ||
+	   message.isEmpty() ||
+	   name == null ||
+	   name.isEmpty())
+	    return;
+
+	status(id, name);
+
 	StringBuilder stringBuilder = new StringBuilder();
-	TextView textView = (TextView) m_view.findViewById
-	    (R.id.chat_messages);
+	TextView textView = (TextView) m_view.findViewById(R.id.chat_messages);
 
 	textView.append("[");
 	textView.append(m_simpleDateFormat.format(new Date()));
@@ -312,5 +330,42 @@ public class FireChannel extends View
 	stringBuilder.append("\n\n");
 	textView.append(stringBuilder);
 	scrollMessagesView();
+    }
+
+    public void status(String id, String name)
+    {
+	if(id == null || id.isEmpty() || name == null || name.isEmpty())
+	    return;
+
+	if(m_participants.containsKey(id))
+	    return;
+
+	StringBuilder stringBuilder = new StringBuilder();
+	TextView textView = (TextView) m_view.findViewById(R.id.chat_messages);
+
+	textView.append("[");
+	textView.append(m_simpleDateFormat.format(new Date()));
+	textView.append("] ");
+	stringBuilder.append(name);
+	stringBuilder.append(" has joined ");
+	stringBuilder.append(m_name);
+	stringBuilder.append(".\n\n");
+
+	Spannable spannable = new SpannableStringBuilder(stringBuilder);
+
+	spannable.setSpan
+	    (new StyleSpan(android.graphics.Typeface.ITALIC),
+	     0,
+	     spannable.length(),
+	     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	textView.append(spannable);
+	scrollMessagesView();
+
+	Participant participant = new Participant();
+
+	participant.m_id = id;
+	participant.m_name = name;
+	participant.m_timestamp = System.currentTimeMillis();
+	m_participants.put(id, participant);
     }
 }

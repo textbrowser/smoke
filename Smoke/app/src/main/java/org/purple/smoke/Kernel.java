@@ -724,6 +724,8 @@ public class Kernel
 				    ("org.purple.smoke.channel",
 				     entry.getKey());
 				intent.putExtra
+				    ("org.purple.smoke.id", strings[2]);
+				intent.putExtra
 				    ("org.purple.smoke.message_type",
 				     strings[0]);
 				intent.putExtra
@@ -731,11 +733,9 @@ public class Kernel
 
 				if(strings[0].
 				   equals(Messages.FIRE_CHAT_MESSAGE_TYPE))
-				{
 				    intent.putExtra
 					("org.purple.smoke.message",
 					 strings[3]);
-				}
 
 				Smoke.getApplication().sendBroadcast(intent);
 				return true;
