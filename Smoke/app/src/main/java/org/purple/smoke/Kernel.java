@@ -37,10 +37,15 @@ import android.util.Base64;
 import android.util.SparseArray;
 import java.net.InetAddress;
 import java.security.PublicKey;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -76,6 +81,8 @@ public class Kernel
     private final static Database s_databaseHelper = Database.getInstance();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static SimpleDateFormat s_fireSimpleDateFormat =
+	new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
@@ -125,6 +132,7 @@ public class Kernel
 	}
 
 	prepareSchedulers();
+	s_fireSimpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     private void prepareSchedulers()
@@ -688,7 +696,28 @@ public class Kernel
 				     strings.length == 5))
 				    return true;
 
-				for(int i = 0; i < strings.length; i++)
+				strings[strings.length - 1] = new
+				    String(Base64.
+					   decode(strings[strings.length - 1],
+						  Base64.NO_WRAP));
+
+				Date date = s_fireSimpleDateFormat.parse
+				    (strings[strings.length - 1]);
+				Timestamp timestamp = new Timestamp
+				    (date.getTime());
+				long current = System.currentTimeMillis();
+
+				if(current - timestamp.getTime() < 0)
+			        {
+				    if(timestamp.getTime() - current >
+				       FIRE_TIME_DELTA)
+					return true;
+				}
+				else if(current - timestamp.getTime() >
+					FIRE_TIME_DELTA)
+				    return true;
+
+				for(int i = 0; i < strings.length - 1; i++)
 				    strings[i] = new String
 					(Base64.decode(strings[i],
 						       Base64.NO_WRAP),
