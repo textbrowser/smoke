@@ -398,15 +398,11 @@ public class Fire extends AppCompatActivity
     {
 	Button button1 = (Button) findViewById(R.id.add_channel);
 	Button button2 = (Button) findViewById(R.id.reset_fields);
-	View linearLayout1 = findViewById(R.id.channel_layout);
-	View linearLayout2 = findViewById(R.id.digest_layout);
-	View linearLayout3 = findViewById(R.id.salt_layout);
+	View gridLayout1 = findViewById(R.id.grid_layout);
 
 	button1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	button2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-	linearLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-	linearLayout2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-	linearLayout3.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	gridLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 
     private void showSettingsActivity()

@@ -59,7 +59,7 @@ public class FireChannel extends View
     {
 	public String m_id = "";
 	public String m_name = "";
-	public long m_timestamp = 0;
+	public long m_timestamp = -1;
     }
 
     private final static Comparator<Participant>
@@ -325,7 +325,6 @@ public class FireChannel extends View
 	    participant.m_id = m_id;
 	    participant.m_name = Database.getInstance().
 		readSetting(Cryptography.getInstance(), "fire_user_name");
-	    participant.m_timestamp = System.currentTimeMillis();
 	    m_participants.put(m_id, participant);
 	    populateParticipants();
 

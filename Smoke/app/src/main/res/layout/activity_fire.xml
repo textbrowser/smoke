@@ -62,12 +62,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="@string/name" />
 
                     <EditText
                         android:id="@+id/name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
@@ -81,6 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
                         android:text="@string/save" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -109,75 +109,55 @@
                         android:checked="true" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/channel_layout"
+                <GridLayout
+                    android:id="@+id/grid_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="5dp"
+                    android:columnCount="2">
 
                     <TextView
-                        android:layout_width="50dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="@string/channel" />
 
                     <EditText
                         android:id="@+id/channel"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/channel"
                         android:inputType="textPersonName" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/digest_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="50dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="@string/digest_key" />
 
                     <EditText
                         android:id="@+id/digest"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/digest"
                         android:inputType="textPersonName" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/salt_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
                     <TextView
-                        android:layout_width="50dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="@string/salt" />
 
                     <EditText
                         android:id="@+id/salt"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/salt"
                         android:inputType="textPersonName" />
-                </LinearLayout>
+                </GridLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
