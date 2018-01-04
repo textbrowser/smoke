@@ -410,7 +410,18 @@ public class FireChannel extends View
 	    return;
 
 	if(m_participants.containsKey(id))
-	    return;
+	{
+	    Participant participant = m_participants.get(id);
+
+	    if(participant != null)
+	    {
+		participant.m_timestamp = System.currentTimeMillis();
+		m_participants.replace(id, participant);
+		return;
+	    }
+	    else
+		m_participants.remove(id);
+	}
 
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView = (TextView) m_view.findViewById(R.id.chat_messages);
