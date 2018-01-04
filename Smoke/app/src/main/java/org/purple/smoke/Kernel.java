@@ -654,7 +654,7 @@ public class Kernel
 		    {
 			byte aes256[] = Base64.decode
 			    (strings[0], Base64.NO_WRAP);
-			byte sha256[] = Base64.decode
+			byte sha384[] = Base64.decode
 			    (strings[1], Base64.NO_WRAP);
 
 			for(Hashtable.Entry<String, byte[]> entry :
@@ -671,7 +671,7 @@ public class Kernel
 							   32,
 							   entry.getValue().
 							   length)),
-				      sha256))
+				      sha384))
 			    {
 				aes256 = Cryptography.decryptFire
 				    (aes256,

@@ -923,14 +923,14 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-256 HMAC ]
+	    ** [ SHA-384 HMAC ]
 	    */
 
-	    byte sha256[] = Cryptography.hmacFire
+	    byte sha384[] = Cryptography.hmacFire
 		(aes256,
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-	    if(sha256 == null)
+	    if(sha384 == null)
 		return null;
 
 	    stringBuilder.setLength(0);
@@ -938,7 +938,7 @@ public class Messages
 		(Base64.encodeToString(aes256, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(sha256, Base64.NO_WRAP));
+		(Base64.encodeToString(sha384, Base64.NO_WRAP));
 	    return stringBuilder.toString().getBytes("ISO-8859-1");
 	}
 	catch(Exception exception)
@@ -999,11 +999,11 @@ public class Messages
 	    ** [ SHA-256 HMAC ]
 	    */
 
-	    byte sha256[] = Cryptography.hmacFire
+	    byte sha384[] = Cryptography.hmacFire
 		(aes256,
 		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
-	    if(sha256 == null)
+	    if(sha384 == null)
 		return null;
 
 	    stringBuilder.setLength(0);
@@ -1011,7 +1011,7 @@ public class Messages
 		(Base64.encodeToString(aes256, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(sha256, Base64.NO_WRAP));
+		(Base64.encodeToString(sha384, Base64.NO_WRAP));
 	    return stringBuilder.toString().getBytes("ISO-8859-1");
 	}
 	catch(Exception exception)

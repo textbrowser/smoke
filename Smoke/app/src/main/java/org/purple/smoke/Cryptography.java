@@ -89,8 +89,8 @@ public class Cryptography
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_sipHashMacKeyMutex =
 	new ReentrantReadWriteLock();
-    private final static String FIRE_HASH_ALGORITHM = "SHA-256";
-    private final static String FIRE_HMAC_ALGORITHM = "HmacSHA256";
+    private final static String FIRE_HASH_ALGORITHM = "SHA-384";
+    private final static String FIRE_HMAC_ALGORITHM = "HmacSHA384";
     private final static String FIRE_SYMMETRIC_ALGORITHM = "AES";
     private final static String FIRE_SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CTS/NoPadding";
@@ -587,11 +587,11 @@ public class Cryptography
 	    return null;
 	}
 
-	byte sha256[] = null;
+	byte sha384[] = null;
 
 	try
 	{
-	    sha256 = "sha256".getBytes("ISO-8859-1"); // Latin-1.
+	    sha384 = "sha384".getBytes("ISO-8859-1"); // Latin-1.
 	}
 	catch(Exception exception)
 	{
@@ -609,7 +609,7 @@ public class Cryptography
 	    key = pbkdf2
 		(s,
 		 new String(new String(Miscellaneous.
-				       joinByteArrays(c, aes256, sha256)).
+				       joinByteArrays(c, aes256, sha384)).
 			    getBytes("UTF-8")).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
 		 2304);
