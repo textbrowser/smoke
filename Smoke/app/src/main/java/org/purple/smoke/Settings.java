@@ -206,7 +206,7 @@ public class Settings extends AppCompatActivity
 		}, 10000); // 10 Seconds
 	    }
 	    else if(intent.getAction().
-	       equals("org.purple.smoke.populate_participants"))
+		    equals("org.purple.smoke.populate_participants"))
 		populateParticipants();
 	}
     }

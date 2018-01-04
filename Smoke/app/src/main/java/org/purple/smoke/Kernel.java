@@ -632,6 +632,95 @@ public class Kernel
 
 	try
 	{
+	    m_fireStreamsMutex.readLock().lock();
+
+	    try
+	    {
+		if(!m_fireStreams.isEmpty())
+		{
+		    String strings[] = Messages.stripMessage(buffer).
+			split("\\n");
+
+		    if(strings != null && strings.length == 2)
+		    {
+			byte aes256[] = Base64.decode
+			    (strings[0], Base64.NO_WRAP);
+			byte sha256[] = Base64.decode
+			    (strings[1], Base64.NO_WRAP);
+
+			for(Hashtable.Entry<String, byte[]> entry :
+				m_fireStreams.entrySet())
+			{
+			    if(entry.getValue() == null)
+				continue;
+
+			    if(Cryptography.
+			       memcmp(Cryptography.
+				      hmacFire(aes256,
+					       Arrays.
+					       copyOfRange(entry.getValue(),
+							   32,
+							   entry.getValue().
+							   length)),
+				      sha256))
+			    {
+				aes256 = Cryptography.decryptFire
+				    (aes256,
+				     Arrays.copyOfRange(entry.getValue(),
+							0,
+							32));
+
+				if(aes256 == null)
+				    return true;
+
+				aes256 = Arrays.copyOfRange
+
+				    /*
+				    ** Remove the size information of the
+				    ** original data.
+				    */
+
+				    (aes256, 0, aes256.length - 4);
+				strings = new String(aes256).split("\\n");
+
+				for(int i = 0; i < strings.length; i++)
+				    strings[i] = new String
+					(Base64.decode(strings[i],
+						       Base64.NO_WRAP),
+					 "UTF-8");
+
+				Intent intent = new Intent
+				    ("org.purple.smoke.fire_message");
+
+				intent.putExtra
+				    ("org.purple.smoke.channel",
+				     entry.getKey());
+				intent.putExtra
+				    ("org.purple.smoke.message_type",
+				     strings[0]);
+				intent.putExtra
+				    ("org.purple.smoke.name", strings[1]);
+
+				if(strings[0].
+				   equals(Messages.FIRE_CHAT_MESSAGE_TYPE))
+				{
+				    intent.putExtra
+					("org.purple.smoke.message",
+					 strings[3]);
+				}
+
+				Smoke.getApplication().sendBroadcast(intent);
+				return true;
+			    }
+			}
+		    }
+		}
+	    }
+	    finally
+	    {
+		m_fireStreamsMutex.readLock().unlock();
+	    }
+
 	    byte bytes[] =
 		Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT);
 

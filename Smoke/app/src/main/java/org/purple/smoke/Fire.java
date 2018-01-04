@@ -28,8 +28,11 @@
 package org.purple.smoke;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -55,6 +58,36 @@ import java.util.Map;
 public class Fire extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+
+    private class FireBroadcastReceiver extends BroadcastReceiver
+    {
+	public FireBroadcastReceiver()
+	{
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent)
+	{
+	    if(intent == null || intent.getAction() == null)
+		return;
+
+	    if(intent.getAction().equals("org.purple.smoke.fire_message"))
+	    {
+		FireChannel fireChannel = State.getInstance().fireChannel
+		    (intent.getStringExtra("org.purple.smoke.channel"));
+		String message = intent.getStringExtra
+		    ("org.purple.smoke.message");
+		String name = intent.getStringExtra("org.purple.smoke.name");
+
+		if(fireChannel != null && message != null && name != null)
+		    fireChannel.append(message, name);
+	    }
+
+	}
+    }
+
+    private FireBroadcastReceiver m_receiver = null;
+    private boolean m_receiverRegistered = false;
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final static CharsetEncoder s_latin1Encoder = Charset.
 	forName("ISO-8859-1").newEncoder();
@@ -71,10 +104,6 @@ public class Fire extends AppCompatActivity
 	{
 
 	    for(int i = start; i < end; i++)
-		/*
-		** Allow hexadecimal characters only and some delimiters.
-		*/
-
 		if(!s_latin1Encoder.canEncode(source.charAt(i)))
 		    return source.subSequence(start, i);
 
@@ -379,6 +408,7 @@ public class Fire extends AppCompatActivity
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_databaseHelper.cleanDanglingOutboundQueued();
 	m_databaseHelper.cleanDanglingParticipants();
+	m_receiver = new FireBroadcastReceiver();
         setContentView(R.layout.activity_fire);
 
 	if(State.getInstance().isAuthenticated())
@@ -465,6 +495,18 @@ public class Fire extends AppCompatActivity
     }
 
     @Override
+    public void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -478,5 +520,32 @@ public class Fire extends AppCompatActivity
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	return true;
+    }
+
+    @Override
+    public void onResume()
+    {
+	super.onResume();
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.fire_message");
+	    registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
+    }
+
+    @Override
+    public void onStop()
+    {
+	super.onStop();
+
+	if(m_receiverRegistered)
+	{
+	    unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
     }
 }

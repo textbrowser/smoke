@@ -63,6 +63,17 @@ public class State
 	}
     }
 
+    public FireChannel fireChannel(String name)
+    {
+	if(name == null)
+	    return null;
+
+	if(m_fireChannels != null && m_fireChannels.containsKey(name))
+	    return m_fireChannels.get(name);
+
+	return null;
+    }
+
     public Map<String, FireChannel> fireChannels()
     {
 	return m_fireChannels;

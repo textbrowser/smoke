@@ -288,4 +288,29 @@ public class FireChannel extends View
 
 	return m_view;
     }
+
+    public void append(String message, String name)
+    {
+	StringBuilder stringBuilder = new StringBuilder();
+	TextView textView = (TextView) m_view.findViewById
+	    (R.id.chat_messages);
+
+	textView.append("[");
+	textView.append(m_simpleDateFormat.format(new Date()));
+	textView.append("] ");
+
+	Spannable spannable = new SpannableStringBuilder(name);
+
+	spannable.setSpan
+	    (new StyleSpan(android.graphics.Typeface.BOLD),
+	     0,
+	     spannable.length(),
+	     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	textView.append(spannable);
+	stringBuilder.append(": ");
+	stringBuilder.append(message);
+	stringBuilder.append("\n\n");
+	textView.append(stringBuilder);
+	scrollMessagesView();
+    }
 }
