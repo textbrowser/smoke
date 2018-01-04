@@ -180,7 +180,7 @@ public class FireChannel extends View
 		final TextView textView3 = (TextView) m_view.findViewById
 		    (R.id.chat_message);
 
-		textView2.post(new Runnable()
+		textView3.post(new Runnable()
 		{
 		    @Override
 		    public void run()
@@ -206,6 +206,18 @@ public class FireChannel extends View
 	    public void run()
 	    {
 		nestedScrollView.fullScroll(NestedScrollView.FOCUS_DOWN);
+	    }
+	});
+
+	final TextView textView1 = (TextView) m_view.findViewById
+	    (R.id.chat_message);
+
+	textView1.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		textView1.requestFocus();
 	    }
 	});
     }
