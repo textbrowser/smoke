@@ -86,6 +86,7 @@ public class Kernel
 	60000; // 60 Seconds
     private final static int CONGESTION_INTERVAL = 5000; // 5 Seconds
     private final static int CONGESTION_LIFETIME = 60; // Seconds
+    private final static int FIRE_TIME_DELTA = 30000; // 30 Seconds
     private final static int MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
@@ -682,6 +683,10 @@ public class Kernel
 
 				    (aes256, 0, aes256.length - 4);
 				strings = new String(aes256).split("\\n");
+
+				if(!(strings.length == 4 ||
+				     strings.length == 5))
+				    return true;
 
 				for(int i = 0; i < strings.length; i++)
 				    strings[i] = new String
