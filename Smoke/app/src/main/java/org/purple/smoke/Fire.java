@@ -71,7 +71,10 @@ public class Fire extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    if(intent.getAction().equals("org.purple.smoke.fire_message"))
+	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
+		Miscellaneous.showNotification
+		    (Fire.this, intent, findViewById(R.id.main_layout));
+	    else if(intent.getAction().equals("org.purple.smoke.fire_message"))
 	    {
 		FireChannel fireChannel = State.getInstance().fireChannel
 		    (intent.getStringExtra("org.purple.smoke.channel"));
@@ -531,6 +534,7 @@ public class Fire extends AppCompatActivity
 	{
 	    IntentFilter intentFilter = new IntentFilter();
 
+	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.fire_message");
 	    registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

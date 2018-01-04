@@ -31,11 +31,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
 import android.text.InputType;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 
@@ -303,6 +314,110 @@ public class Miscellaneous
 	alertDialog.setMessage(error);
 	alertDialog.setTitle("Error");
 	alertDialog.show();
+    }
+
+    public static void showNotification(Context context,
+					Intent intent,
+					View view)
+    {
+	if(context == null || intent == null || view == null)
+	    return;
+
+	if(intent.getAction().equals("org.purple.smoke.chat_message"))
+	{
+	    if(((Activity) context).isFinishing())
+		return;
+
+	    String message = intent.getStringExtra("org.purple.smoke.message");
+	    String name = intent.getStringExtra("org.purple.smoke.name");
+	    String sipHashId = intent.getStringExtra
+		("org.purple.smoke.sipHashId");
+
+	    if(message == null || name == null || sipHashId == null)
+		return;
+
+	    long sequence = intent.getLongExtra("org.purple.smoke.sequence", 1);
+	    long timestamp = intent.getLongExtra
+		("org.purple.smoke.timestamp", 0);
+
+	    State.getInstance().logChatMessage
+		(message, name, sipHashId, sequence, timestamp);
+	    message = message.trim();
+
+	    TextView textView1 = new TextView(context);
+	    final PopupWindow popupWindow = new PopupWindow(context);
+
+	    if(name.length() > 15)
+	    {
+		name = name.substring(0, 15);
+
+		if(!name.endsWith("..."))
+		{
+		    if(name.endsWith(".."))
+			name += ".";
+		    else if(name.endsWith("."))
+			name += "..";
+		    else
+			name += "...";
+		}
+	    }
+
+	    if(message.length() > 15)
+	    {
+		message = message.substring(0, 15);
+
+		if(!message.endsWith("..."))
+		{
+		    if(message.endsWith(".."))
+			message += ".";
+		    else if(message.endsWith("."))
+			message += "..";
+		    else
+			message += "...";
+		}
+	    }
+
+	    textView1.setBackgroundColor(Color.rgb(244, 200, 117));
+	    textView1.setText
+		("A message (" + message + ") from " + name +
+		 " has arrived.");
+	    textView1.setTextSize(16);
+	    popupWindow.setContentView(textView1);
+	    popupWindow.setOutsideTouchable(true);
+
+	    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+	    {
+		popupWindow.setHeight(300);
+		popupWindow.setWidth(450);
+	    }
+
+	    popupWindow.showAtLocation
+		(view, Gravity.START | Gravity.TOP, 75, 75);
+
+	    try
+	    {
+		Ringtone ringtone = null;
+		Uri notification = RingtoneManager.getDefaultUri
+		    (RingtoneManager.TYPE_NOTIFICATION);
+
+		ringtone = RingtoneManager.getRingtone(context, notification);
+		ringtone.play();
+	    }
+	    catch(Exception e)
+	    {
+	    }
+
+	    Handler handler = new Handler();
+
+	    handler.postDelayed(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    popupWindow.dismiss();
+		}
+	    }, 10000); // 10 Seconds
+	}
     }
 
     public static void showPromptDialog

@@ -34,12 +34,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -105,106 +101,8 @@ public class Settings extends AppCompatActivity
 		return;
 
 	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
-	    {
-		if(Settings.this.isFinishing())
-		    return;
-
-		String message = intent.getStringExtra
-		    ("org.purple.smoke.message");
-		String name = intent.getStringExtra("org.purple.smoke.name");
-		String sipHashId = intent.getStringExtra
-		    ("org.purple.smoke.sipHashId");
-
-		if(message == null || name == null || sipHashId == null)
-		    return;
-
-		long sequence = intent.getLongExtra
-		    ("org.purple.smoke.sequence", 1);
-		long timestamp = intent.getLongExtra
-		    ("org.purple.smoke.timestamp", 0);
-
-		State.getInstance().logChatMessage
-		    (message, name, sipHashId, sequence, timestamp);
-		message = message.trim();
-
-		TextView textView1 = new TextView(Settings.this);
-		final PopupWindow popupWindow = new PopupWindow(Settings.this);
-
-		if(name.length() > 15)
-		{
-		    name = name.substring(0, 15);
-
-		    if(!name.endsWith("..."))
-		    {
-			if(name.endsWith(".."))
-			    name += ".";
-			else if(name.endsWith("."))
-			    name += "..";
-			else
-			    name += "...";
-		    }
-		}
-
-		if(message.length() > 15)
-		{
-		    message = message.substring(0, 15);
-
-		    if(!message.endsWith("..."))
-		    {
-			if(message.endsWith(".."))
-			    message += ".";
-			else if(message.endsWith("."))
-			    message += "..";
-			else
-			    message += "...";
-		    }
-		}
-
-		textView1.setBackgroundColor(Color.rgb(244, 200, 117));
-		textView1.setText
-		    ("A message (" + message + ") from " + name +
-		     " has arrived.");
-		textView1.setTextSize(16);
-		popupWindow.setContentView(textView1);
-		popupWindow.setOutsideTouchable(true);
-
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-		{
-		    popupWindow.setHeight(300);
-		    popupWindow.setWidth(450);
-		}
-
-		popupWindow.showAtLocation
-		    (findViewById(R.id.main_layout),
-		     Gravity.START | Gravity.TOP,
-		     75,
-		     75);
-
-		try
-		{
-		    Ringtone ringtone = null;
-		    Uri notification = RingtoneManager.getDefaultUri
-			(RingtoneManager.TYPE_NOTIFICATION);
-
-		    ringtone = RingtoneManager.getRingtone
-			(getApplicationContext(), notification);
-		    ringtone.play();
-		}
-		catch(Exception e)
-		{
-		}
-
-		Handler handler = new Handler();
-
-		handler.postDelayed(new Runnable()
-		{
-		    @Override
-		    public void run()
-		    {
-			popupWindow.dismiss();
-		    }
-		}, 10000); // 10 Seconds
-	    }
+		Miscellaneous.showNotification
+		    (Settings.this, intent, findViewById(R.id.main_layout));
 	    else if(intent.getAction().
 		    equals("org.purple.smoke.populate_participants"))
 		populateParticipants();

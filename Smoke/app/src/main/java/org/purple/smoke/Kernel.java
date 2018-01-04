@@ -707,14 +707,8 @@ public class Kernel
 				    (date.getTime());
 				long current = System.currentTimeMillis();
 
-				if(current - timestamp.getTime() < 0)
-			        {
-				    if(timestamp.getTime() - current >
-				       FIRE_TIME_DELTA)
-					return true;
-				}
-				else if(current - timestamp.getTime() >
-					FIRE_TIME_DELTA)
+				if(Math.abs(current - timestamp.getTime()) >
+				   FIRE_TIME_DELTA)
 				    return true;
 
 				for(int i = 0; i < strings.length - 1; i++)
