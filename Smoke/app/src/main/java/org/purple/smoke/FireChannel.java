@@ -66,13 +66,14 @@ public class FireChannel extends View
 
     private final static Comparator<Participant>
 	s_participantComparator = new Comparator<Participant> ()
-        {
+	{
 	    @Override
 	    public int compare(Participant p1, Participant p2)
 	    {
 		return p1.m_name.compareTo(p2.m_name);
 	    }
 	};
+
     private Context m_context = null;
     private Hashtable<String, Participant> m_participants = new Hashtable<> ();
     private LayoutInflater m_inflater = null;
@@ -84,7 +85,6 @@ public class FireChannel extends View
     private final String m_id = Miscellaneous.byteArrayAsHexString
 	(Cryptography.randomBytes(128));
     private final static int STATUS_INTERVAL = 30000;
-    private int m_oid = -1;
 
     private void createSchedulers()
     {
@@ -144,13 +144,7 @@ public class FireChannel extends View
 
 				    StringBuilder stringBuilder =
 					new StringBuilder();
-				    TextView textView2 = (TextView) m_view.
-					findViewById(R.id.chat_messages);
 
-				    textView2.append("[");
-				    textView2.append
-					(m_simpleDateFormat.format(new Date()));
-				    textView2.append("] ");
 				    stringBuilder.append
 					(textView1.getText().toString());
 				    stringBuilder.append(" has left ");
@@ -167,6 +161,14 @@ public class FireChannel extends View
 					 0,
 					 spannable.length(),
 					 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+				    TextView textView2 = (TextView) m_view.
+					findViewById(R.id.chat_messages);
+
+				    textView2.append("[");
+				    textView2.append
+					(m_simpleDateFormat.format(new Date()));
+				    textView2.append("] ");
 				    textView2.append(spannable);
 				    scrollMessagesView();
 				}
@@ -369,14 +371,13 @@ public class FireChannel extends View
 	super.onDraw(canvas);
     }
 
-    public FireChannel(String name, int oid, Context context)
+    public FireChannel(String name, Context context)
     {
 	super(context);
 	m_context = context;
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_name = name;
-	m_oid = oid;
 	createSchedulers();
     }
 
@@ -505,21 +506,19 @@ public class FireChannel extends View
 
 	    if(participant != null)
 	    {
-		boolean state = false;
-
 		if(!name.equals(participant.m_name))
 		{
 		    StringBuilder stringBuilder = new StringBuilder();
 		    TextView textView = (TextView) m_view.findViewById
 			(R.id.chat_messages);
 
-		    textView.append("[");
-		    textView.append(m_simpleDateFormat.format(new Date()));
-		    textView.append("] ");
 		    stringBuilder.append(participant.m_name);
 		    stringBuilder.append(" is now known as ");
 		    stringBuilder.append(name);
 		    stringBuilder.append(".\n\n");
+		    textView.append("[");
+		    textView.append(m_simpleDateFormat.format(new Date()));
+		    textView.append("] ");
 
 		    Spannable spannable = new SpannableStringBuilder
 			(stringBuilder);
@@ -531,15 +530,17 @@ public class FireChannel extends View
 			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		    textView.append(spannable);
 		    scrollMessagesView();
-		    state = true;
-		}
-
-		participant.m_name = name;
-		participant.m_timestamp = System.currentTimeMillis();
-		m_participants.replace(id, participant);
-
-		if(state)
+		    participant.m_name = name;
+		    participant.m_timestamp = System.currentTimeMillis();
+		    m_participants.replace(id, participant);
 		    populateParticipants();
+		}
+		else
+		{
+		    participant.m_name = name;
+		    participant.m_timestamp = System.currentTimeMillis();
+		    m_participants.replace(id, participant);
+		}
 
 		return;
 	    }
@@ -548,11 +549,7 @@ public class FireChannel extends View
 	}
 
 	StringBuilder stringBuilder = new StringBuilder();
-	TextView textView = (TextView) m_view.findViewById(R.id.chat_messages);
 
-	textView.append("[");
-	textView.append(m_simpleDateFormat.format(new Date()));
-	textView.append("] ");
 	stringBuilder.append(name);
 	stringBuilder.append(" has joined ");
 	stringBuilder.append(m_name);
@@ -565,6 +562,12 @@ public class FireChannel extends View
 	     0,
 	     spannable.length(),
 	     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+	TextView textView = (TextView) m_view.findViewById(R.id.chat_messages);
+
+	textView.append("[");
+	textView.append(m_simpleDateFormat.format(new Date()));
+	textView.append("] ");
 	textView.append(spannable);
 	scrollMessagesView();
 
