@@ -11,7 +11,7 @@
 	UTC Date (5)	Base-64
 }
 
-[SHA-256 HMAC] (2)	32 Bytes
+[SHA-256 HMAC] (2)	Base-64
 {
 	[AES-256] (1)
 }
