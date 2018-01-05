@@ -154,12 +154,12 @@ public class Fire extends AppCompatActivity
 	     "delete the Fire channel " + name + "?");
     }
 
-    private void joinFire(String name, final Integer oid)
+    private void joinFire(String name)
     {
 	if(State.getInstance().containsFire(name))
 	    return;
 
-	FireChannel fireChannel = new FireChannel(name, oid, Fire.this);
+	FireChannel fireChannel = new FireChannel(name, Fire.this);
 
 	State.getInstance().addFire(fireChannel);
 
@@ -211,9 +211,7 @@ public class Fire extends AppCompatActivity
 	ArrayAdapter arrayAdapter = null;
 
 	arrayAdapter = new ArrayAdapter<>
-			(Fire.this,
-			 android.R.layout.simple_spinner_item,
-			 array);
+	    (Fire.this, android.R.layout.simple_spinner_item, array);
 	spinner.setAdapter(arrayAdapter);
 	arrayList.clear();
     }
@@ -329,9 +327,7 @@ public class Fire extends AppCompatActivity
 
 		if(spinner.getAdapter() != null &&
 		   spinner.getAdapter().getCount() > 0)
-		    joinFire
-			(spinner.getSelectedItem().toString(),
-			 m_fireHash.get(spinner.getSelectedItem().toString()));
+		    joinFire(spinner.getSelectedItem().toString());
 	    }
 	});
 
