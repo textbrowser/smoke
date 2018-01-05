@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -41,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,6 +97,82 @@ public class FireChannel extends View
 		public void run()
 		{
 		    Kernel.getInstance().enqueueFireStatus(m_id, m_name);
+
+		    ((Activity) m_context).runOnUiThread(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    if(m_view == null)
+				return;
+
+			    TableLayout tableLayout = (TableLayout)
+				m_view.findViewById(R.id.participants);
+
+			    for(int i = tableLayout.getChildCount() - 1;
+				i >= 0; i--)
+			    {
+				TableRow row = (TableRow) tableLayout.
+				    getChildAt(i);
+
+				if(row == null)
+				    continue;
+
+				TextView textView1 = (TextView) row.
+				    getChildAt(0);
+
+				if(textView1 == null)
+				{
+				    tableLayout.removeView(row);
+				    continue;
+				}
+
+				if(textView1.getId() == -1)
+				    continue;
+
+				Participant participant = m_participants.
+				    get(textView1.getTag(R.id.participants));
+				long current = System.currentTimeMillis();
+
+				if(participant == null ||
+				   Math.abs(current - participant.m_timestamp) >
+				   STATUS_INTERVAL)
+				{
+				    m_participants.remove
+					(textView1.getTag(R.id.participants));
+				    tableLayout.removeView(row);
+
+				    StringBuilder stringBuilder =
+					new StringBuilder();
+				    TextView textView2 = (TextView) m_view.
+					findViewById(R.id.chat_messages);
+
+				    textView2.append("[");
+				    textView2.append
+					(m_simpleDateFormat.format(new Date()));
+				    textView2.append("] ");
+				    stringBuilder.append
+					(textView1.getText().toString());
+				    stringBuilder.append(" has left ");
+				    stringBuilder.append(m_name);
+				    stringBuilder.append(".\n\n");
+
+				    Spannable spannable =
+					new SpannableStringBuilder
+					(stringBuilder);
+
+				    spannable.setSpan
+					(new StyleSpan(android.graphics.
+						       Typeface.ITALIC),
+					 0,
+					 spannable.length(),
+					 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				    textView2.append(spannable);
+				    scrollMessagesView();
+				}
+			    }
+			}
+		    });
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -118,6 +196,7 @@ public class FireChannel extends View
 
 	ArrayList<Participant> arrayList = new ArrayList<>
 	    (m_participants.values());
+	int i = 0;
 
 	Collections.sort(arrayList, s_participantComparator);
 
@@ -128,11 +207,22 @@ public class FireChannel extends View
 
 	    TextView textView = new TextView(m_context);
 
+	    textView.setTag(R.id.participants, participant.m_id);
 	    textView.setText(participant.m_name);
-	    tableLayout.addView(textView);
+
+	    TableRow row = new TableRow(m_context);
+
+	    row.addView(textView);
+	    tableLayout.addView(row, i);
+	    i += 1;
 
 	    if(m_id.equals(participant.m_id))
+	    {
 		textView.setBackgroundColor(Color.rgb(254, 229, 172));
+		textView.setId(-1);
+	    }
+	    else
+		textView.setId(0);
 	}
 
 	arrayList.clear();
@@ -415,8 +505,42 @@ public class FireChannel extends View
 
 	    if(participant != null)
 	    {
+		boolean state = false;
+
+		if(!name.equals(participant.m_name))
+		{
+		    StringBuilder stringBuilder = new StringBuilder();
+		    TextView textView = (TextView) m_view.findViewById
+			(R.id.chat_messages);
+
+		    textView.append("[");
+		    textView.append(m_simpleDateFormat.format(new Date()));
+		    textView.append("] ");
+		    stringBuilder.append(participant.m_name);
+		    stringBuilder.append(" is now known as ");
+		    stringBuilder.append(name);
+		    stringBuilder.append(".\n\n");
+
+		    Spannable spannable = new SpannableStringBuilder
+			(stringBuilder);
+
+		    spannable.setSpan
+			(new StyleSpan(android.graphics.Typeface.ITALIC),
+			 0,
+			 spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    textView.append(spannable);
+		    scrollMessagesView();
+		    state = true;
+		}
+
+		participant.m_name = name;
 		participant.m_timestamp = System.currentTimeMillis();
 		m_participants.replace(id, participant);
+
+		if(state)
+		    populateParticipants();
+
 		return;
 	    }
 	    else
