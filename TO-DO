@@ -148,6 +148,8 @@ Completed Items
 112.   Signed release.
 113.   Fire channels must be retained if the Fire activity is dismissed.
 114.   Allow log clearing.
+115.   Fire. ("AES/CTS/NoPadding")
+116.   Scroll within scroll in Fire channels.
 
 Future Items
 
@@ -193,5 +195,3 @@ Remaining Items
 
 1.     pull-database for multiple devices.
 2.     Calling via multiple neighbors is chaotic.
-3.     Fire. ("AES/CTS/NoPadding")
-4.     Scroll within scroll.
