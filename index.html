@@ -31,10 +31,79 @@
       <section>
         <div id="title">
           <h1>Smoke</h1>
-          <p>Android Echo Communications Software</p>
+          <p>Echo Communications on Android Devices</p>
           <hr>
           <span class="credits left">Project created by <a href="https://github.com/textbrowser">textbrowser</a>.</span>
         </div>
+
+	<h1>Welcome to Smoke!</h1>
+	<p>Smoke is an open source communications research project. The purpose of Smoke is to introduce and investigate the Echo protocol on mobile technologies.</p>
+	<p>
+	  Some of the characteristics of Smoke are summarized below.
+	  <ul>
+	    <li>BSD License.</li>
+	    <li>Decentralized.</li>
+	    <li>Does not require Internet connectivity.</li>
+	    <li>Does not require registration. Telephone numbers are not required.</li>
+	    <li>Introduces Cryptographic Discovery. Cryptographic Discovery is a practical protocol which creates coordinated data paths.</li>
+	    <li>Mobile servers via <a href="https://github.com/textbrowser/smokestack">SmokeStack</a>.</li>
+	    <li>Post offices for messages of the past.</li>
+	    <li>Private public-key servers.</li>
+	    <li>Semi-compatible with <a href="https://github.com/textbrowser/spot-on">Spot-On</a> via Fire.</li>
+	    <li>Simple public-key exchange protocol, or, EPKS via SipHash.</li>
+	    <li>Supported on 90% of Android versions.</li>
+	    <li>Zero-dependency software.</li>
+	  </ul>
+	</p>
+
+	<h2>Release Notes</h2>
+	<p>
+	  2018.01.05
+	  <br>
+	  <ol>
+	    <li>Fire, or, group communications. Compatible with Spot-On.</li>
+	    <li>Increased lane widths to 8 MiB.</li>
+	  </ol>
+	  2017.08.19
+	  <br>
+	  <ol>
+	    <li>Set a non-zero SO_TIMEOUT as some devices do not unblock socket reads after sockets are closed.</li>
+	  </ol>
+	  2017.07.20
+	  <br>
+	  <ol>
+	    <li>AndroidManifest.xml was missing WakeLock permissions.</li>
+	    <li>Do not attempt to send duplicate data.</li>
+	    <li>Do not specify timeouts in socket reads as separate threads are responsible for socket reads.</li>
+	    <li>Removed all Thread.sleep() instances.</li>
+	    <li>Replaced StringBuilder Neighbor member with StringBuffer. StringBuffer is thread-safe.</li>
+	    <li>Signed release.</li>
+	    <li>WiFi lock.</li>
+	  </ol>
+	  2017.07.16
+	  <br>
+	  <ol>
+	    <li>Less activity on disconnected neighbors.</li>
+	  </ol>
+	  2017.07.09
+	  <br>
+	  <ol>
+	    <li>Detect existing key pairs in writeParticipant().</li>
+	    <li>Smaller database transaction areas.</li>
+	  </ol>
+	  2017.07.07
+	  <br>
+	  <ol>
+	    <li>Do not automatically purge the temporary identity for offline message retrieval unless some inactive period has elapsed.</li>
+	    <li>Issue SQLiteDatabase.update() whenever a participant is added. This will allow for replacing of participant names without removal of existing data.</li>
+	    <li>SmokeStack as a private public key repository.</li>
+	  </ol>
+	  2017.07.04
+	  <br>
+	  <ol>
+	    <li>Independence Day!</li>
+	  </ol>
+	</p>
       </section>
     </div>
   </body>
