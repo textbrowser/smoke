@@ -1,7 +1,0 @@
-Verifying a Server's Certificate
-
-1. openssl s_client -connect 192.168.178.1:4710
-2. Copy -----BEGIN CERTIFICATE----- to -----END CERTIFICATE-----,
-   including the tags, and place the contents into server.pem.
-3. openssl x509 -noout -in server.pem -fingerprint -sha512
-4. The above output should match the fingerprint provided by Smoke.

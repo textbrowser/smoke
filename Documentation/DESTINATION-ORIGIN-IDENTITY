@@ -1,3 +1,0 @@
-Various message constructs require destination tags. A destination
-tag may be created, for example, as SHA-512(Data, Destination-Identity). An
-identity should be unique. Identities are not considered confidential.
