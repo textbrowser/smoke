@@ -551,8 +551,45 @@ public class Cryptography
 	return bytes;
     }
 
-    public byte[] generateFireKey(String channel,
-				  String salt)
+    public byte[] generateFireDigestKey(String digest)
+    {
+	byte salt[] = null;
+
+	try
+	{
+	    salt = sha512
+		(Miscellaneous.
+		 joinByteArrays(digest.getBytes("ISO-8859-1"),
+				"sha384".getBytes("ISO-8859-1")));
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
+	/*
+	** Now, a key.
+	*/
+
+	byte key[] = null;
+
+	try
+	{
+	    key = pbkdf2
+		(salt,
+		 new String(digest.getBytes("UTF-8")).toCharArray(),
+		 FIRE_STREAM_CREATION_ITERATION_COUNT,
+		 384);
+	}
+	catch(Exception exception)
+	{
+	    return null;
+	}
+
+	return key;
+    }
+
+    public byte[] generateFireEncryptionKey(String channel, String salt)
     {
 	byte aes256[] = null;
 
@@ -1493,7 +1530,7 @@ public class Cryptography
 	return bytes;
     }
 
-	public static byte[] sha512KeyBytes()
+    public static byte[] sha512KeyBytes()
     {
 	try
 	{

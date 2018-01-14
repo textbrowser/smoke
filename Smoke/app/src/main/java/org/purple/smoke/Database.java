@@ -2764,13 +2764,18 @@ public class Database extends SQLiteOpenHelper
     }
 
     public void saveFireChannel(Cryptography cryptography,
-				String digest,
 				String name,
-				byte stream[])
+				byte encryptionKey[],
+				byte macKey[])
     {
 	prepareDb();
 
-	if(cryptography == null || m_db == null || stream == null)
+	if(cryptography == null ||
+	   encryptionKey == null ||
+	   encryptionKey.length < 0 ||
+	   m_db == null ||
+	   macKey == null ||
+	   macKey.length < 0)
 	    return;
 
 	m_db.beginTransactionNonExclusive();
@@ -2778,8 +2783,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    ContentValues values = new ContentValues();
-	    byte bytes[] = Miscellaneous.joinByteArrays
-		(stream, digest.getBytes("ISO-8859-1"));
+	    byte bytes[] = Miscellaneous.joinByteArrays(encryptionKey, macKey);
 
 	    values.put
 		("name",

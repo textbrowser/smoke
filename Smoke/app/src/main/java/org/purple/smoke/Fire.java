@@ -256,7 +256,8 @@ public class Fire extends AppCompatActivity
 
 		    class SingleShot implements Runnable
 		    {
-			private byte m_bytes[] = null;
+			private byte m_encryptionKey[] = null;
+			private byte m_macKey[] = null;
 
 			SingleShot()
 			{
@@ -265,8 +266,15 @@ public class Fire extends AppCompatActivity
 			@Override
 			public void run()
 			{
-			    m_bytes = s_cryptography.generateFireKey
-				(channel, salt);
+			    final TextView textView1 =
+				(TextView) findViewById(R.id.channel);
+			    final TextView textView2 =
+				(TextView) findViewById(R.id.digest);
+
+			    m_encryptionKey = s_cryptography.
+				generateFireEncryptionKey(channel, salt);
+			    m_macKey = s_cryptography.generateFireDigestKey
+				(textView2.getText().toString());
 
 			    Fire.this.runOnUiThread(new Runnable()
 			    {
@@ -275,20 +283,14 @@ public class Fire extends AppCompatActivity
 				{
 				    dialog.dismiss();
 
-				    if(m_bytes != null)
+				    if(m_encryptionKey != null &&
+				       m_macKey != null)
 				    {
-					TextView textView1 =
-					    (TextView) findViewById
-					    (R.id.digest);
-					TextView textView2 =
-					    (TextView) findViewById
-					    (R.id.channel);
-
 					m_databaseHelper.saveFireChannel
 					    (s_cryptography,
 					     textView1.getText().toString(),
-					     textView2.getText().toString(),
-					     m_bytes);
+					     m_encryptionKey,
+					     m_macKey);
 					populateFires();
 				    }
 				}
