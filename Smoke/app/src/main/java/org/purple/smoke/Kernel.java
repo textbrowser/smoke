@@ -63,6 +63,7 @@ public class Kernel
     private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
+    private ScheduledExecutorService m_publishKeysScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
@@ -97,6 +98,7 @@ public class Kernel
     private final static int MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
+    private final static int PUBLISH_KEYS_INTERVAL = 30000; // 30 Seconds
     private final static int STATUS_INTERVAL = 15000; /*
 						      ** Should be less than
 						      ** Chat.STATUS_WINDOW.
@@ -438,6 +440,61 @@ public class Kernel
 		    prepareNeighbors();
 		}
 	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_publishKeysScheduler == null)
+	{
+	    m_publishKeysScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_publishKeysScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    if(!isConnected())
+			return;
+
+		    ArrayList<SipHashIdElement> arrayList =
+			s_databaseHelper.readSipHashIds("", s_cryptography);
+
+		    if(arrayList == null)
+			arrayList = new ArrayList<> ();
+
+		    {
+			/*
+			** Self-sending.
+			*/
+
+			SipHashIdElement sipHashIdElement =
+			    new SipHashIdElement();
+
+			sipHashIdElement.m_sipHashId = s_cryptography.
+			    sipHashId();
+			sipHashIdElement.m_stream = Miscellaneous.joinByteArrays
+			    (s_cryptography.sipHashEncryptionKey(),
+			     s_cryptography.sipHashMacKey());
+			arrayList.add(sipHashIdElement);
+		    }
+
+		    for(SipHashIdElement sipHashIdElement : arrayList)
+		    {
+			if(sipHashIdElement == null)
+			    break;
+
+			byte bytes[] = Messages.epksMessage
+			    (s_cryptography,
+			     sipHashIdElement.m_sipHashId,
+			     sipHashIdElement.m_stream,
+			     Messages.CHAT_KEY_TYPE);
+
+			if(bytes == null)
+			    break;
+
+			if(enqueueMessage(Messages.bytesToMessageString(bytes)))
+			    break;
+		    }
+		}
+	    }, 1500, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_statusScheduler == null)

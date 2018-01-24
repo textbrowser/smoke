@@ -305,10 +305,7 @@ public class Settings extends AppCompatActivity
 				 "An error occurred while attempting " +
 				 "to save the specified SipHash ID.");
 			else
-			{
 			    populateParticipants();
-			    epks(m_siphashId);
-			}
 		    }
 		});
 	    }
@@ -502,22 +499,25 @@ public class Settings extends AppCompatActivity
 		    }
 		}
 
-		Settings.this.runOnUiThread(new Runnable()
-		{
-		    @Override
-		    public void run()
+		if(sipHashId.isEmpty())
+		    Settings.this.runOnUiThread(new Runnable()
 		    {
-			dialog.dismiss();
+			@Override
+			public void run()
+			{
+			    dialog.dismiss();
 
-			if(!m_error.isEmpty())
-			    Miscellaneous.showErrorDialog
-				(Settings.this,
-				 "An error (" + m_error + ") occurred while " +
-				 "preparing to transfer public key material. " +
-				 "Please verify that participant SipHash " +
-				 "Identities have been defined.");
-		    }
-		});
+			    if(!m_error.isEmpty())
+				Miscellaneous.showErrorDialog
+				    (Settings.this,
+				     "An error (" + m_error +
+				     ") occurred while " +
+				     "preparing to transfer public key " +
+				     "material. " +
+				     "Please verify that participant SipHash " +
+				     "Identities have been defined.");
+			}
+		    });
 
 		arrayList.clear();
 	    }
