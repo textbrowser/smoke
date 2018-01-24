@@ -305,7 +305,10 @@ public class Settings extends AppCompatActivity
 				 "An error occurred while attempting " +
 				 "to save the specified SipHash ID.");
 			else
+			{
 			    populateParticipants();
+			    epks(m_siphashId);
+			}
 		    }
 		});
 	    }
@@ -426,7 +429,7 @@ public class Settings extends AppCompatActivity
 	textView1.setEnabled(state);
     }
 
-    private void epks()
+    private void epks(final String sipHashId)
     {
 	if(Settings.this.isFinishing())
 	    return;
@@ -452,7 +455,7 @@ public class Settings extends AppCompatActivity
 	    public void run()
 	    {
 		ArrayList<SipHashIdElement> arrayList =
-		    m_databaseHelper.readSipHashIds(s_cryptography);
+		    m_databaseHelper.readSipHashIds(sipHashId, s_cryptography);
 
 		if(arrayList == null)
 		    arrayList = new ArrayList<> ();
@@ -963,7 +966,7 @@ public class Settings extends AppCompatActivity
     private void populateParticipants()
     {
 	ArrayList<SipHashIdElement> arrayList =
-	    m_databaseHelper.readSipHashIds(s_cryptography);
+	    m_databaseHelper.readSipHashIds("", s_cryptography);
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
@@ -1071,7 +1074,7 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		epks();
+		epks("");
 	    }
         });
 

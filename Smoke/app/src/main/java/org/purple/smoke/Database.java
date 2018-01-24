@@ -621,7 +621,8 @@ public class Database extends SQLiteOpenHelper
 	return arrayList;
     }
 
-    public ArrayList<SipHashIdElement> readSipHashIds(Cryptography cryptography)
+    public ArrayList<SipHashIdElement> readSipHashIds
+	(String sipHashId, Cryptography cryptography)
     {
 	prepareDb();
 
@@ -633,16 +634,34 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "(SELECT p.encryption_public_key_digest || " +
-		 "p.signature_public_key_digest FROM participants p " +
-		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
-		 "s.name, " +
-		 "s.siphash_id, " +
-		 "s.stream, " +
-		 "s.OID " +
-		 "FROM siphash_ids s ORDER BY s.oid", null);
+	    if(sipHashId.isEmpty())
+		cursor = m_db.rawQuery
+		    ("SELECT " +
+		     "(SELECT p.encryption_public_key_digest || " +
+		     "p.signature_public_key_digest FROM participants p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
+		     "s.name, " +
+		     "s.siphash_id, " +
+		     "s.stream, " +
+		     "s.OID " +
+		     "FROM siphash_ids s ORDER BY s.oid", null);
+	    else
+		cursor = m_db.rawQuery
+		    ("SELECT " +
+		     "(SELECT p.encryption_public_key_digest || " +
+		     "p.signature_public_key_digest FROM participants p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
+		     "s.name, " +
+		     "s.siphash_id, " +
+		     "s.stream, " +
+		     "s.OID " +
+		     "FROM siphash_ids s WHERE s.siphash_id_digest = ?",
+		     new String[] {Base64.
+				   encodeToString(cryptography.
+						  hmac(sipHashId.toLowerCase().
+						       trim().
+						       getBytes("UTF-8")),
+						  Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
