@@ -14,7 +14,7 @@
 	[AES-256] (1)
 }
 
-[Detination SHA-384 HMAC] (3)	Base-64
+[Destination SHA-512 HMAC] (3)	Base-64
 {
 	[AES-256] || [SHA-384] (1)
 }
