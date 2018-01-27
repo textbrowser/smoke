@@ -1,16 +1,20 @@
 [AES-256] (1)
 {
-	0040a (1)	Base-64
+	0040a (1)		Base-64
 	\n
-	Name (2)	Base-64
+	Name (2)		Base-64
 	\n
-	ID (3)		Base-64
+	ID (3)			Base-64
 	\n
-	UTC Date (4)	Base-64
+	UTC Date (4)		Base-64
 }
 
-[SHA-256 HMAC] (2)	Base-64
+[SHA-384 HMAC] (2)		Base-64
 {
 	[AES-256] (1)
 }
 
+[Detination SHA-384 HMAC] (3)	Base-64
+{
+	[AES-256] || [SHA-384] (1)
+}
