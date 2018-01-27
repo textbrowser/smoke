@@ -2073,6 +2073,8 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.add_participant);
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.epks);
+	button1.setCompoundDrawablesWithIntrinsicBounds
+	    (R.drawable.share, 0, 0, 0);
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.ozone_help);
 	button1.setCompoundDrawablesWithIntrinsicBounds
