@@ -307,9 +307,14 @@ public abstract class Neighbor
     {
 	try
 	{
-	    return Messages.identityMessage
-		(Cryptography.
-		 sha512(m_cryptography.sipHashId().getBytes("UTF-8")));
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append(Kernel.getInstance().fireIdentities());
+	    stringBuilder.append
+		(Messages.identityMessage(Cryptography.
+					  sha512(m_cryptography.sipHashId().
+						 getBytes("UTF-8"))));
+	    return stringBuilder.toString();
 	}
 	catch(Exception exception)
 	{

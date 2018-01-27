@@ -584,6 +584,43 @@ public class Kernel
 	}
     }
 
+    public String fireIdentities()
+    {
+	try
+	{
+	    m_fireStreamsMutex.readLock().lock();
+
+	    if(!m_fireStreams.isEmpty())
+	    {
+		StringBuilder stringBuilder = new StringBuilder();
+
+		for(Hashtable.Entry<String, byte[]> entry :
+			m_fireStreams.entrySet())
+		{
+		    if(entry.getValue() == null)
+			continue;
+
+		    stringBuilder.append
+			(Messages.
+			 identityMessage(Cryptography.
+					 sha384(Arrays.
+						copyOfRange(entry.getValue(),
+							    80,
+							    entry.getValue().
+							    length))));
+		}
+
+		return stringBuilder.toString();
+	    }
+	}
+	finally
+	{
+	    m_fireStreamsMutex.readLock().unlock();
+	}
+
+	return "";
+    }
+
     public boolean call(int participantOid, String sipHashId)
     {
 	/*
