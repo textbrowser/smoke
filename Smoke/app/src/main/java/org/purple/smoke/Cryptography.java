@@ -1504,6 +1504,32 @@ public class Cryptography
 	return bytes;
     }
 
+    public static byte[] sha384(byte[] ... data)
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    /*
+	    ** Thread-safe.
+	    */
+
+	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-384");
+
+	    for(byte b[] : data)
+		if(b != null)
+		    messageDigest.update(b);
+
+	    bytes = messageDigest.digest();
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
     public static byte[] sha512(byte[] ... data)
     {
 	byte bytes[] = null;
