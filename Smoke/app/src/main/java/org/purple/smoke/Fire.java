@@ -257,7 +257,7 @@ public class Fire extends AppCompatActivity
 		    class SingleShot implements Runnable
 		    {
 			private byte m_encryptionKey[] = null;
-			private byte m_macKey[] = null;
+			private byte m_keyStream[] = null;
 
 			SingleShot()
 			{
@@ -273,7 +273,8 @@ public class Fire extends AppCompatActivity
 
 			    m_encryptionKey = s_cryptography.
 				generateFireEncryptionKey(channel, salt);
-			    m_macKey = s_cryptography.generateFireDigestKey
+			    m_keyStream = s_cryptography.
+				generateFireDigestKeyStream
 				(textView2.getText().toString());
 
 			    Fire.this.runOnUiThread(new Runnable()
@@ -284,13 +285,13 @@ public class Fire extends AppCompatActivity
 				    dialog.dismiss();
 
 				    if(m_encryptionKey != null &&
-				       m_macKey != null)
+				       m_keyStream != null)
 				    {
 					m_databaseHelper.saveFireChannel
 					    (s_cryptography,
 					     textView1.getText().toString(),
 					     m_encryptionKey,
-					     m_macKey);
+					     m_keyStream);
 					populateFires();
 				    }
 				}
@@ -359,7 +360,8 @@ public class Fire extends AppCompatActivity
 		m_databaseHelper.writeSetting
 		    (s_cryptography,
 		     "fire_user_name",
-		     textView1.getText().toString());
+		     textView1.getText().toString().trim());
+		textView1.setText(textView1.getText().toString().trim());
 	    }
 	});
 
@@ -469,7 +471,8 @@ public class Fire extends AppCompatActivity
 			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 	textView1 = (TextView) findViewById(R.id.name);
 	textView1.setText
-	    (m_databaseHelper.readSetting(s_cryptography, "fire_user_name"));
+	    (m_databaseHelper.
+	     readSetting(s_cryptography, "fire_user_name").trim());
 	textView1 = (TextView) findViewById(R.id.salt);
 	textView1.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
 			       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);

@@ -726,8 +726,7 @@ public class Kernel
 					       Arrays.
 					       copyOfRange(entry.getValue(),
 							   32,
-							   entry.getValue().
-							   length)),
+							   80)),
 				      sha384))
 			    {
 				aes256 = Cryptography.decryptFire

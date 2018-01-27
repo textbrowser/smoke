@@ -882,7 +882,8 @@ public class Messages
 	/*
 	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
-	** [32 ... N] - SHA-256 HMAC Key
+	** [32 ... 79] - SHA-384 HMAC Key
+	** [80 ... N] - Destination SHA-384 HMAC Key
 	*/
 
 	try
@@ -894,6 +895,11 @@ public class Messages
 		 encodeToString(FIRE_CHAT_MESSAGE_TYPE.getBytes("ISO-8859-1"),
 				Base64.NO_WRAP));
 	    stringBuilder.append("\n");
+	    name = name.trim();
+
+	    if(name.isEmpty())
+		name = "unknown";
+
 	    stringBuilder.append
 		(Base64.encodeToString(name.getBytes("UTF-8"), Base64.NO_WRAP));
 	    stringBuilder.append("\n");
@@ -928,7 +934,7 @@ public class Messages
 
 	    byte sha384[] = Cryptography.hmacFire
 		(aes256,
-		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+		 Arrays.copyOfRange(keyStream, 32, 80));
 
 	    if(sha384 == null)
 		return null;
@@ -959,7 +965,8 @@ public class Messages
 	/*
 	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
-	** [32 ... N] - SHA-256 HMAC Key
+	** [32 ... 79] - SHA-384 HMAC Key
+	** [80 ... N] - Destination SHA-384 HMAC Key
 	*/
 
 	try
@@ -971,6 +978,11 @@ public class Messages
 		 encodeToString(FIRE_STATUS_MESSAGE_TYPE.getBytes("ISO-8859-1"),
 				Base64.NO_WRAP));
 	    stringBuilder.append("\n");
+	    name = name.trim();
+
+	    if(name.isEmpty())
+		name = "unknown";
+
 	    stringBuilder.append
 		(Base64.encodeToString(name.getBytes("UTF-8"), Base64.NO_WRAP));
 	    stringBuilder.append("\n");
@@ -996,12 +1008,12 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-256 HMAC ]
+	    ** [ SHA-384 HMAC ]
 	    */
 
 	    byte sha384[] = Cryptography.hmacFire
 		(aes256,
-		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+		 Arrays.copyOfRange(keyStream, 32, 80));
 
 	    if(sha384 == null)
 		return null;

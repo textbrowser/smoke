@@ -59,8 +59,9 @@ public class FireChannel extends View
 {
     private class Participant
     {
-	public String m_id = "";
-	public String m_name = "";
+	public String m_id = Miscellaneous.byteArrayAsHexString
+	    (Cryptography.randomBytes(128));
+	public String m_name = "unknown";
 	public long m_timestamp = -1;
     }
 
@@ -414,8 +415,12 @@ public class FireChannel extends View
 	    Participant participant = new Participant();
 
 	    participant.m_id = m_id;
-	    participant.m_name = Database.getInstance().
-		readSetting(Cryptography.getInstance(), "fire_user_name");
+	    participant.m_name = Database.getInstance().readSetting
+		(Cryptography.getInstance(), "fire_user_name").trim();
+
+	    if(participant.m_name.isEmpty())
+		participant.m_name = "unknown";
+
 	    m_participants.put(m_id, participant);
 	    populateParticipants();
 

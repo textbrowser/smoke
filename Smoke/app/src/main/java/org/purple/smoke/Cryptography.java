@@ -551,7 +551,7 @@ public class Cryptography
 	return bytes;
     }
 
-    public byte[] generateFireDigestKey(String digest)
+    public byte[] generateFireDigestKeyStream(String digest)
     {
 	byte salt[] = null;
 
@@ -568,25 +568,25 @@ public class Cryptography
 	}
 
 	/*
-	** Now, a key.
+	** Now, a key stream.
 	*/
 
-	byte key[] = null;
+	byte stream[] = null;
 
 	try
 	{
-	    key = pbkdf2
+	    stream = pbkdf2
 		(salt,
 		 new String(digest.getBytes("UTF-8")).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
-		 384);
+		 768);
 	}
 	catch(Exception exception)
 	{
 	    return null;
 	}
 
-	return key;
+	return stream;
     }
 
     public byte[] generateFireEncryptionKey(String channel, String salt)
