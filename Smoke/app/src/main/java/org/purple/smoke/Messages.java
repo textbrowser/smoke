@@ -883,7 +883,7 @@ public class Messages
 	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
 	** [32 ... 79] - SHA-384 HMAC Key
-	** [80 ... N] - Destination SHA-384 HMAC Key
+	** [80 ... N] - Destination SHA-512 HMAC Key
 	*/
 
 	try
@@ -945,7 +945,7 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(aes256, sha384),
-		 Cryptography.sha384(Arrays.copyOfRange(keyStream,
+		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							80,
 							keyStream.length)));
 
@@ -979,7 +979,7 @@ public class Messages
 	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
 	** [32 ... 79] - SHA-384 HMAC Key
-	** [80 ... N] - Destination SHA-384 HMAC Key
+	** [80 ... N] - Destination SHA-512 HMAC Key
 	*/
 
 	try
@@ -1037,7 +1037,7 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(aes256, sha384),
-		 Cryptography.sha384(Arrays.copyOfRange(keyStream,
+		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							80,
 							keyStream.length)));
 

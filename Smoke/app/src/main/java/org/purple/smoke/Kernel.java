@@ -603,7 +603,7 @@ public class Kernel
 		    stringBuilder.append
 			(Messages.
 			 identityMessage(Cryptography.
-					 sha384(Arrays.
+					 sha512(Arrays.
 						copyOfRange(entry.getValue(),
 							    80,
 							    entry.getValue().

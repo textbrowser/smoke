@@ -579,7 +579,7 @@ public class Cryptography
 		(salt,
 		 new String(digest.getBytes("UTF-8")).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
-		 768);
+		 896);
 	}
 	catch(Exception exception)
 	{
@@ -1495,32 +1495,6 @@ public class Cryptography
 	{
 	    bytes = new byte[length];
 	    s_secureRandom.nextBytes(bytes);
-	}
-	catch(Exception exception)
-	{
-	    bytes = null;
-	}
-
-	return bytes;
-    }
-
-    public static byte[] sha384(byte[] ... data)
-    {
-	byte bytes[] = null;
-
-	try
-	{
-	    /*
-	    ** Thread-safe.
-	    */
-
-	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-384");
-
-	    for(byte b[] : data)
-		if(b != null)
-		    messageDigest.update(b);
-
-	    bytes = messageDigest.digest();
 	}
 	catch(Exception exception)
 	{
