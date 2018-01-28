@@ -225,7 +225,8 @@ public class Settings extends AppCompatActivity
 	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
 
 	string = textView1.getText().toString().
-	    replace(" ", "").replace("-", "").replace(":", "").replace("@", "");
+	    replace(" ", "").replace("-", "").replace(":", "").
+	    replace("@", "").trim();
 
 	try
 	{
@@ -242,9 +243,10 @@ public class Settings extends AppCompatActivity
 
 	if(stringBuilder.length() > 0 &&
 	   stringBuilder.charAt(stringBuilder.length() - 1) == ':')
-	    string = stringBuilder.substring(0, stringBuilder.length() - 1);
+	    string = stringBuilder.substring(0, stringBuilder.length() - 1).
+		trim();
 	else
-	    string = stringBuilder.toString();
+	    string = stringBuilder.toString().trim();
 
 	if(string.length() != 23)
 	{

@@ -139,8 +139,9 @@ public class FireChannel extends View
 				long current = System.currentTimeMillis();
 
 				if(participant == null ||
-				   Math.abs(current - participant.m_timestamp) >
-				   STATUS_INTERVAL)
+				   Math.abs(current -
+					    participant.m_timestamp) >=
+				   2 * STATUS_INTERVAL)
 				{
 				    m_participants.remove
 					(textView1.getTag(R.id.participants));
