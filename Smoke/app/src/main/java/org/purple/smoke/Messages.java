@@ -895,13 +895,16 @@ public class Messages
 		 encodeToString(FIRE_CHAT_MESSAGE_TYPE.getBytes("ISO-8859-1"),
 				Base64.NO_WRAP));
 	    stringBuilder.append("\n");
-	    name = name.trim();
 
-	    if(name.isEmpty())
-		name = "unknown";
+	    if(name.trim().isEmpty())
+		stringBuilder.append
+		    (Base64.encodeToString("unknown".getBytes("UTF-8"),
+					   Base64.NO_WRAP));
+	    else
+		stringBuilder.append
+		    (Base64.encodeToString(name.trim().getBytes("UTF-8"),
+					   Base64.NO_WRAP));
 
-	    stringBuilder.append
-		(Base64.encodeToString(name.getBytes("UTF-8"), Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(id.getBytes("ISO-8859-1"),
@@ -991,13 +994,16 @@ public class Messages
 		 encodeToString(FIRE_STATUS_MESSAGE_TYPE.getBytes("ISO-8859-1"),
 				Base64.NO_WRAP));
 	    stringBuilder.append("\n");
-	    name = name.trim();
 
-	    if(name.isEmpty())
-		name = "unknown";
+	    if(name.trim().isEmpty())
+		stringBuilder.append
+		    (Base64.encodeToString("unknown".getBytes("UTF-8"),
+					   Base64.NO_WRAP));
+	    else
+		stringBuilder.append
+		    (Base64.encodeToString(name.trim().getBytes("UTF-8"),
+					   Base64.NO_WRAP));
 
-	    stringBuilder.append
-		(Base64.encodeToString(name.getBytes("UTF-8"), Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(id.getBytes("ISO-8859-1"),
