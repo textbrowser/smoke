@@ -52,6 +52,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -68,8 +69,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Chat extends AppCompatActivity
 {
-    private final AtomicBoolean m_greenWritten = new AtomicBoolean(false);
-    private final AtomicBoolean m_redWritten = new AtomicBoolean(false);
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private Database m_databaseHelper = null;
@@ -736,12 +735,6 @@ public class Chat extends AppCompatActivity
 
 	State.getInstance().writeCharSequence
 	    ("chat.message", textView1.getText());
-	State.getInstance().writeChar
-	    ("chat_network_status_green_written",
-	     !m_greenWritten.get() ? '0' : '1');
-	State.getInstance().writeChar
-	    ("chat_network_status_red_written",
-	     !m_redWritten.get() ? '0' : '1');
 	textView1 = (TextView) findViewById(R.id.chat_messages);
 	State.getInstance().writeCharSequence
 	    ("chat.messages", textView1.getText());
@@ -766,12 +759,6 @@ public class Chat extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	m_greenWritten.set
-	    (State.getInstance().
-	     getChar("chat_network_status_green_written") != '0');
-	m_redWritten.set
-	    (State.getInstance().
-	     getChar("chat_network_status_red_written") != '0');
 	m_connectionStatusScheduler = Executors.
 	    newSingleThreadScheduledExecutor();
 	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
@@ -791,39 +778,20 @@ public class Chat extends AppCompatActivity
 		    {
 			Button button1 = (Button) findViewById
 			    (R.id.send_chat_message);
+			ImageButton button2 = (ImageButton) findViewById
+			    (R.id.network_status);
 
 			if(state)
 			{
-			    if(!m_greenWritten.get())
-			    {
-				appendMessage
-				    ("The network is active.",
-				     Color.rgb(153, 204, 0));
-				m_greenWritten.set(true);
-			    }
-
 			    button1.setBackgroundColor
 				(Color.rgb(153, 204, 0));
-
-			    if(m_redWritten.get())
-				m_redWritten.set(false);
+			    button2.setImageResource(R.drawable.network_up);
 			}
 			else
 			{
-			    if(!m_redWritten.get())
-			    {
-				appendMessage
-				    ("The device is unable to access the " +
-				     "network.",
-				     Color.rgb(255, 68, 68));
-				m_redWritten.set(true);
-			    }
-
 			    button1.setBackgroundColor
 				(Color.rgb(255, 68, 68));
-
-			    if(m_greenWritten.get())
-				m_greenWritten.set(false);
+			    button2.setImageResource(R.drawable.network_down);
 			}
 		    }
 		});
@@ -1310,12 +1278,6 @@ public class Chat extends AppCompatActivity
     public void onResume()
     {
 	super.onResume();
-	m_greenWritten.set
-	    (State.getInstance().
-	     getChar("chat_network_status_green_written") != '0');
-	m_redWritten.set
-	    (State.getInstance().
-	     getChar("chat_network_status_red_written") != '0');
 
 	if(!m_receiverRegistered)
 	{
