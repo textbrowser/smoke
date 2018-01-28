@@ -41,6 +41,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -78,6 +79,7 @@ public class FireChannel extends View
     private Context m_context = null;
     private Hashtable<String, Participant> m_participants = new Hashtable<> ();
     private LayoutInflater m_inflater = null;
+    private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_name = "";
     private View m_view = null;
@@ -85,6 +87,7 @@ public class FireChannel extends View
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
     private final String m_id = Miscellaneous.byteArrayAsHexString
 	(Cryptography.randomBytes(128));
+    private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int STATUS_INTERVAL = 30000;
 
     private void createSchedulers()
@@ -410,6 +413,36 @@ public class FireChannel extends View
 	if(m_view == null)
 	{
 	    m_view = m_inflater.inflate(R.layout.fire_channel, null);
+	    m_connectionStatusScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
+
+		    final boolean state = Kernel.getInstance().isConnected();
+
+		    ((Activity) m_context).runOnUiThread(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    ImageButton button1 = (ImageButton) m_view.
+				findViewById(R.id.network_status);
+
+			    if(state)
+				button1.setImageResource(R.drawable.network_up);
+			    else
+				button1.setImageResource
+				    (R.drawable.network_down);
+			}
+		    });
+		}
+	    }, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+
 	    prepareListeners();
 
 	    Participant participant = new Participant();
