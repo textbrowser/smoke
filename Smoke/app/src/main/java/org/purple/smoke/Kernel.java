@@ -744,7 +744,7 @@ public class Kernel
 		    String strings[] = Messages.stripMessage(buffer).
 			split("\\n");
 
-		    if(strings != null && strings.length == 3)
+		    if(strings != null && strings.length == 2)
 		    {
 			byte aes256[] = Base64.decode
 			    (strings[0], Base64.NO_WRAP);

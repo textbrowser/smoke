@@ -883,7 +883,7 @@ public class Messages
 	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
 	** [32 ... 79] - SHA-384 HMAC Key
-	** [80 ... N] - Destination SHA-512 HMAC Key
+	** [80 ... N] - Destination SHA-512 HMAC Key (N/A)
 	*/
 
 	try
@@ -941,25 +941,12 @@ public class Messages
 	    if(sha384 == null)
 		return null;
 
-	    /*
-	    ** [ Destination ]
-	    */
-
-	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(aes256, sha384),
-		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
-							80,
-							keyStream.length)));
-
 	    stringBuilder.setLength(0);
 	    stringBuilder.append
 		(Base64.encodeToString(aes256, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(sha384, Base64.NO_WRAP));
-	    stringBuilder.append("\n");
-	    stringBuilder.append
-		(Base64.encodeToString(destination, Base64.NO_WRAP));
 	    return stringBuilder.toString().getBytes("ISO-8859-1");
 	}
 	catch(Exception exception)
@@ -981,7 +968,7 @@ public class Messages
 	** keyStream
 	** [0 ... 31] - AES-256 Encryption Key
 	** [32 ... 79] - SHA-384 HMAC Key
-	** [80 ... N] - Destination SHA-512 HMAC Key
+	** [80 ... N] - Destination SHA-512 HMAC Key (N/A)
 	*/
 
 	try
@@ -1035,25 +1022,12 @@ public class Messages
 	    if(sha384 == null)
 		return null;
 
-	    /*
-	    ** [ Destination ]
-	    */
-
-	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(aes256, sha384),
-		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
-							80,
-							keyStream.length)));
-
 	    stringBuilder.setLength(0);
 	    stringBuilder.append
 		(Base64.encodeToString(aes256, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(sha384, Base64.NO_WRAP));
-	    stringBuilder.append("\n");
-	    stringBuilder.append
-		(Base64.encodeToString(destination, Base64.NO_WRAP));
 	    return stringBuilder.toString().getBytes("ISO-8859-1");
 	}
 	catch(Exception exception)
