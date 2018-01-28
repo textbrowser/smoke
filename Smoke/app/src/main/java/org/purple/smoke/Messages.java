@@ -936,8 +936,7 @@ public class Messages
 	    */
 
 	    byte sha384[] = Cryptography.hmacFire
-		(aes256,
-		 Arrays.copyOfRange(keyStream, 32, 80));
+		(aes256, Arrays.copyOfRange(keyStream, 32, 80));
 
 	    if(sha384 == null)
 		return null;
@@ -1031,8 +1030,7 @@ public class Messages
 	    */
 
 	    byte sha384[] = Cryptography.hmacFire
-		(aes256,
-		 Arrays.copyOfRange(keyStream, 32, 80));
+		(aes256, Arrays.copyOfRange(keyStream, 32, 80));
 
 	    if(sha384 == null)
 		return null;
