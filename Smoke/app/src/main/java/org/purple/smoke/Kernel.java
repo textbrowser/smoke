@@ -455,7 +455,8 @@ public class Kernel
 			return;
 
 		    ArrayList<SipHashIdElement> arrayList =
-			s_databaseHelper.readSipHashIds("", s_cryptography);
+			s_databaseHelper.readNonSharedSipHashIds
+			(s_cryptography);
 
 		    if(arrayList == null)
 			arrayList = new ArrayList<> ();

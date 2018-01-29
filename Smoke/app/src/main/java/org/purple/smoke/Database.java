@@ -497,6 +497,90 @@ public class Database extends SQLiteOpenHelper
 	return arrayList;
     }
 
+    public ArrayList<SipHashIdElement> readNonSharedSipHashIds
+	(Cryptography cryptography)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	ArrayList<SipHashIdElement> arrayList = null;
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT siphash_id, stream " +
+		 "FROM siphash_ids WHERE siphash_id_digest NOT IN " +
+		 "(SELECT siphash_id_digest FROM participants)", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
+		    boolean error = false;
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    error = true;
+
+			    StringBuilder stringBuilder = new StringBuilder();
+
+			    stringBuilder.append
+				("Database::readNonSharedSipHashIds(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append(cursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    sipHashIdElement.m_sipHashId = new String
+				(bytes, "UTF-8");
+			    break;
+			case 1:
+			    sipHashIdElement.m_stream = Miscellaneous.
+				deepCopy(bytes);
+			    break;
+			}
+		    }
+
+		    if(!error)
+			arrayList.add(sipHashIdElement);
+
+		    cursor.moveToNext();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
     public ArrayList<ParticipantElement> readParticipants
 	(Cryptography cryptography, String sipHashId)
     {
@@ -1275,6 +1359,7 @@ public class Database extends SQLiteOpenHelper
 
 	    PublicKey publicKey = null;
 	    PublicKey signatureKey = null;
+	    boolean exists = false;
 	    byte keyType[] = null;
 	    byte publicKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
@@ -1325,7 +1410,7 @@ public class Database extends SQLiteOpenHelper
 
 		    if(cursor != null && cursor.moveToFirst())
 			if(cursor.getInt(0) == 1)
-			    return "";
+			    exists = true;
 
 		    if(cursor != null)
 			cursor.close();
@@ -1371,7 +1456,7 @@ public class Database extends SQLiteOpenHelper
 
 		    if(cursor != null && cursor.moveToFirst())
 			if(cursor.getInt(0) == 1)
-			    return "";
+			    exists = true;
 
 		    if(cursor != null)
 			cursor.close();
@@ -1415,6 +1500,10 @@ public class Database extends SQLiteOpenHelper
 				  joinByteArrays(publicKey.getEncoded(),
 						 signatureKey.getEncoded())).
 		toLowerCase();
+
+	    if(exists)
+		return sipHashId;
+
 	    name = nameFromSipHashId(cryptography, sipHashId);
 
 	    if(name.isEmpty())
