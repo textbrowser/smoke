@@ -1410,6 +1410,10 @@ public class Database extends SQLiteOpenHelper
 
 		    if(cursor != null && cursor.moveToFirst())
 			if(cursor.getInt(0) == 1)
+			    /*
+			    ** Let's respond with a specific EPKS!
+			    */
+
 			    exists = true;
 
 		    if(cursor != null)
@@ -1456,6 +1460,10 @@ public class Database extends SQLiteOpenHelper
 
 		    if(cursor != null && cursor.moveToFirst())
 			if(cursor.getInt(0) == 1)
+			    /*
+			    ** Let's respond with a specific EPKS!
+			    */
+
 			    exists = true;
 
 		    if(cursor != null)
