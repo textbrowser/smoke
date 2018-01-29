@@ -98,7 +98,7 @@ public class Kernel
     private final static int MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
-    private final static int PUBLISH_KEYS_INTERVAL = 30000; // 30 Seconds
+    private final static int PUBLISH_KEYS_INTERVAL = 15000; // 15 Seconds
     private final static int STATUS_INTERVAL = 15000; /*
 						      ** Should be less than
 						      ** Chat.STATUS_WINDOW.
