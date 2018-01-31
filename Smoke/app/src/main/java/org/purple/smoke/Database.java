@@ -1677,7 +1677,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT message, OID FROM outbound_queue " +
-		 "WHERE neighbor_oid = ? ORDER BY OID",
+		 "WHERE neighbor_oid = ? ORDER BY OID LIMIT 1",
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())
