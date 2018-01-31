@@ -47,8 +47,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class Miscellaneous
 {
@@ -192,6 +196,44 @@ public class Miscellaneous
 	     ':', 2);
     }
 
+    public static byte[] compressed(byte bytes[])
+    {
+	if(bytes == null || bytes.length <= 0)
+	    return null;
+
+	try
+	{
+	    ByteArrayOutputStream byteArrayOutputStream =
+		new ByteArrayOutputStream(bytes.length);
+
+	    try
+	    {
+		GZIPOutputStream gzipOutputStream = new GZIPOutputStream
+		    (byteArrayOutputStream);
+
+		try
+		{
+		    gzipOutputStream.write(bytes);
+		}
+		finally
+		{
+		    gzipOutputStream.close();
+		}
+	    }
+	    finally
+	    {
+		byteArrayOutputStream.close();
+	    }
+
+	    return byteArrayOutputStream.toByteArray();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
     public static byte[] deepCopy(byte bytes[])
     {
 	if(bytes == null || bytes.length <= 0)
@@ -260,6 +302,51 @@ public class Miscellaneous
 	{
 	    return null;
 	}
+    }
+
+    public static byte[] uncompressed(byte bytes[])
+    {
+	if(bytes == null || bytes.length <= 0)
+	    return null;
+
+	try
+	{
+	    ByteArrayInputStream byteArrayInputStream =
+		new ByteArrayInputStream(bytes);
+	    ByteArrayOutputStream byteArrayOutputStream =
+		new ByteArrayOutputStream();
+
+	    try
+	    {
+		GZIPInputStream gzipInputStream = new GZIPInputStream
+		    (byteArrayInputStream);
+
+		try
+		{
+		    byte buffer[] = new byte[1024];
+		    int rc = 0;
+
+		    while((rc = gzipInputStream.read(buffer)) > 0)
+			byteArrayOutputStream.write(buffer, 0, rc);
+		}
+		finally
+		{
+		    gzipInputStream.close();
+		}
+	    }
+	    finally
+	    {
+		byteArrayInputStream.close();
+		byteArrayOutputStream.close();
+	    }
+
+	    return byteArrayOutputStream.toByteArray();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public static int countOf(StringBuilder stringBuilder, char character)
