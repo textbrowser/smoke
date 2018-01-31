@@ -261,6 +261,24 @@ public class FireChannel extends View
 	    {
 		Kernel.getInstance().extinguishFire(m_name);
 
+		if(m_connectionStatusScheduler != null)
+	        {
+		    m_connectionStatusScheduler.shutdown();
+
+		    try
+		    {
+			m_connectionStatusScheduler.awaitTermination
+			    (60, TimeUnit.SECONDS);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_connectionStatusScheduler = null;
+		    }
+		}
+
 		if(m_statusScheduler != null)
 	        {
 		    m_statusScheduler.shutdown();
@@ -479,7 +497,8 @@ public class FireChannel extends View
 		stringBuilder.append("] ");
 		stringBuilder.append("The Fire channel ");
 		stringBuilder.append(m_name);
-		stringBuilder.append(" cannot be registered with the Kernel.");
+		stringBuilder.append(" cannot be registered with the Kernel." +
+				     "Please close this channel.");
 		stringBuilder.append("\n\n");
 
 		Spannable spannable = new SpannableStringBuilder
