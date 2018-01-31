@@ -581,22 +581,10 @@ public class Settings extends AppCompatActivity
 	{
 	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append("SipHash Chat ID\n@");
-
-	    byte bytes[] = Miscellaneous.joinByteArrays
-		(s_cryptography.chatEncryptionKeyPair().getPublic().
-		 getEncoded(),
-		 s_cryptography.chatSignatureKeyPair().getPublic().
-		 getEncoded());
-
-	    if(bytes != null)
-		stringBuilder.append
-		    (Miscellaneous.delimitString(Miscellaneous.
-						 sipHashIdFromData(bytes).
-						 replace(":", ""), '-', 4).
-		     toUpperCase());
-	    else
-		stringBuilder.append("0000-0000-0000-0000");
-
+	    stringBuilder.append
+		(Miscellaneous.
+		 delimitString(s_cryptography.sipHashId().
+			       replace(":", ""), '-', 4).toUpperCase());
 	    textView1.setText(stringBuilder);
 	    textView1.setTextIsSelectable(true);
 	    textView1.setVisibility(View.VISIBLE);
@@ -1323,15 +1311,15 @@ public class Settings extends AppCompatActivity
 		textView1.setSelectAllOnFocus(true);
 		textView2.setSelectAllOnFocus(true);
 
-		if(textView1.getText().length() < 8 ||
+		if(textView1.getText().length() < 1 ||
 		   !textView1.getText().toString().
 		   equals(textView2.getText().toString()))
 		{
 		    String error = "";
 
-		    if(textView1.getText().length() < 8)
+		    if(textView1.getText().length() < 1)
 			error = "Each password must contain " +
-			    "at least eight characters.";
+			    "at least one character.";
 		    else
 			error = "The provided passwords are not identical.";
 
@@ -1810,7 +1798,7 @@ public class Settings extends AppCompatActivity
 			    Settings.this.showWidgets();
 			    Settings.this.enableWidgets(true);
 			    State.getInstance().setAuthenticated(true);
-			    spinner2.setSelection(0); // RSA
+			    spinner2.setSelection(1); // RSA
 			    spinner3.setSelection(1); // RSA
 			    textView1.requestFocus();
 			    textView1.setText("");
@@ -2172,7 +2160,7 @@ public class Settings extends AppCompatActivity
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "RSA"
+	    "McEliece-Fujisaki", "RSA"
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
@@ -2286,7 +2274,7 @@ public class Settings extends AppCompatActivity
 	    spinner1.setSelection(0);
 
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
-	spinner1.setSelection(0); // RSA
+	spinner1.setSelection(1); // RSA
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
 
 	if(spinner1.getAdapter().getCount() > 1)

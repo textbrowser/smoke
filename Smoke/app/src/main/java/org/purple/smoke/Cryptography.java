@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -35,6 +36,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.Signature;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
@@ -46,6 +48,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.crypto.Cipher;
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -53,9 +56,18 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
+import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
+import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
+import org.bouncycastle.pqc.jcajce.spec.McElieceCCA2KeyGenParameterSpec;
 
 public class Cryptography
 {
+    static
+    {
+	Security.addProvider(new BouncyCastlePQCProvider());
+    }
+
     private KeyPair m_chatEncryptionPublicKeyPair = null;
     private KeyPair m_chatSignaturePublicKeyPair = null;
     private SecretKey m_encryptionKey = null;
@@ -110,6 +122,8 @@ public class Cryptography
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
     private final static int FIRE_STREAM_CREATION_ITERATION_COUNT = 10000;
+    private final static int MCELIECE_M = 11;
+    private final static int MCELIECE_T = 50;
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
@@ -199,6 +213,23 @@ public class Cryptography
 	}
     }
 
+    public String chatEncryptionPublicKeyAlgorithm()
+    {
+	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
+
+	try
+	{
+	    if(m_chatEncryptionPublicKeyPair != null)
+		return m_chatEncryptionPublicKeyPair.getPublic().getAlgorithm();
+	    else
+		return "";
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
+	}
+    }
+
     public String fancyKeyInformationOutput(KeyPair keyPair)
     {
 	if(keyPair == null || keyPair.getPublic() == null)
@@ -217,7 +248,9 @@ public class Cryptography
 	stringBuilder.append("Format: ");
 	stringBuilder.append(publicKey.getFormat());
 
-	if(algorithm.equals("EC") || algorithm.equals("RSA"))
+	if(algorithm.equals("EC") ||
+	   algorithm.equals("McEliece-CCA2") ||
+	   algorithm.equals("RSA"))
 	    try
 	    {
 		if(algorithm.equals("EC"))
@@ -228,6 +261,18 @@ public class Cryptography
 			stringBuilder.append("\n").append("Size: ").
 			    append(ecPublicKey.getW().getAffineX().
 				   bitLength());
+		}
+		else if(algorithm.equals("McEliece-CCA2"))
+		{
+		    BCMcElieceCCA2PublicKey mcEliecePublicKey =
+			(BCMcElieceCCA2PublicKey) publicKey;
+
+		    if(mcEliecePublicKey != null)
+			stringBuilder.append("\n").append("m = ").
+			    append((int) (Math.log(mcEliecePublicKey.getN()) /
+					  Math.log(2))).
+			    append(", t = ").
+			    append(mcEliecePublicKey.getT());
 		}
 		else if(algorithm.equals("RSA"))
 		{
@@ -866,9 +911,23 @@ public class Cryptography
 	    {
 		Cipher cipher = null;
 
-		cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
-		cipher.init(Cipher.DECRYPT_MODE,
-			    m_chatEncryptionPublicKeyPair.getPrivate());
+		if(m_chatEncryptionPublicKeyPair.getPrivate().getAlgorithm().
+		   equals("McEliece-CCA2"))
+		{
+		    cipher = Cipher.getInstance("McElieceFujisaki");
+		    cipher.init
+			(Cipher.DECRYPT_MODE,
+			 m_chatEncryptionPublicKeyPair.getPrivate(),
+			 (McElieceCCA2KeyGenParameterSpec) null);
+		}
+		else
+		{
+		    cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
+		    cipher.init
+			(Cipher.DECRYPT_MODE,
+			 m_chatEncryptionPublicKeyPair.getPrivate());
+		}
+
 		bytes = cipher.doFinal(data);
 	    }
 	    catch(Exception exception)
@@ -1000,15 +1059,31 @@ public class Cryptography
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize)
-	throws NoSuchAlgorithmException
+	throws InvalidAlgorithmParameterException, NoSuchAlgorithmException
     {
-	prepareSecureRandom();
+	if(algorithm.equals("McEliece-Fujisaki"))
+	{
+	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance
+		("McElieceFujisaki");
+	    McElieceCCA2KeyGenParameterSpec parameters =
+		new McElieceCCA2KeyGenParameterSpec
+		(MCELIECE_M,
+		 MCELIECE_T,
+		 McElieceCCA2KeyGenParameterSpec.SHA256);
 
-	KeyPairGenerator keyPairGenerator = KeyPairGenerator.
-	    getInstance(algorithm);
+	    keyPairGenerator.initialize(parameters);
+	    return keyPairGenerator.generateKeyPair();
+	}
+	else
+	{
+	    prepareSecureRandom();
 
-	keyPairGenerator.initialize(keySize, s_secureRandom);
-	return keyPairGenerator.generateKeyPair();
+	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+		getInstance(algorithm);
+
+	    keyPairGenerator.initialize(keySize, s_secureRandom);
+	    return keyPairGenerator.generateKeyPair();
+	}
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
@@ -1017,20 +1092,41 @@ public class Cryptography
     {
 	try
 	{
-	    EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
-		(privateBytes);
-	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
-	    KeyFactory generator = KeyFactory.getInstance(algorithm);
-	    PrivateKey privateKey = generator.generatePrivate(privateKeySpec);
-	    PublicKey publicKey = generator.generatePublic(publicKeySpec);
+	    if(algorithm.equals("McEliece-Fujisaki"))
+	    {
+		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
+		    (privateBytes);
+		EncodedKeySpec publicKeySpec = new X509EncodedKeySpec
+		    (publicBytes);
+		KeyFactory generator = KeyFactory.getInstance
+		    (PQCObjectIdentifiers.mcElieceCca2.getId());
+		PrivateKey privateKey = generator.generatePrivate
+		    (privateKeySpec);
+		PublicKey publicKey = generator.generatePublic(publicKeySpec);
 
-	    return new KeyPair(publicKey, privateKey);
+		return new KeyPair(publicKey, privateKey);
+	    }
+	    else
+	    {
+		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
+		    (privateBytes);
+		EncodedKeySpec publicKeySpec = new X509EncodedKeySpec
+		    (publicBytes);
+		KeyFactory generator = KeyFactory.getInstance(algorithm);
+		PrivateKey privateKey = generator.generatePrivate
+		    (privateKeySpec);
+		PublicKey publicKey = generator.generatePublic(publicKeySpec);
+
+		return new KeyPair(publicKey, privateKey);
+	    }
 	}
 	catch(Exception exception)
 	{
 	    Database.getInstance().writeLog
 		("Cryptography::generatePrivatePublicKeyPair(): " +
-		 "exception raised.");
+		 "exception raised (" +
+		 exception.getMessage().toLowerCase().trim()
+		 + ").");
 	}
 
 	return null;
@@ -1042,13 +1138,16 @@ public class Cryptography
 	{
 	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
 
-	    for(int i = 0; i < 2; i++)
+	    for(int i = 0; i < 3; i++)
 		try
 		{
 		    KeyFactory generator = null;
 
 		    if(i == 0)
 			generator = KeyFactory.getInstance("EC");
+		    else if(i == 1)
+			generator = KeyFactory.getInstance
+			    (PQCObjectIdentifiers.mcElieceCca2.getId());
 		    else
 			generator = KeyFactory.getInstance("RSA");
 
@@ -1439,9 +1538,9 @@ public class Cryptography
 	}
     }
 
-    public static byte[] pkiDecrypt(PrivateKey key, byte data[])
+    public static byte[] pkiDecrypt(PrivateKey privateKey, byte data[])
     {
-	if(data == null || data.length < 0 || key == null)
+	if(data == null || data.length < 0 || privateKey == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -1450,8 +1549,12 @@ public class Cryptography
 	{
 	    Cipher cipher = null;
 
-	    cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
-	    cipher.init(Cipher.DECRYPT_MODE, key);
+	    if(privateKey.getAlgorithm().equals("McEliece-CCA2"))
+		cipher = Cipher.getInstance("McElieceFujisaki");
+	    else
+		cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
+
+	    cipher.init(Cipher.DECRYPT_MODE, privateKey);
 	    bytes = cipher.doFinal(data);
 	}
 	catch(Exception exception)
@@ -1473,8 +1576,21 @@ public class Cryptography
 	{
 	    Cipher cipher = null;
 
-	    cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
-	    cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+	    if(publicKey.getAlgorithm().equals("McEliece-CCA2"))
+	    {
+		cipher = Cipher.getInstance("McElieceFujisaki");
+		cipher.init
+		    (Cipher.ENCRYPT_MODE,
+		     publicKey,
+		     (McElieceCCA2KeyGenParameterSpec) null,
+		     s_secureRandom);
+	    }
+	    else
+	    {
+		cipher = Cipher.getInstance(PKI_RSA_ENCRYPTION_ALGORITHM);
+		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+	    }
+
 	    bytes = cipher.doFinal(data);
 	}
 	catch(Exception exception)

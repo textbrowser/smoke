@@ -692,10 +692,16 @@ public class Messages
 	    ** [ Encryption Public Key Signature ]
 	    */
 
-	    bytes = cryptography.signViaChatEncryption(publicKey.getEncoded());
+	    if(!publicKey.getAlgorithm().equals("McEliece-CCA2"))
+	    {
+		bytes = cryptography.signViaChatEncryption
+		    (publicKey.getEncoded());
 
-	    if(bytes == null)
-		return null;
+		if(bytes == null)
+		    return null;
+	    }
+	    else
+		bytes = new byte[1];
 
 	    stringBuilder.append(Base64.encodeToString(publicKey.getEncoded(),
 						       Base64.NO_WRAP));

@@ -273,18 +273,24 @@ public class Authenticate extends AppCompatActivity
 				   s_cryptography.identity() == null)
 				{
 				    if(!e1)
-					m_error = "prepareSipHashIds() failure";
-				    else if(!e2)
-					m_error = "prepareSipHashKeys() " +
-					    "failure";
-				    else if(s_cryptography.
-					    chatEncryptionKeyPair() == null)
-					m_error = "chatEncryptionKeyPair() " +
-					    "returned zero";
-				    else
-					m_error = "chatSignatureKeyPair() " +
-					    "return zero";
+					m_error +=
+					    "prepareSipHashIds() failure ";
 
+				    if(!e2)
+					m_error += "prepareSipHashKeys() " +
+					    "failure ";
+
+				    if(s_cryptography.
+				       chatEncryptionKeyPair() == null)
+					m_error += "chatEncryptionKeyPair() " +
+					    "returned zero ";
+
+				    if(s_cryptography.
+				       chatSignatureKeyPair() == null)
+					m_error += "chatSignatureKeyPair() " +
+					    "return zero ";
+
+				    m_error = m_error.trim();
 				    s_cryptography.reset();
 				}
 			    }

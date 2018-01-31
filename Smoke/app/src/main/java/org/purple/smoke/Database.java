@@ -937,8 +937,7 @@ public class Database extends SQLiteOpenHelper
 				   Base64.DEFAULT));
 
 		if(bytes != null)
-		    publicKey = KeyFactory.getInstance("RSA").
-			generatePublic(new X509EncodedKeySpec(bytes));
+		    publicKey = Cryptography.publicKeyFromBytes(bytes);
 	    }
 	}
 	catch(Exception exception)
@@ -1437,10 +1436,12 @@ public class Database extends SQLiteOpenHelper
 		    publicKeySignature = Base64.decode
 			(string.getBytes(), Base64.NO_WRAP);
 
-		    if(!Cryptography.verifySignature(publicKey,
-						     publicKeySignature,
-						     publicKey.getEncoded()))
-			return "";
+		    if(!publicKey.getAlgorithm().equals("McEliece-CCA2"))
+			if(!Cryptography.
+			   verifySignature(publicKey,
+					   publicKeySignature,
+					   publicKey.getEncoded()))
+			    return "";
 
 		    ii += 1;
 		    break;
@@ -1590,7 +1591,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    if(m_db.insert("participants", null, values) <= 0)
+	    if(m_db.replace("participants", null, values) <= 0)
 		sipHashId = "";
 
 	    m_db.setTransactionSuccessful();
