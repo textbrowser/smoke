@@ -1358,7 +1358,6 @@ public class Database extends SQLiteOpenHelper
 
 	    PublicKey publicKey = null;
 	    PublicKey signatureKey = null;
-	    boolean exists = false;
 	    byte keyType[] = null;
 	    byte publicKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
@@ -1413,7 +1412,7 @@ public class Database extends SQLiteOpenHelper
 			    ** Let's respond with a specific EPKS!
 			    */
 
-			    exists = true;
+			    return "";
 
 		    if(cursor != null)
 			cursor.close();
@@ -1465,7 +1464,7 @@ public class Database extends SQLiteOpenHelper
 			    ** Let's respond with a specific EPKS!
 			    */
 
-			    exists = true;
+			    return "";
 
 		    if(cursor != null)
 			cursor.close();
@@ -1509,10 +1508,6 @@ public class Database extends SQLiteOpenHelper
 				  joinByteArrays(publicKey.getEncoded(),
 						 signatureKey.getEncoded())).
 		toLowerCase();
-
-	    if(exists)
-		return sipHashId;
-
 	    name = nameFromSipHashId(cryptography, sipHashId);
 
 	    if(name.isEmpty())
