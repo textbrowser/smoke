@@ -255,47 +255,40 @@ public class TcpNeighbor extends Neighbor
 
 			m_socket.setSoTimeout(SO_TIMEOUT);
 
-		    while(true)
+		    int i = 0;
+
+		    try
 		    {
-			int i = 0;
-
-			try
-			{
-			    i = m_socket.getInputStream().read(m_bytes);
-			}
-			catch(java.net.SocketTimeoutException exception)
-			{
-			    i = 0;
-			}
-			catch(Exception exception)
-			{
-			    i = -1;
-			}
-
-			long bytesRead = 0;
-
-			if(i < 0)
-			    bytesRead = -1;
-			else if(i > 0)
-			    bytesRead += i;
-			else
-			    break;
-
-			if(bytesRead < 0)
-			{
-			    setError("A socket read() error occurred.");
-			    disconnect();
-			    return;
-			}
-
-			m_bytesRead.getAndAdd(bytesRead);
-			m_lastTimeRead.set(System.nanoTime());
-			m_stringBuffer.append
-			    (new String(m_bytes, 0, (int) bytesRead));
-
-			if(m_stringBuffer.length() >= MAXIMUM_BYTES)
-			    break;
+			i = m_socket.getInputStream().read(m_bytes);
 		    }
+		    catch(java.net.SocketTimeoutException exception)
+		    {
+		    }
+		    catch(Exception exception)
+		    {
+			i = -1;
+		    }
+
+		    long bytesRead = 0;
+
+		    if(i < 0)
+			bytesRead = -1;
+		    else if(i > 0)
+			bytesRead += i;
+
+		    if(bytesRead < 0)
+		    {
+			setError("A socket read() error occurred.");
+			disconnect();
+			return;
+		    }
+
+		    m_bytesRead.getAndAdd(bytesRead);
+		    m_lastTimeRead.set(System.nanoTime());
+
+		    if(bytesRead > 0)
+			m_stringBuffer.
+			    append(new String(m_bytes, 0, (int) bytesRead));
 		}
 		catch(java.net.SocketException exception)
 		{

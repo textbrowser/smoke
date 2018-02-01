@@ -1348,6 +1348,7 @@ public class Database extends SQLiteOpenHelper
 	ContentValues values = null;
 	Cursor cursor = null;
 	String sipHashId = "";
+	boolean exists = false;
 
 	try
 	{
@@ -1408,11 +1409,7 @@ public class Database extends SQLiteOpenHelper
 
 		    if(cursor != null && cursor.moveToFirst())
 			if(cursor.getInt(0) == 1)
-			    /*
-			    ** Let's respond with a specific EPKS!
-			    */
-
-			    return "";
+			    exists = true;
 
 		    if(cursor != null)
 			cursor.close();
@@ -1460,11 +1457,8 @@ public class Database extends SQLiteOpenHelper
 
 		    if(cursor != null && cursor.moveToFirst())
 			if(cursor.getInt(0) == 1)
-			    /*
-			    ** Let's respond with a specific EPKS!
-			    */
-
-			    return "";
+			    if(exists)
+				return "";
 
 		    if(cursor != null)
 			cursor.close();
