@@ -1,7 +1,8 @@
 Completed Items
 
 1.     Remove UI-related references in Settings::prepareListeners()::...::run().
-2.     Replace the (final) iterations variable in Settings::prepareListeners()::...::run().
+2.     Replace the (final) iterations variable in
+       Settings::prepareListeners()::...::run().
 3.     Exit menus.
 4.     Logging class. See Database::writeLog().
 5.     Decide if the State class requires cryptographic data.

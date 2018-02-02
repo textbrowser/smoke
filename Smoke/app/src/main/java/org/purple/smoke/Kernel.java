@@ -392,7 +392,7 @@ public class Kernel
 				     bytesToMessageStringNonBase64(bytes));
 				break;
 			    case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
-				enqueueMessage
+				scheduleSend
 				    (Messages.
 				     bytesToMessageStringNonBase64(bytes));
 				break;
