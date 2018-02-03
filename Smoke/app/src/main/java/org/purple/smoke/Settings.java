@@ -724,14 +724,20 @@ public class Settings extends AppCompatActivity
 		    array = new String[]
 		    {
 			"Action",
-			"Connect", "Delete", "Disconnect",
+			"Connect",
+			"Delete",
+			"Disconnect",
+			"Purge Queue",
 			"Reset SSL/TLS Credentials"
 		    };
 		else
 		    array = new String[]
 		    {
 			"Action",
-			"Connect", "Delete", "Disconnect"
+			"Connect",
+			"Delete",
+			"Disconnect",
+			"Purge Queue"
 		    };
 
 		arrayAdapter = new ArrayAdapter<>
@@ -761,7 +767,10 @@ public class Settings extends AppCompatActivity
 				    (s_cryptography,
 				     "disconnect",
 				     String.valueOf(parent.getId()));
-			    else if(position == 4) // Reset SSL/TLS Credentials
+			    else if(position == 4) // Purge Queue
+				m_databaseHelper.purgeNeighborQueue
+				    (String.valueOf(parent.getId()));
+			    else if(position == 5) // Reset SSL/TLS Credentials
 			    {
 				m_databaseHelper.neighborRecordCertificate
 				    (s_cryptography,
