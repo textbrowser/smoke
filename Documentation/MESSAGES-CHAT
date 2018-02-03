@@ -11,7 +11,7 @@
 	Sequence (4)						8 Bytes (Base-64)
 	[PK Signature] (5)					Variable Bytes (Base-64)
 	{
-		[PK] (1) || [AES-256] (1 ... 4) (1)
+		[PK] (1) || [AES-256] (1 ... 4) || Recipient's Public Encryption Key SHA-512 Digest (1)
 	}
 }
 

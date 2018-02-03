@@ -10,7 +10,7 @@
 	Status (3)						1 Byte (Ignored)
 	[PK Signature] (4)					Variable Bytes
 	{
-		[PK] (1) || [AES-256] (1 ... 3) (1)
+		[PK] (1) || [AES-256] (1 ... 3) || Recipient's Public Encryption Key SHA-512 Digest (1)
 	}
 }
 
