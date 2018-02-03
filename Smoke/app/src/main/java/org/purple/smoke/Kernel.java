@@ -149,6 +149,9 @@ public class Kernel
 		@Override
 		public void run()
 		{
+		    if(!isConnected())
+			return;
+
 		    try
 		    {
 			ParticipantCall participantCall = null;
@@ -450,51 +453,90 @@ public class Kernel
 		newSingleThreadScheduledExecutor();
 	    m_publishKeysScheduler.scheduleAtFixedRate(new Runnable()
 	    {
+		private byte m_state = 0x00;
+
 		@Override
 		public void run()
 		{
 		    if(!isConnected())
 			return;
 
-		    ArrayList<SipHashIdElement> arrayList =
-			s_databaseHelper.readNonSharedSipHashIds
-			(s_cryptography);
-
-		    if(arrayList == null)
-			arrayList = new ArrayList<> ();
-
+		    if(m_state == 0x00)
 		    {
 			/*
-			** Self-sending.
+			** EPKS!
 			*/
 
-			SipHashIdElement sipHashIdElement =
-			    new SipHashIdElement();
+			m_state = 0x01;
 
-			sipHashIdElement.m_sipHashId = s_cryptography.
-			    sipHashId();
-			sipHashIdElement.m_stream = Miscellaneous.joinByteArrays
-			    (s_cryptography.sipHashEncryptionKey(),
-			     s_cryptography.sipHashMacKey());
-			arrayList.add(sipHashIdElement);
+			ArrayList<SipHashIdElement> arrayList =
+			    s_databaseHelper.readNonSharedSipHashIds
+			    (s_cryptography);
+
+			if(arrayList == null)
+			    arrayList = new ArrayList<> ();
+
+			{
+			    /*
+			    ** Self-sending.
+			    */
+
+			    SipHashIdElement sipHashIdElement =
+				new SipHashIdElement();
+
+			    sipHashIdElement.m_sipHashId = s_cryptography.
+				sipHashId();
+			    sipHashIdElement.m_stream = Miscellaneous.
+				joinByteArrays(s_cryptography.
+					       sipHashEncryptionKey(),
+					       s_cryptography.sipHashMacKey());
+			    arrayList.add(sipHashIdElement);
+			}
+
+			for(SipHashIdElement sipHashIdElement : arrayList)
+			{
+			    if(sipHashIdElement == null)
+				continue;
+
+			    byte bytes[] = Messages.epksMessage
+				(s_cryptography,
+				 sipHashIdElement.m_sipHashId,
+				 sipHashIdElement.m_stream,
+				 Messages.CHAT_KEY_TYPE);
+
+			    if(bytes != null)
+				enqueueMessage
+				    (Messages.bytesToMessageString(bytes));
+			}
 		    }
-
-		    for(SipHashIdElement sipHashIdElement : arrayList)
+		    else
 		    {
-			if(sipHashIdElement == null)
-			    break;
+			/*
+			** Request keys!
+			*/
 
-			byte bytes[] = Messages.epksMessage
-			    (s_cryptography,
-			     sipHashIdElement.m_sipHashId,
-			     sipHashIdElement.m_stream,
-			     Messages.CHAT_KEY_TYPE);
+			m_state = 0x00;
 
-			if(bytes == null)
-			    break;
+			ArrayList<SipHashIdElement> arrayList =
+			    s_databaseHelper.readNonSharedSipHashIds
+			    (s_cryptography);
 
-			if(enqueueMessage(Messages.bytesToMessageString(bytes)))
-			    break;
+			if(arrayList != null)
+			    for(SipHashIdElement sipHashIdElement : arrayList)
+			    {
+				if(sipHashIdElement == null)
+				    continue;
+
+				byte bytes[] = Messages.pkpRequestMessage
+				    (s_cryptography,
+				     sipHashIdElement.m_sipHashId);
+
+				if(bytes != null)
+				    Kernel.getInstance().
+					enqueueMessage(Messages.
+						       bytesToMessageString
+						       (bytes));
+			    }
 		    }
 		}
 	    }, 1500, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -508,6 +550,9 @@ public class Kernel
 		@Override
 		public void run()
 		{
+		    if(!isConnected())
+			return;
+
 		    ArrayList<ParticipantElement> arrayList =
 			s_databaseHelper.readParticipants(s_cryptography, "");
 

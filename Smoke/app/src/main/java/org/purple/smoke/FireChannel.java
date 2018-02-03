@@ -100,6 +100,9 @@ public class FireChannel extends View
 		@Override
 		public void run()
 		{
+		    if(!Kernel.getInstance().isConnected())
+			return;
+
 		    Kernel.getInstance().enqueueFireStatus(m_id, m_name);
 
 		    ((Activity) m_context).runOnUiThread(new Runnable()

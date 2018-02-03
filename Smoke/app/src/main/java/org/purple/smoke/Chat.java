@@ -805,6 +805,9 @@ public class Chat extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
+		if(!Kernel.getInstance().isConnected())
+		    return;
+
 		if(!m_databaseHelper.readSetting(null, "show_chat_icons").
 		   equals("true"))
 		    return;
