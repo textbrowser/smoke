@@ -532,10 +532,8 @@ public class Kernel
 				     sipHashIdElement.m_sipHashId);
 
 				if(bytes != null)
-				    Kernel.getInstance().
-					enqueueMessage(Messages.
-						       bytesToMessageString
-						       (bytes));
+				    enqueueMessage
+					(Messages.bytesToMessageString(bytes));
 			    }
 		    }
 		}

@@ -2031,12 +2031,14 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || m_db == null)
 	    return false;
 
-	ContentValues values = null;
+	ContentValues values1 = null;
+	ContentValues values2 = null;
 	boolean ok = true;
 
 	try
 	{
-	    values = new ContentValues();
+	    values1 = new ContentValues();
+	    values2 = new ContentValues();
 	}
 	catch(Exception exception)
 	{
@@ -2109,7 +2111,32 @@ public class Database extends SQLiteOpenHelper
 
 		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-		values.put(sparseArray.get(i), str);
+		values1.put(sparseArray.get(i), str);
+	    }
+
+	    sparseArray.clear();
+	    sparseArray.append(0, "name");
+
+	    for(int i = 0; i < sparseArray.size(); i++)
+	    {
+		if(sparseArray.get(i).equals("name"))
+		    bytes = cryptography.etm(name.getBytes());
+
+		if(bytes == null)
+		{
+		    StringBuilder stringBuilder = new StringBuilder();
+
+		    stringBuilder.append
+			("Database::writeSipHashParticipant(): error with ");
+		    stringBuilder.append(sparseArray.get(i));
+		    stringBuilder.append(" field.");
+		    writeLog(stringBuilder.toString());
+		    throw new Exception();
+		}
+
+		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+		values2.put(sparseArray.get(i), str);
 	    }
 	}
 	catch(Exception exception)
@@ -2125,7 +2152,7 @@ public class Database extends SQLiteOpenHelper
 	    {
 		if(m_db.
 		   update("siphash_ids",
-			  values,
+			  values1,
 			  "siphash_id_digest = ?",
 			  new String[] {Base64.
 					encodeToString(cryptography.
@@ -2134,8 +2161,22 @@ public class Database extends SQLiteOpenHelper
 							    trim().
 							    getBytes("UTF-8")),
 						       Base64.DEFAULT)}) <= 0)
-		    if(m_db.replace("siphash_ids", null, values) == -1)
+		{
+		    if(m_db.replace("siphash_ids", null, values1) == -1)
 			ok = false;
+		}
+		else if(m_db.update("participants",
+				    values2,
+				    "siphash_id_digest = ?",
+				    new String[] {Base64.
+						  encodeToString
+						  (cryptography.
+						   hmac(sipHashId.
+							toLowerCase().
+							trim().
+							getBytes("UTF-8")),
+						   Base64.DEFAULT)}) == -1)
+		    ok = false;
 
 		m_db.setTransactionSuccessful();
 	    }
