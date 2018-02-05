@@ -204,7 +204,7 @@ public class Database extends SQLiteOpenHelper
 			case 0:
 			    if(bytes != null)
 				fireElement.m_name = new String
-				    (bytes, "ISO-8859-1");
+				    (bytes, "ISO-8859-1").trim();
 			    else
 				fireElement.m_name = "error (" + oid + ")";
 
@@ -1366,6 +1366,8 @@ public class Database extends SQLiteOpenHelper
 			("SELECT value FROM settings WHERE name_digest = ?",
 			 new String[] {Base64.encodeToString(bytes,
 							     Base64.DEFAULT)});
+		else
+		    str = "An error occurred (hmac() failure).";
 	    }
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -1379,11 +1381,15 @@ public class Database extends SQLiteOpenHelper
 
 		    if(bytes != null)
 			str = new String(bytes);
+		    else
+			str = "An error occurred (mtd() failure).";
 		}
 	}
 	catch(Exception exception)
 	{
-	    str = "";
+	    str = "An exception was thrown (" +
+		exception.getMessage().toLowerCase() +
+		").";
 	}
 	finally
 	{
@@ -2606,7 +2612,7 @@ public class Database extends SQLiteOpenHelper
     {
 	prepareDb();
 
-	if(message.trim().isEmpty() || m_db == null)
+	if(m_db == null || message.trim().isEmpty())
 	    return;
 
 	m_db.beginTransactionNonExclusive();
@@ -3051,7 +3057,8 @@ public class Database extends SQLiteOpenHelper
 	   encryptionKey.length < 0 ||
 	   keyStream == null ||
 	   keyStream.length < 0 ||
-	   m_db == null)
+	   m_db == null ||
+	   name.isEmpty())
 	    return;
 
 	m_db.beginTransactionNonExclusive();

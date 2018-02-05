@@ -275,7 +275,7 @@ public class Fire extends AppCompatActivity
 				generateFireEncryptionKey(channel, salt);
 			    m_keyStream = s_cryptography.
 				generateFireDigestKeyStream
-				(textView2.getText().toString());
+				(textView2.getText().toString().trim());
 
 			    Fire.this.runOnUiThread(new Runnable()
 			    {
@@ -289,7 +289,7 @@ public class Fire extends AppCompatActivity
 				    {
 					m_databaseHelper.saveFireChannel
 					    (s_cryptography,
-					     textView1.getText().toString(),
+					     channel,
 					     m_encryptionKey,
 					     m_keyStream);
 					populateFires();
