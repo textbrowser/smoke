@@ -1883,4 +1883,8 @@ public class Kernel
 	{
 	}
     }
+
+    public void smokeService(boolean state)
+    {
+    }
 }

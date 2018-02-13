@@ -1512,6 +1512,20 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
+	checkBox1 = (CheckBox) findViewById(R.id.smoke_service);
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    Kernel.getInstance().smokeService(isChecked);
+		    m_databaseHelper.writeSetting
+			(null, "smoke_service", isChecked ? "true" : "false");
+		}
+	    });
+
 	spinner1.setOnItemSelectedListener
 	    (new OnItemSelectedListener()
 	    {
@@ -2120,6 +2134,13 @@ public class Settings extends AppCompatActivity
 	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
 
 	if(m_databaseHelper.readSetting(null, "always_awake").equals("true"))
+	    checkBox1.setChecked(true);
+	else
+	    checkBox1.setChecked(false);
+
+	checkBox1 = (CheckBox) findViewById(R.id.smoke_service);
+
+	if(m_databaseHelper.readSetting(null, "smoke_service").equals("true"))
 	    checkBox1.setChecked(true);
 	else
 	    checkBox1.setChecked(false);
