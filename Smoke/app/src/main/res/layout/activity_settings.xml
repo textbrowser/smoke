@@ -66,12 +66,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/prefer_active_cpu" />
 
-                <CheckBox
-                    android:id="@+id/smoke_service"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/smoke_service" />
-
                 <Button
                     android:id="@+id/clear_log"
                     android:layout_width="wrap_content"
