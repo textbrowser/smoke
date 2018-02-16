@@ -38,6 +38,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -126,7 +127,6 @@ public class Fire extends AppCompatActivity
 	    return null;
 	}
     };
-    public final static int FIRE_CHANNEL_HEIGHT = 500;
 
     private void deleteFire(String name, final Integer oid)
     {
@@ -178,10 +178,16 @@ public class Fire extends AppCompatActivity
 	    }
 	}
 
+	DisplayMetrics displayMetrics = new DisplayMetrics();
+
+	getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+	int height = (int) (0.6 * displayMetrics.heightPixels);
+
 	viewGroup.addView
 	    (fireChannel.view(),
 	     index,
-	     new LayoutParams(LayoutParams.WRAP_CONTENT, FIRE_CHANNEL_HEIGHT));
+	     new LayoutParams(LayoutParams.WRAP_CONTENT, height));
 	viewGroup.requestLayout();
     }
 
@@ -440,7 +446,12 @@ public class Fire extends AppCompatActivity
 
 	if(map != null)
 	{
+	    DisplayMetrics displayMetrics = new DisplayMetrics();
 	    ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
+
+	    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+	    int height = (int) (0.6 * displayMetrics.heightPixels);
 
 	    for(Map.Entry<String, FireChannel> entry : map.entrySet())
 	    {
@@ -453,8 +464,7 @@ public class Fire extends AppCompatActivity
 		parent.removeView(entry.getValue().view());
 		viewGroup.addView
 		    (entry.getValue().view(),
-		     new LayoutParams(LayoutParams.WRAP_CONTENT,
-				      FIRE_CHANNEL_HEIGHT));
+		     new LayoutParams(LayoutParams.WRAP_CONTENT, height));
 	    }
 
 	    viewGroup.requestLayout();

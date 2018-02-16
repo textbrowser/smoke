@@ -957,7 +957,7 @@ public class Chat extends AppCompatActivity
 	    populateParticipants();
 
 	findViewById(R.id.view).setBackgroundColor
-	    (Color.rgb(27, 40, 54));
+	    (Color.rgb(108, 121, 137));
 
 	/*
 	** Preparse some event listeners.
