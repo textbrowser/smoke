@@ -67,6 +67,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/chat_message"
             android:layout_below="@+id/clear_chat_messages"
+            android:layout_marginEnd="5dp"
             android:layout_toEndOf="@+id/chat_scrollview"
             android:fadeScrollbars="false"
             android:scrollbars="vertical">
@@ -87,6 +88,7 @@
             android:layout_alignBaseline="@+id/chat_message"
             android:layout_alignBottom="@+id/chat_message"
             android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
             android:text="@string/send" />
 
         <EditText
