@@ -87,11 +87,8 @@ public class Kernel
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
-    private final static int CALL_LIFETIME = 30000; // 30 Seconds
     private final static int CHAT_TEMPORARY_IDENTITY_INTERVAL =
 	5000; // 5 Seconds
-    private final static int CHAT_TEMPORARY_IDENTITY_LIFETIME =
-	60000; // 60 Seconds
     private final static int CONGESTION_INTERVAL = 5000; // 5 Seconds
     private final static int CONGESTION_LIFETIME = 60; // Seconds
     private final static int FIRE_TIME_DELTA = 30000; // 30 Seconds
@@ -105,6 +102,9 @@ public class Kernel
 						      ** Should be less than
 						      ** Chat.STATUS_WINDOW.
 						      */
+    private final static long CALL_LIFETIME = 30000; // 30 Seconds
+    private final static long CHAT_TEMPORARY_IDENTITY_LIFETIME =
+	60000; // 60 Seconds
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -149,9 +149,6 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    if(!isConnected())
-			return;
-
 		    try
 		    {
 			ParticipantCall participantCall = null;
@@ -238,18 +235,23 @@ public class Kernel
 			    m_callQueueMutex.writeLock().unlock();
 			}
 
-			/*
-			** Place a call request to all neighbors.
-			*/
+			if(isConnected())
+			{
+			    /*
+			    ** Place a call request to all neighbors.
+			    */
 
-			byte bytes[] = Messages.callMessage
-			    (s_cryptography,
-			     participantCall.m_sipHashId,
-			     participantCall.m_keyPair.getPublic().getEncoded(),
-			     Messages.CALL_HALF_AND_HALF_TAGS[0]);
+			    byte bytes[] = Messages.callMessage
+				(s_cryptography,
+				 participantCall.m_sipHashId,
+				 participantCall.m_keyPair.getPublic().
+				 getEncoded(),
+				 Messages.CALL_HALF_AND_HALF_TAGS[0]);
 
-			if(bytes != null)
-			    scheduleSend(Messages.bytesToMessageString(bytes));
+			    if(bytes != null)
+				scheduleSend
+				    (Messages.bytesToMessageString(bytes));
+			}
 		    }
 		    catch(Exception exception)
 		    {
@@ -1491,6 +1493,27 @@ public class Kernel
 	{
 	    m_chatMessageRetrievalIdentityMutex.writeLock().unlock();
 	}
+    }
+
+    public long callTimeRemaining(String sipHashId)
+    {
+	m_callQueueMutex.readLock().lock();
+
+	try
+	{
+	    if(m_callQueue.containsKey(sipHashId))
+		return
+		    Math.abs
+		    (CALL_LIFETIME / 1000 - (System.nanoTime() -
+					     m_callQueue.get(sipHashId).
+					     m_startTime) / 1000000000);
+	}
+	finally
+	{
+	    m_callQueueMutex.readLock().unlock();
+	}
+
+	return 0;
     }
 
     public static boolean containsCongestion(String message)

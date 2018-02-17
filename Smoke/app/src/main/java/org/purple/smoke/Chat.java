@@ -130,8 +130,8 @@ public class Chat extends AppCompatActivity
     private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     private final static int STATUS_INTERVAL = 30000; // 30 Seconds
-    public final static int CHAT_WINDOW = 60000; // 1 Minute
-    public final static int STATUS_WINDOW = 30000; // 30 Seconds
+    public final static long CHAT_WINDOW = 60000; // 1 Minute
+    public final static long STATUS_WINDOW = 30000; // 30 Seconds
 
     private String nameFromCheckBoxText(String text)
     {
@@ -589,7 +589,20 @@ public class Chat extends AppCompatActivity
 			     delimitString(checkBox1.getTag().toString().
 					   replace(":", ""), '-', 4).
 			     toUpperCase());
-			stringBuilder.append("). Please be patient.\n\n");
+			stringBuilder.append("). ");
+
+			if(!ok)
+			{
+			    stringBuilder.append("Please try again in ");
+			    stringBuilder.append
+				(Kernel.getInstance().
+				 callTimeRemaining(checkBox1.getTag().
+						   toString()));
+			    stringBuilder.append(" second(s).\n\n");
+			}
+			else
+			    stringBuilder.append("Please be patient.\n\n");
+
 			textView1.append(stringBuilder);
 		    }
 		}

@@ -52,8 +52,8 @@ public abstract class Neighbor
     private final static int LANE_WIDTH = 8 * 1024 * 1024; // 8 MiB
     private final static int PARSING_INTERVAL = 100; // Milliseconds
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
-    private final static int SILENCE = 90000; // 90 Seconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
+    private final static long SILENCE = 90000; // 90 Seconds
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
