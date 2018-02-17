@@ -29,6 +29,8 @@ package org.purple.smoke;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager.WifiLock;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager.WakeLock;
@@ -747,6 +749,21 @@ public class Kernel
 
     public boolean isConnected()
     {
+	try
+	{
+	    ConnectivityManager connectivityManager = (ConnectivityManager)
+		Smoke.getApplication().getApplicationContext().
+		getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connectivityManager.getNetworkInfo
+		(ConnectivityManager.TYPE_WIFI);
+
+	    if(!networkInfo.isConnected())
+		return false;
+	}
+	catch(Exception exception)
+	{
+	}
+
 	m_neighborsMutex.readLock().lock();
 
 	try

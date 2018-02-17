@@ -115,6 +115,50 @@ public class UdpNeighbor extends Neighbor
 	return 0;
     }
 
+    protected void abort()
+    {
+	disconnect();
+	super.abort();
+	m_readSocketScheduler.shutdown();
+
+	try
+	{
+	    m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
+    protected void connect()
+    {
+	if(connected())
+	    return;
+	else if(!isWifiConnected())
+	    return;
+
+	setError("");
+
+	try
+	{
+	    if(m_inetAddress == null)
+		return;
+
+	    m_bytesRead.set(0);
+	    m_bytesWritten.set(0);
+	    m_lastTimeRead.set(System.nanoTime());
+	    m_socket = new DatagramSocket();
+	    m_socket.connect(m_inetAddress, Integer.parseInt(m_ipPort));
+	    m_socket.setSoTimeout(SO_TIMEOUT);
+	    m_startTime.set(System.nanoTime());
+	}
+	catch(Exception exception)
+	{
+	    setError("An error occurred while attempting a connection.");
+	    disconnect();
+	}
+    }
+
     protected void disconnect()
     {
 	super.disconnect();
@@ -200,47 +244,5 @@ public class UdpNeighbor extends Neighbor
 		}
 	    }
 	}, 0, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);
-    }
-
-    public void abort()
-    {
-	disconnect();
-	super.abort();
-	m_readSocketScheduler.shutdown();
-
-	try
-	{
-	    m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
-    public void connect()
-    {
-	if(connected())
-	    return;
-
-	setError("");
-
-	try
-	{
-	    if(m_inetAddress == null)
-		return;
-
-	    m_bytesRead.set(0);
-	    m_bytesWritten.set(0);
-	    m_lastTimeRead.set(System.nanoTime());
-	    m_socket = new DatagramSocket();
-	    m_socket.connect(m_inetAddress, Integer.parseInt(m_ipPort));
-	    m_socket.setSoTimeout(SO_TIMEOUT);
-	    m_startTime.set(System.nanoTime());
-	}
-	catch(Exception exception)
-	{
-	    setError("An error occurred while attempting a connection.");
-	    disconnect();
-	}
     }
 }

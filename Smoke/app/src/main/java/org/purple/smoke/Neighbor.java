@@ -27,8 +27,10 @@
 
 package org.purple.smoke;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Base64;
-
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -152,9 +154,6 @@ public abstract class Neighbor
 
 	    public void run()
 	    {
-		if(!connected())
-		    return;
-
 		/*
 		** Detect our end-of-message delimiter.
 		*/
@@ -332,6 +331,25 @@ public abstract class Neighbor
     protected abstract boolean send(String message);
     protected abstract int getLocalPort();
     protected abstract void connect();
+
+    protected boolean isWifiConnected()
+    {
+	try
+	{
+	    ConnectivityManager connectivityManager = (ConnectivityManager)
+		Smoke.getApplication().getApplicationContext().
+		getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connectivityManager.getNetworkInfo
+		(ConnectivityManager.TYPE_WIFI);
+
+	    return networkInfo.isConnected();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return false;
+    }
 
     protected synchronized void abort()
     {

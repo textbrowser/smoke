@@ -93,8 +93,10 @@ public class TcpNeighbor extends Neighbor
     {
 	try
 	{
-	    return m_isValidCertificate.get() &&
-		m_socket != null && !m_socket.isClosed() &&
+	    return isWifiConnected() &&
+		m_isValidCertificate.get() &&
+		m_socket != null &&
+		!m_socket.isClosed() &&
 		m_socket.getSession() != null &&
 		m_socket.getSession().isValid();
 	}
@@ -148,6 +150,83 @@ public class TcpNeighbor extends Neighbor
 	}
 
 	return 0;
+    }
+
+    protected void abort()
+    {
+	disconnect();
+	super.abort();
+	m_isValidCertificate.set(false);
+	m_readSocketScheduler.shutdown();
+
+	try
+	{
+	    m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
+    protected void connect()
+    {
+	if(connected())
+	    return;
+	else if(!isWifiConnected())
+	    return;
+
+	setError("");
+
+	try
+	{
+	    m_bytesRead.set(0);
+	    m_bytesWritten.set(0);
+	    m_lastTimeRead.set(System.nanoTime());
+
+	    SSLContext sslContext = null;
+
+	    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+		sslContext = SSLContext.getInstance("TLS");
+	    else
+		sslContext = SSLContext.getInstance("SSL");
+
+	    sslContext.init
+		(null, m_trustManagers, SecureRandom.getInstance("SHA1PRNG"));
+
+	    if(m_proxyInetSocketAddress == null)
+	    {
+		m_socket = (SSLSocket) sslContext.getSocketFactory().
+		    createSocket();
+		m_socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
+	    }
+	    else
+	    {
+		Socket socket = null;
+
+		if(m_proxyType.equals("HTTP"))
+		    socket = new Socket
+			(new Proxy(Proxy.Type.HTTP, m_proxyInetSocketAddress));
+		else
+		    socket = new Socket
+			(new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
+
+		socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
+		m_socket = (SSLSocket) sslContext.getSocketFactory().
+		    createSocket(socket, m_proxyIpAddress, m_proxyPort, true);
+	    }
+
+	    m_socket.setEnabledProtocols(m_protocols);
+	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
+	    m_socket.setTcpNoDelay(false);
+	    m_startTime.set(System.nanoTime());
+	}
+	catch(Exception exception)
+	{
+	    setError("An error (" +
+		     exception.getMessage() +
+		     ") occurred while attempting a connection.");
+	    disconnect();
+	}
     }
 
     protected void disconnect()
@@ -376,80 +455,5 @@ public class TcpNeighbor extends Neighbor
 		}
 	    }
 	};
-    }
-
-    public void abort()
-    {
-	disconnect();
-	super.abort();
-	m_isValidCertificate.set(false);
-	m_readSocketScheduler.shutdown();
-
-	try
-	{
-	    m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
-    public void connect()
-    {
-	if(connected())
-	    return;
-
-	setError("");
-
-	try
-	{
-	    m_bytesRead.set(0);
-	    m_bytesWritten.set(0);
-	    m_lastTimeRead.set(System.nanoTime());
-
-	    SSLContext sslContext = null;
-
-	    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-		sslContext = SSLContext.getInstance("TLS");
-	    else
-		sslContext = SSLContext.getInstance("SSL");
-
-	    sslContext.init
-		(null, m_trustManagers, SecureRandom.getInstance("SHA1PRNG"));
-
-	    if(m_proxyInetSocketAddress == null)
-	    {
-		m_socket = (SSLSocket) sslContext.getSocketFactory().
-		    createSocket();
-		m_socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
-	    }
-	    else
-	    {
-		Socket socket = null;
-
-		if(m_proxyType.equals("HTTP"))
-		    socket = new Socket
-			(new Proxy(Proxy.Type.HTTP, m_proxyInetSocketAddress));
-		else
-		    socket = new Socket
-			(new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
-
-		socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
-		m_socket = (SSLSocket) sslContext.getSocketFactory().
-		    createSocket(socket, m_proxyIpAddress, m_proxyPort, true);
-	    }
-
-	    m_socket.setEnabledProtocols(m_protocols);
-	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
-	    m_socket.setTcpNoDelay(false);
-	    m_startTime.set(System.nanoTime());
-	}
-	catch(Exception exception)
-	{
-	    setError("An error (" +
-		     exception.getMessage() +
-		     ") occurred while attempting a connection.");
-	    disconnect();
-	}
     }
 }
