@@ -187,7 +187,11 @@ public abstract class Neighbor
 		switch(statusControl)
 		{
 		case "connect":
-		    connect();
+		    if(isWifiConnected())
+			connect();
+		    else
+			disconnect();
+
 		    break;
 		case "disconnect":
 		    disconnect();
@@ -332,7 +336,7 @@ public abstract class Neighbor
     protected abstract int getLocalPort();
     protected abstract void connect();
 
-    protected boolean isWifiConnected()
+    protected synchronized boolean isWifiConnected()
     {
 	try
 	{
