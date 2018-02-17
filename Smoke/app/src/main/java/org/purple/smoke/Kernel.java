@@ -212,12 +212,16 @@ public class Kernel
 				return;
 
 			    participantCall = m_callQueue.get(sipHashId);
-			    participantCall.preparePrivatePublicKey();
 			}
 			finally
 			{
 			    m_callQueueMutex.writeLock().unlock();
 			}
+
+			if(participantCall == null)
+			    return;
+			else
+			    participantCall.preparePrivatePublicKey();
 
 			m_callQueueMutex.writeLock().lock();
 
