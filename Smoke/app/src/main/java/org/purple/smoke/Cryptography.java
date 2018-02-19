@@ -1296,7 +1296,7 @@ public class Cryptography
 	return ok;
     }
 
-	public static byte[] aes256KeyBytes()
+    public static byte[] aes256KeyBytes()
     {
 	try
 	{
