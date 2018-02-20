@@ -60,66 +60,76 @@
 	</p>
 
 	<h2>Release Notes</h2>
-	  2018.02.10
-	  <br>
-	  <ul>
-	    <li>Allow empty Fire participant names.</li>
-	    <li>Allow purging of neighbor queues.</li>
-	    <li>Automatic, oscillatory EPKS.</li>
-	    <li>Avoid non-essential operations if network channels are not available.</li>
-	    <li>Depict corrupted database entries.</li>
-	    <li>Enabled Nagle's algorithm.</li>
-	    <li>Introduced McEliece-Fujisaka via BouncyCastle. Cross-communications supported.</li>
-	    <li>Minimum password length set to one character.</li>
-	    <li>New Fire key generation. Destination tags are required for SmokeStack.</li>
-	    <li>Participant name changes should be reflected in the Chat activity.</li>
-	    <li>Trim Channel, Digest Key, and Salt values on Fire.</li>
-	  </ul>
-	  2018.01.05
-	  <br>
-	  <ul>
-	    <li>Fire, or, group communications. Compatible with Spot-On.</li>
-	    <li>Increased lane widths to 8 MiB.</li>
-	  </ul>
-	  2017.08.19
-	  <br>
-	  <ul>
-	    <li>Set a non-zero SO_TIMEOUT as some devices do not unblock socket reads after sockets are closed.</li>
-	  </ul>
-	  2017.07.20
-	  <br>
-	  <ul>
-	    <li>AndroidManifest.xml was missing WakeLock permissions.</li>
-	    <li>Do not attempt to send duplicate data.</li>
-	    <li>Do not specify timeouts in socket reads as separate threads are responsible for socket reads.</li>
-	    <li>Removed all Thread.sleep() instances.</li>
-	    <li>Replaced StringBuilder Neighbor member with StringBuffer. StringBuffer is thread-safe.</li>
-	    <li>Signed release.</li>
-	    <li>WiFi lock.</li>
-	  </ul>
-	  2017.07.16
-	  <br>
-	  <ul>
-	    <li>Less activity on disconnected neighbors.</li>
-	  </ul>
-	  2017.07.09
-	  <br>
-	  <ul>
-	    <li>Detect existing key pairs in writeParticipant().</li>
-	    <li>Smaller database transaction areas.</li>
-	  </ul>
-	  2017.07.07
-	  <br>
-	  <ul>
-	    <li>Do not automatically purge the temporary identity for offline message retrieval unless some inactive period has elapsed.</li>
-	    <li>Issue SQLiteDatabase.update() whenever a participant is added. This will allow for replacing of participant names without removal of existing data.</li>
-	    <li>SmokeStack as a private public key repository.</li>
-	  </ul>
-	  2017.07.04
-	  <br>
-	  <ul>
-	    <li>Independence Day!</li>
-	  </ul>
+	2018.02.20
+	<br>
+	<ul>
+	  <li>Abort simultaneous calls.</li>
+	  <li>Inspect WiFi availability before attempting socket connections.</li>
+	  <li>New Chat background color.</li>
+	  <li>Prepare calling public-key pairs without locking calling queue object.</li>
+	  <li>Replaced integers with long integers where necessary.</li>
+	  <li>Set Fire height to 60% of screen height.</li>
+	</ul>
+	2018.02.10
+	<br>
+	<ul>
+	  <li>Allow empty Fire participant names.</li>
+	  <li>Allow purging of neighbor queues.</li>
+	  <li>Automatic, oscillatory EPKS.</li>
+	  <li>Avoid non-essential operations if network channels are not available.</li>
+	  <li>Depict corrupted database entries.</li>
+	  <li>Enabled Nagle's algorithm.</li>
+	  <li>Introduced McEliece-Fujisaka via BouncyCastle. Cross-communications supported.</li>
+	  <li>Minimum password length set to one character.</li>
+	  <li>New Fire key generation. Destination tags are required for SmokeStack.</li>
+	  <li>Participant name changes should be reflected in the Chat activity.</li>
+	  <li>Trim Channel, Digest Key, and Salt values on Fire.</li>
+	</ul>
+	2018.01.05
+	<br>
+	<ul>
+	  <li>Fire, or, group communications. Compatible with Spot-On.</li>
+	  <li>Increased lane widths to 8 MiB.</li>
+	</ul>
+	2017.08.19
+	<br>
+	<ul>
+	  <li>Set a non-zero SO_TIMEOUT as some devices do not unblock socket reads after sockets are closed.</li>
+	</ul>
+	2017.07.20
+	<br>
+	<ul>
+	  <li>AndroidManifest.xml was missing WakeLock permissions.</li>
+	  <li>Do not attempt to send duplicate data.</li>
+	  <li>Do not specify timeouts in socket reads as separate threads are responsible for socket reads.</li>
+	  <li>Removed all Thread.sleep() instances.</li>
+	  <li>Replaced StringBuilder Neighbor member with StringBuffer. StringBuffer is thread-safe.</li>
+	  <li>Signed release.</li>
+	  <li>WiFi lock.</li>
+	</ul>
+	2017.07.16
+	<br>
+	<ul>
+	  <li>Less activity on disconnected neighbors.</li>
+	</ul>
+	2017.07.09
+	<br>
+	<ul>
+	  <li>Detect existing key pairs in writeParticipant().</li>
+	  <li>Smaller database transaction areas.</li>
+	</ul>
+	2017.07.07
+	<br>
+	<ul>
+	  <li>Do not automatically purge the temporary identity for offline message retrieval unless some inactive period has elapsed.</li>
+	  <li>Issue SQLiteDatabase.update() whenever a participant is added. This will allow for replacing of participant names without removal of existing data.</li>
+	  <li>SmokeStack as a private public key repository.</li>
+	</ul>
+	2017.07.04
+	<br>
+	<ul>
+	  <li>Independence Day!</li>
+	</ul>
       </section>
     </div>
   </body>
