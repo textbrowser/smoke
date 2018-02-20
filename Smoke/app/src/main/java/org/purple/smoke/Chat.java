@@ -85,7 +85,11 @@ public class Chat extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
+	    if(intent.getAction().equals("org.purple.smoke.busy_call"))
+		busyCall
+		    (intent.getStringExtra("org.purple.smoke.name"),
+		     intent.getStringExtra("org.purple.smoke.sipHashId"));
+	    else if(intent.getAction().equals("org.purple.smoke.chat_message"))
 		appendMessage
 		    (intent.getStringExtra("org.purple.smoke.message"),
 		     intent.getStringExtra("org.purple.smoke.name"),
@@ -297,6 +301,43 @@ public class Chat extends AppCompatActivity
 	    (new ForegroundColorSpan(color),
 	     0, stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	textView1.append(spannable);
+	scrollMessagesView();
+
+	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
+
+	textView2.post(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		textView2.requestFocus();
+	    }
+	});
+    }
+
+    private void busyCall(String name, String sipHashId)
+    {
+	if(name == null || sipHashId == null)
+	    return;
+	else if(name.trim().length() == 0 || sipHashId.trim().length() == 0)
+	    return;
+
+	StringBuilder stringBuilder = new StringBuilder();
+	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
+
+	stringBuilder.append("[");
+	stringBuilder.append(m_simpleDateFormat.format(new Date()));
+	stringBuilder.append("] ");
+	stringBuilder.append
+	    ("Received a simultaneous half-and-half organic call from ");
+	stringBuilder.append(name);
+	stringBuilder.append(" (");
+	stringBuilder.append
+	    (Miscellaneous.
+	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
+	stringBuilder.append("). Aborting.");
+	stringBuilder.append("\n\n");
+	textView1.append(stringBuilder);
 	scrollMessagesView();
 
 	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
@@ -1302,6 +1343,7 @@ public class Chat extends AppCompatActivity
 	{
 	    IntentFilter intentFilter = new IntentFilter();
 
+	    intentFilter.addAction("org.purple.smoke.busy_call");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
 	    intentFilter.addAction("org.purple.smoke.populate_participants");

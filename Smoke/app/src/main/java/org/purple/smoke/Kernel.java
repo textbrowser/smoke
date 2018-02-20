@@ -1382,19 +1382,61 @@ public class Kernel
 
 		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
-			publicKey = Cryptography.publicRSAKeyFromBytes
-			    (Arrays.copyOfRange(aes256, 9, 9 + 294));
+			ParticipantCall participantCall = null;
 
-			if(publicKey == null)
+			m_callQueueMutex.readLock().lock();
+
+			try
+			{
+			    participantCall = m_callQueue.get(array[1]);
+			}
+			finally
+			{
+			    m_callQueueMutex.readLock().unlock();
+			}
+
+			if(participantCall == null)
+			{
+			    publicKey = Cryptography.publicRSAKeyFromBytes
+				(Arrays.copyOfRange(aes256, 9, 9 + 294));
+
+			    if(publicKey == null)
+				return true;
+
+			    /*
+			    ** Generate new AES-256 and SHA-512 keys.
+			    */
+
+			    keyStream = Miscellaneous.joinByteArrays
+				(Cryptography.aes256KeyBytes(),
+				 Cryptography.sha512KeyBytes());
+			}
+			else
+			{
+			    /*
+			    ** We're busy!
+			    */
+
+			    m_callQueueMutex.writeLock().lock();
+
+			    try
+			    {
+				m_callQueue.remove(array[1]);
+			    }
+			    finally
+			    {
+				m_callQueueMutex.writeLock().unlock();
+			    }
+
+			    Intent intent = new Intent
+				("org.purple.smoke.busy_call");
+
+			    intent.putExtra("org.purple.smoke.name", array[0]);
+			    intent.putExtra
+				("org.purple.smoke.sipHashId", array[1]);
+			    Smoke.getApplication().sendBroadcast(intent);
 			    return true;
-
-			/*
-			** Generate new AES-256 and SHA-512 keys.
-			*/
-
-			keyStream = Miscellaneous.joinByteArrays
-			    (Cryptography.aes256KeyBytes(),
-			     Cryptography.sha512KeyBytes());
+			}
 		    }
 		    else if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[1])
 		    {
