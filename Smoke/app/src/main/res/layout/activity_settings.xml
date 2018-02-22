@@ -471,32 +471,24 @@
                     android:textSize="20sp"
                     android:textStyle="normal|bold" />
 
-                <LinearLayout
-                    android:id="@+id/iteration_count_linear_layout"
+                <GridLayout
+                    android:id="@+id/pki_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="5dp"
+                    android:columnCount="2"
+                    android:rowCount="3">
 
                     <TextView
-                        android:layout_width="179dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/iteration_count"
                         android:textSize="14sp" />
 
                     <Spinner
                         android:id="@+id/iteration_count"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/pki_linear_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -505,9 +497,8 @@
 
                     <Spinner
                         android:id="@+id/pki_encryption_algorithm"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -516,11 +507,9 @@
 
                     <Spinner
                         android:id="@+id/pki_signature_algorithm"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content" />
+                </GridLayout>
 
                 <EditText
                     android:id="@+id/password1"

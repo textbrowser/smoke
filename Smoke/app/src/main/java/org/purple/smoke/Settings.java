@@ -2316,12 +2316,10 @@ public class Settings extends AppCompatActivity
 		View child = ((ViewGroup) findViewById(R.id.linear_layout)).
 		    getChildAt(i);
 
-		if(!(child == findViewById(R.id.
-					   iteration_count_linear_layout) ||
-		     child == findViewById(R.id.password1) ||
+		if(!(child == findViewById(R.id.password1) ||
 		     child == findViewById(R.id.password2) ||
 		     child == findViewById(R.id.password_separator) ||
-		     child == findViewById(R.id.pki_linear_layout) ||
+		     child == findViewById(R.id.pki_layout) ||
 		     child == findViewById(R.id.set_password_linear_layout)))
 		    child.setVisibility(View.GONE);
 	    }
