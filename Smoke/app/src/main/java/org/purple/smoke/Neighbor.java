@@ -73,7 +73,7 @@ public abstract class Neighbor
     protected final static Object m_errorMutex = new Object();
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
     protected final static int READ_SOCKET_INTERVAL = 100; // 100 Milliseconds
-    protected final static int SO_TIMEOUT = 7500; // 7.5 Seconds
+    protected final static int SO_TIMEOUT = 2500; // 2.5 Seconds
     public final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
 
     private void saveStatistics()
