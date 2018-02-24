@@ -36,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 
 public class UdpMulticastNeighbor extends Neighbor
 {
-    private InetAddress m_inetAddress = null;
     private MulticastSocket m_socket = null;
     private final static int TTL = 255;
 
@@ -49,7 +48,9 @@ public class UdpMulticastNeighbor extends Neighbor
     {
 	try
 	{
-	    return m_socket != null && !m_socket.isClosed();
+	    return isWifiConnected() &&
+		m_socket != null &&
+		!m_socket.isClosed();
 	}
 	catch(Exception exception)
 	{
@@ -73,7 +74,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	    DatagramPacket datagramPacket = new DatagramPacket
 		(message.getBytes(),
 		 message.getBytes().length,
-		 m_inetAddress,
+		 InetAddress.getByName(m_ipAddress),
 		 Integer.parseInt(m_ipPort));
 
 	    Kernel.writeCongestionDigest(datagramPacket.getData());
@@ -124,9 +125,10 @@ public class UdpMulticastNeighbor extends Neighbor
 	if(connected())
 	    return;
 	else if(!isWifiConnected())
+	{
+	    setError("WiFi is not available.");
 	    return;
-
-	setError("");
+	}
 
 	try
 	{
@@ -134,11 +136,12 @@ public class UdpMulticastNeighbor extends Neighbor
 	    m_bytesWritten.set(0);
 	    m_lastTimeRead.set(System.nanoTime());
 	    m_socket = new MulticastSocket(Integer.parseInt(m_ipPort));
-	    m_socket.joinGroup(m_inetAddress);
+	    m_socket.joinGroup(InetAddress.getByName(m_ipAddress));
 	    m_socket.setLoopbackMode(true);
 	    m_socket.setSoTimeout(SO_TIMEOUT);
 	    m_socket.setTimeToLive(TTL);
 	    m_startTime.set(System.nanoTime());
+	    setError("");
 	}
 	catch(Exception exception)
 	{
@@ -155,9 +158,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	{
 	    if(m_socket != null)
 	    {
-		if(m_inetAddress != null)
-		    m_socket.leaveGroup(m_inetAddress);
-
+		m_socket.leaveGroup(InetAddress.getByName(m_ipAddress));
 		m_socket.close();
 	    }
 	}
@@ -180,15 +181,6 @@ public class UdpMulticastNeighbor extends Neighbor
 				int oid)
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
-
-	try
-	{
-	    m_inetAddress = InetAddress.getByName(m_ipAddress);
-	}
-	catch(Exception exception)
-	{
-	    m_ipAddress = null;
-	}
 
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()

@@ -187,11 +187,7 @@ public abstract class Neighbor
 		switch(statusControl)
 		{
 		case "connect":
-		    if(isWifiConnected())
-			connect();
-		    else
-			disconnect();
-
+		    connect();
 		    break;
 		case "disconnect":
 		    disconnect();

@@ -51,7 +51,6 @@
     <string name="save">Save</string>
     <string name="scope_id">Scope ID</string>
     <string name="send">Send</string>
-    <string name="set_password">Set Password</string>
     <string name="share_keys">Share Keys</string>
     <string name="signature">Signature</string>
     <string name="siphashid">SipHash ID</string>
@@ -59,4 +58,5 @@
     <string name="clear_log">Clear Log</string>
     <string name="network">Network</string>
     <string name="smoke_service">Smoke Service</string>
+    <string name="generate">Generate</string>
 </resources>

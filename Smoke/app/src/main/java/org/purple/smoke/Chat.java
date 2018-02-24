@@ -1261,7 +1261,8 @@ public class Chat extends AppCompatActivity
 	menu.add(0, -1, 0, "Refresh Participants Table");
 	item = menu.add(1, -1, 0, "Retrieve Messages");
 	item.setEnabled
-	    (!m_databaseHelper.readSetting(s_cryptography, "ozone_address").
+	    (Kernel.getInstance().isConnected() &&
+	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty());
 	item = menu.add(2, -1, 0, "Show Details").setCheckable(true);
 	item.setChecked

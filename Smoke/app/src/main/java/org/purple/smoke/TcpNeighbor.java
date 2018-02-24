@@ -45,7 +45,6 @@ import javax.net.ssl.X509TrustManager;
 public class TcpNeighbor extends Neighbor
 {
     private AtomicBoolean m_isValidCertificate = null;
-    private InetSocketAddress m_inetSocketAddress = null;
     private InetSocketAddress m_proxyInetSocketAddress = null;
     private SSLSocket m_socket = null;
     private String m_protocols[] = null;
@@ -173,9 +172,10 @@ public class TcpNeighbor extends Neighbor
 	if(connected())
 	    return;
 	else if(!isWifiConnected())
+	{
+	    setError("WiFi is not available.");
 	    return;
-
-	setError("");
+	}
 
 	try
 	{
@@ -183,6 +183,8 @@ public class TcpNeighbor extends Neighbor
 	    m_bytesWritten.set(0);
 	    m_lastTimeRead.set(System.nanoTime());
 
+	    InetSocketAddress inetSocketAddress = new InetSocketAddress
+		(m_ipAddress, Integer.parseInt(m_ipPort));
 	    SSLContext sslContext = null;
 
 	    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -197,7 +199,7 @@ public class TcpNeighbor extends Neighbor
 	    {
 		m_socket = (SSLSocket) sslContext.getSocketFactory().
 		    createSocket();
-		m_socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
+		m_socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 	    }
 	    else
 	    {
@@ -210,7 +212,7 @@ public class TcpNeighbor extends Neighbor
 		    socket = new Socket
 			(new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
 
-		socket.connect(m_inetSocketAddress, CONNECTION_TIMEOUT);
+		socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 		m_socket = (SSLSocket) sslContext.getSocketFactory().
 		    createSocket(socket, m_proxyIpAddress, m_proxyPort, true);
 	    }
@@ -219,12 +221,14 @@ public class TcpNeighbor extends Neighbor
 	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
 	    m_socket.setTcpNoDelay(false);
 	    m_startTime.set(System.nanoTime());
+	    setError("");
 	}
 	catch(Exception exception)
 	{
 	    setError("An error (" +
 		     exception.getMessage() +
-		     ") occurred while attempting a connection.");
+		     ") occurred while attempting a connection (" +
+		     System.nanoTime() + ").");
 	    disconnect();
 	}
     }
@@ -261,6 +265,14 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
+	m_isValidCertificate = new AtomicBoolean(false);
+
+	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+	    m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
+	else
+	    m_protocols = new String[] {"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
+
+	m_proxyIpAddress = proxyIpAddress;
 
 	try
 	{
@@ -271,34 +283,6 @@ public class TcpNeighbor extends Neighbor
 	    m_proxyPort = -1;
 	}
 
-	int port = 4710;
-
-	try
-	{
-	    port = Integer.parseInt(m_ipPort);
-	}
-	catch(Exception exception)
-	{
-	    port = 4710;
-	}
-
-	try
-	{
-	    m_inetSocketAddress = new InetSocketAddress(m_ipAddress, port);
-	}
-	catch(Exception exception)
-	{
-	    m_inetSocketAddress = null;
-	}
-
-	m_isValidCertificate = new AtomicBoolean(false);
-
-	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-	    m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
-	else
-	    m_protocols = new String[] {"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
-
-	m_proxyIpAddress = proxyIpAddress;
 	m_proxyType = proxyType;
 
 	if(!m_proxyIpAddress.isEmpty() && m_proxyPort != -1 &&
