@@ -1811,6 +1811,16 @@ public class Settings extends AppCompatActivity
 			    textView1.requestFocus();
 			    textView1.setText("");
 			    textView2.setText("");
+			    m_databaseHelper.writeNeighbor
+				(s_cryptography,
+				 "",
+				 "",
+				 "HTTP",
+				 BuildConfig.ROSEMARY_IPV4_HOST,
+				 BuildConfig.ROSEMARY_IPV4_PORT,
+				 "",
+				 "TCP",
+				 "IPv4");
 			    populateFancyKeyData();
 			    populateParticipants();
 			    startKernel();

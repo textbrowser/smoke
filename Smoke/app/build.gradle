@@ -12,6 +12,8 @@ android {
     }
     buildTypes {
         android.applicationVariants.all { variant ->
+	    buildConfigField "String", "ROSEMARY_IPV4_HOST", "\"rosemary-ipv4.tilaa.cloud\""
+	    buildConfigField "String", "ROSEMARY_IPV4_PORT", "\"4710\""
             variant.outputs.all {
                 outputFileName = "./apk/smoke.apk"
             }
