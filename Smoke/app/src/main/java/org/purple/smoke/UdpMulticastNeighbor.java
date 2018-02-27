@@ -71,14 +71,22 @@ public class UdpMulticastNeighbor extends Neighbor
 	    if(Kernel.containsCongestion(message))
 		return true;
 
-	    DatagramPacket datagramPacket = new DatagramPacket
-		(message.getBytes(),
-		 message.getBytes().length,
-		 InetAddress.getByName(m_ipAddress),
-		 Integer.parseInt(m_ipPort));
+	    StringBuffer stringBuffer = new StringBuffer(message);
 
-	    Kernel.writeCongestionDigest(datagramPacket.getData());
-	    m_socket.send(datagramPacket);
+	    while(stringBuffer.length() > 0)
+	    {
+		byte bytes[] = stringBuffer.substring
+		    (0, Math.min(576, stringBuffer.length())).getBytes();
+
+		m_socket.send
+		    (new DatagramPacket(bytes,
+					bytes.length,
+					InetAddress.getByName(m_ipAddress),
+					Integer.parseInt(m_ipPort)));
+		stringBuffer.delete(0, bytes.length);
+	    }
+
+	    Kernel.writeCongestionDigest(message);
 	    m_bytesWritten.getAndAdd(message.length());
 	}
 	catch(Exception exception)
