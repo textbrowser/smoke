@@ -192,8 +192,7 @@ public class Settings extends AppCompatActivity
 
 	if(textView1.getText().toString().trim().isEmpty())
 	    Miscellaneous.showErrorDialog
-		(Settings.this,
-		 "Please complete the IP Address field.");
+		(Settings.this, "Please complete the IP Address field.");
 	else if(!m_databaseHelper.
 		writeNeighbor(s_cryptography,
 			      proxyIpAddress.getText().toString(),
