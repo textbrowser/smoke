@@ -44,7 +44,6 @@
     <string name="save">Speichern</string>
     <string name="scope_id">Scope ID</string>
     <string name="send">Senden</string>
-    <string name="set_password">Setze Passwort</string>
     <string name="share_keys">Sende Schlüssel</string>
     <string name="signature">Signatur</string>
     <string name="siphashid">SipHash ID</string>

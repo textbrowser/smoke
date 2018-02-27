@@ -55,7 +55,6 @@
                     android:textStyle="normal|bold" />
 
                 <LinearLayout
-                    android:id="@+id/name_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -142,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
                         android:ems="10"
-                        android:hint="@string/digest"
+                        android:hint="@string/digest_key"
                         android:inputType="textPersonName" />
 
                     <TextView
