@@ -232,12 +232,26 @@ public class Fire extends AppCompatActivity
 	    public void onClick(View view)
 	    {
 		TextView textView1 = (TextView) findViewById(R.id.channel);
+		TextView textView2 = (TextView) findViewById(R.id.digest);
+		TextView textView3 = (TextView) findViewById(R.id.salt);
 
 		if(textView1.getText().toString().trim().isEmpty())
 		{
 		    Miscellaneous.showErrorDialog
 			(Fire.this, "Please complete the Channel field.");
 		    textView1.requestFocus();
+		}
+		else if(textView2.getText().toString().trim().isEmpty())
+		{
+		    Miscellaneous.showErrorDialog
+			(Fire.this, "Please complete the Digest Key field.");
+		    textView2.requestFocus();
+		}
+		else if(textView3.getText().toString().trim().isEmpty())
+		{
+		    Miscellaneous.showErrorDialog
+			(Fire.this, "Please complete the Salt field.");
+		    textView3.requestFocus();
 		}
 		else
 		{
