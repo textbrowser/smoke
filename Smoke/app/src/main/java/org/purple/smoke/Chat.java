@@ -832,21 +832,13 @@ public class Chat extends AppCompatActivity
 		    {
 			Button button1 = (Button) findViewById
 			    (R.id.send_chat_message);
-			ImageButton button2 = (ImageButton) findViewById
-			    (R.id.network_status);
 
 			if(state)
-			{
-			    button1.setBackgroundColor
-				(Color.rgb(153, 204, 0));
-			    button2.setImageResource(R.drawable.network_up);
-			}
+			    button1.setCompoundDrawablesWithIntrinsicBounds
+				(R.drawable.network_up, 0, 0, 0);
 			else
-			{
-			    button1.setBackgroundColor
-				(Color.rgb(255, 68, 68));
-			    button2.setImageResource(R.drawable.network_down);
-			}
+			    button1.setCompoundDrawablesWithIntrinsicBounds
+				(R.drawable.network_down, 0, 0, 0);
 		    }
 		});
 	    }

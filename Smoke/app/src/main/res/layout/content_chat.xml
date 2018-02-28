@@ -76,7 +76,6 @@
         android:layout_alignBaseline="@+id/chat_message"
         android:layout_alignBottom="@+id/chat_message"
         android:layout_alignParentEnd="true"
-        android:background="@android:color/holo_green_light"
         android:text="@string/send" />
 
     <Button
@@ -105,16 +104,5 @@
 
         </TableLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <ImageButton
-        android:id="@+id/network_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/chat_scrollview"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/call"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/network"
-        app:srcCompat="@drawable/network_up" />
 
 </RelativeLayout>
