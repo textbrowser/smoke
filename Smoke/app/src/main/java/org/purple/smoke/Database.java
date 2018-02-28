@@ -43,8 +43,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.regex.Matcher;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
 {
