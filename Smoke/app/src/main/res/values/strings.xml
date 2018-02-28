@@ -57,4 +57,5 @@
     <string name="clear_log">Clear Log</string>
     <string name="network">Network</string>
     <string name="generate">Generate</string>
+    <string name="auto_fill">Auto Fill</string>
 </resources>

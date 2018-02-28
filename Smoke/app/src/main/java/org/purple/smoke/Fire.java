@@ -43,6 +43,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -220,6 +222,48 @@ public class Fire extends AppCompatActivity
 	    (Fire.this, android.R.layout.simple_spinner_item, array);
 	spinner.setAdapter(arrayAdapter);
 	arrayList.clear();
+    }
+
+    private void prepareAutoFill()
+    {
+	Spinner spinner = (Spinner) findViewById(R.id.auto_fill);
+        String array[] = new String[]
+	{
+	    "Please Select",
+	    "Spot-On Developer Channel"
+	};
+
+	ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+	    (Fire.this, android.R.layout.simple_spinner_item, array);
+
+        spinner.setAdapter(arrayAdapter);
+	spinner.setOnItemSelectedListener(new OnItemSelectedListener()
+	{
+	    @Override
+	    public void onItemSelected(AdapterView<?> parent,
+				       View view,
+				       int position,
+				       long id)
+	    {
+		if(position == 1)
+		{
+		    TextView textView1 = (TextView) findViewById(R.id.channel);
+		    TextView textView2 = (TextView) findViewById(R.id.digest);
+		    TextView textView3 = (TextView) findViewById(R.id.salt);
+
+		    textView1.setText("Spot-On_Developer_Channel_Key");
+		    textView2.setText("Spot-On_Developer_Channel_Hash_Key");
+		    textView3.setText("Spot-On_Developer_Channel_Salt");
+		}
+
+		parent.setSelection(0);
+	    }
+
+	    @Override
+	    public void onNothingSelected(AdapterView<?> parent)
+	    {
+	    }
+        });
     }
 
     private void prepareListeners()
@@ -418,11 +462,13 @@ public class Fire extends AppCompatActivity
     {
 	Button button1 = (Button) findViewById(R.id.add_channel);
 	Button button2 = (Button) findViewById(R.id.reset_fields);
+	View linearLayout1 = findViewById(R.id.auto_fill_layout);
 	View gridLayout1 = findViewById(R.id.grid_layout);
 
 	button1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	button2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	gridLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	linearLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 
     private void showSettingsActivity()
@@ -451,6 +497,7 @@ public class Fire extends AppCompatActivity
 	checkBox1.setChecked
 	    (m_databaseHelper.readSetting(null, "fire_show_details").
 	     equals("true"));
+	prepareAutoFill();
 	prepareListeners();
 	showFireDetails
 	    (m_databaseHelper.readSetting(null, "fire_show_details").

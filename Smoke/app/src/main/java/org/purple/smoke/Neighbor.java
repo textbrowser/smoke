@@ -340,10 +340,10 @@ public abstract class Neighbor
 	    ConnectivityManager connectivityManager = (ConnectivityManager)
 		Smoke.getApplication().getApplicationContext().
 		getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = connectivityManager.getNetworkInfo
-		(ConnectivityManager.TYPE_WIFI);
+	    NetworkInfo networkInfo = connectivityManager.
+		getActiveNetworkInfo();
 
-	    return networkInfo.isConnected();
+	    return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
 	}
 	catch(Exception exception)
 	{
