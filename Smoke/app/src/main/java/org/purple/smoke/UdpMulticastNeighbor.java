@@ -68,9 +68,6 @@ public class UdpMulticastNeighbor extends Neighbor
 	    if(m_socket == null)
 		return false;
 
-	    if(Kernel.containsCongestion(message))
-		return true;
-
 	    StringBuffer stringBuffer = new StringBuffer(message);
 
 	    while(stringBuffer.length() > 0)

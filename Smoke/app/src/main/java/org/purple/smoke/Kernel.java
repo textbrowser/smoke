@@ -615,11 +615,6 @@ public class Kernel
 	if(message.trim().isEmpty())
 	    return;
 
-	if(s_databaseHelper.
-	   containsCongestionDigest(s_congestionSipHash.hmac(message.
-							     getBytes())))
-	    return;
-
 	m_neighborsMutex.readLock().lock();
 
 	try
@@ -787,7 +782,44 @@ public class Kernel
 	return false;
     }
 
-    public boolean ourMessage(String buffer)
+    public boolean wakeLocked()
+    {
+	if(m_wakeLock != null)
+	    return m_wakeLock.isHeld();
+
+	return false;
+    }
+
+    public boolean wifiLocked()
+    {
+	if(m_wifiLock != null)
+	    return m_wifiLock.isHeld();
+
+	return false;
+    }
+
+    public byte[] messageRetrievalIdentity()
+    {
+	m_chatMessageRetrievalIdentityMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_chatMessageRetrievalIdentity == null)
+	    {
+		m_chatMessageRetrievalIdentity = Miscellaneous.deepCopy
+		    (Cryptography.randomBytes(64));
+		m_chatTemporaryIdentityLastTick.set(System.currentTimeMillis());
+	    }
+
+	    return m_chatMessageRetrievalIdentity;
+	}
+	finally
+	{
+	    m_chatMessageRetrievalIdentityMutex.writeLock().unlock();
+	}
+    }
+
+    public int ourMessage(String buffer)
     {
 	/*
 	** Return false if the contents of buffer could not be assessed.
@@ -796,10 +828,9 @@ public class Kernel
 	long value = s_congestionSipHash.hmac(buffer.getBytes());
 
 	if(s_databaseHelper.containsCongestionDigest(value))
-	    return true;
+	    return 1;
 
-	if(s_databaseHelper.writeCongestionDigest(value))
-	    return true;
+	s_databaseHelper.writeCongestionDigest(value);
 
 	try
 	{
@@ -841,7 +872,7 @@ public class Kernel
 							32));
 
 				if(aes256 == null)
-				    return true;
+				    return 1;
 
 				aes256 = Arrays.copyOfRange
 
@@ -855,7 +886,7 @@ public class Kernel
 
 				if(!(strings.length == 4 ||
 				     strings.length == 5))
-				    return true;
+				    return 1;
 
 				strings[strings.length - 1] = new
 				    String(Base64.
@@ -870,7 +901,7 @@ public class Kernel
 
 				if(Math.abs(current - timestamp.getTime()) >
 				   FIRE_TIME_DELTA)
-				    return true;
+				    return 1;
 
 				for(int i = 0; i < strings.length - 1; i++)
 				    strings[i] = new String
@@ -899,7 +930,7 @@ public class Kernel
 					 strings[3]);
 
 				Smoke.getApplication().sendBroadcast(intent);
-				return true;
+				return 2; // Echo Fire!
 			    }
 			}
 		    }
@@ -914,7 +945,7 @@ public class Kernel
 		Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT);
 
 	    if(bytes == null || bytes.length < 128)
-		return false;
+		return 0;
 
 	    boolean ourMessageViaChatTemporaryIdentity = false;
 	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
@@ -953,7 +984,7 @@ public class Kernel
 							0,
 							bytes.length - 64),
 				     array3))
-		    return false;
+		    return 0;
 
 	    if(s_cryptography.isValidSipHashMac(array1, array2))
 	    {
@@ -1011,7 +1042,7 @@ public class Kernel
 			    (Messages.bytesToMessageString(bytes));
 		}
 
-		return true;
+		return 1;
 	    }
 
 	    byte pk[] = null;
@@ -1044,7 +1075,7 @@ public class Kernel
 				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
 
 	    if(pk == null)
-		return true;
+		return 1;
 
 	    if(pk.length == 64)
 	    {
@@ -1056,14 +1087,14 @@ public class Kernel
 		    (s_cryptography, pk);
 
 		if(keyStream == null)
-		    return true;
+		    return 1;
 
 		byte sha512[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
-		    return true;
+		    return 1;
 
 		byte aes256[] = null;
 
@@ -1084,7 +1115,7 @@ public class Kernel
 			 Arrays.copyOfRange(keyStream, 0, 32));
 
 		if(aes256 == null)
-		    return true;
+		    return 1;
 
 		byte abyte[] = new byte[] {aes256[0]};
 
@@ -1094,7 +1125,7 @@ public class Kernel
 			(s_cryptography, pk);
 
 		    if(array == null || array.length != 2)
-			return true;
+			return 1;
 
 		    String sipHashId = array[1];
 
@@ -1106,7 +1137,7 @@ public class Kernel
 			    signatureKeyForDigest(s_cryptography, pk);
 
 			if(signatureKey == null)
-			    return true;
+			    return 1;
 
 			if(!Cryptography.
 			   verifySignature
@@ -1122,7 +1153,7 @@ public class Kernel
 						       10),
 					   s_cryptography.
 					   chatEncryptionPublicKeyDigest())))
-			    return true;
+			    return 1;
 		    }
 
 		    long current = System.currentTimeMillis();
@@ -1132,14 +1163,14 @@ public class Kernel
 		    if(current - timestamp < 0)
 		    {
 			if(timestamp - current > Chat.STATUS_WINDOW)
-			    return true;
+			    return 1;
 		    }
 		    else if(current - timestamp > Chat.STATUS_WINDOW)
-			return true;
+			return 1;
 
 		    s_databaseHelper.updateParticipantLastTimestamp
 			(s_cryptography, pk);
-		    return true;
+		    return 1;
 		}
 
 		aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
@@ -1147,7 +1178,7 @@ public class Kernel
 		String strings[] = new String(aes256).split("\\n");
 
 		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
-		    return true;
+		    return 1;
 
 		String message = null;
 		boolean updateTimeStamp = true;
@@ -1185,7 +1216,7 @@ public class Kernel
 			    */
 
 			    if(!ourMessageViaChatTemporaryIdentity)
-				return true;
+				return 1;
 
 			ii += 1;
 			break;
@@ -1205,7 +1236,7 @@ public class Kernel
 			    nameSipHashIdFromDigest(s_cryptography, pk);
 
 			if(array == null || array.length != 2)
-			    return true;
+			    return 1;
 
 			String sipHashId = array[1];
 
@@ -1221,7 +1252,7 @@ public class Kernel
 				signatureKeyForDigest(s_cryptography, pk);
 
 			    if(signatureKey == null)
-				return true;
+				return 1;
 
 			    if(!Cryptography.
 			       verifySignature
@@ -1239,7 +1270,7 @@ public class Kernel
 				 "\n".getBytes(),
 				 s_cryptography.
 				 chatEncryptionPublicKeyDigest())))
-				return true;
+				return 1;
 			}
 
 			strings = array;
@@ -1247,7 +1278,7 @@ public class Kernel
 		    }
 
 		if(message == null)
-		    return true;
+		    return 1;
 
 		if(updateTimeStamp)
 		    s_databaseHelper.updateParticipantLastTimestamp
@@ -1262,7 +1293,7 @@ public class Kernel
 		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		intent.putExtra("org.purple.smoke.timestamp", timestamp);
 		Smoke.getApplication().sendBroadcast(intent);
-		return true;
+		return 1;
 	    }
 	    else if(pk.length == 96)
 	    {
@@ -1275,7 +1306,7 @@ public class Kernel
 		     Arrays.copyOfRange(pk, 32, pk.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
-		    return true;
+		    return 1;
 
 		byte aes256[] = null;
 
@@ -1296,13 +1327,13 @@ public class Kernel
 			 Arrays.copyOfRange(pk, 0, 32));
 
 		if(aes256 == null)
-		    return true;
+		    return 1;
 
 		byte tag = aes256[0];
 
 		if(!(tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1]))
-		    return true;
+		    return 1;
 
 		PublicKey signatureKey = null;
 
@@ -1316,7 +1347,7 @@ public class Kernel
 			 Arrays.copyOfRange(aes256, 273, 273 + 64));
 
 		if(signatureKey == null)
-		    return true;
+		    return 1;
 
 		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		{
@@ -1332,7 +1363,7 @@ public class Kernel
 						   375),
 				       s_cryptography.
 				       chatEncryptionPublicKeyDigest())))
-			return true;
+			return 1;
 		}
 		else
 		{
@@ -1348,7 +1379,7 @@ public class Kernel
 						   337),
 				       s_cryptography.
 				       chatEncryptionPublicKeyDigest())))
-			return true;
+			return 1;
 		}
 
 		long current = System.currentTimeMillis();
@@ -1358,10 +1389,10 @@ public class Kernel
 		if(current - timestamp < 0)
 		{
 		    if(timestamp - current > CALL_LIFETIME)
-			return true;
+			return 1;
 		}
 		else if(current - timestamp > CALL_LIFETIME)
-		    return true;
+		    return 1;
 
 		String array[] = null;
 
@@ -1400,7 +1431,7 @@ public class Kernel
 				(Arrays.copyOfRange(aes256, 9, 9 + 294));
 
 			    if(publicKey == null)
-				return true;
+				return 1;
 
 			    /*
 			    ** Generate new AES-256 and SHA-512 keys.
@@ -1434,7 +1465,7 @@ public class Kernel
 			    intent.putExtra
 				("org.purple.smoke.sipHashId", array[1]);
 			    Smoke.getApplication().sendBroadcast(intent);
-			    return true;
+			    return 1;
 			}
 		    }
 		    else if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[1])
@@ -1453,7 +1484,7 @@ public class Kernel
 			}
 
 			if(participantCall == null)
-			    return true;
+			    return 1;
 
 			m_callQueueMutex.writeLock().lock();
 
@@ -1471,10 +1502,10 @@ public class Kernel
 			     Arrays.copyOfRange(aes256, 9, 9 + 256));
 
 			if(keyStream == null)
-			    return true;
+			    return 1;
 		    }
 		    else
-			return true;
+			return 1;
 
 		    s_databaseHelper.writeCallKeys
 			(s_cryptography, array[1], keyStream);
@@ -1508,53 +1539,16 @@ public class Kernel
 			    scheduleSend(Messages.bytesToMessageString(bytes));
 		    }
 
-		    return true;
+		    return 1;
 		}
 	    }
 	}
 	catch(Exception exception)
 	{
-	    return false;
+	    return 0;
 	}
 
-	return false;
-    }
-
-    public boolean wakeLocked()
-    {
-	if(m_wakeLock != null)
-	    return m_wakeLock.isHeld();
-
-	return false;
-    }
-
-    public boolean wifiLocked()
-    {
-	if(m_wifiLock != null)
-	    return m_wifiLock.isHeld();
-
-	return false;
-    }
-
-    public byte[] messageRetrievalIdentity()
-    {
-	m_chatMessageRetrievalIdentityMutex.writeLock().lock();
-
-	try
-	{
-	    if(m_chatMessageRetrievalIdentity == null)
-	    {
-		m_chatMessageRetrievalIdentity = Miscellaneous.deepCopy
-		    (Cryptography.randomBytes(64));
-		m_chatTemporaryIdentityLastTick.set(System.currentTimeMillis());
-	    }
-
-	    return m_chatMessageRetrievalIdentity;
-	}
-	finally
-	{
-	    m_chatMessageRetrievalIdentityMutex.writeLock().unlock();
-	}
+	return 0;
     }
 
     public long callTimeRemaining(String sipHashId)
@@ -1576,12 +1570,6 @@ public class Kernel
 	}
 
 	return 0;
-    }
-
-    public static boolean containsCongestion(String message)
-    {
-        return s_databaseHelper.containsCongestionDigest
-	    (s_congestionSipHash.hmac(message.getBytes()));
     }
 
     public static synchronized Kernel getInstance()
@@ -1632,9 +1620,28 @@ public class Kernel
 	if(!State.getInstance().neighborsEcho() || message.trim().isEmpty())
 	    return;
 
-	if(s_databaseHelper.
-	   containsCongestionDigest(s_congestionSipHash.hmac(message.
-							     getBytes())))
+	m_neighborsMutex.readLock().lock();
+
+	try
+	{
+	    for(int i = 0; i < m_neighbors.size(); i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null &&
+		   m_neighbors.get(j).getOid() != oid)
+		    m_neighbors.get(j).scheduleEchoSend(message);
+	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
+	}
+    }
+
+    public void echoForce(String message, int oid)
+    {
+	if(message.trim().isEmpty())
 	    return;
 
 	m_neighborsMutex.readLock().lock();

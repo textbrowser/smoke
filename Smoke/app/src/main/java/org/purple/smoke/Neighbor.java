@@ -168,8 +168,12 @@ public abstract class Neighbor
 		    m_stringBuffer.delete(0, buffer.length());
 		    indexOf = m_stringBuffer.indexOf(Messages.EOM);
 
-		    if(!Kernel.getInstance().ourMessage(buffer))
+		    int rc = Kernel.getInstance().ourMessage(buffer);
+
+		    if(rc == 0)
 			echo(buffer);
+		    else if(rc == 2)
+			echoForce(buffer);
 		}
 
 		if(m_stringBuffer.length() > MAXIMUM_BYTES)
@@ -403,6 +407,11 @@ public abstract class Neighbor
     protected void echo(String message)
     {
 	Kernel.getInstance().echo(message, m_oid.get());
+    }
+
+    protected void echoForce(String message)
+    {
+	Kernel.getInstance().echoForce(message, m_oid.get());
     }
 
     protected void setError(String error)
