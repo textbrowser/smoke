@@ -452,14 +452,15 @@ public class FireChannel extends View
 			@Override
 			public void run()
 			{
-			    ImageButton button1 = (ImageButton) m_view.
-				findViewById(R.id.network_status);
+			    Button button1 = (Button) m_view.findViewById
+				(R.id.send_chat_message);
 
 			    if(state)
-				button1.setImageResource(R.drawable.network_up);
+				button1.setCompoundDrawablesWithIntrinsicBounds
+				    (R.drawable.network_up, 0, 0, 0);
 			    else
-				button1.setImageResource
-				    (R.drawable.network_down);
+				button1.setCompoundDrawablesWithIntrinsicBounds
+				    (R.drawable.network_down, 0, 0, 0);
 			}
 		    });
 		}

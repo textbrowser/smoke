@@ -102,18 +102,6 @@
             android:hint="@string/please_type_a_message"
             android:inputType="textPersonName" />
 
-        <ImageButton
-            android:id="@+id/network_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/chat_scrollview"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/clear_chat_messages"
-            android:adjustViewBounds="false"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/network"
-            android:cropToPadding="false"
-            app:srcCompat="@drawable/network_up" />
     </RelativeLayout>
 
 </FrameLayout>
