@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.regex.Matcher;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -130,6 +131,8 @@ public class Database extends SQLiteOpenHelper
 		return e1.m_sipHashId.compareTo(e2.m_sipHashId);
 	    }
 	};
+    private final static ReentrantReadWriteLock s_congestionControlMutex =
+	new ReentrantReadWriteLock();
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
     private final static int WRITE_PARTICIPANT_TIME_DELTA = 60000; // 60 Seconds
@@ -1814,29 +1817,39 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return false;
 
-	Cursor cursor = null;
 	boolean contains = false;
+
+	s_congestionControlMutex.readLock().lock();
 
 	try
 	{
-	    cursor = m_db.rawQuery
-		("SELECT EXISTS(SELECT 1 FROM " +
-		 "congestion_control WHERE digest = ?)",
-		 new String[] {Base64.
-			       encodeToString(Miscellaneous.
-					      longToByteArray(value),
-					      Base64.DEFAULT)});
+	    Cursor cursor = null;
 
-	    if(cursor != null && cursor.moveToFirst())
-		contains = cursor.getInt(0) == 1;
-	}
-	catch(Exception exception)
-	{
+	    try
+	    {
+		cursor = m_db.rawQuery
+		    ("SELECT EXISTS(SELECT 1 FROM " +
+		     "congestion_control WHERE digest = ?)",
+		     new String[] {Base64.
+				   encodeToString(Miscellaneous.
+						  longToByteArray(value),
+						  Base64.DEFAULT)});
+
+		if(cursor != null && cursor.moveToFirst())
+		    contains = cursor.getInt(0) == 1;
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		if(cursor != null)
+		    cursor.close();
+	    }
 	}
 	finally
 	{
-	    if(cursor != null)
-		cursor.close();
+	    s_congestionControlMutex.readLock().unlock();
 	}
 
 	return contains;
@@ -1919,25 +1932,35 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return false;
 
-	m_db.beginTransactionNonExclusive();
+	s_congestionControlMutex.writeLock().lock();
 
 	try
 	{
-	    ContentValues values = new ContentValues();
+	    m_db.beginTransactionNonExclusive();
 
-	    values.put
-		("digest",
-		 Base64.encodeToString(Miscellaneous.
-				       longToByteArray(value), Base64.DEFAULT));
-	    m_db.replace("congestion_control", null, values);
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-        {
+	    try
+	    {
+		ContentValues values = new ContentValues();
+
+		values.put
+		    ("digest",
+		     Base64.encodeToString(Miscellaneous.
+					   longToByteArray(value),
+					   Base64.DEFAULT));
+		m_db.replace("congestion_control", null, values);
+		m_db.setTransactionSuccessful();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_db.endTransaction();
+	    }
 	}
 	finally
 	{
-	    m_db.endTransaction();
+	    s_congestionControlMutex.writeLock().unlock();
 	}
 
 	return false; // Not an error.
