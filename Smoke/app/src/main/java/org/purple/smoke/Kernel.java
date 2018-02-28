@@ -141,6 +141,151 @@ public class Kernel
 	s_fireSimpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
+    private void prepareNeighbors()
+    {
+	ArrayList<NeighborElement> neighbors =
+	    s_databaseHelper.readNeighbors(s_cryptography);
+
+	if(neighbors == null || neighbors.size() == 0)
+	{
+	    purge();
+	    return;
+	}
+
+	m_neighborsMutex.writeLock().lock();
+
+	try
+	{
+	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
+	    {
+		/*
+		** Remove neighbor objects which do not exist in the
+		** database.
+		*/
+
+		boolean found = false;
+		int oid = m_neighbors.keyAt(i);
+
+		for(NeighborElement neighbor : neighbors)
+		    if(neighbor != null && neighbor.m_oid == oid)
+		    {
+			found = true;
+			break;
+		    }
+
+		if(!found)
+		{
+		    if(m_neighbors.get(oid) != null)
+			m_neighbors.get(oid).abort();
+
+		    m_neighbors.remove(oid);
+		}
+	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.writeLock().unlock();
+	}
+
+	for(NeighborElement neighborElement : neighbors)
+	{
+	    if(neighborElement == null)
+		continue;
+	    else
+	    {
+		m_neighborsMutex.readLock().lock();
+
+		try
+		{
+		    if(m_neighbors.get(neighborElement.m_oid) != null)
+			continue;
+		}
+		finally
+		{
+		    m_neighborsMutex.readLock().unlock();
+		}
+
+		if(neighborElement.m_statusControl.toLowerCase().
+		   equals("delete") ||
+		   neighborElement.m_statusControl.toLowerCase().
+		   equals("disconnect"))
+		{
+		    if(neighborElement.m_statusControl.toLowerCase().
+		       equals("disconnect"))
+			s_databaseHelper.saveNeighborInformation
+			    (s_cryptography,
+			     "0",             // Bytes Read
+			     "0",             // Bytes Written
+			     "0",             // Queue Size
+			     "",              // Error
+			     "",              // IP Address
+			     "0",             // Port
+			     "",              // Session Cipher
+			     "disconnected",  // Status
+			     "0",             // Uptime
+			     String.valueOf(neighborElement.m_oid));
+
+		    continue;
+		}
+	    }
+
+	    Neighbor neighbor = null;
+
+	    if(neighborElement.m_transport.equals("TCP"))
+		neighbor = new TcpNeighbor
+		    (neighborElement.m_proxyIpAddress,
+		     neighborElement.m_proxyPort,
+		     neighborElement.m_proxyType,
+		     neighborElement.m_remoteIpAddress,
+		     neighborElement.m_remotePort,
+		     neighborElement.m_remoteScopeId,
+		     neighborElement.m_ipVersion,
+		     neighborElement.m_oid);
+	    else if(neighborElement.m_transport.equals("UDP"))
+	    {
+		try
+		{
+		    InetAddress inetAddress = InetAddress.getByName
+			(neighborElement.m_remoteIpAddress);
+
+		    if(inetAddress.isMulticastAddress())
+			neighbor = new UdpMulticastNeighbor
+			    (neighborElement.m_remoteIpAddress,
+			     neighborElement.m_remotePort,
+			     neighborElement.m_remoteScopeId,
+			     neighborElement.m_ipVersion,
+			     neighborElement.m_oid);
+		    else
+			neighbor = new UdpNeighbor
+			    (neighborElement.m_remoteIpAddress,
+			     neighborElement.m_remotePort,
+			     neighborElement.m_remoteScopeId,
+			     neighborElement.m_ipVersion,
+			     neighborElement.m_oid);
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+
+	    if(neighbor == null)
+		continue;
+
+	    m_neighborsMutex.writeLock().lock();
+
+	    try
+	    {
+		m_neighbors.append(neighborElement.m_oid, neighbor);
+	    }
+	    finally
+	    {
+		m_neighborsMutex.writeLock().unlock();
+	    }
+	}
+
+	neighbors.clear();
+    }
+
     private void prepareSchedulers()
     {
 	if(m_callScheduler == null)
@@ -1771,151 +1916,6 @@ public class Kernel
 	{
 	    m_fireStreamsMutex.writeLock().unlock();
 	}
-    }
-
-    public void prepareNeighbors()
-    {
-	ArrayList<NeighborElement> neighbors =
-	    s_databaseHelper.readNeighbors(s_cryptography);
-
-	if(neighbors == null || neighbors.size() == 0)
-	{
-	    purge();
-	    return;
-	}
-
-	m_neighborsMutex.writeLock().lock();
-
-	try
-	{
-	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
-	    {
-		/*
-		** Remove neighbor objects which do not exist in the
-		** database.
-		*/
-
-		boolean found = false;
-		int oid = m_neighbors.keyAt(i);
-
-		for(NeighborElement neighbor : neighbors)
-		    if(neighbor != null && neighbor.m_oid == oid)
-		    {
-			found = true;
-			break;
-		    }
-
-		if(!found)
-		{
-		    if(m_neighbors.get(oid) != null)
-			m_neighbors.get(oid).abort();
-
-		    m_neighbors.remove(oid);
-		}
-	    }
-	}
-	finally
-	{
-	    m_neighborsMutex.writeLock().unlock();
-	}
-
-	for(NeighborElement neighborElement : neighbors)
-	{
-	    if(neighborElement == null)
-		continue;
-	    else
-	    {
-		m_neighborsMutex.readLock().lock();
-
-		try
-		{
-		    if(m_neighbors.get(neighborElement.m_oid) != null)
-			continue;
-		}
-		finally
-		{
-		    m_neighborsMutex.readLock().unlock();
-		}
-
-		if(neighborElement.m_statusControl.toLowerCase().
-		   equals("delete") ||
-		   neighborElement.m_statusControl.toLowerCase().
-		   equals("disconnect"))
-		{
-		    if(neighborElement.m_statusControl.toLowerCase().
-		       equals("disconnect"))
-			s_databaseHelper.saveNeighborInformation
-			    (s_cryptography,
-			     "0",             // Bytes Read
-			     "0",             // Bytes Written
-			     "0",             // Queue Size
-			     "",              // Error
-			     "",              // IP Address
-			     "0",             // Port
-			     "",              // Session Cipher
-			     "disconnected",  // Status
-			     "0",             // Uptime
-			     String.valueOf(neighborElement.m_oid));
-
-		    continue;
-		}
-	    }
-
-	    Neighbor neighbor = null;
-
-	    if(neighborElement.m_transport.equals("TCP"))
-		neighbor = new TcpNeighbor
-		    (neighborElement.m_proxyIpAddress,
-		     neighborElement.m_proxyPort,
-		     neighborElement.m_proxyType,
-		     neighborElement.m_remoteIpAddress,
-		     neighborElement.m_remotePort,
-		     neighborElement.m_remoteScopeId,
-		     neighborElement.m_ipVersion,
-		     neighborElement.m_oid);
-	    else if(neighborElement.m_transport.equals("UDP"))
-	    {
-		try
-		{
-		    InetAddress inetAddress = InetAddress.getByName
-			(neighborElement.m_remoteIpAddress);
-
-		    if(inetAddress.isMulticastAddress())
-			neighbor = new UdpMulticastNeighbor
-			    (neighborElement.m_remoteIpAddress,
-			     neighborElement.m_remotePort,
-			     neighborElement.m_remoteScopeId,
-			     neighborElement.m_ipVersion,
-			     neighborElement.m_oid);
-		    else
-			neighbor = new UdpNeighbor
-			    (neighborElement.m_remoteIpAddress,
-			     neighborElement.m_remotePort,
-			     neighborElement.m_remoteScopeId,
-			     neighborElement.m_ipVersion,
-			     neighborElement.m_oid);
-		}
-		catch(Exception exception)
-		{
-		}
-	    }
-
-	    if(neighbor == null)
-		continue;
-
-	    m_neighborsMutex.writeLock().lock();
-
-	    try
-	    {
-		m_neighbors.append(neighborElement.m_oid, neighbor);
-	    }
-	    finally
-	    {
-		m_neighborsMutex.writeLock().unlock();
-	    }
-	}
-
-	neighbors.clear();
     }
 
     public void retrieveChatMessages()
