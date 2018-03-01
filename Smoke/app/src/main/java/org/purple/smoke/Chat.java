@@ -503,7 +503,8 @@ public class Chat extends AppCompatActivity
 
 			if(State.getInstance().chatCheckedParticipants() > 0)
 			{
-			    button1.setEnabled(true);
+			    button1.setEnabled
+				(Kernel.getInstance().isConnected());
 			    button2.setEnabled(true);
 			}
 			else
@@ -830,8 +831,12 @@ public class Chat extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
-			Button button1 = (Button) findViewById
-			    (R.id.send_chat_message);
+			Button button1 = (Button) findViewById(R.id.call);
+
+			button1.setEnabled
+			    (State.getInstance().
+			     chatCheckedParticipants() > 0 && state);
+			button1 = (Button) findViewById(R.id.send_chat_message);
 
 			if(state)
 			    button1.setCompoundDrawablesWithIntrinsicBounds
