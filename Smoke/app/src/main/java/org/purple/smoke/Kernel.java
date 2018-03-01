@@ -143,49 +143,10 @@ public class Kernel
 
     private void prepareNeighbors()
     {
-	ArrayList<NeighborElement> neighbors =
-	    s_databaseHelper.readNeighbors(s_cryptography);
+	ArrayList<NeighborElement> neighbors = purgeDeletedNeighbors();
 
-	if(neighbors == null || neighbors.size() == 0)
-	{
-	    purge();
+	if(neighbors == null)
 	    return;
-	}
-
-	m_neighborsMutex.writeLock().lock();
-
-	try
-	{
-	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
-	    {
-		/*
-		** Remove neighbor objects which do not exist in the
-		** database.
-		*/
-
-		boolean found = false;
-		int oid = m_neighbors.keyAt(i);
-
-		for(NeighborElement neighbor : neighbors)
-		    if(neighbor != null && neighbor.m_oid == oid)
-		    {
-			found = true;
-			break;
-		    }
-
-		if(!found)
-		{
-		    if(m_neighbors.get(oid) != null)
-			m_neighbors.get(oid).abort();
-
-		    m_neighbors.remove(oid);
-		}
-	    }
-	}
-	finally
-	{
-	    m_neighborsMutex.writeLock().unlock();
-	}
 
 	for(NeighborElement neighborElement : neighbors)
 	{
@@ -776,6 +737,55 @@ public class Kernel
 	{
 	    m_neighborsMutex.readLock().unlock();
 	}
+    }
+
+    public ArrayList<NeighborElement> purgeDeletedNeighbors()
+    {
+	ArrayList<NeighborElement> neighbors =
+	    s_databaseHelper.readNeighbors(s_cryptography);
+
+	if(neighbors == null || neighbors.size() == 0)
+	{
+	    purge();
+	    return neighbors;
+	}
+
+	m_neighborsMutex.writeLock().lock();
+
+	try
+	{
+	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
+	    {
+		/*
+		** Remove neighbor objects which do not exist in the
+		** database.
+		*/
+
+		boolean found = false;
+		int oid = m_neighbors.keyAt(i);
+
+		for(NeighborElement neighbor : neighbors)
+		    if(neighbor != null && neighbor.m_oid == oid)
+		    {
+			found = true;
+			break;
+		    }
+
+		if(!found)
+		{
+		    if(m_neighbors.get(oid) != null)
+			m_neighbors.get(oid).abort();
+
+		    m_neighbors.remove(oid);
+		}
+	    }
+	}
+	finally
+	{
+	    m_neighborsMutex.writeLock().unlock();
+	}
+
+	return neighbors;
     }
 
     public String fireIdentities()
