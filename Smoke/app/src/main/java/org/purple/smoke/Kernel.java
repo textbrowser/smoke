@@ -907,7 +907,8 @@ public class Kernel
 	    NetworkInfo networkInfo = connectivityManager.
 		getActiveNetworkInfo();
 
-	    return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+	    if(networkInfo.getType() != ConnectivityManager.TYPE_WIFI)
+		return false;
 	}
 	catch(Exception exception)
 	{
