@@ -92,7 +92,7 @@ public class TcpNeighbor extends Neighbor
     {
 	try
 	{
-	    return isWiFiConnected() &&
+	    return isNetworkConnected() &&
 		m_isValidCertificate.get() &&
 		m_socket != null &&
 		!m_socket.isClosed() &&
@@ -168,9 +168,9 @@ public class TcpNeighbor extends Neighbor
     {
 	if(connected())
 	    return;
-	else if(!isWiFiConnected())
+	else if(!isNetworkConnected())
 	{
-	    setError("WiFi is not available.");
+	    setError("A network is not available.");
 	    return;
 	}
 

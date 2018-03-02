@@ -337,7 +337,7 @@ public abstract class Neighbor
     protected abstract int getLocalPort();
     protected abstract void connect();
 
-    protected synchronized boolean isWiFiConnected()
+    protected synchronized boolean isNetworkConnected()
     {
 	try
 	{
@@ -347,7 +347,8 @@ public abstract class Neighbor
 	    NetworkInfo networkInfo = connectivityManager.
 		getActiveNetworkInfo();
 
-	    return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+	    return networkInfo.getState() ==
+		android.net.NetworkInfo.State.CONNECTED;
 	}
 	catch(Exception exception)
 	{

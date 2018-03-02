@@ -125,7 +125,7 @@ public class Kernel
 
 	    if(wifiManager != null)
 		m_wifiLock = wifiManager.createWifiLock
-		    (WifiManager.WIFI_MODE_FULL_HIGH_PERF, "SmokeWifiLockTag");
+		    (WifiManager.WIFI_MODE_FULL_HIGH_PERF, "SmokeWiFiLockTag");
 
 	    if(m_wifiLock != null)
 	    {
@@ -907,7 +907,8 @@ public class Kernel
 	    NetworkInfo networkInfo = connectivityManager.
 		getActiveNetworkInfo();
 
-	    if(networkInfo.getType() != ConnectivityManager.TYPE_WIFI)
+	    if(networkInfo.getState() !=
+	       android.net.NetworkInfo.State.CONNECTED)
 		return false;
 	}
 	catch(Exception exception)
