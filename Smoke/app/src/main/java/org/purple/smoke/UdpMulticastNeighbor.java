@@ -224,6 +224,8 @@ public class UdpMulticastNeighbor extends Neighbor
 			disconnect();
 			return;
 		    }
+		    else if(bytesRead == 0)
+			return;
 
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
