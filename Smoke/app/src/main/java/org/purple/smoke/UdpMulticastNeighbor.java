@@ -48,7 +48,7 @@ public class UdpMulticastNeighbor extends Neighbor
     {
 	try
 	{
-	    return isWifiConnected() &&
+	    return isWiFiConnected() &&
 		m_socket != null &&
 		!m_socket.isClosed();
 	}
@@ -130,7 +130,7 @@ public class UdpMulticastNeighbor extends Neighbor
     {
 	if(connected())
 	    return;
-	else if(!isWifiConnected())
+	else if(!isWiFiConnected())
 	{
 	    setError("WiFi is not available.");
 	    return;

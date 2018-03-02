@@ -337,7 +337,7 @@ public abstract class Neighbor
     protected abstract int getLocalPort();
     protected abstract void connect();
 
-    protected synchronized boolean isWifiConnected()
+    protected synchronized boolean isWiFiConnected()
     {
 	try
 	{
