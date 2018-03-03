@@ -295,7 +295,6 @@ public class Messages
     public static byte[] chatMessage(Cryptography cryptography,
 				     String message,
 				     String sipHashId,
-				     boolean thirdParty,
 				     byte destinationKey[],
 				     byte keyStream[],
 				     long sequence,
@@ -415,26 +414,18 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = null;
-
-	    if(thirdParty)
-		destination = Cryptography.hmac
-		    (Miscellaneous.
-		     joinByteArrays(pk,
-				    aes256,
-				    sha512,
-				    sipHashId.getBytes("UTF-8"),
-				    Miscellaneous.
-				    longToByteArray(TimeUnit.MILLISECONDS.
-						    toMinutes(timestamp))),
-		     destinationKey);
-	    else
-		destination = Cryptography.hmac
+	    if(destinationKey != null)
+	    {
+		byte destination[] = Cryptography.hmac
 		    (Miscellaneous.joinByteArrays(pk, aes256, sha512),
 		     destinationKey);
 
-	    return Miscellaneous.joinByteArrays
-		(pk, aes256, sha512, destination);
+		return Miscellaneous.joinByteArrays
+		    (pk, aes256, sha512, destination);
+	    }
+	    else
+		return Miscellaneous.joinByteArrays
+		    (pk, aes256, sha512, sipHashId.getBytes("UTF-8"));
 	}
 	catch(Exception exception)
 	{

@@ -330,36 +330,42 @@ public class Fire extends AppCompatActivity
 			@Override
 			public void run()
 			{
-			    final TextView textView1 =
-				(TextView) findViewById(R.id.channel);
-			    final TextView textView2 =
-				(TextView) findViewById(R.id.digest);
-
-			    m_encryptionKey = s_cryptography.
-				generateFireEncryptionKey(channel, salt);
-			    m_keyStream = s_cryptography.
-				generateFireDigestKeyStream
-				(textView2.getText().toString().trim());
-
-			    Fire.this.runOnUiThread(new Runnable()
+			    try
 			    {
-				@Override
-				public void run()
-				{
-				    dialog.dismiss();
+				final TextView textView1 =
+				    (TextView) findViewById(R.id.channel);
+				final TextView textView2 =
+				    (TextView) findViewById(R.id.digest);
 
-				    if(m_encryptionKey != null &&
-				       m_keyStream != null)
+				m_encryptionKey = s_cryptography.
+				    generateFireEncryptionKey(channel, salt);
+				m_keyStream = s_cryptography.
+				    generateFireDigestKeyStream
+				    (textView2.getText().toString().trim());
+
+				Fire.this.runOnUiThread(new Runnable()
+				{
+				    @Override
+				    public void run()
 				    {
-					m_databaseHelper.saveFireChannel
-					    (s_cryptography,
-					     channel,
-					     m_encryptionKey,
-					     m_keyStream);
+					dialog.dismiss();
+
+					if(m_encryptionKey != null &&
+					   m_keyStream != null)
+					{
+					    m_databaseHelper.saveFireChannel
+						(s_cryptography,
+						 channel,
+						 m_encryptionKey,
+						 m_keyStream);
 					populateFires();
+					}
 				    }
-				}
-			    });
+				});
+			    }
+			    catch(Exception exception)
+			    {
+			    }
 			}
 		    }
 

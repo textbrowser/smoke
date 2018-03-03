@@ -2631,11 +2631,13 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public void enqueueOutboundMessage(String message, int oid)
+    public void enqueueOutboundMessage(Cryptography cryptography,
+				       String message,
+				       int oid)
     {
 	prepareDb();
 
-	if(m_db == null || message.trim().isEmpty())
+	if(cryptography == null || m_db == null || message.trim().isEmpty())
 	    return;
 
 	m_db.beginTransactionNonExclusive();
@@ -2644,7 +2646,10 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
-	    values.put("message", message);
+	    values.put
+		("message",
+		 Base64.encodeToString(cryptography.etm(message.getBytes()),
+				       Base64.DEFAULT));
 	    values.put("neighbor_oid", oid);
 	    m_db.insert("outbound_queue", null, values);
 	    m_db.setTransactionSuccessful();

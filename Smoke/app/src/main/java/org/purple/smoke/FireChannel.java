@@ -100,89 +100,99 @@ public class FireChannel extends View
 		@Override
 		public void run()
 		{
-		    if(!Kernel.getInstance().isConnected())
-			return;
-
-		    Kernel.getInstance().enqueueFireStatus(m_id, m_name);
-
-		    ((Activity) m_context).runOnUiThread(new Runnable()
+		    try
 		    {
-			@Override
-			public void run()
+			if(!Kernel.getInstance().isConnected())
+			    return;
+
+			Kernel.getInstance().enqueueFireStatus(m_id, m_name);
+
+			((Activity) m_context).runOnUiThread(new Runnable()
 			{
-			    if(m_view == null)
-				return;
-
-			    TableLayout tableLayout = (TableLayout)
-				m_view.findViewById(R.id.participants);
-
-			    for(int i = tableLayout.getChildCount() - 1;
-				i >= 0; i--)
+			    @Override
+			    public void run()
 			    {
-				TableRow row = (TableRow) tableLayout.
-				    getChildAt(i);
+				if(m_view == null)
+				    return;
 
-				if(row == null)
-				    continue;
+				TableLayout tableLayout = (TableLayout)
+				    m_view.findViewById(R.id.participants);
 
-				TextView textView1 = (TextView) row.
-				    getChildAt(0);
-
-				if(textView1 == null)
+				for(int i = tableLayout.getChildCount() - 1;
+				    i >= 0; i--)
 				{
-				    tableLayout.removeView(row);
-				    continue;
-				}
+				    TableRow row = (TableRow) tableLayout.
+					getChildAt(i);
 
-				if(textView1.getId() == -1)
-				    continue;
+				    if(row == null)
+					continue;
 
-				Participant participant = m_participants.
-				    get(textView1.getTag(R.id.participants));
-				long current = System.currentTimeMillis();
+				    TextView textView1 = (TextView) row.
+					getChildAt(0);
 
-				if(participant == null ||
-				   Math.abs(current -
-					    participant.m_timestamp) >=
-				   2 * STATUS_INTERVAL)
-				{
-				    m_participants.remove
-					(textView1.getTag(R.id.participants));
-				    tableLayout.removeView(row);
+				    if(textView1 == null)
+				    {
+					tableLayout.removeView(row);
+					continue;
+				    }
 
-				    StringBuilder stringBuilder =
-					new StringBuilder();
+				    if(textView1.getId() == -1)
+					continue;
 
-				    stringBuilder.append
-					(textView1.getText().toString());
-				    stringBuilder.append(" has left ");
-				    stringBuilder.append(m_name);
-				    stringBuilder.append(".\n\n");
+				    Participant participant = m_participants.
+					get(textView1.getTag
+					    (R.id.participants));
+				    long current = System.currentTimeMillis();
 
-				    Spannable spannable =
-					new SpannableStringBuilder
-					(stringBuilder);
+				    if(participant == null ||
+				       Math.abs(current -
+						participant.m_timestamp) >=
+				       2 * STATUS_INTERVAL)
+				    {
+					m_participants.remove
+					    (textView1.
+					     getTag(R.id.participants));
+					tableLayout.removeView(row);
 
-				    spannable.setSpan
-					(new StyleSpan(android.graphics.
-						       Typeface.ITALIC),
-					 0,
-					 spannable.length(),
-					 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					StringBuilder stringBuilder =
+					    new StringBuilder();
 
-				    TextView textView2 = (TextView) m_view.
-					findViewById(R.id.chat_messages);
+					stringBuilder.append
+					    (textView1.getText().toString());
+					stringBuilder.append(" has left ");
+					stringBuilder.append(m_name);
+					stringBuilder.append(".\n\n");
 
-				    textView2.append("[");
-				    textView2.append
-					(m_simpleDateFormat.format(new Date()));
-				    textView2.append("] ");
-				    textView2.append(spannable);
-				    scrollMessagesView();
+					Spannable spannable =
+					    new SpannableStringBuilder
+					    (stringBuilder);
+
+					spannable.setSpan
+					    (new StyleSpan(android.graphics.
+							   Typeface.ITALIC),
+					     0,
+					     spannable.length(),
+					     Spannable.
+					     SPAN_EXCLUSIVE_EXCLUSIVE);
+
+					TextView textView2 = (TextView) m_view.
+					    findViewById(R.id.chat_messages);
+
+					textView2.append("[");
+					textView2.append
+					    (m_simpleDateFormat.
+					     format(new Date()));
+					textView2.append("] ");
+					textView2.append(spannable);
+					scrollMessagesView();
+				    }
 				}
 			    }
-			}
-		    });
+			});
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -442,27 +452,36 @@ public class FireChannel extends View
 		@Override
 		public void run()
 		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-
-		    final boolean state = Kernel.getInstance().isConnected();
-
-		    ((Activity) m_context).runOnUiThread(new Runnable()
+		    try
 		    {
-			@Override
-			public void run()
-			{
-			    Button button1 = (Button) m_view.findViewById
-				(R.id.send_chat_message);
+			if(Thread.currentThread().isInterrupted())
+			    return;
 
-			    if(state)
-				button1.setCompoundDrawablesWithIntrinsicBounds
-				    (R.drawable.network_up, 0, 0, 0);
-			    else
-				button1.setCompoundDrawablesWithIntrinsicBounds
-				    (R.drawable.network_down, 0, 0, 0);
-			}
-		    });
+			final boolean state = Kernel.getInstance().
+			    isConnected();
+
+			((Activity) m_context).runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				Button button1 = (Button) m_view.findViewById
+				    (R.id.send_chat_message);
+
+				if(state)
+				    button1.
+					setCompoundDrawablesWithIntrinsicBounds
+					(R.drawable.network_up, 0, 0, 0);
+				else
+				    button1.
+					setCompoundDrawablesWithIntrinsicBounds
+					(R.drawable.network_down, 0, 0, 0);
+			    }
+			});
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 		}
 	    }, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 

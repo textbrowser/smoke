@@ -300,13 +300,12 @@ public class TcpNeighbor extends Neighbor
 	    @Override
 	    public void run()
 	    {
-		if(!connected())
-		    return;
-
 		try
 		{
-		    if(m_socket == null ||
-		       m_socket.getInputStream() == null)
+		    if(!connected())
+			return;
+		    else if(m_socket == null ||
+			    m_socket.getInputStream() == null)
 			return;
 		    else if(m_socket.getSoTimeout() == HANDSHAKE_TIMEOUT)
 			/*

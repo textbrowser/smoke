@@ -821,31 +821,38 @@ public class Chat extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		if(Thread.currentThread().isInterrupted())
-		    return;
-
-		final boolean state = Kernel.getInstance().isConnected();
-
-		Chat.this.runOnUiThread(new Runnable()
+		try
 		{
-		    @Override
-		    public void run()
+		    if(Thread.currentThread().isInterrupted())
+			return;
+
+		    final boolean state = Kernel.getInstance().isConnected();
+
+		    Chat.this.runOnUiThread(new Runnable()
 		    {
-			Button button1 = (Button) findViewById(R.id.call);
+			@Override
+			public void run()
+			{
+			    Button button1 = (Button) findViewById(R.id.call);
 
-			button1.setEnabled
-			    (State.getInstance().
-			     chatCheckedParticipants() > 0 && state);
-			button1 = (Button) findViewById(R.id.send_chat_message);
+			    button1.setEnabled
+				(State.getInstance().
+				 chatCheckedParticipants() > 0 && state);
+			    button1 = (Button) findViewById
+				(R.id.send_chat_message);
 
-			if(state)
-			    button1.setCompoundDrawablesWithIntrinsicBounds
-				(R.drawable.network_up, 0, 0, 0);
-			else
-			    button1.setCompoundDrawablesWithIntrinsicBounds
-				(R.drawable.network_down, 0, 0, 0);
-		    }
-		});
+			    if(state)
+				button1.setCompoundDrawablesWithIntrinsicBounds
+				    (R.drawable.network_up, 0, 0, 0);
+			    else
+				button1.setCompoundDrawablesWithIntrinsicBounds
+				    (R.drawable.network_down, 0, 0, 0);
+			}
+		    });
+		}
+		catch(Exception exception)
+		{
+		}
 	    }
 	}, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
@@ -856,37 +863,43 @@ public class Chat extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		if(!Kernel.getInstance().isConnected())
-		    return;
-
-		if(!m_databaseHelper.readSetting(null, "show_chat_icons").
-		   equals("true"))
-		    return;
-
-		ArrayList<String> arrayList =
-		    m_databaseHelper.readSipHashIdStrings(s_cryptography);
-
-		if(arrayList == null || arrayList.size() == 0)
-		    return;
-
-		for(String string : arrayList)
+		try
 		{
-		    if(Thread.currentThread().isInterrupted())
+		    if(!Kernel.getInstance().isConnected())
 			return;
 
-		    final String sipHashId = string;
+		    if(!m_databaseHelper.readSetting(null, "show_chat_icons").
+		       equals("true"))
+			return;
 
-		    Chat.this.runOnUiThread(new Runnable()
+		    ArrayList<String> arrayList =
+			m_databaseHelper.readSipHashIdStrings(s_cryptography);
+
+		    if(arrayList == null || arrayList.size() == 0)
+			return;
+
+		    for(String string : arrayList)
 		    {
-			@Override
-			public void run()
-			{
-			    refreshCheckBox(sipHashId);
-			}
-		    });
-		}
+			if(Thread.currentThread().isInterrupted())
+			    return;
 
-		arrayList.clear();
+			final String sipHashId = string;
+
+			Chat.this.runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				refreshCheckBox(sipHashId);
+			    }
+		        });
+		    }
+
+		    arrayList.clear();
+		}
+		catch(Exception exception)
+		{
+		}
 	    }
 	}, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
         setContentView(R.layout.activity_chat);

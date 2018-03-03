@@ -32,6 +32,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Base64;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -154,30 +155,36 @@ public abstract class Neighbor
 
 	    public void run()
 	    {
-		/*
-		** Detect our end-of-message delimiter.
-		*/
-
-		int indexOf = m_stringBuffer.indexOf(Messages.EOM);
-
-		while(indexOf >= 0)
+		try
 		{
-		    String buffer = m_stringBuffer.
-			substring(0, indexOf + Messages.EOM.length());
+		    /*
+		    ** Detect our end-of-message delimiter.
+		    */
 
-		    m_stringBuffer.delete(0, buffer.length());
-		    indexOf = m_stringBuffer.indexOf(Messages.EOM);
+		    int indexOf = m_stringBuffer.indexOf(Messages.EOM);
 
-		    int rc = Kernel.getInstance().ourMessage(buffer);
+		    while(indexOf >= 0)
+		    {
+			String buffer = m_stringBuffer.
+			    substring(0, indexOf + Messages.EOM.length());
 
-		    if(rc == 0)
-			echo(buffer);
-		    else if(rc == 2)
-			echoForce(buffer);
+			m_stringBuffer.delete(0, buffer.length());
+			indexOf = m_stringBuffer.indexOf(Messages.EOM);
+
+			int rc = Kernel.getInstance().ourMessage(buffer);
+
+			if(rc == 0)
+			    echo(buffer);
+			else if(rc == 2)
+			    echoForce(buffer);
+		    }
+
+		    if(m_stringBuffer.length() > MAXIMUM_BYTES)
+			m_stringBuffer.setLength(MAXIMUM_BYTES);
 		}
-
-		if(m_stringBuffer.length() > MAXIMUM_BYTES)
-		    m_stringBuffer.setLength(MAXIMUM_BYTES);
+		catch(Exception exception)
+		{
+		}
 	    }
 	}, 0, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
 	m_scheduler.scheduleAtFixedRate(new Runnable()
@@ -185,29 +192,35 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
-		String statusControl = m_databaseHelper.
-		    readNeighborStatusControl(m_cryptography, m_oid.get());
-
-		switch(statusControl)
+		try
 		{
-		case "connect":
-		    connect();
-		    break;
-		case "disconnect":
-		    disconnect();
-		    setError("");
-		    break;
-		default:
-		    /*
-		    ** Abort!
-		    */
+		    String statusControl = m_databaseHelper.
+			readNeighborStatusControl(m_cryptography, m_oid.get());
 
-		    disconnect();
-		    return;
+		    switch(statusControl)
+		    {
+		    case "connect":
+			connect();
+			break;
+		    case "disconnect":
+			disconnect();
+			setError("");
+			break;
+		    default:
+			/*
+			** Abort!
+			*/
+
+			disconnect();
+			return;
+		    }
+
+		    saveStatistics();
+		    terminateOnSilence();
 		}
-
-		saveStatistics();
-		terminateOnSilence();
+		catch(Exception exception)
+		{
+		}
 	    }
 	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
@@ -217,51 +230,103 @@ public abstract class Neighbor
 	    @Override
 	    public void run()
 	    {
-		if(!connected())
-		    return;
-
-		if(System.nanoTime() - m_accumulatedTime >= 10000000000L)
+		try
 		{
-		    m_accumulatedTime = System.nanoTime();
-		    send(getCapabilities());
-		    send(getIdentities());
+		    if(!connected())
+			return;
+
+		    if(System.nanoTime() - m_accumulatedTime >= 10000000000L)
+		    {
+			m_accumulatedTime = System.nanoTime();
+			send(getCapabilities());
+			send(getIdentities());
+		    }
+
+		    /*
+		    ** Retrieve a database message.
+		    */
+
+		    String array[] = m_databaseHelper.readOutboundMessage
+			(m_oid.get());
+
+		    /*
+		    ** If the message is sent successfully, remove it
+		    ** from the database.
+		    */
+
+		    if(array != null && array.length == 2)
+		    {
+			byte bytes[] = m_cryptography.mtd
+			    (Base64.decode(array[0], Base64.DEFAULT));
+
+			if(bytes != null)
+			    array[0] = new String(bytes);
+			else
+			    array[0] = "";
+
+			if(array[0].startsWith("OZONE-"))
+			{
+			    bytes = Base64.decode
+				(array[0].substring(6), Base64.NO_WRAP);
+
+			    if(bytes != null)
+			    {
+				byte timestamp[] = Miscellaneous.longToByteArray
+				    (TimeUnit.MILLISECONDS.
+				     toMinutes(System.currentTimeMillis()));
+
+				bytes = Miscellaneous.joinByteArrays
+				    /*
+				    ** Remove the embedded SipHash.
+				    */
+
+				    (Arrays.copyOfRange(bytes,
+							0,
+							bytes.length - 23),
+				     Cryptography.
+				     hmac(Miscellaneous.
+					  joinByteArrays(bytes, timestamp),
+					  m_cryptography.ozoneMacKey()));
+			    }
+			    else
+				array[0] = "";
+
+			    if(bytes != null)
+				array[0] = Messages.bytesToMessageString(bytes);
+			    else
+				array[0] = "";
+			}
+
+			if(array[0].isEmpty())
+			    m_databaseHelper.deleteEntry
+				(array[1], "outbound_queue");
+			else if(send(array[0]))
+			    m_databaseHelper.deleteEntry
+				(array[1], "outbound_queue");
+		    }
+
+		    /*
+		    ** Echo packets.
+		    */
+
+		    synchronized(m_echoQueueMutex)
+		    {
+			if(!m_echoQueue.isEmpty())
+			    send(m_echoQueue.remove(0)); // Ignore the results.
+		    }
+
+		    /*
+		    ** Transfer real-time packets.
+		    */
+
+		    synchronized(m_queueMutex)
+		    {
+			if(!m_queue.isEmpty())
+			    send(m_queue.remove(0)); // Ignore the results.
+		    }
 		}
-
-		/*
-		** Retrieve a database message.
-		*/
-
-		String array[] = m_databaseHelper.readOutboundMessage
-		    (m_oid.get());
-
-		/*
-		** If the message is sent successfully, remove it
-		** from the database.
-		*/
-
-		if(array != null && array.length == 2)
-		    if(send(array[0]))
-			m_databaseHelper.deleteEntry
-			    (array[1], "outbound_queue");
-
-		/*
-		** Echo packets.
-		*/
-
-		synchronized(m_echoQueueMutex)
+		catch(Exception exception)
 		{
-		    if(!m_echoQueue.isEmpty())
-			send(m_echoQueue.remove(0)); // Ignore the results.
-		}
-
-		/*
-		** Transfer real-time packets.
-		*/
-
-		synchronized(m_queueMutex)
-		{
-		    if(!m_queue.isEmpty())
-			send(m_queue.remove(0)); // Ignore the results.
 		}
 	    }
 	}, 0, SEND_OUTBOUND_TIMER_INTERVAL, TimeUnit.MILLISECONDS);

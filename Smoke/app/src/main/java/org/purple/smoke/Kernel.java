@@ -408,7 +408,13 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
+		    try
+		    {
+			s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 		}
 	    }, 1500, CONGESTION_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -454,7 +460,6 @@ public class Kernel
 				    (s_cryptography,
 				     messageElement.m_message,
 				     messageElement.m_id,
-				     false,
 				     Cryptography.
 				     sha512(messageElement.m_id.
 					    getBytes("UTF-8")),
@@ -493,56 +498,71 @@ public class Kernel
 			    bytes = null;
 			}
 
-			if(bytes != null)
+			try
 			{
-			    switch(messageElement.m_messageType)
+			    if(bytes != null)
 			    {
-			    case MessageElement.CHAT_MESSAGE_TYPE:
-				enqueueMessage
-				    (Messages.bytesToMessageString(bytes));
-				State.getInstance().incrementChatSequence
-				    (messageElement.m_id);
-				break;
-			    case MessageElement.FIRE_MESSAGE_TYPE:
-				enqueueMessage
-				    (Messages.
-				     bytesToMessageStringNonBase64(bytes));
-				break;
-			    case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
-				scheduleSend
-				    (Messages.
-				     bytesToMessageStringNonBase64(bytes));
-				break;
-			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
-				scheduleSend
-				    (Messages.
-				     identityMessage
-				     (messageRetrievalIdentity()));
-				scheduleSend
-				    (Messages.bytesToMessageString(bytes));
-				break;
+				switch(messageElement.m_messageType)
+				    {
+				    case MessageElement.CHAT_MESSAGE_TYPE:
+					enqueueMessage
+					    (Messages.
+					     bytesToMessageString(bytes));
+					State.getInstance().
+					    incrementChatSequence
+					    (messageElement.m_id);
+					break;
+				    case MessageElement.FIRE_MESSAGE_TYPE:
+					enqueueMessage
+					    (Messages.
+					     bytesToMessageStringNonBase64
+					     (bytes));
+					break;
+				    case MessageElement.
+					FIRE_STATUS_MESSAGE_TYPE:
+					scheduleSend
+					    (Messages.
+					     bytesToMessageStringNonBase64
+					     (bytes));
+					break;
+				    case MessageElement.
+					RETRIEVE_MESSAGES_MESSAGE_TYPE:
+					scheduleSend
+					    (Messages.
+					     identityMessage
+					     (messageRetrievalIdentity()));
+					scheduleSend
+					    (Messages.
+					     bytesToMessageString(bytes));
+					break;
+				    }
 			    }
+
+			    if(messageElement.m_messageType ==
+			       MessageElement.CHAT_MESSAGE_TYPE)
+				if(s_cryptography.ozoneMacKey() != null)
+				{
+				    bytes = Messages.
+					chatMessage(s_cryptography,
+						    messageElement.m_message,
+						    messageElement.m_id,
+						    null,
+						    messageElement.m_keyStream,
+						    State.getInstance().
+						    chatSequence(messageElement.
+								 m_id),
+						    System.currentTimeMillis());
+
+				    if(bytes != null)
+					enqueueMessage
+					    ("OZONE-" + Base64.
+					     encodeToString(bytes,
+							    Base64.NO_WRAP));
+				}
 			}
-
-			if(messageElement.m_messageType ==
-			   MessageElement.CHAT_MESSAGE_TYPE)
-			    if(s_cryptography.ozoneMacKey() != null)
-			    {
-				bytes = Messages.chatMessage
-				    (s_cryptography,
-				     messageElement.m_message,
-				     messageElement.m_id,
-				     true,
-				     s_cryptography.ozoneMacKey(),
-				     messageElement.m_keyStream,
-				     State.getInstance().
-				     chatSequence(messageElement.m_id),
-				     System.currentTimeMillis());
-
-				if(bytes != null)
-				    enqueueMessage
-					(Messages.bytesToMessageString(bytes));
-			    }
+			catch(Exception exception)
+			{
+			}
 		    }
 		}
 	    }, 1500, MESSAGES_TO_SEND_INTERVAL, TimeUnit.MILLISECONDS);
@@ -556,7 +576,13 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    prepareNeighbors();
+		    try
+		    {
+			prepareNeighbors();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 		}
 	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -572,83 +598,92 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    if(!isConnected())
-			return;
-
-		    if(m_state == 0x00)
+		    try
 		    {
-			/*
-			** EPKS!
-			*/
+			if(!isConnected())
+			    return;
 
-			m_state = 0x01;
-
-			ArrayList<SipHashIdElement> arrayList =
-			    s_databaseHelper.readNonSharedSipHashIds
-			    (s_cryptography);
-
-			if(arrayList == null)
-			    arrayList = new ArrayList<> ();
-
+			if(m_state == 0x00)
 			{
 			    /*
-			    ** Self-sending.
+			    ** EPKS!
 			    */
 
-			    SipHashIdElement sipHashIdElement =
-				new SipHashIdElement();
+			    m_state = 0x01;
 
-			    sipHashIdElement.m_sipHashId = s_cryptography.
-				sipHashId();
-			    sipHashIdElement.m_stream = Miscellaneous.
-				joinByteArrays(s_cryptography.
-					       sipHashEncryptionKey(),
-					       s_cryptography.sipHashMacKey());
-			    arrayList.add(sipHashIdElement);
-			}
+			    ArrayList<SipHashIdElement> arrayList =
+				s_databaseHelper.readNonSharedSipHashIds
+				(s_cryptography);
 
-			for(SipHashIdElement sipHashIdElement : arrayList)
-			{
-			    if(sipHashIdElement == null)
-				continue;
+			    if(arrayList == null)
+				arrayList = new ArrayList<> ();
 
-			    byte bytes[] = Messages.epksMessage
-				(s_cryptography,
-				 sipHashIdElement.m_sipHashId,
-				 sipHashIdElement.m_stream,
-				 Messages.CHAT_KEY_TYPE);
+			    {
+				/*
+				** Self-sending.
+				*/
 
-			    if(bytes != null)
-				enqueueMessage
-				    (Messages.bytesToMessageString(bytes));
-			}
-		    }
-		    else
-		    {
-			/*
-			** Request keys!
-			*/
+				SipHashIdElement sipHashIdElement =
+				    new SipHashIdElement();
 
-			m_state = 0x00;
+				sipHashIdElement.m_sipHashId = s_cryptography.
+				    sipHashId();
+				sipHashIdElement.m_stream = Miscellaneous.
+				    joinByteArrays(s_cryptography.
+						   sipHashEncryptionKey(),
+						   s_cryptography.
+						   sipHashMacKey());
+				arrayList.add(sipHashIdElement);
+			    }
 
-			ArrayList<SipHashIdElement> arrayList =
-			    s_databaseHelper.readNonSharedSipHashIds
-			    (s_cryptography);
-
-			if(arrayList != null)
 			    for(SipHashIdElement sipHashIdElement : arrayList)
 			    {
 				if(sipHashIdElement == null)
 				    continue;
 
-				byte bytes[] = Messages.pkpRequestMessage
+				byte bytes[] = Messages.epksMessage
 				    (s_cryptography,
-				     sipHashIdElement.m_sipHashId);
+				     sipHashIdElement.m_sipHashId,
+				     sipHashIdElement.m_stream,
+				     Messages.CHAT_KEY_TYPE);
 
 				if(bytes != null)
 				    enqueueMessage
 					(Messages.bytesToMessageString(bytes));
 			    }
+			}
+			else
+			{
+			    /*
+			    ** Request keys!
+			    */
+
+			    m_state = 0x00;
+
+			    ArrayList<SipHashIdElement> arrayList =
+				s_databaseHelper.readNonSharedSipHashIds
+				(s_cryptography);
+
+			    if(arrayList != null)
+				for(SipHashIdElement sipHashIdElement :
+					arrayList)
+				{
+				    if(sipHashIdElement == null)
+					continue;
+
+				    byte bytes[] = Messages.pkpRequestMessage
+					(s_cryptography,
+					 sipHashIdElement.m_sipHashId);
+
+				    if(bytes != null)
+					enqueueMessage
+					    (Messages.
+					     bytesToMessageString(bytes));
+				}
+			}
+		    }
+		    catch(Exception exception)
+		    {
 		    }
 		}
 	    }, 1500, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -662,29 +697,36 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    if(!isConnected())
-			return;
+		    try
+		    {
+			if(!isConnected())
+			    return;
 
-		    ArrayList<ParticipantElement> arrayList =
-			s_databaseHelper.readParticipants(s_cryptography, "");
+			ArrayList<ParticipantElement> arrayList =
+			    s_databaseHelper.
+			    readParticipants(s_cryptography, "");
 
-		    if(arrayList == null || arrayList.size() == 0)
-			return;
+			if(arrayList == null || arrayList.size() == 0)
+			    return;
 
-		    for(ParticipantElement participantElement : arrayList)
-			if(participantElement != null)
-			{
-			    byte bytes[] = Messages.chatStatus
-				(s_cryptography,
-				 participantElement.m_sipHashId,
-				 participantElement.m_keyStream);
+			for(ParticipantElement participantElement : arrayList)
+			    if(participantElement != null)
+			    {
+				byte bytes[] = Messages.chatStatus
+				    (s_cryptography,
+				     participantElement.m_sipHashId,
+				     participantElement.m_keyStream);
 
-			    if(bytes != null)
-				scheduleSend
-				    (Messages.bytesToMessageString(bytes));
-			}
+				if(bytes != null)
+				    scheduleSend
+					(Messages.bytesToMessageString(bytes));
+			    }
 
-		    arrayList.clear();
+			arrayList.clear();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -865,7 +907,7 @@ public class Kernel
 	    if(arrayList.get(i) != null &&
 	       arrayList.get(i).m_statusControl.toLowerCase().equals("connect"))
 		s_databaseHelper.enqueueOutboundMessage
-		    (message, arrayList.get(i).m_oid);
+		    (s_cryptography, message, arrayList.get(i).m_oid);
 
 	arrayList.clear();
 	return true;

@@ -317,45 +317,52 @@ public class Authenticate extends AppCompatActivity
 			    @Override
 			    public void run()
 			    {
-				dialog.dismiss();
-
-				if(!m_error.isEmpty())
-				    Miscellaneous.showErrorDialog
-					(Authenticate.this,
-					 "An error (" + m_error +
-					 ") occurred while " +
-					 "generating the confidential " +
-					 "data.");
-				else
+				try
 				{
-				    m_databaseHelper.cleanNeighborStatistics
-					(s_cryptography);
-				    Kernel.getInstance();
-				    State.getInstance().setAuthenticated(true);
+				    dialog.dismiss();
 
-				    /*
-				    ** Disable some widgets.
-				    */
-
-				    button1.setEnabled(false);
-				    textView1.setEnabled(false);
-				    textView1.setText("");
-
-				    String str = m_databaseHelper.
-					readSetting(null, "lastActivity");
-
-				    switch(str)
+				    if(!m_error.isEmpty())
+					Miscellaneous.showErrorDialog
+					    (Authenticate.this,
+					     "An error (" + m_error +
+					     ") occurred while " +
+					     "generating the confidential " +
+					     "data.");
+				    else
 				    {
-				    case "Chat":
-					showChatActivity();
-					break;
-				    case "Fire":
-					showFireActivity();
-					break;
-				    case "Settings":
-					showSettingsActivity();
-					break;
+					m_databaseHelper.cleanNeighborStatistics
+					    (s_cryptography);
+					Kernel.getInstance();
+					State.getInstance().
+					    setAuthenticated(true);
+
+					/*
+					** Disable some widgets.
+					*/
+
+					button1.setEnabled(false);
+					textView1.setEnabled(false);
+					textView1.setText("");
+
+					String str = m_databaseHelper.
+					    readSetting(null, "lastActivity");
+
+					switch(str)
+					{
+					case "Chat":
+					    showChatActivity();
+					    break;
+					case "Fire":
+					    showFireActivity();
+					    break;
+					case "Settings":
+					    showSettingsActivity();
+					    break;
+					}
 				    }
+				}
+				catch(Exception exception)
+				{
 				}
 			    }
 			});

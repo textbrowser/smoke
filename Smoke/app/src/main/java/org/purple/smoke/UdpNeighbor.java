@@ -201,12 +201,11 @@ public class UdpNeighbor extends Neighbor
 	    @Override
 	    public void run()
 	    {
-		if(!connected())
-		    return;
-
 		try
 		{
-		    if(m_socket == null)
+		    if(!connected())
+			return;
+		    else if(m_socket == null)
 			return;
 
 		    ByteArrayOutputStream byteArrayOutputStream =
