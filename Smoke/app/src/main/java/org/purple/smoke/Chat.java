@@ -865,9 +865,6 @@ public class Chat extends AppCompatActivity
 	    {
 		try
 		{
-		    if(!Kernel.getInstance().isConnected())
-			return;
-
 		    if(!m_databaseHelper.readSetting(null, "show_chat_icons").
 		       equals("true"))
 			return;
