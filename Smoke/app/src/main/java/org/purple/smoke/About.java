@@ -34,7 +34,9 @@ public class About
     private final static String s_about =
 	"Version 2018.03.03 Ruby Rosemary " +
 	(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
-	"\nAndroid " + Build.VERSION.RELEASE;
+	"\nAndroid " + Build.VERSION.RELEASE +
+	(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ?
+	 "\nAndroid version not supported." : "");
 
     private About()
     {
