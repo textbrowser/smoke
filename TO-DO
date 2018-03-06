@@ -200,3 +200,4 @@ Remaining Items
 2.     Calling via multiple neighbors is chaotic.
 3.     Fire through SmokeStack. Requires discovery or unsolicited data.
 4.     Retain password for re-authentication upon background activity. Optional.
+5.     Receiving requested keys which do not include signatures should be functional.
