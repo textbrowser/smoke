@@ -402,7 +402,7 @@ public abstract class Neighbor
     protected abstract int getLocalPort();
     protected abstract void connect();
 
-    protected synchronized boolean isNetworkConnected()
+    protected boolean isNetworkConnected()
     {
 	try
 	{
