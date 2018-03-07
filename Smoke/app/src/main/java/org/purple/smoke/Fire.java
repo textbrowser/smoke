@@ -358,7 +358,7 @@ public class Fire extends AppCompatActivity
 						 channel,
 						 m_encryptionKey,
 						 m_keyStream);
-					populateFires();
+					    populateFires();
 					}
 				    }
 				});
