@@ -201,3 +201,4 @@ Remaining Items
 3.     Fire through SmokeStack. Requires discovery or unsolicited data.
 4.     Retain password for re-authentication upon background activity. Optional.
 5.     Receiving requested keys which do not include signatures should be functional.
+6.     Consider LruCache as a replacement of the database congestion container.
