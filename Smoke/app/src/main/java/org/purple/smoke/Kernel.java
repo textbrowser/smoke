@@ -1020,10 +1020,6 @@ public class Kernel
 
     public int ourMessage(String buffer)
     {
-	/*
-	** Return false if the contents of buffer could not be assessed.
-	*/
-
 	long value = s_congestionSipHash.hmac(buffer.getBytes());
 
 	if(s_databaseHelper.containsCongestionDigest(value))
