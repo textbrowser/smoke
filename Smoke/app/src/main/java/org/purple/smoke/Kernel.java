@@ -1104,6 +1104,17 @@ public class Kernel
 						       Base64.NO_WRAP),
 					 "UTF-8");
 
+				value = s_congestionSipHash.hmac
+				    (("fire" +
+				      entry.getKey() +
+				      strings[2] +
+				      strings[3] +
+				      timestamp).getBytes());
+
+				if(s_databaseHelper.
+				   writeCongestionDigest(value))
+				    return 1;
+
 				Intent intent = new Intent
 				    ("org.purple.smoke.fire_message");
 
@@ -1478,6 +1489,12 @@ public class Kernel
 		if(updateTimeStamp)
 		    s_databaseHelper.updateParticipantLastTimestamp
 			(s_cryptography, strings[1]);
+
+		value = s_congestionSipHash.hmac
+		    (("chat" + message + strings[1] + timestamp).getBytes());
+
+		if(s_databaseHelper.writeCongestionDigest(value))
+		    return 1;
 
 		Intent intent = new Intent
 		    ("org.purple.smoke.chat_message");

@@ -152,6 +152,7 @@ Completed Items
 115.   Fire. ("AES/CTS/NoPadding")
 116.   Scroll within scroll in Fire channels.
 117.   Periodic key publishing requires more intelligence.
+118.   Calling via multiple neighbors is chaotic.
 
 Future Items
 
@@ -193,12 +194,11 @@ Ignored / Impossible Items
 16.    Optional SipHash identities in received messages. Unique people.
 17.    SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
 18.    Smoke as a service.
+19.    Consider LruCache as a replacement of the database congestion container.
 
 Remaining Items
 
 1.     pull-database for multiple devices.
-2.     Calling via multiple neighbors is chaotic.
-3.     Fire through SmokeStack. Requires discovery or unsolicited data.
-4.     Retain password for re-authentication upon background activity. Optional.
-5.     Receiving requested keys which do not include signatures should be functional.
-6.     Consider LruCache as a replacement of the database congestion container.
+2.     Fire through SmokeStack. Requires discovery or unsolicited data.
+3.     Retain password for re-authentication upon background activity. Optional.
+4.     Receiving requested keys which do not include signatures should be functional.
