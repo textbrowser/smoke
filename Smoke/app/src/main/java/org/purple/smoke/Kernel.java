@@ -81,9 +81,9 @@ public class Kernel
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
-    private final static Database s_databaseHelper = Database.getInstance();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static Database s_databaseHelper = Database.getInstance();
     private final static SimpleDateFormat s_fireSimpleDateFormat =
 	new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
     private final static SipHash s_congestionSipHash = new SipHash
