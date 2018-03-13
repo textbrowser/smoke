@@ -1024,8 +1024,8 @@ public class Kernel
 
 	if(s_databaseHelper.containsCongestionDigest(value))
 	    return 1;
-
-	s_databaseHelper.writeCongestionDigest(value);
+	else if(s_databaseHelper.writeCongestionDigest(value))
+	    return 1;
 
 	try
 	{

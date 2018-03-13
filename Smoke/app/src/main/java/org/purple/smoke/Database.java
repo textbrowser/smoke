@@ -1947,11 +1947,13 @@ public class Database extends SQLiteOpenHelper
 		     Base64.encodeToString(Miscellaneous.
 					   longToByteArray(value),
 					   Base64.DEFAULT));
-		m_db.replace("congestion_control", null, values);
+		m_db.insertOrThrow("congestion_control", null, values);
 		m_db.setTransactionSuccessful();
 	    }
 	    catch(Exception exception)
 	    {
+		if(exception.getMessage().toLowerCase().contains("unique"))
+		    return true;
 	    }
 	    finally
 	    {
@@ -1963,7 +1965,7 @@ public class Database extends SQLiteOpenHelper
 	    s_congestionControlMutex.writeLock().unlock();
 	}
 
-	return false; // Not an error.
+	return false;
     }
 
     public boolean writeNeighbor(Cryptography cryptography,
@@ -2136,7 +2138,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    if(ok)
 	    {
-		m_db.insert("neighbors", null, values);
+		m_db.insertOrThrow("neighbors", null, values);
 		m_db.setTransactionSuccessful();
 	    }
 	}
