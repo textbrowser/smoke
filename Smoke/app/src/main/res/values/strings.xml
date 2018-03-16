@@ -58,4 +58,5 @@
     <string name="network">Network</string>
     <string name="generate">Generate</string>
     <string name="auto_fill">Auto Fill</string>
+    <string name="generating_confidential_data_please_be_patient_and_do_not_rotate_the_device_while_the_process_executes">Generating confidential data. Please be patient and do not rotate the device while the process executes.</string>
 </resources>

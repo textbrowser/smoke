@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +35,9 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.Arrays;
 import javax.crypto.SecretKey;
@@ -139,16 +140,17 @@ public class Authenticate extends AppCompatActivity
 		    return;
 		}
 
-		final ProgressDialog dialog = new ProgressDialog
-		    (Authenticate.this);
+		final ProgressBar bar = (ProgressBar) findViewById
+		    (R.id.progress_bar);
+		final TextView textView2 = (TextView) findViewById
+		    (R.id.message);
 
-		dialog.setCancelable(false);
-		dialog.setIndeterminate(true);
-		dialog.setMessage
-		    ("Generating confidential data. Please be patient " +
-		     "and do not rotate the device while the process " +
-		     "executes.");
-		dialog.show();
+		bar.setIndeterminate(true);
+		bar.setVisibility(ProgressBar.VISIBLE);
+		getWindow().setFlags
+		    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+		     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+		textView2.setVisibility(TextView.VISIBLE);
 
 		class SingleShot implements Runnable
 		{
@@ -319,7 +321,11 @@ public class Authenticate extends AppCompatActivity
 			    {
 				try
 				{
-				    dialog.dismiss();
+				    bar.setVisibility(ProgressBar.INVISIBLE);
+				    getWindow().clearFlags
+					(WindowManager.LayoutParams.
+					 FLAG_NOT_TOUCHABLE);
+				    textView2.setVisibility(TextView.INVISIBLE);
 
 				    if(!m_error.isEmpty())
 					Miscellaneous.showErrorDialog
