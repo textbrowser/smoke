@@ -612,14 +612,14 @@ public class FireChannel extends View
 		    scrollMessagesView();
 		    participant.m_name = name;
 		    participant.m_timestamp = System.currentTimeMillis();
-		    m_participants.replace(id, participant);
+		    m_participants.put(id, participant);
 		    populateParticipants();
 		}
 		else
 		{
 		    participant.m_name = name;
 		    participant.m_timestamp = System.currentTimeMillis();
-		    m_participants.replace(id, participant);
+		    m_participants.put(id, participant);
 		}
 
 		return;
