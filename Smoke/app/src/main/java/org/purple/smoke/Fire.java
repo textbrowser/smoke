@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,6 +42,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -50,6 +50,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import java.nio.charset.Charset;
@@ -307,16 +308,14 @@ public class Fire extends AppCompatActivity
 		    textView1 = (TextView) findViewById(R.id.salt);
 
 		    final String salt = textView1.getText().toString().trim();
-		    final ProgressDialog dialog = new ProgressDialog
-			(Fire.this);
+		    final ProgressBar bar = (ProgressBar) findViewById
+			(R.id.progress_bar);
 
-		    dialog.setCancelable(false);
-		    dialog.setIndeterminate(true);
-		    dialog.setMessage
-			("Generating key material. Please be patient " +
-			 "and do not rotate the device while the process " +
-			 "executes.");
-		    dialog.show();
+		    bar.setIndeterminate(true);
+		    bar.setVisibility(ProgressBar.VISIBLE);
+		    getWindow().setFlags
+			(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+			 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
 		    class SingleShot implements Runnable
 		    {
@@ -348,7 +347,11 @@ public class Fire extends AppCompatActivity
 				    @Override
 				    public void run()
 				    {
-					dialog.dismiss();
+					bar.setVisibility
+					    (ProgressBar.INVISIBLE);
+					getWindow().clearFlags
+					    (WindowManager.LayoutParams.
+					     FLAG_NOT_TOUCHABLE);
 
 					if(m_encryptionKey != null &&
 					   m_keyStream != null)

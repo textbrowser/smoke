@@ -198,6 +198,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/reset_fields" />
 
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        style="@android:style/Widget.DeviceDefault.ProgressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="invisible" />
+
                 </LinearLayout>
 
                 <TextView
