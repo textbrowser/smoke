@@ -393,6 +393,14 @@
                         android:paddingStart="10dp"
                         android:text="@string/share_keys" />
 
+                    <ProgressBar
+                        android:id="@+id/share_keys_progress_bar"
+                        style="@android:style/Widget.DeviceDefault.ProgressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="invisible" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -456,6 +464,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/reset_fields" />
+
+                    <ProgressBar
+                        android:id="@+id/add_participants_progress_bar"
+                        style="@android:style/Widget.DeviceDefault.ProgressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <TextView
@@ -546,6 +562,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/generate" />
+
+                    <ProgressBar
+                        android:id="@+id/generate_progress_bar"
+                        style="@android:style/Widget.DeviceDefault.ProgressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <TextView

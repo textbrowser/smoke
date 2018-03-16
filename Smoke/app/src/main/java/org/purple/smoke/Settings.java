@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,6 +47,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -56,6 +56,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -264,14 +265,16 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 
-	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+	final ProgressBar bar = (ProgressBar) findViewById
+	    (R.id.add_participants_progress_bar);
 
-	dialog.setCancelable(false);
-	dialog.setIndeterminate(true);
-	dialog.setMessage("Generating key material. Please be patient and " +
-			  "do not rotate the device while the process " +
-			  "executes.");
-	dialog.show();
+	bar.setIndeterminate(true);
+	bar.setVisibility(ProgressBar.VISIBLE);
+	getWindow().setFlags
+	    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+	     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+	Miscellaneous.enableChildren
+	    (findViewById(R.id.linear_layout), false);
 
 	class SingleShot implements Runnable
 	{
@@ -298,7 +301,11 @@ public class Settings extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
-			dialog.dismiss();
+			bar.setVisibility(ProgressBar.INVISIBLE);
+			getWindow().clearFlags
+			    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+			Miscellaneous.enableChildren
+			    (findViewById(R.id.linear_layout), true);
 
 			if(m_error)
 			    Miscellaneous.showErrorDialog
@@ -432,14 +439,16 @@ public class Settings extends AppCompatActivity
 	if(Settings.this.isFinishing())
 	    return;
 
-	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+	final ProgressBar bar = (ProgressBar) findViewById
+	    (R.id.share_keys_progress_bar);
 
-	dialog.setCancelable(false);
-	dialog.setIndeterminate(true);
-	dialog.setMessage
-	    ("Transferring public key material. Please be patient " +
-	     "and do not rotate the device while the process executes.");
-	dialog.show();
+	bar.setIndeterminate(true);
+	bar.setVisibility(ProgressBar.VISIBLE);
+	getWindow().setFlags
+	    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+	     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+	Miscellaneous.enableChildren
+	    (findViewById(R.id.linear_layout), false);
 
 	class SingleShot implements Runnable
 	{
@@ -506,7 +515,12 @@ public class Settings extends AppCompatActivity
 			@Override
 			public void run()
 			{
-			    dialog.dismiss();
+			    bar.setVisibility(ProgressBar.INVISIBLE);
+			    getWindow().clearFlags
+				(WindowManager.LayoutParams.
+				 FLAG_NOT_TOUCHABLE);
+			    Miscellaneous.enableChildren
+				(findViewById(R.id.linear_layout), true);
 
 			    if(!m_error.isEmpty())
 				Miscellaneous.showErrorDialog
@@ -1562,7 +1576,6 @@ public class Settings extends AppCompatActivity
 	if(Settings.this.isFinishing())
 	    return;
 
-	final ProgressDialog dialog = new ProgressDialog(Settings.this);
 	final Spinner spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	final Spinner spinner2 = (Spinner) findViewById
 	    (R.id.pki_encryption_algorithm);
@@ -1584,12 +1597,16 @@ public class Settings extends AppCompatActivity
 	    iterationCount = 1000;
 	}
 
-	dialog.setCancelable(false);
-	dialog.setIndeterminate(true);
-	dialog.setMessage
-	    ("Generating confidential material. Please be patient and " +
-	     "do not rotate the device while the process executes.");
-	dialog.show();
+	final ProgressBar bar = (ProgressBar) findViewById
+	    (R.id.generate_progress_bar);
+
+	bar.setIndeterminate(true);
+	bar.setVisibility(ProgressBar.VISIBLE);
+	getWindow().setFlags
+	    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+	     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+	Miscellaneous.enableChildren
+	    (findViewById(R.id.linear_layout), false);
 
 	class SingleShot implements Runnable
 	{
@@ -1792,7 +1809,12 @@ public class Settings extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
-			dialog.dismiss();
+			bar.setVisibility(ProgressBar.INVISIBLE);
+			getWindow().clearFlags
+			    (WindowManager.LayoutParams.
+			     FLAG_NOT_TOUCHABLE);
+			Miscellaneous.enableChildren
+			    (findViewById(R.id.linear_layout), true);
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
@@ -1853,14 +1875,16 @@ public class Settings extends AppCompatActivity
 	if(Settings.this.isFinishing())
 	    return;
 
-	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+	final ProgressBar bar = (ProgressBar) findViewById
+	    (R.id.share_keys_progress_bar);
 
-	dialog.setCancelable(false);
-	dialog.setIndeterminate(true);
-	dialog.setMessage
-	    ("Requesting public key material. Please be patient " +
-	     "and do not rotate the device while the process executes.");
-	dialog.show();
+	bar.setIndeterminate(true);
+	bar.setVisibility(ProgressBar.VISIBLE);
+	getWindow().setFlags
+	    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+	     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+	Miscellaneous.enableChildren
+	    (findViewById(R.id.linear_layout), false);
 
 	class SingleShot implements Runnable
 	{
@@ -1896,7 +1920,12 @@ public class Settings extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
-			dialog.dismiss();
+			bar.setVisibility(ProgressBar.INVISIBLE);
+			getWindow().clearFlags
+			    (WindowManager.LayoutParams.
+			     FLAG_NOT_TOUCHABLE);
+			Miscellaneous.enableChildren
+			    (findViewById(R.id.linear_layout), true);
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
@@ -1918,14 +1947,16 @@ public class Settings extends AppCompatActivity
 	if(Settings.this.isFinishing())
 	    return;
 
-	final ProgressDialog dialog = new ProgressDialog(Settings.this);
+	final ProgressBar bar = (ProgressBar) findViewById
+	    (R.id.share_keys_progress_bar);
 
-	dialog.setCancelable(false);
-	dialog.setIndeterminate(true);
-	dialog.setMessage
-	    ("Transferring public key material. Please be patient " +
-	     "and do not rotate the device while the process executes.");
-	dialog.show();
+	bar.setIndeterminate(true);
+	bar.setVisibility(ProgressBar.VISIBLE);
+	getWindow().setFlags
+	    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+	     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+	Miscellaneous.enableChildren
+	    (findViewById(R.id.linear_layout), false);
 
 	class SingleShot implements Runnable
 	{
@@ -1965,7 +1996,12 @@ public class Settings extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
-			dialog.dismiss();
+			bar.setVisibility(ProgressBar.INVISIBLE);
+			getWindow().clearFlags
+			    (WindowManager.LayoutParams.
+			     FLAG_NOT_TOUCHABLE);
+			Miscellaneous.enableChildren
+			    (findViewById(R.id.linear_layout), true);
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
