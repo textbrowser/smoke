@@ -142,15 +142,14 @@ public class Authenticate extends AppCompatActivity
 
 		final ProgressBar bar = (ProgressBar) findViewById
 		    (R.id.progress_bar);
-		final TextView textView2 = (TextView) findViewById
-		    (R.id.message);
 
 		bar.setIndeterminate(true);
 		bar.setVisibility(ProgressBar.VISIBLE);
 		getWindow().setFlags
 		    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
 		     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-		textView2.setVisibility(TextView.VISIBLE);
+		Miscellaneous.enableChildren
+		    (findViewById(R.id.relative_layout), false);
 
 		class SingleShot implements Runnable
 		{
@@ -325,7 +324,9 @@ public class Authenticate extends AppCompatActivity
 				    getWindow().clearFlags
 					(WindowManager.LayoutParams.
 					 FLAG_NOT_TOUCHABLE);
-				    textView2.setVisibility(TextView.INVISIBLE);
+				    Miscellaneous.enableChildren
+					(findViewById(R.id.relative_layout),
+					 true);
 
 				    if(!m_error.isEmpty())
 					Miscellaneous.showErrorDialog

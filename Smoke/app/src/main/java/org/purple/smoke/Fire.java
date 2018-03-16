@@ -308,6 +308,11 @@ public class Fire extends AppCompatActivity
 		    textView1 = (TextView) findViewById(R.id.salt);
 
 		    final String salt = textView1.getText().toString().trim();
+
+		    /*
+		    ** Display a progress bar.
+		    */
+
 		    final ProgressBar bar = (ProgressBar) findViewById
 			(R.id.progress_bar);
 
@@ -316,6 +321,8 @@ public class Fire extends AppCompatActivity
 		    getWindow().setFlags
 			(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
 			 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+		    Miscellaneous.enableChildren
+			(findViewById(R.id.linear_layout), false);
 
 		    class SingleShot implements Runnable
 		    {
@@ -352,6 +359,9 @@ public class Fire extends AppCompatActivity
 					getWindow().clearFlags
 					    (WindowManager.LayoutParams.
 					     FLAG_NOT_TOUCHABLE);
+					Miscellaneous.enableChildren
+					    (findViewById(R.id.linear_layout),
+					     true);
 
 					if(m_encryptionKey != null &&
 					   m_keyStream != null)

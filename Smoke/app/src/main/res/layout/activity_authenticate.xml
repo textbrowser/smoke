@@ -17,6 +17,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="10dp"
@@ -78,14 +79,6 @@
             android:layout_centerVertical="true"
             android:visibility="invisible" />
 
-        <TextView
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/progress_bar"
-            android:layout_centerHorizontal="true"
-            android:text="@string/generating_confidential_data_please_be_patient_and_do_not_rotate_the_device_while_the_process_executes"
-            android:visibility="invisible" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -41,6 +41,7 @@ import android.os.Handler;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -379,6 +380,24 @@ public class Miscellaneous
 	catch(Exception exception)
 	{
 	    return 0;
+	}
+    }
+
+    public static void enableChildren(View view, boolean state)
+    {
+	if(view == null)
+	    return;
+	else if(!(view instanceof ViewGroup))
+	{
+	    view.setEnabled(state);
+	    return;
+	}
+
+	for(int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+	{
+	    View child = ((ViewGroup) view).getChildAt(i);
+
+	    enableChildren(child, state);
 	}
     }
 
