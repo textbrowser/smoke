@@ -81,12 +81,11 @@ public class FireChannel extends View
     private LayoutInflater m_inflater = null;
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private String m_id = "";
     private String m_name = "";
     private View m_view = null;
     private final SimpleDateFormat m_simpleDateFormat =
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-    private final String m_id = Miscellaneous.byteArrayAsHexString
-	(Cryptography.randomBytes(128));
     private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int STATUS_INTERVAL = 30000;
 
@@ -406,31 +405,14 @@ public class FireChannel extends View
 	super.onDraw(canvas);
     }
 
-    public FireChannel(String name, Context context)
+    public FireChannel(String id, String name, Context context)
     {
 	super(context);
 	m_context = context;
+	m_id = id;
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_name = name;
-	createSchedulers();
-    }
-
-    public FireChannel(Context context, AttributeSet attrs)
-    {
-	super(context, attrs);
-	m_context = context;
-	m_inflater = (LayoutInflater) m_context.getSystemService
-	    (Context.LAYOUT_INFLATER_SERVICE);
-	createSchedulers();
-    }
-
-    public FireChannel(Context context, AttributeSet attrs, int defStyle)
-    {
-	super(context, attrs, defStyle);
-	m_context = context;
-	m_inflater = (LayoutInflater) m_context.getSystemService
-	    (Context.LAYOUT_INFLATER_SERVICE);
 	createSchedulers();
     }
 
