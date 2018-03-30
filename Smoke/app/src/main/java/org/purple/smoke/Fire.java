@@ -33,6 +33,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -606,7 +607,8 @@ public class Fire extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    unregisterReceiver(m_receiver);
+	    LocalBroadcastManager.getInstance(this).
+		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
     }
@@ -638,7 +640,8 @@ public class Fire extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.fire_message");
-	    registerReceiver(m_receiver, intentFilter);
+	    LocalBroadcastManager.getInstance(this).
+		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
     }
@@ -650,7 +653,8 @@ public class Fire extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    unregisterReceiver(m_receiver);
+	    LocalBroadcastManager.getInstance(this).
+		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
     }

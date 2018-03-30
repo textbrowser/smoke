@@ -32,7 +32,7 @@ import android.os.Build;
 public class About
 {
     private final static String s_about =
-	"Version 2018.03.20 Jane Jetway " +
+	"Version 2018.04.04 Blue Spark " +
 	(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 	"\nAndroid " + Build.VERSION.RELEASE +
 	(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ?

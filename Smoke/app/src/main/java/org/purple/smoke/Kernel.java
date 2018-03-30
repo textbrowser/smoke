@@ -35,6 +35,7 @@ import android.net.wifi.WifiManager.WifiLock;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.SparseArray;
 import java.net.InetAddress;
@@ -1135,7 +1136,11 @@ public class Kernel
 					("org.purple.smoke.message",
 					 strings[3]);
 
-				Smoke.getApplication().sendBroadcast(intent);
+				LocalBroadcastManager localBroadcastManager =
+				    LocalBroadcastManager.getInstance
+				    (Smoke.getApplication());
+
+				localBroadcastManager.sendBroadcast(intent);
 				return 2; // Echo Fire!
 			    }
 			}
@@ -1211,8 +1216,11 @@ public class Kernel
 
 		    Intent intent = new Intent
 			("org.purple.smoke.populate_participants");
+		    LocalBroadcastManager localBroadcastManager =
+			LocalBroadcastManager.getInstance
+			(Smoke.getApplication());
 
-		    Smoke.getApplication().sendBroadcast(intent);
+		    localBroadcastManager.sendBroadcast(intent);
 
 		    /*
 		    ** Response-share.
@@ -1504,7 +1512,12 @@ public class Kernel
 		intent.putExtra("org.purple.smoke.sequence", sequence);
 		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		intent.putExtra("org.purple.smoke.timestamp", timestamp);
-		Smoke.getApplication().sendBroadcast(intent);
+
+		LocalBroadcastManager localBroadcastManager =
+		    LocalBroadcastManager.getInstance
+		    (Smoke.getApplication());
+
+		localBroadcastManager.sendBroadcast(intent);
 		return 1;
 	    }
 	    else if(pk.length == 96)
@@ -1676,7 +1689,12 @@ public class Kernel
 			    intent.putExtra("org.purple.smoke.name", array[0]);
 			    intent.putExtra
 				("org.purple.smoke.sipHashId", array[1]);
-			    Smoke.getApplication().sendBroadcast(intent);
+
+			    LocalBroadcastManager localBroadcastManager =
+				LocalBroadcastManager.getInstance
+				(Smoke.getApplication());
+
+			    localBroadcastManager.sendBroadcast(intent);
 			    return 1;
 			}
 		    }
@@ -1733,7 +1751,12 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.name", array[0]);
 		    intent.putExtra("org.purple.smoke.refresh", true);
 		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);
-		    Smoke.getApplication().sendBroadcast(intent);
+
+		    LocalBroadcastManager localBroadcastManager =
+			LocalBroadcastManager.getInstance
+			(Smoke.getApplication());
+
+		    localBroadcastManager.sendBroadcast(intent);
 
 		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {

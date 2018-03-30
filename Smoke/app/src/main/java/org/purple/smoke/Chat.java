@@ -37,6 +37,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -1335,7 +1336,8 @@ public class Chat extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    unregisterReceiver(m_receiver);
+	    LocalBroadcastManager.getInstance(this).
+		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
 
@@ -1355,7 +1357,8 @@ public class Chat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
 	    intentFilter.addAction("org.purple.smoke.populate_participants");
-	    registerReceiver(m_receiver, intentFilter);
+	    LocalBroadcastManager.getInstance(this).
+		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
 
@@ -1377,7 +1380,8 @@ public class Chat extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    unregisterReceiver(m_receiver);
+	    LocalBroadcastManager.getInstance(this).
+		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
 
