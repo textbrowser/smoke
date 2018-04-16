@@ -2918,6 +2918,7 @@ public class Database extends SQLiteOpenHelper
 	    "signature_public_key_digest TEXT NOT NULL, " +
 	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
+	    "special_value_a TEXT NOT NULL, " + // Telephone number, for example.
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
