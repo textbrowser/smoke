@@ -168,7 +168,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    cursor = m_db.rawQuery("SELECT name, OID FROM fire", null);
+	    cursor = m_db.rawQuery("SELECT name, oid FROM fire", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -253,7 +253,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT status_control, OID FROM neighbors", null);
+		("SELECT status_control, oid FROM neighbors", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -340,7 +340,7 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery
 		("SELECT " +
 		 "(SELECT COUNT(*) FROM outbound_queue o WHERE " +
-		 "o.neighbor_oid = n.OID), " +
+		 "o.neighbor_oid = n.oid), " +
 		 "n.bytes_read, " +
 		 "n.bytes_written, " +
 		 "n.echo_queue_size, " +
@@ -360,8 +360,8 @@ public class Database extends SQLiteOpenHelper
 		 "n.status_control, " +
 		 "n.transport, " +
 		 "n.uptime, " +
-		 "n.OID " +
-		 "FROM neighbors n ORDER BY n.OID", null);
+		 "n.oid " +
+		 "FROM neighbors n ORDER BY n.oid", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -696,7 +696,7 @@ public class Database extends SQLiteOpenHelper
 		     "keystream, " +
 		     "last_status_timestamp, " +
 		     "siphash_id, " +
-		     "OID " +
+		     "oid " +
 		     "FROM participants", null);
 	    else
 		cursor = m_db.rawQuery
@@ -705,7 +705,7 @@ public class Database extends SQLiteOpenHelper
 		     "keystream, " +
 		     "last_status_timestamp, " +
 		     "siphash_id, " +
-		     "OID " +
+		     "oid " +
 		     "FROM participants WHERE siphash_id_digest = ?",
 		     new String[] {Base64.
 				   encodeToString(cryptography.
@@ -828,7 +828,7 @@ public class Database extends SQLiteOpenHelper
 		     "s.name, " +
 		     "s.siphash_id, " +
 		     "s.stream, " +
-		     "s.OID " +
+		     "s.oid " +
 		     "FROM siphash_ids s ORDER BY s.oid", null);
 	    else
 		cursor = m_db.rawQuery
@@ -839,7 +839,7 @@ public class Database extends SQLiteOpenHelper
 		     "s.name, " +
 		     "s.siphash_id, " +
 		     "s.stream, " +
-		     "s.OID " +
+		     "s.oid " +
 		     "FROM siphash_ids s WHERE s.siphash_id_digest = ?",
 		     new String[] {Base64.
 				   encodeToString(cryptography.
@@ -1143,8 +1143,8 @@ public class Database extends SQLiteOpenHelper
 		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
 		 "s.siphash_id, " +
 		 "s.stream, " +
-		 "s.OID " +
-		 "FROM siphash_ids s WHERE s.OID = ? ORDER BY s.oid",
+		 "s.oid " +
+		 "FROM siphash_ids s WHERE s.oid = ? ORDER BY s.oid",
 		 new String[] {oid});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -1273,7 +1273,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT status_control FROM neighbors WHERE OID = ?",
+		("SELECT status_control FROM neighbors WHERE oid = ?",
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -1423,7 +1423,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT siphash_id FROM siphash_ids WHERE OID = ?",
+		("SELECT siphash_id FROM siphash_ids WHERE oid = ?",
 		 new String[] {oid});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -1779,8 +1779,8 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT message, OID FROM outbound_queue " +
-		 "WHERE neighbor_oid = ? ORDER BY OID LIMIT 1",
+		("SELECT message, oid FROM outbound_queue " +
+		 "WHERE neighbor_oid = ? ORDER BY oid LIMIT 1",
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -1868,7 +1868,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    ok = m_db.delete(table, "OID = ?", new String[] {oid}) > 0;
+	    ok = m_db.delete(table, "oid = ?", new String[] {oid}) > 0;
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -1909,7 +1909,7 @@ public class Database extends SQLiteOpenHelper
 		     Base64.encodeToString(cryptography.etm(keyStream),
 					   Base64.DEFAULT));
 
-	    m_db.update("participants", values, "OID = ?",
+	    m_db.update("participants", values, "oid = ?",
 			new String[] {String.valueOf(oid)});
 	    m_db.setTransactionSuccessful();
 	}
@@ -2378,7 +2378,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT remote_certificate FROM neighbors WHERE OID = ?",
+		("SELECT remote_certificate FROM neighbors WHERE oid = ?",
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -2540,7 +2540,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("DELETE FROM outbound_queue WHERE neighbor_oid " +
-		 "NOT IN (SELECT OID FROM neighbors)",
+		 "NOT IN (SELECT oid FROM neighbors)",
 		 null);
 	    m_db.setTransactionSuccessful();
 	}
@@ -2685,7 +2685,7 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.
 				       etm(controlStatus.trim().getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -2723,7 +2723,7 @@ public class Database extends SQLiteOpenHelper
 		     Base64.encodeToString(cryptography.etm(certificate),
 					   Base64.DEFAULT));
 
-	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -2884,7 +2884,7 @@ public class Database extends SQLiteOpenHelper
 
 	/*
 	** Create the outbound_queue table.
-	** A foreign-key constraint on the OID of the neighbors
+	** A foreign-key constraint on the oid of the neighbors
 	** table cannot be assigned.
 	*/
 
@@ -2918,11 +2918,34 @@ public class Database extends SQLiteOpenHelper
 	    "signature_public_key_digest TEXT NOT NULL, " +
 	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
-	    "special_value_a TEXT NOT NULL, " + // Telephone number, for example.
+	    "special_value_a TEXT NOT NULL, " + /*
+						** Telephone number,
+						** for example.
+						*/
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
 	    "signature_public_key_digest))";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	/*
+	** Create the participants_keys table. Note that the
+	** keystream_digest should be unique for all participants.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS participants_keys (" +
+	    "keystream TEXT NOT NULL, " +
+	    "keystream_digest TEXT NOT NULL PRIMARY KEY, " +
+	    "participants_oid INTEGER, " +
+	    "FOREIGN KEY (participants_oid) REFERENCES " +
+	    "participants (oid) ON DELETE CASCADE)";
 
 	try
 	{
@@ -3061,6 +3084,7 @@ public class Database extends SQLiteOpenHelper
 	     "DROP TABLE IF EXISTS neighbors",
 	     "DROP TABLE IF EXISTS outbound_queue",
 	     "DROP TABLE IF EXISTS participants",
+	     "DROP TABLE IF EXISTS participants_keys",
 	     "DROP TABLE IF EXISTS settings",
 	     "DROP TABLE IF EXISTS siphash_ids"};
 
@@ -3218,7 +3242,7 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.
 				       etm(uptime.trim().getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update("neighbors", values, "OID = ?", new String[] {oid});
+	    m_db.update("neighbors", values, "oid = ?", new String[] {oid});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
