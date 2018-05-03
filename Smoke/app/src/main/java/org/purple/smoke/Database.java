@@ -2918,10 +2918,10 @@ public class Database extends SQLiteOpenHelper
 	    "signature_public_key_digest TEXT NOT NULL, " +
 	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
-	    "special_value_a TEXT NOT NULL, " + /*
-						** Telephone number,
-						** for example.
-						*/
+	    "special_value_a TEXT, " + /*
+				       ** Telephone number,
+				       ** for example.
+				       */
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
@@ -2943,9 +2943,9 @@ public class Database extends SQLiteOpenHelper
 	str = "CREATE TABLE IF NOT EXISTS participants_keys (" +
 	    "keystream TEXT NOT NULL, " +
 	    "keystream_digest TEXT NOT NULL PRIMARY KEY, " +
-	    "participants_oid INTEGER, " +
-	    "FOREIGN KEY (participants_oid) REFERENCES " +
-	    "participants (oid) ON DELETE CASCADE)";
+	    "siphash_id_digest TEXT NOT NULL, " +
+	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
+	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE)";
 
 	try
 	{
@@ -3057,6 +3057,7 @@ public class Database extends SQLiteOpenHelper
 	    m_db.delete("neighbors", null, null);
 	    m_db.delete("outbound_queue", null, null);
 	    m_db.delete("participants", null, null);
+	    m_db.delete("participants_keys", null, null);
 	    m_db.delete("settings", null, null);
 	    m_db.delete("siphash_ids", null, null);
 	    m_db.setTransactionSuccessful();
@@ -3372,6 +3373,19 @@ public class Database extends SQLiteOpenHelper
 							  toLowerCase().trim().
 							  getBytes("UTF-8")),
 						     Base64.DEFAULT)});
+	    values.clear();
+	    values.put("keystream",
+		       Base64.encodeToString(cryptography.etm(keyStream),
+					     Base64.DEFAULT));
+	    values.put("keystream_digest",
+		       Base64.encodeToString(cryptography.hmac(keyStream),
+					     Base64.DEFAULT));
+	    values.put("siphash_id_digest",
+		       Base64.encodeToString(cryptography.
+					     hmac(sipHashId.toLowerCase().
+						  trim().getBytes("UTF-8")),
+					     Base64.DEFAULT));
+	    m_db.insert("participants_keys", null, values);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
