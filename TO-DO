@@ -202,3 +202,4 @@ Remaining Items
 2.     Fire through SmokeStack. Requires discovery or unsolicited data.
 3.     Retain password for re-authentication upon background activity. Optional.
 4.     Receiving requested keys which do not include signatures should be functional.
+5.     Remove older private keys. Perhaps keep keys for one week.
