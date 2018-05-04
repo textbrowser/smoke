@@ -1308,7 +1308,18 @@ public class Kernel
 		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
-		    return 1;
+		{
+		    if(ourMessageViaChatTemporaryIdentity)
+		    {
+			keyStream = s_databaseHelper.participantKeyStream
+			    (s_cryptography, pk, array2, bytes);
+
+			if(keyStream == null)
+			    return 1;
+		    }
+		    else
+			return 1;
+		}
 
 		byte aes256[] = null;
 

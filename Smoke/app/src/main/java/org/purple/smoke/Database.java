@@ -41,6 +41,7 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -2476,6 +2477,68 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return bytes;
+    }
+
+    public byte[] participantKeyStream(Cryptography cryptography,
+				       byte digest[],
+				       byte array[],
+				       byte bytes[])
+    {
+	prepareDb();
+
+	if(array == null ||
+	   array.length < 0 ||
+	   bytes == null ||
+	   bytes.length < 0 ||
+	   cryptography == null ||
+	   digest == null ||
+	   digest.length < 0 ||
+	   m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	byte keyStream[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT keystream FROM participants_keys " +
+		 "WHERE siphash_id_digest IN " +
+		 "(SELECT siphash_id_digest FROM participants WHERE " +
+		 "encryption_public_key_digest = ?) ORDER BY oid DESC",
+		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		while(!cursor.isAfterLast())
+		{
+		    keyStream = cryptography.mtd
+			(Base64.decode(cursor.getString(0).getBytes(),
+				       Base64.DEFAULT));
+
+		    if(keyStream == null)
+			continue;
+
+		    byte sha512[] = Cryptography.hmac
+			(Arrays.copyOfRange(bytes, 0, bytes.length - 128),
+			 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+		    if(Cryptography.memcmp(array, sha512))
+			break;
+
+		    cursor.moveToNext();
+		}
+	}
+	catch(Exception exception)
+	{
+	    keyStream = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return keyStream;
     }
 
     public long count(String table)
