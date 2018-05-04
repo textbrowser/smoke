@@ -2505,7 +2505,7 @@ public class Database extends SQLiteOpenHelper
 		("SELECT keystream FROM participants_keys " +
 		 "WHERE siphash_id_digest IN " +
 		 "(SELECT siphash_id_digest FROM participants WHERE " +
-		 "encryption_public_key_digest = ?) ORDER BY oid DESC",
+		 "encryption_public_key_digest = ?) ORDER BY timestamp DESC",
 		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -3007,6 +3007,7 @@ public class Database extends SQLiteOpenHelper
 	    "keystream TEXT NOT NULL, " +
 	    "keystream_digest TEXT NOT NULL PRIMARY KEY, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
+	    "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE)";
 
