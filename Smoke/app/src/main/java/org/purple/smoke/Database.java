@@ -2985,6 +2985,10 @@ public class Database extends SQLiteOpenHelper
 				       ** Telephone number,
 				       ** for example.
 				       */
+	    "special_value_b TEXT, " +
+	    "special_value_c TEXT, " +
+	    "special_value_d TEXT, " +
+	    "special_value_e TEXT, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
