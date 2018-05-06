@@ -63,10 +63,10 @@ public class Kernel
     private Hashtable<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_chatTemporaryIdentityScheduler = null;
-    private ScheduledExecutorService m_congestionScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_publishKeysScheduler = null;
+    private ScheduledExecutorService m_purgeScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
@@ -92,7 +92,6 @@ public class Kernel
     private final static int CALL_INTERVAL = 250; // 0.250 Seconds
     private final static int CHAT_TEMPORARY_IDENTITY_INTERVAL =
 	5000; // 5 Seconds
-    private final static int CONGESTION_INTERVAL = 5000; // 5 Seconds
     private final static int CONGESTION_LIFETIME = 60; // Seconds
     private final static int FIRE_TIME_DELTA = 30000; // 30 Seconds
     private final static int MCELIECE_OUTPUT_SIZE_CALL_A = 352;
@@ -100,7 +99,10 @@ public class Kernel
     private final static int MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
+    private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
+	864000; // Seconds in ten days.
     private final static int PUBLISH_KEYS_INTERVAL = 15000; // 15 Seconds
+    private final static int PURGE_INTERVAL = 30000; // 30 Seconds
     private final static int STATUS_INTERVAL = 15000; /*
 						      ** Should be less than
 						      ** Chat.STATUS_WINDOW.
@@ -400,26 +402,6 @@ public class Kernel
 	    }, 1500, CHAT_TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
-	if(m_congestionScheduler == null)
-	{
-	    m_congestionScheduler = Executors.
-		newSingleThreadScheduledExecutor();
-	    m_congestionScheduler.scheduleAtFixedRate(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    try
-		    {
-			s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		}
-	    }, 1500, CONGESTION_INTERVAL, TimeUnit.MILLISECONDS);
-	}
-
 	if(m_messagesToSendScheduler == null)
 	{
 	    m_messagesToSendScheduler = Executors.
@@ -688,6 +670,28 @@ public class Kernel
 		    }
 		}
 	    }, 1500, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_purgeScheduler == null)
+	{
+	    m_purgeScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_purgeScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
+			s_databaseHelper.purgeParticipantsKeyStreams
+			    (PARTICIPANTS_KEYSTREAMS_LIFETIME);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 1500, PURGE_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_statusScheduler == null)
