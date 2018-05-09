@@ -57,4 +57,7 @@
     <string name="clear_log">Clear Log</string>
     <string name="generate">Generate</string>
     <string name="auto_fill">Auto Fill</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
