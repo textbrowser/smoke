@@ -1056,7 +1056,6 @@ public class Chat extends AppCompatActivity
 
 	final String sipHashId = Miscellaneous.delimitString
 	    (item.getTitle().toString().replace("Custom Session ", "").
-	     replace("New Window ", "").
 	     replace("Optional Signatures ", "").
 	     replace("Purge Session ", "").replace("(", "").replace(")", "").
 	     replace("-", ""), ':', 2).toLowerCase();
@@ -1107,9 +1106,7 @@ public class Chat extends AppCompatActivity
 
 			    State.getInstance().removeKey("chat_secret_input");
 			    break;
-			case 1: // New Window
-			    break;
-			case 3: // Purge Session
+			case 2: // Purge Session
 			    if(State.getInstance().getString("dialog_accepted").
 			       equals("true"))
 				if(m_databaseHelper.
@@ -1136,8 +1133,6 @@ public class Chat extends AppCompatActivity
 		     "Secret");
 		break;
 	    case 1:
-		break;
-	    case 2:
 		item.setChecked(!item.isChecked());
 
 		String string = m_databaseHelper.
@@ -1175,7 +1170,7 @@ public class Chat extends AppCompatActivity
 		m_databaseHelper.writeParticipantOptions
 		    (s_cryptography, string, sipHashId);
 		break;
-	    case 3:
+	    case 2:
 		Miscellaneous.showPromptDialog
 		    (Chat.this,
 		     listener,
@@ -1243,17 +1238,8 @@ public class Chat extends AppCompatActivity
 		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")");
-	    menu.add
-		(1,
-		 v.getId(),
-		 0,
-		 "New Window (" +
-		 Miscellaneous.
-		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
-		 toUpperCase() +
-		 ")");
 	    item = menu.add
-		(2,
+		(1,
 		 v.getId(),
 		 0,
 		 "Optional Signatures (" +
@@ -1266,7 +1252,7 @@ public class Chat extends AppCompatActivity
 		 readParticipantOptions(s_cryptography, v.getTag().toString()).
 		 contains("optional_signatures = true"));
 	    menu.add
-		(3,
+		(2,
 		 v.getId(),
 		 0,
 		 "Purge Session (" +
