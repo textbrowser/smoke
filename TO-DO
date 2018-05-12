@@ -204,3 +204,6 @@ Remaining Items
 3.     Retain password for re-authentication upon background activity. Optional.
 4.     Receiving requested keys which do not include signatures should be functional.
 5.     Separation of Fire channels.
+6.     Steam and Vapor.
+7.     Steam should offer a caching mechanism, transforming Smoke into
+       a data replicator.
