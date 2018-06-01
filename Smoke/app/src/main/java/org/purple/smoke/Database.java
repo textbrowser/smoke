@@ -3024,6 +3024,27 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	/*
+	** Create the participants_messages table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS participants_messages (" +
+	    "attachment BLOB NOT NULL, " +
+	    "from_smokestack TEXT NOT NULL, " +
+	    "message TEXT NOT NULL, " +
+	    "siphash_id_digest TEXT NOT NULL, " +
+	    "timestamp TEXT NOT NULL, " +
+	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
+	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE)";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	/*
 	** Create the settings table.
 	*/
 
@@ -3157,6 +3178,7 @@ public class Database extends SQLiteOpenHelper
 	    m_db.delete("outbound_queue", null, null);
 	    m_db.delete("participants", null, null);
 	    m_db.delete("participants_keys", null, null);
+	    m_db.delete("participants_messages", null, null);
 	    m_db.delete("settings", null, null);
 	    m_db.delete("siphash_ids", null, null);
 	    m_db.setTransactionSuccessful();
@@ -3185,6 +3207,7 @@ public class Database extends SQLiteOpenHelper
 	     "DROP TABLE IF EXISTS outbound_queue",
 	     "DROP TABLE IF EXISTS participants",
 	     "DROP TABLE IF EXISTS participants_keys",
+	     "DROP TABLE IF EXISTS participants_messages",
 	     "DROP TABLE IF EXISTS settings",
 	     "DROP TABLE IF EXISTS siphash_ids"};
 
