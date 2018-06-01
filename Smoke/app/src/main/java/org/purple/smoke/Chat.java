@@ -566,7 +566,7 @@ public class Chat extends AppCompatActivity
 
 	    checkBox1.setTag(participantElement.m_sipHashId);
 	    checkBox1.setText(stringBuilder);
-	    checkBox1.setTextColor(Color.rgb(255, 255, 255));
+	    checkBox1.setTextColor(Color.BLACK);
 	    checkBox1.setTextSize(CHECKBOX_TEXT_SIZE);
 
 	    TableRow row = new TableRow(Chat.this);
@@ -1017,9 +1017,6 @@ public class Chat extends AppCompatActivity
 
 	if(State.getInstance().isAuthenticated())
 	    populateParticipants();
-
-	findViewById(R.id.view).setBackgroundColor
-	    (Color.rgb(108, 121, 137));
 
 	/*
 	** Preparse some event listeners.
