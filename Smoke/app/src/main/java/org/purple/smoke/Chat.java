@@ -786,6 +786,16 @@ public class Chat extends AppCompatActivity
 	});
     }
 
+    private void showMemberChatActivity(String sipHashId)
+    {
+	saveState();
+
+	Intent intent = new Intent(Chat.this, MemberChat.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -1105,6 +1115,9 @@ public class Chat extends AppCompatActivity
 		     "Secret");
 		break;
 	    case 1:
+		showMemberChatActivity
+		    (item.getTitle().toString().replace("New Window (", "").
+		     replace(")", ""));
 		break;
 	    case 2:
 		item.setChecked(!item.isChecked());
