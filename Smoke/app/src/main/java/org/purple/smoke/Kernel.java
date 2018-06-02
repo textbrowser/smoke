@@ -439,6 +439,8 @@ public class Kernel
 			    switch(messageElement.m_messageType)
 			    {
 			    case MessageElement.CHAT_MESSAGE_TYPE:
+				long timestamp = System.currentTimeMillis();
+
 				bytes = Messages.chatMessage
 				    (s_cryptography,
 				     messageElement.m_message,
@@ -449,7 +451,14 @@ public class Kernel
 				     messageElement.m_keyStream,
 				     State.getInstance().
 				     chatSequence(messageElement.m_id),
-				     System.currentTimeMillis());
+				     timestamp);
+				s_databaseHelper.writeParticipantMessage
+				    (s_cryptography,
+				     "local",
+				     messageElement.m_message,
+				     messageElement.m_id,
+				     String.valueOf(timestamp),
+				     null);
 				break;
 			    case MessageElement.FIRE_MESSAGE_TYPE:
 				bytes = Messages.fireMessage
