@@ -3545,6 +3545,66 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void writeParticipantMessage(Cryptography cryptography,
+					String fromSmokeStack,
+					String message,
+					String sipHashId,
+					String timestamp,
+					byte attachment[])
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    if(attachment == null)
+		values.put
+		    ("attachment",
+		     Base64.encodeToString(cryptography.etm(new byte[] {0}),
+					   Base64.DEFAULT));
+	    else
+		values.put
+		    ("attachment",
+		     Base64.encodeToString(cryptography.etm(attachment),
+					   Base64.DEFAULT));
+
+	    values.put
+		("from_smokestack",
+		 Base64.encodeToString(cryptography.etm(fromSmokeStack.
+							getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("message",
+		 Base64.encodeToString(cryptography.etm(message.getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("siphash_id_digest",
+		 Base64.encodeToString(cryptography.
+				       hmac(sipHashId.toLowerCase().
+					    trim().getBytes("UTF-8")),
+				       Base64.DEFAULT));
+	    values.put
+		("timestamp",
+		 Base64.encodeToString(cryptography.etm(timestamp.getBytes()),
+				       Base64.DEFAULT));
+	    m_db.insert("participants_messages", null, values);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void writeParticipantOptions(Cryptography cryptography,
 					String options,
 					String sipHashId)

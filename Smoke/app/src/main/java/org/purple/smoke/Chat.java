@@ -182,6 +182,14 @@ public class Chat extends AppCompatActivity
 	boolean purple =
 	    Math.abs(System.currentTimeMillis() - timestamp) > CHAT_WINDOW;
 
+	m_databaseHelper.writeParticipantMessage
+	    (s_cryptography,
+	     purple ? "true" : "false",
+	     message,
+	     sipHashId,
+	     String.valueOf(timestamp),
+	     null);
+
 	if(purple)
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
@@ -270,39 +278,6 @@ public class Chat extends AppCompatActivity
 	    catch(Exception e)
 	    {
 	    }
-
-	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
-
-	textView2.post(new Runnable()
-	{
-	    @Override
-	    public void run()
-	    {
-		textView2.requestFocus();
-	    }
-	});
-    }
-
-    private void appendMessage(String message,
-			       int color)
-    {
-	StringBuilder stringBuilder = new StringBuilder();
-	TextView textView1 = (TextView) findViewById(R.id.chat_messages);
-
-	stringBuilder.append("[");
-	stringBuilder.append(m_simpleDateFormat.format(new Date()));
-	stringBuilder.append("] ");
-	stringBuilder.append(message);
-	stringBuilder.append("\n\n");
-
-	Spannable spannable = new SpannableStringBuilder
-	    (stringBuilder.toString());
-
-	spannable.setSpan
-	    (new ForegroundColorSpan(color),
-	     0, stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	textView1.append(spannable);
-	scrollMessagesView();
 
 	final TextView textView2 = (TextView) findViewById(R.id.chat_message);
 
