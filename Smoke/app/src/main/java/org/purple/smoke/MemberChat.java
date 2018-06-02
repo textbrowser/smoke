@@ -35,14 +35,21 @@ import android.view.MenuItem;
 
 public class MemberChat extends AppCompatActivity
 {
-    private Database m_databaseHelper = null;
-
+    private Database m_databaseHelper = Database.getInstance();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
 
     private void showChatActivity()
     {
 	Intent intent = new Intent(MemberChat.this, Chat.class);
+
+	startActivity(intent);
+	finish();
+    }
+
+    private void showFireActivity()
+    {
+	Intent intent = new Intent(MemberChat.this, Fire.class);
 
 	startActivity(intent);
 	finish();
@@ -66,12 +73,46 @@ public class MemberChat extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+	getMenuInflater().inflate(R.menu.member_chat_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+	int id = item.getItemId();
+
+	if(id == R.id.action_chat)
+	{
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+
+	    Intent intent = new Intent(MemberChat.this, Chat.class);
+
+            startActivity(intent);
+	    finish();
+	    return true;
+	}
+	else if(id == R.id.action_fire)
+	{
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+
+	    Intent intent = new Intent(MemberChat.this, Fire.class);
+
+            startActivity(intent);
+	    finish();
+	    return true;
+	}
+	else if(id == R.id.action_settings)
+	{
+	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+
+            Intent intent = new Intent(MemberChat.this, Settings.class);
+
+            startActivity(intent);
+	    finish();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -84,6 +125,16 @@ public class MemberChat extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
+	boolean isAuthenticated = State.getInstance().isAuthenticated();
+
+	if(!m_databaseHelper.accountPrepared())
+	    /*
+	    ** The database may have been modified or removed.
+	    */
+
+	    isAuthenticated = true;
+
+	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	return true;
     }
 

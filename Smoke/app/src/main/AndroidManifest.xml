@@ -22,9 +22,9 @@
         <activity
             android:name=".Fire"
             android:noHistory="true" />
-	<activity
-	    android:name=".MemberChat"
-	    android.noHistory="true" />
+        <activity
+            android:name=".MemberChat"
+            android:noHistory="true" />
         <activity
             android:name=".Settings"
             android:label="@string/app_name"
