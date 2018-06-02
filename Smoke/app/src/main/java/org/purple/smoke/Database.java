@@ -3031,10 +3031,12 @@ public class Database extends SQLiteOpenHelper
 	    "attachment BLOB NOT NULL, " +
 	    "from_smokestack TEXT NOT NULL, " +
 	    "message TEXT NOT NULL, " +
+	    "message_digest TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "timestamp TEXT NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
-	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE)";
+	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
+	    "PRIMARY KEY (message_digest, siphash_id_digest))";
 
 	try
 	{
@@ -3582,6 +3584,13 @@ public class Database extends SQLiteOpenHelper
 	    values.put
 		("message",
 		 Base64.encodeToString(cryptography.etm(message.getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("message_digest",
+		 Base64.encodeToString(cryptography.
+				       hmac((message +
+					     sipHashId +
+					     timestamp).getBytes()),
 				       Base64.DEFAULT));
 	    values.put
 		("siphash_id_digest",
