@@ -32,12 +32,45 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import java.util.ArrayList;
 
 public class MemberChat extends AppCompatActivity
 {
     private Database m_databaseHelper = Database.getInstance();
+    private String m_sipHashId = "";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+
+    private void populate()
+    {
+	ArrayList<MemberChatElement> arrayList = m_databaseHelper.
+	    readMemberChats(s_cryptography, m_sipHashId);
+
+	if(arrayList == null || arrayList.size() == 0)
+	    return;
+
+	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.messages);
+	int i = 0;
+
+	for(MemberChatElement memberChatElement : arrayList)
+	{
+	    if(memberChatElement == null)
+		continue;
+
+	    CheckBox checkBox1 = new CheckBox(MemberChat.this);
+
+	    checkBox1.setId(memberChatElement.m_oid);
+	    checkBox1.setTag(m_sipHashId);
+	    checkBox1.setText(memberChatElement.m_message);
+	    viewGroup.addView(checkBox1, i);
+	    viewGroup.requestLayout();
+	    i += 1;
+	}
+
+	arrayList.clear();
+    }
 
     private void showChatActivity()
     {
@@ -68,6 +101,8 @@ public class MemberChat extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_chat);
+	m_sipHashId = State.getInstance().getString("member_chat_siphash_id");
+	populate();
     }
 
     @Override

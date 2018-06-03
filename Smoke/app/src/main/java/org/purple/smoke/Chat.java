@@ -1039,6 +1039,7 @@ public class Chat extends AppCompatActivity
 
 	final String sipHashId = Miscellaneous.delimitString
 	    (item.getTitle().toString().replace("Custom Session ", "").
+	     replace("New Window ", "").
 	     replace("Optional Signatures ", "").
 	     replace("Purge Session ", "").replace("(", "").replace(")", "").
 	     replace("-", ""), ':', 2).toLowerCase();
@@ -1116,9 +1117,7 @@ public class Chat extends AppCompatActivity
 		     "Secret");
 		break;
 	    case 1:
-		showMemberChatActivity
-		    (item.getTitle().toString().replace("New Window (", "").
-		     replace(")", ""));
+		showMemberChatActivity(sipHashId);
 		break;
 	    case 2:
 		item.setChecked(!item.isChecked());
