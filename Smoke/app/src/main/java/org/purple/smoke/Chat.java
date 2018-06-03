@@ -788,6 +788,7 @@ public class Chat extends AppCompatActivity
 
     private void showMemberChatActivity(String sipHashId)
     {
+	State.getInstance().setString("member_chat_siphash_id", sipHashId);
 	saveState();
 
 	Intent intent = new Intent(Chat.this, MemberChat.class);
