@@ -28,8 +28,11 @@
 package org.purple.smoke;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -61,6 +64,11 @@ public class MemberChat extends AppCompatActivity
 
 	    CheckBox checkBox1 = new CheckBox(MemberChat.this);
 
+	    /*
+	    ** Hide the check box.
+	    */
+
+	    checkBox1.setButtonDrawable(new ColorDrawable(Color.TRANSPARENT));
 	    checkBox1.setId(memberChatElement.m_oid);
 	    checkBox1.setTag(m_sipHashId);
 	    checkBox1.setText(memberChatElement.m_message);
@@ -101,6 +109,7 @@ public class MemberChat extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_chat);
+	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 	m_sipHashId = State.getInstance().getString("member_chat_siphash_id");
 	populate();
     }
