@@ -37,12 +37,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MemberChat extends AppCompatActivity
 {
     private Database m_databaseHelper = Database.getInstance();
-    private String m_sipHashId = "";
+    private String m_name = "00:00:00:00:00:00:00:00";
+    private String m_sipHashId = "00:00:00:00:00:00:00:00";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
 
@@ -54,6 +56,7 @@ public class MemberChat extends AppCompatActivity
 	if(arrayList == null || arrayList.size() == 0)
 	    return;
 
+	StringBuilder stringBuilder = new StringBuilder();
 	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.messages);
 	int i = 0;
 
@@ -62,16 +65,31 @@ public class MemberChat extends AppCompatActivity
 	    if(memberChatElement == null)
 		continue;
 
+	    stringBuilder.setLength(0);
+
 	    CheckBox checkBox1 = new CheckBox(MemberChat.this);
 
-	    /*
-	    ** Hide the check box.
-	    */
+	    if(memberChatElement.m_fromSmokeStack.equals("local"))
+	    {
+		checkBox1.setBackgroundColor(Color.parseColor("#cdc9c9"));
+		stringBuilder.append("me\n");
+	    }
+	    else if(memberChatElement.m_fromSmokeStack.equals("true"))
+		checkBox1.setBackgroundColor(Color.rgb(144, 202, 249));
+	    else
+	    {
+		checkBox1.setBackgroundColor(Color.parseColor("#b0c4de"));
+		stringBuilder.append(m_name.substring(0, 1) + "\n");
+	    }
 
-	    checkBox1.setButtonDrawable(new ColorDrawable(Color.TRANSPARENT));
+	    stringBuilder.append(memberChatElement.m_message);
+	    checkBox1.setButtonDrawable
+		(new ColorDrawable(Color.TRANSPARENT)); /*
+							** Hide the check box.
+							*/
 	    checkBox1.setId(memberChatElement.m_oid);
 	    checkBox1.setTag(m_sipHashId);
-	    checkBox1.setText(memberChatElement.m_message);
+	    checkBox1.setText(stringBuilder);
 	    viewGroup.addView(checkBox1, i);
 	    viewGroup.requestLayout();
 	    i += 1;
@@ -110,7 +128,34 @@ public class MemberChat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-	m_sipHashId = State.getInstance().getString("member_chat_siphash_id");
+	m_name = m_sipHashId = State.getInstance().getString
+	    ("member_chat_siphash_id");
+
+	if(m_sipHashId.isEmpty())
+	    m_name = m_sipHashId = "00:00:00:00:00:00:00:00";
+
+	/*
+	** Prepare various widgets.
+	*/
+
+	m_name = m_databaseHelper.nameFromSipHashId
+	    (s_cryptography, m_sipHashId);
+
+	if(m_name.isEmpty())
+	    m_name = m_sipHashId;
+
+	TextView textView1 = (TextView) findViewById(R.id.banner);
+
+	textView1.setText(m_name +
+			  "@" +
+			  Miscellaneous.
+			  delimitString(m_sipHashId.replace(":", ""), '-', 4).
+			  toUpperCase());
+
+	/*
+	** Populate the view.
+	*/
+
 	populate();
     }
 
