@@ -31,6 +31,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 public class ChatBubble extends View
 {
@@ -50,19 +51,32 @@ public class ChatBubble extends View
 	m_context = context;
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
+	view();
     }
 
     public View view()
     {
 	if(m_view == null)
-	{
 	    m_view = m_inflater.inflate(R.layout.chat_bubble, null);
-	}
 
 	return m_view;
     }
 
-    public void setText(String text)
+    public void setTextLeft(String text)
     {
+	TextView textView = (TextView) m_view.findViewById(R.id.text_left);
+
+	textView.setText(text);
+	textView = (TextView) m_view.findViewById(R.id.text_right);
+	textView.setVisibility(View.INVISIBLE);
+    }
+
+    public void setTextRight(String text)
+    {
+	TextView textView = (TextView) m_view.findViewById(R.id.text_left);
+
+	textView.setVisibility(View.INVISIBLE);
+	textView = (TextView) m_view.findViewById(R.id.text_right);
+	textView.setText(text);
     }
 }

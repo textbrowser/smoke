@@ -9,17 +9,22 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0" />
-
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/text_left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:background="#cdc9c9" />
+
+        <TextView
+            android:id="@+id/text_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="#b0c4de" />
     </LinearLayout>
 
 </FrameLayout>

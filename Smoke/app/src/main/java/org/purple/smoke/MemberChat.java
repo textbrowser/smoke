@@ -28,8 +28,6 @@
 package org.purple.smoke;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -68,24 +66,24 @@ public class MemberChat extends AppCompatActivity
 	    stringBuilder.setLength(0);
 
 	    ChatBubble chatBubble = new ChatBubble(MemberChat.this);
+	    boolean local = false;
 
 	    if(memberChatElement.m_fromSmokeStack.equals("local"))
 	    {
-		chatBubble.setBackgroundColor(Color.parseColor("#cdc9c9"));
+		local = true;
 		stringBuilder.append("me\n");
-	    }
-	    else if(memberChatElement.m_fromSmokeStack.equals("true"))
-		chatBubble.setBackgroundColor(Color.rgb(144, 202, 249));
-	    else
-	    {
-		chatBubble.setBackgroundColor(Color.parseColor("#b0c4de"));
-		stringBuilder.append(m_name.substring(0, 1) + "\n");
 	    }
 
 	    stringBuilder.append(memberChatElement.m_message);
+	    stringBuilder.append("\n");
 	    chatBubble.setId(memberChatElement.m_oid);
 	    chatBubble.setTag(m_sipHashId);
-	    chatBubble.setText(stringBuilder.toString());
+
+	    if(!local)
+		chatBubble.setTextLeft(stringBuilder.toString());
+	    else
+		chatBubble.setTextRight(stringBuilder.toString());
+
 	    viewGroup.addView(chatBubble.view(), i);
 	    viewGroup.requestLayout();
 	    i += 1;
