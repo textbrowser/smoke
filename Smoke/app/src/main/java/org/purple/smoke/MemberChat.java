@@ -67,30 +67,26 @@ public class MemberChat extends AppCompatActivity
 
 	    stringBuilder.setLength(0);
 
-	    CheckBox checkBox1 = new CheckBox(MemberChat.this);
+	    ChatBubble chatBubble = new ChatBubble(MemberChat.this);
 
 	    if(memberChatElement.m_fromSmokeStack.equals("local"))
 	    {
-		checkBox1.setBackgroundColor(Color.parseColor("#cdc9c9"));
+		chatBubble.setBackgroundColor(Color.parseColor("#cdc9c9"));
 		stringBuilder.append("me\n");
 	    }
 	    else if(memberChatElement.m_fromSmokeStack.equals("true"))
-		checkBox1.setBackgroundColor(Color.rgb(144, 202, 249));
+		chatBubble.setBackgroundColor(Color.rgb(144, 202, 249));
 	    else
 	    {
-		checkBox1.setBackgroundColor(Color.parseColor("#b0c4de"));
+		chatBubble.setBackgroundColor(Color.parseColor("#b0c4de"));
 		stringBuilder.append(m_name.substring(0, 1) + "\n");
 	    }
 
 	    stringBuilder.append(memberChatElement.m_message);
-	    checkBox1.setButtonDrawable
-		(new ColorDrawable(Color.TRANSPARENT)); /*
-							** Hide the check box.
-							*/
-	    checkBox1.setId(memberChatElement.m_oid);
-	    checkBox1.setTag(m_sipHashId);
-	    checkBox1.setText(stringBuilder);
-	    viewGroup.addView(checkBox1, i);
+	    chatBubble.setId(memberChatElement.m_oid);
+	    chatBubble.setTag(m_sipHashId);
+	    chatBubble.setText(stringBuilder.toString());
+	    viewGroup.addView(chatBubble.view(), i);
 	    viewGroup.requestLayout();
 	    i += 1;
 	}
