@@ -14,8 +14,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:background="#cdc9c9" />
+            android:background="@drawable/bubble_left_text" />
 
         <TextView
             android:id="@+id/text_right"
@@ -23,8 +24,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:background="#b0c4de" />
+            android:background="@drawable/bubble_right_text" />
     </LinearLayout>
 
 </FrameLayout>

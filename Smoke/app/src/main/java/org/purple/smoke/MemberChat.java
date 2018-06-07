@@ -69,10 +69,7 @@ public class MemberChat extends AppCompatActivity
 	    boolean local = false;
 
 	    if(memberChatElement.m_fromSmokeStack.equals("local"))
-	    {
 		local = true;
-		stringBuilder.append("me\n");
-	    }
 
 	    stringBuilder.append(memberChatElement.m_message);
 	    stringBuilder.append("\n");
