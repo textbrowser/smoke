@@ -72,6 +72,7 @@
         android:layout_alignEnd="@+id/banner"
         android:layout_alignTop="@+id/banner"
         android:layout_below="@+id/banner"
+        android:layout_marginEnd="5dp"
         app:srcCompat="@drawable/chat_status_offline" />
 
 </RelativeLayout>

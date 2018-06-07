@@ -155,6 +155,7 @@ Completed Items
 118.   Calling via multiple neighbors is chaotic.
 119.   Remove expired private keystreams.
 120.   Network status in Member Chat.
+121.   Member status in Member Chat.
 
 Future Items
 
@@ -210,5 +211,6 @@ Remaining Items
        a data replicator.
 8.     Individual member pages.
 9.     Elongate messages in Member Chat.
-10.    Member status in Member Chat.
-11.    Retrieve Member Chat data in a thread.
+10.    Retrieve Member Chat data in a thread.
+11.    Retrieve a subset of message data in Member Chat. New data via scroll.
+12.    Last activity and Member Chat. Restore.

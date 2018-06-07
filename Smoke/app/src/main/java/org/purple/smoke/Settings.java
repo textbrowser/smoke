@@ -613,7 +613,7 @@ public class Settings extends AppCompatActivity
 	final TableLayout tableLayout = (TableLayout)
 	    findViewById(R.id.neighbors);
 
-	if(arrayList == null || arrayList.size() == 0)
+	if(arrayList == null || arrayList.isEmpty())
 	{
 	    tableLayout.removeAllViews();
 	    return;
@@ -985,7 +985,7 @@ public class Settings extends AppCompatActivity
 
 	tableLayout.removeAllViews();
 
-	if(arrayList == null || arrayList.size() == 0)
+	if(arrayList == null || arrayList.isEmpty())
 	    return;
 
 	int i = 0;

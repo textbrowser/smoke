@@ -35,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -45,11 +46,13 @@ public class MemberChat extends AppCompatActivity
 {
     private Database m_databaseHelper = Database.getInstance();
     private ScheduledExecutorService m_connectionStatusScheduler = null;
+    private ScheduledExecutorService m_statusScheduler = null;
     private String m_name = "00:00:00:00:00:00:00:00";
     private String m_sipHashId = "00:00:00:00:00:00:00:00";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
+    private final static int STATUS_INTERVAL = 30000; // 30 Seconds
 
     private void populate()
     {
@@ -138,6 +141,59 @@ public class MemberChat extends AppCompatActivity
 		    }
 		}
 	    }, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_statusScheduler == null)
+	{
+	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    ArrayList<ParticipantElement> arrayList =
+			m_databaseHelper.readParticipants
+			(s_cryptography, m_sipHashId);
+
+		    if(arrayList == null || arrayList.isEmpty())
+			return;
+
+		    final ParticipantElement participantElement =
+			arrayList.get(0);
+
+		    try
+		    {
+			MemberChat.this.runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				ImageView imageView = (ImageView)
+				    findViewById(R.id.status);
+
+				if(participantElement.m_keyStream == null ||
+				   participantElement.m_keyStream.length != 96)
+				    imageView.setImageResource
+					(R.drawable.chat_faulty_session);
+				else if(Math.abs(System.currentTimeMillis() -
+						 participantElement.
+						 m_lastStatusTimestamp) >
+					Chat.STATUS_WINDOW)
+				    imageView.setImageResource
+					(R.drawable.chat_status_offline);
+				else
+				    imageView.setImageResource
+					(R.drawable.chat_status_online);
+			    }
+			});
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+
+		    arrayList.clear();
+		}
+	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 

@@ -720,7 +720,7 @@ public class Kernel
 			    s_databaseHelper.
 			    readParticipants(s_cryptography, "");
 
-			if(arrayList == null || arrayList.size() == 0)
+			if(arrayList == null || arrayList.isEmpty())
 			    return;
 
 			for(ParticipantElement participantElement : arrayList)
@@ -800,7 +800,7 @@ public class Kernel
 	ArrayList<NeighborElement> neighbors =
 	    s_databaseHelper.readNeighbors(s_cryptography);
 
-	if(neighbors == null || neighbors.size() == 0)
+	if(neighbors == null || neighbors.isEmpty())
 	{
 	    purge();
 	    return neighbors;
@@ -914,7 +914,7 @@ public class Kernel
 	ArrayList<NeighborElement> arrayList =
 	    s_databaseHelper.readNeighborOids(s_cryptography);
 
-	if(arrayList == null || arrayList.size() == 0)
+	if(arrayList == null || arrayList.isEmpty())
 	    return false;
 
 	for(int i = 0; i < arrayList.size(); i++)

@@ -377,7 +377,7 @@ public class Chat extends AppCompatActivity
 	ArrayList<MessageElement> arrayList = State.getInstance().
 	    chatLog();
 
-	if(arrayList == null || arrayList.size() == 0)
+	if(arrayList == null || arrayList.isEmpty())
 	    return;
 
 	for(MessageElement messageElement : arrayList)
@@ -409,7 +409,7 @@ public class Chat extends AppCompatActivity
 	button1.setEnabled(false);
 	button2.setEnabled(false);
 
-	if(arrayList == null || arrayList.size() == 0)
+	if(arrayList == null || arrayList.isEmpty())
 	{
 	    tableLayout.removeAllViews();
 	    return;
@@ -648,7 +648,7 @@ public class Chat extends AppCompatActivity
 	ArrayList<ParticipantElement> arrayList =
 	    m_databaseHelper.readParticipants(s_cryptography, sipHashId);
 
-	if(arrayList == null || arrayList.size() == 0)
+	if(arrayList == null || arrayList.isEmpty())
 	    return;
 
 	ParticipantElement participantElement = arrayList.get(0);
@@ -851,7 +851,7 @@ public class Chat extends AppCompatActivity
 		    ArrayList<String> arrayList =
 			m_databaseHelper.readSipHashIdStrings(s_cryptography);
 
-		    if(arrayList == null || arrayList.size() == 0)
+		    if(arrayList == null || arrayList.isEmpty())
 			return;
 
 		    for(String string : arrayList)

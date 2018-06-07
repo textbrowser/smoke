@@ -206,7 +206,7 @@ public class Fire extends AppCompatActivity
 	m_fireHash.clear();
 	spinner.setAdapter(null);
 
-	if(arrayList == null || arrayList.size() == 0)
+	if(arrayList == null || arrayList.isEmpty())
 	    return;
 
 	ArrayList<String> array = new ArrayList<>();

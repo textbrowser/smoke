@@ -17,6 +17,8 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:background="@drawable/bubble_left_text"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -28,6 +30,8 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:background="@drawable/bubble_right_text"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
