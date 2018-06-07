@@ -182,14 +182,6 @@ public class Chat extends AppCompatActivity
 	boolean purple =
 	    Math.abs(System.currentTimeMillis() - timestamp) > CHAT_WINDOW;
 
-	m_databaseHelper.writeParticipantMessage
-	    (s_cryptography,
-	     purple ? "true" : "false",
-	     message,
-	     sipHashId,
-	     String.valueOf(timestamp),
-	     null);
-
 	if(purple)
 	{
 	    StringBuilder stringBuilder = new StringBuilder();

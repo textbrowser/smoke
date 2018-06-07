@@ -64,4 +64,14 @@
             android:orientation="vertical"></LinearLayout>
     </ScrollView>
 
+    <ImageView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_scrollview"
+        android:layout_alignEnd="@+id/banner"
+        android:layout_alignTop="@+id/banner"
+        android:layout_below="@+id/banner"
+        app:srcCompat="@drawable/chat_status_offline" />
+
 </RelativeLayout>

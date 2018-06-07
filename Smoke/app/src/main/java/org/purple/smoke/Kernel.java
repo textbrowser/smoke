@@ -1528,6 +1528,18 @@ public class Kernel
 		if(s_databaseHelper.writeCongestionDigest(value))
 		    return 1;
 
+		boolean purple =
+		    Math.abs(System.currentTimeMillis() - timestamp) >
+		    Chat.CHAT_WINDOW;
+
+		s_databaseHelper.writeParticipantMessage
+		    (s_cryptography,
+		     purple ? "true" : "false",
+		     message,
+		     strings[1],
+		     String.valueOf(timestamp),
+		     null);
+
 		Intent intent = new Intent
 		    ("org.purple.smoke.chat_message");
 
