@@ -208,3 +208,7 @@ Remaining Items
 7.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
 8.     Individual member pages.
+9.     Elongate messages in Member Chat.
+10.    Member status in Member Chat.
+11.    Network status in Member Chat.
+12.    Retrieve Member Chat data in a thread.
