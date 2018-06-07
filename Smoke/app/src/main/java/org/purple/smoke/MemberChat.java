@@ -34,17 +34,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MemberChat extends AppCompatActivity
 {
     private Database m_databaseHelper = Database.getInstance();
+    private ScheduledExecutorService m_connectionStatusScheduler = null;
     private String m_name = "00:00:00:00:00:00:00:00";
     private String m_sipHashId = "00:00:00:00:00:00:00:00";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
 
     private void populate()
     {
@@ -88,6 +93,52 @@ public class MemberChat extends AppCompatActivity
 	}
 
 	arrayList.clear();
+    }
+
+    private void prepareSchedulers()
+    {
+	if(m_connectionStatusScheduler == null)
+	{
+	    m_connectionStatusScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			if(Thread.currentThread().isInterrupted())
+			    return;
+
+			final boolean state = Kernel.getInstance().
+			    isConnected();
+
+			MemberChat.this.runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				Button button1 = (Button) findViewById
+				    (R.id.send_chat_message);
+
+				if(state)
+				    button1.
+					setCompoundDrawablesWithIntrinsicBounds
+					(R.drawable.network_up, 0, 0, 0);
+				else
+				    button1.
+					setCompoundDrawablesWithIntrinsicBounds
+					(R.drawable.network_down, 0, 0, 0);
+			    }
+			});
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
     }
 
     private void showChatActivity()
@@ -149,6 +200,12 @@ public class MemberChat extends AppCompatActivity
 	*/
 
 	populate();
+
+	/*
+	** Prepare schedulers.
+	*/
+
+	prepareSchedulers();
     }
 
     @Override
