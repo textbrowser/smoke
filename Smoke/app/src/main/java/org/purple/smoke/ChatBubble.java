@@ -29,6 +29,11 @@ package org.purple.smoke;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -39,6 +44,7 @@ import java.util.Locale;
 public class ChatBubble extends View
 {
     private Context m_context = null;
+    private Date m_date = new Date(System.currentTimeMillis());
     private LayoutInflater m_inflater = null;
     private View m_view = null;
     private final SimpleDateFormat m_simpleDateFormat = new
@@ -69,17 +75,35 @@ public class ChatBubble extends View
 
     public void setDate(long timestamp)
     {
-	Date date = new Date(timestamp);
-	TextView textView = (TextView) m_view.findViewById(R.id.date);
-
-	textView.setText(m_simpleDateFormat.format(date));
+	m_date = new Date(timestamp);
     }
 
     public void setTextLeft(String text)
     {
 	TextView textView = (TextView) m_view.findViewById(R.id.text_left);
 
-	textView.setText(text);
+	{
+	    Spannable spannable = new SpannableStringBuilder(text);
+
+	    spannable.setSpan
+		(new ForegroundColorSpan(Color.parseColor("white")),
+		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    textView.append(spannable);
+	}
+
+	{
+	    Spannable spannable = new SpannableStringBuilder
+		(m_simpleDateFormat.format(m_date));
+
+	    spannable.setSpan
+		(new ForegroundColorSpan(Color.rgb(220, 220, 220)),
+		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    spannable.setSpan
+		(new RelativeSizeSpan(0.75f),
+		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    textView.append(spannable);
+	}
+
 	textView = (TextView) m_view.findViewById(R.id.text_right);
 	textView.setVisibility(View.INVISIBLE);
     }
@@ -90,6 +114,27 @@ public class ChatBubble extends View
 
 	textView.setVisibility(View.INVISIBLE);
 	textView = (TextView) m_view.findViewById(R.id.text_right);
-	textView.setText(text);
+
+	{
+	    Spannable spannable = new SpannableStringBuilder(text);
+
+	    spannable.setSpan
+		(new ForegroundColorSpan(Color.parseColor("white")),
+		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    textView.append(spannable);
+	}
+
+	{
+	    Spannable spannable = new SpannableStringBuilder
+		(m_simpleDateFormat.format(m_date));
+
+	    spannable.setSpan
+		(new ForegroundColorSpan(Color.rgb(220, 220, 220)),
+		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    spannable.setSpan
+		(new RelativeSizeSpan(0.75f),
+		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    textView.append(spannable);
+	}
     }
 }
