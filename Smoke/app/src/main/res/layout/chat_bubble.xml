@@ -19,6 +19,18 @@
             android:background="@drawable/bubble_left_text" />
 
         <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="12sp" />
+
+        <TextView
             android:id="@+id/text_right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

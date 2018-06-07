@@ -73,6 +73,7 @@ public class MemberChat extends AppCompatActivity
 
 	    stringBuilder.append(memberChatElement.m_message);
 	    stringBuilder.append("\n");
+	    chatBubble.setDate(memberChatElement.m_timestamp);
 	    chatBubble.setId(memberChatElement.m_oid);
 	    chatBubble.setTag(m_sipHashId);
 

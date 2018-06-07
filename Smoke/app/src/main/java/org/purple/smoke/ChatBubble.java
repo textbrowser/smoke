@@ -32,12 +32,17 @@ import android.graphics.Canvas;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class ChatBubble extends View
 {
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
     private View m_view = null;
+    private final SimpleDateFormat m_simpleDateFormat = new
+	SimpleDateFormat("yyyy-MM-dd h:mm a", Locale.getDefault());
 
     @Override
     protected void onDraw(Canvas canvas)
@@ -60,6 +65,14 @@ public class ChatBubble extends View
 	    m_view = m_inflater.inflate(R.layout.chat_bubble, null);
 
 	return m_view;
+    }
+
+    public void setDate(long timestamp)
+    {
+	Date date = new Date(timestamp);
+	TextView textView = (TextView) m_view.findViewById(R.id.date);
+
+	textView.setText(m_simpleDateFormat.format(date));
     }
 
     public void setTextLeft(String text)
