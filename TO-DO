@@ -214,3 +214,9 @@ Remaining Items
 9.     Elongate messages in Member Chat.
 10.    Retrieve Member Chat data in a thread.
 11.    Retrieve a subset of message data in Member Chat. New data via scroll.
+12.    Context menu items in Member Chat: enable deletion, delete selected,
+       select all, disable deletion.
+13.    Send messages in Member Chat.
+14.    Append new messages in Member Chat.
+15.    Notify of other member messages in Member Chat.
+16.    Rich context menu containing other members.
