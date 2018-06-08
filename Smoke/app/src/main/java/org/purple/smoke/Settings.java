@@ -2043,6 +2043,14 @@ public class Settings extends AppCompatActivity
 	finish();
     }
 
+    private void showMemberChatActivity()
+    {
+	Intent intent = new Intent(Settings.this, MemberChat.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showWidgets()
     {
 	for(int i = 0;
@@ -2580,6 +2588,8 @@ public class Settings extends AppCompatActivity
 	    showChatActivity();
 	else if(str.equals("Fire"))
 	    showFireActivity();
+	else if(str.equals("MemberChat"))
+	    showMemberChatActivity();
     }
 
     @Override

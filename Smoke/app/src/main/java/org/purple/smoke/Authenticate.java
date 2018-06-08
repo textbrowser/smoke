@@ -362,6 +362,15 @@ public class Authenticate extends AppCompatActivity
 					case "Fire":
 					    showFireActivity();
 					    break;
+					case "MemberChat":
+					    State.getInstance().setString
+						("member_chat_siphash_id",
+						 m_databaseHelper.
+						 readSetting(s_cryptography,
+							     "member_chat_" +
+							     "siphash_id"));
+					    showMemberChatActivity();
+					    break;
 					case "Settings":
 					    showSettingsActivity();
 					    break;
@@ -435,6 +444,14 @@ public class Authenticate extends AppCompatActivity
     private void showFireActivity()
     {
 	Intent intent = new Intent(Authenticate.this, Fire.class);
+
+	startActivity(intent);
+	finish();
+    }
+
+    private void showMemberChatActivity()
+    {
+	Intent intent = new Intent(Authenticate.this, MemberChat.class);
 
 	startActivity(intent);
 	finish();

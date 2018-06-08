@@ -52,7 +52,7 @@ public class MemberChat extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
-    private final static int STATUS_INTERVAL = 30000; // 30 Seconds
+    private final static int STATUS_INTERVAL = 5000; // 5 Seconds
 
     private void populate()
     {
