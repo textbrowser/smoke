@@ -86,9 +86,9 @@ public class MemberChat extends AppCompatActivity
 	    chatBubble.setTag(m_sipHashId);
 
 	    if(!local)
-		chatBubble.setTextLeft(stringBuilder.toString());
+		chatBubble.setText(stringBuilder.toString(), ChatBubble.LEFT);
 	    else
-		chatBubble.setTextRight(stringBuilder.toString());
+		chatBubble.setText(stringBuilder.toString(), ChatBubble.RIGHT);
 
 	    viewGroup.addView(chatBubble.view(), i);
 	    viewGroup.requestLayout();

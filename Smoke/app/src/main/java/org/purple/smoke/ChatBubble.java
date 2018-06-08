@@ -36,6 +36,8 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,6 +51,8 @@ public class ChatBubble extends View
     private View m_view = null;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm a", Locale.getDefault());
+    public final static int LEFT = 0;
+    public final static int RIGHT = 1;
 
     @Override
     protected void onDraw(Canvas canvas)
@@ -78,16 +82,22 @@ public class ChatBubble extends View
 	m_date = new Date(timestamp);
     }
 
-    public void setTextLeft(String text)
+    public void setText(String text, int location)
     {
-	TextView textView = (TextView) m_view.findViewById(R.id.text_left);
+	TextView textView = (TextView) m_view.findViewById(R.id.text);
 
 	{
 	    Spannable spannable = new SpannableStringBuilder(text);
 
-	    spannable.setSpan
-		(new ForegroundColorSpan(Color.parseColor("white")),
-		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    if(location == LEFT)
+		spannable.setSpan
+		    (new ForegroundColorSpan(Color.rgb(255, 255, 255)),
+		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    else
+		spannable.setSpan
+		    (new ForegroundColorSpan(Color.rgb(0, 0, 0)),
+		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
 	    textView.append(spannable);
 	}
 
@@ -95,46 +105,38 @@ public class ChatBubble extends View
 	    Spannable spannable = new SpannableStringBuilder
 		(m_simpleDateFormat.format(m_date));
 
-	    spannable.setSpan
-		(new ForegroundColorSpan(Color.rgb(220, 220, 220)),
-		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    if(location == LEFT)
+		spannable.setSpan
+		    (new ForegroundColorSpan(Color.rgb(220, 220, 220)),
+		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    else
+		spannable.setSpan
+		    (new ForegroundColorSpan(Color.rgb(128, 128, 128)),
+		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
 	    spannable.setSpan
 		(new RelativeSizeSpan(0.75f),
 		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    textView.append(spannable);
 	}
 
-	textView = (TextView) m_view.findViewById(R.id.text_right);
-	textView.setVisibility(View.INVISIBLE);
-    }
-
-    public void setTextRight(String text)
-    {
-	TextView textView = (TextView) m_view.findViewById(R.id.text_left);
-
-	textView.setVisibility(View.INVISIBLE);
-	textView = (TextView) m_view.findViewById(R.id.text_right);
-
+	if(location == LEFT)
 	{
-	    Spannable spannable = new SpannableStringBuilder(text);
+	    LinearLayout.LayoutParams layoutParams =
+		(LinearLayout.LayoutParams) textView.getLayoutParams();
 
-	    spannable.setSpan
-		(new ForegroundColorSpan(Color.parseColor("white")),
-		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    textView.append(spannable);
+	    layoutParams.setMarginEnd(250);
+	    textView.setBackgroundResource(R.drawable.bubble_left_text);
+	    textView.setLayoutParams(layoutParams);
 	}
-
+	else
 	{
-	    Spannable spannable = new SpannableStringBuilder
-		(m_simpleDateFormat.format(m_date));
+	    LinearLayout.LayoutParams layoutParams =
+		(LinearLayout.LayoutParams) textView.getLayoutParams();
 
-	    spannable.setSpan
-		(new ForegroundColorSpan(Color.rgb(220, 220, 220)),
-		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    spannable.setSpan
-		(new RelativeSizeSpan(0.75f),
-		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    textView.append(spannable);
+	    layoutParams.setMarginStart(250);
+	    textView.setBackgroundResource(R.drawable.bubble_right_text);
+	    textView.setLayoutParams(layoutParams);
 	}
     }
 }
