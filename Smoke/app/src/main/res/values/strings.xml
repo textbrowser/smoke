@@ -57,6 +57,7 @@
     <string name="clear_log">Clear Log</string>
     <string name="generate">Generate</string>
     <string name="auto_fill">Auto Fill</string>
+    <string name="network_status">Network Status</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

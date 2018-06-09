@@ -36,6 +36,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -60,20 +61,17 @@ public class ChatBubble extends View
 	super.onDraw(canvas);
     }
 
-    public ChatBubble(Context context)
+    public ChatBubble(Context context, ViewGroup viewGroup)
     {
 	super(context);
 	m_context = context;
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
-	view();
+	m_view = m_inflater.inflate(R.layout.chat_bubble, viewGroup, false);
     }
 
     public View view()
     {
-	if(m_view == null)
-	    m_view = m_inflater.inflate(R.layout.chat_bubble, null);
-
 	return m_view;
     }
 
@@ -85,6 +83,8 @@ public class ChatBubble extends View
     public void setText(String text, int location)
     {
 	TextView textView = (TextView) m_view.findViewById(R.id.text);
+
+	textView.setText("");
 
 	{
 	    Spannable spannable = new SpannableStringBuilder(text);
@@ -126,6 +126,7 @@ public class ChatBubble extends View
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
 
 	    layoutParams.setMarginEnd(250);
+	    layoutParams.setMarginStart(0);
 	    textView.setBackgroundResource(R.drawable.bubble_left_text);
 	    textView.setLayoutParams(layoutParams);
 	}
@@ -134,6 +135,7 @@ public class ChatBubble extends View
 	    LinearLayout.LayoutParams layoutParams =
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
 
+	    layoutParams.setMarginEnd(5);
 	    layoutParams.setMarginStart(250);
 	    textView.setBackgroundResource(R.drawable.bubble_right_text);
 	    textView.setLayoutParams(layoutParams);

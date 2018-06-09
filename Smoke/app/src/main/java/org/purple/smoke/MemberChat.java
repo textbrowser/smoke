@@ -30,6 +30,8 @@ package org.purple.smoke;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,9 @@ import java.util.concurrent.TimeUnit;
 public class MemberChat extends AppCompatActivity
 {
     private Database m_databaseHelper = Database.getInstance();
+    private LinearLayoutManager m_layoutManager = null;
+    private RecyclerView m_recyclerView = null;
+    private RecyclerView.Adapter m_adapter = null;
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_name = "00:00:00:00:00:00:00:00";
@@ -53,50 +58,6 @@ public class MemberChat extends AppCompatActivity
 	Cryptography.getInstance();
     private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int STATUS_INTERVAL = 5000; // 5 Seconds
-
-    private void populate()
-    {
-	ArrayList<MemberChatElement> arrayList = m_databaseHelper.
-	    readMemberChats(s_cryptography, m_sipHashId);
-
-	if(arrayList == null || arrayList.size() == 0)
-	    return;
-
-	StringBuilder stringBuilder = new StringBuilder();
-	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.messages);
-	int i = 0;
-
-	for(MemberChatElement memberChatElement : arrayList)
-	{
-	    if(memberChatElement == null)
-		continue;
-
-	    stringBuilder.setLength(0);
-
-	    ChatBubble chatBubble = new ChatBubble(MemberChat.this);
-	    boolean local = false;
-
-	    if(memberChatElement.m_fromSmokeStack.equals("local"))
-		local = true;
-
-	    stringBuilder.append(memberChatElement.m_message);
-	    stringBuilder.append("\n");
-	    chatBubble.setDate(memberChatElement.m_timestamp);
-	    chatBubble.setId(memberChatElement.m_oid);
-	    chatBubble.setTag(m_sipHashId);
-
-	    if(!local)
-		chatBubble.setText(stringBuilder.toString(), ChatBubble.LEFT);
-	    else
-		chatBubble.setText(stringBuilder.toString(), ChatBubble.RIGHT);
-
-	    viewGroup.addView(chatBubble.view(), i);
-	    viewGroup.requestLayout();
-	    i += 1;
-	}
-
-	arrayList.clear();
-    }
 
     private void prepareSchedulers()
     {
@@ -229,6 +190,8 @@ public class MemberChat extends AppCompatActivity
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 	m_name = m_sipHashId = State.getInstance().getString
 	    ("member_chat_siphash_id");
+	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+	m_recyclerView.setHasFixedSize(true);
 
 	if(m_sipHashId.isEmpty())
 	    m_name = m_sipHashId = "00:00:00:00:00:00:00:00";
@@ -237,11 +200,19 @@ public class MemberChat extends AppCompatActivity
 	** Prepare various widgets.
 	*/
 
+	m_adapter = new MemberChatAdapter
+	    (m_databaseHelper.readMemberChats(s_cryptography, m_sipHashId),
+	     m_sipHashId);
+	m_layoutManager = new LinearLayoutManager(this);
+	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_name = m_databaseHelper.nameFromSipHashId
 	    (s_cryptography, m_sipHashId);
 
 	if(m_name.isEmpty())
 	    m_name = m_sipHashId;
+
+	m_recyclerView.setAdapter(m_adapter);
+	m_recyclerView.setLayoutManager(m_layoutManager);
 
 	TextView textView1 = (TextView) findViewById(R.id.banner);
 
@@ -250,12 +221,6 @@ public class MemberChat extends AppCompatActivity
 			  Miscellaneous.
 			  delimitString(m_sipHashId.replace(":", ""), '-', 4).
 			  toUpperCase());
-
-	/*
-	** Populate the view.
-	*/
-
-	populate();
 
 	/*
 	** Prepare schedulers.
