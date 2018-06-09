@@ -1988,6 +1988,52 @@ public class Database extends SQLiteOpenHelper
 	return contains;
     }
 
+    public boolean containsParticipant(Cryptography cryptography,
+				       String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return false;
+
+	boolean contains = false;
+
+	try
+	{
+	    Cursor cursor = null;
+
+	    try
+	    {
+		cursor = m_db.rawQuery
+		    ("SELECT EXISTS(SELECT 1 " +
+		     "FROM participants WHERE " +
+		     "siphash_id_digest = ?)",
+		     new String[] {Base64.
+				   encodeToString(cryptography.
+						  hmac(sipHashId.toLowerCase().
+						       trim().
+						       getBytes("UTF-8")),
+						  Base64.DEFAULT)});
+
+		if(cursor != null && cursor.moveToFirst())
+		    contains = cursor.getInt(0) == 1;
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		if(cursor != null)
+		    cursor.close();
+	    }
+	}
+	finally
+	{
+	}
+
+	return contains;
+    }
+
     public boolean deleteEntry(String oid, String table)
     {
 	prepareDb();

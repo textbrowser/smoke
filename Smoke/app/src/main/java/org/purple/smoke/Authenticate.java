@@ -363,13 +363,28 @@ public class Authenticate extends AppCompatActivity
 					    showFireActivity();
 					    break;
 					case "MemberChat":
-					    State.getInstance().setString
-						("member_chat_siphash_id",
-						 m_databaseHelper.
-						 readSetting(s_cryptography,
-							     "member_chat_" +
-							     "siphash_id"));
-					    showMemberChatActivity();
+					    String sipHashId =
+						m_databaseHelper.
+						readSetting(s_cryptography,
+							    "member_chat_" +
+							    "siphash_id");
+
+					    if(m_databaseHelper.
+					       containsParticipant
+					       (s_cryptography,
+						sipHashId))
+					    {
+						State.getInstance().setString
+						    ("member_chat_siphash_id",
+						     sipHashId);
+						showMemberChatActivity();
+					    }
+					    else
+						m_databaseHelper.writeSetting
+						    (s_cryptography,
+						     "member_chat_siphash_id",
+						     "");
+
 					    break;
 					case "Settings":
 					    showSettingsActivity();
