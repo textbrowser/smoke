@@ -162,6 +162,7 @@ Completed Items
 125.   Retrieve a subset of message data in Member Chat. New data via scroll.
 126.   Send messages in Member Chat.
 127.   Append new messages in Member Chat.
+128.   Scroll on sending of local messages; Member Chat.
 
 Future Items
 
@@ -222,4 +223,3 @@ Remaining Items
 10.    Notify of other member messages in Member Chat.
 11.    Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
-12.    Scroll on send of Member Chat data.

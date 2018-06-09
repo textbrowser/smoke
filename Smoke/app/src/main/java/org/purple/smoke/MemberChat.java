@@ -63,7 +63,9 @@ public class MemberChat extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
+	    if(intent.getAction().
+	       equals("org.purple.smoke.chat_local_message") ||
+	       intent.getAction().equals("org.purple.smoke.chat_message"))
 		if(intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
 		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
@@ -292,7 +294,7 @@ public class MemberChat extends AppCompatActivity
 		    (int positionStart, int itemCount)
 		{
 		    m_layoutManager.smoothScrollToPosition
-			(m_recyclerView, null, m_adapter.getItemCount());
+			(m_recyclerView, null, positionStart);
 		}
 	    });
 	m_name = m_databaseHelper.nameFromSipHashId
@@ -409,6 +411,7 @@ public class MemberChat extends AppCompatActivity
 	{
 	    IntentFilter intentFilter = new IntentFilter();
 
+	    intentFilter.addAction("org.purple.smoke.chat_local_message");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);

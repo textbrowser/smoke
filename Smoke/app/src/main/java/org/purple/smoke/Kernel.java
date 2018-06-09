@@ -459,6 +459,18 @@ public class Kernel
 				     messageElement.m_id,
 				     String.valueOf(timestamp),
 				     null);
+
+				Intent intent = new Intent
+				    ("org.purple.smoke.chat_local_message");
+
+				intent.putExtra("org.purple.smoke.sipHashId",
+						messageElement.m_id);
+
+				LocalBroadcastManager localBroadcastManager =
+				    LocalBroadcastManager.getInstance
+				    (Smoke.getApplication());
+
+				localBroadcastManager.sendBroadcast(intent);
 				break;
 			    case MessageElement.FIRE_MESSAGE_TYPE:
 				bytes = Messages.fireMessage
