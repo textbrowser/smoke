@@ -2430,8 +2430,14 @@ public class Settings extends AppCompatActivity
 				{
 				    State.getInstance().
 					removeChatCheckBoxOid(itemId);
+				    State.getInstance().
+					setString
+					("member_chat_siphash_id", "");
 				    m_databaseHelper.
 					cleanDanglingParticipants();
+				    m_databaseHelper.writeSetting
+					(s_cryptography,
+					 "member_chat_siphash_id", "");
 				    populateParticipants();
 				}
 
