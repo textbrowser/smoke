@@ -163,6 +163,7 @@ Completed Items
 126.   Send messages in Member Chat.
 127.   Append new messages in Member Chat.
 128.   Scroll on sending of local messages; Member Chat.
+129.   Notify of other member messages in Member Chat.
 
 Future Items
 
@@ -220,7 +221,6 @@ Remaining Items
 8.     Rich context menu containing other members.
 9.     Context menu items in Member Chat: enable deletion, delete selected,
        select all, disable deletion.
-10.    Notify of other member messages in Member Chat.
-11.    Member Chat theme: bubble colors, bubble font colors,
+10.    Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
-12.    Record messages in Chat from Member Chat.
+11.    Record messages in Chat from Member Chat.
