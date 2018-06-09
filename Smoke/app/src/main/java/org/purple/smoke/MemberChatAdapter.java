@@ -28,7 +28,6 @@
 package org.purple.smoke;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.ViewGroup;
 import java.util.ArrayList;
 

@@ -35,7 +35,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,7 +52,7 @@ public class MemberChat extends AppCompatActivity
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_name = "00:00:00:00:00:00:00:00";
-    private String m_sipHashId = "00:00:00:00:00:00:00:00";
+    private String m_sipHashId = m_name;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int STATUS_INTERVAL = 5000; // 5 Seconds
