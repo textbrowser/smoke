@@ -161,6 +161,7 @@ Completed Items
 124.   Individual member pages.
 125.   Retrieve a subset of message data in Member Chat. New data via scroll.
 126.   Send messages in Member Chat.
+127.   Append new messages in Member Chat.
 
 Future Items
 
@@ -218,7 +219,6 @@ Remaining Items
 8.     Rich context menu containing other members.
 9.     Context menu items in Member Chat: enable deletion, delete selected,
        select all, disable deletion.
-10.    Append new messages in Member Chat.
-11.    Notify of other member messages in Member Chat.
-12.    Member Chat theme: bubble colors, bubble font colors,
+10.    Notify of other member messages in Member Chat.
+11.    Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.

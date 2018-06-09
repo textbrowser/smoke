@@ -27,8 +27,12 @@
 
 package org.purple.smoke;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,14 +51,35 @@ import java.util.concurrent.TimeUnit;
 
 public class MemberChat extends AppCompatActivity
 {
+    private class MemberChatBroadcastReceiver extends BroadcastReceiver
+    {
+	public MemberChatBroadcastReceiver()
+	{
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent)
+	{
+	    if(intent == null || intent.getAction() == null)
+		return;
+
+	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
+		if(intent.getStringExtra("org.purple.smoke.sipHashId").
+		   equals(m_sipHashId))
+		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
+	}
+    }
+
     private Database m_databaseHelper = Database.getInstance();
     private LinearLayoutManager m_layoutManager = null;
+    private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter m_adapter = null;
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_name = "00:00:00:00:00:00:00:00";
     private String m_sipHashId = m_name;
+    private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int STATUS_INTERVAL = 5000; // 5 Seconds
@@ -101,7 +126,6 @@ public class MemberChat extends AppCompatActivity
 
 		Kernel.getInstance().enqueueChatMessage
 		    (str, m_sipHashId, keyStream);
-
 		textView1.post(new Runnable()
 		{
 		    @Override
@@ -244,8 +268,11 @@ public class MemberChat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+	m_layoutManager = new LinearLayoutManager(this);
+	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_name = m_sipHashId = State.getInstance().getString
 	    ("member_chat_siphash_id");
+	m_receiver = new MemberChatBroadcastReceiver();
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 	m_recyclerView.setHasFixedSize(true);
 
@@ -257,8 +284,17 @@ public class MemberChat extends AppCompatActivity
 	*/
 
 	m_adapter = new MemberChatAdapter(m_sipHashId);
-	m_layoutManager = new LinearLayoutManager(this);
-	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+	m_adapter.registerAdapterDataObserver
+	    (new RecyclerView.AdapterDataObserver()
+	    {
+		@Override
+		public void onItemRangeInserted
+		    (int positionStart, int itemCount)
+		{
+		    m_layoutManager.smoothScrollToPosition
+			(m_recyclerView, null, m_adapter.getItemCount());
+		}
+	    });
 	m_name = m_databaseHelper.nameFromSipHashId
 	    (s_cryptography, m_sipHashId);
 
@@ -339,6 +375,13 @@ public class MemberChat extends AppCompatActivity
     public void onPause()
     {
 	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    LocalBroadcastManager.getInstance(this).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
     }
 
     @Override
@@ -361,11 +404,28 @@ public class MemberChat extends AppCompatActivity
     public void onResume()
     {
 	super.onResume();
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    LocalBroadcastManager.getInstance(this).
+		registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
     }
 
     @Override
     public void onStop()
     {
 	super.onStop();
+
+	if(m_receiverRegistered)
+	{
+	    LocalBroadcastManager.getInstance(this).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
     }
 }
