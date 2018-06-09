@@ -35,10 +35,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -59,6 +61,58 @@ public class MemberChat extends AppCompatActivity
 
     private void prepareListeners()
     {
+	Button button1 = (Button) findViewById(R.id.send_chat_message);
+
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		final TextView textView1 = (TextView) findViewById
+		    (R.id.chat_message);
+
+		if(textView1.getText().toString().trim().isEmpty())
+		    return;
+
+		String str = textView1.getText().toString().trim();
+		int size = Chat.CHAT_MESSAGE_PREFERRED_SIZE *
+		    (int) Math.ceil((1.0 * str.length()) /
+				    (1.0 * Chat.CHAT_MESSAGE_PREFERRED_SIZE));
+
+		if(size > str.length())
+		{
+		    char a[] = new char[size - str.length()];
+
+		    Arrays.fill(a, ' ');
+		    str += new String(a);
+		}
+		else if(str.length() > 0)
+		{
+		    char a[] = new char[1024 + str.length() % 2];
+
+		    Arrays.fill(a, ' ');
+		    str += new String(a);
+		}
+
+		byte keyStream[] = m_databaseHelper.participantKeyStream
+		    (s_cryptography, m_sipHashId);
+
+		if(keyStream == null || keyStream.length != 96)
+		    return;
+
+		Kernel.getInstance().enqueueChatMessage
+		    (str, m_sipHashId, keyStream);
+
+		textView1.post(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			textView1.requestFocus();
+		    }
+		});
+		textView1.setText("");
+	    }
+	});
     }
 
     private void prepareSchedulers()
@@ -223,6 +277,12 @@ public class MemberChat extends AppCompatActivity
 			  Miscellaneous.
 			  delimitString(m_sipHashId.replace(":", ""), '-', 4).
 			  toUpperCase());
+
+	/*
+	** Prepare listeners.
+	*/
+
+	prepareListeners();
 
 	/*
 	** Prepare schedulers.
