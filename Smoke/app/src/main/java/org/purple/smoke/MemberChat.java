@@ -78,6 +78,26 @@ public class MemberChat extends AppCompatActivity
 		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
 
 		    if(!local)
+		    {
+			String message = intent.getStringExtra
+			    ("org.purple.smoke.message");
+			String name = intent.getStringExtra
+			    ("org.purple.smoke.name");
+
+			if(!(message == null || name == null))
+			{
+			    long sequence = intent.getLongExtra
+				("org.purple.smoke.sequence", 1);
+			    long timestamp = intent.getLongExtra
+				("org.purple.smoke.timestamp", 0);
+
+			    State.getInstance().logChatMessage
+				(message,
+				 name,
+				 m_sipHashId,sequence,
+				 timestamp);
+			}
+
 			try
 			{
 			    Ringtone ringtone = null;
@@ -91,6 +111,7 @@ public class MemberChat extends AppCompatActivity
 			catch(Exception e)
 			{
 			}
+		    }
 		}
 		else
 		    Miscellaneous.showNotification

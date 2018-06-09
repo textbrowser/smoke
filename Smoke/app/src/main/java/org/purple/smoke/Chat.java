@@ -884,6 +884,8 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		State.getInstance().clearChatLog();
+
 		TextView textView1 = (TextView) findViewById
 		    (R.id.chat_messages);
 
