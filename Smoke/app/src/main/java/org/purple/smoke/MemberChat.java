@@ -71,6 +71,7 @@ public class MemberChat extends AppCompatActivity
 	    if((local = intent.getAction().
 		equals("org.purple.smoke.chat_local_message")) ||
 	       intent.getAction().equals("org.purple.smoke.chat_message"))
+	    {
 		if(intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
 		{
@@ -91,6 +92,12 @@ public class MemberChat extends AppCompatActivity
 			{
 			}
 		}
+		else
+		    Miscellaneous.showNotification
+			(MemberChat.this,
+			 intent,
+			 findViewById(R.id.main_layout));
+	    }
 	}
     }
 
