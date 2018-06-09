@@ -59,20 +59,6 @@ public class Database extends SQLiteOpenHelper
 		return e1.m_name.compareTo(e2.m_name);
 	    }
 	};
-    private final static Comparator<MemberChatElement>
-	s_readMemberChatComparator = new Comparator<MemberChatElement> ()
-	{
-	    @Override
-	    public int compare(MemberChatElement e1, MemberChatElement e2)
-	    {
-		if(e1.m_timestamp < e2.m_timestamp)
-		    return -1;
-		else if(e1.m_timestamp == e2.m_timestamp)
-		    return 0;
-		else
-		    return 1;
-	    }
-	};
     private final static Comparator<NeighborElement>
 	s_readNeighborsComparator = new Comparator<NeighborElement> ()
 	{
@@ -236,126 +222,6 @@ public class Database extends SQLiteOpenHelper
 
 		if(arrayList.size() > 1)
 		    Collections.sort(arrayList, s_readFiresComparator);
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(arrayList != null)
-		arrayList.clear();
-
-	    arrayList = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return arrayList;
-    }
-
-    public ArrayList<MemberChatElement> readMemberChats
-	(Cryptography cryptography, String sipHashId, int position)
-    {
-	prepareDb();
-
-	if(cryptography == null || m_db == null)
-	    return null;
-
-	Cursor cursor = null;
-	ArrayList<MemberChatElement> arrayList = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery
-		("SELECT from_smokestack, " +
-		 "message, " +
-		 "timestamp, " +
-		 "oid " +
-		 "FROM participants_messages WHERE siphash_id_digest = ? " +
-		 "LIMIT 1 OFFSET CAST(? AS INTEGER)",
-		 new String[] {Base64.
-			       encodeToString(cryptography.
-					      hmac(sipHashId.toLowerCase().
-						   trim().getBytes("UTF-8")),
-					      Base64.DEFAULT),
-			       String.valueOf(position)});
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		arrayList = new ArrayList<> ();
-
-		while(!cursor.isAfterLast())
-		{
-		    MemberChatElement memberChatElement =
-			new MemberChatElement();
-		    int oid = cursor.getInt(cursor.getColumnCount() - 1);
-
-		    for(int i = 0; i < cursor.getColumnCount(); i++)
-		    {
-			if(i == cursor.getColumnCount() - 1)
-			{
-			    memberChatElement.m_oid = cursor.getInt(i);
-			    continue;
-			}
-
-			byte bytes[] = cryptography.mtd
-			    (Base64.decode(cursor.getString(i).getBytes(),
-					   Base64.DEFAULT));
-
-			if(bytes == null)
-			{
-			    StringBuilder stringBuilder = new StringBuilder();
-
-			    stringBuilder.append
-				("Database::readMemberChats(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
-			}
-
-			switch(i)
-			{
-			case 0:
-			    if(bytes != null)
-				memberChatElement.m_fromSmokeStack =
-				    new String(bytes).trim();
-			    else
-				memberChatElement.m_fromSmokeStack =
-				    "error (" + oid + ")";
-
-			    break;
-			case 1:
-			    if(bytes != null)
-				memberChatElement.m_message =
-				    new String(bytes);
-			    else
-				memberChatElement.m_message =
-				    "error (" + oid + ")";
-
-			    break;
-			case 2:
-			    if(bytes != null)
-				try
-				{
-				    memberChatElement.m_timestamp =
-					Long.parseLong(new String(bytes));
-				}
-				catch(Exception exception)
-				{
-				}
-
-			    break;
-			}
-		    }
-
-		    arrayList.add(memberChatElement);
-		    cursor.moveToNext();
-		}
-
-		if(arrayList.size() > 1)
-		    Collections.sort(arrayList, s_readMemberChatComparator);
 	    }
 	}
 	catch(Exception exception)
@@ -1148,6 +1014,115 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return arrayList;
+    }
+
+    public MemberChatElement readMemberChat
+	(Cryptography cryptography, String sipHashId, int position)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	MemberChatElement memberChatElement = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT from_smokestack, " +
+		 "message, " +
+		 "timestamp, " +
+		 "oid " +
+		 "FROM participants_messages WHERE siphash_id_digest = ? " +
+		 "ORDER BY oid LIMIT 1 OFFSET CAST(? AS INTEGER)",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toLowerCase().
+						   trim().getBytes("UTF-8")),
+					      Base64.DEFAULT),
+			       String.valueOf(position)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		while(!cursor.isAfterLast())
+		{
+		    memberChatElement = new MemberChatElement();
+
+		    int oid = cursor.getInt(cursor.getColumnCount() - 1);
+
+		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    {
+			if(i == cursor.getColumnCount() - 1)
+			{
+			    memberChatElement.m_oid = cursor.getInt(i);
+			    continue;
+			}
+
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    StringBuilder stringBuilder = new StringBuilder();
+
+			    stringBuilder.append
+				("Database::readMemberChats(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append(cursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			}
+
+			switch(i)
+			{
+			case 0:
+			    if(bytes != null)
+				memberChatElement.m_fromSmokeStack =
+				    new String(bytes).trim();
+			    else
+				memberChatElement.m_fromSmokeStack =
+				    "error (" + oid + ")";
+
+			    break;
+			case 1:
+			    if(bytes != null)
+				memberChatElement.m_message =
+				    new String(bytes);
+			    else
+				memberChatElement.m_message =
+				    "error (" + oid + ")";
+
+			    break;
+			case 2:
+			    if(bytes != null)
+				try
+				{
+				    memberChatElement.m_timestamp =
+					Long.parseLong(new String(bytes));
+				}
+				catch(Exception exception)
+				{
+				}
+
+			    break;
+			}
+		    }
+
+		    break;
+		}
+	}
+	catch(Exception exception)
+	{
+	    memberChatElement = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return memberChatElement;
     }
 
     public PublicKey publicKeyForSipHashId(Cryptography cryptography,

@@ -29,7 +29,6 @@ package org.purple.smoke;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import java.util.ArrayList;
 
 public class MemberChatAdapter extends RecyclerView.Adapter
 				       <MemberChatAdapter.ViewHolder>
@@ -102,12 +101,12 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	if(viewHolder == null)
 	    return;
 
-	ArrayList<MemberChatElement> arrayList =
-	    (s_database.readMemberChats(s_cryptography, m_sipHashId, position));
+	MemberChatElement memberChatElement =
+	    (s_database.readMemberChat(s_cryptography, m_sipHashId, position));
 
-	if(arrayList == null || arrayList.isEmpty())
+	if(memberChatElement == null)
 	    return;
 
-	viewHolder.setData(arrayList.get(0));
+	viewHolder.setData(memberChatElement);
     }
 }
