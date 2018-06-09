@@ -56,8 +56,11 @@ public class MemberChat extends AppCompatActivity
     private String m_sipHashId = "00:00:00:00:00:00:00:00";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
-    private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int STATUS_INTERVAL = 5000; // 5 Seconds
+
+    private void prepareListeners()
+    {
+    }
 
     private void prepareSchedulers()
     {
@@ -101,7 +104,7 @@ public class MemberChat extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_statusScheduler == null)

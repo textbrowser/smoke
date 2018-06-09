@@ -132,10 +132,10 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     private final static int CHECKBOX_TEXT_SIZE = 13;
-    private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     private final static int STATUS_INTERVAL = 30000; // 30 Seconds
     public final static long CHAT_WINDOW = 60000; // 1 Minute
+    public final static long CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     public final static long STATUS_WINDOW = 30000; // 30 Seconds
 
     private String nameFromCheckBoxText(String text)

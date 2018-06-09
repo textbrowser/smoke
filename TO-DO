@@ -157,6 +157,8 @@ Completed Items
 120.   Network status in Member Chat.
 121.   Member status in Member Chat.
 122.   Last activity and Member Chat. Restore.
+123.   Elongate messages in Member Chat.
+124.   Individual member pages.
 
 Future Items
 
@@ -210,13 +212,11 @@ Remaining Items
 6.     Steam and Vapor.
 7.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
-8.     Individual member pages.
-9.     Elongate messages in Member Chat.
-10.    Retrieve Member Chat data in a thread.
-11.    Retrieve a subset of message data in Member Chat. New data via scroll.
-12.    Context menu items in Member Chat: enable deletion, delete selected,
+8.     Rich context menu containing other members.
+9.     Retrieve Member Chat data in a thread.
+10.    Retrieve a subset of message data in Member Chat. New data via scroll.
+11.    Context menu items in Member Chat: enable deletion, delete selected,
        select all, disable deletion.
-13.    Send messages in Member Chat.
-14.    Append new messages in Member Chat.
-15.    Notify of other member messages in Member Chat.
-16.    Rich context menu containing other members.
+12.    Send messages in Member Chat.
+13.    Append new messages in Member Chat.
+14.    Notify of other member messages in Member Chat.
