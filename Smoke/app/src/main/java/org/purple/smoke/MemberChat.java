@@ -31,6 +31,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -63,12 +66,31 @@ public class MemberChat extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    if(intent.getAction().
-	       equals("org.purple.smoke.chat_local_message") ||
+	    boolean local = false;
+
+	    if((local = intent.getAction().
+		equals("org.purple.smoke.chat_local_message")) ||
 	       intent.getAction().equals("org.purple.smoke.chat_message"))
 		if(intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
+		{
 		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
+
+		    if(!local)
+			try
+			{
+			    Ringtone ringtone = null;
+			    Uri notification = RingtoneManager.getDefaultUri
+				(RingtoneManager.TYPE_NOTIFICATION);
+
+			    ringtone = RingtoneManager.getRingtone
+				(getApplicationContext(), notification);
+			    ringtone.play();
+			}
+			catch(Exception e)
+			{
+			}
+		}
 	}
     }
 
