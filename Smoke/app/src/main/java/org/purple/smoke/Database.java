@@ -255,7 +255,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public ArrayList<MemberChatElement> readMemberChats
-	(Cryptography cryptography, String sipHashId)
+	(Cryptography cryptography, String sipHashId, int position)
     {
 	prepareDb();
 
@@ -272,12 +272,14 @@ public class Database extends SQLiteOpenHelper
 		 "message, " +
 		 "timestamp, " +
 		 "oid " +
-		 "FROM participants_messages WHERE siphash_id_digest = ?",
+		 "FROM participants_messages WHERE siphash_id_digest = ? " +
+		 "LIMIT 1 OFFSET CAST(? AS INTEGER)",
 		 new String[] {Base64.
 			       encodeToString(cryptography.
 					      hmac(sipHashId.toLowerCase().
 						   trim().getBytes("UTF-8")),
-					      Base64.DEFAULT)});
+					      Base64.DEFAULT),
+			       String.valueOf(position)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -2751,6 +2753,46 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return c;
+    }
+
+    public long countOfMessages(Cryptography cryptography, String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return -1;
+
+	Cursor cursor = null;
+	long count = 0;
+
+	try
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append("SELECT COUNT(*) FROM participants_messages ");
+	    stringBuilder.append("WHERE siphash_id_digest = ?");
+	    cursor = m_db.rawQuery
+		(stringBuilder.toString(),
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toLowerCase().
+						   trim().getBytes("UTF-8")),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		count = cursor.getLong(0);
+	}
+	catch(Exception exception)
+	{
+	    count = -1;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return count;
     }
 
     public static synchronized Database getInstance()

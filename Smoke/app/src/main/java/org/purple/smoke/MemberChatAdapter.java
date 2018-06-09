@@ -34,8 +34,10 @@ import java.util.ArrayList;
 public class MemberChatAdapter extends RecyclerView.Adapter
 				       <MemberChatAdapter.ViewHolder>
 {
-    ArrayList<MemberChatElement> m_arrayList = null;
-    String m_sipHashId = "";
+    private String m_sipHashId = "";
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
+    private final static Database s_database = Database.getInstance();
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -75,10 +77,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	}
     }
 
-    public MemberChatAdapter(ArrayList<MemberChatElement> arrayList,
-			     String sipHashId)
+    public MemberChatAdapter(String sipHashId)
     {
-	m_arrayList = arrayList;
 	m_sipHashId = sipHashId;
     }
 
@@ -93,18 +93,21 @@ public class MemberChatAdapter extends RecyclerView.Adapter
     @Override
     public int getItemCount()
     {
-	if(m_arrayList == null)
-	    return 0;
-	else
-	    return m_arrayList.size();
+	return (int) s_database.countOfMessages(s_cryptography, m_sipHashId);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)
+    public void onBindViewHolder(ViewHolder viewHolder, int position)
     {
-	if(holder == null || m_arrayList == null || m_arrayList.isEmpty())
+	if(viewHolder == null)
 	    return;
 
-	holder.setData(m_arrayList.get(position));
+	ArrayList<MemberChatElement> arrayList =
+	    (s_database.readMemberChats(s_cryptography, m_sipHashId, position));
+
+	if(arrayList == null || arrayList.isEmpty())
+	    return;
+
+	viewHolder.setData(arrayList.get(0));
     }
 }

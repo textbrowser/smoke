@@ -159,6 +159,7 @@ Completed Items
 122.   Last activity and Member Chat. Restore.
 123.   Elongate messages in Member Chat.
 124.   Individual member pages.
+125.   Retrieve a subset of message data in Member Chat. New data via scroll.
 
 Future Items
 
@@ -201,6 +202,7 @@ Ignored / Impossible Items
 17.    SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
 18.    Smoke as a service.
 19.    Consider LruCache as a replacement of the database congestion container.
+20.    Retrieve Member Chat data in a thread. Not necessary.
 
 Remaining Items
 
@@ -213,10 +215,8 @@ Remaining Items
 7.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
 8.     Rich context menu containing other members.
-9.     Retrieve Member Chat data in a thread.
-10.    Retrieve a subset of message data in Member Chat. New data via scroll.
-11.    Context menu items in Member Chat: enable deletion, delete selected,
+9.     Context menu items in Member Chat: enable deletion, delete selected,
        select all, disable deletion.
-12.    Send messages in Member Chat.
-13.    Append new messages in Member Chat.
-14.    Notify of other member messages in Member Chat.
+10.    Send messages in Member Chat.
+11.    Append new messages in Member Chat.
+12.    Notify of other member messages in Member Chat.

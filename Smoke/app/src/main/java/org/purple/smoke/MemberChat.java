@@ -256,9 +256,7 @@ public class MemberChat extends AppCompatActivity
 	** Prepare various widgets.
 	*/
 
-	m_adapter = new MemberChatAdapter
-	    (m_databaseHelper.readMemberChats(s_cryptography, m_sipHashId),
-	     m_sipHashId);
+	m_adapter = new MemberChatAdapter(m_sipHashId);
 	m_layoutManager = new LinearLayoutManager(this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_name = m_databaseHelper.nameFromSipHashId
