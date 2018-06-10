@@ -463,8 +463,12 @@ public class Kernel
 				Intent intent = new Intent
 				    ("org.purple.smoke.chat_local_message");
 
-				intent.putExtra("org.purple.smoke.sipHashId",
-						messageElement.m_id);
+				intent.putExtra
+				    ("org.purple.smoke.message",
+				     messageElement.m_message);
+				intent.putExtra
+				    ("org.purple.smoke.sipHashId",
+				     messageElement.m_id);
 
 				LocalBroadcastManager localBroadcastManager =
 				    LocalBroadcastManager.getInstance

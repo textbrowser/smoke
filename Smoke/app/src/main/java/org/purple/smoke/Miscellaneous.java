@@ -435,7 +435,8 @@ public class Miscellaneous
 
 	    boolean purple = intent.getBooleanExtra
 		("org.purple.smoke.purple", false);
-	    long sequence = intent.getLongExtra("org.purple.smoke.sequence", 1);
+	    long sequence = intent.getLongExtra
+		("org.purple.smoke.sequence", 1);
 	    long timestamp = intent.getLongExtra
 		("org.purple.smoke.timestamp", 0);
 

@@ -199,8 +199,15 @@ public class Chat extends AppCompatActivity
 	    stringBuilder.append("] ");
 	    stringBuilder.append(name);
 	    stringBuilder.append(":");
-	    stringBuilder.append(sequence);
-	    stringBuilder.append(": ");
+
+	    if(sequence != -1)
+	    {
+		stringBuilder.append(sequence);
+		stringBuilder.append(": ");
+	    }
+	    else
+		stringBuilder.append(" ");
+
 	    stringBuilder.append(message);
 	    stringBuilder.append("\n\n");
 
@@ -231,8 +238,15 @@ public class Chat extends AppCompatActivity
 		 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    textView1.append(spannable);
 	    textView1.append(":");
-	    textView1.append(String.valueOf(sequence));
-	    textView1.append(": ");
+
+	    if(sequence != -1)
+	    {
+		textView1.append(String.valueOf(sequence));
+		textView1.append(": ");
+	    }
+	    else
+		textView1.append(" ");
+
 	    textView1.append(message);
 	    textView1.append("\n\n");
 	}

@@ -73,35 +73,48 @@ public class MemberChat extends AppCompatActivity
 		equals("org.purple.smoke.chat_local_message")) ||
 	       intent.getAction().equals("org.purple.smoke.chat_message"))
 	    {
-		if(intent.getStringExtra("org.purple.smoke.sipHashId").
+		if(intent.
+		   getStringExtra("org.purple.smoke.sipHashId") != null &&
+		   intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
 		{
 		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
 
-		    if(!local)
+		    if(local)
+		    {
+			String message = intent.getStringExtra
+			    ("org.purple.smoke.message");
+			long timestamp = intent.getLongExtra
+			    ("org.purple.smoke.timestamp", 0);
+
+			State.getInstance().logChatMessage
+			    (message,
+			     "me",
+			     m_mySipHashId,
+			     false,
+			     -1,
+			     timestamp);
+		    }
+		    else
 		    {
 			String message = intent.getStringExtra
 			    ("org.purple.smoke.message");
 			String name = intent.getStringExtra
 			    ("org.purple.smoke.name");
+			boolean purple = intent.getBooleanExtra
+			    ("org.purple.smoke.purple", false);
+			long sequence = intent.getLongExtra
+			    ("org.purple.smoke.sequence", 1);
+			long timestamp = intent.getLongExtra
+			    ("org.purple.smoke.timestamp", 0);
 
-			if(!(message == null || name == null))
-			{
-			    boolean purple = intent.getBooleanExtra
-				("org.purple.smoke.purple", false);
-			    long sequence = intent.getLongExtra
-				("org.purple.smoke.sequence", 1);
-			    long timestamp = intent.getLongExtra
-				("org.purple.smoke.timestamp", 0);
-
-			    State.getInstance().logChatMessage
-				(message,
-				 name,
-				 m_sipHashId,
-				 purple,
-				 sequence,
-				 timestamp);
-			}
+			State.getInstance().logChatMessage
+			    (message,
+			     name,
+			     m_sipHashId,
+			     purple,
+			     sequence,
+			     timestamp);
 
 			try
 			{
@@ -135,6 +148,7 @@ public class MemberChat extends AppCompatActivity
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_name = "00:00:00:00:00:00:00:00";
+    private String m_mySipHashId = "";
     private String m_sipHashId = m_name;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
@@ -327,6 +341,7 @@ public class MemberChat extends AppCompatActivity
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 	m_layoutManager = new LinearLayoutManager(this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+	m_mySipHashId = s_cryptography.sipHashId();
 	m_name = m_sipHashId = State.getInstance().getString
 	    ("member_chat_siphash_id");
 	m_receiver = new MemberChatBroadcastReceiver();
