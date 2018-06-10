@@ -414,7 +414,10 @@ public class Miscellaneous
 					Intent intent,
 					View view)
     {
-	if(context == null || intent == null || view == null)
+	if(context == null ||
+	   intent == null ||
+	   intent.getAction() == null ||
+	   view == null)
 	    return;
 
 	if(intent.getAction().equals("org.purple.smoke.chat_message"))
