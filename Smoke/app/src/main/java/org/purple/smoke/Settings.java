@@ -769,23 +769,28 @@ public class Settings extends AppCompatActivity
 						   int position,
 						   long id)
 			{
-			    if(position == 1) // Connect
+			    switch(position)
+			    {
+			    case 1: // Connect
 				m_databaseHelper.neighborControlStatus
 				    (s_cryptography,
 				     "connect",
 				     String.valueOf(parent.getId()));
-			    else if(position == 2) // Delete
+				break;
+			    case 2: // Delete
 				deleteNeighbor(ipAndPort, parent.getId());
-			    else if(position == 3) // Disconnect
+				break;
+			    case 3: // Disconnect
 				m_databaseHelper.neighborControlStatus
 				    (s_cryptography,
 				     "disconnect",
 				     String.valueOf(parent.getId()));
-			    else if(position == 4) // Purge Queue
+				break;
+			    case 4: // Purge Queue
 				m_databaseHelper.purgeNeighborQueue
 				    (String.valueOf(parent.getId()));
-			    else if(position == 5) // Reset SSL/TLS Credentials
-			    {
+				break;
+			    case 5: // Reset SSL/TLS Credentials
 				m_databaseHelper.neighborRecordCertificate
 				    (s_cryptography,
 				     String.valueOf(parent.getId()),
@@ -794,6 +799,7 @@ public class Settings extends AppCompatActivity
 				    (s_cryptography,
 				     "disconnect",
 				     String.valueOf(parent.getId()));
+				break;
 			    }
 
 			    parent.setSelection(0);
@@ -2590,12 +2596,18 @@ public class Settings extends AppCompatActivity
 
 	String str = m_databaseHelper.readSetting(null, "lastActivity");
 
-	if(str.equals("Chat"))
+	switch(str)
+	{
+	case "Chat":
 	    showChatActivity();
-	else if(str.equals("Fire"))
+	    break;
+	case "Fire":
 	    showFireActivity();
-	else if(str.equals("MemberChat"))
+	    break;
+	case "MemberChat":
 	    showMemberChatActivity();
+	    break;
+	}
     }
 
     @Override

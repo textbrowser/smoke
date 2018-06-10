@@ -84,11 +84,14 @@ public class Chat extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    if(intent.getAction().equals("org.purple.smoke.busy_call"))
+	    switch(intent.getAction())
+	    {
+	    case "org.purple.smoke.busy_call":
 		busyCall
 		    (intent.getStringExtra("org.purple.smoke.name"),
 		     intent.getStringExtra("org.purple.smoke.sipHashId"));
-	    else if(intent.getAction().equals("org.purple.smoke.chat_message"))
+		break;
+	    case "org.purple.smoke.chat_message":
 		appendMessage
 		    (intent.getStringExtra("org.purple.smoke.message"),
 		     intent.getStringExtra("org.purple.smoke.name"),
@@ -96,9 +99,8 @@ public class Chat extends AppCompatActivity
 		     false,
 		     intent.getLongExtra("org.purple.smoke.sequence", 1),
 		     intent.getLongExtra("org.purple.smoke.timestamp", 0));
-	    else if(intent.getAction().
-		    equals("org.purple.smoke.populate_participants"))
-	    {
+		break;
+	    case "org.purple.smoke.populate_participants":
 		String sipHashId = intent.getStringExtra
 		    ("org.purple.smoke.sipHashId");
 
@@ -106,14 +108,16 @@ public class Chat extends AppCompatActivity
 		    populateParticipants();
 		else
 		    refreshCheckBox(sipHashId);
-	    }
-	    else if(intent.getAction().
-		    equals("org.purple.smoke.half_and_half_call"))
+
+		break;
+	    case "org.purple.smoke.half_and_half_call":
 		halfAndHalfCall
 		    (intent.getStringExtra("org.purple.smoke.name"),
 		     intent.getStringExtra("org.purple.smoke.sipHashId"),
 		     intent.getBooleanExtra("org.purple.smoke.initial", false),
 		     intent.getBooleanExtra("org.purple.smoke.refresh", false));
+		break;
+	    }
 	}
     }
 
