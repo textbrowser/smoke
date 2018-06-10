@@ -166,6 +166,7 @@ Completed Items
 129.   Notify of other member messages in Member Chat.
 130.   Record received messages in Chat from Member Chat.
 131.   Context menu items in Member Chat: delete all, delete selected.
+132.   Banner text may shadow member status in Member Chat.
 
 Future Items
 
@@ -223,5 +224,4 @@ Remaining Items
 8.     Rich context menu containing other members.
 9.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
-10.    Banner text may shadow member status in Member Chat.
-11.    Resize Member Chat bubbles according to contents.
+10.    Resize Member Chat bubbles according to contents.
