@@ -87,6 +87,8 @@ public class MemberChat extends AppCompatActivity
 
 			if(!(message == null || name == null))
 			{
+			    boolean purple = intent.getBooleanExtra
+				("org.purple.smoke.purple", false);
 			    long sequence = intent.getLongExtra
 				("org.purple.smoke.sequence", 1);
 			    long timestamp = intent.getLongExtra
@@ -95,7 +97,9 @@ public class MemberChat extends AppCompatActivity
 			    State.getInstance().logChatMessage
 				(message,
 				 name,
-				 m_sipHashId,sequence,
+				 m_sipHashId,
+				 purple,
+				 sequence,
 				 timestamp);
 			}
 

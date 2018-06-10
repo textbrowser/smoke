@@ -433,12 +433,14 @@ public class Miscellaneous
 	    if(message == null || name == null || sipHashId == null)
 		return;
 
+	    boolean purple = intent.getBooleanExtra
+		("org.purple.smoke.purple", false);
 	    long sequence = intent.getLongExtra("org.purple.smoke.sequence", 1);
 	    long timestamp = intent.getLongExtra
 		("org.purple.smoke.timestamp", 0);
 
 	    State.getInstance().logChatMessage
-		(message, name, sipHashId, sequence, timestamp);
+		(message, name, sipHashId, purple, sequence, timestamp);
 	    message = message.trim();
 
 	    TextView textView1 = new TextView(context);

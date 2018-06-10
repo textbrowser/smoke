@@ -144,8 +144,10 @@ Completed Items
 107.   Prevent-sleep option in Settings.
 108.   Per request, include the source in the application bundle.
 109.   Do not enqueue messages in disconnected neighbors.
-110.   Requesting offline messages stalls if there are several active neighbors.
-111.   https://developer.android.com/reference/android/net/wifi/WifiManager.WifiLock.html
+110.   Requesting offline messages stalls if there are several active
+       neighbors.
+111.   https://developer.android.com/reference/android/net/wifi/
+       WifiManager.WifiLock.html
 112.   Signed release.
 113.   Fire channels must be retained if the Fire activity is dismissed.
 114.   Allow log clearing.
@@ -180,12 +182,14 @@ Future Items
 5.     SMP.
 6.     Resolve DNS through a proxy if a proxy is defined.
 7.     Allow exporting of smoke.db to other devices.
-8.     Bluetooth (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
+8.     Bluetooth (http://www.oracle.com/technetwork/articles/javame/
+                  index-156193.html).
 9.     Automatic SipHash hyphens.
 10.    Names or PINs alongside SipHashes. The extra bits will increase
        the possibilities.
 11.    Protocol-less snubbing without key revocation.
 12.    Introduce real-time typing status.
+13.    Vacuum databases.
 
 Ignored / Impossible Items
 
@@ -207,7 +211,8 @@ Ignored / Impossible Items
 14.    Source-level string translations.
 15.    Socket channels. A lot of work.
 16.    Optional SipHash identities in received messages. Unique people.
-17.    SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
+17.    SCTP (http://www.oracle.com/technetwork/articles/javase/
+             index-139946.html).
 18.    Smoke as a service.
 19.    Consider LruCache as a replacement of the database congestion container.
 20.    Retrieve Member Chat data in a thread. Not necessary.
@@ -216,8 +221,10 @@ Remaining Items
 
 1.     pull-database for multiple devices.
 2.     Fire through SmokeStack. Requires discovery or unsolicited data.
-3.     Retain password for re-authentication upon background activity. Optional.
-4.     Receiving requested keys which do not include signatures should be functional.
+3.     Retain password for re-authentication upon background activity.
+       Optional.
+4.     Receiving requested keys which do not include signatures should
+       be functional.
 5.     Separation of Fire channels.
 6.     Steam and Vapor.
 7.     Steam should offer a caching mechanism, transforming Smoke into
@@ -229,4 +236,3 @@ Remaining Items
 11.    Push sent messages from Member Chat to Chat.
 12.    Chat messages will appear blue if they are assembled from the internal
        log and are beyond the specific time window.
-13.    Vacuum databases.

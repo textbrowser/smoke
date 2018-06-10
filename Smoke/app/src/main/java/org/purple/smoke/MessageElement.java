@@ -32,6 +32,7 @@ public class MessageElement
     public String m_id = "";
     public String m_message = "";
     public String m_name = "";
+    public boolean m_purple = false;
     public byte m_keyStream[] = null;
     public final static int CHAT_MESSAGE_TYPE = 0;
     public final static int FIRE_MESSAGE_TYPE = 1;

@@ -220,6 +220,7 @@ public class State
     public synchronized void logChatMessage(String message,
 					    String name,
 					    String sipHashId,
+					    boolean purple,
 					    long sequence,
 					    long timestamp)
     {
@@ -234,6 +235,7 @@ public class State
 	messageElement.m_id = sipHashId;
 	messageElement.m_message = message;
 	messageElement.m_name = name;
+	messageElement.m_purple = purple;
 	messageElement.m_sequence = sequence;
 	messageElement.m_timestamp = timestamp;
 	m_chatMessages.add(messageElement);

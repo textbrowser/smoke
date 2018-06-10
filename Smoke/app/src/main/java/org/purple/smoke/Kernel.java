@@ -1557,6 +1557,7 @@ public class Kernel
 
 		intent.putExtra("org.purple.smoke.message", message);
 		intent.putExtra("org.purple.smoke.name", strings[0]);
+		intent.putExtra("org.purple.smoke.purple", purple);
 		intent.putExtra("org.purple.smoke.sequence", sequence);
 		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		intent.putExtra("org.purple.smoke.timestamp", timestamp);
