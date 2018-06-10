@@ -1044,73 +1044,70 @@ public class Database extends SQLiteOpenHelper
 			       String.valueOf(position)});
 
 	    if(cursor != null && cursor.moveToFirst())
-		while(!cursor.isAfterLast())
+	    {
+		memberChatElement = new MemberChatElement();
+
+		int oid = cursor.getInt(cursor.getColumnCount() - 1);
+
+		for(int i = 0; i < cursor.getColumnCount(); i++)
 		{
-		    memberChatElement = new MemberChatElement();
-
-		    int oid = cursor.getInt(cursor.getColumnCount() - 1);
-
-		    for(int i = 0; i < cursor.getColumnCount(); i++)
+		    if(i == cursor.getColumnCount() - 1)
 		    {
-			if(i == cursor.getColumnCount() - 1)
-			{
-			    memberChatElement.m_oid = cursor.getInt(i);
-			    continue;
-			}
-
-			byte bytes[] = cryptography.mtd
-			    (Base64.decode(cursor.getString(i).getBytes(),
-					   Base64.DEFAULT));
-
-			if(bytes == null)
-			{
-			    StringBuilder stringBuilder = new StringBuilder();
-
-			    stringBuilder.append
-				("Database::readMemberChats(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
-			}
-
-			switch(i)
-			{
-			case 0:
-			    if(bytes != null)
-				memberChatElement.m_fromSmokeStack =
-				    new String(bytes).trim();
-			    else
-				memberChatElement.m_fromSmokeStack =
-				    "error (" + oid + ")";
-
-			    break;
-			case 1:
-			    if(bytes != null)
-				memberChatElement.m_message =
-				    new String(bytes);
-			    else
-				memberChatElement.m_message =
-				    "error (" + oid + ")";
-
-			    break;
-			case 2:
-			    if(bytes != null)
-				try
-				{
-				    memberChatElement.m_timestamp =
-					Long.parseLong(new String(bytes));
-				}
-				catch(Exception exception)
-				{
-				}
-
-			    break;
-			}
+			memberChatElement.m_oid = cursor.getInt(i);
+			continue;
 		    }
 
-		    break;
+		    byte bytes[] = cryptography.mtd
+			(Base64.decode(cursor.getString(i).getBytes(),
+				       Base64.DEFAULT));
+
+		    if(bytes == null)
+		    {
+			StringBuilder stringBuilder = new StringBuilder();
+
+			stringBuilder.append
+			    ("Database::readMemberChat(): ");
+			stringBuilder.append("error on column ");
+			stringBuilder.append(cursor.getColumnName(i));
+			stringBuilder.append(".");
+			writeLog(stringBuilder.toString());
+		    }
+
+		    switch(i)
+		    {
+		    case 0:
+			if(bytes != null)
+			    memberChatElement.m_fromSmokeStack =
+				new String(bytes).trim();
+			else
+			    memberChatElement.m_fromSmokeStack =
+				"error (" + oid + ")";
+
+			break;
+		    case 1:
+			if(bytes != null)
+			    memberChatElement.m_message =
+				new String(bytes);
+			else
+			    memberChatElement.m_message =
+				"error (" + oid + ")";
+
+			break;
+		    case 2:
+			if(bytes != null)
+			    try
+			    {
+				memberChatElement.m_timestamp =
+				    Long.parseLong(new String(bytes));
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+
+			break;
+		    }
 		}
+	    }
 	}
 	catch(Exception exception)
 	{
