@@ -515,23 +515,20 @@ public class Authenticate extends AppCompatActivity
     {
 	int id = item.getItemId();
 
-        if(id == R.id.action_chat)
+        switch(id)
 	{
+	case R.id.action_chat:
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
 	    showChatActivity();
-            return true;
-        }
-	else if(id == R.id.action_fire)
-        {
+	    return true;
+	case R.id.action_fire:
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 	    showFireActivity();
 	    return true;
-	}
-        else if(id == R.id.action_settings)
-	{
+	case R.id.action_settings:
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 	    showSettingsActivity();
-            return true;
+	    return true;
         }
 
         return super.onOptionsItemSelected(item);

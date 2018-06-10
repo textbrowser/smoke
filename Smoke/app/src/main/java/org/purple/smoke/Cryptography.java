@@ -252,17 +252,18 @@ public class Cryptography
 	   algorithm.equals("RSA"))
 	    try
 	    {
-		if(algorithm.equals("EC"))
+		switch(algorithm)
 		{
+		case "EC":
 		    ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
 
 		    if(ecPublicKey != null)
 			stringBuilder.append("\n").append("Size: ").
 			    append(ecPublicKey.getW().getAffineX().
 				   bitLength());
-		}
-		else if(algorithm.equals("McEliece-CCA2"))
-		{
+
+		    break;
+		case "McEliece-CCA2":
 		    BCMcElieceCCA2PublicKey mcEliecePublicKey =
 			(BCMcElieceCCA2PublicKey) publicKey;
 
@@ -272,14 +273,16 @@ public class Cryptography
 					  Math.log(2))).
 			    append(", t = ").
 			    append(mcEliecePublicKey.getT());
-		}
-		else if(algorithm.equals("RSA"))
-		{
+
+		    break;
+		case "RSA":
 		    RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
 
 		    if(rsaPublicKey != null)
 			stringBuilder.append("\n").append("Size: ").
 			    append(rsaPublicKey.getModulus().bitLength());
+
+		    break;
 		}
 	    }
 	    catch(Exception exception)
@@ -1142,13 +1145,19 @@ public class Cryptography
 		{
 		    KeyFactory generator = null;
 
-		    if(i == 0)
+		    switch(i)
+		    {
+		    case 0:
 			generator = KeyFactory.getInstance("EC");
-		    else if(i == 1)
+			break;
+		    case 1:
 			generator = KeyFactory.getInstance
 			    (PQCObjectIdentifiers.mcElieceCca2.getId());
-		    else
+			break;
+		    default:
 			generator = KeyFactory.getInstance("RSA");
+			break;
+		    }
 
 		    return generator.generatePublic(publicKeySpec);
 		}
