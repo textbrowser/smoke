@@ -447,36 +447,39 @@ public class MemberChat extends AppCompatActivity
     {
 	int id = item.getItemId();
 
-	if(id == R.id.action_chat)
+	switch(id)
+	{
+	case R.id.action_chat:
 	{
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
 
 	    Intent intent = new Intent(MemberChat.this, Chat.class);
 
-            startActivity(intent);
+	    startActivity(intent);
 	    finish();
 	    return true;
 	}
-	else if(id == R.id.action_fire)
+	case R.id.action_fire:
 	{
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 
 	    Intent intent = new Intent(MemberChat.this, Fire.class);
 
-            startActivity(intent);
+	    startActivity(intent);
 	    finish();
 	    return true;
 	}
-	else if(id == R.id.action_settings)
+	case R.id.action_settings:
 	{
 	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 
-            Intent intent = new Intent(MemberChat.this, Settings.class);
+	    Intent intent = new Intent(MemberChat.this, Settings.class);
 
-            startActivity(intent);
+	    startActivity(intent);
 	    finish();
-            return true;
-        }
+	    return true;
+	}
+	}
 
         return super.onOptionsItemSelected(item);
     }
