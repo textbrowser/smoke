@@ -414,7 +414,7 @@ public class MemberChat extends AppCompatActivity
 	    Miscellaneous.showPromptDialog
 		(MemberChat.this,
 		 listener,
-		 "Are you sure that you wish to delete the selected item?");
+		 "Are you sure that you wish to delete the selected message?");
 	else
 	    Miscellaneous.showPromptDialog
 		(MemberChat.this,
