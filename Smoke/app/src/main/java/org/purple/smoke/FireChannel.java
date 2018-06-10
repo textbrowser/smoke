@@ -224,7 +224,7 @@ public class FireChannel extends View
 	    TextView textView = new TextView(m_context);
 
 	    textView.setTag(R.id.participants, participant.m_id);
-	    textView.setText(participant.m_name);
+	    textView.setText(participant.m_name.trim());
 
 	    TableRow row = new TableRow(m_context);
 
@@ -544,7 +544,7 @@ public class FireChannel extends View
 	textView.append(m_simpleDateFormat.format(new Date()));
 	textView.append("] ");
 
-	Spannable spannable = new SpannableStringBuilder(name);
+	Spannable spannable = new SpannableStringBuilder(name.trim());
 
 	spannable.setSpan
 	    (new StyleSpan(android.graphics.Typeface.BOLD),
@@ -559,9 +559,14 @@ public class FireChannel extends View
 	scrollMessagesView();
     }
 
+    public void setUserName(String name)
+    {
+	status(m_id, name);
+    }
+
     public void status(String id, String name)
     {
-	if(id == null || id.isEmpty() || name == null || name.isEmpty())
+	if(id == null || id.isEmpty() || name == null || name.trim().isEmpty())
 	    return;
 
 	if(m_participants.containsKey(id))
@@ -570,7 +575,7 @@ public class FireChannel extends View
 
 	    if(participant != null)
 	    {
-		if(!name.equals(participant.m_name))
+		if(!name.trim().equals(participant.m_name))
 		{
 		    StringBuilder stringBuilder = new StringBuilder();
 		    TextView textView = m_view.findViewById
@@ -578,7 +583,7 @@ public class FireChannel extends View
 
 		    stringBuilder.append(participant.m_name);
 		    stringBuilder.append(" is now known as ");
-		    stringBuilder.append(name);
+		    stringBuilder.append(name.trim());
 		    stringBuilder.append(".\n\n");
 		    textView.append("[");
 		    textView.append(m_simpleDateFormat.format(new Date()));
@@ -594,14 +599,14 @@ public class FireChannel extends View
 			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		    textView.append(spannable);
 		    scrollMessagesView();
-		    participant.m_name = name;
+		    participant.m_name = name.trim();
 		    participant.m_timestamp = System.currentTimeMillis();
 		    m_participants.put(id, participant);
 		    populateParticipants();
 		}
 		else
 		{
-		    participant.m_name = name;
+		    participant.m_name = name.trim();
 		    participant.m_timestamp = System.currentTimeMillis();
 		    m_participants.put(id, participant);
 		}
@@ -614,7 +619,7 @@ public class FireChannel extends View
 
 	StringBuilder stringBuilder = new StringBuilder();
 
-	stringBuilder.append(name);
+	stringBuilder.append(name.trim());
 	stringBuilder.append(" has joined ");
 	stringBuilder.append(m_name);
 	stringBuilder.append(".\n\n");
@@ -638,7 +643,7 @@ public class FireChannel extends View
 	Participant participant = new Participant();
 
 	participant.m_id = id;
-	participant.m_name = name;
+	participant.m_name = name.trim();
 	participant.m_timestamp = System.currentTimeMillis();
 	m_participants.put(id, participant);
 	populateParticipants();

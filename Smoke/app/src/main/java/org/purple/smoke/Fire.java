@@ -449,6 +449,19 @@ public class Fire extends AppCompatActivity
 		     "fire_user_name",
 		     textView1.getText().toString().trim());
 		textView1.setText(textView1.getText().toString().trim());
+
+		Map<String, FireChannel> map = State.getInstance().
+		    fireChannels();
+
+		if(map != null)
+		    for(Map.Entry<String, FireChannel> entry : map.entrySet())
+		    {
+			if(entry.getValue() == null)
+			    continue;
+
+			entry.getValue().setUserName
+			    (textView1.getText().toString().trim());
+		    }
 	    }
 	});
 
