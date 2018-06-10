@@ -111,8 +111,8 @@ public class FireChannel extends View
 				if(m_view == null)
 				    return;
 
-				TableLayout tableLayout = (TableLayout)
-				    m_view.findViewById(R.id.participants);
+				TableLayout tableLayout = m_view.findViewById
+				    (R.id.participants);
 
 				for(int i = tableLayout.getChildCount() - 1;
 				    i >= 0; i--)
@@ -171,7 +171,7 @@ public class FireChannel extends View
 					     Spannable.
 					     SPAN_EXCLUSIVE_EXCLUSIVE);
 
-					TextView textView2 = (TextView) m_view.
+					TextView textView2 = m_view.
 					    findViewById(R.id.chat_messages);
 
 					textView2.append("[");
@@ -199,8 +199,7 @@ public class FireChannel extends View
 	if(m_view == null)
 	    return;
 
-	final TableLayout tableLayout = (TableLayout)
-	    m_view.findViewById(R.id.participants);
+	final TableLayout tableLayout = m_view.findViewById(R.id.participants);
 
 	if(m_participants.isEmpty())
 	{
@@ -251,19 +250,19 @@ public class FireChannel extends View
 
 	Button button1 = null;
 
-	button1 = (Button) m_view.findViewById(R.id.clear_chat_messages);
+	button1 = m_view.findViewById(R.id.clear_chat_messages);
         button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
-		TextView textView1 = (TextView) m_view.findViewById
+		TextView textView1 = m_view.findViewById
 		    (R.id.chat_messages);
 
 		textView1.setText("");
 	    }
 	});
 
-	button1 = (Button) m_view.findViewById(R.id.close);
+	button1 = m_view.findViewById(R.id.close);
         button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
@@ -313,12 +312,12 @@ public class FireChannel extends View
 	    }
 	});
 
-	button1 = (Button) m_view.findViewById(R.id.send_chat_message);
+	button1 = m_view.findViewById(R.id.send_chat_message);
         button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
 	    {
-		TextView textView1 = (TextView) m_view.findViewById
+		TextView textView1 = m_view.findViewById
 		    (R.id.chat_message);
 
 		if(textView1.getText().toString().trim().isEmpty())
@@ -326,7 +325,7 @@ public class FireChannel extends View
 
 		String str = textView1.getText().toString().trim();
 		StringBuilder stringBuilder = new StringBuilder();
-		TextView textView2 = (TextView) m_view.findViewById
+		TextView textView2 = m_view.findViewById
 		    (R.id.chat_messages);
 
 		textView2.append("[");
@@ -352,7 +351,7 @@ public class FireChannel extends View
 		Kernel.getInstance().enqueueFireMessage(str, m_id, m_name);
 		scrollMessagesView();
 
-		final TextView textView3 = (TextView) m_view.findViewById
+		final TextView textView3 = m_view.findViewById
 		    (R.id.chat_message);
 
 		textView3.post(new Runnable()
@@ -372,8 +371,8 @@ public class FireChannel extends View
 	if(m_view == null)
 	    return;
 
-	final NestedScrollView nestedScrollView = (NestedScrollView)
-	    m_view.findViewById(R.id.chat_scrollview);
+	final NestedScrollView nestedScrollView = m_view.findViewById
+	    (R.id.chat_scrollview);
 
 	nestedScrollView.post(new Runnable()
 	{
@@ -384,7 +383,7 @@ public class FireChannel extends View
 	    }
 	});
 
-	final TextView textView1 = (TextView) m_view.findViewById
+	final TextView textView1 = m_view.findViewById
 	    (R.id.chat_message);
 
 	textView1.post(new Runnable()
@@ -444,7 +443,7 @@ public class FireChannel extends View
 			    @Override
 			    public void run()
 			    {
-				Button button1 = (Button) m_view.findViewById
+				Button button1 = m_view.findViewById
 				    (R.id.send_chat_message);
 
 				if(state)
@@ -478,19 +477,19 @@ public class FireChannel extends View
 	    m_participants.put(m_id, participant);
 	    populateParticipants();
 
-	    TextView textView1 = (TextView) m_view.findViewById(R.id.fire_name);
+	    TextView textView1 = m_view.findViewById(R.id.fire_name);
 
 	    textView1.setText(m_name);
 
 	    if(!Kernel.getInstance().igniteFire(m_name))
 	    {
-		Button button1 = (Button) m_view.findViewById
+		Button button1 = m_view.findViewById
 		    (R.id.clear_chat_messages);
 
 		button1.setEnabled(false);
-		button1 = (Button) m_view.findViewById(R.id.send_chat_message);
+		button1 = m_view.findViewById(R.id.send_chat_message);
 		button1.setEnabled(false);
-		textView1 = (TextView) m_view.findViewById(R.id.chat_messages);
+		textView1 = m_view.findViewById(R.id.chat_messages);
 
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -513,7 +512,7 @@ public class FireChannel extends View
 		textView1.append(spannable);
 	    }
 
-	    textView1 = (TextView) m_view.findViewById(R.id.chat_message);
+	    textView1 = m_view.findViewById(R.id.chat_message);
 	    textView1.requestFocus();
 	}
 
@@ -534,7 +533,7 @@ public class FireChannel extends View
 	status(id, name);
 
 	StringBuilder stringBuilder = new StringBuilder();
-	TextView textView = (TextView) m_view.findViewById(R.id.chat_messages);
+	TextView textView = m_view.findViewById(R.id.chat_messages);
 
 	textView.append("[");
 	textView.append(m_simpleDateFormat.format(new Date()));
@@ -569,7 +568,7 @@ public class FireChannel extends View
 		if(!name.equals(participant.m_name))
 		{
 		    StringBuilder stringBuilder = new StringBuilder();
-		    TextView textView = (TextView) m_view.findViewById
+		    TextView textView = m_view.findViewById
 			(R.id.chat_messages);
 
 		    stringBuilder.append(participant.m_name);
@@ -623,7 +622,7 @@ public class FireChannel extends View
 	     spannable.length(),
 	     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-	TextView textView = (TextView) m_view.findViewById(R.id.chat_messages);
+	TextView textView = m_view.findViewById(R.id.chat_messages);
 
 	textView.append("[");
 	textView.append(m_simpleDateFormat.format(new Date()));

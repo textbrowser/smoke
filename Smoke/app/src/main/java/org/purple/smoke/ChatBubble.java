@@ -86,7 +86,7 @@ public class ChatBubble extends View
 
     public void setText(String text, int location)
     {
-	TextView textView = (TextView) m_view.findViewById(R.id.text);
+	TextView textView = m_view.findViewById(R.id.text);
 
 	textView.setText("");
 
