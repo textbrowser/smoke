@@ -165,11 +165,12 @@ public class Fire extends AppCompatActivity
 	if(State.getInstance().containsFire(name))
 	    return;
 
-	FireChannel fireChannel = new FireChannel(m_id, name, Fire.this);
+	FireChannel fireChannel = null;
+	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
 
+	fireChannel = new FireChannel(m_id, name, Fire.this, viewGroup);
 	State.getInstance().addFire(fireChannel);
 
-	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
 	int index = -1;
 
 	for(int i = 0; i < viewGroup.getChildCount(); i++)

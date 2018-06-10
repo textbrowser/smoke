@@ -82,6 +82,7 @@ public class FireChannel extends View
     private String m_id = "";
     private String m_name = "";
     private View m_view = null;
+    private ViewGroup m_parent = null;
     private final SimpleDateFormat m_simpleDateFormat =
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
     private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
@@ -402,7 +403,10 @@ public class FireChannel extends View
 	super.onDraw(canvas);
     }
 
-    public FireChannel(String id, String name, Context context)
+    public FireChannel(String id,
+		       String name,
+		       Context context,
+		       ViewGroup parent)
     {
 	super(context);
 	m_context = context;
@@ -410,6 +414,7 @@ public class FireChannel extends View
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_name = name;
+	m_parent = parent;
 	createSchedulers();
     }
 
@@ -422,7 +427,7 @@ public class FireChannel extends View
     {
 	if(m_view == null)
 	{
-	    m_view = m_inflater.inflate(R.layout.fire_channel, null);
+	    m_view = m_inflater.inflate(R.layout.fire_channel, m_parent, false);
 	    m_connectionStatusScheduler = Executors.
 		newSingleThreadScheduledExecutor();
 	    m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
