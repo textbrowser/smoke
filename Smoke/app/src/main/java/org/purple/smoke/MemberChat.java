@@ -41,6 +41,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -403,6 +405,12 @@ public class MemberChat extends AppCompatActivity
 	*/
 
 	prepareSchedulers();
+
+	/*
+	** Register other things.
+	*/
+
+	registerForContextMenu(findViewById(R.id.status));
     }
 
     @Override
@@ -440,16 +448,27 @@ public class MemberChat extends AppCompatActivity
 		}
 	    };
 
-	if(itemId > -1)
-	    Miscellaneous.showPromptDialog
-		(MemberChat.this,
-		 listener,
-		 "Are you sure that you wish to delete the selected message?");
-	else
-	    Miscellaneous.showPromptDialog
-		(MemberChat.this,
-		 listener,
-		 "Are you sure that you wish to delete all of the messages?");
+	switch(groupId)
+	{
+	case 0:
+	    Kernel.getInstance().retrieveChatMessages();
+	    break;
+	case 1:
+	    if(itemId > -1)
+		Miscellaneous.showPromptDialog
+		    (MemberChat.this,
+		     listener,
+		     "Are you sure that you wish to delete the " +
+		     "selected message?");
+	    else
+		Miscellaneous.showPromptDialog
+		    (MemberChat.this,
+		     listener,
+		     "Are you sure that you wish to delete all " +
+		     "of the messages?");
+
+	    break;
+	}
 
 	return true;
     }
@@ -501,6 +520,22 @@ public class MemberChat extends AppCompatActivity
 	}
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu,
+				    View view,
+				    ContextMenuInfo menuInfo)
+    {
+	super.onCreateContextMenu(menu, view, menuInfo);
+
+	MenuItem item = null;
+
+	item = menu.add(0, -1, 0, "Retrieve Messages");
+	item.setEnabled
+	    (Kernel.getInstance().isConnected() &&
+	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").
+	     isEmpty());
     }
 
     @Override
