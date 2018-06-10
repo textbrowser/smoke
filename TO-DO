@@ -170,6 +170,8 @@ Completed Items
 131.   Context menu items in Member Chat: delete all, delete selected.
 132.   Banner text may shadow member status in Member Chat.
 133.   Deploy new user name to Fire channels.
+134.   Chat messages will appear blue if they are assembled from the internal
+       log and are beyond the specific time window.
 
 Future Items
 
@@ -234,5 +236,3 @@ Remaining Items
        bubble time font color and size.
 10.    Resize Member Chat bubbles according to contents.
 11.    Push sent messages from Member Chat to Chat.
-12.    Chat messages will appear blue if they are assembled from the internal
-       log and are beyond the specific time window.
