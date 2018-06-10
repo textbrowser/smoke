@@ -1204,53 +1204,58 @@ public class Chat extends AppCompatActivity
 
     @Override
     public void onCreateContextMenu(ContextMenu menu,
-				    View v,
+				    View view,
 				    ContextMenuInfo menuInfo)
     {
-	super.onCreateContextMenu(menu, v, menuInfo);
+	super.onCreateContextMenu(menu, view, menuInfo);
 
 	MenuItem item = null;
 
-	if(v.getTag() != null)
+	if(view.getTag() != null)
 	{
 	    menu.add
 		(0,
-		 v.getId(),
+		 view.getId(),
 		 0,
 		 "Custom Session (" +
 		 Miscellaneous.
-		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
+		 delimitString(view.getTag().toString().
+			       replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")");
 	    menu.add
 		(1,
-		 v.getId(),
+		 view.getId(),
 		 0,
 		 "New Window (" +
 		 Miscellaneous.
-		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
+		 delimitString(view.getTag().toString().
+			       replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")");
 	    item = menu.add
 		(2,
-		 v.getId(),
+		 view.getId(),
 		 0,
 		 "Optional Signatures (" +
 		 Miscellaneous.
-		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
+		 delimitString(view.getTag().toString().
+			       replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")").setCheckable(true);
 	    item.setChecked
 		(m_databaseHelper.
-		 readParticipantOptions(s_cryptography, v.getTag().toString()).
+		 readParticipantOptions(s_cryptography, view.getTag().
+					toString()).
 		 contains("optional_signatures = true"));
 	    menu.add
 		(3,
-		 v.getId(),
+		 view.getId(),
 		 0,
 		 "Purge Session (" +
 		 Miscellaneous.
-		 delimitString(v.getTag().toString().replace(":", ""), '-', 4).
+		 delimitString(view.getTag().toString().
+			       replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")");
 	}

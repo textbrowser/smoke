@@ -28,6 +28,11 @@
 package org.purple.smoke;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View.OnCreateContextMenuListener;
+import android.view.View;
 import android.view.ViewGroup;
 
 public class MemberChatAdapter extends RecyclerView.Adapter
@@ -39,6 +44,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
     private final static Database s_database = Database.getInstance();
 
     public static class ViewHolder extends RecyclerView.ViewHolder
+	implements OnCreateContextMenuListener
     {
 	ChatBubble m_chatBubble = null;
 	String m_sipHashId = "";
@@ -46,9 +52,19 @@ public class MemberChatAdapter extends RecyclerView.Adapter
         public ViewHolder(ChatBubble chatBubble, String sipHashId)
 	{
 	    super(chatBubble.view());
+	    chatBubble.view().setOnCreateContextMenuListener(this);
 	    m_chatBubble = chatBubble;
 	    m_sipHashId = sipHashId;
         }
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu,
+					View view,
+					ContextMenuInfo menuInfo)
+	{
+	    menu.add(0, view.getId(), 0, "Delete");
+	    menu.add(0, -1, 0, "Delete All");
+	}
 
 	public void setData(MemberChatElement memberChatElement)
 	{
@@ -64,8 +80,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    stringBuilder.append(memberChatElement.m_message);
 	    stringBuilder.append("\n");
 	    m_chatBubble.setDate(memberChatElement.m_timestamp);
-	    m_chatBubble.setId(memberChatElement.m_oid);
-	    m_chatBubble.setTag(m_sipHashId);
+	    m_chatBubble.setOid(memberChatElement.m_oid);
 
 	    if(!local)
 		m_chatBubble.setText

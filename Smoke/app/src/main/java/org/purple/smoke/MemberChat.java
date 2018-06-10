@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.Ringtone;
@@ -375,6 +376,52 @@ public class MemberChat extends AppCompatActivity
 	*/
 
 	prepareSchedulers();
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+	if(item == null)
+	    return false;
+
+	final int groupId = item.getGroupId();
+	final int itemId = item.getItemId();
+
+	/*
+	** Prepare a listener.
+	*/
+
+	DialogInterface.OnCancelListener listener =
+	    new DialogInterface.OnCancelListener()
+	    {
+		public void onCancel(DialogInterface dialog)
+		{
+		    if(itemId > -1)
+		    {
+			if(State.getInstance().getString("dialog_accepted").
+			   equals("true"))
+			{
+			}
+		    }
+		    else if(State.getInstance().getString("dialog_accepted").
+			    equals("true"))
+			m_databaseHelper.deleteParticipantMessages
+			    (s_cryptography, m_sipHashId);
+		}
+	    };
+
+	if(itemId > -1)
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete the selected item?");
+	else
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete all of the messages?");
+
+	return true;
     }
 
     @Override

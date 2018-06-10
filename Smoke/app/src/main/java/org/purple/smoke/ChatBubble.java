@@ -79,10 +79,9 @@ public class ChatBubble extends View
 	m_date = new Date(timestamp);
     }
 
-    public void setOid(long oid)
+    public void setOid(int oid)
     {
-	m_view.findViewById(R.id.text).setTag(oid);
-	m_view.setTag(oid);
+	m_view.setId(oid);
     }
 
     public void setText(String text, int location)
@@ -125,12 +124,14 @@ public class ChatBubble extends View
 	    textView.append(spannable);
 	}
 
+	float density = m_context.getResources().getDisplayMetrics().density;
+
 	if(location == LEFT)
 	{
 	    LinearLayout.LayoutParams layoutParams =
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
 
-	    layoutParams.setMarginEnd(250);
+	    layoutParams.setMarginEnd((int) (75.0 * density));
 	    layoutParams.setMarginStart(0);
 	    textView.setBackgroundResource(R.drawable.bubble_left_text);
 	    textView.setLayoutParams(layoutParams);
@@ -139,11 +140,9 @@ public class ChatBubble extends View
 	{
 	    LinearLayout.LayoutParams layoutParams =
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
-	    float density = m_context.getResources().getDisplayMetrics().
-		density;
 
-	    layoutParams.setMarginEnd((int) (5 * density));
-	    layoutParams.setMarginStart(250);
+	    layoutParams.setMarginEnd((int) (5.0 * density));
+	    layoutParams.setMarginStart((int) (75.0 * density));
 	    textView.setBackgroundResource(R.drawable.bubble_right_text);
 	    textView.setLayoutParams(layoutParams);
 	}
