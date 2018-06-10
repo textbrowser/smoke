@@ -137,8 +137,8 @@ public class FireChannel extends View
 					continue;
 
 				    Participant participant = m_participants.
-					get(textView1.getTag
-					    (R.id.participants));
+					get(textView1.
+					    getTag(R.id.participants));
 				    long current = System.currentTimeMillis();
 
 				    if(participant == null ||
