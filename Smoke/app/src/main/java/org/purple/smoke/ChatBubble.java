@@ -79,6 +79,12 @@ public class ChatBubble extends View
 	m_date = new Date(timestamp);
     }
 
+    public void setOid(long oid)
+    {
+	m_view.findViewById(R.id.text).setTag(oid);
+	m_view.setTag(oid);
+    }
+
     public void setText(String text, int location)
     {
 	TextView textView = (TextView) m_view.findViewById(R.id.text);
@@ -133,8 +139,10 @@ public class ChatBubble extends View
 	{
 	    LinearLayout.LayoutParams layoutParams =
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
+	    float density = m_context.getResources().getDisplayMetrics().
+		density;
 
-	    layoutParams.setMarginEnd(5);
+	    layoutParams.setMarginEnd((int) (5 * density));
 	    layoutParams.setMarginStart(250);
 	    textView.setBackgroundResource(R.drawable.bubble_right_text);
 	    textView.setLayoutParams(layoutParams);
