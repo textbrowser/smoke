@@ -80,14 +80,7 @@ public class MemberChat extends AppCompatActivity
 		   intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
 		{
-		    try
-		    {
-			m_adapter.notifyItemInserted
-			    (m_adapter.getItemCount() - 1);
-		    }
-		    catch(Exception exception)
-		    {
-		    }
+		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
 
 		    if(local)
 		    {
@@ -149,13 +142,38 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    private class SmokeLinearLayoutManager extends LinearLayoutManager
+    {
+	SmokeLinearLayoutManager(Context context)
+	{
+	    super(context);
+	}
+
+	@Override
+	public void onLayoutChildren(RecyclerView.Recycler recycler,
+				     RecyclerView.State state)
+	{
+	    /*
+	    ** Android may terminate!
+	    */
+
+	    try
+	    {
+		super.onLayoutChildren(recycler, state);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	}
+    }
+
     private Database m_databaseHelper = Database.getInstance();
-    private LinearLayoutManager m_layoutManager = null;
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter m_adapter = null;
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_name = "00:00:00:00:00:00:00:00";
     private String m_mySipHashId = "";
     private String m_sipHashId = m_name;
@@ -349,7 +367,7 @@ public class MemberChat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-	m_layoutManager = new LinearLayoutManager(this);
+	m_layoutManager = new SmokeLinearLayoutManager(this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_mySipHashId = s_cryptography.sipHashId();
 	m_name = m_sipHashId = State.getInstance().getString
