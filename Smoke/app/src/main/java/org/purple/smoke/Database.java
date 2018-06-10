@@ -2891,6 +2891,38 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void deleteParticipantMessage(Cryptography cryptography,
+					 String sipHashId,
+					 int oid)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    m_db.delete
+		("participants_messages", "oid = ? AND siphash_id_digest = ?",
+		 new String[] {String.valueOf(oid),
+			       Base64.encodeToString(cryptography.
+						     hmac(sipHashId.
+							  toLowerCase().trim().
+							  getBytes("UTF-8")),
+						     Base64.DEFAULT)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void deleteParticipantMessages(Cryptography cryptography,
 					  String sipHashId)
     {

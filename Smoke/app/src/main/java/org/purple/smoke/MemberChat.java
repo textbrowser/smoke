@@ -347,6 +347,14 @@ public class MemberChat extends AppCompatActivity
 		    m_layoutManager.smoothScrollToPosition
 			(m_recyclerView, null, positionStart);
 		}
+
+		@Override
+		public void onItemRangeRemoved
+		    (int positionStart, int itemCount)
+		{
+		    m_layoutManager.smoothScrollToPosition
+			(m_recyclerView, null, positionStart - itemCount);
+		}
 	    });
 	m_name = m_databaseHelper.nameFromSipHashId
 	    (s_cryptography, m_sipHashId);
@@ -401,6 +409,9 @@ public class MemberChat extends AppCompatActivity
 			if(State.getInstance().getString("dialog_accepted").
 			   equals("true"))
 			{
+			    m_databaseHelper.deleteParticipantMessage
+				(s_cryptography, m_sipHashId, itemId);
+			    m_adapter.notifyDataSetChanged();
 			}
 		    }
 		    else if(State.getInstance().getString("dialog_accepted").

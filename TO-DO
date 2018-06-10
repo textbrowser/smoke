@@ -165,6 +165,7 @@ Completed Items
 128.   Scroll on sending of local messages; Member Chat.
 129.   Notify of other member messages in Member Chat.
 130.   Record received messages in Chat from Member Chat.
+131.   Context menu items in Member Chat: delete all, delete selected.
 
 Future Items
 
@@ -220,8 +221,7 @@ Remaining Items
 7.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
 8.     Rich context menu containing other members.
-9.     Context menu items in Member Chat: delete all, delete selected.
-10.    Member Chat theme: bubble colors, bubble font colors,
+9.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
-11.    Banner text may shadow member status in Member Chat.
-12.    Resize Member Chat bubbles according to contents.
+10.    Banner text may shadow member status in Member Chat.
+11.    Resize Member Chat bubbles according to contents.
