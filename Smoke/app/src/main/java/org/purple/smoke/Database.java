@@ -1970,39 +1970,31 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || m_db == null)
 	    return false;
 
+	Cursor cursor = null;
 	boolean contains = false;
 
 	try
 	{
-	    Cursor cursor = null;
+	    cursor = m_db.rawQuery
+		("SELECT EXISTS(SELECT 1 " +
+		 "FROM participants WHERE " +
+		 "siphash_id_digest = ?)",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toLowerCase().
+						   trim().getBytes("UTF-8")),
+					      Base64.DEFAULT)});
 
-	    try
-	    {
-		cursor = m_db.rawQuery
-		    ("SELECT EXISTS(SELECT 1 " +
-		     "FROM participants WHERE " +
-		     "siphash_id_digest = ?)",
-		     new String[] {Base64.
-				   encodeToString(cryptography.
-						  hmac(sipHashId.toLowerCase().
-						       trim().
-						       getBytes("UTF-8")),
-						  Base64.DEFAULT)});
-
-		if(cursor != null && cursor.moveToFirst())
-		    contains = cursor.getInt(0) == 1;
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	    finally
-	    {
-		if(cursor != null)
-		    cursor.close();
-	    }
+	    if(cursor != null && cursor.moveToFirst())
+		contains = cursor.getInt(0) == 1;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
+	    if(cursor != null)
+		cursor.close();
 	}
 
 	return contains;
