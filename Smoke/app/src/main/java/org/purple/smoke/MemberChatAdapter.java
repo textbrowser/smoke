@@ -30,7 +30,6 @@ package org.purple.smoke;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View;
 import android.view.ViewGroup;

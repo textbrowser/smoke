@@ -209,16 +209,10 @@ public class Miscellaneous
 
 	    try
 	    {
-		GZIPOutputStream gzipOutputStream = new GZIPOutputStream
-		    (byteArrayOutputStream);
-
-		try
+		try(GZIPOutputStream gzipOutputStream =
+		    new GZIPOutputStream(byteArrayOutputStream))
 		{
 		    gzipOutputStream.write(bytes);
-		}
-		finally
-		{
-		    gzipOutputStream.close();
 		}
 	    }
 	    finally
@@ -319,20 +313,14 @@ public class Miscellaneous
 
 	    try
 	    {
-		GZIPInputStream gzipInputStream = new GZIPInputStream
-		    (byteArrayInputStream);
-
-		try
+		try(GZIPInputStream gzipInputStream =
+		    new GZIPInputStream(byteArrayInputStream))
 		{
 		    byte buffer[] = new byte[1024];
 		    int rc = 0;
 
 		    while((rc = gzipInputStream.read(buffer)) > 0)
 			byteArrayOutputStream.write(buffer, 0, rc);
-		}
-		finally
-		{
-		    gzipInputStream.close();
 		}
 	    }
 	    finally
