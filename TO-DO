@@ -228,3 +228,4 @@ Remaining Items
 11.    Push sent messages from Member Chat to Chat.
 12.    Chat messages will appear blue if they are assembled from the internal
        log and are beyond the specific time window.
+13.    Vacuum databases.
