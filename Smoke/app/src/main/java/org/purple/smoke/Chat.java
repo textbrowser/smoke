@@ -235,8 +235,8 @@ public class Chat extends AppCompatActivity
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
-	    CheckBox checkBox1 = (CheckBox)
-		findViewById(R.id.participants).findViewWithTag(sipHashId);
+	    CheckBox checkBox1 = findViewById
+		(R.id.participants).findViewWithTag(sipHashId);
 
 	    if(checkBox1 != null)
 	    {
@@ -637,8 +637,8 @@ public class Chat extends AppCompatActivity
 
     private void refreshCheckBox(String sipHashId)
     {
-	CheckBox checkBox1 = (CheckBox)
-	    findViewById(R.id.participants).findViewWithTag(sipHashId);
+	CheckBox checkBox1 = findViewById(R.id.participants).findViewWithTag
+	    (sipHashId);
 
 	if(checkBox1 == null)
 	    return;
@@ -1119,40 +1119,43 @@ public class Chat extends AppCompatActivity
 	    case 2:
 		item.setChecked(!item.isChecked());
 
-		String string = m_databaseHelper.
-		    readParticipantOptions(s_cryptography, sipHashId);
-		String strings[] = string.split(";");
+		String strings[] = null;
+		StringBuilder stringBuilder = new StringBuilder
+		    (m_databaseHelper.
+		     readParticipantOptions(s_cryptography, sipHashId));
+
+		strings = stringBuilder.toString().split(";");
 
 		if(strings == null || strings.length == 0)
 		{
 		    if(item.isChecked())
-			string += "optional_signatures = true";
+			stringBuilder.append("optional_signatures = true");
 		    else
-			string += "optional_signatures = false";
+			stringBuilder.append("optional_signatures = false");
 		}
 		else
 		{
-		    string = "";
+		    stringBuilder.setLength(0);
 
 		    for(int i = 0; i < strings.length; i++)
 			if(!(strings[i].equals("optional_signatures = false") ||
 			     strings[i].equals("optional_signatures = true")))
 			{
-			    string += strings[i];
+			    stringBuilder.append(strings[i]);
 
 			    if(i != strings.length - 1)
-				string += ";";
+				stringBuilder.append(";");
 			}
 
-		    if(!string.isEmpty())
-			string += ";";
+		    if(stringBuilder.length() > 0)
+			stringBuilder.append(";");
 
-		    string += "optional_signatures = " +
-			(item.isChecked() ? "true" : "false");
+		    stringBuilder.append("optional_signatures = ");
+		    stringBuilder.append(item.isChecked() ? "true" : "false");
 		}
 
 		m_databaseHelper.writeParticipantOptions
-		    (s_cryptography, string, sipHashId);
+		    (s_cryptography, stringBuilder.toString(), sipHashId);
 		break;
 	    case 3:
 		Miscellaneous.showPromptDialog
