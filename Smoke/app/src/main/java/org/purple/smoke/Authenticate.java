@@ -363,6 +363,10 @@ public class Authenticate extends AppCompatActivity
 					    showFireActivity();
 					    break;
 					case "MemberChat":
+					    String oid =
+						m_databaseHelper.
+						readSetting(s_cryptography,
+							    "member_chat_oid");
 					    String sipHashId =
 						m_databaseHelper.
 						readSetting(s_cryptography,
@@ -375,15 +379,23 @@ public class Authenticate extends AppCompatActivity
 						sipHashId))
 					    {
 						State.getInstance().setString
+						    ("member_chat_oid", oid);
+						State.getInstance().setString
 						    ("member_chat_siphash_id",
 						     sipHashId);
 						showMemberChatActivity();
 					    }
 					    else
+					    {
+						m_databaseHelper.writeSetting
+						    (s_cryptography,
+						     "member_chat_oid",
+						     "");
 						m_databaseHelper.writeSetting
 						    (s_cryptography,
 						     "member_chat_siphash_id",
 						     "");
+					    }
 
 					    break;
 					case "Settings":

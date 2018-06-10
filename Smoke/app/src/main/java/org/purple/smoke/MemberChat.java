@@ -80,7 +80,14 @@ public class MemberChat extends AppCompatActivity
 		   intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
 		{
-		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
+		    try
+		    {
+			m_adapter.notifyItemInserted
+			    (m_adapter.getItemCount() - 1);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 
 		    if(local)
 		    {
@@ -156,6 +163,7 @@ public class MemberChat extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int STATUS_INTERVAL = 5000; // 5 Seconds
+    private int m_oid = -1;
 
     private void prepareListeners()
     {
@@ -346,6 +354,17 @@ public class MemberChat extends AppCompatActivity
 	m_mySipHashId = s_cryptography.sipHashId();
 	m_name = m_sipHashId = State.getInstance().getString
 	    ("member_chat_siphash_id");
+
+	try
+	{
+	    m_oid = Integer.parseInt
+		(State.getInstance().getString("member_chat_oid"));
+	}
+	catch(Exception exception)
+	{
+	    m_oid = -1;
+	}
+
 	m_receiver = new MemberChatBroadcastReceiver();
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 	m_recyclerView.setHasFixedSize(true);
@@ -431,29 +450,38 @@ public class MemberChat extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
-		    if(itemId > -1)
+		    switch(groupId)
 		    {
-			if(State.getInstance().getString("dialog_accepted").
-			   equals("true"))
+		    case 2:
+			if(itemId > -1)
 			{
-			    m_databaseHelper.deleteParticipantMessage
-				(s_cryptography, m_sipHashId, itemId);
-			    m_adapter.notifyDataSetChanged();
+			    if(State.getInstance().getString("dialog_accepted").
+			       equals("true"))
+			    {
+				m_databaseHelper.deleteParticipantMessage
+				    (s_cryptography, m_sipHashId, itemId);
+				m_adapter.notifyDataSetChanged();
+			    }
 			}
+			else if(State.getInstance().
+				getString("dialog_accepted").equals("true"))
+			    m_databaseHelper.deleteParticipantMessages
+				(s_cryptography, m_sipHashId);
+
+			break;
 		    }
-		    else if(State.getInstance().getString("dialog_accepted").
-			    equals("true"))
-			m_databaseHelper.deleteParticipantMessages
-			    (s_cryptography, m_sipHashId);
 		}
 	    };
 
 	switch(groupId)
 	{
 	case 0:
-	    Kernel.getInstance().retrieveChatMessages();
+	    Kernel.getInstance().call(m_oid, m_sipHashId);
 	    break;
 	case 1:
+	    Kernel.getInstance().retrieveChatMessages();
+	    break;
+	case 2:
 	    if(itemId > -1)
 		Miscellaneous.showPromptDialog
 		    (MemberChat.this,
@@ -531,7 +559,8 @@ public class MemberChat extends AppCompatActivity
 
 	MenuItem item = null;
 
-	item = menu.add(0, -1, 0, "Retrieve Messages");
+	menu.add(0, -1, 0, "Call");
+	item = menu.add(1, -1, 0, "Retrieve Messages");
 	item.setEnabled
 	    (Kernel.getInstance().isConnected() &&
 	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").

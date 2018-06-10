@@ -795,7 +795,7 @@ public class Chat extends AppCompatActivity
 	});
     }
 
-    private void showMemberChatActivity(String sipHashId)
+    private void showMemberChatActivity()
     {
 	saveState();
 
@@ -1128,12 +1128,16 @@ public class Chat extends AppCompatActivity
 		break;
 	    case 1:
 		State.getInstance().setString
+		    ("member_chat_oid", String.valueOf(itemId));
+		State.getInstance().setString
 		    ("member_chat_siphash_id", sipHashId);
 		m_databaseHelper.writeSetting
 		    (null, "lastActivity", "MemberChat");
 		m_databaseHelper.writeSetting
+		    (s_cryptography, "member_chat_oid", String.valueOf(itemId));
+		m_databaseHelper.writeSetting
 		    (s_cryptography, "member_chat_siphash_id", sipHashId);
-		showMemberChatActivity(sipHashId);
+		showMemberChatActivity();
 		break;
 	    case 2:
 		item.setChecked(!item.isChecked());

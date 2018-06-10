@@ -61,8 +61,13 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 					View view,
 					ContextMenuInfo menuInfo)
 	{
-	    menu.add(1, view.getId(), 0, "Delete Message");
-	    menu.add(1, -1, 0, "Delete All Messages");
+	    /*
+	    ** Please update the first parameter if the context menu
+	    ** in MemberChat is modified!
+	    */
+
+	    menu.add(2, view.getId(), 0, "Delete Message");
+	    menu.add(2, -1, 0, "Delete All Messages");
 	}
 
 	public void setData(MemberChatElement memberChatElement)
