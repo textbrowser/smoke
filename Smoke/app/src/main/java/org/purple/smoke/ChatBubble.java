@@ -51,7 +51,7 @@ public class ChatBubble extends View
     private View m_view = null;
     private boolean m_fromSmokeStack = false;
     private final SimpleDateFormat m_simpleDateFormat = new
-	SimpleDateFormat("yyyy-MM-dd h:mm a", Locale.getDefault());
+	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
     public final static int LEFT = 0;
     public final static int RIGHT = 1;
 

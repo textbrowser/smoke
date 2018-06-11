@@ -236,3 +236,4 @@ Remaining Items
 9.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
 10.    Resize Member Chat bubbles according to contents.
+11.    The timestamp in participants_messages must be used for sorting.
