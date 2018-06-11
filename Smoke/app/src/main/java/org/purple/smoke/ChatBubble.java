@@ -49,6 +49,7 @@ public class ChatBubble extends View
     private Date m_date = new Date(System.currentTimeMillis());
     private LayoutInflater m_inflater = null;
     private View m_view = null;
+    private boolean m_fromSmokeStack = false;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm a", Locale.getDefault());
     public final static int LEFT = 0;
@@ -79,6 +80,11 @@ public class ChatBubble extends View
 	m_date = new Date(timestamp);
     }
 
+    public void setFromeSmokeStack(boolean state)
+    {
+	m_fromSmokeStack = state;
+    }
+
     public void setOid(int oid)
     {
 	m_view.setId(oid);
@@ -107,7 +113,8 @@ public class ChatBubble extends View
 
 	{
 	    Spannable spannable = new SpannableStringBuilder
-		(m_simpleDateFormat.format(m_date));
+		((m_fromSmokeStack ? "Ozone " : "") +
+		 m_simpleDateFormat.format(m_date));
 
 	    if(location == LEFT)
 		spannable.setSpan

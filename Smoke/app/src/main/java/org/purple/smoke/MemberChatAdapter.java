@@ -84,6 +84,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    stringBuilder.append(memberChatElement.m_message);
 	    stringBuilder.append("\n");
 	    m_chatBubble.setDate(memberChatElement.m_timestamp);
+	    m_chatBubble.setFromeSmokeStack
+		(memberChatElement.m_fromSmokeStack.equals("true"));
 	    m_chatBubble.setOid(memberChatElement.m_oid);
 
 	    if(!local)
