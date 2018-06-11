@@ -433,14 +433,13 @@ public class Kernel
 			    continue;
 
 			byte bytes[] = null;
+			long timestamp = System.currentTimeMillis();
 
 			try
 			{
 			    switch(messageElement.m_messageType)
 			    {
 			    case MessageElement.CHAT_MESSAGE_TYPE:
-				long timestamp = System.currentTimeMillis();
-
 				bytes = Messages.chatMessage
 				    (s_cryptography,
 				     messageElement.m_message,
@@ -559,7 +558,7 @@ public class Kernel
 						    State.getInstance().
 						    chatSequence(messageElement.
 								 m_id),
-						    System.currentTimeMillis());
+						    timestamp);
 
 				    if(bytes != null)
 					enqueueMessage
