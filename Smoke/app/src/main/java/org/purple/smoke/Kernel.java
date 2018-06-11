@@ -1187,7 +1187,12 @@ public class Kernel
 	    if(bytes == null || bytes.length < 128)
 		return 0;
 
-	    boolean ourMessageViaChatTemporaryIdentity = false;
+	    boolean ourMessageViaChatTemporaryIdentity = false; /*
+								** Did the
+								** message
+								** arrive from
+								** SmokeStack?
+								*/
 	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
 		(bytes, 0, bytes.length - 128);
 	    byte array2[] = Arrays.copyOfRange // Second to the last block.
@@ -1442,10 +1447,6 @@ public class Kernel
 		long timestamp = 0;
 
 		for(String string : strings)
-		    /*
-		    ** Ignore byte 0, please see above.
-		    */
-
 		    switch(ii)
 		    {
 		    case 0:
@@ -1550,7 +1551,7 @@ public class Kernel
 
 		s_databaseHelper.writeParticipantMessage
 		    (s_cryptography,
-		     purple ? "true" : "false",
+		     ourMessageViaChatTemporaryIdentity ? "true" : "false",
 		     message,
 		     strings[1],
 		     null,
@@ -1561,7 +1562,9 @@ public class Kernel
 
 		intent.putExtra("org.purple.smoke.message", message);
 		intent.putExtra("org.purple.smoke.name", strings[0]);
-		intent.putExtra("org.purple.smoke.purple", purple);
+		intent.putExtra
+		    ("org.purple.smoke.purple",
+		     ourMessageViaChatTemporaryIdentity);
 		intent.putExtra("org.purple.smoke.sequence", sequence);
 		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		intent.putExtra("org.purple.smoke.timestamp", timestamp);
