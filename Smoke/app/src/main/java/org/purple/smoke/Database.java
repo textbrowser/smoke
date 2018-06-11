@@ -1056,6 +1056,11 @@ public class Database extends SQLiteOpenHelper
 			memberChatElement.m_oid = cursor.getInt(i);
 			continue;
 		    }
+		    else if(i == 2)
+		    {
+			memberChatElement.m_timestamp = cursor.getLong(i);
+			continue;
+		    }
 
 		    byte bytes[] = cryptography.mtd
 			(Base64.decode(cursor.getString(i).getBytes(),
@@ -1091,18 +1096,6 @@ public class Database extends SQLiteOpenHelper
 			else
 			    memberChatElement.m_message =
 				"error (" + oid + ")";
-
-			break;
-		    case 2:
-			if(bytes != null)
-			    try
-			    {
-				memberChatElement.m_timestamp =
-				    Long.parseLong(new String(bytes));
-			    }
-			    catch(Exception exception)
-			    {
-			    }
 
 			break;
 		    }
