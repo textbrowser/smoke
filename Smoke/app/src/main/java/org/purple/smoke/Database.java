@@ -3876,7 +3876,8 @@ public class Database extends SQLiteOpenHelper
 	    values.put
 		("message_digest",
 		 Base64.encodeToString(cryptography.
-				       hmac((message +
+				       hmac((fromSmokeStack +
+					     message +
 					     sipHashId +
 					     timestamp).getBytes()),
 				       Base64.DEFAULT));
