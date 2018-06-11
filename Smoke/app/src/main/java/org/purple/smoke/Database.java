@@ -1035,7 +1035,7 @@ public class Database extends SQLiteOpenHelper
 		 "timestamp, " +
 		 "oid " +
 		 "FROM participants_messages WHERE siphash_id_digest = ? " +
-		 "ORDER BY oid LIMIT 1 OFFSET CAST(? AS INTEGER)",
+		 "ORDER BY timestamp LIMIT 1 OFFSET CAST(? AS INTEGER)",
 		 new String[] {Base64.
 			       encodeToString(cryptography.
 					      hmac(sipHashId.toLowerCase().
@@ -3321,7 +3321,7 @@ public class Database extends SQLiteOpenHelper
 	    "message TEXT NOT NULL, " +
 	    "message_digest TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
-	    "timestamp TEXT NOT NULL, " +
+	    "timestamp INTEGER NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (message_digest, siphash_id_digest))";
@@ -3839,8 +3839,8 @@ public class Database extends SQLiteOpenHelper
 					String fromSmokeStack,
 					String message,
 					String sipHashId,
-					String timestamp,
-					byte attachment[])
+					byte attachment[],
+					long timestamp)
     {
 	prepareDb();
 
@@ -3876,6 +3876,12 @@ public class Database extends SQLiteOpenHelper
 	    values.put
 		("message_digest",
 		 Base64.encodeToString(cryptography.
+				       /*
+				       ** It's very possible that a message
+				       ** sent by one device will be identical
+				       ** to the message sent by another
+				       ** device.
+				       */
 				       hmac((message +
 					     sipHashId +
 					     timestamp).getBytes()),
@@ -3886,10 +3892,14 @@ public class Database extends SQLiteOpenHelper
 				       hmac(sipHashId.toLowerCase().
 					    trim().getBytes("UTF-8")),
 				       Base64.DEFAULT));
-	    values.put
-		("timestamp",
-		 Base64.encodeToString(cryptography.etm(timestamp.getBytes()),
-				       Base64.DEFAULT));
+
+	    /*
+	    ** We want to preserve the order of the time values.
+	    ** That is, if t_a < t_b, then E(t_a) < E(t_b) must
+	    ** also be true. Or, H(t_a) < H(t_b).
+	    */
+
+	    values.put("timestamp", timestamp);
 	    m_db.insert("participants_messages", null, values);
 	    m_db.setTransactionSuccessful();
 	}

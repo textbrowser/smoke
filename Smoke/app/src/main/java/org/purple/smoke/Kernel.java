@@ -457,8 +457,8 @@ public class Kernel
 				     "local",
 				     messageElement.m_message,
 				     messageElement.m_id,
-				     String.valueOf(timestamp),
-				     null);
+				     null,
+				     timestamp);
 
 				Intent intent = new Intent
 				    ("org.purple.smoke.chat_local_message");
@@ -1553,8 +1553,8 @@ public class Kernel
 		     purple ? "true" : "false",
 		     message,
 		     strings[1],
-		     String.valueOf(timestamp),
-		     null);
+		     null,
+		     timestamp);
 
 		Intent intent = new Intent
 		    ("org.purple.smoke.chat_message");
