@@ -1855,7 +1855,8 @@ public class Settings extends AppCompatActivity
 			    startKernel();
 
 			    if(m_databaseHelper.
-			       readSetting(null, "automatic_neighbors_refresh").
+			       readSetting(null,
+					   "automatic_neighbors_refresh").
 			       equals("true"))
 				startTimers();
 			    else
@@ -2156,7 +2157,14 @@ public class Settings extends AppCompatActivity
 
 	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 
-	if(m_databaseHelper.
+	if(m_databaseHelper.readSetting(null, "automatic_neighbors_refresh").
+	   isEmpty())
+	{
+	    checkBox1.setChecked(true);
+	    m_databaseHelper.writeSetting
+		(null, "automatic_neighbors_refresh", "true");
+	}
+	else if(m_databaseHelper.
 	   readSetting(null, "automatic_neighbors_refresh").equals("true"))
 	    checkBox1.setChecked(true);
 	else
@@ -2179,7 +2187,13 @@ public class Settings extends AppCompatActivity
 
 	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
 
-	if(m_databaseHelper.readSetting(null, "always_awake").equals("true"))
+	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())
+	{
+	    checkBox1.setChecked(true);
+	    m_databaseHelper.writeSetting(null, "always_awake", "true");
+	}
+	else if(m_databaseHelper.readSetting(null, "always_awake").
+		equals("true"))
 	    checkBox1.setChecked(true);
 	else
 	    checkBox1.setChecked(false);

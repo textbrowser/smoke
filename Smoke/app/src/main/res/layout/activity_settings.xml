@@ -64,6 +64,7 @@
                     android:id="@+id/sleepless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="@string/prefer_active_cpu" />
 
                 <Button
@@ -128,6 +129,7 @@
                         android:id="@+id/automatic_refresh"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:checked="true"
                         android:text="@string/automatic_refresh" />
 
                     <CheckBox
