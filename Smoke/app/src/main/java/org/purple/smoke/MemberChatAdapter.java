@@ -47,6 +47,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
     {
 	ChatBubble m_chatBubble = null;
 	String m_sipHashId = "";
+	int m_position = -1;
 
         public ViewHolder(ChatBubble chatBubble, String sipHashId)
 	{
@@ -66,11 +67,12 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    ** in MemberChat is modified!
 	    */
 
-	    menu.add(2, view.getId(), 0, "Delete Message");
-	    menu.add(2, -1, 0, "Delete All Messages");
+	    menu.add(2, -2, 1, "Delete All Messages");
+	    menu.add(2, view.getId(), 2, "Delete Message");
+	    menu.add(3, m_position, 0, "Copy Text");
 	}
 
-	public void setData(MemberChatElement memberChatElement)
+	public void setData(MemberChatElement memberChatElement, int position)
 	{
 	    if(m_chatBubble == null || memberChatElement == null)
 		return;
@@ -94,6 +96,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    else
 		m_chatBubble.setText
 		    (stringBuilder.toString(), ChatBubble.RIGHT);
+
+	    m_position = position;
 	}
     }
 
@@ -128,6 +132,6 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	if(memberChatElement == null)
 	    return;
 
-	viewHolder.setData(memberChatElement);
+	viewHolder.setData(memberChatElement, position);
     }
 }

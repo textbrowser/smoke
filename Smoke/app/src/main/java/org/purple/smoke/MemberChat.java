@@ -28,6 +28,8 @@
 package org.purple.smoke;
 
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +43,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -512,6 +515,40 @@ public class MemberChat extends AppCompatActivity
 		     listener,
 		     "Are you sure that you wish to delete all " +
 		     "of the messages?");
+
+	    break;
+	case 3:
+	    try
+	    {
+		View view = (View) m_layoutManager.findViewByPosition(itemId);
+
+		if(view != null)
+		{
+		    TextView textView = (TextView) view.findViewById
+			(R.id.text);
+
+		    if(textView != null)
+		    {
+			ClipboardManager clipboardManager = (ClipboardManager)
+			    getSystemService(Context.CLIPBOARD_SERVICE);
+
+			if(clipboardManager != null)
+			{
+			    ClipData clipData = null;
+			    SpannableStringBuilder spannableStringBuilder =
+				new SpannableStringBuilder(textView.getText());
+
+			    spannableStringBuilder.clearSpans();
+			    clipData = ClipData.newPlainText
+				("Smoke", spannableStringBuilder.toString());
+			    clipboardManager.setPrimaryClip(clipData);
+			}
+		    }
+		}
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 
 	    break;
 	}
