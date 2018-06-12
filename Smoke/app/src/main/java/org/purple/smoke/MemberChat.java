@@ -340,8 +340,18 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    private void saveState()
+    {
+	TextView textView1 = (TextView) findViewById(R.id.chat_message);
+
+	State.getInstance().writeCharSequence
+	    ("member_chat.message", textView1.getText());
+    }
+
     private void showChatActivity()
     {
+	saveState();
+
 	Intent intent = new Intent(MemberChat.this, Chat.class);
 
 	startActivity(intent);
@@ -350,6 +360,8 @@ public class MemberChat extends AppCompatActivity
 
     private void showFireActivity()
     {
+	saveState();
+
 	Intent intent = new Intent(MemberChat.this, Fire.class);
 
 	startActivity(intent);
@@ -358,6 +370,8 @@ public class MemberChat extends AppCompatActivity
 
     private void showSettingsActivity()
     {
+	saveState();
+
 	Intent intent = new Intent(MemberChat.this, Settings.class);
 
 	startActivity(intent);
@@ -451,6 +465,21 @@ public class MemberChat extends AppCompatActivity
 	*/
 
 	registerForContextMenu(findViewById(R.id.status));
+
+	/*
+	** Restore states.
+	*/
+
+	try
+	{
+	    textView1 = (TextView) findViewById(R.id.chat_message);
+	    textView1.setText
+		(State.getInstance().getCharSequence("member_chat.message"));
+
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     @Override
@@ -633,6 +662,8 @@ public class MemberChat extends AppCompatActivity
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
+
+	saveState();
     }
 
     @Override
@@ -679,5 +710,7 @@ public class MemberChat extends AppCompatActivity
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
+
+	saveState();
     }
 }
