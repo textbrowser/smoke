@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -34,6 +35,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,19 +128,24 @@ public class ChatBubble extends View
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 	    spannable.setSpan
-		(new RelativeSizeSpan(0.75f),
+		(new RelativeSizeSpan(0.80f),
 		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    textView.append(spannable);
 	}
 
+	DisplayMetrics displayMetrics = new DisplayMetrics();
 	float density = m_context.getResources().getDisplayMetrics().density;
+
+	((Activity) m_context).getWindowManager().getDefaultDisplay().
+	    getMetrics(displayMetrics);
 
 	if(location == LEFT)
 	{
 	    LinearLayout.LayoutParams layoutParams =
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
 
-	    layoutParams.setMarginEnd((int) (75.0 * density));
+	    layoutParams.setMarginEnd
+		((int) (0.20 * displayMetrics.widthPixels));
 	    layoutParams.setMarginStart(0);
 	    textView.setBackgroundResource(R.drawable.bubble_left_text);
 	    textView.setLayoutParams(layoutParams);
@@ -149,7 +156,8 @@ public class ChatBubble extends View
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
 
 	    layoutParams.setMarginEnd((int) (5.0 * density));
-	    layoutParams.setMarginStart((int) (75.0 * density));
+	    layoutParams.setMarginStart
+		((int) (0.20 * displayMetrics.widthPixels));
 	    textView.setBackgroundResource(R.drawable.bubble_right_text);
 	    textView.setLayoutParams(layoutParams);
 	}
