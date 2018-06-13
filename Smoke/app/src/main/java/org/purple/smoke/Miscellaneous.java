@@ -394,7 +394,7 @@ public class Miscellaneous
 		subMenu = menu.addSubMenu
 		    (Menu.NONE,
 		     Menu.NONE,
-		     position, // Some large order!
+		     position,
 		     "Chat Messaging Window");
 	    else
 		subMenu = menu.getItem(menu.size() - 1).getSubMenu();
