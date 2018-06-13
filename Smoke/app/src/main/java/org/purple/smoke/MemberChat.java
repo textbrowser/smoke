@@ -416,6 +416,13 @@ public class MemberChat extends AppCompatActivity
 
 	if(m_sipHashId.isEmpty())
 	    m_name = m_sipHashId = "00:00:00:00:00:00:00:00";
+	else if(m_sipHashId.contains("-"))
+	    /*
+	    ** The SipHash ID is expected to be in a specific format.
+	    */
+
+	    m_sipHashId = Miscellaneous.delimitString
+		(m_sipHashId.replace("-", ""), ':', 2);
 
 	/*
 	** Prepare various widgets.
@@ -450,13 +457,14 @@ public class MemberChat extends AppCompatActivity
 	m_recyclerView.setAdapter(m_adapter);
 	m_recyclerView.setLayoutManager(m_layoutManager);
 
+	String string =	Miscellaneous.delimitString
+	    (m_sipHashId.replace(":", ""), '-', 4).toUpperCase();
 	TextView textView1 = (TextView) findViewById(R.id.banner);
 
-	textView1.setText(m_name +
-			  "@" +
-			  Miscellaneous.
-			  delimitString(m_sipHashId.replace(":", ""), '-', 4).
-			  toUpperCase());
+	if(string.isEmpty())
+	    textView1.setText("Error!");
+	else
+	    textView1.setText(m_name + "@" + string);
 
 	/*
 	** Prepare listeners.

@@ -415,7 +415,10 @@ public class Miscellaneous
 		     0,
 		     participantElement.m_name +
 		     " (" +
-		     participantElement.m_sipHashId +
+		     Miscellaneous.
+		     delimitString(participantElement.m_sipHashId.
+				   replace(":", ""), '-', 4).
+		     toUpperCase() +
 		     ")");
 	    }
 
