@@ -552,6 +552,8 @@ public class Authenticate extends AppCompatActivity
 	    if(indexOf >= 0)
 		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
+	    sipHashId = Miscellaneous.delimitString
+		(sipHashId.replace("-", "").replace(":", ""), ':', 2);
 	    State.getInstance().setString
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString

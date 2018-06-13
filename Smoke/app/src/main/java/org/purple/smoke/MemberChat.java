@@ -416,13 +416,6 @@ public class MemberChat extends AppCompatActivity
 
 	if(m_sipHashId.isEmpty())
 	    m_name = m_sipHashId = "00:00:00:00:00:00:00:00";
-	else if(m_sipHashId.contains("-"))
-	    /*
-	    ** The SipHash ID is expected to be in a specific format.
-	    */
-
-	    m_sipHashId = Miscellaneous.delimitString
-		(m_sipHashId.replace("-", ""), ':', 2);
 
 	/*
 	** Prepare various widgets.
@@ -646,6 +639,9 @@ public class MemberChat extends AppCompatActivity
 	    if(indexOf >= 0)
 		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
+	    sipHashId = Miscellaneous.delimitString
+		(sipHashId.replace("-", "").replace(":", "").
+		 toLowerCase(), ':', 2);
 	    State.getInstance().setString
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString

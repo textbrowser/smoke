@@ -693,21 +693,25 @@ public class Database extends SQLiteOpenHelper
 	    if(sipHashId.isEmpty())
 		cursor = m_db.rawQuery
 		    ("SELECT " +
-		     "name, " +
-		     "keystream, " +
-		     "last_status_timestamp, " +
-		     "siphash_id, " +
-		     "oid " +
-		     "FROM participants", null);
+		     "(SELECT s.name FROM siphash_ids s " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) " +
+		     "AS a, " +
+		     "p.keystream, " +
+		     "p.last_status_timestamp, " +
+		     "p.siphash_id, " +
+		     "p.oid " +
+		     "FROM participants p", null);
 	    else
 		cursor = m_db.rawQuery
 		    ("SELECT " +
-		     "name, " +
-		     "keystream, " +
-		     "last_status_timestamp, " +
-		     "siphash_id, " +
-		     "oid " +
-		     "FROM participants WHERE siphash_id_digest = ?",
+		     "(SELECT s.name FROM siphash_ids s " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) " +
+		     "AS a, " +
+		     "p.keystream, " +
+		     "p.last_status_timestamp, " +
+		     "p.siphash_id, " +
+		     "p.oid " +
+		     "FROM participants p WHERE siphash_id_digest = ?",
 		     new String[] {Base64.
 				   encodeToString(cryptography.
 						  hmac(sipHashId.toLowerCase().
@@ -1709,16 +1713,13 @@ public class Database extends SQLiteOpenHelper
 	    ** we'll reject the data.
 	    */
 
-	    String name = "";
-
 	    sipHashId = Miscellaneous.
 		sipHashIdFromData(Miscellaneous.
 				  joinByteArrays(publicKey.getEncoded(),
 						 signatureKey.getEncoded())).
 		toLowerCase();
-	    name = nameFromSipHashId(cryptography, sipHashId);
 
-	    if(name.isEmpty())
+	    if(nameFromSipHashId(cryptography, sipHashId).isEmpty())
 		return "";
 
 	    values = new ContentValues();
@@ -1731,12 +1732,11 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(3, "identity");
 	    sparseArray.append(4, "keystream");
 	    sparseArray.append(5, "last_status_timestamp");
-	    sparseArray.append(6, "name");
-	    sparseArray.append(7, "options");
-	    sparseArray.append(8, "signature_public_key");
-	    sparseArray.append(9, "signature_public_key_digest");
-	    sparseArray.append(10, "siphash_id");
-	    sparseArray.append(11, "siphash_id_digest");
+	    sparseArray.append(6, "options");
+	    sparseArray.append(7, "signature_public_key");
+	    sparseArray.append(8, "signature_public_key_digest");
+	    sparseArray.append(9, "siphash_id");
+	    sparseArray.append(10, "siphash_id_digest");
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
@@ -1761,9 +1761,6 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case "last_status_timestamp":
 		    bytes = cryptography.etm("".getBytes());
-		    break;
-		case "name":
-		    bytes = cryptography.etm(name.trim().getBytes());
 		    break;
 		case "options":
 		    bytes = cryptography.etm
@@ -1842,7 +1839,9 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT name, siphash_id " +
-		 "FROM participants WHERE encryption_public_key_digest = ?",
+		 "FROM siphash_ids WHERE siphash_id_digest IN " +
+		 "(SELECT siphash_id_digest FROM participants " +
+		 "WHERE encryption_public_key_digest = ?)",
 		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -2375,14 +2374,12 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || m_db == null)
 	    return false;
 
-	ContentValues values1 = null;
-	ContentValues values2 = null;
+	ContentValues values = null;
 	boolean ok = true;
 
 	try
 	{
-	    values1 = new ContentValues();
-	    values2 = new ContentValues();
+	    values = new ContentValues();
 	}
 	catch(Exception exception)
 	{
@@ -2461,33 +2458,10 @@ public class Database extends SQLiteOpenHelper
 
 		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-		values1.put(sparseArray.get(i), str);
+		values.put(sparseArray.get(i), str);
 	    }
 
 	    sparseArray.clear();
-	    sparseArray.append(0, "name");
-
-	    for(int i = 0; i < sparseArray.size(); i++)
-	    {
-		if(sparseArray.get(i).equals("name"))
-		    bytes = cryptography.etm(name.getBytes());
-
-		if(bytes == null)
-		{
-		    StringBuilder stringBuilder = new StringBuilder();
-
-		    stringBuilder.append
-			("Database::writeSipHashParticipant(): error with ");
-		    stringBuilder.append(sparseArray.get(i));
-		    stringBuilder.append(" field.");
-		    writeLog(stringBuilder.toString());
-		    throw new Exception();
-		}
-
-		String str = Base64.encodeToString(bytes, Base64.DEFAULT);
-
-		values2.put(sparseArray.get(i), str);
-	    }
 	}
 	catch(Exception exception)
 	{
@@ -2502,7 +2476,7 @@ public class Database extends SQLiteOpenHelper
 	    {
 		if(m_db.
 		   update("siphash_ids",
-			  values1,
+			  values,
 			  "siphash_id_digest = ?",
 			  new String[] {Base64.
 					encodeToString(cryptography.
@@ -2512,21 +2486,9 @@ public class Database extends SQLiteOpenHelper
 							    getBytes("UTF-8")),
 						       Base64.DEFAULT)}) <= 0)
 		{
-		    if(m_db.replace("siphash_ids", null, values1) == -1)
+		    if(m_db.replace("siphash_ids", null, values) == -1)
 			ok = false;
 		}
-		else if(m_db.update("participants",
-				    values2,
-				    "siphash_id_digest = ?",
-				    new String[] {Base64.
-						  encodeToString
-						  (cryptography.
-						   hmac(sipHashId.
-							toLowerCase().
-							trim().
-							getBytes("UTF-8")),
-						   Base64.DEFAULT)}) == -1)
-		    ok = false;
 
 		m_db.setTransactionSuccessful();
 	    }
@@ -3291,7 +3253,6 @@ public class Database extends SQLiteOpenHelper
 	    "identity TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
 	    "last_status_timestamp TEXT NOT NULL, " +
-	    "name TEXT NOT NULL, " +
 	    "options TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
