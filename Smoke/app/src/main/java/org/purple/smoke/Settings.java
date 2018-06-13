@@ -989,6 +989,7 @@ public class Settings extends AppCompatActivity
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
+	invalidateOptionsMenu();
 	tableLayout.removeAllViews();
 
 	if(arrayList == null || arrayList.isEmpty())
