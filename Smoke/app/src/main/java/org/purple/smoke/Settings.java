@@ -2438,12 +2438,14 @@ public class Settings extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
-		    if(groupId == 0)
+		    switch(groupId)
+		    {
+		    case 0:
 			switch(itemId)
 			{
 			default:
-			    if(State.getInstance().getString("dialog_accepted").
-			       equals("true"))
+			    if(State.getInstance().
+			       getString("dialog_accepted").equals("true"))
 				if(m_databaseHelper.
 				   deleteEntry(String.valueOf(itemId),
 					       "siphash_ids"))
@@ -2467,6 +2469,22 @@ public class Settings extends AppCompatActivity
 
 			    break;
 			}
+
+			break;
+		    case 1:
+			String string = State.getInstance().
+			    getString("settings_participant_name_input");
+
+			if(m_databaseHelper.
+			   writeParticipantName(s_cryptography,
+						string,
+						itemId))
+			    populateParticipants();
+
+			State.getInstance().removeKey
+			    ("settings_participant_name_input");
+			break;
+		    }
 		}
 	    };
 
@@ -2486,9 +2504,19 @@ public class Settings extends AppCompatActivity
 		 replace(")", "") + "?");
 	    break;
 	case 1:
-	    requestKeysOf(String.valueOf(itemId));
+	    Miscellaneous.showTextInputDialog
+		(Settings.this,
+		 listener,
+		 "Please provide a new name for " +
+		 menuItem.getTitle().toString().
+		 replace("New Name (", "").
+		 replace(")", "") + ".",
+		 "Name");
 	    break;
 	case 2:
+	    requestKeysOf(String.valueOf(itemId));
+	    break;
+	case 3:
 	    shareKeysOf(String.valueOf(itemId));
 	    break;
 	}
@@ -2572,19 +2600,20 @@ public class Settings extends AppCompatActivity
 
     @Override
     public void onCreateContextMenu(ContextMenu menu,
-				    View v,
+				    View view,
 				    ContextMenuInfo menuInfo)
     {
-	Object tag1 = v.getTag(R.id.participants);
-	Object tag2 = v.getTag(R.id.refresh_participants);
+	Object tag1 = view.getTag(R.id.participants);
+	Object tag2 = view.getTag(R.id.refresh_participants);
 
 	if(tag1 != null && tag2 != null)
 	{
-	    super.onCreateContextMenu(menu, v, menuInfo);
-	    menu.add(0, v.getId(), 0, "Delete (" + tag1 + ")");
+	    super.onCreateContextMenu(menu, view, menuInfo);
+	    menu.add(0, view.getId(), 0, "Delete (" + tag1 + ")");
+	    menu.add(1, view.getId(), 0, "New Name (" + tag1 + ")");
 
 	    MenuItem menuItem = menu.add
-		(1, v.getId(), 0, "Request Keys via Ozone (" + tag1 + ")");
+		(2, view.getId(), 0, "Request Keys via Ozone (" + tag1 + ")");
 
 	    if(s_cryptography.ozoneEncryptionKey() == null ||
 	       s_cryptography.ozoneEncryptionKey().length != 32 ||
@@ -2592,7 +2621,7 @@ public class Settings extends AppCompatActivity
 	       s_cryptography.ozoneMacKey().length != 64)
 		menuItem.setEnabled(false);
 
-	    menu.add(2, v.getId(), 0, "Share Keys (" + tag1 + ")").
+	    menu.add(3, view.getId(), 0, "Share Keys (" + tag1 + ")").
 		setEnabled((boolean) tag2);
 	}
     }

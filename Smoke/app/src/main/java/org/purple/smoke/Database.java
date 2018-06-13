@@ -1763,7 +1763,7 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.etm("".getBytes());
 		    break;
 		case "name":
-		    bytes = cryptography.etm(name.getBytes());
+		    bytes = cryptography.etm(name.trim().getBytes());
 		    break;
 		case "options":
 		    bytes = cryptography.etm
@@ -2329,6 +2329,41 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return ok;
+    }
+
+    public boolean writeParticipantName(Cryptography cryptography,
+					String name,
+					int oid)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("name",
+		 Base64.encodeToString(cryptography.etm(name.trim().getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update("siphash_ids", values, "oid = ?",
+			new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
     }
 
     public boolean writeSipHashParticipant(Cryptography cryptography,
@@ -3263,8 +3298,7 @@ public class Database extends SQLiteOpenHelper
 	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "special_value_a TEXT, " + /*
-				       ** Telephone number,
-				       ** for example.
+				       ** Telephone number, for example.
 				       */
 	    "special_value_b TEXT, " +
 	    "special_value_c TEXT, " +
