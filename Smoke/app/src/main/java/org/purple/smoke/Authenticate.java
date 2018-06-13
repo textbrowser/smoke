@@ -523,27 +523,49 @@ public class Authenticate extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(MenuItem menuItem)
     {
-	int id = item.getItemId();
+	int groupId = menuItem.getGroupId();
+	int itemId = menuItem.getItemId();
 
-        switch(id)
+	if(groupId == Menu.NONE)
+	    switch(itemId)
+	    {
+	    case R.id.action_chat:
+		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+		showChatActivity();
+		return true;
+	    case R.id.action_fire:
+		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+		showFireActivity();
+		return true;
+	    case R.id.action_settings:
+		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+		showSettingsActivity();
+		return true;
+	    }
+	else
 	{
-	case R.id.action_chat:
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
-	    showChatActivity();
-	    return true;
-	case R.id.action_fire:
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
-	    showFireActivity();
-	    return true;
-	case R.id.action_settings:
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
-	    showSettingsActivity();
-	    return true;
-        }
+	    String sipHashId = menuItem.getTitle().toString();
+	    int indexOf = sipHashId.indexOf("(");
 
-        return super.onOptionsItemSelected(item);
+	    if(indexOf >= 0)
+		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
+
+	    State.getInstance().setString
+		("member_chat_oid", String.valueOf(itemId));
+	    State.getInstance().setString
+		("member_chat_siphash_id", sipHashId);
+	    m_databaseHelper.writeSetting
+		(null, "lastActivity", "MemberChat");
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_siphash_id", sipHashId);
+	    showMemberChatActivity();
+	}
+
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -561,6 +583,8 @@ public class Authenticate extends AppCompatActivity
 	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
+	Miscellaneous.addMembersToMenu
+	    (s_cryptography, m_databaseHelper, menu, 3, 150);
 	return true;
     }
 }

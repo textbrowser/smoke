@@ -1,12 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_authenticate"
-        android:title="@string/authenticate" />
+        android:title="@string/authenticate"
+        android:orderInCategory="100" />
     <item
         android:id="@+id/action_chat"
+        android:orderInCategory="200"
         android:title="@string/chat" />
     <item
-        android:orderInCategory="100"
+        android:orderInCategory="300"
         android:title="@string/action_settings"
         android:id="@+id/action_settings" />
 </menu>

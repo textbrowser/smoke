@@ -2566,7 +2566,7 @@ public class Settings extends AppCompatActivity
 	menu.findItem(R.id.action_fire).setEnabled
 	    (State.getInstance().isAuthenticated());
 	Miscellaneous.addMembersToMenu
-	    (s_cryptography, m_databaseHelper, menu, 3);
+	    (s_cryptography, m_databaseHelper, menu, 3, 250);
 	return true;
     }
 

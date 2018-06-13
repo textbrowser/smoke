@@ -4,15 +4,18 @@
     tools:context="org.purple.smoke.MemberChat">
     <item
         android:id="@+id/action_authenticate"
+        android:orderInCategory="100"
         android:title="@string/authenticate" />
     <item
         android:id="@+id/action_chat"
+        android:orderInCategory="200"
         android:title="@string/chat" />
     <item
         android:id="@+id/action_fire"
+        android:orderInCategory="300"
         android:title="@string/fire" />
     <item
-        android:orderInCategory="100"
+        android:orderInCategory="400"
         android:title="@string/action_settings"
         android:id="@+id/action_settings"
         app:showAsAction="never" />

@@ -1374,7 +1374,7 @@ public class Chat extends AppCompatActivity
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	Miscellaneous.addMembersToMenu
-	    (s_cryptography, m_databaseHelper, menu, 3);
+	    (s_cryptography, m_databaseHelper, menu, 3, 150);
 	return true;
     }
 

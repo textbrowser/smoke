@@ -377,7 +377,8 @@ public class Miscellaneous
     public static void addMembersToMenu(Cryptography cryptography,
 					Database database,
 					Menu menu,
-					int count)
+					int count,
+					int position)
     {
 	if(cryptography == null || database == null || menu == null)
 	    return;
@@ -393,8 +394,8 @@ public class Miscellaneous
 		subMenu = menu.addSubMenu
 		    (Menu.NONE,
 		     Menu.NONE,
-		     1000, // Some large order!
-		     "Users Messaging Window");
+		     position, // Some large order!
+		     "Chat Messaging Window");
 	    else
 		subMenu = menu.getItem(menu.size() - 1).getSubMenu();
 

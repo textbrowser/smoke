@@ -1,13 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="@string/authenticate"
-        android:id="@+id/action_authenticate" />
+        android:id="@+id/action_authenticate"
+        android:orderInCategory="100" />
     <item
         android:id="@+id/action_chat"
-        android:orderInCategory="101"
+        android:orderInCategory="200"
         android:title="@string/chat" />
     <item
         android:id="@+id/action_fire"
-        android:orderInCategory="102"
+        android:orderInCategory="300"
         android:title="@string/fire" />
 </menu>

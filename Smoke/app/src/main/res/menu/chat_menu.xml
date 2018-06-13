@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.purple.smoke.Chat">
     <item android:title="@string/authenticate"
-        android:id="@+id/action_authenticate" />
+        android:id="@+id/action_authenticate"
+        android:orderInCategory="100" />
     <item
         android:id="@+id/action_fire"
+        android:orderInCategory="200"
         android:title="@string/fire" />
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="300"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
