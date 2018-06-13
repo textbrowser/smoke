@@ -1042,19 +1042,19 @@ public class Chat extends AppCompatActivity
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item)
+    public boolean onContextItemSelected(MenuItem menuItem)
     {
-	if(item == null)
+	if(menuItem == null)
 	    return false;
 
 	final String sipHashId = Miscellaneous.delimitString
-	    (item.getTitle().toString().replace("Custom Session ", "").
+	    (menuItem.getTitle().toString().replace("Custom Session ", "").
 	     replace("New Window ", "").
 	     replace("Optional Signatures ", "").
 	     replace("Purge Session ", "").replace("(", "").replace(")", "").
 	     replace("-", ""), ':', 2).toLowerCase();
-	final int groupId = item.getGroupId();
-	final int itemId = item.getItemId();
+	final int groupId = menuItem.getGroupId();
+	final int itemId = menuItem.getItemId();
 
 	/*
 	** Prepare a listener.
@@ -1122,7 +1122,8 @@ public class Chat extends AppCompatActivity
 		    (Chat.this,
 		     listener,
 		     "Please provide a secret for " +
-		     item.getTitle().toString().replace("Custom Session (", "").
+		     menuItem.getTitle().toString().
+		     replace("Custom Session (", "").
 		     replace(")", "") + ".",
 		     "Secret");
 		break;
@@ -1140,7 +1141,7 @@ public class Chat extends AppCompatActivity
 		showMemberChatActivity();
 		break;
 	    case 2:
-		item.setChecked(!item.isChecked());
+		menuItem.setChecked(!menuItem.isChecked());
 
 		String strings[] = null;
 		StringBuilder stringBuilder = new StringBuilder
@@ -1151,7 +1152,7 @@ public class Chat extends AppCompatActivity
 
 		if(strings == null || strings.length == 0)
 		{
-		    if(item.isChecked())
+		    if(menuItem.isChecked())
 			stringBuilder.append("optional_signatures = true");
 		    else
 			stringBuilder.append("optional_signatures = false");
@@ -1174,7 +1175,8 @@ public class Chat extends AppCompatActivity
 			stringBuilder.append(";");
 
 		    stringBuilder.append("optional_signatures = ");
-		    stringBuilder.append(item.isChecked() ? "true" : "false");
+		    stringBuilder.append
+			(menuItem.isChecked() ? "true" : "false");
 		}
 
 		m_databaseHelper.writeParticipantOptions
@@ -1186,7 +1188,8 @@ public class Chat extends AppCompatActivity
 		     listener,
 		     "Are you sure that you " +
 		     "wish to purge the session key stream for " +
-		     item.getTitle().toString().replace("Purge Session (", "").
+		     menuItem.getTitle().toString().
+		     replace("Purge Session (", "").
 		     replace(")", "") + "?");
 		break;
 	    }
@@ -1201,19 +1204,19 @@ public class Chat extends AppCompatActivity
 		requestMessages();
 		break;
 	    case 2: // Show Details
-		item.setChecked(!item.isChecked());
+		menuItem.setChecked(!menuItem.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,
 		     "show_chat_details",
-		     item.isChecked() ? "true" : "false");
+		     menuItem.isChecked() ? "true" : "false");
 		populateParticipants();
 		break;
 	    case 3: // Show Icons
-		item.setChecked(!item.isChecked());
+		menuItem.setChecked(!menuItem.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,
 		     "show_chat_icons",
-		     item.isChecked() ? "true" : "false");
+		     menuItem.isChecked() ? "true" : "false");
 		populateParticipants();
 		break;
 	    }
@@ -1235,7 +1238,7 @@ public class Chat extends AppCompatActivity
     {
 	super.onCreateContextMenu(menu, view, menuInfo);
 
-	MenuItem item = null;
+	MenuItem menuItem = null;
 
 	if(view.getTag() != null)
 	{
@@ -1259,7 +1262,7 @@ public class Chat extends AppCompatActivity
 			       replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")");
-	    item = menu.add
+	    menuItem = menu.add
 		(2,
 		 view.getId(),
 		 0,
@@ -1269,7 +1272,7 @@ public class Chat extends AppCompatActivity
 			       replace(":", ""), '-', 4).
 		 toUpperCase() +
 		 ")").setCheckable(true);
-	    item.setChecked
+	    menuItem.setChecked
 		(m_databaseHelper.
 		 readParticipantOptions(s_cryptography, view.getTag().
 					toString()).
@@ -1287,50 +1290,74 @@ public class Chat extends AppCompatActivity
 	}
 
 	menu.add(0, -1, 0, "Refresh Participants Table");
-	item = menu.add(1, -1, 0, "Retrieve Messages");
-	item.setEnabled
+	menuItem = menu.add(1, -1, 0, "Retrieve Messages");
+	menuItem.setEnabled
 	    (Kernel.getInstance().isConnected() &&
 	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty());
-	item = menu.add(2, -1, 0, "Show Details").setCheckable(true);
-	item.setChecked
+	menuItem = menu.add(2, -1, 0, "Show Details").setCheckable(true);
+	menuItem.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_details").equals("true"));
-	item = menu.add(3, -1, 0, "Show Icons").setCheckable(true);
-	item.setChecked
+	menuItem = menu.add(3, -1, 0, "Show Icons").setCheckable(true);
+	menuItem.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_icons").equals("true"));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(MenuItem menuItem)
     {
-	int id = item.getItemId();
+	int groupId = menuItem.getGroupId();
+	int itemId = menuItem.getItemId();
 
-	if(id == R.id.action_fire)
+	if(groupId == Menu.NONE)
 	{
-	    saveState();
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+	    if(itemId == R.id.action_fire)
+	    {
+		saveState();
+		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 
-	    Intent intent = new Intent(Chat.this, Fire.class);
+		Intent intent = new Intent(Chat.this, Fire.class);
 
-            startActivity(intent);
-	    finish();
-	    return true;
+		startActivity(intent);
+		finish();
+		return true;
+	    }
+	    else if(itemId == R.id.action_settings)
+	    {
+		saveState();
+		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+
+		Intent intent = new Intent(Chat.this, Settings.class);
+
+		startActivity(intent);
+		finish();
+		return true;
+	    }
 	}
-	else if(id == R.id.action_settings)
+	else
 	{
-	    saveState();
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+	    String sipHashId = menuItem.getTitle().toString();
+	    int indexOf = sipHashId.indexOf("(");
 
-            Intent intent = new Intent(Chat.this, Settings.class);
+	    if(indexOf >= 0)
+		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
-            startActivity(intent);
-	    finish();
-            return true;
-        }
+	    State.getInstance().setString
+		("member_chat_oid", String.valueOf(itemId));
+	    State.getInstance().setString
+		("member_chat_siphash_id", sipHashId);
+	    m_databaseHelper.writeSetting
+		(null, "lastActivity", "MemberChat");
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_siphash_id", sipHashId);
+	    showMemberChatActivity();
+	}
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -1346,6 +1373,8 @@ public class Chat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
+	Miscellaneous.addMembersToMenu
+	    (s_cryptography, m_databaseHelper, menu, 3);
 	return true;
     }
 

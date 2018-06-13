@@ -2506,19 +2506,43 @@ public class Settings extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
-        int id = menuItem.getItemId();
+	int groupId = menuItem.getGroupId();
+        int itemId = menuItem.getItemId();
 
-	if(id == R.id.action_chat)
+	if(groupId == Menu.NONE)
 	{
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
-	    showChatActivity();
-            return true;
-        }
-	else if(id == R.id.action_fire)
+	    if(itemId == R.id.action_chat)
+	    {
+		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+		showChatActivity();
+		return true;
+	    }
+	    else if(itemId == R.id.action_fire)
+	    {
+		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+		showFireActivity();
+		return true;
+	    }
+	}
+	else
 	{
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
-	    showFireActivity();
-            return true;
+	    String sipHashId = menuItem.getTitle().toString();
+	    int indexOf = sipHashId.indexOf("(");
+
+	    if(indexOf >= 0)
+		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
+
+	    State.getInstance().setString
+		("member_chat_oid", String.valueOf(itemId));
+	    State.getInstance().setString
+		("member_chat_siphash_id", sipHashId);
+	    m_databaseHelper.writeSetting
+		(null, "lastActivity", "MemberChat");
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_siphash_id", sipHashId);
+	    showMemberChatActivity();
 	}
 
         return super.onOptionsItemSelected(menuItem);
@@ -2541,6 +2565,8 @@ public class Settings extends AppCompatActivity
 	    (State.getInstance().isAuthenticated());
 	menu.findItem(R.id.action_fire).setEnabled
 	    (State.getInstance().isAuthenticated());
+	Miscellaneous.addMembersToMenu
+	    (s_cryptography, m_databaseHelper, menu, 3);
 	return true;
     }
 

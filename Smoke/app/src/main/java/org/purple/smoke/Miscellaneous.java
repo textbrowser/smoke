@@ -40,6 +40,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.text.InputType;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -52,6 +54,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -368,6 +371,54 @@ public class Miscellaneous
 	catch(Exception exception)
 	{
 	    return 0;
+	}
+    }
+
+    public static void addMembersToMenu(Cryptography cryptography,
+					Database database,
+					Menu menu,
+					int count)
+    {
+	if(cryptography == null || database == null || menu == null)
+	    return;
+
+	ArrayList<ParticipantElement> arrayList =
+	    database.readParticipants(cryptography, "");
+
+	if(arrayList != null && arrayList.size() > 0)
+	{
+	    SubMenu subMenu = null;
+
+	    if(count == menu.size())
+		subMenu = menu.addSubMenu
+		    (Menu.NONE,
+		     Menu.NONE,
+		     1000, // Some large order!
+		     "Users Messaging Window");
+	    else
+		subMenu = menu.getItem(menu.size() - 1).getSubMenu();
+
+	    if(subMenu == null)
+		return;
+
+	    subMenu.clear();
+
+	    for(ParticipantElement participantElement : arrayList)
+	    {
+		if(participantElement == null)
+		    continue;
+
+		subMenu.add
+		    (1,
+		     participantElement.m_oid,
+		     0,
+		     participantElement.m_name +
+		     " (" +
+		     participantElement.m_sipHashId +
+		     ")");
+	    }
+
+	    arrayList.clear();
 	}
     }
 

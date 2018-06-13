@@ -358,6 +358,16 @@ public class MemberChat extends AppCompatActivity
 	finish();
     }
 
+    private void showMemberChatActivity()
+    {
+	saveState();
+
+	Intent intent = new Intent(MemberChat.this, MemberChat.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showFireActivity()
     {
 	saveState();
@@ -483,13 +493,13 @@ public class MemberChat extends AppCompatActivity
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item)
+    public boolean onContextItemSelected(MenuItem menuItem)
     {
-	if(item == null)
+	if(menuItem == null)
 	    return false;
 
-	final int groupId = item.getGroupId();
-	final int itemId = item.getItemId();
+	final int groupId = menuItem.getGroupId();
+	final int itemId = menuItem.getItemId();
 
 	/*
 	** Prepare a listener.
@@ -593,45 +603,55 @@ public class MemberChat extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(MenuItem menuItem)
     {
-	int id = item.getItemId();
+	int groupId = menuItem.getGroupId();
+	int itemId = menuItem.getItemId();
 
-	switch(id)
+	if(groupId == Menu.NONE)
+	    switch(itemId)
+	    {
+	    case R.id.action_chat:
+	    {
+		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+		showChatActivity();
+		return true;
+	    }
+	    case R.id.action_fire:
+	    {
+		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+		showFireActivity();
+		return true;
+	    }
+	    case R.id.action_settings:
+	    {
+		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+		showSettingsActivity();
+		return true;
+	    }
+	    }
+	else
 	{
-	case R.id.action_chat:
-	{
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+	    String sipHashId = menuItem.getTitle().toString();
+	    int indexOf = sipHashId.indexOf("(");
 
-	    Intent intent = new Intent(MemberChat.this, Chat.class);
+	    if(indexOf >= 0)
+		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
-	    startActivity(intent);
-	    finish();
-	    return true;
-	}
-	case R.id.action_fire:
-	{
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
-
-	    Intent intent = new Intent(MemberChat.this, Fire.class);
-
-	    startActivity(intent);
-	    finish();
-	    return true;
-	}
-	case R.id.action_settings:
-	{
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
-
-	    Intent intent = new Intent(MemberChat.this, Settings.class);
-
-	    startActivity(intent);
-	    finish();
-	    return true;
-	}
+	    State.getInstance().setString
+		("member_chat_oid", String.valueOf(itemId));
+	    State.getInstance().setString
+		("member_chat_siphash_id", sipHashId);
+	    m_databaseHelper.writeSetting
+		(null, "lastActivity", "MemberChat");
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_siphash_id", sipHashId);
+	    showMemberChatActivity();
 	}
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -641,11 +661,11 @@ public class MemberChat extends AppCompatActivity
     {
 	super.onCreateContextMenu(menu, view, menuInfo);
 
-	MenuItem item = null;
+	MenuItem menuItem = null;
 
 	menu.add(0, -1, 0, "Call");
-	item = menu.add(1, -1, 0, "Retrieve Messages");
-	item.setEnabled
+	menuItem = menu.add(1, -1, 0, "Retrieve Messages");
+	menuItem.setEnabled
 	    (Kernel.getInstance().isConnected() &&
 	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty());
@@ -679,6 +699,8 @@ public class MemberChat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
+	Miscellaneous.addMembersToMenu
+	    (s_cryptography, m_databaseHelper, menu, 4);
 	return true;
     }
 

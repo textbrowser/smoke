@@ -507,6 +507,14 @@ public class Fire extends AppCompatActivity
 	linearLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 
+    private void showMemberChatActivity()
+    {
+	Intent intent = new Intent(Fire.this, MemberChat.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showSettingsActivity()
     {
 	Intent intent = new Intent(Fire.this, Settings.class);
@@ -594,24 +602,48 @@ public class Fire extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(MenuItem menuItem)
     {
-	int id = item.getItemId();
+	int groupId = menuItem.getGroupId();
+	int itemId = menuItem.getItemId();
 
-        if(id == R.id.action_chat)
+	if(groupId == Menu.NONE)
 	{
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
-	    showChatActivity();
-            return true;
-        }
-        else if(id == R.id.action_settings)
+	    if(itemId == R.id.action_chat)
+	    {
+		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+		showChatActivity();
+		return true;
+	    }
+	    else if(itemId == R.id.action_settings)
+	    {
+		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+		showSettingsActivity();
+		return true;
+	    }
+	}
+	else
 	{
-	    m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
-	    showSettingsActivity();
-            return true;
-        }
+	    String sipHashId = menuItem.getTitle().toString();
+	    int indexOf = sipHashId.indexOf("(");
 
-        return super.onOptionsItemSelected(item);
+	    if(indexOf >= 0)
+		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
+
+	    State.getInstance().setString
+		("member_chat_oid", String.valueOf(itemId));
+	    State.getInstance().setString
+		("member_chat_siphash_id", sipHashId);
+	    m_databaseHelper.writeSetting
+		(null, "lastActivity", "MemberChat");
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
+	    m_databaseHelper.writeSetting
+		(s_cryptography, "member_chat_siphash_id", sipHashId);
+	    showMemberChatActivity();
+	}
+
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -640,6 +672,8 @@ public class Fire extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
+	Miscellaneous.addMembersToMenu
+	    (s_cryptography, m_databaseHelper, menu, 3);
 	return true;
     }
 

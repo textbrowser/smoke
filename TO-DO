@@ -174,6 +174,7 @@ Completed Items
        log and are beyond the specific time window.
 135.   Push sent messages from Member Chat to Chat.
 136.   The timestamp in participants_messages must be used for sorting.
+137.   Rich context menu containing other members.
 
 Future Items
 
@@ -233,7 +234,6 @@ Remaining Items
 6.     Steam and Vapor.
 7.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
-8.     Rich context menu containing other members.
-9.     Member Chat theme: bubble colors, bubble font colors,
+8.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
-10.    Resize Member Chat bubbles according to contents.
+9.     Resize Member Chat bubbles according to contents.
