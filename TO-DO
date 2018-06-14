@@ -237,3 +237,6 @@ Remaining Items
 8.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
 9.     Resize Member Chat bubbles according to contents.
+10.    New messages should be at the top of the view; Member Chat.
+11.    Participant list may be large. Create a special State container and
+       thread for retrieval.
