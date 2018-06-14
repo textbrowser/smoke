@@ -62,8 +62,8 @@ Completed Items
 53.    The initial call (1/2-1/2) should store the generated stream in a
        map (or hash).
        Upon receiving a timely response, the total key stream should be
-       saved to smoke.db. If a timely response is not received, the partial data
-       should be purged.
+       saved to smoke.db. If a timely response is not received, the partial
+       data should be purged.
 54.    Java serialization requires safety.
        (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
 55.    Inadvertent calling may sever an established session.
@@ -177,6 +177,7 @@ Completed Items
 137.   Rich context menu containing other members.
 138.   Participant list may be large. Create a special State container and
        thread for retrieval.
+139.   Schedulers may silently fail. try-catch blocks!
 
 Future Items
 
@@ -240,4 +241,3 @@ Remaining Items
        bubble time font color and size.
 9.     Resize Member Chat bubbles according to contents.
 10.    New messages should be at the top of the view; Member Chat. Optional.
-11.    Schedulers may silently fail. try-catch blocks!

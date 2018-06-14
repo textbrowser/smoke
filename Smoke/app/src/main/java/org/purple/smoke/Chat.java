@@ -847,6 +847,7 @@ public class Chat extends AppCompatActivity
 		}
 		catch(Exception exception)
 		{
+		    throw new RuntimeException(exception);
 		}
 	    }
 	}, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -891,6 +892,7 @@ public class Chat extends AppCompatActivity
 		}
 		catch(Exception exception)
 		{
+		    throw new RuntimeException(exception);
 		}
 	    }
 	}, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);

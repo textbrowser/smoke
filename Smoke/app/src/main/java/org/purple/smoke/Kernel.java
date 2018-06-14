@@ -370,6 +370,7 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
+			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
@@ -384,19 +385,26 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    m_chatMessageRetrievalIdentityMutex.writeLock().lock();
-
 		    try
 		    {
-			if(System.currentTimeMillis() -
-			   m_chatTemporaryIdentityLastTick.get() >
-			   CHAT_TEMPORARY_IDENTITY_LIFETIME)
-			    m_chatMessageRetrievalIdentity = null;
+			m_chatMessageRetrievalIdentityMutex.writeLock().lock();
+
+			try
+			{
+			    if(System.currentTimeMillis() -
+			       m_chatTemporaryIdentityLastTick.get() >
+			       CHAT_TEMPORARY_IDENTITY_LIFETIME)
+				m_chatMessageRetrievalIdentity = null;
+			}
+			finally
+			{
+			    m_chatMessageRetrievalIdentityMutex.writeLock().
+				unlock();
+			}
 		    }
-		    finally
+		    catch(Exception exception)
 		    {
-			m_chatMessageRetrievalIdentityMutex.writeLock().
-			    unlock();
+			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, CHAT_TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
@@ -411,105 +419,111 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    while(true)
+		    try
 		    {
-			MessageElement messageElement = null;
-
-			m_messagesToSendMutex.writeLock().lock();
-
-			try
+			while(true)
 			{
-			    if(!m_messagesToSend.isEmpty())
-				messageElement = m_messagesToSend.remove(0);
-			    else
-				break;
-			}
-			finally
-			{
-			    m_messagesToSendMutex.writeLock().unlock();
-			}
+			    MessageElement messageElement = null;
 
-			if(messageElement == null)
-			    continue;
+			    m_messagesToSendMutex.writeLock().lock();
 
-			byte bytes[] = null;
-			long timestamp = System.currentTimeMillis();
-
-			try
-			{
-			    switch(messageElement.m_messageType)
+			    try
 			    {
-			    case MessageElement.CHAT_MESSAGE_TYPE:
-				bytes = Messages.chatMessage
-				    (s_cryptography,
-				     messageElement.m_message,
-				     messageElement.m_id,
-				     Cryptography.
-				     sha512(messageElement.m_id.
-					    getBytes("UTF-8")),
-				     messageElement.m_keyStream,
-				     State.getInstance().
-				     chatSequence(messageElement.m_id),
-				     timestamp);
-				s_databaseHelper.writeParticipantMessage
-				    (s_cryptography,
-				     "local",
-				     messageElement.m_message,
-				     messageElement.m_id,
-				     null,
-				     timestamp);
-
-				Intent intent = new Intent
-				    ("org.purple.smoke.chat_local_message");
-
-				intent.putExtra
-				    ("org.purple.smoke.message",
-				     messageElement.m_message);
-				intent.putExtra
-				    ("org.purple.smoke.sipHashId",
-				     messageElement.m_id);
-
-				LocalBroadcastManager localBroadcastManager =
-				    LocalBroadcastManager.getInstance
-				    (Smoke.getApplication());
-
-				localBroadcastManager.sendBroadcast(intent);
-				break;
-			    case MessageElement.FIRE_MESSAGE_TYPE:
-				bytes = Messages.fireMessage
-				    (s_cryptography,
-				     messageElement.m_id,
-				     messageElement.m_message,
-				     s_databaseHelper.
-				     readSetting(s_cryptography,
-						 "fire_user_name"),
-				     messageElement.m_keyStream);
-				break;
-			    case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
-				bytes = Messages.fireStatus
-				    (s_cryptography,
-				     messageElement.m_id,
-				     s_databaseHelper.
-				     readSetting(s_cryptography,
-						 "fire_user_name"),
-				     messageElement.m_keyStream);
-				break;
-			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
-				bytes = Messages.chatMessageRetrieval
-				    (s_cryptography);
-				break;
+				if(!m_messagesToSend.isEmpty())
+				    messageElement = m_messagesToSend.
+					remove(0);
+				else
+				    break;
 			    }
-			}
-			catch(Exception exception)
-			{
-			    bytes = null;
-			}
+			    finally
+			    {
+				m_messagesToSendMutex.writeLock().unlock();
+			    }
 
-			try
-			{
-			    if(bytes != null)
+			    if(messageElement == null)
+				continue;
+
+			    byte bytes[] = null;
+			    long timestamp = System.currentTimeMillis();
+
+			    try
 			    {
 				switch(messageElement.m_messageType)
+				{
+				case MessageElement.CHAT_MESSAGE_TYPE:
+				    bytes = Messages.chatMessage
+					(s_cryptography,
+					 messageElement.m_message,
+					 messageElement.m_id,
+					 Cryptography.
+					 sha512(messageElement.m_id.
+						getBytes("UTF-8")),
+					 messageElement.m_keyStream,
+					 State.getInstance().
+					 chatSequence(messageElement.m_id),
+					 timestamp);
+				    s_databaseHelper.writeParticipantMessage
+					(s_cryptography,
+					 "local",
+					 messageElement.m_message,
+					 messageElement.m_id,
+					 null,
+					 timestamp);
+
+				    Intent intent = new Intent
+					("org.purple.smoke.chat_local_message");
+
+				    intent.putExtra
+					("org.purple.smoke.message",
+					 messageElement.m_message);
+				    intent.putExtra
+					("org.purple.smoke.sipHashId",
+					 messageElement.m_id);
+
+				    LocalBroadcastManager
+					localBroadcastManager =
+					LocalBroadcastManager.getInstance
+					(Smoke.getApplication());
+
+				    localBroadcastManager.sendBroadcast
+					(intent);
+				    break;
+				case MessageElement.FIRE_MESSAGE_TYPE:
+				    bytes = Messages.fireMessage
+					(s_cryptography,
+					 messageElement.m_id,
+					 messageElement.m_message,
+					 s_databaseHelper.
+					 readSetting(s_cryptography,
+						     "fire_user_name"),
+					 messageElement.m_keyStream);
+				    break;
+				case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
+				    bytes = Messages.fireStatus
+					(s_cryptography,
+					 messageElement.m_id,
+					 s_databaseHelper.
+					 readSetting(s_cryptography,
+						     "fire_user_name"),
+					 messageElement.m_keyStream);
+				    break;
+				case MessageElement.
+				    RETRIEVE_MESSAGES_MESSAGE_TYPE:
+				    bytes = Messages.chatMessageRetrieval
+					(s_cryptography);
+				    break;
+				}
+			    }
+			    catch(Exception exception)
+			    {
+				bytes = null;
+			    }
+
+			    try
+			    {
+				if(bytes != null)
+				{
+				    switch(messageElement.m_messageType)
 				    {
 				    case MessageElement.CHAT_MESSAGE_TYPE:
 					enqueueMessage
@@ -543,22 +557,25 @@ public class Kernel
 					     bytesToMessageString(bytes));
 					break;
 				    }
+				}
+			    }
+			    catch(Exception exception)
+			    {
 			    }
 
 			    if(messageElement.m_messageType ==
 			       MessageElement.CHAT_MESSAGE_TYPE)
 				if(s_cryptography.ozoneMacKey() != null)
 				{
-				    bytes = Messages.
-					chatMessage(s_cryptography,
-						    messageElement.m_message,
-						    messageElement.m_id,
-						    null,
-						    messageElement.m_keyStream,
-						    State.getInstance().
-						    chatSequence(messageElement.
-								 m_id),
-						    timestamp);
+				    bytes = Messages.chatMessage
+					(s_cryptography,
+					 messageElement.m_message,
+					 messageElement.m_id,
+					 null,
+					 messageElement.m_keyStream,
+					 State.getInstance().
+					 chatSequence(messageElement.m_id),
+					 timestamp);
 
 				    if(bytes != null)
 					enqueueMessage
@@ -567,9 +584,10 @@ public class Kernel
 							    Base64.NO_WRAP));
 				}
 			}
-			catch(Exception exception)
-			{
-			}
+		    }
+		    catch(Exception exception)
+		    {
+			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, MESSAGES_TO_SEND_INTERVAL, TimeUnit.MILLISECONDS);
@@ -589,6 +607,7 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
+			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -691,6 +710,7 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
+			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -713,6 +733,7 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
+			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, PURGE_INTERVAL, TimeUnit.MILLISECONDS);
@@ -755,6 +776,7 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
+			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);

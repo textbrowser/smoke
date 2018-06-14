@@ -2091,9 +2091,16 @@ public class Settings extends AppCompatActivity
 		@Override
 		public void run()
 		{
-		    Settings.this.runOnUiThread
-			(new PopulateNeighbors(m_databaseHelper.
-					       readNeighbors(s_cryptography)));
+		    try
+		    {
+			Settings.this.runOnUiThread
+			    (new PopulateNeighbors(m_databaseHelper.
+			     readNeighbors(s_cryptography)));
+		    }
+		    catch(Exception exception)
+		    {
+			throw new RuntimeException(exception);
+		    }
 		}
 	    }, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
         }

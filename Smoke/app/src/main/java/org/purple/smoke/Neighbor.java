@@ -184,6 +184,7 @@ public abstract class Neighbor
 		}
 		catch(Exception exception)
 		{
+		    throw new RuntimeException(exception);
 		}
 	    }
 	}, 0, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
@@ -220,6 +221,7 @@ public abstract class Neighbor
 		}
 		catch(Exception exception)
 		{
+		    throw new RuntimeException(exception);
 		}
 	    }
 	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
@@ -327,6 +329,7 @@ public abstract class Neighbor
 		}
 		catch(Exception exception)
 		{
+		    throw new RuntimeException(exception);
 		}
 	    }
 	}, 0, SEND_OUTBOUND_TIMER_INTERVAL, TimeUnit.MILLISECONDS);
