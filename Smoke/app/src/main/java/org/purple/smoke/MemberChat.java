@@ -524,21 +524,52 @@ public class MemberChat extends AppCompatActivity
 		{
 		    switch(groupId)
 		    {
-		    case 2:
-			if(itemId > -1)
+		    case 1:
+			try
 			{
-			    if(State.getInstance().getString("dialog_accepted").
-			       equals("true"))
-			    {
-				m_databaseHelper.deleteParticipantMessage
-				    (s_cryptography, m_sipHashId, itemId);
-				m_adapter.notifyDataSetChanged();
-			    }
+			    String string = State.getInstance().
+				getString("member_chat_secret_input");
+			    byte bytes[] = Cryptography.pbkdf2
+				(Cryptography.sha512(string.getBytes("UTF-8")),
+				 string.toCharArray(),
+				 Chat.CUSTOM_SESSION_ITERATION_COUNT,
+				 160); // SHA-1
+			    int oid = m_databaseHelper.
+				participantOidFromSipHashOid(m_oid);
+
+			    if(bytes != null)
+				bytes = Cryptography.pbkdf2
+				    (Cryptography.sha512(string.
+							 getBytes("UTF-8")),
+				     new String(bytes).toCharArray(),
+				     1,
+				     96 * 8); // AES-256, SHA-512
+
+			    m_databaseHelper.setParticipantKeyStream
+				(s_cryptography, bytes, oid);
 			}
-			else if(State.getInstance().
-				getString("dialog_accepted").equals("true"))
+			catch(Exception exception)
+			{
+			}
+
+			State.getInstance().removeKey
+			    ("member_chat_secret_input");
+			break;
+		    case 10:
+			if(State.getInstance().getString("dialog_accepted").
+			   equals("true"))
 			    m_databaseHelper.deleteParticipantMessages
 				(s_cryptography, m_sipHashId);
+
+			break;
+		    case 15:
+			if(State.getInstance().getString("dialog_accepted").
+			   equals("true"))
+			{
+			    m_databaseHelper.deleteParticipantMessage
+				(s_cryptography, m_sipHashId, itemId);
+			    m_adapter.notifyDataSetChanged();
+			}
 
 			break;
 		    }
@@ -551,24 +582,30 @@ public class MemberChat extends AppCompatActivity
 	    Kernel.getInstance().call(m_oid, m_sipHashId);
 	    break;
 	case 1:
-	    Kernel.getInstance().retrieveChatMessages();
+	    Miscellaneous.showTextInputDialog
+		(MemberChat.this,
+		 listener,
+		 "Please provide a secret.",
+		 "Secret");
 	    break;
 	case 2:
-	    if(itemId > -1)
-		Miscellaneous.showPromptDialog
-		    (MemberChat.this,
-		     listener,
-		     "Are you sure that you wish to delete the " +
-		     "selected message?");
-	    else
-		Miscellaneous.showPromptDialog
-		    (MemberChat.this,
-		     listener,
-		     "Are you sure that you wish to delete all " +
-		     "of the messages?");
-
+	    Kernel.getInstance().retrieveChatMessages();
 	    break;
-	case 3:
+	case 10:
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete all " +
+		 "of the messages?");
+	    break;
+	case 15:
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete the " +
+		 "selected message?");
+	    break;
+	case 20:
 	    try
 	    {
 		View view = (View) m_layoutManager.findViewByPosition(itemId);
@@ -679,7 +716,8 @@ public class MemberChat extends AppCompatActivity
 	MenuItem menuItem = null;
 
 	menu.add(0, -1, 0, "Call");
-	menuItem = menu.add(1, -1, 0, "Retrieve Messages");
+	menu.add(1, -1, 0, "Custom Session");
+	menuItem = menu.add(2, -1, 0, "Retrieve Messages");
 	menuItem.setEnabled
 	    (Kernel.getInstance().isConnected() &&
 	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").

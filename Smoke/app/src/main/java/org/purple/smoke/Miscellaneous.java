@@ -641,6 +641,7 @@ public class Miscellaneous
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 	final EditText editText = new EditText(context);
 	final boolean contextIsChat = context instanceof Chat;
+	final boolean contextIsMemberChat = context instanceof MemberChat;
 	final boolean contextIsSettings = context instanceof Settings;
 
 	alertDialog.setButton
@@ -651,6 +652,9 @@ public class Miscellaneous
 		 {
 		     if(contextIsChat)
 			 State.getInstance().removeKey("chat_secret_input");
+		     else if(contextIsMemberChat)
+			 State.getInstance().removeKey
+			     ("member_chat_secret_input");
 		     else if(contextIsSettings)
 			 State.getInstance().removeKey
 			     ("settings_participant_name_input");
@@ -667,6 +671,10 @@ public class Miscellaneous
 		     if(contextIsChat)
 			 State.getInstance().setString
 			     ("chat_secret_input",
+			      editText.getText().toString());
+		     else if(contextIsMemberChat)
+			 State.getInstance().setString
+			     ("member_chat_secret_input",
 			      editText.getText().toString());
 		     else if(contextIsSettings)
 			 State.getInstance().setString

@@ -67,9 +67,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    ** in MemberChat is modified!
 	    */
 
-	    menu.add(2, -2, 1, "Delete All Messages");
-	    menu.add(2, view.getId(), 2, "Delete Message");
-	    menu.add(3, m_position, 0, "Copy Text");
+	    menu.add(10, -1, 1, "Delete All Messages");
+	    menu.add(15, view.getId(), 2, "Delete Message");
+	    menu.add(20, m_position, 0, "Copy Text");
 	}
 
 	public void setData(MemberChatElement memberChatElement, int position)

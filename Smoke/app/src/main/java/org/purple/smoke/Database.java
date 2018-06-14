@@ -1839,7 +1839,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT name, siphash_id " +
-		 "FROM siphash_ids WHERE siphash_id_digest IN " +
+		 "FROM siphash_ids WHERE siphash_id_digest = " +
 		 "(SELECT siphash_id_digest FROM participants " +
 		 "WHERE encryption_public_key_digest = ?)",
 		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
@@ -2678,7 +2678,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT keystream FROM participants_keys " +
-		 "WHERE siphash_id_digest IN " +
+		 "WHERE siphash_id_digest = " +
 		 "(SELECT siphash_id_digest FROM participants WHERE " +
 		 "encryption_public_key_digest = ?) ORDER BY timestamp DESC",
 		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
@@ -2714,6 +2714,39 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return keyStream;
+    }
+
+    public int participantOidFromSipHashOid(int oid)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return -1;
+
+	Cursor cursor = null;
+	int o = 0;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT oid FROM participants WHERE siphash_id_digest = " +
+		 "(SELECT siphash_id_digest from siphash_ids WHERE oid = ?)",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		o = cursor.getInt(0);
+	}
+	catch(Exception exception)
+	{
+	    o = -1;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return o;
     }
 
     public long count(String table)
