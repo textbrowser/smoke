@@ -374,17 +374,15 @@ public class Miscellaneous
 	}
     }
 
-    public static void addMembersToMenu(Cryptography cryptography,
-					Database database,
-					Menu menu,
+    public static void addMembersToMenu(Menu menu,
 					int count,
 					int position)
     {
-	if(cryptography == null || database == null || menu == null)
+	if(menu == null)
 	    return;
 
-	ArrayList<ParticipantElement> arrayList =
-	    database.readParticipants(cryptography, "");
+	ArrayList<ParticipantElement> arrayList = State.getInstance().
+	    participants();
 
 	if(arrayList != null && arrayList.size() > 0)
 	{
@@ -421,8 +419,6 @@ public class Miscellaneous
 		     toUpperCase() +
 		     ")");
 	    }
-
-	    arrayList.clear();
 	}
     }
 

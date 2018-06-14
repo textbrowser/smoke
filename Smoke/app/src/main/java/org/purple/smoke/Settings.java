@@ -2451,6 +2451,7 @@ public class Settings extends AppCompatActivity
 				   deleteEntry(String.valueOf(itemId),
 					       "siphash_ids"))
 				{
+				    State.getInstance().populateParticipants();
 				    State.getInstance().
 					removeChatCheckBoxOid(itemId);
 				    State.getInstance().setString
@@ -2597,8 +2598,7 @@ public class Settings extends AppCompatActivity
 	    (State.getInstance().isAuthenticated());
 	menu.findItem(R.id.action_fire).setEnabled
 	    (State.getInstance().isAuthenticated());
-	Miscellaneous.addMembersToMenu
-	    (s_cryptography, m_databaseHelper, menu, 3, 250);
+	Miscellaneous.addMembersToMenu(menu, 3, 250);
 	return true;
     }
 

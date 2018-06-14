@@ -341,6 +341,8 @@ public class Authenticate extends AppCompatActivity
 					    (s_cryptography);
 					Kernel.getInstance();
 					State.getInstance().
+					    populateParticipants();
+					State.getInstance().
 					    setAuthenticated(true);
 
 					/*
@@ -585,8 +587,7 @@ public class Authenticate extends AppCompatActivity
 	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
-	Miscellaneous.addMembersToMenu
-	    (s_cryptography, m_databaseHelper, menu, 3, 150);
+	Miscellaneous.addMembersToMenu(menu, 3, 150);
 	return true;
     }
 }

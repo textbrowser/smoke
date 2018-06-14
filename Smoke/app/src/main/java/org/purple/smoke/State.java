@@ -32,21 +32,42 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class State
 {
     private ArrayList<MessageElement> m_chatMessages = null;
+    private ArrayList<ParticipantElement> m_participants = null;
     private Bundle m_bundle = null;
     private Map<String, FireChannel> m_fireChannels = null;
-    private final ReentrantReadWriteLock m_bundleMutex =
-	new ReentrantReadWriteLock();
+    private ScheduledExecutorService m_participantsScheduler = null;
+    private final ReentrantReadWriteLock m_bundleMutex = new
+	ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_participantsMutex = new
+	ReentrantReadWriteLock();
     private static State s_instance = null;
 
     private State()
     {
 	m_bundle = new Bundle();
 	setAuthenticated(false);
+    }
+
+    public ArrayList<ParticipantElement> participants()
+    {
+	m_participantsMutex.readLock().lock();
+
+	try
+	{
+	    return m_participants;
+	}
+	finally
+	{
+	    m_participantsMutex.readLock().unlock();
+	}
     }
 
     public CharSequence getCharSequence(String key)
@@ -270,6 +291,65 @@ public class State
 	}
     }
 
+    public void populateParticipants()
+    {
+	m_participantsMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_participants == null)
+		m_participants = new ArrayList<> ();
+	    else
+		m_participants.clear();
+	}
+	finally
+	{
+	    m_participantsMutex.writeLock().unlock();
+	}
+
+	if(m_participantsScheduler == null)
+	    m_participantsScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	else
+	{
+	    try
+	    {
+		m_participantsScheduler.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    m_participantsScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	}
+
+	m_participantsScheduler.schedule(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    m_participantsMutex.writeLock().lock();
+
+		    try
+		    {
+			m_participants = Database.getInstance().
+			    readParticipants(Cryptography.getInstance(), "");
+		    }
+		    finally
+		    {
+			m_participantsMutex.writeLock().unlock();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 100, TimeUnit.MILLISECONDS);
+    }
+
     public void removeChatCheckBoxOid(int oid)
     {
 	m_bundleMutex.writeLock().lock();
@@ -322,6 +402,18 @@ public class State
 
 	if(m_fireChannels != null)
 	    m_fireChannels.clear();
+
+	m_participantsMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_participants != null)
+		m_participants.clear();
+	}
+	finally
+	{
+	    m_participantsMutex.writeLock().unlock();
+	}
     }
 
     public void setAuthenticated(boolean state)

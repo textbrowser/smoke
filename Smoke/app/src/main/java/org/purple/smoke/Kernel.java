@@ -1287,6 +1287,8 @@ public class Kernel
 		    if(bytes != null)
 			enqueueMessage
 			    (Messages.bytesToMessageString(bytes));
+
+		    State.getInstance().populateParticipants();
 		}
 
 		return 1;

@@ -703,8 +703,7 @@ public class MemberChat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu
-	    (s_cryptography, m_databaseHelper, menu, 4, 250);
+	Miscellaneous.addMembersToMenu(menu, 4, 250);
 	return true;
     }
 
