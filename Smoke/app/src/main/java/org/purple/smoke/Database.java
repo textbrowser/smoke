@@ -711,7 +711,7 @@ public class Database extends SQLiteOpenHelper
 		     "p.last_status_timestamp, " +
 		     "p.siphash_id, " +
 		     "p.oid " +
-		     "FROM participants p WHERE siphash_id_digest = ?",
+		     "FROM participants p WHERE p.siphash_id_digest = ?",
 		     new String[] {Base64.
 				   encodeToString(cryptography.
 						  hmac(sipHashId.toLowerCase().
