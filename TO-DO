@@ -242,3 +242,4 @@ Remaining Items
        bubble time font color and size.
 9.     Resize Member Chat bubbles according to contents.
 10.    New messages should be at the top of the view; Member Chat. Optional.
+11.    Replace Chat member view with a recycler view.
