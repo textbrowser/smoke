@@ -240,7 +240,6 @@ public class UdpNeighbor extends Neighbor
 		}
 		catch(Exception exception)
 		{
-		    throw new RuntimeException(exception);
 		}
 	    }
 	}, 0, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);

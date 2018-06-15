@@ -286,7 +286,6 @@ public class MemberChat extends AppCompatActivity
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -349,7 +348,6 @@ public class MemberChat extends AppCompatActivity
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);

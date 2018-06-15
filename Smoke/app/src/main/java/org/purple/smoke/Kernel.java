@@ -370,7 +370,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
@@ -404,7 +403,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, CHAT_TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
@@ -587,7 +585,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, MESSAGES_TO_SEND_INTERVAL, TimeUnit.MILLISECONDS);
@@ -607,7 +604,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -710,7 +706,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
@@ -733,7 +728,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, PURGE_INTERVAL, TimeUnit.MILLISECONDS);
@@ -776,7 +770,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-			throw new RuntimeException(exception);
 		    }
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
