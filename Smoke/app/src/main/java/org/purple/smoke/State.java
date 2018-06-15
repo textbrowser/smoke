@@ -347,7 +347,7 @@ public class State
 		{
 		}
 	    }
-	}, 100, TimeUnit.MILLISECONDS);
+	}, 10, TimeUnit.MILLISECONDS);
     }
 
     public void removeChatCheckBoxOid(int oid)
