@@ -416,8 +416,8 @@ public class Chat extends AppCompatActivity
 
     private void populateParticipants()
     {
-	ArrayList<ParticipantElement> arrayList =
-	    m_databaseHelper.readParticipants(s_cryptography, "");
+	ArrayList<ParticipantElement> arrayList = State.getInstance().
+	    participants();
 	Button button1 = (Button) findViewById(R.id.call);
 	Button button2 = (Button) findViewById(R.id.send_chat_message);
 	TableLayout tableLayout = (TableLayout) findViewById
@@ -559,8 +559,6 @@ public class Chat extends AppCompatActivity
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
-
-	arrayList.clear();
     }
 
     private void prepareListeners()

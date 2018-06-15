@@ -178,6 +178,7 @@ Completed Items
 138.   Participant list may be large. Create a special State container and
        thread for retrieval.
 139.   Schedulers may silently fail. try-catch blocks!
+140.   Populate Chat member list without accessing the database.
 
 Future Items
 
@@ -241,4 +242,3 @@ Remaining Items
        bubble time font color and size.
 9.     Resize Member Chat bubbles according to contents.
 10.    New messages should be at the top of the view; Member Chat. Optional.
-11.    Populate Chat member list without accessing the database.
