@@ -83,6 +83,11 @@ public class MemberChat extends AppCompatActivity
 		   intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
 		{
+		    m_adapter.notifyDataSetChanged(); /*
+						      ** Items are inserted
+						      ** into the database
+						      ** haphazardly.
+						      */
 		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
 
 		    if(local)
