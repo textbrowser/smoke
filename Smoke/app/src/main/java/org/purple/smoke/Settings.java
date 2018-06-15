@@ -1028,7 +1028,7 @@ public class Settings extends AppCompatActivity
 			    (R.drawable.lock, 0, 0, 0);
 		    else
 			textView1.setCompoundDrawablesWithIntrinsicBounds
-			    (R.drawable.lockless, 0, 0, 0);
+			    (R.drawable.warning, 0, 0, 0);
 
 		    textView1.setCompoundDrawablePadding(5);
 		    textView1.setText
