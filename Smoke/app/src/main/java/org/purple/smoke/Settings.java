@@ -594,7 +594,6 @@ public class Settings extends AppCompatActivity
 	else
 	{
 	    stringBuilder.delete(0, stringBuilder.length());
-	    stringBuilder.append("SipHash Chat ID\n@");
 	    stringBuilder.append
 		(Miscellaneous.
 		 delimitString(s_cryptography.sipHashId().

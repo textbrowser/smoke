@@ -58,6 +58,7 @@
     <string name="generate">Generate</string>
     <string name="auto_fill">Auto Fill</string>
     <string name="network_status">Network Status</string>
+    <string name="siphash_id">SipHash Chat ID</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
