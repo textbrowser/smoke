@@ -826,6 +826,8 @@ public class Chat extends AppCompatActivity
 			@Override
 			public void run()
 			{
+			    invalidateOptionsMenu();
+
 			    Button button1 = (Button) findViewById(R.id.call);
 
 			    button1.setEnabled

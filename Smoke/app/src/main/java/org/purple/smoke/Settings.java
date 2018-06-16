@@ -989,7 +989,6 @@ public class Settings extends AppCompatActivity
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
-	invalidateOptionsMenu();
 	tableLayout.removeAllViews();
 
 	if(arrayList == null || arrayList.isEmpty())
@@ -2096,6 +2095,15 @@ public class Settings extends AppCompatActivity
 			Settings.this.runOnUiThread
 			    (new PopulateNeighbors(m_databaseHelper.
 			     readNeighbors(s_cryptography)));
+
+			Settings.this.runOnUiThread(new Runnable()
+		        {
+			    @Override
+			    public void run()
+			    {
+				invalidateOptionsMenu();
+			    }
+			});
 		    }
 		    catch(Exception exception)
 		    {

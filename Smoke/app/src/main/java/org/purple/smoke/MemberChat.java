@@ -270,6 +270,8 @@ public class MemberChat extends AppCompatActivity
 			    @Override
 			    public void run()
 			    {
+				invalidateOptionsMenu();
+
 				Button button1 = (Button) findViewById
 				    (R.id.send_chat_message);
 

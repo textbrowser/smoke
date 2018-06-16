@@ -44,8 +44,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -59,6 +59,9 @@ import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Fire extends AppCompatActivity
 {
@@ -108,6 +111,7 @@ public class Fire extends AppCompatActivity
     }
 
     private FireBroadcastReceiver m_receiver = null;
+    private ScheduledExecutorService m_scheduler = null;
     private boolean m_receiverRegistered = false;
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final String m_id = Miscellaneous.byteArrayAsHexString
@@ -133,6 +137,7 @@ public class Fire extends AppCompatActivity
 	    return null;
 	}
     };
+    private final static int TIMER_INTERVAL = 2000; // 2 Seconds
 
     private void deleteFire(String name, final Integer oid)
     {
@@ -531,6 +536,28 @@ public class Fire extends AppCompatActivity
 	m_databaseHelper.cleanDanglingOutboundQueued();
 	m_databaseHelper.cleanDanglingParticipants();
 	m_receiver = new FireBroadcastReceiver();
+	m_scheduler = Executors.newSingleThreadScheduledExecutor();
+	m_scheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    Fire.this.runOnUiThread(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    invalidateOptionsMenu();
+			}
+		    });
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
         setContentView(R.layout.activity_fire);
 
 	if(State.getInstance().isAuthenticated())
