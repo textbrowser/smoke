@@ -540,7 +540,8 @@ public class MemberChat extends AppCompatActivity
 				 Chat.CUSTOM_SESSION_ITERATION_COUNT,
 				 160); // SHA-1
 			    int oid = m_databaseHelper.
-				participantOidFromSipHashOid(m_oid);
+				participantOidFromSipHash
+				(s_cryptography, m_sipHashId);
 
 			    if(bytes != null)
 				bytes = Cryptography.pbkdf2

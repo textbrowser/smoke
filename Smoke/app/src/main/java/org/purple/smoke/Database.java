@@ -2716,29 +2716,34 @@ public class Database extends SQLiteOpenHelper
 	return keyStream;
     }
 
-    public int participantOidFromSipHashOid(int oid)
+    public int participantOidFromSipHash(Cryptography cryptography,
+					 String sipHashId)
     {
 	prepareDb();
 
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return -1;
 
 	Cursor cursor = null;
-	int o = 0;
+	int oid = 0;
 
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT oid FROM participants WHERE siphash_id_digest = " +
-		 "(SELECT siphash_id_digest from siphash_ids WHERE oid = ?)",
-		 new String[] {String.valueOf(oid)});
+		("SELECT oid FROM participants WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toLowerCase().
+						   trim().
+						   getBytes("UTF-8")),
+					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
-		o = cursor.getInt(0);
+		oid = cursor.getInt(0);
 	}
 	catch(Exception exception)
 	{
-	    o = -1;
+	    oid = -1;
 	}
 	finally
 	{
@@ -2746,7 +2751,7 @@ public class Database extends SQLiteOpenHelper
 		cursor.close();
 	}
 
-	return o;
+	return oid;
     }
 
     public long count(String table)
