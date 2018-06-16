@@ -22,7 +22,7 @@
         android:background="@drawable/sectiongradient"
         android:gravity="center_vertical"
         android:paddingEnd="5dp"
-        android:paddingStart="35dp"
+        android:paddingStart="40dp"
         android:text="@string/chat"
         android:textColor="@android:color/white"
         android:textSize="20sp"

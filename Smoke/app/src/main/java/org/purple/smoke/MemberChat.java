@@ -473,7 +473,7 @@ public class MemberChat extends AppCompatActivity
 	if(string.isEmpty())
 	    textView1.setText("Error!");
 	else
-	    textView1.setText(m_name + "@" + string);
+	    textView1.setText(m_name + "@\n" + string);
 
 	/*
 	** Prepare listeners.
