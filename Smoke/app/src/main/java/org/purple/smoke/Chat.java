@@ -425,6 +425,7 @@ public class Chat extends AppCompatActivity
 
 	button1.setEnabled(false);
 	button2.setEnabled(false);
+	invalidateOptionsMenu();
 
 	if(arrayList == null || arrayList.isEmpty())
 	{
