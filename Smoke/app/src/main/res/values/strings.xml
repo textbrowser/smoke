@@ -52,13 +52,13 @@
     <string name="send">Send</string>
     <string name="share_keys">Share Keys</string>
     <string name="signature">Signature</string>
-    <string name="siphashid">SipHash ID</string>
+    <string name="smokeid">Smoke ID</string>
     <string name="your_name">Your Name</string>
     <string name="clear_log">Clear Log</string>
     <string name="generate">Generate</string>
     <string name="auto_fill">Auto Fill</string>
     <string name="network_status">Network Status</string>
-    <string name="siphash_id">SipHash Chat ID</string>
+    <string name="smoke_chat_id">Smoke Chat ID</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

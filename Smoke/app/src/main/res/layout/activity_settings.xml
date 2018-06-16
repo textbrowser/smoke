@@ -354,7 +354,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
                         android:layout_weight="0.13"
-                        android:text="@string/siphashid" />
+                        android:text="@string/smokeid" />
 
                 </LinearLayout>
 
@@ -435,7 +435,7 @@
                         android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="@string/siphashid"
+                        android:hint="@string/smokeid"
                         android:inputType="textPersonName" />
 
                     <Button
@@ -603,7 +603,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/siphash_id"
+                    android:text="@string/smoke_chat_id"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -612,7 +612,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:text="@string/siphashid"
+                    android:text="@string/smokeid"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 

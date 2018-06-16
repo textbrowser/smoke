@@ -46,5 +46,5 @@
     <string name="send">Senden</string>
     <string name="share_keys">Sende Schlüssel</string>
     <string name="signature">Signatur</string>
-    <string name="siphashid">SipHash ID</string>
+    <string name="smokeid">Smoke ID</string>
 </resources>

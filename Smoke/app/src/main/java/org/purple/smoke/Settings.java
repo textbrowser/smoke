@@ -253,7 +253,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "A SipHash ID must be of the form 0102-0304-0506-0708.");
+		 "A Smoke ID must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
 	else if(textView2.getText().toString().toLowerCase().replace("-", "").
@@ -262,7 +262,7 @@ public class Settings extends AppCompatActivity
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
-		 "Please do not assign your SipHash ID.");
+		 "Please do not assign your Smoke ID.");
 	    return;
 	}
 
@@ -312,7 +312,7 @@ public class Settings extends AppCompatActivity
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
 				 "An error occurred while attempting " +
-				 "to save the specified SipHash ID.");
+				 "to save the specified Smoke ID.");
 			else
 			    populateParticipants();
 		    }
@@ -1398,13 +1398,13 @@ public class Settings extends AppCompatActivity
 
 		textView1.setBackgroundColor(Color.rgb(135, 206, 250));
 		textView1.setText
-		    ("A SipHash ID is a sequence of digits and " +
+		    ("A Smoke ID is a sequence of digits and " +
 		     "letters assigned to a specific subscriber " +
 		     "(public key pair). " +
 		     "The tokens allow participants to exchange public " +
 		     "key pairs via the Echo Public Key Sharing (EPKS) " +
 		     "protocol. " +
-		     "An example SipHash ID is ABAB-0101-CDCD-0202.");
+		     "An example Smoke ID is ABAB-0101-CDCD-0202.");
 		textView1.setTextSize(16);
 		popupWindow.setContentView(textView1);
 		popupWindow.setOutsideTouchable(true);
