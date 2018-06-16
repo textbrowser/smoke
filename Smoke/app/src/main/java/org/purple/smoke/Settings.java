@@ -530,7 +530,7 @@ public class Settings extends AppCompatActivity
 				     ") occurred while " +
 				     "preparing to transfer public key " +
 				     "material. " +
-				     "Please verify that participant SipHash " +
+				     "Please verify that participant Smoke " +
 				     "Identities have been defined.");
 			}
 		    });
