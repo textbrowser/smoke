@@ -5,7 +5,7 @@
       android:left="1dp"
       android:right="1dp"
       android:top="1dp" />
-  <solid android:color="#a9a9a9" />
+  <solid android:color="#787878" />
   <stroke
       android:width="1px"
       android:color="#808080" />
