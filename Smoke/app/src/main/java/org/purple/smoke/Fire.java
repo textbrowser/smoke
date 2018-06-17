@@ -285,6 +285,9 @@ public class Fire extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Fire.this.isFinishing())
+		    return;
+
 		TextView textView1 = (TextView) findViewById(R.id.channel);
 		TextView textView2 = (TextView) findViewById(R.id.digest);
 		TextView textView3 = (TextView) findViewById(R.id.salt);
@@ -403,6 +406,9 @@ public class Fire extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Fire.this.isFinishing())
+		    return;
+
 		Spinner spinner = (Spinner) findViewById(R.id.fires);
 
 		if(spinner.getAdapter() != null &&
@@ -418,6 +424,9 @@ public class Fire extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Fire.this.isFinishing())
+		    return;
+
 		Spinner spinner = (Spinner) findViewById(R.id.fires);
 
 		if(spinner.getAdapter() != null &&
@@ -431,6 +440,9 @@ public class Fire extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Fire.this.isFinishing())
+		    return;
+
 		TextView textView1 = (TextView) findViewById(R.id.channel);
 
 		textView1.requestFocus();
@@ -447,6 +459,9 @@ public class Fire extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Fire.this.isFinishing())
+		    return;
+
 		TextView textView1 = (TextView) findViewById(R.id.name);
 
 		m_databaseHelper.writeSetting

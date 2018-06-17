@@ -199,6 +199,9 @@ public class MemberChat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(MemberChat.this.isFinishing())
+		    return;
+
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.chat_message);
 

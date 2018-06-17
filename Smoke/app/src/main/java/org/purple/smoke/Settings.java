@@ -1139,6 +1139,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		addNeighbor();
 	    }
         });
@@ -1148,6 +1151,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		addParticipant();
 	    }
         });
@@ -1157,6 +1163,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		m_databaseHelper.clearTable("log");
 	    }
 	});
@@ -1166,6 +1175,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		epks("");
 	    }
         });
@@ -1207,6 +1219,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		populateNeighbors(null);
 	    }
         });
@@ -1216,6 +1231,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		populateParticipants();
 	    }
         });
@@ -1258,6 +1276,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		RadioButton radioButton1 = (RadioButton) findViewById
 		    (R.id.neighbors_ipv4);
 		Spinner spinner1 = (Spinner) findViewById
@@ -1292,6 +1313,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		TextView textView1 = (TextView) findViewById
 		    (R.id.participant_name);
 		TextView textView2 = (TextView) findViewById
@@ -1329,6 +1353,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		TextView textView1 = (TextView) findViewById(R.id.ozone);
 
 		if(!generateOzone(textView1.getText().toString()))
@@ -1346,6 +1373,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Settings.this.isFinishing())
+		    return;
+
 		TextView textView1 = (TextView) findViewById(R.id.password1);
 		TextView textView2 = (TextView) findViewById(R.id.password2);
 

@@ -570,6 +570,9 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Chat.this.isFinishing())
+		    return;
+
 		StringBuilder stringBuilder = new StringBuilder();
 		TextView textView1 = (TextView) findViewById
 		    (R.id.chat_messages);
@@ -904,6 +907,9 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Chat.this.isFinishing())
+		    return;
+
 		State.getInstance().clearChatLog();
 
 		TextView textView1 = (TextView) findViewById
@@ -918,6 +924,9 @@ public class Chat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(Chat.this.isFinishing())
+		    return;
+
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.chat_message);
 
