@@ -850,7 +850,7 @@ public class Chat extends AppCompatActivity
 		{
 		}
 	    }
-	}, 1500, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
 	m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -894,7 +894,7 @@ public class Chat extends AppCompatActivity
 		{
 		}
 	    }
-	}, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 

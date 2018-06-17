@@ -290,7 +290,7 @@ public class MemberChat extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 1500, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_statusScheduler == null)
@@ -352,7 +352,7 @@ public class MemberChat extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
