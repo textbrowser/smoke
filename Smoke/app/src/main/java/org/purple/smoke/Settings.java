@@ -172,6 +172,71 @@ public class Settings extends AppCompatActivity
     private final static int TIMER_INTERVAL = 2000; // 2 Seconds
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {3072}; // RSA
 
+    private boolean generateOzone(String string)
+    {
+	boolean ok = true;
+	byte bytes[] = null;
+	byte salt[] = null;
+
+	try
+	{
+	    salt = Cryptography.sha512(string.getBytes("UTF-8"));
+
+	    if(salt != null)
+		bytes = Cryptography.pbkdf2
+		    (salt,
+		     string.toCharArray(),
+		     OZONE_STREAM_CREATION_ITERATION_COUNT,
+		     160); // SHA-1
+	    else
+		ok = false;
+
+	    if(bytes != null)
+		bytes = Cryptography.
+		    pbkdf2(salt,
+			   new String(bytes).toCharArray(),
+			   1,
+			   768); // 8 * (32 + 64) Bits
+	    else
+		ok = false;
+
+	    if(bytes != null || string.isEmpty())
+	    {
+		m_databaseHelper.writeSetting
+		    (s_cryptography, "ozone_address", string);
+
+		if(string.isEmpty())
+		{
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "ozone_address_stream",
+			 "");
+		    ok = true;
+		    s_cryptography.setOzoneEncryptionKey(null);
+		    s_cryptography.setOzoneMacKey(null);
+		}
+		else if(bytes != null && bytes.length == 96)
+		    {
+			m_databaseHelper.writeSetting
+			    (s_cryptography,
+			     "ozone_address_stream",
+			     Base64.encodeToString(bytes,
+						   Base64.DEFAULT));
+			s_cryptography.setOzoneEncryptionKey
+			    (Arrays.copyOfRange(bytes, 0, 32));
+			s_cryptography.setOzoneMacKey
+			    (Arrays.copyOfRange(bytes, 32, bytes.length));
+		    }
+	    }
+	}
+	catch(Exception exception)
+	{
+	    ok = false;
+	}
+
+	return ok;
+    }
+
     private void addNeighbor()
     {
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
@@ -981,6 +1046,14 @@ public class Settings extends AppCompatActivity
 	arrayList.clear();
     }
 
+    private void populateOzone()
+    {
+	TextView textView1 = (TextView) findViewById(R.id.ozone);
+
+	textView1.setText
+	    (m_databaseHelper.readSetting(s_cryptography, "ozone_address"));
+    }
+
     private void populateParticipants()
     {
 	ArrayList<SipHashIdElement> arrayList =
@@ -1034,8 +1107,7 @@ public class Settings extends AppCompatActivity
 		    textView1.setText
 			(Miscellaneous.
 			 delimitString(sipHashIdElement.m_sipHashId.
-				       replace(":", ""), '-', 4).
-			 toUpperCase());
+				       replace(":", "").toUpperCase(), '-', 4));
 		}
 
 		textView1.setTag(R.id.participants, textView1.getText());
@@ -1257,70 +1329,9 @@ public class Settings extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		String string = "";
 		TextView textView1 = (TextView) findViewById(R.id.ozone);
-		boolean ok = true;
-		byte bytes[] = null;
-		byte salt[] = null;
 
-		try
-		{
-		    string = textView1.getText().toString().trim();
-		    salt = Cryptography.sha512(string.getBytes("UTF-8"));
-
-		    if(salt != null)
-			bytes = Cryptography.pbkdf2
-			    (salt,
-			     string.toCharArray(),
-			     OZONE_STREAM_CREATION_ITERATION_COUNT,
-			     160); // SHA-1
-		    else
-			ok = false;
-
-		    if(bytes != null)
-			bytes = Cryptography.
-			    pbkdf2(salt,
-				   new String(bytes).toCharArray(),
-				   1,
-				   768); // 8 * (32 + 64) Bits
-		    else
-			ok = false;
-
-		    if(bytes != null || string.isEmpty())
-		    {
-			m_databaseHelper.writeSetting
-			    (s_cryptography, "ozone_address", string);
-
-			if(string.isEmpty())
-			{
-			    m_databaseHelper.writeSetting
-				(s_cryptography,
-				 "ozone_address_stream",
-				 "");
-			    ok = true;
-			    s_cryptography.setOzoneEncryptionKey(null);
-			    s_cryptography.setOzoneMacKey(null);
-			}
-			else if(bytes != null && bytes.length == 96)
-			{
-			    m_databaseHelper.writeSetting
-				(s_cryptography,
-				 "ozone_address_stream",
-				 Base64.encodeToString(bytes,
-						       Base64.DEFAULT));
-			    s_cryptography.setOzoneEncryptionKey
-				(Arrays.copyOfRange(bytes, 0, 32));
-			    s_cryptography.setOzoneMacKey
-				(Arrays.copyOfRange(bytes, 32, bytes.length));
-			}
-		    }
-		}
-		catch(Exception exception)
-		{
-		    ok = false;
-		}
-
-		if(!ok)
+		if(!generateOzone(textView1.getText().toString()))
 		{
 		    Miscellaneous.showErrorDialog
 			(Settings.this,
@@ -1650,6 +1661,7 @@ public class Settings extends AppCompatActivity
 
 		encryptionSalt = Cryptography.randomBytes(32);
 		macSalt = Cryptography.randomBytes(64);
+		m_databaseHelper.reset();
 
 		try
 		{
@@ -1783,12 +1795,16 @@ public class Settings extends AppCompatActivity
 
 		    boolean e1 = s_cryptography.prepareSipHashIds();
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
+		    boolean e3 = generateOzone
+			(Miscellaneous.
+			 delimitString(s_cryptography.sipHashId().
+				       replace(":", "").toUpperCase(), '-', 4));
 		    byte saltedPassword[] = Cryptography.
 			sha512(m_password.getBytes(),
 			       encryptionSalt,
 			       macSalt);
 
-		    if(e1 && e2 && saltedPassword != null)
+		    if(e1 && e2 && e3 && saltedPassword != null)
 			m_databaseHelper.writeSetting
 			    (null,
 			     "saltedPassword",
@@ -1833,8 +1849,9 @@ public class Settings extends AppCompatActivity
 				 "data.");
 			else
 			{
-			    Settings.this.showWidgets();
+			    Kernel.getInstance().setWakeLock(true);
 			    Settings.this.enableWidgets(true);
+			    Settings.this.showWidgets();
 			    State.getInstance().setAuthenticated(true);
 			    spinner2.setSelection(1); // RSA
 			    spinner3.setSelection(1); // RSA
@@ -1852,16 +1869,10 @@ public class Settings extends AppCompatActivity
 				 "TCP",
 				 "IPv4");
 			    populateFancyKeyData();
+			    populateOzone();
 			    populateParticipants();
 			    startKernel();
-
-			    if(m_databaseHelper.
-			       readSetting(null,
-					   "automatic_neighbors_refresh").
-			       equals("true"))
-				startTimers();
-			    else
-				populateNeighbors(null);
+			    startTimers();
 			}
 		    }
 		});
