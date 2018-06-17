@@ -147,7 +147,12 @@ public class ChatBubble extends View
 	    layoutParams.setMarginEnd
 		((int) (0.20 * displayMetrics.widthPixels));
 	    layoutParams.setMarginStart(0);
-	    textView.setBackgroundResource(R.drawable.bubble_left_text);
+
+	    if(m_fromSmokeStack)
+		textView.setBackgroundResource(R.drawable.bubble_ozone_text);
+	    else
+		textView.setBackgroundResource(R.drawable.bubble_left_text);
+
 	    textView.setLayoutParams(layoutParams);
 	}
 	else
