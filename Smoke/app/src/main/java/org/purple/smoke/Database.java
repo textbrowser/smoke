@@ -2336,7 +2336,10 @@ public class Database extends SQLiteOpenHelper
     {
 	prepareDb();
 
-	if(cryptography == null || m_db == null)
+	if(cryptography == null ||
+	   m_db == null ||
+	   name == null ||
+	   name.trim().isEmpty())
 	    return false;
 
 	m_db.beginTransactionNonExclusive();
