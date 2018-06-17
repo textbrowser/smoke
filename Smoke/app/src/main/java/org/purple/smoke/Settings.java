@@ -180,32 +180,35 @@ public class Settings extends AppCompatActivity
 
 	try
 	{
-	    salt = Cryptography.sha512(string.getBytes("UTF-8"));
+	    if(!string.trim().isEmpty())
+	    {
+		salt = Cryptography.sha512(string.trim().getBytes("UTF-8"));
 
-	    if(salt != null)
-		bytes = Cryptography.pbkdf2
-		    (salt,
-		     string.toCharArray(),
-		     OZONE_STREAM_CREATION_ITERATION_COUNT,
-		     160); // SHA-1
-	    else
-		ok = false;
+		if(salt != null)
+		    bytes = Cryptography.pbkdf2
+			(salt,
+			 string.trim().toCharArray(),
+			 OZONE_STREAM_CREATION_ITERATION_COUNT,
+			 160); // SHA-1
+		else
+		    ok = false;
 
-	    if(bytes != null)
-		bytes = Cryptography.
-		    pbkdf2(salt,
-			   new String(bytes).toCharArray(),
-			   1,
-			   768); // 8 * (32 + 64) Bits
-	    else
-		ok = false;
+		if(bytes != null)
+		    bytes = Cryptography.
+			pbkdf2(salt,
+			       new String(bytes).toCharArray(),
+			       1,
+			       768); // 8 * (32 + 64) Bits
+		else
+		    ok = false;
+	    }
 
-	    if(bytes != null || string.isEmpty())
+	    if(bytes != null || string.trim().isEmpty())
 	    {
 		m_databaseHelper.writeSetting
-		    (s_cryptography, "ozone_address", string);
+		    (s_cryptography, "ozone_address", string.trim());
 
-		if(string.isEmpty())
+		if(string.trim().isEmpty())
 		{
 		    m_databaseHelper.writeSetting
 			(s_cryptography,
