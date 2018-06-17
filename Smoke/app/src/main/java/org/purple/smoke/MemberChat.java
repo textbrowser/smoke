@@ -499,6 +499,8 @@ public class MemberChat extends AppCompatActivity
 
 	try
 	{
+	    m_layoutManager.smoothScrollToPosition
+		(m_recyclerView, null, m_adapter.getItemCount() - 1);
 	    textView1 = (TextView) findViewById(R.id.chat_message);
 	    textView1.setText
 		(State.getInstance().getCharSequence("member_chat.message"));
@@ -776,6 +778,16 @@ public class MemberChat extends AppCompatActivity
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
+	}
+
+	try
+	{
+	    m_layoutManager.smoothScrollToPosition
+		(m_recyclerView, null, m_adapter.getItemCount() - 1);
+
+	}
+	catch(Exception exception)
+	{
 	}
     }
 
