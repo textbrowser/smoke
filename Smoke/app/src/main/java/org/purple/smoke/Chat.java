@@ -1214,6 +1214,7 @@ public class Chat extends AppCompatActivity
 		requestMessages();
 		break;
 	    case 2: // Show Details
+		State.getInstance().populateParticipants();
 		menuItem.setChecked(!menuItem.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,
