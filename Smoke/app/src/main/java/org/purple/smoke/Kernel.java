@@ -1559,35 +1559,35 @@ public class Kernel
 		if(s_databaseHelper.writeCongestionDigest(value))
 		    return 1;
 
-		boolean purple =
-		    Math.abs(System.currentTimeMillis() - timestamp) >
-		    Chat.CHAT_WINDOW;
+		if(s_databaseHelper.
+		   writeParticipantMessage(s_cryptography,
+					   ourMessageViaChatTemporaryIdentity ?
+					   "true" : "false",
+					   message,
+					   strings[1],
+					   null,
+					   timestamp) !=
+		   Database.ExceptionLevels.EXCEPTION_PERMISSIBLE)
+		{
+		    Intent intent = new Intent
+			("org.purple.smoke.chat_message");
 
-		s_databaseHelper.writeParticipantMessage
-		    (s_cryptography,
-		     ourMessageViaChatTemporaryIdentity ? "true" : "false",
-		     message,
-		     strings[1],
-		     null,
-		     timestamp);
+		    intent.putExtra("org.purple.smoke.message", message);
+		    intent.putExtra("org.purple.smoke.name", strings[0]);
+		    intent.putExtra
+			("org.purple.smoke.purple",
+			 ourMessageViaChatTemporaryIdentity);
+		    intent.putExtra("org.purple.smoke.sequence", sequence);
+		    intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
+		    intent.putExtra("org.purple.smoke.timestamp", timestamp);
 
-		Intent intent = new Intent
-		    ("org.purple.smoke.chat_message");
+		    LocalBroadcastManager localBroadcastManager =
+			LocalBroadcastManager.getInstance
+			(Smoke.getApplication());
 
-		intent.putExtra("org.purple.smoke.message", message);
-		intent.putExtra("org.purple.smoke.name", strings[0]);
-		intent.putExtra
-		    ("org.purple.smoke.purple",
-		     ourMessageViaChatTemporaryIdentity);
-		intent.putExtra("org.purple.smoke.sequence", sequence);
-		intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
-		intent.putExtra("org.purple.smoke.timestamp", timestamp);
+		    localBroadcastManager.sendBroadcast(intent);
+		}
 
-		LocalBroadcastManager localBroadcastManager =
-		    LocalBroadcastManager.getInstance
-		    (Smoke.getApplication());
-
-		localBroadcastManager.sendBroadcast(intent);
 		return 1;
 	    }
 	    else if(pk.length == 96)

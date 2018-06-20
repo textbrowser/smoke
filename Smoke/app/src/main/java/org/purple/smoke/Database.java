@@ -138,6 +138,10 @@ public class Database extends SQLiteOpenHelper
     private final static int DATABASE_VERSION = 1;
     private final static int WRITE_PARTICIPANT_TIME_DELTA = 60000; // 60 Seconds
     private static Database s_instance = null;
+    public static enum ExceptionLevels
+    {
+	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
+    }
     public final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
 
     private Database(Context context)
@@ -1018,6 +1022,93 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return arrayList;
+    }
+
+    public ExceptionLevels writeParticipantMessage(Cryptography cryptography,
+						   String fromSmokeStack,
+						   String message,
+						   String sipHashId,
+						   byte attachment[],
+						   long timestamp)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return ExceptionLevels.EXCEPTION_FATAL;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    if(attachment == null)
+		values.put
+		    ("attachment",
+		     Base64.encodeToString(cryptography.etm(new byte[] {0}),
+					   Base64.DEFAULT));
+	    else
+		values.put
+		    ("attachment",
+		     Base64.encodeToString(cryptography.etm(attachment),
+					   Base64.DEFAULT));
+
+	    values.put
+		("from_smokestack",
+		 Base64.encodeToString(cryptography.etm(fromSmokeStack.
+							getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("message",
+		 Base64.encodeToString(cryptography.etm(message.getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("message_digest",
+		 Base64.encodeToString(cryptography.
+				       /*
+				       ** It's very possible that a message
+				       ** sent by one device will be identical
+				       ** to the message sent by another
+				       ** device.
+				       */
+				       hmac((message +
+					     sipHashId +
+					     timestamp).getBytes()),
+				       Base64.DEFAULT));
+	    values.put
+		("siphash_id_digest",
+		 Base64.encodeToString(cryptography.
+				       hmac(sipHashId.toLowerCase().
+					    trim().getBytes("UTF-8")),
+				       Base64.DEFAULT));
+
+	    /*
+	    ** We want to preserve the order of the time values.
+	    ** That is, if t_a < t_b, then E(t_a) < E(t_b) must
+	    ** also be true. Or, H(t_a) < H(t_b).
+	    */
+
+	    values.put("timestamp", timestamp);
+	    m_db.insertOrThrow("participants_messages", null, values);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(SQLiteConstraintException exception)
+	{
+	    if(exception.getMessage().toLowerCase().contains("unique"))
+		return ExceptionLevels.EXCEPTION_PERMISSIBLE;
+	    else
+		return ExceptionLevels.EXCEPTION_FATAL;
+	}
+	catch(Exception exception)
+        {
+	    return ExceptionLevels.EXCEPTION_FATAL;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return ExceptionLevels.EXCEPTION_NONE;
     }
 
     public MemberChatElement readMemberChat
@@ -3857,83 +3948,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
         {
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
-    }
-
-    public void writeParticipantMessage(Cryptography cryptography,
-					String fromSmokeStack,
-					String message,
-					String sipHashId,
-					byte attachment[],
-					long timestamp)
-    {
-	prepareDb();
-
-	if(cryptography == null || m_db == null)
-	    return;
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
-	    if(attachment == null)
-		values.put
-		    ("attachment",
-		     Base64.encodeToString(cryptography.etm(new byte[] {0}),
-					   Base64.DEFAULT));
-	    else
-		values.put
-		    ("attachment",
-		     Base64.encodeToString(cryptography.etm(attachment),
-					   Base64.DEFAULT));
-
-	    values.put
-		("from_smokestack",
-		 Base64.encodeToString(cryptography.etm(fromSmokeStack.
-							getBytes()),
-				       Base64.DEFAULT));
-	    values.put
-		("message",
-		 Base64.encodeToString(cryptography.etm(message.getBytes()),
-				       Base64.DEFAULT));
-	    values.put
-		("message_digest",
-		 Base64.encodeToString(cryptography.
-				       /*
-				       ** It's very possible that a message
-				       ** sent by one device will be identical
-				       ** to the message sent by another
-				       ** device.
-				       */
-				       hmac((message +
-					     sipHashId +
-					     timestamp).getBytes()),
-				       Base64.DEFAULT));
-	    values.put
-		("siphash_id_digest",
-		 Base64.encodeToString(cryptography.
-				       hmac(sipHashId.toLowerCase().
-					    trim().getBytes("UTF-8")),
-				       Base64.DEFAULT));
-
-	    /*
-	    ** We want to preserve the order of the time values.
-	    ** That is, if t_a < t_b, then E(t_a) < E(t_b) must
-	    ** also be true. Or, H(t_a) < H(t_b).
-	    */
-
-	    values.put("timestamp", timestamp);
-	    m_db.insert("participants_messages", null, values);
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-	{
 	}
 	finally
 	{
