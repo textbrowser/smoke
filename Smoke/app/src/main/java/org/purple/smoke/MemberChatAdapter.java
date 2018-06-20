@@ -92,10 +92,10 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 
 	    if(!local)
 		m_chatBubble.setText
-		    (stringBuilder.toString(), ChatBubble.LEFT);
+		    (stringBuilder.toString(), ChatBubble.Locations.LEFT);
 	    else
 		m_chatBubble.setText
-		    (stringBuilder.toString(), ChatBubble.RIGHT);
+		    (stringBuilder.toString(), ChatBubble.Locations.RIGHT);
 
 	    m_position = position;
 	}

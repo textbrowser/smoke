@@ -54,8 +54,7 @@ public class ChatBubble extends View
     private boolean m_fromSmokeStack = false;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
-    public final static int LEFT = 0;
-    public final static int RIGHT = 1;
+    public static enum Locations {LEFT, RIGHT};
 
     @Override
     protected void onDraw(Canvas canvas)
@@ -92,7 +91,7 @@ public class ChatBubble extends View
 	m_view.setId(oid);
     }
 
-    public void setText(String text, int location)
+    public void setText(String text, Locations location)
     {
 	TextView textView = m_view.findViewById(R.id.text);
 
@@ -101,7 +100,7 @@ public class ChatBubble extends View
 	{
 	    Spannable spannable = new SpannableStringBuilder(text);
 
-	    if(location == LEFT)
+	    if(location == Locations.LEFT)
 		spannable.setSpan
 		    (new ForegroundColorSpan(Color.rgb(255, 255, 255)),
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -118,7 +117,7 @@ public class ChatBubble extends View
 		((m_fromSmokeStack ? "Ozone " : "") +
 		 m_simpleDateFormat.format(m_date));
 
-	    if(location == LEFT)
+	    if(location == Locations.LEFT)
 		spannable.setSpan
 		    (new ForegroundColorSpan(Color.rgb(220, 220, 220)),
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -139,7 +138,7 @@ public class ChatBubble extends View
 	((Activity) m_context).getWindowManager().getDefaultDisplay().
 	    getMetrics(displayMetrics);
 
-	if(location == LEFT)
+	if(location == Locations.LEFT)
 	{
 	    LinearLayout.LayoutParams layoutParams =
 		(LinearLayout.LayoutParams) textView.getLayoutParams();
