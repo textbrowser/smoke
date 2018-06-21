@@ -27,7 +27,9 @@
 
 package org.purple.smoke;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.Map;
@@ -337,6 +339,14 @@ public class State
 		    {
 			m_participants = Database.getInstance().
 			    readParticipants(Cryptography.getInstance(), "");
+
+			Intent intent = new Intent
+			    ("org.purple.smoke.participants_populated");
+			LocalBroadcastManager localBroadcastManager =
+			    LocalBroadcastManager.
+			    getInstance(Smoke.getApplication());
+
+			localBroadcastManager.sendBroadcast(intent);
 		    }
 		    finally
 		    {
