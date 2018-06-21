@@ -341,7 +341,7 @@ public class State
 			    readParticipants(Cryptography.getInstance(), "");
 
 			Intent intent = new Intent
-			    ("org.purple.smoke.participants_populated");
+			    ("org.purple.smoke.state_participants_populated");
 			LocalBroadcastManager localBroadcastManager =
 			    LocalBroadcastManager.
 			    getInstance(Smoke.getApplication());

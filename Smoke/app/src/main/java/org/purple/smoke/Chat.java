@@ -101,22 +101,16 @@ public class Chat extends AppCompatActivity
 		     intent.getLongExtra("org.purple.smoke.sequence", 1),
 		     intent.getLongExtra("org.purple.smoke.timestamp", 0));
 		break;
-	    case "org.purple.smoke.populate_participants":
-		String sipHashId = intent.getStringExtra
-		    ("org.purple.smoke.sipHashId");
-
-		if(sipHashId == null || sipHashId.trim().isEmpty())
-		    populateParticipants();
-		else
-		    refreshCheckBox(sipHashId);
-
-		break;
 	    case "org.purple.smoke.half_and_half_call":
 		halfAndHalfCall
 		    (intent.getStringExtra("org.purple.smoke.name"),
 		     intent.getStringExtra("org.purple.smoke.sipHashId"),
 		     intent.getBooleanExtra("org.purple.smoke.initial", false),
 		     intent.getBooleanExtra("org.purple.smoke.refresh", false));
+		break;
+	    case "org.purple.smoke.state_participants_populated":
+		invalidateOptionsMenu();
+		populateParticipants();
 		break;
 	    }
 	}
@@ -425,7 +419,6 @@ public class Chat extends AppCompatActivity
 
 	button1.setEnabled(false);
 	button2.setEnabled(false);
-	invalidateOptionsMenu();
 
 	if(arrayList == null || arrayList.isEmpty())
 	{
@@ -830,8 +823,6 @@ public class Chat extends AppCompatActivity
 			@Override
 			public void run()
 			{
-			    invalidateOptionsMenu();
-
 			    Button button1 = (Button) findViewById(R.id.call);
 
 			    button1.setEnabled
@@ -1418,7 +1409,8 @@ public class Chat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.busy_call");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
-	    intentFilter.addAction("org.purple.smoke.populate_participants");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
