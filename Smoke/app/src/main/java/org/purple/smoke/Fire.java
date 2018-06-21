@@ -59,9 +59,6 @@ import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Fire extends AppCompatActivity
 {
@@ -79,11 +76,13 @@ public class Fire extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
+	    switch(intent.getAction())
+	    {
+	    case "org.purple.smoke.chat_message":
 		Miscellaneous.showNotification
 		    (Fire.this, intent, findViewById(R.id.main_layout));
-	    else if(intent.getAction().equals("org.purple.smoke.fire_message"))
-	    {
+		break;
+	    case "org.purple.smoke.fire_message":
 		FireChannel fireChannel = State.getInstance().fireChannel
 		    (intent.getStringExtra("org.purple.smoke.channel"));
 
@@ -106,12 +105,16 @@ public class Fire extends AppCompatActivity
 			    equals(Messages.FIRE_STATUS_MESSAGE_TYPE))
 			fireChannel.status(id, name);
 		}
+
+		break;
+	    case "org.purple.smoke.state_participants_populated":
+		invalidateOptionsMenu();
+		break;
 	    }
 	}
     }
 
     private FireBroadcastReceiver m_receiver = null;
-    private ScheduledExecutorService m_scheduler = null;
     private boolean m_receiverRegistered = false;
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final String m_id = Miscellaneous.byteArrayAsHexString
@@ -137,7 +140,6 @@ public class Fire extends AppCompatActivity
 	    return null;
 	}
     };
-    private final static int TIMER_INTERVAL = 2000; // 2 Seconds
 
     private void deleteFire(String name, final Integer oid)
     {
@@ -551,28 +553,6 @@ public class Fire extends AppCompatActivity
 	m_databaseHelper.cleanDanglingOutboundQueued();
 	m_databaseHelper.cleanDanglingParticipants();
 	m_receiver = new FireBroadcastReceiver();
-	m_scheduler = Executors.newSingleThreadScheduledExecutor();
-	m_scheduler.scheduleAtFixedRate(new Runnable()
-	{
-	    @Override
-	    public void run()
-	    {
-		try
-		{
-		    Fire.this.runOnUiThread(new Runnable()
-		    {
-			@Override
-			public void run()
-			{
-			    invalidateOptionsMenu();
-			}
-		    });
-		}
-		catch(Exception exception)
-		{
-		}
-	    }
-	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
         setContentView(R.layout.activity_fire);
 
 	if(State.getInstance().isAuthenticated())
@@ -732,6 +712,8 @@ public class Fire extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.fire_message");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
