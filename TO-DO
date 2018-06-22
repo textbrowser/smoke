@@ -246,3 +246,5 @@ Remaining Items
 11.    Replace Chat member view with a recycler view.
 12.    MemberChat attachment.
 13.    New images in Smoke.odt.
+14.    Participant status icon should not be modified if received message
+       is from an Ozone.
