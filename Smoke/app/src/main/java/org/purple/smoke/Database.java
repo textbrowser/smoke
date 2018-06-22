@@ -1125,10 +1125,11 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT from_smokestack, " +
-		 "message, " +
-		 "timestamp, " +
-		 "oid " +
+		("SELECT attachment, " + // 0
+		 "from_smokestack, " +   // 1
+		 "message, " +           // 2
+		 "timestamp, " +         // 3
+		 "oid " +                // 4
 		 "FROM participants_messages WHERE siphash_id_digest = ? " +
 		 "ORDER BY timestamp LIMIT 1 OFFSET CAST(? AS INTEGER)",
 		 new String[] {Base64.
@@ -1151,7 +1152,7 @@ public class Database extends SQLiteOpenHelper
 			memberChatElement.m_oid = cursor.getInt(i);
 			continue;
 		    }
-		    else if(i == 2)
+		    else if(i == 3)
 		    {
 			memberChatElement.m_timestamp = cursor.getLong(i);
 			continue;
@@ -1177,6 +1178,12 @@ public class Database extends SQLiteOpenHelper
 		    {
 		    case 0:
 			if(bytes != null)
+			    memberChatElement.m_attachment =
+				Miscellaneous.deepCopy(bytes);
+
+			break;
+		    case 1:
+			if(bytes != null)
 			    memberChatElement.m_fromSmokeStack =
 				new String(bytes).trim();
 			else
@@ -1184,7 +1191,7 @@ public class Database extends SQLiteOpenHelper
 				"error (" + oid + ")";
 
 			break;
-		    case 1:
+		    case 2:
 			if(bytes != null)
 			    memberChatElement.m_message =
 				new String(bytes);
