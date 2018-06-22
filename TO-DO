@@ -199,6 +199,7 @@ Future Items
 11.    Protocol-less snubbing without key revocation.
 12.    Introduce real-time typing status.
 13.    Vacuum databases.
+14.    NTRU via BouncyCastle.
 
 Ignored / Impossible Items
 
@@ -243,4 +244,5 @@ Remaining Items
 9.     Resize Member Chat bubbles according to contents.
 10.    New messages should be at the top of the view; Member Chat. Optional.
 11.    Replace Chat member view with a recycler view.
-12.    NTRU via BouncyCastle.
+12.    MemberChat attachment.
+13.    New images in Smoke.odt.

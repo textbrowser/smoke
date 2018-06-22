@@ -453,6 +453,7 @@ public class Kernel
 					(s_cryptography,
 					 messageElement.m_message,
 					 messageElement.m_id,
+					 messageElement.m_attachment,
 					 Cryptography.
 					 sha512(messageElement.m_id.
 						getBytes("UTF-8")),
@@ -465,7 +466,7 @@ public class Kernel
 					 "local",
 					 messageElement.m_message,
 					 messageElement.m_id,
-					 null,
+					 messageElement.m_attachment,
 					 timestamp);
 
 				    Intent intent = new Intent
@@ -569,6 +570,7 @@ public class Kernel
 					(s_cryptography,
 					 messageElement.m_message,
 					 messageElement.m_id,
+					 messageElement.m_attachment,
 					 null,
 					 messageElement.m_keyStream,
 					 State.getInstance().
@@ -1457,6 +1459,7 @@ public class Kernel
 
 		String message = null;
 		boolean updateTimeStamp = true;
+		byte attachment[] = null;
 		byte publicKeySignature[] = null;
 		int ii = 0;
 		long sequence = 0;
@@ -1503,6 +1506,11 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 3:
+			attachment = Miscellaneous.decompressed
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+			ii += 1;
+			break;
+		    case 4:
 			String array[] = s_databaseHelper.
 			    nameSipHashIdFromDigest(s_cryptography, pk);
 
@@ -1539,6 +1547,8 @@ public class Kernel
 				 "\n".getBytes(),
 				 strings[2].getBytes(),
 				 "\n".getBytes(),
+				 strings[3].getBytes(),
+				 "\n".getBytes(),
 				 s_cryptography.
 				 chatEncryptionPublicKeyDigest())))
 				return 1;
@@ -1567,7 +1577,7 @@ public class Kernel
 					   "true" : "false",
 					   message,
 					   strings[1],
-					   null,
+					   attachment,
 					   timestamp) !=
 		   Database.ExceptionLevels.EXCEPTION_PERMISSIBLE)
 		{

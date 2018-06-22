@@ -48,7 +48,7 @@ public class Messages
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
-    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 4; /*
+    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 5; /*
 							      ** The first
 							      ** byte is not
 							      ** considered.
@@ -293,6 +293,7 @@ public class Messages
     public static byte[] chatMessage(Cryptography cryptography,
 				     String message,
 				     String sipHashId,
+				     byte attachment[],
 				     byte destinationKey[],
 				     byte keyStream[],
 				     long sequence,
@@ -353,6 +354,22 @@ public class Messages
 		(Base64.encodeToString(Miscellaneous.
 				       longToByteArray(sequence),
 				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Attachment ]
+	    */
+
+	    if(attachment != null)
+		stringBuilder.append
+		    (Base64.encodeToString(Miscellaneous.compressed(attachment),
+					   Base64.NO_WRAP));
+	    else
+		stringBuilder.append
+		    (Base64.encodeToString(Miscellaneous.
+					   compressed(new byte[1]),
+					   Base64.NO_WRAP));
+
 	    stringBuilder.append("\n");
 
 	    /*

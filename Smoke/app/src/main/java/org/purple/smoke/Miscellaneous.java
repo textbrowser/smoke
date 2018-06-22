@@ -232,6 +232,45 @@ public class Miscellaneous
 	return null;
     }
 
+    public static byte[] decompressed(byte bytes[])
+    {
+	if(bytes == null || bytes.length <= 0)
+	    return null;
+
+	try
+	{
+	    ByteArrayInputStream byteArrayInputStream =
+		new ByteArrayInputStream(bytes);
+	    ByteArrayOutputStream byteArrayOutputStream =
+		new ByteArrayOutputStream();
+
+	    try
+	    {
+		try(GZIPInputStream gzipInputStream =
+		    new GZIPInputStream(byteArrayInputStream))
+		{
+		    byte buffer[] = new byte[1024];
+		    int rc = 0;
+
+		    while((rc = gzipInputStream.read(buffer)) > 0)
+			byteArrayOutputStream.write(buffer, 0, rc);
+		}
+	    }
+	    finally
+	    {
+		byteArrayInputStream.close();
+		byteArrayOutputStream.close();
+	    }
+
+	    return byteArrayOutputStream.toByteArray();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
     public static byte[] deepCopy(byte bytes[])
     {
 	if(bytes == null || bytes.length <= 0)
@@ -300,45 +339,6 @@ public class Miscellaneous
 	{
 	    return null;
 	}
-    }
-
-    public static byte[] uncompressed(byte bytes[])
-    {
-	if(bytes == null || bytes.length <= 0)
-	    return null;
-
-	try
-	{
-	    ByteArrayInputStream byteArrayInputStream =
-		new ByteArrayInputStream(bytes);
-	    ByteArrayOutputStream byteArrayOutputStream =
-		new ByteArrayOutputStream();
-
-	    try
-	    {
-		try(GZIPInputStream gzipInputStream =
-		    new GZIPInputStream(byteArrayInputStream))
-		{
-		    byte buffer[] = new byte[1024];
-		    int rc = 0;
-
-		    while((rc = gzipInputStream.read(buffer)) > 0)
-			byteArrayOutputStream.write(buffer, 0, rc);
-		}
-	    }
-	    finally
-	    {
-		byteArrayInputStream.close();
-		byteArrayOutputStream.close();
-	    }
-
-	    return byteArrayOutputStream.toByteArray();
-	}
-	catch(Exception exception)
-	{
-	}
-
-	return null;
     }
 
     public static int countOf(StringBuilder stringBuilder, char character)
