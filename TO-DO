@@ -179,6 +179,8 @@ Completed Items
        thread for retrieval.
 139.   Schedulers may silently fail. try-catch blocks!
 140.   Populate Chat member list without accessing the database.
+141.   Participant status icon should not be modified if newly-received message
+       is from an Ozone.
 
 Future Items
 
@@ -246,5 +248,3 @@ Remaining Items
 11.    Replace Chat member view with a recycler view.
 12.    MemberChat attachment.
 13.    New images in Smoke.odt.
-14.    Participant status icon should not be modified if received message
-       is from an Ozone.

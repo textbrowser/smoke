@@ -243,24 +243,25 @@ public class Chat extends AppCompatActivity
 
 	    textView1.append(message);
 	    textView1.append("\n\n");
-	}
 
-	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
-	{
-	    CheckBox checkBox1 = findViewById
-		(R.id.participants).findViewWithTag(sipHashId);
-
-	    if(checkBox1 != null)
+	    if(m_databaseHelper.readSetting(null, "show_chat_icons").
+	       equals("true"))
 	    {
-		if(Math.abs(System.currentTimeMillis() - timestamp) >
-		   STATUS_WINDOW)
-		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
-			(R.drawable.chat_status_offline, 0, 0, 0);
-		else
-		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
-			(R.drawable.chat_status_online, 0, 0, 0);
+		CheckBox checkBox1 = findViewById
+		    (R.id.participants).findViewWithTag(sipHashId);
 
-		checkBox1.setCompoundDrawablePadding(5);
+		if(checkBox1 != null)
+		{
+		    if(Math.abs(System.currentTimeMillis() - timestamp) >
+		       STATUS_WINDOW)
+			checkBox1.setCompoundDrawablesWithIntrinsicBounds
+			    (R.drawable.chat_status_offline, 0, 0, 0);
+		    else
+			checkBox1.setCompoundDrawablesWithIntrinsicBounds
+			    (R.drawable.chat_status_online, 0, 0, 0);
+
+		    checkBox1.setCompoundDrawablePadding(5);
+		}
 	    }
 	}
 
