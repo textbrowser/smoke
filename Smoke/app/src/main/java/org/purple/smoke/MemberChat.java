@@ -72,13 +72,14 @@ public class MemberChat extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    boolean local = false;
-
-	    if((local = intent.getAction().
-		equals("org.purple.smoke.chat_local_message")) ||
-	       intent.getAction().equals("org.purple.smoke.chat_message"))
+	    switch(intent.getAction())
 	    {
-		if(intent.
+	    case "org.purple.smoke.chat_local_message":
+	    case "org.purple.smoke.chat_message":
+		boolean local = intent.getAction().equals
+		("org.purple.smoke.chat_local_message");
+
+	        if(intent.
 		   getStringExtra("org.purple.smoke.sipHashId") != null &&
 		   intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
@@ -146,6 +147,11 @@ public class MemberChat extends AppCompatActivity
 			(MemberChat.this,
 			 intent,
 			 findViewById(R.id.main_layout));
+
+		break;
+	    case "org.purple.smoke.state_participants_populated":
+		invalidateOptionsMenu();
+		break;
 	    }
 	}
     }
@@ -273,8 +279,6 @@ public class MemberChat extends AppCompatActivity
 			    @Override
 			    public void run()
 			    {
-				invalidateOptionsMenu();
-
 				Button button1 = (Button) findViewById
 				    (R.id.send_chat_message);
 
@@ -778,6 +782,8 @@ public class MemberChat extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_local_message");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
