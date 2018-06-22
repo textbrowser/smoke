@@ -102,12 +102,16 @@ public class Settings extends AppCompatActivity
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    if(intent.getAction().equals("org.purple.smoke.chat_message"))
+	    switch(intent.getAction())
+	    {
+	    case "org.purple.smoke.chat_message":
 		Miscellaneous.showNotification
 		    (Settings.this, intent, findViewById(R.id.main_layout));
-	    else if(intent.getAction().
-		    equals("org.purple.smoke.populate_participants"))
+		break;
+	    case "org.purple.smoke.populate_participants":
 		populateParticipants();
+		break;
+	    }
 	}
     }
 
@@ -1064,7 +1068,6 @@ public class Settings extends AppCompatActivity
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
-	State.getInstance().populateParticipants();
 	invalidateOptionsMenu();
 	tableLayout.removeAllViews();
 
@@ -2140,15 +2143,6 @@ public class Settings extends AppCompatActivity
 			Settings.this.runOnUiThread
 			    (new PopulateNeighbors(m_databaseHelper.
 			     readNeighbors(s_cryptography)));
-
-			Settings.this.runOnUiThread(new Runnable()
-		        {
-			    @Override
-			    public void run()
-			    {
-				invalidateOptionsMenu();
-			    }
-			});
 		    }
 		    catch(Exception exception)
 		    {
@@ -2540,7 +2534,10 @@ public class Settings extends AppCompatActivity
 			   writeParticipantName(s_cryptography,
 						string,
 						itemId))
+			{
+			    State.getInstance().populateParticipants();
 			    populateParticipants();
+			}
 
 			State.getInstance().removeKey
 			    ("settings_participant_name_input");

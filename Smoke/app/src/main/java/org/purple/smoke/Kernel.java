@@ -1264,6 +1264,14 @@ public class Kernel
 
 		    State.getInstance().populateParticipants();
 
+		    Intent intent = new Intent
+			("org.purple.smoke.populate_participants");
+		    LocalBroadcastManager localBroadcastManager =
+			LocalBroadcastManager.
+			getInstance(Smoke.getApplication());
+
+		    localBroadcastManager.sendBroadcast(intent);
+
 		    /*
 		    ** Response-share.
 		    */
