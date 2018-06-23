@@ -59,6 +59,7 @@
     <string name="auto_fill">Auto Fill</string>
     <string name="network_status">Network Status</string>
     <string name="smoke_chat_id">Smoke Chat ID</string>
+    <string name="attachment">Attachment</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
