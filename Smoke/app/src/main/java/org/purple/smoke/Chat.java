@@ -1074,27 +1074,31 @@ public class Chat extends AppCompatActivity
 			    try
 			    {
 				String string = State.getInstance().
-				    getString("chat_secret_input");
-				byte bytes[] = Cryptography.pbkdf2
-				    (Cryptography.sha512(string.
-							 getBytes("UTF-8")),
-				     string.toCharArray(),
-				     CUSTOM_SESSION_ITERATION_COUNT,
-				     160); // SHA-1
+				    getString("chat_secret_input").trim();
 
-				if(bytes != null)
-				    bytes = Cryptography.pbkdf2
-					(Cryptography.sha512(string.
-							     getBytes("UTF-8")),
-					 new String(bytes).toCharArray(),
-					 1,
-					 96 * 8); // AES-256, SHA-512
+				if(!string.isEmpty())
+				{
+				    byte bytes[] = Cryptography.pbkdf2
+					(Cryptography.
+					 sha512(string.getBytes("UTF-8")),
+					 string.toCharArray(),
+					 CUSTOM_SESSION_ITERATION_COUNT,
+					 160); // SHA-1
 
-				if(m_databaseHelper.
-				   setParticipantKeyStream(s_cryptography,
-							   bytes,
-							   itemId))
-				    refreshCheckBox(sipHashId);
+				    if(bytes != null)
+					bytes = Cryptography.pbkdf2
+					    (Cryptography.
+					     sha512(string.getBytes("UTF-8")),
+					     new String(bytes).toCharArray(),
+					     1,
+					     96 * 8); // AES-256, SHA-512
+
+				    if(m_databaseHelper.
+				       setParticipantKeyStream(s_cryptography,
+							       bytes,
+							       itemId))
+					refreshCheckBox(sipHashId);
+				}
 			    }
 			    catch(Exception exception)
 			    {

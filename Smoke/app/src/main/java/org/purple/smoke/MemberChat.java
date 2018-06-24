@@ -538,30 +538,35 @@ public class MemberChat extends AppCompatActivity
 		{
 		    switch(groupId)
 		    {
-		    case 1:
+		    case 2:
 			try
 			{
 			    String string = State.getInstance().
-				getString("member_chat_secret_input");
-			    byte bytes[] = Cryptography.pbkdf2
-				(Cryptography.sha512(string.getBytes("UTF-8")),
-				 string.toCharArray(),
-				 Chat.CUSTOM_SESSION_ITERATION_COUNT,
-				 160); // SHA-1
-			    int oid = m_databaseHelper.
-				participantOidFromSipHash
-				(s_cryptography, m_sipHashId);
+				getString("member_chat_secret_input").trim();
 
-			    if(bytes != null)
-				bytes = Cryptography.pbkdf2
+			    if(!string.isEmpty())
+			    {
+				byte bytes[] = Cryptography.pbkdf2
 				    (Cryptography.sha512(string.
 							 getBytes("UTF-8")),
-				     new String(bytes).toCharArray(),
-				     1,
-				     96 * 8); // AES-256, SHA-512
+				     string.toCharArray(),
+				     Chat.CUSTOM_SESSION_ITERATION_COUNT,
+				     160); // SHA-1
+				int oid = m_databaseHelper.
+				    participantOidFromSipHash
+				    (s_cryptography, m_sipHashId);
 
-			    m_databaseHelper.setParticipantKeyStream
-				(s_cryptography, bytes, oid);
+				if(bytes != null)
+				    bytes = Cryptography.pbkdf2
+					(Cryptography.sha512(string.
+							     getBytes("UTF-8")),
+					 new String(bytes).toCharArray(),
+					 1,
+					 96 * 8); // AES-256, SHA-512
+
+				m_databaseHelper.setParticipantKeyStream
+				    (s_cryptography, bytes, oid);
+			    }
 			}
 			catch(Exception exception)
 			{
@@ -594,16 +599,18 @@ public class MemberChat extends AppCompatActivity
 	switch(groupId)
 	{
 	case 0:
-	    Kernel.getInstance().call(m_oid, m_sipHashId);
 	    break;
 	case 1:
+	    Kernel.getInstance().call(m_oid, m_sipHashId);
+	    break;
+	case 2:
 	    Miscellaneous.showTextInputDialog
 		(MemberChat.this,
 		 listener,
 		 "Please provide a secret.",
 		 "Secret");
 	    break;
-	case 2:
+	case 3:
 	    Kernel.getInstance().retrieveChatMessages();
 	    break;
 	case 10:
@@ -730,9 +737,10 @@ public class MemberChat extends AppCompatActivity
 
 	MenuItem menuItem = null;
 
-	menu.add(0, -1, 0, "Call");
-	menu.add(1, -1, 0, "Custom Session");
-	menuItem = menu.add(2, -1, 0, "Retrieve Messages");
+	menu.add(0, -1, 0, "Attachment");
+	menu.add(1, -1, 0, "Call");
+	menu.add(2, -1, 0, "Custom Session");
+	menuItem = menu.add(3, -1, 0, "Retrieve Messages");
 	menuItem.setEnabled
 	    (Kernel.getInstance().isConnected() &&
 	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").
