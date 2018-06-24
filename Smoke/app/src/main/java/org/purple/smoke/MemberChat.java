@@ -192,8 +192,10 @@ public class MemberChat extends AppCompatActivity
     private String m_mySipHashId = "";
     private String m_sipHashId = m_name;
     private boolean m_receiverRegistered = false;
+    private byte m_imageData[] = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static int SELECT_IMAGE_REQUEST = 0;
     private final static int STATUS_INTERVAL = 5000; // 5 Seconds
     private int m_oid = -1;
 
@@ -379,6 +381,15 @@ public class MemberChat extends AppCompatActivity
 
 	startActivity(intent);
 	finish();
+    }
+
+    private void showGalleryActivity()
+    {
+	Intent intent = new Intent
+	    (Intent.ACTION_PICK,
+	     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(intent, SELECT_IMAGE_REQUEST);
     }
 
     private void showMemberChatActivity()
@@ -599,6 +610,7 @@ public class MemberChat extends AppCompatActivity
 	switch(groupId)
 	{
 	case 0:
+	    showGalleryActivity();
 	    break;
 	case 1:
 	    Kernel.getInstance().call(m_oid, m_sipHashId);
