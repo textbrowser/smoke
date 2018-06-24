@@ -1982,6 +1982,7 @@ public class Kernel
 
     public void enqueueChatMessage(String message,
 				   String sipHashId,
+				   byte imageBytes[],
 				   byte keystream[])
     {
 	m_messagesToSendMutex.writeLock().lock();
@@ -1990,6 +1991,7 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_attachment = Miscellaneous.deepCopy(imageBytes);
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_message = message;

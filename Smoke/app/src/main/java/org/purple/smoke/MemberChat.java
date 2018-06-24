@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -34,6 +35,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -52,6 +55,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
@@ -192,7 +197,7 @@ public class MemberChat extends AppCompatActivity
     private String m_mySipHashId = "";
     private String m_sipHashId = m_name;
     private boolean m_receiverRegistered = false;
-    private byte m_imageData[] = null;
+    private byte m_attachment[] = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
@@ -201,8 +206,20 @@ public class MemberChat extends AppCompatActivity
 
     private void prepareListeners()
     {
-	Button button1 = (Button) findViewById(R.id.send_chat_message);
+	Button button1 = (Button) findViewById(R.id.attachment);
 
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(MemberChat.this.isFinishing())
+		    return;
+
+		showGalleryActivity();
+	    }
+	});
+
+	button1 = (Button) findViewById(R.id.send_chat_message);
         button1.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
@@ -243,7 +260,8 @@ public class MemberChat extends AppCompatActivity
 		    return;
 
 		Kernel.getInstance().enqueueChatMessage
-		    (str, m_sipHashId, keyStream);
+		    (str, m_sipHashId, m_attachment, keyStream);
+		m_attachment = null;
 		textView1.post(new Runnable()
 		{
 		    @Override
@@ -383,12 +401,23 @@ public class MemberChat extends AppCompatActivity
 	finish();
     }
 
+    private void showFireActivity()
+    {
+	saveState();
+
+	Intent intent = new Intent(MemberChat.this, Fire.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showGalleryActivity()
     {
 	Intent intent = new Intent
 	    (Intent.ACTION_PICK,
 	     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
+	intent.setType("image/*");
         startActivityForResult(intent, SELECT_IMAGE_REQUEST);
     }
 
@@ -402,16 +431,6 @@ public class MemberChat extends AppCompatActivity
 	finish();
     }
 
-    private void showFireActivity()
-    {
-	saveState();
-
-	Intent intent = new Intent(MemberChat.this, Fire.class);
-
-	startActivity(intent);
-	finish();
-    }
-
     private void showSettingsActivity()
     {
 	saveState();
@@ -420,6 +439,88 @@ public class MemberChat extends AppCompatActivity
 
 	startActivity(intent);
 	finish();
+    }
+
+     @Override
+     protected void onActivityResult(int requestCode,
+				     int resultCode,
+				     Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try
+	{
+	    if(data != null &&
+	       requestCode == SELECT_IMAGE_REQUEST &&
+	       resultCode == RESULT_OK)
+	    {
+		final ProgressDialog dialog = new ProgressDialog
+		    (MemberChat.this);
+
+		dialog.setCancelable(false);
+		dialog.setIndeterminate(true);
+		dialog.setMessage("Reading image data.");
+		dialog.show();
+
+		class SingleShot implements Runnable
+		{
+		    private Uri m_uri = null;
+		    private byte m_bytes[] = null;
+
+		    SingleShot(Uri uri)
+		    {
+			m_uri = uri;
+		    }
+
+		    @Override
+		    public void run()
+		    {
+			try
+			{
+			    Bitmap bitmap = null;
+			    InputStream inputStream = null;
+
+			    inputStream = getContentResolver().
+				openInputStream(m_uri);
+			    bitmap = BitmapFactory.decodeStream(inputStream);
+
+			    ByteArrayOutputStream byteArrayOutputStream = new
+				ByteArrayOutputStream();
+
+			    bitmap.compress
+				(Bitmap.CompressFormat.PNG,
+				 100,
+				 byteArrayOutputStream);
+			    m_bytes = Miscellaneous.deepCopy
+				(byteArrayOutputStream.toByteArray());
+			    bitmap.recycle();
+			}
+			catch(Exception exception)
+			{
+			    m_bytes = null;
+			}
+
+			MemberChat.this.runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				m_attachment = Miscellaneous.deepCopy(m_bytes);
+				dialog.dismiss();
+			    }
+			});
+		    }
+		}
+
+		Thread thread = new Thread(new SingleShot(data.getData()));
+
+		thread.start();
+            }
+	}
+	catch(Exception exception)
+	{
+	    m_attachment = null;
+	}
     }
 
     @Override
@@ -549,7 +650,7 @@ public class MemberChat extends AppCompatActivity
 		{
 		    switch(groupId)
 		    {
-		    case 2:
+		    case 1:
 			try
 			{
 			    String string = State.getInstance().
@@ -610,19 +711,16 @@ public class MemberChat extends AppCompatActivity
 	switch(groupId)
 	{
 	case 0:
-	    showGalleryActivity();
-	    break;
-	case 1:
 	    Kernel.getInstance().call(m_oid, m_sipHashId);
 	    break;
-	case 2:
+	case 1:
 	    Miscellaneous.showTextInputDialog
 		(MemberChat.this,
 		 listener,
 		 "Please provide a secret.",
 		 "Secret");
 	    break;
-	case 3:
+	case 2:
 	    Kernel.getInstance().retrieveChatMessages();
 	    break;
 	case 10:
@@ -741,6 +839,16 @@ public class MemberChat extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+	Intent intent = new Intent();
+
+	intent.putExtra("Result", "Done");
+	setResult(RESULT_OK, intent);
+	super.onBackPressed();
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu,
 				    View view,
 				    ContextMenuInfo menuInfo)
@@ -749,10 +857,9 @@ public class MemberChat extends AppCompatActivity
 
 	MenuItem menuItem = null;
 
-	menu.add(0, -1, 0, "Attachment");
-	menu.add(1, -1, 0, "Call");
-	menu.add(2, -1, 0, "Custom Session");
-	menuItem = menu.add(3, -1, 0, "Retrieve Messages");
+	menu.add(0, -1, 0, "Call");
+	menu.add(1, -1, 0, "Custom Session");
+	menuItem = menu.add(2, -1, 0, "Retrieve Messages");
 	menuItem.setEnabled
 	    (Kernel.getInstance().isConnected() &&
 	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").

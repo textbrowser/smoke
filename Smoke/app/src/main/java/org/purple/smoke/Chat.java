@@ -994,7 +994,7 @@ public class Chat extends AppCompatActivity
 			continue;
 
 		    Kernel.getInstance().enqueueChatMessage
-			(str, sipHashId, keyStream);
+			(str, sipHashId, null, keyStream);
 		}
 
 		scrollMessagesView();

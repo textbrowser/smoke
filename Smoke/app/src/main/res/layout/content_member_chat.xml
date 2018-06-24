@@ -34,9 +34,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_alignStart="@+id/banner"
+        android:layout_marginStart="30dp"
         android:layout_toStartOf="@+id/send_chat_message"
         android:ems="10"
-        android:hint="@string/please_type_a_message"
+        android:hint="@string/message"
         android:inputType="textPersonName" />
 
     <Button
@@ -69,5 +71,15 @@
         android:layout_marginStart="5dp"
         android:contentDescription="@string/network_status"
         app:srcCompat="@drawable/chat_status_offline" />
+
+    <Button
+        android:id="@+id/attachment"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/send_chat_message"
+        android:layout_alignTop="@+id/send_chat_message"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/file" />
 
 </RelativeLayout>

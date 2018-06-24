@@ -60,6 +60,7 @@
     <string name="network_status">Network Status</string>
     <string name="smoke_chat_id">Smoke Chat ID</string>
     <string name="attachment">Attachment</string>
+    <string name="message">Message...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

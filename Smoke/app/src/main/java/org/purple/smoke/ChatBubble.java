@@ -86,6 +86,15 @@ public class ChatBubble extends View
 	m_fromSmokeStack = state;
     }
 
+    public void setImageAttachment(byte bytes[])
+    {
+	if(bytes == null || bytes.length <= 0)
+	{
+	    m_view.findViewById(R.id.image).setVisibility(View.GONE);
+	    return;
+	}
+    }
+
     public void setOid(int oid)
     {
 	m_view.setId(oid);
