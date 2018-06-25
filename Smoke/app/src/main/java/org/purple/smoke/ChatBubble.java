@@ -106,7 +106,10 @@ public class ChatBubble extends View
 
 	    imageView.setImageBitmap
 		(Bitmap.
-		 createScaledBitmap(bitmap, bitmap.getWidth(), 500, false));
+		 createScaledBitmap(bitmap,
+				    bitmap.getWidth(),
+				    Math.min(500, bitmap.getHeight()),
+				    false));
 	    m_view.findViewById(R.id.image).setVisibility(View.VISIBLE);
 	}
 	catch(Exception exception)
