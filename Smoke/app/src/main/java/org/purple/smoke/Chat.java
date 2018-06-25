@@ -191,7 +191,7 @@ public class Chat extends AppCompatActivity
 		    (m_simpleDateFormat.format(new Date(timestamp)));
 
 	    stringBuilder.append("] ");
-	    stringBuilder.append(name);
+	    stringBuilder.append(name.trim());
 	    stringBuilder.append(":");
 
 	    if(sequence != -1)
@@ -202,7 +202,7 @@ public class Chat extends AppCompatActivity
 	    else
 		stringBuilder.append(" ");
 
-	    stringBuilder.append(message);
+	    stringBuilder.append(message.trim());
 	    stringBuilder.append("\n\n");
 
 	    Spannable spannable = new SpannableStringBuilder
@@ -225,11 +225,11 @@ public class Chat extends AppCompatActivity
 
 	    textView1.append("] ");
 
-	    Spannable spannable = new SpannableStringBuilder(name);
+	    Spannable spannable = new SpannableStringBuilder(name.trim());
 
 	    spannable.setSpan
 		(new StyleSpan(android.graphics.Typeface.BOLD),
-		 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		 0, name.trim().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    textView1.append(spannable);
 	    textView1.append(":");
 
@@ -241,7 +241,7 @@ public class Chat extends AppCompatActivity
 	    else
 		textView1.append(" ");
 
-	    textView1.append(message);
+	    textView1.append(message.trim());
 	    textView1.append("\n\n");
 
 	    if(m_databaseHelper.readSetting(null, "show_chat_icons").
@@ -309,7 +309,7 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append("] ");
 	stringBuilder.append
 	    ("Received a simultaneous half-and-half organic call from ");
-	stringBuilder.append(name);
+	stringBuilder.append(name.trim());
 	stringBuilder.append(" (");
 	stringBuilder.append
 	    (Miscellaneous.
@@ -354,7 +354,7 @@ public class Chat extends AppCompatActivity
 	    stringBuilder.append
 		("Received a half-and-half organic response from ");
 
-	stringBuilder.append(name);
+	stringBuilder.append(name.trim());
 	stringBuilder.append(" (");
 	stringBuilder.append
 	    (Miscellaneous.
@@ -507,7 +507,7 @@ public class Chat extends AppCompatActivity
 					   LayoutParams.WRAP_CONTENT,
 					   1));
 	    stringBuilder.setLength(0);
-	    stringBuilder.append(participantElement.m_name);
+	    stringBuilder.append(participantElement.m_name.trim());
 
 	    if(showDetails)
 	    {
@@ -674,7 +674,7 @@ public class Chat extends AppCompatActivity
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
 
-	    stringBuilder.append(participantElement.m_name);
+	    stringBuilder.append(participantElement.m_name.trim());
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Miscellaneous.

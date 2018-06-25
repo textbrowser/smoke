@@ -230,7 +230,8 @@ public class MemberChat extends AppCompatActivity
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.chat_message);
 
-		if(textView1.getText().toString().trim().isEmpty())
+		if(m_attachment == null &&
+		   textView1.getText().toString().trim().isEmpty())
 		    return;
 
 		String str = textView1.getText().toString().trim();

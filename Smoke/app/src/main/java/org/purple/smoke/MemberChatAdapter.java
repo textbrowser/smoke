@@ -83,8 +83,11 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    if(memberChatElement.m_fromSmokeStack.equals("local"))
 		local = true;
 
-	    stringBuilder.append(memberChatElement.m_message);
-	    stringBuilder.append("\n");
+	    stringBuilder.append(memberChatElement.m_message.trim());
+
+	    if(!memberChatElement.m_message.trim().isEmpty())
+		stringBuilder.append("\n");
+
 	    m_chatBubble.setDate(memberChatElement.m_timestamp);
 	    m_chatBubble.setFromeSmokeStack
 		(memberChatElement.m_fromSmokeStack.equals("true"));
