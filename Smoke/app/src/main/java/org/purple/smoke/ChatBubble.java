@@ -29,6 +29,8 @@ package org.purple.smoke;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.text.Spannable;
@@ -39,8 +41,10 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -93,6 +97,22 @@ public class ChatBubble extends View
 	    m_view.findViewById(R.id.image).setVisibility(View.GONE);
 	    return;
 	}
+
+	try
+	{
+	    Bitmap bitmap = BitmapFactory.decodeStream
+		(new ByteArrayInputStream(bytes));
+	    ImageView imageView = (ImageView) m_view.findViewById(R.id.image);
+
+	    imageView.setImageBitmap
+		(Bitmap.
+		 createScaledBitmap(bitmap, bitmap.getWidth(), 500, false));
+	    m_view.findViewById(R.id.image).setVisibility(View.VISIBLE);
+	}
+	catch(Exception exception)
+	{
+	    m_view.findViewById(R.id.image).setVisibility(View.GONE);
+	}
     }
 
     public void setOid(int oid)
@@ -102,6 +122,7 @@ public class ChatBubble extends View
 
     public void setText(String text, Locations location)
     {
+	ImageView imageView = m_view.findViewById(R.id.image);
 	TextView textView = m_view.findViewById(R.id.text);
 
 	textView.setText("");
@@ -157,11 +178,11 @@ public class ChatBubble extends View
 	    layoutParams.setMarginStart(0);
 
 	    if(m_fromSmokeStack)
-		textView.setBackgroundResource(R.drawable.bubble_ozone_text);
+		m_view.setBackgroundResource(R.drawable.bubble_ozone_text);
 	    else
-		textView.setBackgroundResource(R.drawable.bubble_left_text);
+		m_view.setBackgroundResource(R.drawable.bubble_left_text);
 
-	    textView.setLayoutParams(layoutParams);
+	    m_view.setLayoutParams(layoutParams);
 	}
 	else
 	{
@@ -171,8 +192,8 @@ public class ChatBubble extends View
 	    layoutParams.setMarginEnd((int) (5.0 * density));
 	    layoutParams.setMarginStart
 		((int) (0.20 * displayMetrics.widthPixels));
-	    textView.setBackgroundResource(R.drawable.bubble_right_text);
-	    textView.setLayoutParams(layoutParams);
+	    m_view.setBackgroundResource(R.drawable.bubble_right_text);
+	    m_view.setLayoutParams(layoutParams);
 	}
     }
 }

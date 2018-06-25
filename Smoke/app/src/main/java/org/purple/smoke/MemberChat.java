@@ -488,11 +488,10 @@ public class MemberChat extends AppCompatActivity
 				ByteArrayOutputStream();
 
 			    bitmap.compress
-				(Bitmap.CompressFormat.PNG,
-				 100,
+				(Bitmap.CompressFormat.JPEG,
+				 80,
 				 byteArrayOutputStream);
-			    m_bytes = Miscellaneous.deepCopy
-				(byteArrayOutputStream.toByteArray());
+			    m_bytes = byteArrayOutputStream.toByteArray();
 			    bitmap.recycle();
 			}
 			catch(Exception exception)
