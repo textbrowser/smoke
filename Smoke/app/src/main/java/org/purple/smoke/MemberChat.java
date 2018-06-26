@@ -55,7 +55,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -772,6 +775,63 @@ public class MemberChat extends AppCompatActivity
 
 	    break;
 	case 25:
+	    try
+	    {
+		View view = (View) m_layoutManager.findViewByPosition(itemId);
+
+		if(view != null)
+		{
+		    ImageView imageView = (ImageView) view.findViewById
+			(R.id.image);
+
+		    if(imageView != null)
+		    {
+			MemberChatElement memberChatElement =
+			    m_databaseHelper.readMemberChat(s_cryptography,
+							    m_sipHashId,
+							    itemId);
+
+			/*
+			** Convert the bytes into a bitmap.
+			*/
+
+			Bitmap bitmap = BitmapFactory.decodeStream
+			    (new ByteArrayInputStream(memberChatElement.
+						      m_attachment));
+			ByteArrayOutputStream byteArrayOutputStream = new
+			    ByteArrayOutputStream();
+
+			bitmap.compress(Bitmap.CompressFormat.JPEG,
+					100,
+					byteArrayOutputStream);
+
+			File file = new File
+			    (getExternalFilesDir(null),
+			     "smoke-" + System.currentTimeMillis() + ".jpg");
+
+			FileOutputStream fileOutputStream = null;
+
+			try
+			{
+			    if(!file.exists())
+				file.createNewFile();
+
+			    fileOutputStream = new FileOutputStream(file);
+			    fileOutputStream.write
+				(byteArrayOutputStream.toByteArray());
+			}
+			finally
+			{
+			    if(fileOutputStream != null)
+				fileOutputStream.close();
+			}
+		    }
+		}
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
 	    break;
 	}
 

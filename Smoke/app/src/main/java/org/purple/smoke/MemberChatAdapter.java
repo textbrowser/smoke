@@ -75,9 +75,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    menuItem = menu.add(25, m_position, 3, "Save Attachment");
 
 	    MemberChatElement memberChatElement =
-		(s_database.readMemberChat(s_cryptography,
-					   m_sipHashId,
-					   m_position));
+		s_database.readMemberChat(s_cryptography,
+					  m_sipHashId,
+					  m_position);
 
 	    menuItem.setEnabled(memberChatElement != null &&
 				memberChatElement.m_attachment != null &&

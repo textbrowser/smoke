@@ -182,6 +182,7 @@ Completed Items
 141.   Participant status icon should not be modified if newly-received message
        is from an Ozone.
 142.   MemberChat attachment.
+143.   Save attachment.
 
 Future Items
 
@@ -203,6 +204,9 @@ Future Items
 12.    Introduce real-time typing status.
 13.    Vacuum databases.
 14.    NTRU via BouncyCastle.
+15.    Resize Member Chat bubbles according to contents.
+16.    New messages should be at the top of the view; Member Chat. Optional.
+17.    Replace Chat member view with a recycler view.
 
 Ignored / Impossible Items
 
@@ -244,9 +248,4 @@ Remaining Items
        a data replicator.
 8.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
-9.     Resize Member Chat bubbles according to contents.
-10.    New messages should be at the top of the view; Member Chat. Optional.
-11.    Replace Chat member view with a recycler view.
-12.    Save attachment.
-13.    New activity images in Smoke.odt.
-14.    Preview attachment.
+9.     Preview attachment.
