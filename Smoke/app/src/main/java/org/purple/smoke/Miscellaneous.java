@@ -529,9 +529,15 @@ public class Miscellaneous
 	    }
 
 	    textView1.setBackgroundColor(Color.rgb(244, 200, 117));
-	    textView1.setText
-		("A message (" + message + ") from " + name +
-		 " has arrived.");
+
+	    if(message.isEmpty())
+		textView1.setText
+		    ("A message from " + name + " has arrived.");
+	    else
+		textView1.setText
+		    ("A message (" + message + ") from " + name +
+		     " has arrived.");
+
 	    textView1.setTextSize(16);
 	    popupWindow.setContentView(textView1);
 	    popupWindow.setOutsideTouchable(true);
