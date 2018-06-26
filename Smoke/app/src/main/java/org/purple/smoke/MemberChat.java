@@ -771,6 +771,8 @@ public class MemberChat extends AppCompatActivity
 	    }
 
 	    break;
+	case 25:
+	    break;
 	}
 
 	return true;

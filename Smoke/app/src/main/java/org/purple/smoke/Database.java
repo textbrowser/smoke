@@ -1042,10 +1042,10 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
-	    if(attachment == null)
+	    if(attachment == null || attachment.length <= 1)
 		values.put
 		    ("attachment",
-		     Base64.encodeToString(cryptography.etm(new byte[] {0}),
+		     Base64.encodeToString(cryptography.etm("".getBytes()),
 					   Base64.DEFAULT));
 	    else
 		values.put

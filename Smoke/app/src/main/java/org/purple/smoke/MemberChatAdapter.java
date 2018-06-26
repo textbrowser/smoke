@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,6 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    m_sipHashId = sipHashId;
         }
 
-	@Override
 	public void onCreateContextMenu(ContextMenu menu,
 					View view,
 					ContextMenuInfo menuInfo)
@@ -67,9 +67,21 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    ** in MemberChat is modified!
 	    */
 
+	    MenuItem menuItem = null;
+
 	    menu.add(10, -1, 1, "Delete All Messages");
 	    menu.add(15, view.getId(), 2, "Delete Message");
 	    menu.add(20, m_position, 0, "Copy Text");
+	    menuItem = menu.add(25, m_position, 3, "Save Attachment");
+
+	    MemberChatElement memberChatElement =
+		(s_database.readMemberChat(s_cryptography,
+					   m_sipHashId,
+					   m_position));
+
+	    menuItem.setEnabled(memberChatElement != null &&
+				memberChatElement.m_attachment != null &&
+				memberChatElement.m_attachment.length > 0);
 	}
 
 	public void setData(MemberChatElement memberChatElement, int position)
