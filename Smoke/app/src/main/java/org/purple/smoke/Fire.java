@@ -518,15 +518,13 @@ public class Fire extends AppCompatActivity
 
     private void showFireDetails(boolean isChecked)
     {
-	Button button1 = (Button) findViewById(R.id.add_channel);
-	Button button2 = (Button) findViewById(R.id.reset_fields);
 	View linearLayout1 = findViewById(R.id.auto_fill_layout);
+	View linearLayout2 = findViewById(R.id.fire_buttons_layout);
 	View gridLayout1 = findViewById(R.id.grid_layout);
 
-	button1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-	button2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	gridLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	linearLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	linearLayout2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 
     private void showMemberChatActivity()
