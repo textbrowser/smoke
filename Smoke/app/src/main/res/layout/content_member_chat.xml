@@ -28,12 +28,14 @@
 
     <ImageView
         android:id="@+id/preview"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_above="@+id/chat_message"
         android:layout_alignStart="@+id/attachment"
-        android:visibility="gone"
-        app:srcCompat="@android:color/background_dark" />
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/preview"
+        android:scaleType="fitXY"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/send_chat_message"
@@ -70,11 +72,23 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/chat_message"
+        android:layout_above="@+id/preview"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:visibility="visible">
 
     </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/remove_preview"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignStart="@+id/attachment"
+        android:layout_below="@+id/recycler_view"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/minus"
+        android:visibility="gone" />
 
 </RelativeLayout>

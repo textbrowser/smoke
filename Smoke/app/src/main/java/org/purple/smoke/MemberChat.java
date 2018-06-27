@@ -222,6 +222,17 @@ public class MemberChat extends AppCompatActivity
 	    }
 	});
 
+	button1 = (Button) findViewById(R.id.remove_preview);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		findViewById(R.id.preview).setVisibility(View.GONE);
+		findViewById(R.id.remove_preview).setVisibility(View.GONE);
+		m_attachment = null;
+	    }
+	});
+
 	button1 = (Button) findViewById(R.id.send_chat_message);
         button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -265,6 +276,9 @@ public class MemberChat extends AppCompatActivity
 
 		Kernel.getInstance().enqueueChatMessage
 		    (str, m_sipHashId, m_attachment, keyStream);
+		findViewById(R.id.preview).setVisibility(View.GONE);
+		findViewById(R.id.remove_preview).setVisibility(View.GONE);
+		m_attachment = null;
 		m_attachment = null;
 		textView1.post(new Runnable()
 		{
@@ -495,8 +509,8 @@ public class MemberChat extends AppCompatActivity
 				(Bitmap.CompressFormat.JPEG,
 				 80,
 				 byteArrayOutputStream);
-			    m_bytes = byteArrayOutputStream.toByteArray();
 			    bitmap.recycle();
+			    m_bytes = byteArrayOutputStream.toByteArray();
 			}
 			catch(Exception exception)
 			{
@@ -510,6 +524,24 @@ public class MemberChat extends AppCompatActivity
 				@Override
 				public void run()
 				{
+				    Bitmap bitmap = BitmapFactory.decodeStream
+					(new ByteArrayInputStream(m_bytes));
+				    ImageView imageView = (ImageView)
+					findViewById(R.id.preview);
+
+				    findViewById(R.id.remove_preview).
+					setVisibility(View.VISIBLE);
+				    imageView.setImageBitmap
+					(Bitmap.
+					 createScaledBitmap(bitmap,
+							    bitmap.getWidth(),
+							    Math.
+							    min(200,
+								bitmap.
+								getHeight()),
+							    false));
+				    imageView.setVisibility(View.VISIBLE);
+				    bitmap.recycle();
 				    m_attachment = Miscellaneous.deepCopy
 					(m_bytes);
 				    dialog.dismiss();

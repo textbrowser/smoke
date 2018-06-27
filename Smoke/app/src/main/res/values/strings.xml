@@ -61,6 +61,7 @@
     <string name="smoke_chat_id">Smoke Chat ID</string>
     <string name="attachment">Attachment</string>
     <string name="message">Message...</string>
+    <string name="preview">Preview</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
