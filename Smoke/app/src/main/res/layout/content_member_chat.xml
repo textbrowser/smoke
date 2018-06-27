@@ -28,8 +28,8 @@
 
     <ImageView
         android:id="@+id/preview"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         android:layout_above="@+id/chat_message"
         android:layout_alignStart="@+id/attachment"
         android:background="@android:color/transparent"
