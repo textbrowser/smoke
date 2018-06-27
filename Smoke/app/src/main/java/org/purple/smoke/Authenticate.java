@@ -502,6 +502,7 @@ public class Authenticate extends AppCompatActivity
 	m_databaseHelper.cleanDanglingOutboundQueued();
 	m_databaseHelper.cleanDanglingParticipants();
         setContentView(R.layout.activity_authenticate);
+	getSupportActionBar().setTitle("Smoke: Authenticate");
 	State.getInstance().setNeighborsEcho
 	    (m_databaseHelper.readSetting(null,
 					  "neighbors_echo").equals("true"));

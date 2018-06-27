@@ -597,12 +597,11 @@ public class MemberChat extends AppCompatActivity
 
 	String string =	Miscellaneous.delimitString
 	    (m_sipHashId.replace(":", ""), '-', 4).toUpperCase();
-	TextView textView1 = (TextView) findViewById(R.id.banner);
 
 	if(string.isEmpty())
-	    textView1.setText("Error!");
+	    getSupportActionBar().setTitle("Smoke: Member Chat");
 	else
-	    textView1.setText(m_name + "@\n" + string);
+	    getSupportActionBar().setTitle("Smoke: " + m_name + "@" + string);
 
 	/*
 	** Prepare listeners.
@@ -630,7 +629,9 @@ public class MemberChat extends AppCompatActivity
 	{
 	    m_layoutManager.smoothScrollToPosition
 		(m_recyclerView, null, m_adapter.getItemCount() - 1);
-	    textView1 = (TextView) findViewById(R.id.chat_message);
+
+	    TextView textView1 = (TextView) findViewById(R.id.chat_message);
+
 	    textView1.setText
 		(State.getInstance().getCharSequence("member_chat.message"));
 

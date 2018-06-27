@@ -554,6 +554,7 @@ public class Fire extends AppCompatActivity
 	m_databaseHelper.cleanDanglingParticipants();
 	m_receiver = new FireBroadcastReceiver();
         setContentView(R.layout.activity_fire);
+	getSupportActionBar().setTitle("Smoke: Fire");
 
 	if(State.getInstance().isAuthenticated())
 	    populateFires();

@@ -892,6 +892,7 @@ public class Chat extends AppCompatActivity
 	}, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+	getSupportActionBar().setTitle("Smoke: Chat");
 
         Button button1 = (Button) findViewById(R.id.clear_chat_messages);
 
