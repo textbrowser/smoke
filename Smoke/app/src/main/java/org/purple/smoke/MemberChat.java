@@ -730,8 +730,11 @@ public class MemberChat extends AppCompatActivity
 		    case 10:
 			if(State.getInstance().getString("dialog_accepted").
 			   equals("true"))
+			{
 			    m_databaseHelper.deleteParticipantMessages
 				(s_cryptography, m_sipHashId);
+			    m_adapter.notifyDataSetChanged();
+			}
 
 			break;
 		    case 15:
