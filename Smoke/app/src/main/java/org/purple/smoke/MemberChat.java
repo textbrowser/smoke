@@ -503,15 +503,22 @@ public class MemberChat extends AppCompatActivity
 			    m_bytes = null;
 			}
 
-			MemberChat.this.runOnUiThread(new Runnable()
+			try
 			{
-			    @Override
-			    public void run()
+			    MemberChat.this.runOnUiThread(new Runnable()
 			    {
-				m_attachment = Miscellaneous.deepCopy(m_bytes);
-				dialog.dismiss();
-			    }
-			});
+				@Override
+				public void run()
+				{
+				    m_attachment = Miscellaneous.deepCopy
+					(m_bytes);
+				    dialog.dismiss();
+				}
+			    });
+			}
+			catch(Exception exception)
+			{
+			}
 		    }
 		}
 
@@ -786,45 +793,94 @@ public class MemberChat extends AppCompatActivity
 
 		    if(imageView != null)
 		    {
-			MemberChatElement memberChatElement =
-			    m_databaseHelper.readMemberChat(s_cryptography,
-							    m_sipHashId,
-							    itemId);
+			final ProgressDialog dialog = new ProgressDialog
+			    (MemberChat.this);
 
-			/*
-			** Convert the bytes into a bitmap.
-			*/
+			dialog.setCancelable(false);
+			dialog.setIndeterminate(true);
+			dialog.setMessage("Saving attachment.");
+			dialog.show();
 
-			Bitmap bitmap = BitmapFactory.decodeStream
-			    (new ByteArrayInputStream(memberChatElement.
-						      m_attachment));
-			ByteArrayOutputStream byteArrayOutputStream = new
-			    ByteArrayOutputStream();
-
-			bitmap.compress(Bitmap.CompressFormat.JPEG,
-					100,
-					byteArrayOutputStream);
-
-			File file = new File
-			    (getExternalFilesDir(null),
-			     "smoke-" + System.currentTimeMillis() + ".jpg");
-
-			FileOutputStream fileOutputStream = null;
-
-			try
+			class SingleShot implements Runnable
 			{
-			    if(!file.exists())
-				file.createNewFile();
+			    public SingleShot()
+			    {
+			    }
 
-			    fileOutputStream = new FileOutputStream(file);
-			    fileOutputStream.write
-				(byteArrayOutputStream.toByteArray());
+			    @Override
+			    public void run()
+			    {
+				try
+				{
+				    MemberChatElement memberChatElement =
+					m_databaseHelper.
+					readMemberChat(s_cryptography,
+						       m_sipHashId,
+						       itemId);
+
+				    /*
+				    ** Convert the bytes into a bitmap.
+				    */
+
+				    Bitmap bitmap = BitmapFactory.decodeStream
+					(new ByteArrayInputStream
+					 (memberChatElement.m_attachment));
+				    ByteArrayOutputStream
+					byteArrayOutputStream = new
+					ByteArrayOutputStream();
+
+				    bitmap.compress(Bitmap.CompressFormat.JPEG,
+						    100,
+						    byteArrayOutputStream);
+
+				    File file = new File
+					(getExternalFilesDir(null),
+					 "smoke-" +
+					 System.currentTimeMillis() +
+					 ".jpg");
+				    FileOutputStream fileOutputStream = null;
+
+				    try
+				    {
+					if(!file.exists())
+					    file.createNewFile();
+
+					fileOutputStream = new FileOutputStream
+					    (file);
+					fileOutputStream.write
+					    (byteArrayOutputStream.
+					     toByteArray());
+				    }
+				    finally
+				    {
+					if(fileOutputStream != null)
+					    fileOutputStream.close();
+				    }
+				}
+				catch(Exception exception)
+				{
+				}
+
+				try
+				{
+				    MemberChat.this.runOnUiThread(new Runnable()
+				    {
+					@Override
+					public void run()
+					{
+					    dialog.dismiss();
+					}
+				    });
+				}
+				catch(Exception exception)
+				{
+				}
+			    }
 			}
-			finally
-			{
-			    if(fileOutputStream != null)
-				fileOutputStream.close();
-			}
+
+			Thread thread = new Thread(new SingleShot());
+
+			thread.start();
 		    }
 		}
 	    }

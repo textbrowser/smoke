@@ -45,6 +45,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_message"
         android:layout_below="@+id/clear_chat_messages"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
         android:layout_toStartOf="@+id/call"
         android:fadeScrollbars="false">
 

@@ -160,7 +160,7 @@ public class ChatBubble extends View
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 	    spannable.setSpan
-		(new RelativeSizeSpan(0.80f),
+		(new RelativeSizeSpan(0.90f),
 		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    textView.append(spannable);
 	}
