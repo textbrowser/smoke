@@ -227,8 +227,7 @@ public class MemberChat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
-		findViewById(R.id.preview).setVisibility(View.GONE);
-		findViewById(R.id.remove_preview).setVisibility(View.GONE);
+		findViewById(R.id.preview_layout).setVisibility(View.GONE);
 		m_attachment = null;
 	    }
 	});
@@ -276,8 +275,7 @@ public class MemberChat extends AppCompatActivity
 
 		Kernel.getInstance().enqueueChatMessage
 		    (str, m_sipHashId, m_attachment, keyStream);
-		findViewById(R.id.preview).setVisibility(View.GONE);
-		findViewById(R.id.remove_preview).setVisibility(View.GONE);
+		findViewById(R.id.preview_layout).setVisibility(View.GONE);
 		m_attachment = null;
 		m_attachment = null;
 		textView1.post(new Runnable()
@@ -529,7 +527,7 @@ public class MemberChat extends AppCompatActivity
 				    ImageView imageView = (ImageView)
 					findViewById(R.id.preview);
 
-				    findViewById(R.id.remove_preview).
+				    findViewById(R.id.preview_layout).
 					setVisibility(View.VISIBLE);
 				    imageView.setImageBitmap
 					(Bitmap.
@@ -540,7 +538,6 @@ public class MemberChat extends AppCompatActivity
 								bitmap.
 								getHeight()),
 							    false));
-				    imageView.setVisibility(View.VISIBLE);
 				    bitmap.recycle();
 				    m_attachment = Miscellaneous.deepCopy
 					(m_bytes);
