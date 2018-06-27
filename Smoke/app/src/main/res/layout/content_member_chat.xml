@@ -26,6 +26,15 @@
         android:hint="@string/message"
         android:inputType="textPersonName" />
 
+    <ImageView
+        android:id="@+id/preview"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_above="@+id/chat_message"
+        android:layout_alignStart="@+id/attachment"
+        android:visibility="gone"
+        app:srcCompat="@android:color/background_dark" />
+
     <Button
         android:id="@+id/send_chat_message"
         android:layout_width="wrap_content"
