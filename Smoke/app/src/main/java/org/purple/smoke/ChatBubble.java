@@ -104,14 +104,19 @@ public class ChatBubble extends View
 		(new ByteArrayInputStream(bytes));
 	    ImageView imageView = (ImageView) m_view.findViewById(R.id.image);
 
-	    imageView.setImageBitmap
-		(Bitmap.
-		 createScaledBitmap(bitmap,
-				    bitmap.getWidth(),
-				    Math.min(500, bitmap.getHeight()),
-				    false));
-	    imageView.setVisibility(View.VISIBLE);
-	    bitmap.recycle();
+	    if(bitmap != null)
+	    {
+		imageView.setImageBitmap
+		    (Bitmap.
+		     createScaledBitmap(bitmap,
+					bitmap.getWidth(),
+					Math.min(500, bitmap.getHeight()),
+					false));
+		imageView.setVisibility(View.VISIBLE);
+		bitmap.recycle();
+	    }
+	    else
+		imageView.setVisibility(View.GONE);
 	}
 	catch(Exception exception)
 	{
