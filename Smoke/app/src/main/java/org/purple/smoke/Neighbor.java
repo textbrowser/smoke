@@ -52,7 +52,8 @@ public abstract class Neighbor
     private final String m_echoMode = "full";
     private final static Object m_echoQueueMutex = new Object();
     private final static Object m_queueMutex = new Object();
-    private final static int LANE_WIDTH = 8 * 1024 * 1024; // 8 MiB
+    private final static int BYTES_PER_READ = 1 * 1024 * 1024; // 1 MiB
+    private final static int LANE_WIDTH = 32 * 1024 * 1024; // 32 MiB
     private final static int PARSING_INTERVAL = 100; // Milliseconds
     private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
     private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
@@ -126,7 +127,7 @@ public abstract class Neighbor
 		       String version,
 		       int oid)
     {
-	m_bytes = new byte[1024 * 1024];
+	m_bytes = new byte[BYTES_PER_READ];
 	m_bytesRead = new AtomicLong(0);
 	m_bytesWritten = new AtomicLong(0);
 	m_cryptography = Cryptography.getInstance();
