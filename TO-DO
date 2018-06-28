@@ -205,9 +205,8 @@ Future Items
 12.    Introduce real-time typing status.
 13.    Vacuum databases.
 14.    NTRU via BouncyCastle.
-15.    Resize Member Chat bubbles according to contents.
-16.    New messages should be at the top of the view; Member Chat. Optional.
-17.    Replace Chat member view with a recycler view.
+15.    New messages should be at the top of the view; Member Chat. Optional.
+16.    Replace Chat member view with a recycler view.
 
 Ignored / Impossible Items
 
@@ -249,3 +248,5 @@ Remaining Items
        a data replicator.
 8.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
+9.     Resize Member Chat bubbles according to contents.
+10.    Increase network buffer sizes for large attachments.
