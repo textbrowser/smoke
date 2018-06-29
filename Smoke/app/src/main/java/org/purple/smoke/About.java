@@ -28,12 +28,15 @@
 package org.purple.smoke;
 
 import android.os.Build;
+import java.util.Date;
 
 public class About
 {
     private final static String s_about =
 	"Version 2018.08.19 Radical Rhombus " +
 	(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
+	"\nBuild Date " +
+	(new Date(BuildConfig.BUILD_TIME).toString()) +
 	"\nAndroid " + Build.VERSION.RELEASE +
 	(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ?
 	 "\nAndroid version not supported." : "");

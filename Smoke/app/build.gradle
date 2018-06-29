@@ -4,6 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "org.purple.smoke"
+        buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
