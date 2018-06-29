@@ -184,6 +184,7 @@ Completed Items
 142.   MemberChat attachment.
 143.   Save attachment.
 144.   Preview attachment.
+145.   Increase network buffer sizes for large attachments.
 
 Future Items
 
@@ -249,4 +250,3 @@ Remaining Items
 8.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
 9.     Resize Member Chat bubbles according to contents.
-10.    Increase network buffer sizes for large attachments.
