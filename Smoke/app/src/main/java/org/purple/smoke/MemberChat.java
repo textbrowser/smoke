@@ -500,15 +500,20 @@ public class MemberChat extends AppCompatActivity
 				openInputStream(m_uri);
 			    bitmap = BitmapFactory.decodeStream(inputStream);
 
-			    ByteArrayOutputStream byteArrayOutputStream = new
-				ByteArrayOutputStream();
+			    if(bitmap != null)
+			    {
+				ByteArrayOutputStream byteArrayOutputStream =
+				    new ByteArrayOutputStream();
 
-			    bitmap.compress
-				(Bitmap.CompressFormat.JPEG,
-				 80,
-				 byteArrayOutputStream);
-			    bitmap.recycle();
-			    m_bytes = byteArrayOutputStream.toByteArray();
+				bitmap.compress
+				    (Bitmap.CompressFormat.JPEG,
+				     80,
+				     byteArrayOutputStream);
+				bitmap.recycle();
+				m_bytes = byteArrayOutputStream.toByteArray();
+			    }
+			    else
+				m_bytes = null;
 			}
 			catch(Exception exception)
 			{
@@ -524,23 +529,30 @@ public class MemberChat extends AppCompatActivity
 				{
 				    Bitmap bitmap = BitmapFactory.decodeStream
 					(new ByteArrayInputStream(m_bytes));
-				    ImageView imageView = (ImageView)
-					findViewById(R.id.preview);
 
-				    findViewById(R.id.preview_layout).
-					setVisibility(View.VISIBLE);
-				    imageView.setImageBitmap
-					(Bitmap.
-					 createScaledBitmap(bitmap,
-							    bitmap.getWidth(),
-							    Math.
-							    min(200,
-								bitmap.
-								getHeight()),
-							    false));
-				    bitmap.recycle();
-				    m_attachment = Miscellaneous.deepCopy
-					(m_bytes);
+				    if(bitmap != null)
+				    {
+					ImageView imageView = (ImageView)
+					    findViewById(R.id.preview);
+
+					findViewById(R.id.preview_layout).
+					    setVisibility(View.VISIBLE);
+					imageView.setImageBitmap
+					    (Bitmap.
+					     createScaledBitmap
+					     (bitmap,
+					      bitmap.getWidth(),
+					      Math.min(200,
+						       bitmap.getHeight()),
+					      false));
+					bitmap.recycle();
+					m_attachment = Miscellaneous.deepCopy
+					    (m_bytes);
+				    }
+				    else
+					findViewById(R.id.preview_layout).
+					    setVisibility(View.GONE);
+
 				    dialog.dismiss();
 				}
 			    });
@@ -858,36 +870,42 @@ public class MemberChat extends AppCompatActivity
 				    Bitmap bitmap = BitmapFactory.decodeStream
 					(new ByteArrayInputStream
 					 (memberChatElement.m_attachment));
-				    ByteArrayOutputStream
-					byteArrayOutputStream = new
-					ByteArrayOutputStream();
 
-				    bitmap.compress(Bitmap.CompressFormat.JPEG,
-						    100,
-						    byteArrayOutputStream);
-
-				    File file = new File
-					(getExternalFilesDir(null),
-					 "smoke-" +
-					 System.currentTimeMillis() +
-					 ".jpg");
-				    FileOutputStream fileOutputStream = null;
-
-				    try
+				    if(bitmap != null)
 				    {
-					if(!file.exists())
-					    file.createNewFile();
+					ByteArrayOutputStream
+					    byteArrayOutputStream = new
+					    ByteArrayOutputStream();
 
-					fileOutputStream = new FileOutputStream
-					    (file);
-					fileOutputStream.write
-					    (byteArrayOutputStream.
-					     toByteArray());
-				    }
-				    finally
-				    {
-					if(fileOutputStream != null)
-					    fileOutputStream.close();
+					bitmap.compress
+					    (Bitmap.CompressFormat.JPEG,
+					     100,
+					     byteArrayOutputStream);
+
+					File file = new File
+					    (getExternalFilesDir(null),
+					     "smoke-" +
+					     System.currentTimeMillis() +
+					     ".jpg");
+					FileOutputStream fileOutputStream =
+					    null;
+
+					try
+					{
+					    if(!file.exists())
+						file.createNewFile();
+
+					    fileOutputStream =
+						new FileOutputStream(file);
+					    fileOutputStream.write
+						(byteArrayOutputStream.
+						 toByteArray());
+					}
+					finally
+					{
+					    if(fileOutputStream != null)
+						fileOutputStream.close();
+					}
 				    }
 				}
 				catch(Exception exception)
