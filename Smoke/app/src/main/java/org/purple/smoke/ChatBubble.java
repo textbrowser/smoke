@@ -179,13 +179,13 @@ public class ChatBubble extends View
 	{
 	    LinearLayout.LayoutParams layoutParams = new
 		LinearLayout.LayoutParams
-		(LinearLayout.LayoutParams.MATCH_PARENT,
+		(LinearLayout.LayoutParams.WRAP_CONTENT,
 		 LinearLayout.LayoutParams.WRAP_CONTENT);
 
 	    layoutParams.setMargins
 		(0,
 		 0,
-		 (int) (0.20 * displayMetrics.widthPixels),
+		 (int) (0.35 * displayMetrics.widthPixels),
 		 (int) (5.0 * density));
 
 	    if(m_fromSmokeStack)
@@ -199,11 +199,11 @@ public class ChatBubble extends View
 	{
 	    LinearLayout.LayoutParams layoutParams = new
 		LinearLayout.LayoutParams
-		(LinearLayout.LayoutParams.MATCH_PARENT,
+		(LinearLayout.LayoutParams.WRAP_CONTENT,
 		 LinearLayout.LayoutParams.WRAP_CONTENT);
 
 	    layoutParams.setMargins
-		((int) (0.20 * displayMetrics.widthPixels),
+		((int) (0.35 * displayMetrics.widthPixels),
 		 0,
 		 (int) (5.0 * density),
 		 (int) (5.0 * density));
