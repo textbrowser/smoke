@@ -355,6 +355,16 @@ public class Miscellaneous
 	return count;
     }
 
+    public static int imagePercentFromArrayLength(int length)
+    {
+	final int upper = 5 * 1024 * 1024;
+
+	if(length <= upper)
+	    return 100;
+	else
+	    return (int) ((100.0 * ((double) upper)) / ((double) length));
+    }
+
     public static long byteArrayToLong(byte bytes[])
     {
 	if(bytes == null || bytes.length != LONG_BYTES)

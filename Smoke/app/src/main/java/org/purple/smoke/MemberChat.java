@@ -494,11 +494,17 @@ public class MemberChat extends AppCompatActivity
 			try
 			{
 			    Bitmap bitmap = null;
+			    BitmapFactory.Options options = new
+				BitmapFactory.Options();
+
+			    options.inSampleSize = 4;
+
 			    InputStream inputStream = null;
 
 			    inputStream = getContentResolver().
 				openInputStream(m_uri);
-			    bitmap = BitmapFactory.decodeStream(inputStream);
+			    bitmap = BitmapFactory.decodeStream
+				(inputStream, null, options);
 
 			    if(bitmap != null)
 			    {
@@ -507,7 +513,9 @@ public class MemberChat extends AppCompatActivity
 
 				bitmap.compress
 				    (Bitmap.CompressFormat.JPEG,
-				     50,
+				     Miscellaneous.
+				     imagePercentFromArrayLength
+				     (bitmap.getAllocationByteCount()),
 				     byteArrayOutputStream);
 				m_bytes = byteArrayOutputStream.toByteArray();
 			    }
@@ -526,8 +534,15 @@ public class MemberChat extends AppCompatActivity
 				@Override
 				public void run()
 				{
+				    BitmapFactory.Options options = new
+					BitmapFactory.Options();
+
+				    options.inSampleSize = 4;
+
 				    Bitmap bitmap = BitmapFactory.decodeStream
-					(new ByteArrayInputStream(m_bytes));
+					(new ByteArrayInputStream(m_bytes),
+					 null,
+					 options);
 
 				    if(bitmap != null)
 				    {
@@ -855,6 +870,11 @@ public class MemberChat extends AppCompatActivity
 			    {
 				try
 				{
+				    BitmapFactory.Options options =
+					new BitmapFactory.Options();
+
+				    options.inSampleSize = 4;
+
 				    MemberChatElement memberChatElement =
 					m_databaseHelper.
 					readMemberChat(s_cryptography,
@@ -867,7 +887,9 @@ public class MemberChat extends AppCompatActivity
 
 				    Bitmap bitmap = BitmapFactory.decodeStream
 					(new ByteArrayInputStream
-					 (memberChatElement.m_attachment));
+					 (memberChatElement.m_attachment),
+					 null,
+					 options);
 
 				    if(bitmap != null)
 				    {
