@@ -28,15 +28,19 @@
 package org.purple.smoke;
 
 import android.os.Build;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class About
 {
+    private final static SimpleDateFormat s_simpleDateFormat = new
+	SimpleDateFormat("yyyy-MM-dd h:mm:ss", Locale.getDefault());
     private final static String s_about =
 	"Version 2018.08.19 Radical Rhombus " +
 	(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 	"\nBuild Date " +
-	(new Date(BuildConfig.BUILD_TIME).toString()) +
+	s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +
 	"\nAndroid " + Build.VERSION.RELEASE +
 	(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ?
 	 "\nAndroid version not supported." : "");
