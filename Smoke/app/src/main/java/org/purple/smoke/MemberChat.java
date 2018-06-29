@@ -507,9 +507,8 @@ public class MemberChat extends AppCompatActivity
 
 				bitmap.compress
 				    (Bitmap.CompressFormat.JPEG,
-				     80,
+				     50,
 				     byteArrayOutputStream);
-				bitmap.recycle();
 				m_bytes = byteArrayOutputStream.toByteArray();
 			    }
 			    else
@@ -545,7 +544,6 @@ public class MemberChat extends AppCompatActivity
 					      Math.min(200,
 						       bitmap.getHeight()),
 					      false));
-					bitmap.recycle();
 					m_attachment = Miscellaneous.deepCopy
 					    (m_bytes);
 				    }

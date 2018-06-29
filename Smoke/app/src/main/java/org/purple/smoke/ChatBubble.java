@@ -100,20 +100,18 @@ public class ChatBubble extends View
 
 	try
 	{
+	    BitmapFactory.Options options = new BitmapFactory.Options();
+
+	    options.inSampleSize = 4;
+
 	    Bitmap bitmap = BitmapFactory.decodeStream
-		(new ByteArrayInputStream(bytes));
+		(new ByteArrayInputStream(bytes), null, options);
 	    ImageView imageView = (ImageView) m_view.findViewById(R.id.image);
 
 	    if(bitmap != null)
 	    {
-		imageView.setImageBitmap
-		    (Bitmap.
-		     createScaledBitmap(bitmap,
-					bitmap.getWidth(),
-					Math.min(500, bitmap.getHeight()),
-					false));
+		imageView.setImageBitmap(bitmap);
 		imageView.setVisibility(View.VISIBLE);
-		bitmap.recycle();
 	    }
 	    else
 		imageView.setVisibility(View.GONE);
