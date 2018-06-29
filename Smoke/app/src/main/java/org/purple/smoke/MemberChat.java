@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap.Config;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Ringtone;
@@ -206,6 +207,20 @@ public class MemberChat extends AppCompatActivity
     private final static int SELECT_IMAGE_REQUEST = 0;
     private final static int STATUS_INTERVAL = 5000; // 5 Seconds
     private int m_oid = -1;
+
+    private int getBytesPerPixel(Config config)
+    {
+	if(config == Config.ALPHA_8)
+	    return 1;
+	else if(config == Config.ARGB_4444)
+	    return 2;
+	else if(config == Config.ARGB_8888)
+	    return 4;
+	else if(config == Config.RGB_565)
+	    return 2;
+
+	return 1;
+    }
 
     private void prepareListeners()
     {
@@ -515,7 +530,8 @@ public class MemberChat extends AppCompatActivity
 				    (Bitmap.CompressFormat.JPEG,
 				     Miscellaneous.
 				     imagePercentFromArrayLength
-				     (bitmap.getAllocationByteCount()),
+				     (bitmap.getByteCount() *
+				      getBytesPerPixel(bitmap.getConfig())),
 				     byteArrayOutputStream);
 				m_bytes = byteArrayOutputStream.toByteArray();
 			    }
