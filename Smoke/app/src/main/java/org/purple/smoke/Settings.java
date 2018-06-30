@@ -2179,7 +2179,7 @@ public class Settings extends AppCompatActivity
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SettingsBroadcastReceiver();
         setContentView(R.layout.activity_settings);
-	getSupportActionBar().setTitle("Smoke: Settings");
+	getSupportActionBar().setTitle("Smoke | Settings");
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
         Button button1 = (Button) findViewById(R.id.add_neighbor);

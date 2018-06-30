@@ -669,9 +669,9 @@ public class MemberChat extends AppCompatActivity
 	    (m_sipHashId.replace(":", ""), '-', 4).toUpperCase();
 
 	if(string.isEmpty())
-	    getSupportActionBar().setTitle("Smoke: Member Chat");
+	    getSupportActionBar().setTitle("Smoke | Member Chat");
 	else
-	    getSupportActionBar().setTitle("Smoke: " + m_name + "@" + string);
+	    getSupportActionBar().setTitle("Smoke | " + m_name + "@" + string);
 
 	/*
 	** Prepare listeners.
