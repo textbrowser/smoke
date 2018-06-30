@@ -54,13 +54,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:paddingStart="5dp"
+                    android:layout_marginStart="5dp"
                     android:textIsSelectable="true" />
 
                 <CheckBox
                     android:id="@+id/sleepless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:checked="true"
                     android:text="@string/prefer_active_cpu" />
 
@@ -68,6 +69,7 @@
                     android:id="@+id/clear_log"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:text="@string/clear_log" />
 
                 <TextView
@@ -85,19 +87,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.31"
-                        android:paddingStart="5dp"
                         android:text="@string/control" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="0.31"
                         android:text="@string/remote" />
                 </LinearLayout>
@@ -106,6 +108,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:fadeScrollbars="false">
 
                     <TableLayout
@@ -120,6 +123,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal"
                     android:weightSum="1">
 
@@ -142,11 +147,14 @@
                     android:id="@+id/echo"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
                     android:text="@string/echo" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -162,6 +170,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:ems="10"
                     android:hint="@string/ip_address"
                     android:inputType="textPersonName"
@@ -170,6 +179,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <EditText
@@ -186,7 +197,6 @@
                         android:id="@+id/neighbors_scope_id"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/scope_id"
@@ -199,6 +209,8 @@
                     android:id="@+id/neighbors_ipv_radio_group"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:checkedButton="@+id/neighbors_ipv4"
                     android:orientation="horizontal">
@@ -222,7 +234,6 @@
                         android:id="@+id/neighbors_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1" />
 
                 </RadioGroup>
@@ -232,6 +243,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:ems="10"
                     android:hint="@string/proxy_ip_address"
                     android:inputType="textPersonName"
@@ -240,6 +252,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <EditText
@@ -256,13 +270,14 @@
                         android:id="@+id/proxy_type"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -297,6 +312,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -310,7 +327,6 @@
                         android:id="@+id/ozone"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/address"
@@ -323,6 +339,8 @@
                     style="@style/Widget.AppCompat.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/save" />
 
                 <TextView
@@ -340,6 +358,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -392,8 +412,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="10dp"
-                        android:paddingStart="10dp"
                         android:text="@string/share_keys" />
 
                     <ProgressBar
@@ -401,7 +419,6 @@
                         style="@android:style/Widget.DeviceDefault.ProgressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:visibility="invisible" />
 
                 </LinearLayout>
@@ -409,6 +426,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <EditText
@@ -433,7 +452,6 @@
                         android:id="@+id/participant_siphash_id"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/smokeid"
@@ -443,7 +461,6 @@
                         android:id="@+id/siphash_help"
                         android:layout_width="32dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="0"
                         android:background="@android:color/transparent" />
 
@@ -452,6 +469,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -473,7 +492,6 @@
                         style="@android:style/Widget.DeviceDefault.ProgressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:visibility="invisible" />
                 </LinearLayout>
 
@@ -495,13 +513,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:columnCount="2"
                     android:rowCount="3">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/iteration_count"
                         android:textSize="14sp" />
 
@@ -513,7 +531,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/encryption" />
 
                     <Spinner
@@ -524,7 +541,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/signature" />
 
                     <Spinner
@@ -538,6 +554,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:ems="10"
                     android:hint="@string/password"
                     android:inputType="textPassword" />
@@ -547,6 +564,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:ems="10"
                     android:hint="@string/password_confirmation"
                     android:inputType="textPassword" />
@@ -555,6 +573,8 @@
                     android:id="@+id/set_password_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <CheckBox
@@ -574,7 +594,6 @@
                         style="@android:style/Widget.DeviceDefault.ProgressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:visibility="invisible" />
                 </LinearLayout>
 
@@ -595,7 +614,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:paddingStart="5dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/chat_encryption_key_data" />
 
                 <TextView
@@ -603,13 +622,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:paddingStart="5dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/chat_signature_key_data" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/smoke_chat_id"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -619,7 +639,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:paddingStart="5dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/smokeid"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -627,6 +647,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <Button
