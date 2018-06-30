@@ -52,12 +52,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/name" />
 
                     <EditText
@@ -74,7 +75,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:text="@string/save" />
 
                 </LinearLayout>
@@ -82,6 +82,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -99,7 +100,6 @@
                         android:id="@+id/show_details"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:checked="true" />
                 </LinearLayout>
@@ -108,19 +108,19 @@
                     android:id="@+id/auto_fill_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/auto_fill" />
 
                     <Spinner
                         android:id="@+id/auto_fill"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="5dp"
                         android:layout_weight="1" />
                 </LinearLayout>
 
@@ -129,19 +129,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:columnCount="2">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/channel" />
 
                     <EditText
                         android:id="@+id/channel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/channel"
                         android:inputType="textPersonName" />
@@ -149,14 +148,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/digest_key" />
 
                     <EditText
                         android:id="@+id/digest"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/digest_key"
                         android:inputType="textPersonName" />
@@ -164,14 +161,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="5dp"
                         android:text="@string/salt" />
 
                     <EditText
                         android:id="@+id/salt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:ems="10"
                         android:hint="@string/salt"
                         android:inputType="textPersonName" />
@@ -182,6 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -203,7 +199,6 @@
                         style="@android:style/Widget.DeviceDefault.ProgressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:visibility="invisible" />
 
                 </LinearLayout>
@@ -222,6 +217,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal">
 
                     <Spinner
@@ -235,7 +232,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:text="@string/delete" />
 
                     <Button
@@ -243,7 +239,6 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
                         android:text="@string/join" />
                 </LinearLayout>
 
