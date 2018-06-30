@@ -102,7 +102,7 @@ public class ChatBubble extends View
 	{
 	    BitmapFactory.Options options = new BitmapFactory.Options();
 
-	    options.inSampleSize = 4;
+	    options.inSampleSize = 2;
 
 	    Bitmap bitmap = BitmapFactory.decodeStream
 		(new ByteArrayInputStream(bytes), null, options);
@@ -185,7 +185,7 @@ public class ChatBubble extends View
 	    layoutParams.setMargins
 		(0,
 		 0,
-		 (int) (0.35 * displayMetrics.widthPixels),
+		 (int) (0.15 * displayMetrics.widthPixels),
 		 (int) (5.0 * density));
 
 	    if(m_fromSmokeStack)

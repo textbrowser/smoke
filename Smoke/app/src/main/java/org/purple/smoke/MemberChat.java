@@ -512,7 +512,7 @@ public class MemberChat extends AppCompatActivity
 			    BitmapFactory.Options options = new
 				BitmapFactory.Options();
 
-			    options.inSampleSize = 4;
+			    options.inSampleSize = 2;
 
 			    InputStream inputStream = null;
 
@@ -553,7 +553,7 @@ public class MemberChat extends AppCompatActivity
 				    BitmapFactory.Options options = new
 					BitmapFactory.Options();
 
-				    options.inSampleSize = 4;
+				    options.inSampleSize = 2;
 
 				    Bitmap bitmap = BitmapFactory.decodeStream
 					(new ByteArrayInputStream(m_bytes),
@@ -889,7 +889,7 @@ public class MemberChat extends AppCompatActivity
 				    BitmapFactory.Options options =
 					new BitmapFactory.Options();
 
-				    options.inSampleSize = 4;
+				    options.inSampleSize = 2;
 
 				    MemberChatElement memberChatElement =
 					m_databaseHelper.
