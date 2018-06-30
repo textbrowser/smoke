@@ -24,10 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fadeScrollbars="false"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
         tools:context="org.purple.smoke.Settings">
 
         <ScrollView
@@ -58,6 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:paddingStart="5dp"
                     android:textIsSelectable="true" />
 
                 <CheckBox
@@ -94,6 +91,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.31"
+                        android:paddingStart="5dp"
                         android:text="@string/control" />
 
                     <TextView
@@ -312,6 +310,7 @@
                         android:id="@+id/ozone"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/address"
@@ -324,7 +323,6 @@
                     style="@style/Widget.AppCompat.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
                     android:text="@string/save" />
 
                 <TextView
@@ -348,6 +346,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.13"
+                        android:paddingStart="5dp"
                         android:text="@string/name" />
 
                     <TextView
@@ -370,7 +369,8 @@
                         android:id="@+id/participants"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp">
+                        android:layout_marginEnd="5dp"
+                        android:paddingStart="5dp">
 
                     </TableLayout>
                 </android.support.v4.widget.NestedScrollView>
@@ -501,6 +501,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
                         android:text="@string/iteration_count"
                         android:textSize="14sp" />
 
@@ -512,6 +513,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
                         android:text="@string/encryption" />
 
                     <Spinner
@@ -522,6 +524,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
                         android:text="@string/signature" />
 
                     <Spinner
@@ -592,6 +595,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:paddingStart="5dp"
                     android:text="@string/chat_encryption_key_data" />
 
                 <TextView
@@ -599,11 +603,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:paddingStart="5dp"
                     android:text="@string/chat_signature_key_data" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="5dp"
                     android:text="@string/smoke_chat_id"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -613,6 +619,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:paddingStart="5dp"
                     android:text="@string/smokeid"
                     android:textSize="16sp"
                     android:textStyle="bold" />

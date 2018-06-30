@@ -5,10 +5,6 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.purple.smoke.MemberChat"
     tools:showIn="@layout/activity_member_chat">
@@ -60,12 +56,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/chat_message">
+        android:layout_above="@+id/divider">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:scrollbars="vertical"
             android:visibility="visible">
 
@@ -75,6 +73,7 @@
             android:id="@+id/preview_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:visibility="gone">
 
             <Button
@@ -91,7 +90,7 @@
 
             <ImageView
                 android:id="@+id/preview"
-                android:layout_width="128dp"
+                android:layout_width="192dp"
                 android:layout_height="128dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
@@ -103,5 +102,12 @@
         </RelativeLayout>
 
     </FrameLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/chat_message"
+        android:background="?android:attr/listDivider" />
 
 </RelativeLayout>

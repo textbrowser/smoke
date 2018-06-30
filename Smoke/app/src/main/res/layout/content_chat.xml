@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.purple.smoke.Chat"
     tools:showIn="@layout/activity_chat">
@@ -17,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="5dp"
         android:text="@string/clear" />
 
     <ScrollView
@@ -25,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_message"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:layout_toStartOf="@+id/call"
         android:fadeScrollbars="false">
 
@@ -35,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             android:textIsSelectable="true" />
     </ScrollView>
 
@@ -71,7 +68,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_message"
         android:layout_below="@+id/clear_chat_messages"
-        android:layout_marginEnd="5dp"
         android:layout_toEndOf="@+id/chat_scrollview"
         android:fadeScrollbars="false"
         android:scrollbars="vertical">
@@ -84,5 +80,12 @@
 
         </TableLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/chat_message"
+        android:background="?android:attr/listDivider" />
 
 </RelativeLayout>

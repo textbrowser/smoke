@@ -19,11 +19,7 @@
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/password"

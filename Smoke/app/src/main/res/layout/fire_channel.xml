@@ -5,7 +5,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingEnd="5dp">
 
         <Button
             android:id="@+id/close"
@@ -14,7 +15,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="5dp"
             android:text="@string/close" />
 
         <TextView
@@ -48,6 +48,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/chat_message"
             android:layout_below="@+id/clear_chat_messages"
+            android:layout_marginTop="5dp"
             android:layout_toStartOf="@+id/clear_chat_messages"
             android:fadeScrollbars="false"
             android:fillViewport="true"
@@ -58,6 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
                 android:textIsSelectable="true" />
 
         </android.support.v4.widget.NestedScrollView>
@@ -67,7 +69,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/chat_message"
             android:layout_below="@+id/clear_chat_messages"
-            android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/chat_scrollview"
             android:fadeScrollbars="false"
             android:scrollbars="vertical">
@@ -76,7 +78,8 @@
                 android:id="@+id/participants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp">
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp">
 
             </TableLayout>
         </android.support.v4.widget.NestedScrollView>
@@ -88,7 +91,6 @@
             android:layout_alignBaseline="@+id/chat_message"
             android:layout_alignBottom="@+id/chat_message"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="5dp"
             android:text="@string/send" />
 
         <EditText
