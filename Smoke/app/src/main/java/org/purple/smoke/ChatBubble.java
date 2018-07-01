@@ -202,11 +202,19 @@ public class ChatBubble extends View
 		(LinearLayout.LayoutParams.WRAP_CONTENT,
 		 LinearLayout.LayoutParams.WRAP_CONTENT);
 
-	    layoutParams.setMargins
-		((int) (0.35 * displayMetrics.widthPixels),
-		 0,
-		 (int) (5.0 * density),
-		 (int) (5.0 * density));
+	    if(m_view.findViewById(R.id.image).getVisibility() == View.GONE)
+		layoutParams.setMargins
+		    ((int) (0.50 * displayMetrics.widthPixels),
+		     0,
+		     (int) (5.0 * density),
+		     (int) (5.0 * density));
+	    else
+		layoutParams.setMargins
+		    ((int) (0.15 * displayMetrics.widthPixels),
+		     0,
+		     (int) (5.0 * density),
+		     (int) (5.0 * density));
+
 	    m_view.setBackgroundResource(R.drawable.bubble_right_text);
 	    m_view.setLayoutParams(layoutParams);
 	}
