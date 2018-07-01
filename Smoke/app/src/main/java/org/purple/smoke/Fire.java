@@ -196,7 +196,7 @@ public class Fire extends AppCompatActivity
 
 	getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-	int height = (int) (0.6 * displayMetrics.heightPixels);
+	int height = (int) (1.0 * displayMetrics.heightPixels);
 
 	viewGroup.addView
 	    (fireChannel.view(),
@@ -518,6 +518,7 @@ public class Fire extends AppCompatActivity
 
     private void showFireDetails(boolean isChecked)
     {
+	TextView textView1 = (TextView) findViewById(R.id.channel);
 	View linearLayout1 = findViewById(R.id.auto_fill_layout);
 	View linearLayout2 = findViewById(R.id.fire_buttons_layout);
 	View gridLayout1 = findViewById(R.id.grid_layout);
@@ -525,6 +526,7 @@ public class Fire extends AppCompatActivity
 	gridLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	linearLayout1.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 	linearLayout2.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+	textView1.requestFocus();
     }
 
     private void showMemberChatActivity()
@@ -577,7 +579,7 @@ public class Fire extends AppCompatActivity
 
 	    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-	    int height = (int) (0.6 * displayMetrics.heightPixels);
+	    int height = (int) (1.0 * displayMetrics.heightPixels);
 
 	    for(Map.Entry<String, FireChannel> entry : map.entrySet())
 	    {

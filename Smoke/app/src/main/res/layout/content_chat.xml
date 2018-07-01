@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginEnd="5dp"
-    android:layout_marginStart="5dp"
+    android:paddingEnd="5dp"
+    android:paddingStart="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.purple.smoke.Chat"
     tools:showIn="@layout/activity_chat">
@@ -42,7 +42,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
         android:layout_toStartOf="@+id/send_chat_message"
         android:ems="10"
         android:hint="@string/please_type_a_message"
@@ -70,7 +69,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_message"
         android:layout_below="@+id/clear_chat_messages"
-        android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/chat_scrollview"
         android:fadeScrollbars="false"
         android:scrollbars="vertical">

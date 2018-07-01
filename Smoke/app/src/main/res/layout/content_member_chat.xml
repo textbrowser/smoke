@@ -12,15 +12,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/divider"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp">
+        android:layout_above="@+id/divider">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
             android:scrollbars="vertical"
             android:visibility="visible">
 
@@ -30,6 +27,7 @@
             android:id="@+id/preview_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
             android:layout_marginStart="5dp"
             android:visibility="gone">
 
@@ -37,11 +35,11 @@
                 android:id="@+id/remove_preview"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/preview"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="110dp"
+                android:layout_marginStart="175dp"
                 android:background="@drawable/minus"
                 android:visibility="visible" />
 
@@ -52,6 +50,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:layout_gravity="bottom"
+                android:layout_marginStart="5dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/preview"
                 android:scaleType="fitXY"
