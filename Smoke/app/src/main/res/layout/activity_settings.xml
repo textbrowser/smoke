@@ -4,7 +4,6 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/creamy"
     android:fadeScrollbars="false">
 
     <android.support.design.widget.AppBarLayout
