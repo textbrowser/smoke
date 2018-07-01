@@ -102,7 +102,7 @@ public class ChatBubble extends View
 	{
 	    BitmapFactory.Options options = new BitmapFactory.Options();
 
-	    options.inSampleSize = 1;
+	    options.inSampleSize = 2;
 
 	    Bitmap bitmap = BitmapFactory.decodeStream
 		(new ByteArrayInputStream(bytes), null, options);

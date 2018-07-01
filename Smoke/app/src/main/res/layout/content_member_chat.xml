@@ -5,9 +5,9 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginEnd="5dp"
-    android:layout_marginStart="5dp"
     android:background="@drawable/creamy"
+    android:paddingEnd="5dp"
+    android:paddingStart="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.purple.smoke.MemberChat"
     tools:showIn="@layout/activity_member_chat">
