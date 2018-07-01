@@ -102,7 +102,7 @@ public class ChatBubble extends View
 	{
 	    BitmapFactory.Options options = new BitmapFactory.Options();
 
-	    options.inSampleSize = 2;
+	    options.inSampleSize = 1;
 
 	    Bitmap bitmap = BitmapFactory.decodeStream
 		(new ByteArrayInputStream(bytes), null, options);
@@ -183,10 +183,10 @@ public class ChatBubble extends View
 		 LinearLayout.LayoutParams.WRAP_CONTENT);
 
 	    layoutParams.setMargins
-		(0,
+		((int) (15.0 * density),
 		 0,
 		 (int) (0.15 * displayMetrics.widthPixels),
-		 (int) (5.0 * density));
+		 (int) (10.0 * density));
 
 	    if(m_fromSmokeStack)
 		m_view.setBackgroundResource(R.drawable.bubble_ozone_text);
@@ -206,14 +206,14 @@ public class ChatBubble extends View
 		layoutParams.setMargins
 		    ((int) (0.50 * displayMetrics.widthPixels),
 		     0,
-		     (int) (5.0 * density),
-		     (int) (5.0 * density));
+		     (int) (15.0 * density),
+		     (int) (10.0 * density));
 	    else
 		layoutParams.setMargins
 		    ((int) (0.15 * displayMetrics.widthPixels),
 		     0,
-		     (int) (5.0 * density),
-		     (int) (5.0 * density));
+		     (int) (15.0 * density),
+		     (int) (10.0 * density));
 
 	    m_view.setBackgroundResource(R.drawable.bubble_right_text);
 	    m_view.setLayoutParams(layoutParams);
