@@ -5,6 +5,8 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingEnd="5dp"
+    android:paddingStart="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.purple.smoke.MemberChat"
     tools:showIn="@layout/activity_member_chat">
@@ -18,6 +20,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:scrollbars="vertical"
             android:visibility="visible">
 
@@ -39,7 +42,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="110dp"
-                android:layout_marginStart="175dp"
+                android:layout_marginStart="180dp"
                 android:background="@drawable/minus"
                 android:visibility="visible" />
 
