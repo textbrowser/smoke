@@ -256,9 +256,6 @@ public class FireChannel extends View
 	{
 	    public void onClick(View view)
 	    {
-		if(((Activity) m_context).isFinishing())
-		    return;
-
 		TextView textView1 = m_view.findViewById
 		    (R.id.chat_messages);
 
@@ -271,9 +268,6 @@ public class FireChannel extends View
 	{
 	    public void onClick(View view)
 	    {
-		if(((Activity) m_context).isFinishing())
-		    return;
-
 		Kernel.getInstance().extinguishFire(m_name);
 
 		if(m_connectionStatusScheduler != null)
@@ -324,9 +318,6 @@ public class FireChannel extends View
 	{
 	    public void onClick(View view)
 	    {
-		if(((Activity) m_context).isFinishing())
-		    return;
-
 		TextView textView1 = m_view.findViewById
 		    (R.id.chat_message);
 
