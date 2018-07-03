@@ -117,7 +117,7 @@ public class Fire extends AppCompatActivity
     private FireBroadcastReceiver m_receiver = null;
     private boolean m_receiverRegistered = false;
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
-    private final String m_id = Miscellaneous.byteArrayAsHexString
+    private final static String s_id = Miscellaneous.byteArrayAsHexString
 	(Cryptography.randomBytes(128));
     private final static CharsetEncoder s_latin1Encoder = Charset.
 	forName("ISO-8859-1").newEncoder();
@@ -175,7 +175,7 @@ public class Fire extends AppCompatActivity
 	FireChannel fireChannel = null;
 	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
 
-	fireChannel = new FireChannel(m_id, name, Fire.this, viewGroup);
+	fireChannel = new FireChannel(s_id, name, Fire.this, viewGroup);
 	State.getInstance().addFire(fireChannel);
 
 	int index = -1;
