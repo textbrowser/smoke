@@ -475,7 +475,7 @@ public class FireChannel extends View
 		    {
 		    }
 		}
-		}, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 
 	    prepareListeners();
 
