@@ -611,6 +611,8 @@ public class MemberChat extends AppCompatActivity
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 	m_layoutManager = new SmokeLinearLayoutManager(this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+	m_layoutManager.setReverseLayout(true);
+	m_layoutManager.setStackFromEnd(true);
 	m_mySipHashId = s_cryptography.sipHashId();
 	m_name = m_sipHashId = State.getInstance().getString
 	    ("member_chat_siphash_id");
