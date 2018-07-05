@@ -122,12 +122,28 @@ public class ChatBubble extends View
 	}
     }
 
+    public void setName(Locations location, String name)
+    {
+	m_view.findViewById(R.id.left_name).setVisibility(View.GONE);
+
+	if(name.trim().isEmpty())
+	    return;
+
+	if(location == Locations.LEFT)
+	{
+	    TextView textView = (TextView) m_view.findViewById(R.id.left_name);
+
+	    textView.setText(name.substring(0, 1).toUpperCase());
+	    textView.setVisibility(View.VISIBLE);
+	}
+    }
+
     public void setOid(int oid)
     {
 	m_view.setId(oid);
     }
 
-    public void setText(String text, Locations location)
+    public void setText(Locations location, String text)
     {
 	ImageView imageView = m_view.findViewById(R.id.image);
 	TextView textView = m_view.findViewById(R.id.text);
@@ -183,15 +199,15 @@ public class ChatBubble extends View
 		 LinearLayout.LayoutParams.WRAP_CONTENT);
 
 	    layoutParams.setMargins
-		((int) (15.0 * density),
+		((int) (5.0 * density),
 		 0,
 		 (int) (0.15 * displayMetrics.widthPixels),
 		 (int) (10.0 * density));
 
 	    if(m_fromSmokeStack)
-		m_view.setBackgroundResource(R.drawable.bubble_ozone_text);
+		textView.setBackgroundResource(R.drawable.bubble_ozone_text);
 	    else
-		m_view.setBackgroundResource(R.drawable.bubble_left_text);
+		textView.setBackgroundResource(R.drawable.bubble_left_text);
 
 	    m_view.setLayoutParams(layoutParams);
 	}
@@ -202,21 +218,13 @@ public class ChatBubble extends View
 		(LinearLayout.LayoutParams.WRAP_CONTENT,
 		 LinearLayout.LayoutParams.WRAP_CONTENT);
 
-	    if(m_view.findViewById(R.id.image).getVisibility() == View.GONE)
-		layoutParams.setMargins
-		    ((int) (0.50 * displayMetrics.widthPixels),
-		     0,
-		     (int) (15.0 * density),
-		     (int) (10.0 * density));
-	    else
-		layoutParams.setMargins
-		    ((int) (0.15 * displayMetrics.widthPixels),
-		     0,
-		     (int) (15.0 * density),
-		     (int) (10.0 * density));
-
-	    m_view.setBackgroundResource(R.drawable.bubble_right_text);
+	    layoutParams.setMargins
+		((int) (0.30 * displayMetrics.widthPixels),
+		 0,
+		 (int) (15.0 * density),
+		 (int) (10.0 * density));
 	    m_view.setLayoutParams(layoutParams);
+	    textView.setBackgroundResource(R.drawable.bubble_right_text);
 	}
     }
 }

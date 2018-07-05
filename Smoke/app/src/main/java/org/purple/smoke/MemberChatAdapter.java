@@ -47,6 +47,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	implements OnCreateContextMenuListener
     {
 	ChatBubble m_chatBubble = null;
+	String m_name = "";
 	String m_sipHashId = "";
 	int m_position = -1;
 
@@ -55,6 +56,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    super(chatBubble.view());
 	    chatBubble.view().setOnCreateContextMenuListener(this);
 	    m_chatBubble = chatBubble;
+	    m_name = s_database.nameFromSipHashId(s_cryptography, sipHashId);
 	    m_sipHashId = sipHashId;
         }
 
@@ -107,11 +109,17 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    m_chatBubble.setOid(memberChatElement.m_oid);
 
 	    if(!local)
+	    {
+		m_chatBubble.setName(ChatBubble.Locations.LEFT, m_name);
 		m_chatBubble.setText
-		    (stringBuilder.toString(), ChatBubble.Locations.LEFT);
+		    (ChatBubble.Locations.LEFT, stringBuilder.toString());
+	    }
 	    else
+	    {
+		m_chatBubble.setName(ChatBubble.Locations.RIGHT, "");
 		m_chatBubble.setText
-		    (stringBuilder.toString(), ChatBubble.Locations.RIGHT);
+		    (ChatBubble.Locations.RIGHT, stringBuilder.toString());
+	    }
 
 	    m_position = position;
 	}
