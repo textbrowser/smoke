@@ -198,23 +198,34 @@ public class UdpNeighbor extends Neighbor
 	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
 	{
+	    private boolean m_error = false;
+
 	    @Override
 	    public void run()
 	    {
 		try
 		{
-		    if(!connected())
+		    if(!connected() || m_error)
 			return;
 		    else if(m_socket == null)
 			return;
 
 		    ByteArrayOutputStream byteArrayOutputStream =
 			new ByteArrayOutputStream();
-		    DatagramPacket datagramPacket = null;
-
-		    datagramPacket = new DatagramPacket
+		    DatagramPacket datagramPacket = new DatagramPacket
 			(m_bytes, m_bytes.length);
-		    m_socket.receive(datagramPacket);
+
+		    try
+		    {
+			m_socket.receive(datagramPacket);
+		    }
+		    catch(Exception exception)
+		    {
+			m_error = true;
+			setError("A socket receive() error occurred.");
+			disconnect();
+			return;
+		    }
 
 		    if(datagramPacket.getLength() > 0)
 			byteArrayOutputStream.write
@@ -226,6 +237,7 @@ public class UdpNeighbor extends Neighbor
 
 		    if(bytesRead < 0)
 		    {
+			m_error = true;
 			setError("A socket receive() error occurred.");
 			disconnect();
 			return;
