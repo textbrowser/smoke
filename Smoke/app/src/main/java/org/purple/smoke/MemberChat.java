@@ -38,6 +38,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap.Config;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -334,13 +335,11 @@ public class MemberChat extends AppCompatActivity
 				    (R.id.send_chat_message);
 
 				if(state)
-				    button1.
-					setCompoundDrawablesWithIntrinsicBounds
-					(R.drawable.network_up, 0, 0, 0);
+				    button1.setTextColor
+					(Color.rgb(46, 125, 50));
 				else
-				    button1.
-					setCompoundDrawablesWithIntrinsicBounds
-					(R.drawable.network_down, 0, 0, 0);
+				    button1.setTextColor
+					(Color.rgb(198, 40, 40));
 			    }
 			});
 		    }

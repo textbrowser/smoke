@@ -452,13 +452,11 @@ public class FireChannel extends View
 				    (R.id.send_chat_message);
 
 				if(state)
-				    button1.
-					setCompoundDrawablesWithIntrinsicBounds
-					(R.drawable.network_up, 0, 0, 0);
+				    button1.setTextColor
+					(Color.rgb(46, 125, 50));
 				else
-				    button1.
-					setCompoundDrawablesWithIntrinsicBounds
-					(R.drawable.network_down, 0, 0, 0);
+				    button1.setTextColor
+					(Color.rgb(198, 40, 40));
 			    }
 			});
 		    }

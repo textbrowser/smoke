@@ -825,19 +825,35 @@ public class Chat extends AppCompatActivity
 			public void run()
 			{
 			    Button button1 = (Button) findViewById(R.id.call);
+			    boolean isEnabled = State.getInstance().
+				chatCheckedParticipants() > 0;
 
-			    button1.setEnabled
-				(State.getInstance().
-				 chatCheckedParticipants() > 0 && state);
+			    button1.setEnabled(isEnabled && state);
 			    button1 = (Button) findViewById
 				(R.id.send_chat_message);
 
-			    if(state)
-				button1.setCompoundDrawablesWithIntrinsicBounds
-				    (R.drawable.network_up, 0, 0, 0);
+			    if(isEnabled)
+			    {
+				if(state)
+				    button1.setTextColor
+					(Color.rgb(46, 125, 50));
+				else
+				    button1.setTextColor
+					(Color.rgb(198, 40, 40));
+			    }
 			    else
-				button1.setCompoundDrawablesWithIntrinsicBounds
-				    (R.drawable.network_down, 0, 0, 0);
+			    {
+				/*
+				** 38% of enabled colors.
+				*/
+
+				if(state)
+				    button1.setTextColor
+					(Color.argb(38, 46, 125, 50));
+				else
+				    button1.setTextColor
+					(Color.argb(38, 198, 40, 40));
+			    }
 			}
 		    });
 		}

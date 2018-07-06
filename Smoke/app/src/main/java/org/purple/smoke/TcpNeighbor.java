@@ -337,6 +337,7 @@ public class TcpNeighbor extends Neighbor
 
 		    if(bytesRead < 0)
 		    {
+			m_error = true;
 			setError("A socket read() error occurred.");
 			disconnect();
 			return;
