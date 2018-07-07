@@ -33,6 +33,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -110,7 +112,12 @@ public class ChatBubble extends View
 
 	    if(bitmap != null)
 	    {
-		imageView.setImageBitmap(bitmap);
+		RoundedBitmapDrawable roundedBitmapDrawable =
+		    RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+
+		roundedBitmapDrawable.setCornerRadius(25.0f);
+		roundedBitmapDrawable.setAntiAlias(true);
+		imageView.setImageDrawable(roundedBitmapDrawable);
 		imageView.setVisibility(View.VISIBLE);
 	    }
 	    else
@@ -219,7 +226,7 @@ public class ChatBubble extends View
 		 LinearLayout.LayoutParams.WRAP_CONTENT);
 
 	    layoutParams.setMargins
-		((int) (0.30 * displayMetrics.widthPixels),
+		((int) (0.15 * displayMetrics.widthPixels),
 		 0,
 		 (int) (15.0 * density),
 		 (int) (10.0 * density));

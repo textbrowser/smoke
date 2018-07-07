@@ -34,8 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
