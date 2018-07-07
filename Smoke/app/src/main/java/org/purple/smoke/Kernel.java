@@ -746,7 +746,7 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    if(isConnected())
+		    if(isConnected() && s_cryptography.ozoneMacKey() != null)
 			retrieveChatMessages();
 		}
 	    }, 10000, REQUEST_MESSAGES_INTERVAL, TimeUnit.MILLISECONDS);

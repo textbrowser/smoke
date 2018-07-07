@@ -233,5 +233,7 @@ public class ChatBubble extends View
 	    m_view.setLayoutParams(layoutParams);
 	    textView.setBackgroundResource(R.drawable.bubble_right_text);
 	}
+
+	textView.setPaddingRelative(10, 10, 10, 10);
     }
 }
