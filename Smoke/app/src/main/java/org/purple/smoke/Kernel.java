@@ -67,6 +67,7 @@ public class Kernel
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_publishKeysScheduler = null;
     private ScheduledExecutorService m_purgeScheduler = null;
+    private ScheduledExecutorService m_requestMessagesScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
@@ -103,6 +104,7 @@ public class Kernel
 	864000; // Seconds in ten days.
     private final static int PUBLISH_KEYS_INTERVAL = 15000; // 15 Seconds
     private final static int PURGE_INTERVAL = 30000; // 30 Seconds
+    private final static int REQUEST_MESSAGES_INTERVAL = 60000; // 60 Seconds
     private final static int STATUS_INTERVAL = 15000; /*
 						      ** Should be less than
 						      ** Chat.STATUS_WINDOW.
@@ -733,6 +735,21 @@ public class Kernel
 		    }
 		}
 	    }, 1500, PURGE_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_requestMessagesScheduler == null)
+	{
+	    m_requestMessagesScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_requestMessagesScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    if(isConnected())
+			retrieveChatMessages();
+		}
+	    }, 10000, REQUEST_MESSAGES_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_statusScheduler == null)
