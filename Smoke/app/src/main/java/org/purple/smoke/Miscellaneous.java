@@ -538,7 +538,7 @@ public class Miscellaneous
 		}
 	    }
 
-	    textView1.setBackgroundColor(Color.rgb(244, 200, 117));
+	    textView1.setBackgroundColor(Color.rgb(255, 236, 179));
 
 	    if(message.isEmpty())
 		textView1.setText
@@ -548,6 +548,13 @@ public class Miscellaneous
 		    ("A message (" + message + ") from " + name +
 		     " has arrived.");
 
+	    float density = context.getResources().getDisplayMetrics().density;
+
+	    textView1.setPaddingRelative
+		((int) (10 * density),
+		 (int) (10 * density),
+		 (int) (10 * density),
+		 (int) (10 * density));
 	    textView1.setTextSize(16);
 	    popupWindow.setContentView(textView1);
 	    popupWindow.setOutsideTouchable(true);

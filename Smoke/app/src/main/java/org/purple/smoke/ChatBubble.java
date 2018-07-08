@@ -166,7 +166,7 @@ public class ChatBubble extends View
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    else
 		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(120, 120, 120)),
+		    (new ForegroundColorSpan(Color.rgb(117, 117, 117)),
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 	    textView.append(spannable);
@@ -179,11 +179,11 @@ public class ChatBubble extends View
 
 	    if(location == Locations.LEFT)
 		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(220, 220, 220)),
+		    (new ForegroundColorSpan(Color.rgb(224, 224, 224)),
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    else
 		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(150, 150, 150)),
+		    (new ForegroundColorSpan(Color.rgb(158, 158, 158)),
 		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 	    spannable.setSpan
@@ -234,6 +234,10 @@ public class ChatBubble extends View
 	    textView.setBackgroundResource(R.drawable.bubble_right_text);
 	}
 
-	textView.setPaddingRelative(10, 10, 10, 10);
+	textView.setPaddingRelative
+	    ((int) (10 * density),
+	     (int) (10 * density),
+	     (int) (10 * density),
+	     (int) (10 * density));
     }
 }

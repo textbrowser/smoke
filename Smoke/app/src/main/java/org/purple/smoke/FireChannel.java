@@ -234,7 +234,7 @@ public class FireChannel extends View
 
 	    if(m_id.equals(participant.m_id))
 	    {
-		textView.setBackgroundColor(Color.rgb(254, 229, 172));
+		textView.setBackgroundColor(Color.rgb(255, 183, 77));
 		textView.setId(-1);
 	    }
 	    else
@@ -509,7 +509,7 @@ public class FireChannel extends View
 		    (stringBuilder.toString());
 
 		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(255, 68, 68)),
+		    (new ForegroundColorSpan(Color.rgb(213, 0, 0)),
 		     0, stringBuilder.length(),
 		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		textView1.append(spannable);

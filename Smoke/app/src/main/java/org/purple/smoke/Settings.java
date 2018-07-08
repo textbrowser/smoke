@@ -888,13 +888,13 @@ public class Settings extends AppCompatActivity
 	    switch(neighborElement.m_status)
 	    {
             case "connected":
-                textView1.setTextColor(Color.rgb(0, 100, 0)); // Dark Green
+                textView1.setTextColor(Color.rgb(27, 94, 32)); // Dark Green
                 break;
             case "connecting":
-                textView1.setTextColor(Color.rgb(255, 140, 0)); // Dark Orange
+                textView1.setTextColor(Color.rgb(255, 111, 0)); // Dark Orange
                 break;
             default:
-                textView1.setTextColor(Color.rgb(139, 0, 0)); // Dark Red
+                textView1.setTextColor(Color.rgb(183, 28, 28)); // Dark Red
                 break;
 	    }
 
@@ -1126,7 +1126,7 @@ public class Settings extends AppCompatActivity
 	    }
 
 	    if(i % 2 == 0)
-		row.setBackgroundColor(Color.argb(100, 179, 230, 255));
+		row.setBackgroundColor(Color.rgb(179, 229, 252));
 
 	    tableLayout.addView(row, i);
 	    i += 1;
@@ -1198,8 +1198,15 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
+		float density = getApplicationContext().getResources().
+		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
+		textView1.setPaddingRelative
+		    ((int) (10 * density),
+		     (int) (10 * density),
+		     (int) (10 * density),
+		     (int) (10 * density));
 		textView1.setText
 		    ("An Ozone Address defines a virtual location, " +
 		     "a separate device where messages are to be stored for " +
@@ -1443,8 +1450,15 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
+		float density = getApplicationContext().getResources().
+		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(135, 206, 250));
+		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
+		textView1.setPaddingRelative
+		    ((int) (10 * density),
+		     (int) (10 * density),
+		     (int) (10 * density),
+		     (int) (10 * density));
 		textView1.setText
 		    ("A Smoke ID is a sequence of digits and " +
 		     "letters assigned to a specific subscriber " +

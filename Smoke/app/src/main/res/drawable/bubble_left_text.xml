@@ -5,8 +5,8 @@
       android:left="1dp"
       android:right="1dp"
       android:top="1dp" />
-  <solid android:color="#23b0fd" />
+  <solid android:color="#448aff" />
   <stroke
       android:width="1px"
-      android:color="#0288d2" />
+      android:color="#2962ff" />
 </shape>
