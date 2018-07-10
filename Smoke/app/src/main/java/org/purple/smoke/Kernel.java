@@ -95,8 +95,7 @@ public class Kernel
 	5000; // 5 Seconds
     private final static int CONGESTION_LIFETIME = 60; // Seconds
     private final static int FIRE_TIME_DELTA = 30000; // 30 Seconds
-    private final static int MCELIECE_OUTPUT_SIZE_CALL_A = 352;
-    private final static int MCELIECE_OUTPUT_SIZE_CHAT = 320;
+    private final static int MCELIECE_OUTPUT_SIZES[] = {320, 352, 576, 608};
     private final static int MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
@@ -1329,25 +1328,29 @@ public class Kernel
 	    }
 
 	    byte pk[] = null;
+	    int mceliece_output_size = 0;
 
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
 	       equals("McEliece-CCA2"))
 	    {
+		int sizes[] = null;
+		int t = s_cryptography.chatEncryptionPublicKeyT();
+
+		if(t == 50)
+		    sizes = Arrays.copyOfRange(MCELIECE_OUTPUT_SIZES, 0, 2);
+		else
+		    sizes = Arrays.copyOfRange(MCELIECE_OUTPUT_SIZES, 2, 4);
+
 		for(int i = 0; i < 2; i++)
 		{
-		    if(i == 0)
-			pk = s_cryptography.pkiDecrypt
-			    (Arrays.copyOfRange(bytes,
-						0,
-						MCELIECE_OUTPUT_SIZE_CHAT));
-		    else
-			pk = s_cryptography.pkiDecrypt
-			    (Arrays.copyOfRange(bytes,
-						0,
-						MCELIECE_OUTPUT_SIZE_CALL_A));
+		    pk = s_cryptography.pkiDecrypt
+			(Arrays.copyOfRange(bytes, 0, sizes[i]));
 
 		    if(pk != null)
+		    {
+			mceliece_output_size = sizes[i];
 			break;
+		    }
 		}
 	    }
 	    else
@@ -1397,7 +1400,7 @@ public class Kernel
 		    aes256 = Cryptography.decrypt
 			(Arrays.
 			 copyOfRange(bytes,
-				     MCELIECE_OUTPUT_SIZE_CHAT,
+				     mceliece_output_size,
 				     bytes.length - 128),
 			 Arrays.copyOfRange(keyStream, 0, 32));
 		else
@@ -1639,7 +1642,7 @@ public class Kernel
 		    aes256 = Cryptography.decrypt
 			(Arrays.
 			 copyOfRange(bytes,
-				     MCELIECE_OUTPUT_SIZE_CALL_A,
+				     mceliece_output_size,
 				     bytes.length - 128),
 			 Arrays.copyOfRange(pk, 0, 32));
 		else
