@@ -1333,22 +1333,28 @@ public class Kernel
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
 	       equals("McEliece-CCA2"))
 	    {
-		int sizes[] = null;
+		int e = 0;
+		int s = 0;
 		int t = s_cryptography.chatEncryptionPublicKeyT();
 
 		if(t == 50)
-		    sizes = Arrays.copyOfRange(MCELIECE_OUTPUT_SIZES, 0, 2);
+		    e = 2;
 		else
-		    sizes = Arrays.copyOfRange(MCELIECE_OUTPUT_SIZES, 2, 4);
+		{
+		    e = 4;
+		    s = 2;
+		}
 
-		for(int i = 0; i < 2; i++)
+		for(int i = s; i < e; i++)
 		{
 		    pk = s_cryptography.pkiDecrypt
-			(Arrays.copyOfRange(bytes, 0, sizes[i]));
+			(Arrays.copyOfRange(bytes,
+					    0,
+					    MCELIECE_OUTPUT_SIZES[i]));
 
 		    if(pk != null)
 		    {
-			mceliece_output_size = sizes[i];
+			mceliece_output_size = MCELIECE_OUTPUT_SIZES[i];
 			break;
 		    }
 		}

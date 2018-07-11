@@ -28,11 +28,11 @@
 package org.purple.smoke;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 
 public class MemberChatAdapter extends RecyclerView.Adapter
@@ -116,7 +116,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    }
 	    else
 	    {
-		m_chatBubble.setName(ChatBubble.Locations.RIGHT, "");
+		m_chatBubble.setName(ChatBubble.Locations.RIGHT, "M");
 		m_chatBubble.setText
 		    (ChatBubble.Locations.RIGHT, stringBuilder.toString());
 	    }

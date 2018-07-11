@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,12 +38,10 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
@@ -131,14 +128,22 @@ public class ChatBubble extends View
 
     public void setName(Locations location, String name)
     {
-	m_view.findViewById(R.id.left_name).setVisibility(View.GONE);
+	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
+	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
 
 	if(name.trim().isEmpty())
 	    return;
 
 	if(location == Locations.LEFT)
 	{
-	    TextView textView = (TextView) m_view.findViewById(R.id.left_name);
+	    TextView textView = (TextView) m_view.findViewById(R.id.name_left);
+
+	    textView.setText(name.substring(0, 1).toUpperCase());
+	    textView.setVisibility(View.VISIBLE);
+	}
+	else
+	{
+	    TextView textView = (TextView) m_view.findViewById(R.id.name_right);
 
 	    textView.setText(name.substring(0, 1).toUpperCase());
 	    textView.setVisibility(View.VISIBLE);
@@ -192,47 +197,17 @@ public class ChatBubble extends View
 	    textView.append(spannable);
 	}
 
-	DisplayMetrics displayMetrics = new DisplayMetrics();
 	float density = m_context.getResources().getDisplayMetrics().density;
-
-	((Activity) m_context).getWindowManager().getDefaultDisplay().
-	    getMetrics(displayMetrics);
 
 	if(location == Locations.LEFT)
 	{
-	    LinearLayout.LayoutParams layoutParams = new
-		LinearLayout.LayoutParams
-		(LinearLayout.LayoutParams.WRAP_CONTENT,
-		 LinearLayout.LayoutParams.WRAP_CONTENT);
-
-	    layoutParams.setMargins
-		((int) (5.0 * density),
-		 0,
-		 (int) (0.15 * displayMetrics.widthPixels),
-		 (int) (10.0 * density));
-
 	    if(m_fromSmokeStack)
 		textView.setBackgroundResource(R.drawable.bubble_ozone_text);
 	    else
 		textView.setBackgroundResource(R.drawable.bubble_left_text);
-
-	    m_view.setLayoutParams(layoutParams);
 	}
 	else
-	{
-	    LinearLayout.LayoutParams layoutParams = new
-		LinearLayout.LayoutParams
-		(LinearLayout.LayoutParams.WRAP_CONTENT,
-		 LinearLayout.LayoutParams.WRAP_CONTENT);
-
-	    layoutParams.setMargins
-		((int) (0.15 * displayMetrics.widthPixels),
-		 0,
-		 (int) (15.0 * density),
-		 (int) (10.0 * density));
-	    m_view.setLayoutParams(layoutParams);
 	    textView.setBackgroundResource(R.drawable.bubble_right_text);
-	}
 
 	textView.setPaddingRelative
 	    ((int) (10 * density),
