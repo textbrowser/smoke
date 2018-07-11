@@ -35,6 +35,7 @@ public class SipHashIdElement
     public byte m_encryptionPublicKey[] = null;
     public byte m_signaturePublicKey[] = null;
     public byte m_stream[] = null;
+    public int m_fiascoKeys = 0;
     public int m_oid = -1;
 
     public SipHashIdElement()

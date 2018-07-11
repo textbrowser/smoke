@@ -62,6 +62,7 @@
     <string name="attachment">Attachment</string>
     <string name="message">Message...</string>
     <string name="preview">Preview</string>
+    <string name="fiasco_keys">Fiasco Keys</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

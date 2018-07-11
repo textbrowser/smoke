@@ -834,6 +834,8 @@ public class Database extends SQLiteOpenHelper
 		     "(SELECT p.encryption_public_key_digest || " +
 		     "p.signature_public_key_digest FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
+		     "(SELECT COUNT(p.oid) FROM participants_keys p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
 		     "s.name, " +
 		     "s.siphash_id, " +
 		     "s.stream, " +
@@ -845,6 +847,8 @@ public class Database extends SQLiteOpenHelper
 		     "(SELECT p.encryption_public_key_digest || " +
 		     "p.signature_public_key_digest FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
+		     "(SELECT COUNT(p.oid) FROM participants_keys p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
 		     "s.name, " +
 		     "s.siphash_id, " +
 		     "s.stream, " +
@@ -887,6 +891,11 @@ public class Database extends SQLiteOpenHelper
 				!string_a.equals(string_b);
 			    continue;
 			}
+			else if(i == 1)
+			{
+			    sipHashIdElement.m_fiascoKeys = cursor.getInt(i);
+			    continue;
+			}
 			else if(i == cursor.getColumnCount() - 1)
 			{
 			    sipHashIdElement.m_oid = cursor.getInt(i);
@@ -911,7 +920,7 @@ public class Database extends SQLiteOpenHelper
 
 			switch(i)
 			{
-			case 1:
+			case 2:
 			    if(bytes != null)
 				sipHashIdElement.m_name = new String(bytes);
 			    else
@@ -919,7 +928,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 2:
+			case 3:
 			    if(bytes != null)
 				sipHashIdElement.m_sipHashId = new String
 				    (bytes, "UTF-8");
@@ -928,7 +937,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 3:
+			case 4:
 			    if(bytes != null)
 				sipHashIdElement.m_stream = Miscellaneous.
 				    deepCopy(bytes);

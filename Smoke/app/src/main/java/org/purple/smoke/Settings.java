@@ -169,7 +169,6 @@ public class Settings extends AppCompatActivity
 	}
     };
     private final static int OZONE_STREAM_CREATION_ITERATION_COUNT = 4096;
-    private final static int TEXTVIEW_TEXT_SIZE = 13;
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
@@ -1037,7 +1036,6 @@ public class Settings extends AppCompatActivity
 	    textView1.setLayoutParams
 		(new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
 	    textView1.setText(stringBuilder);
-	    textView1.setTextSize(TEXTVIEW_TEXT_SIZE);
 	    textView1.setWidth(TEXTVIEW_WIDTH);
 
 	    if(row != null)
@@ -1087,21 +1085,23 @@ public class Settings extends AppCompatActivity
 
 	    row.setLayoutParams(layoutParams);
 
-	    for(int j = 0; j < 2; j++)
+	    for(int j = 0; j < 3; j++)
 	    {
 		TextView textView1 = new TextView(Settings.this);
 
-		textView1.setGravity(Gravity.CENTER_VERTICAL);
 		textView1.setId(sipHashIdElement.m_oid);
 		textView1.setLayoutParams
 		    (new TableRow.LayoutParams(0,
-					       LayoutParams.WRAP_CONTENT,
+					       LayoutParams.MATCH_PARENT,
 					       1));
 
-		if(j == 0)
-		    textView1.setText(sipHashIdElement.m_name);
-		else
+		switch(j)
 		{
+		case 0:
+		    textView1.setGravity(Gravity.CENTER_VERTICAL);
+		    textView1.setText(sipHashIdElement.m_name);
+		    break;
+		case 1:
 		    if(sipHashIdElement.m_epksCompleted)
 			textView1.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.lock, 0, 0, 0);
@@ -1110,17 +1110,23 @@ public class Settings extends AppCompatActivity
 			    (R.drawable.warning, 0, 0, 0);
 
 		    textView1.setCompoundDrawablePadding(5);
+		    textView1.setGravity(Gravity.CENTER_VERTICAL);
 		    textView1.setText
 			(Miscellaneous.
 			 delimitString(sipHashIdElement.m_sipHashId.
 				       replace(":", "").toUpperCase(), '-', 4));
+		    break;
+		case 2:
+		    textView1.setGravity(Gravity.CENTER);
+		    textView1.setText
+			(String.valueOf(sipHashIdElement.m_fiascoKeys));
+		    break;
 		}
 
 		textView1.setTag(R.id.participants, textView1.getText());
 		textView1.setTag
 		    (R.id.refresh_participants,
 		     sipHashIdElement.m_epksCompleted);
-		textView1.setTextSize(TEXTVIEW_TEXT_SIZE);
 		registerForContextMenu(textView1);
 		row.addView(textView1);
 	    }
