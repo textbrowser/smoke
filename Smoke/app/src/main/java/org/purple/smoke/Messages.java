@@ -362,10 +362,14 @@ public class Messages
 
 	    if(attachment != null)
 		stringBuilder.append
-		    (Base64.encodeToString(attachment, Base64.NO_WRAP));
+		    (Base64.
+		     encodeToString(Miscellaneous.compressed(attachment),
+				    Base64.NO_WRAP));
 	    else
 		stringBuilder.append
-		    (Base64.encodeToString(new byte[1], Base64.NO_WRAP));
+		    (Base64.
+		     encodeToString(Miscellaneous.compressed(new byte[1]),
+				    Base64.NO_WRAP));
 
 	    stringBuilder.append("\n");
 

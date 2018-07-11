@@ -1532,8 +1532,9 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 3:
-			attachment = Base64.decode
-			    (string.getBytes(), Base64.NO_WRAP);
+			attachment = Miscellaneous.
+			    decompressed(Base64.decode(string.getBytes(),
+						       Base64.NO_WRAP));
 			ii += 1;
 			break;
 		    case 4:
