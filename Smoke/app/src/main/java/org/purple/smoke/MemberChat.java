@@ -293,7 +293,6 @@ public class MemberChat extends AppCompatActivity
 		    (str, m_sipHashId, m_attachment, keyStream);
 		findViewById(R.id.preview_layout).setVisibility(View.GONE);
 		m_attachment = null;
-		m_attachment = null;
 		textView1.post(new Runnable()
 		{
 		    @Override
