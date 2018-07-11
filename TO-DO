@@ -185,6 +185,7 @@ Completed Items
 143.   Save attachment.
 144.   Preview attachment.
 145.   Increase network buffer sizes for large attachments.
+146.   Resize Member Chat bubbles according to contents.
 
 Future Items
 
@@ -249,4 +250,3 @@ Remaining Items
        a data replicator.
 8.     Member Chat theme: bubble colors, bubble font colors,
        bubble time font color and size.
-9.     Resize Member Chat bubbles according to contents.
