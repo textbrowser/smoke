@@ -1429,7 +1429,8 @@ public class Database extends SQLiteOpenHelper
 	return sipHashIdElement;
     }
 
-    public String nameFromSipHashId(Cryptography cryptography, String sipHashId)
+    public String nameFromSipHashId(Cryptography cryptography,
+				    String sipHashId)
     {
 	prepareDb();
 
@@ -2138,6 +2139,35 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return ok;
+    }
+
+    public boolean deleteFiascoKeys(String oid)
+    {
+	prepareDb();
+
+	if(m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    m_db.execSQL
+		("DELETE FROM participants_keys WHERE siphash_id_digest IN " +
+		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
+		 new String[] {oid});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
     }
 
     public boolean setParticipantKeyStream(Cryptography cryptography,

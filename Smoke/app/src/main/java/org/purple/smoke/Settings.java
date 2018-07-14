@@ -2515,6 +2515,8 @@ public class Settings extends AppCompatActivity
 	    {
 		public void onCancel(DialogInterface dialog)
 		{
+		    String string = "";
+
 		    switch(groupId)
 		    {
 		    case 0:
@@ -2550,7 +2552,18 @@ public class Settings extends AppCompatActivity
 
 			break;
 		    case 1:
-			String string = State.getInstance().
+			string = State.getInstance().
+			    getString("settings_participant_name_input");
+
+			if(m_databaseHelper.
+			   deleteFiascoKeys(String.valueOf(itemId)))
+			    populateParticipants();
+
+			State.getInstance().removeKey
+			    ("settings_participant_name_input");
+			break;
+		    case 2:
+			string = State.getInstance().
 			    getString("settings_participant_name_input");
 
 			if(m_databaseHelper.
@@ -2585,6 +2598,15 @@ public class Settings extends AppCompatActivity
 		 replace(")", "") + "?");
 	    break;
 	case 1:
+	    Miscellaneous.showPromptDialog
+		(Settings.this,
+		 listener,
+		 "Are you sure that you " +
+		 "wish to delete the Fiasco keys of " +
+		 menuItem.getTitle().toString().
+		 replace("Delete Fiasco Keys (", "").replace(")", "") + "?");
+	    break;
+	case 2:
 	    Miscellaneous.showTextInputDialog
 		(Settings.this,
 		 listener,
@@ -2594,10 +2616,10 @@ public class Settings extends AppCompatActivity
 		 replace(")", "") + ".",
 		 "Name");
 	    break;
-	case 2:
+	case 3:
 	    requestKeysOf(String.valueOf(itemId));
 	    break;
-	case 3:
+	case 4:
 	    shareKeysOf(String.valueOf(itemId));
 	    break;
 	}
@@ -2693,10 +2715,11 @@ public class Settings extends AppCompatActivity
 	{
 	    super.onCreateContextMenu(menu, view, menuInfo);
 	    menu.add(0, view.getId(), 0, "Delete (" + tag1 + ")");
-	    menu.add(1, view.getId(), 0, "New Name (" + tag1 + ")");
+	    menu.add(1, view.getId(), 0, "Delete Fiasco Keys (" + tag1 + ")");
+	    menu.add(2, view.getId(), 0, "New Name (" + tag1 + ")");
 
 	    MenuItem menuItem = menu.add
-		(2, view.getId(), 0, "Request Keys via Ozone (" + tag1 + ")");
+		(3, view.getId(), 0, "Request Keys via Ozone (" + tag1 + ")");
 
 	    if(s_cryptography.ozoneEncryptionKey() == null ||
 	       s_cryptography.ozoneEncryptionKey().length != 32 ||
@@ -2704,7 +2727,7 @@ public class Settings extends AppCompatActivity
 	       s_cryptography.ozoneMacKey().length != 64)
 		menuItem.setEnabled(false);
 
-	    menu.add(3, view.getId(), 0, "Share Keys (" + tag1 + ")").
+	    menu.add(4, view.getId(), 0, "Share Keys (" + tag1 + ")").
 		setEnabled((boolean) tag2);
 	}
     }
