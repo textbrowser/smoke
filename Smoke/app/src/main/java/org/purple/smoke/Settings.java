@@ -469,6 +469,8 @@ public class Settings extends AppCompatActivity
 	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
 	checkBox1.setChecked(!state);
 	checkBox1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.generate_pki);
+	button1.setEnabled(checkBox1.isChecked());
 	button1 = (Button) findViewById(R.id.set_password);
 	button1.setEnabled(checkBox1.isChecked());
 
@@ -1198,6 +1200,18 @@ public class Settings extends AppCompatActivity
 	    }
         });
 
+	button1 = (Button) findViewById(R.id.generate_pki);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(Settings.this.isFinishing())
+		    return;
+
+		preparePKI();
+	    }
+	});
+
 	button1 = (Button) findViewById(R.id.ozone_help);
 	button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -1570,9 +1584,11 @@ public class Settings extends AppCompatActivity
 		public void onCheckedChanged
 		    (CompoundButton buttonView, boolean isChecked)
 		{
-		    Button button1 = (Button) findViewById
-			(R.id.set_password);
+		    Button button1 = null;
 
+		    button1 = (Button) findViewById(R.id.generate_pki);
+		    button1.setEnabled(isChecked);
+		    button1 = (Button) findViewById(R.id.set_password);
 		    button1.setEnabled(isChecked);
 		}
 	    });
@@ -1948,6 +1964,202 @@ public class Settings extends AppCompatActivity
 			    textView1.getText().toString(),
 			    spinner3.getSelectedItem().toString(),
 			    iterationCount));
+
+	thread.start();
+    }
+
+    private void preparePKI()
+    {
+	if(Settings.this.isFinishing())
+	    return;
+
+	final ProgressBar bar = (ProgressBar) findViewById
+	    (R.id.generate_progress_bar);
+	final Spinner spinner1 = (Spinner) findViewById
+	    (R.id.pki_encryption_algorithm);
+	final Spinner spinner2 = (Spinner) findViewById
+	    (R.id.pki_signature_algorithm);
+
+	bar.setIndeterminate(true);
+	bar.setVisibility(ProgressBar.VISIBLE);
+	getWindow().setFlags
+	    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+	     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+	Miscellaneous.enableChildren
+	    (findViewById(R.id.linear_layout), false);
+
+	class SingleShot implements Runnable
+	{
+	    private String m_encryptionAlgorithm = "";
+	    private String m_error = "";
+	    private String m_signatureAlgorithm = "";
+
+	    SingleShot(String encryptionAlgorithm, String signatureAlgorithm)
+	    {
+		m_encryptionAlgorithm = encryptionAlgorithm;
+		m_signatureAlgorithm = signatureAlgorithm;
+
+		if(m_signatureAlgorithm.equals("ECDSA"))
+		    m_signatureAlgorithm = "EC";
+	    }
+
+	    @Override
+	    public void run()
+	    {
+		KeyPair chatEncryptionKeyPair = null;
+		KeyPair chatSignatureKeyPair = null;
+
+		try
+		{
+		    chatEncryptionKeyPair = Cryptography.
+			generatePrivatePublicKeyPair
+			(m_encryptionAlgorithm, PKI_ENCRYPTION_KEY_SIZES[0], 0);
+
+		    if(chatEncryptionKeyPair == null)
+		    {
+			m_error = "encryption " +
+			    "generatePrivatePublicKeyPair() failure";
+			s_cryptography.resetPKI();
+			return;
+		    }
+
+		    if(m_signatureAlgorithm.equals("EC"))
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    ("EC", PKI_SIGNATURE_KEY_SIZES[0], 0);
+		    else
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    (m_signatureAlgorithm,
+			     PKI_SIGNATURE_KEY_SIZES[1],
+			     0);
+
+		    if(chatSignatureKeyPair == null)
+		    {
+			m_error = "signature " +
+			    "generatePrivatePublicKeyPair() failure";
+			s_cryptography.resetPKI();
+			return;
+		    }
+
+		    /*
+		    ** Prepare the Cryptography object's data.
+		    */
+
+		    s_cryptography.setChatEncryptionPublicKeyPair
+			(chatEncryptionKeyPair);
+		    s_cryptography.setChatSignaturePublicKeyPair
+			(chatSignatureKeyPair);
+
+		    /*
+		    ** Record the data.
+		    */
+
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "identity",
+			 Base64.encodeToString(s_cryptography.identity(),
+					       Base64.DEFAULT));
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "pki_chat_encryption_algorithm",
+			 m_encryptionAlgorithm);
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "pki_chat_encryption_private_key",
+			 Base64.
+			 encodeToString(chatEncryptionKeyPair.
+					getPrivate().
+					getEncoded(),
+					Base64.DEFAULT));
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "pki_chat_encryption_public_key",
+			 Base64.
+			 encodeToString(chatEncryptionKeyPair.
+					getPublic().
+					getEncoded(),
+					Base64.DEFAULT));
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "pki_chat_signature_algorithm",
+			 m_signatureAlgorithm);
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "pki_chat_signature_private_key",
+			 Base64.encodeToString(chatSignatureKeyPair.
+					       getPrivate().
+					       getEncoded(),
+					       Base64.DEFAULT));
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "pki_chat_signature_public_key",
+			 Base64.encodeToString(chatSignatureKeyPair.
+					       getPublic().
+					       getEncoded(),
+					       Base64.DEFAULT));
+
+		    boolean e1 = s_cryptography.prepareSipHashIds();
+		    boolean e2 = s_cryptography.prepareSipHashKeys();
+		    boolean e3 = generateOzone
+			(Miscellaneous.
+			 delimitString(s_cryptography.sipHashId().
+				       replace(":", "").toUpperCase(), '-', 4));
+
+		    if(!e1 || !e2 || !e3)
+		    {
+			if(!e1)
+			    m_error = "prepareSipHashIds() failure";
+			else if(!e2)
+			    m_error = "prepareSipHashKeys() failure";
+			else
+			    m_error = "sha512() failure";
+
+			s_cryptography.resetPKI();
+		    }
+		}
+		catch(Exception exception)
+		{
+		    m_error = exception.getMessage().toLowerCase().trim();
+		    s_cryptography.resetPKI();
+		}
+
+		Settings.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			bar.setVisibility(ProgressBar.INVISIBLE);
+			getWindow().clearFlags
+			    (WindowManager.LayoutParams.
+			     FLAG_NOT_TOUCHABLE);
+			Miscellaneous.enableChildren
+			    (findViewById(R.id.linear_layout), true);
+
+			if(!m_error.isEmpty())
+			    Miscellaneous.showErrorDialog
+				(Settings.this,
+				 "An error (" + m_error +
+				 ") occurred while " +
+				 "generating the PKI " +
+				 "data.");
+			else
+			{
+			    Settings.this.enableWidgets(true);
+			    Settings.this.showWidgets();
+			    spinner1.setSelection(1); // RSA
+			    spinner2.setSelection(1); // RSA
+			    populateFancyKeyData();
+			    populateOzone();
+			}
+		    }
+		});
+	    }
+	}
+
+	Thread thread = new Thread
+	    (new SingleShot(spinner1.getSelectedItem().toString(),
+			    spinner2.getSelectedItem().toString()));
 
 	thread.start();
     }
@@ -2374,11 +2586,13 @@ public class Settings extends AppCompatActivity
 	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
 	checkBox1.setChecked(!isAuthenticated);
 	checkBox1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.generate_pki);
+	button1.setEnabled(checkBox1.isChecked());
+	button1 = (Button) findViewById(R.id.set_password);
+	button1.setEnabled(checkBox1.isChecked());
 
 	TextView textView1 = null;
 
-	textView1 = (TextView) findViewById(R.id.set_password);
-	textView1.setEnabled(checkBox1.isChecked());
 	textView1 = (TextView) findViewById(R.id.about);
 	textView1.setText(About.about());
 	textView1.append("\n");
@@ -2479,6 +2693,7 @@ public class Settings extends AppCompatActivity
 		    child.setVisibility(View.GONE);
 	    }
 
+	    findViewById(R.id.generate_pki).setVisibility(View.GONE);
 	    findViewById(R.id.overwrite).setVisibility(View.GONE);
 	}
 

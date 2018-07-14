@@ -596,6 +596,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/generate" />
 
+                    <Button
+                        android:id="@+id/generate_pki"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/generate_pk" />
+
                     <ProgressBar
                         android:id="@+id/generate_progress_bar"
                         style="@android:style/Widget.DeviceDefault.ProgressBar"

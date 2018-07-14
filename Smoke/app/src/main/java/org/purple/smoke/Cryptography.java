@@ -1906,6 +1906,123 @@ public class Cryptography
 	}
     }
 
+    public void resetPKI()
+    {
+	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
+
+	try
+	{
+	    m_chatEncryptionPublicKeyPair = null;
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.writeLock().unlock();
+	}
+
+	m_chatSignaturePublicKeyPairMutex.writeLock().lock();
+
+	try
+	{
+	    m_chatSignaturePublicKeyPair = null;
+	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.writeLock().unlock();
+	}
+
+	m_identityMutex.writeLock().lock();
+
+	try
+	{
+	    m_identity = null;
+	}
+	finally
+	{
+	    m_identityMutex.writeLock().unlock();
+	}
+
+	m_ozoneEncryptionKeyMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_ozoneEncryptionKey != null)
+		Arrays.fill(m_ozoneEncryptionKey, (byte) 0);
+
+	    m_ozoneEncryptionKey = null;
+	}
+	finally
+	{
+	    m_ozoneEncryptionKeyMutex.writeLock().unlock();
+	}
+
+	m_ozoneMacKeyMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_ozoneMacKey != null)
+		Arrays.fill(m_ozoneMacKey, (byte) 0);
+
+	    m_ozoneMacKey = null;
+	}
+	finally
+	{
+	    m_ozoneMacKeyMutex.writeLock().unlock();
+	}
+
+	m_sipHashEncryptionKeyMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_sipHashEncryptionKey != null)
+		Arrays.fill(m_sipHashEncryptionKey, (byte) 0);
+
+	    m_sipHashEncryptionKey = null;
+	}
+	finally
+	{
+	    m_sipHashEncryptionKeyMutex.writeLock().unlock();
+	}
+
+	m_sipHashIdDigestMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_sipHashIdDigest != null)
+		Arrays.fill(m_sipHashIdDigest, (byte) 0);
+
+	    m_sipHashIdDigest = null;
+	}
+	finally
+	{
+	    m_sipHashIdDigestMutex.writeLock().unlock();
+	}
+
+	m_sipHashIdMutex.writeLock().lock();
+
+	try
+	{
+	    m_sipHashId = "00:00:00:00:00:00:00:00";
+	}
+	finally
+	{
+	    m_sipHashIdMutex.writeLock().unlock();
+	}
+
+	m_sipHashMacKeyMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_sipHashMacKey != null)
+		Arrays.fill(m_sipHashMacKey, (byte) 0);
+
+	    m_sipHashMacKey = null;
+	}
+	finally
+	{
+	    m_sipHashMacKeyMutex.writeLock().unlock();
+	}
+    }
+
     public void setChatEncryptionPublicKeyPair(KeyPair keyPair)
     {
 	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
