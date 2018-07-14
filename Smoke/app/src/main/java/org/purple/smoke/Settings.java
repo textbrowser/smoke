@@ -1723,7 +1723,7 @@ public class Settings extends AppCompatActivity
 		{
 		    chatEncryptionKeyPair = Cryptography.
 			generatePrivatePublicKeyPair
-			(m_encryptionAlgorithm, PKI_ENCRYPTION_KEY_SIZES[0]);
+			(m_encryptionAlgorithm, PKI_ENCRYPTION_KEY_SIZES[0], 0);
 
 		    if(chatEncryptionKeyPair == null)
 		    {
@@ -1736,11 +1736,13 @@ public class Settings extends AppCompatActivity
 		    if(m_signatureAlgorithm.equals("EC"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    ("EC", PKI_SIGNATURE_KEY_SIZES[0]);
+			    ("EC", PKI_SIGNATURE_KEY_SIZES[0], 0);
 		    else
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    (m_signatureAlgorithm, PKI_SIGNATURE_KEY_SIZES[1]);
+			    (m_signatureAlgorithm,
+			     PKI_SIGNATURE_KEY_SIZES[1],
+			     0);
 
 		    if(chatSignatureKeyPair == null)
 		    {

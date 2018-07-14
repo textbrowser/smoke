@@ -31,13 +31,18 @@ import java.security.KeyPair;
 
 public class ParticipantCall
 {
+    public Algorithms m_algorithm = Algorithms.RSA;
     public KeyPair m_keyPair = null;
     public String m_sipHashId = "";
     public int m_participantOid = -1;
     public long m_startTime = -1; // Calls expire.
+    public static enum Algorithms {MCELIECE, RSA};
 
-    public ParticipantCall(String sipHashId, int participantOid)
+    public ParticipantCall(Algorithms algorithm,
+			   String sipHashId,
+			   int participantOid)
     {
+	m_algorithm = algorithm;
 	m_participantOid = participantOid;
 	m_sipHashId = sipHashId;
 	m_startTime = System.nanoTime();
@@ -47,8 +52,17 @@ public class ParticipantCall
     {
 	try
 	{
-	    m_keyPair = Cryptography.generatePrivatePublicKeyPair
-		("RSA", 2048);
+	    switch(m_algorithm)
+	    {
+	    case MCELIECE:
+		m_keyPair = Cryptography.
+		    generatePrivatePublicKeyPair("McEliece-Fujisaki", 11, 50);
+		break;
+	    case RSA:
+		m_keyPair = Cryptography.
+		    generatePrivatePublicKeyPair("RSA", 2048, 0);
+		break;
+	    }
 	}
 	catch(Exception exception)
 	{

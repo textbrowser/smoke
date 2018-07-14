@@ -1079,18 +1079,26 @@ public class Cryptography
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
-						       int keySize)
+						       int keySize1,
+						       int keySize2)
 	throws InvalidAlgorithmParameterException, NoSuchAlgorithmException
     {
 	if(algorithm.equals("McEliece-Fujisaki"))
 	{
 	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance
 		("McElieceFujisaki");
-	    McElieceCCA2KeyGenParameterSpec parameters =
-		new McElieceCCA2KeyGenParameterSpec
-		(MCELIECE_M,
-		 MCELIECE_T,
-		 McElieceCCA2KeyGenParameterSpec.SHA256);
+	    McElieceCCA2KeyGenParameterSpec parameters = null;
+
+	    if(keySize2 == 0)
+		parameters = new McElieceCCA2KeyGenParameterSpec
+		    (MCELIECE_M,
+		     MCELIECE_T,
+		     McElieceCCA2KeyGenParameterSpec.SHA256);
+	    else
+		parameters = new McElieceCCA2KeyGenParameterSpec
+		    (keySize1,
+		     keySize2,
+		     McElieceCCA2KeyGenParameterSpec.SHA256);
 
 	    keyPairGenerator.initialize(parameters);
 	    return keyPairGenerator.generateKeyPair();
@@ -1102,7 +1110,7 @@ public class Cryptography
 	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
 		getInstance(algorithm);
 
-	    keyPairGenerator.initialize(keySize, s_secureRandom);
+	    keyPairGenerator.initialize(keySize1, s_secureRandom);
 	    return keyPairGenerator.generateKeyPair();
 	}
     }

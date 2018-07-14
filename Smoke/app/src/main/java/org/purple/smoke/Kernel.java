@@ -353,6 +353,12 @@ public class Kernel
 
 			if(isConnected())
 			{
+			    byte publicKeyType = 'M';
+
+			    if(participantCall.m_algorithm ==
+			       ParticipantCall.Algorithms.RSA)
+				publicKeyType = 'R';
+
 			    /*
 			    ** Place a call request to all neighbors.
 			    */
@@ -362,6 +368,7 @@ public class Kernel
 				 participantCall.m_sipHashId,
 				 participantCall.m_keyPair.getPublic().
 				 getEncoded(),
+				 publicKeyType,
 				 Messages.CALL_HALF_AND_HALF_TAGS[0]);
 
 			    if(bytes != null)
@@ -929,7 +936,9 @@ public class Kernel
 	return "";
     }
 
-    public boolean call(int participantOid, String sipHashId)
+    public boolean call(int participantOid,
+			ParticipantCall.Algorithms algorithm,
+			String sipHashId)
     {
 	/*
 	** Calling messages are not placed in the outbound_queue
@@ -944,7 +953,9 @@ public class Kernel
 		return false;
 
 	    m_callQueue.put
-		(sipHashId, new ParticipantCall(sipHashId, participantOid));
+		(sipHashId, new ParticipantCall(algorithm,
+						sipHashId,
+						participantOid));
 	}
 	finally
 	{
@@ -1669,82 +1680,102 @@ public class Kernel
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1]))
 		    return 1;
 
-		PublicKey signatureKey = null;
+		aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
 
-		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
-		    signatureKey = s_databaseHelper.signatureKeyForDigest
-			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 311, 311 + 64));
-		else
-		    signatureKey = s_databaseHelper.signatureKeyForDigest
-			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 273, 273 + 64));
+		String strings[] = new String(aes256).split("\\n");
 
-		if(signatureKey == null)
+		if(strings.length != Messages.CALL_GROUP_TWO_ELEMENT_COUNT)
 		    return 1;
 
-		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
-		{
-		    if(!Cryptography.
-		       verifySignature
-		       (signatureKey,
-			Arrays.copyOfRange(aes256, 375, aes256.length),
-			Miscellaneous.
-			joinByteArrays(pk,
-				       Arrays.
-				       copyOfRange(aes256,
-						   0,
-						   375),
-				       s_cryptography.
-				       chatEncryptionPublicKeyDigest())))
-			return 1;
-		}
-		else
-		{
-		    if(!Cryptography.
-		       verifySignature
-		       (signatureKey,
-			Arrays.copyOfRange(aes256, 337, aes256.length),
-			Miscellaneous.
-			joinByteArrays(pk,
-				       Arrays.
-				       copyOfRange(aes256,
-						   0,
-						   337),
-				       s_cryptography.
-				       chatEncryptionPublicKeyDigest())))
-			return 1;
-		}
+		byte ephemeralPublicKey[] = null;
+		byte ephemeralPublicKeyType[] = null;
+		byte publicKeySignature[] = null;
+		byte senderPublicEncryptionKeyDigest[] = null;
+		int ii = 0;
+		long timestamp = 0;
 
-		long current = System.currentTimeMillis();
-		long timestamp = Miscellaneous.byteArrayToLong
-		    (Arrays.copyOfRange(aes256, 1, 1 + 8));
+		for(String string : strings)
+		    switch(ii)
+		    {
+		    case 0:
+			long current = System.currentTimeMillis();
 
-		if(current - timestamp < 0)
-		{
-		    if(timestamp - current > CALL_LIFETIME)
-			return 1;
-		}
-		else if(current - timestamp > CALL_LIFETIME)
-		    return 1;
+			timestamp = Miscellaneous.byteArrayToLong
+			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
-		String array[] = null;
+			if(current - timestamp < 0)
+			{
+			    if(timestamp - current > CALL_LIFETIME)
+				return 1;
+			}
+			else if(current - timestamp > CALL_LIFETIME)
+			    return 1;
 
-		if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
-		    array = s_databaseHelper.nameSipHashIdFromDigest
-			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 311, 311 + 64));
-		else
-		    array = s_databaseHelper.nameSipHashIdFromDigest
-			(s_cryptography,
-			 Arrays.copyOfRange(aes256, 273, 273 + 64));
+			ii += 1;
+			break;
+		    case 1:
+			ephemeralPublicKey = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
+			ii += 1;
+			break;
+		    case 2:
+			ephemeralPublicKeyType = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
+			ii += 1;
+			break;
+		    case 3:
+			ii += 1;
+			break;
+		    case 4:
+			senderPublicEncryptionKeyDigest = Base64.
+			    decode(string.getBytes(), Base64.NO_WRAP);
+			ii += 1;
+			break;
+		    case 5:
+			publicKeySignature = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
+
+			PublicKey signatureKey = s_databaseHelper.
+			    signatureKeyForDigest
+			    (s_cryptography, senderPublicEncryptionKeyDigest);
+
+			if(signatureKey == null)
+			    return 1;
+
+			if(!Cryptography.
+			   verifySignature(signatureKey,
+					   publicKeySignature,
+					   Miscellaneous.
+					   joinByteArrays
+					   (pk,
+					    new byte[] {tag},
+					    strings[0].getBytes(),
+					    "\n".getBytes(),
+					    strings[1].getBytes(),
+					    "\n".getBytes(),
+					    strings[2].getBytes(),
+					    "\n".getBytes(),
+					    strings[3].getBytes(),
+					    "\n".getBytes(),
+					    strings[4].getBytes(),
+					    "\n".getBytes(),
+					    s_cryptography.
+					    chatEncryptionPublicKeyDigest())))
+			    return 1;
+
+			ii += 1;
+			break;
+		    }
+
+		String array[] = s_databaseHelper.nameSipHashIdFromDigest
+		    (s_cryptography, senderPublicEncryptionKeyDigest);
 
 		if(array != null && array.length == 2)
 		{
 		    PublicKey publicKey = null;
 		    byte keyStream[] = null;
 
-		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
+		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
 			ParticipantCall participantCall = null;
 
@@ -1761,8 +1792,12 @@ public class Kernel
 
 			if(participantCall == null)
 			{
-			    publicKey = Cryptography.publicRSAKeyFromBytes
-				(Arrays.copyOfRange(aes256, 9, 9 + 294));
+			    if(ephemeralPublicKeyType[0] == 'M')
+				publicKey = Cryptography.publicKeyFromBytes
+				    (ephemeralPublicKey);
+			    else
+				publicKey = Cryptography.publicRSAKeyFromBytes
+				    (ephemeralPublicKey);
 
 			    if(publicKey == null)
 				return 1;
@@ -1807,7 +1842,7 @@ public class Kernel
 			    return 1;
 			}
 		    }
-		    else if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[1])
+		    else if(tag == Messages.CALL_HALF_AND_HALF_TAGS[1])
 		    {
 			ParticipantCall participantCall = null;
 
@@ -1838,7 +1873,7 @@ public class Kernel
 
 			keyStream = Cryptography.pkiDecrypt
 			    (participantCall.m_keyPair.getPrivate(),
-			     Arrays.copyOfRange(aes256, 9, 9 + 256));
+			     ephemeralPublicKey);
 
 			if(keyStream == null)
 			    return 1;
@@ -1852,7 +1887,7 @@ public class Kernel
 		    Intent intent = new Intent
 			("org.purple.smoke.half_and_half_call");
 
-		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
+		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 			intent.putExtra("org.purple.smoke.initial", true);
 		    else
 			intent.putExtra("org.purple.smoke.initial", false);
@@ -1867,7 +1902,7 @@ public class Kernel
 
 		    localBroadcastManager.sendBroadcast(intent);
 
-		    if(aes256[0] == Messages.CALL_HALF_AND_HALF_TAGS[0])
+		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
 			/*
 			** Respond via all neighbors.
@@ -1877,6 +1912,7 @@ public class Kernel
 			    (s_cryptography,
 			     array[1],
 			     Cryptography.pkiEncrypt(publicKey, keyStream),
+			     (byte) '0', // Public Key Type
 			     Messages.CALL_HALF_AND_HALF_TAGS[1]);
 
 			if(bytes != null)

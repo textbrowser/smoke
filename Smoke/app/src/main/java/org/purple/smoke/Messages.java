@@ -48,6 +48,11 @@ public class Messages
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
+    public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
+							      ** The first
+							      ** byte is not
+							      ** considered.
+							      */
     public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 5; /*
 							      ** The first
 							      ** byte is not
@@ -173,6 +178,7 @@ public class Messages
     public static byte[] callMessage(Cryptography cryptography,
 				     String sipHashId,
 				     byte keyStream[],
+				     byte publicKeyType,
 				     byte tag)
     {
 	if(cryptography == null || keyStream == null || keyStream.length <= 0)
@@ -206,37 +212,54 @@ public class Messages
 	    if(pk == null)
 		return null;
 
-	    byte bytes[] = Miscellaneous.joinByteArrays
-		(
-		 /*
-		 ** [ A Tag ]
-		 */
+	    StringBuilder stringBuilder = new StringBuilder();
 
-		 new byte[] {tag},
+	    /*
+	    ** [ A Timestamp ]
+	    */
 
-		 /*
-		 ** [ A Timestamp ]
-		 */
+	    stringBuilder.append
+		(Base64.encodeToString(Miscellaneous.
+				       longToByteArray(System.
+						       currentTimeMillis()),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
 
-		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
+	    /*
+	    ** [ Ephemeral Public Key ]
+	    */
 
-		 /*
-		 ** [ RSA 2048-Bit Public Key ]
-		 */
+	    stringBuilder.append
+		(Base64.encodeToString(keyStream, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
 
-		 keyStream,
+	    /*
+	    ** [ Ephemeral Public Key Type ]
+	    */
 
-		 /*
-		 ** [ Identity ]
-		 */
+	    stringBuilder.append
+		(Base64.encodeToString(new byte[] {publicKeyType},
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
 
-		 cryptography.identity(),
+	    /*
+	    ** [ Identity ]
+	    */
 
-		 /*
-		 ** [ Encryption Public Key Digest ]
-		 */
+	    stringBuilder.append
+		(Base64.encodeToString(cryptography.identity(),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
 
-		 cryptography.chatEncryptionPublicKeyDigest());
+	    /*
+	    ** [ Encryption Public Key Digest ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(cryptography.
+				       chatEncryptionPublicKeyDigest(),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Public Key Signature ]
@@ -246,21 +269,31 @@ public class Messages
 		(Miscellaneous.
 		 joinByteArrays(aesKey,
 				shaKey,
-				bytes,
+				new byte[] {tag},
+				stringBuilder.toString().getBytes(),
 				Cryptography.sha512(publicKey.getEncoded())));
 
 	    if(signature == null)
 		return null;
+
+	    stringBuilder.append
+		(Base64.encodeToString(signature, Base64.NO_WRAP));
 
 	    /*
 	    ** [ AES-256 ]
 	    */
 
 	    byte aes256[] = Cryptography.encrypt
-		(Miscellaneous.joinByteArrays(bytes, signature), aesKey);
+		(Miscellaneous.
+		 joinByteArrays(new byte[] {tag},
+				stringBuilder.toString().getBytes()),
+		 aesKey);
 
 	    if(aes256 == null)
 		return null;
+
+	    stringBuilder.setLength(0);
+	    stringBuilder = null;
 
 	    /*
 	    ** [ SHA-512 HMAC ]
