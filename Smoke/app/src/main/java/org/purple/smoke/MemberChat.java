@@ -795,12 +795,12 @@ public class MemberChat extends AppCompatActivity
 	switch(groupId)
 	{
 	case 0:
-	    Kernel.getInstance().
-		call(m_oid, ParticipantCall.Algorithms.RSA, m_sipHashId);
-	    break;
-	case 1:
 	    Kernel.getInstance().call
 		(m_oid, ParticipantCall.Algorithms.MCELIECE, m_sipHashId);
+	    break;
+	case 1:
+	    Kernel.getInstance().
+		call(m_oid, ParticipantCall.Algorithms.RSA, m_sipHashId);
 	    break;
 	case 2:
 	    Miscellaneous.showTextInputDialog
@@ -1067,8 +1067,8 @@ public class MemberChat extends AppCompatActivity
 
 	MenuItem menuItem = null;
 
-	menu.add(0, -1, 0, "Call");
-	menu.add(1, -1, 0, "Call via McEliece");
+	menu.add(0, -1, 0, "Call via McEliece");
+	menu.add(1, -1, 0, "Call via RSA");
 	menu.add(2, -1, 0, "Custom Session");
 	menuItem = menu.add(3, -1, 0, "Retrieve Messages");
 	menuItem.setEnabled

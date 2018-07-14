@@ -353,11 +353,11 @@ public class Kernel
 
 			if(isConnected())
 			{
-			    byte publicKeyType = 'M';
+			    byte publicKeyType = Messages.CALL_KEY_TYPES[0];
 
 			    if(participantCall.m_algorithm ==
 			       ParticipantCall.Algorithms.RSA)
-				publicKeyType = 'R';
+				publicKeyType = Messages.CALL_KEY_TYPES[1];
 
 			    /*
 			    ** Place a call request to all neighbors.
@@ -1792,12 +1792,17 @@ public class Kernel
 
 			if(participantCall == null)
 			{
-			    if(ephemeralPublicKeyType[0] == 'M')
+			    switch(ephemeralPublicKeyType[0])
+			    {
+			    case (byte) 'M':
 				publicKey = Cryptography.publicKeyFromBytes
 				    (ephemeralPublicKey);
-			    else
+				break;
+			    case (byte) 'R':
 				publicKey = Cryptography.publicRSAKeyFromBytes
 				    (ephemeralPublicKey);
+				break;
+			    }
 
 			    if(publicKey == null)
 				return 1;
@@ -1892,6 +1897,10 @@ public class Kernel
 		    else
 			intent.putExtra("org.purple.smoke.initial", false);
 
+		    intent.putExtra
+			("org.purple.smoke.keyType",
+			 ephemeralPublicKeyType[0] ==
+			 Messages.CALL_KEY_TYPES[0] ? 'M' : 'R');
 		    intent.putExtra("org.purple.smoke.name", array[0]);
 		    intent.putExtra("org.purple.smoke.refresh", true);
 		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);
@@ -1912,7 +1921,7 @@ public class Kernel
 			    (s_cryptography,
 			     array[1],
 			     Cryptography.pkiEncrypt(publicKey, keyStream),
-			     (byte) '0', // Public Key Type
+			     ephemeralPublicKeyType[0],
 			     Messages.CALL_HALF_AND_HALF_TAGS[1]);
 
 			if(bytes != null)

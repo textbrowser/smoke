@@ -106,7 +106,8 @@ public class Chat extends AppCompatActivity
 		    (intent.getStringExtra("org.purple.smoke.name"),
 		     intent.getStringExtra("org.purple.smoke.sipHashId"),
 		     intent.getBooleanExtra("org.purple.smoke.initial", false),
-		     intent.getBooleanExtra("org.purple.smoke.refresh", false));
+		     intent.getBooleanExtra("org.purple.smoke.refresh", false),
+		     intent.getCharExtra("org.purple.smoke.keyType", 'R'));
 		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
@@ -334,7 +335,8 @@ public class Chat extends AppCompatActivity
     private void halfAndHalfCall(String name,
 				 String sipHashId,
 				 boolean initial,
-				 boolean refresh)
+				 boolean refresh,
+				 char keyType)
     {
 	if(name == null || sipHashId == null)
 	    return;
@@ -359,10 +361,19 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append
 	    (Miscellaneous.
 	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
-	stringBuilder.append(").");
+	stringBuilder.append(")");
 
 	if(initial)
-	    stringBuilder.append(" Dispatching a response. Please be patient.");
+	{
+	    if(keyType == 'M')
+		stringBuilder.append(" via McEliece. ");
+	    else
+		stringBuilder.append(" via RSA. ");
+
+	    stringBuilder.append("Dispatching a response. Please be patient.");
+	}
+	else
+	    stringBuilder.append(".");
 
 	stringBuilder.append("\n\n");
 	textView1.append(stringBuilder);

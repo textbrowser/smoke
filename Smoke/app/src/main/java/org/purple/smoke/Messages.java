@@ -43,6 +43,8 @@ public class Messages
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
+    public final static byte CALL_KEY_TYPES[] = new byte[] {(byte) 'M',
+							    (byte) 'R'};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
