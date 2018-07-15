@@ -351,13 +351,13 @@ public class Settings extends AppCompatActivity
 	class SingleShot implements Runnable
 	{
 	    private String m_name = "";
-	    private String m_siphashId = "";
+	    private String m_sipHashId = "";
 	    private boolean m_error = false;
 
 	    SingleShot(String name, String sipHashId)
 	    {
 		m_name = name;
-		m_siphashId = sipHashId;
+		m_sipHashId = sipHashId;
 	    }
 
 	    @Override
@@ -365,7 +365,7 @@ public class Settings extends AppCompatActivity
 	    {
 		if(!m_databaseHelper.writeSipHashParticipant(s_cryptography,
 							     m_name,
-							     m_siphashId))
+							     m_sipHashId))
 		    m_error = true;
 
 		Settings.this.runOnUiThread(new Runnable()
@@ -1467,6 +1467,18 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
+	button1 = (Button) findViewById(R.id.share_via_ozone);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(Settings.this.isFinishing())
+		    return;
+
+		shareSipHashId();
+	    }
+        });
+
 	button1 = (Button) findViewById(R.id.siphash_help);
 	button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -2315,6 +2327,21 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
+    private void shareSipHashId()
+    {
+	if(Settings.this.isFinishing())
+	    return;
+	else if(s_cryptography.ozoneEncryptionKey() == null ||
+		s_cryptography.ozoneMacKey() == null)
+	{
+	    Miscellaneous.showErrorDialog
+		(Settings.this, "Please prepare Ozone credentials.");
+	    return;
+	}
+
+	Kernel.getInstance().enqueueShareSipHashIdMessage();
+    }
+
     private void showAuthenticateActivity()
     {
 	Intent intent = new Intent(Settings.this, Authenticate.class);
@@ -2444,6 +2471,10 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.reset_participants_fields);
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.save_ozone);
+	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.share_via_ozone);
+	button1.setCompoundDrawablesWithIntrinsicBounds
+	    (R.drawable.share, 0, 0, 0);
 	button1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.siphash_help);
 	button1.setCompoundDrawablesWithIntrinsicBounds

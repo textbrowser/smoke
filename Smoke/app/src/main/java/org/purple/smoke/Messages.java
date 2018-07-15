@@ -50,6 +50,7 @@ public class Messages
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
+    public final static byte SHARE_SIPHASHID[] = new byte[] {0x02};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
 							      ** byte is not
@@ -1143,6 +1144,62 @@ public class Messages
 		 */
 
 		 requestedSipHashId.getBytes("UTF-8"));
+
+	    /*
+	    ** [ AES-256 ]
+	    */
+
+	    byte aes256[] = Cryptography.encrypt
+		(bytes, cryptography.ozoneEncryptionKey());
+
+	    if(aes256 == null)
+		return null;
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(aes256, cryptography.ozoneMacKey());
+
+	    if(sha512 == null)
+		return null;
+
+	    return Miscellaneous.joinByteArrays(aes256, sha512);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public static byte[] shareSipHashIdMessage(Cryptography cryptography)
+    {
+	if(cryptography == null)
+	    return null;
+
+	try
+	{
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(
+		 /*
+		 ** [ A Byte ]
+		 */
+
+		 SHARE_SIPHASHID,
+
+		 /*
+		 ** [ A Timestamp ]
+		 */
+
+		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
+
+		 /*
+		 ** [ SipHash Identity ]
+		 */
+
+		 cryptography.sipHashId().getBytes("UTF-8"));
 
 	    /*
 	    ** [ AES-256 ]

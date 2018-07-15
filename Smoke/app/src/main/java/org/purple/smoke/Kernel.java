@@ -519,6 +519,11 @@ public class Kernel
 				    bytes = Messages.chatMessageRetrieval
 					(s_cryptography);
 				    break;
+				case MessageElement.
+				    SHARE_SIPHASHID_MESSAGE_TYPE:
+				    bytes = Messages.shareSipHashIdMessage
+					(s_cryptography);
+				    break;
 				}
 			    }
 			    catch(Exception exception)
@@ -560,6 +565,12 @@ public class Kernel
 					     identityMessage
 					     (messageRetrievalIdentity()));
 					scheduleSend
+					    (Messages.
+					     bytesToMessageString(bytes));
+					break;
+				    case MessageElement.
+					SHARE_SIPHASHID_MESSAGE_TYPE:
+					enqueueMessage
 					    (Messages.
 					     bytesToMessageString(bytes));
 					break;
@@ -2142,6 +2153,24 @@ public class Kernel
 	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_messageType =
 		MessageElement.FIRE_STATUS_MESSAGE_TYPE;
+	    m_messagesToSend.add(messageElement);
+	}
+	finally
+	{
+	    m_messagesToSendMutex.writeLock().unlock();
+	}
+    }
+
+    public void enqueueShareSipHashIdMessage()
+    {
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
+	    MessageElement messageElement = new MessageElement();
+
+	    messageElement.m_messageType = MessageElement.
+		SHARE_SIPHASHID_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
 	finally

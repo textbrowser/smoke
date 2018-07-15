@@ -334,14 +334,27 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/save_ozone"
-                    style="@style/Widget.AppCompat.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="@string/save" />
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/save_ozone"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save" />
+
+                    <Button
+                        android:id="@+id/share_via_ozone"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/share_keys" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
