@@ -1081,6 +1081,9 @@ public class Settings extends AppCompatActivity
 	    if(sipHashIdElement == null)
 		continue;
 
+	    String sipHashId = Miscellaneous.
+		delimitString(sipHashIdElement.m_sipHashId.
+			      replace(":", "").toUpperCase(), '-', 4);
 	    TableRow.LayoutParams layoutParams = new
 		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Settings.this);
@@ -1115,12 +1118,8 @@ public class Settings extends AppCompatActivity
 
 		    textView1.setCompoundDrawablePadding(5);
 		    textView1.setGravity(Gravity.CENTER_VERTICAL);
-		    textView1.setTag
-			(R.id.participants, sipHashIdElement.m_sipHashId);
-		    textView1.setText
-			(Miscellaneous.
-			 delimitString(sipHashIdElement.m_sipHashId.
-				       replace(":", "").toUpperCase(), '-', 4));
+		    textView1.setTag(R.id.participants, sipHashId);
+		    textView1.setText(sipHashId);
 		    break;
 		case 2:
 		    textView1.setGravity(Gravity.CENTER);
@@ -1128,8 +1127,7 @@ public class Settings extends AppCompatActivity
 			(new TableRow.LayoutParams(0,
 						   LayoutParams.MATCH_PARENT,
 						   1));
-		    textView1.setTag
-			(R.id.participants, sipHashIdElement.m_sipHashId);
+		    textView1.setTag(R.id.participants, sipHashId);
 		    textView1.setText
 			(String.valueOf(sipHashIdElement.m_fiascoKeys));
 		    break;
