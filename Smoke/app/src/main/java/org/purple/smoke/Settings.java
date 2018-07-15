@@ -1101,6 +1101,8 @@ public class Settings extends AppCompatActivity
 			(new TableRow.LayoutParams(0,
 						   LayoutParams.MATCH_PARENT,
 						   1));
+		    textView1.setTag
+			(R.id.participants, sipHashIdElement.m_name);
 		    textView1.setText(sipHashIdElement.m_name);
 		    break;
 		case 1:
@@ -1113,6 +1115,8 @@ public class Settings extends AppCompatActivity
 
 		    textView1.setCompoundDrawablePadding(5);
 		    textView1.setGravity(Gravity.CENTER_VERTICAL);
+		    textView1.setTag
+			(R.id.participants, sipHashIdElement.m_sipHashId);
 		    textView1.setText
 			(Miscellaneous.
 			 delimitString(sipHashIdElement.m_sipHashId.
@@ -1124,12 +1128,13 @@ public class Settings extends AppCompatActivity
 			(new TableRow.LayoutParams(0,
 						   LayoutParams.MATCH_PARENT,
 						   1));
+		    textView1.setTag
+			(R.id.participants, sipHashIdElement.m_sipHashId);
 		    textView1.setText
 			(String.valueOf(sipHashIdElement.m_fiascoKeys));
 		    break;
 		}
 
-		textView1.setTag(R.id.participants, textView1.getText());
 		textView1.setTag
 		    (R.id.refresh_participants,
 		     sipHashIdElement.m_epksCompleted);
