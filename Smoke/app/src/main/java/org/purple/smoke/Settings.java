@@ -668,9 +668,7 @@ public class Settings extends AppCompatActivity
 	{
 	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append
-		(Miscellaneous.
-		 delimitString(s_cryptography.sipHashId().
-			       replace(":", ""), '-', 4).toUpperCase());
+		(Miscellaneous.prepareSipHashId(s_cryptography.sipHashId()));
 	    textView1.setText(stringBuilder);
 	    textView1.setTextIsSelectable(true);
 	    textView1.setVisibility(View.VISIBLE);
@@ -1081,9 +1079,8 @@ public class Settings extends AppCompatActivity
 	    if(sipHashIdElement == null)
 		continue;
 
-	    String sipHashId = Miscellaneous.
-		delimitString(sipHashIdElement.m_sipHashId.
-			      replace(":", "").toUpperCase(), '-', 4);
+	    String sipHashId = Miscellaneous.prepareSipHashId
+		(sipHashIdElement.m_sipHashId);
 	    TableRow.LayoutParams layoutParams = new
 		TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 	    TableRow row = new TableRow(Settings.this);
@@ -1890,8 +1887,7 @@ public class Settings extends AppCompatActivity
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
 		    boolean e3 = generateOzone
 			(Miscellaneous.
-			 delimitString(s_cryptography.sipHashId().
-				       replace(":", "").toUpperCase(), '-', 4));
+			 prepareSipHashId(s_cryptography.sipHashId()));
 		    byte saltedPassword[] = Cryptography.
 			sha512(m_password.getBytes(),
 			       encryptionSalt,
@@ -2118,8 +2114,7 @@ public class Settings extends AppCompatActivity
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
 		    boolean e3 = generateOzone
 			(Miscellaneous.
-			 delimitString(s_cryptography.sipHashId().
-				       replace(":", "").toUpperCase(), '-', 4));
+			 prepareSipHashId(s_cryptography.sipHashId()));
 
 		    if(!e1 || !e2 || !e3)
 		    {
@@ -2916,9 +2911,7 @@ public class Settings extends AppCompatActivity
 	    if(indexOf >= 0)
 		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
-	    sipHashId = Miscellaneous.delimitString
-		(sipHashId.replace("-", "").replace(":", "").
-		 toLowerCase(), ':', 2);
+	    sipHashId = Miscellaneous.prepareSipHashId(sipHashId);
 	    State.getInstance().setString
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString

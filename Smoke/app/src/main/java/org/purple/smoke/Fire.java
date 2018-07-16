@@ -653,9 +653,7 @@ public class Fire extends AppCompatActivity
 	    if(indexOf >= 0)
 		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
-	    sipHashId = Miscellaneous.delimitString
-		(sipHashId.replace("-", "").replace(":", "").
-		 toLowerCase(), ':', 2);
+	    sipHashId = Miscellaneous.prepareSipHashId(sipHashId);
 	    State.getInstance().setString
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString

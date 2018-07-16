@@ -71,7 +71,7 @@ public class Cryptography
     private KeyPair m_chatSignaturePublicKeyPair = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
-    private String m_sipHashId = "00:00:00:00:00:00:00:00";
+    private String m_sipHashId = "0000-0000-0000-0000";
     private byte m_identity[] = null;
     private byte m_ozoneEncryptionKey[] = null;
     private byte m_ozoneMacKey[] = null;
@@ -1736,8 +1736,8 @@ public class Cryptography
 		{
 		    m_sipHashIdDigest = Miscellaneous.deepCopy
 			(sha512(Miscellaneous.
-				byteArrayAsHexStringDelimited(bytes, ':', 2).
-				getBytes()));
+				byteArrayAsHexStringDelimited(bytes, '-', 4).
+				toUpperCase().getBytes()));
 		}
 		finally
 		{
@@ -1749,7 +1749,8 @@ public class Cryptography
 		try
 		{
 		    m_sipHashId = Miscellaneous.
-			byteArrayAsHexStringDelimited(bytes, ':', 2);
+			byteArrayAsHexStringDelimited(bytes, '-', 4).
+			toUpperCase();
 		}
 		finally
 		{

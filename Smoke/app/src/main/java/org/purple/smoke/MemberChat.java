@@ -665,8 +665,7 @@ public class MemberChat extends AppCompatActivity
 	m_recyclerView.setAdapter(m_adapter);
 	m_recyclerView.setLayoutManager(m_layoutManager);
 
-	String string =	Miscellaneous.delimitString
-	    (m_sipHashId.replace(":", ""), '-', 4).toUpperCase();
+	String string =	Miscellaneous.prepareSipHashId(m_sipHashId);
 
 	if(string.isEmpty())
 	    getSupportActionBar().setTitle("Smoke | Member Chat");
@@ -1029,9 +1028,7 @@ public class MemberChat extends AppCompatActivity
 	    if(indexOf >= 0)
 		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
-	    sipHashId = Miscellaneous.delimitString
-		(sipHashId.replace("-", "").replace(":", "").
-		 toLowerCase(), ':', 2);
+	    sipHashId = Miscellaneous.prepareSipHashId(sipHashId);
 	    State.getInstance().setString
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString

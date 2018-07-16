@@ -312,9 +312,7 @@ public class Chat extends AppCompatActivity
 	    ("Received a simultaneous half-and-half organic call from ");
 	stringBuilder.append(name.trim());
 	stringBuilder.append(" (");
-	stringBuilder.append
-	    (Miscellaneous.
-	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
+	stringBuilder.append(Miscellaneous.prepareSipHashId(sipHashId));
 	stringBuilder.append("). Aborting.");
 	stringBuilder.append("\n\n");
 	textView1.append(stringBuilder);
@@ -358,9 +356,7 @@ public class Chat extends AppCompatActivity
 
 	stringBuilder.append(name.trim());
 	stringBuilder.append(" (");
-	stringBuilder.append
-	    (Miscellaneous.
-	     delimitString(sipHashId.replace(":", ""), '-', 4).toUpperCase());
+	stringBuilder.append(Miscellaneous.prepareSipHashId(sipHashId));
 	stringBuilder.append(")");
 
 	if(initial)
@@ -525,8 +521,7 @@ public class Chat extends AppCompatActivity
 		stringBuilder.append("\n");
 		stringBuilder.append
 		    (Miscellaneous.
-		     delimitString(participantElement.m_sipHashId.
-				   replace(":", ""), '-', 4).toUpperCase());
+		     prepareSipHashId(participantElement.m_sipHashId));
 		stringBuilder.append("\n");
 
 		if(participantElement.m_keyStream == null ||
@@ -622,9 +617,7 @@ public class Chat extends AppCompatActivity
 			stringBuilder.append(" (");
 			stringBuilder.append
 			    (Miscellaneous.
-			     delimitString(checkBox1.getTag().toString().
-					   replace(":", ""), '-', 4).
-			     toUpperCase());
+			     prepareSipHashId(checkBox1.getTag().toString()));
 			stringBuilder.append("). ");
 
 			if(!ok)
@@ -691,8 +684,7 @@ public class Chat extends AppCompatActivity
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Miscellaneous.
-		 delimitString(participantElement.m_sipHashId.
-			       replace(":", ""), '-', 4).toUpperCase());
+		 prepareSipHashId(participantElement.m_sipHashId));
 	    stringBuilder.append("\n");
 
 	    if(participantElement.m_keyStream == null ||
@@ -1079,12 +1071,11 @@ public class Chat extends AppCompatActivity
 	if(menuItem == null)
 	    return false;
 
-	final String sipHashId = Miscellaneous.delimitString
+	final String sipHashId = Miscellaneous.prepareSipHashId
 	    (menuItem.getTitle().toString().replace("Custom Session ", "").
 	     replace("New Window ", "").
 	     replace("Optional Signatures ", "").
-	     replace("Purge Session ", "").replace("(", "").replace(")", "").
-	     replace("-", ""), ':', 2).toLowerCase();
+	     replace("Purge Session ", "").replace("(", "").replace(")", ""));
 	final int groupId = menuItem.getGroupId();
 	final int itemId = menuItem.getItemId();
 
@@ -1284,30 +1275,21 @@ public class Chat extends AppCompatActivity
 		 view.getId(),
 		 0,
 		 "Custom Session (" +
-		 Miscellaneous.
-		 delimitString(view.getTag().toString().
-			       replace(":", ""), '-', 4).
-		 toUpperCase() +
+		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")");
 	    menu.add
 		(1,
 		 view.getId(),
 		 0,
 		 "New Window (" +
-		 Miscellaneous.
-		 delimitString(view.getTag().toString().
-			       replace(":", ""), '-', 4).
-		 toUpperCase() +
+		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")");
 	    menuItem = menu.add
 		(2,
 		 view.getId(),
 		 0,
 		 "Optional Signatures (" +
-		 Miscellaneous.
-		 delimitString(view.getTag().toString().
-			       replace(":", ""), '-', 4).
-		 toUpperCase() +
+		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")").setCheckable(true);
 	    menuItem.setChecked
 		(m_databaseHelper.
@@ -1319,10 +1301,7 @@ public class Chat extends AppCompatActivity
 		 view.getId(),
 		 0,
 		 "Purge Session (" +
-		 Miscellaneous.
-		 delimitString(view.getTag().toString().
-			       replace(":", ""), '-', 4).
-		 toUpperCase() +
+		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")");
 	}
 
@@ -1381,9 +1360,7 @@ public class Chat extends AppCompatActivity
 	    if(indexOf >= 0)
 		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
 
-	    sipHashId = Miscellaneous.delimitString
-		(sipHashId.replace("-", "").replace(":", "").
-		 toLowerCase(), ':', 2);
+	    sipHashId = Miscellaneous.prepareSipHashId(sipHashId);
 	    State.getInstance().setString
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString

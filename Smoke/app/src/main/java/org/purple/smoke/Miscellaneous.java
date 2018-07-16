@@ -206,7 +206,7 @@ public class Miscellaneous
 	return byteArrayAsHexStringDelimited
 	    (longToByteArray(sipHash.
 			     hmac(bytes, Cryptography.keyForSipHash(bytes))),
-	     ':', 2);
+	     '-', 4).toUpperCase();
     }
 
     public static byte[] compressed(byte bytes[])
