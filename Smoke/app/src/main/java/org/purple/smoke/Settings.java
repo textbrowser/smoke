@@ -296,44 +296,26 @@ public class Settings extends AppCompatActivity
 	    (R.id.participant_siphash_id);
 	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
 
-	string = textView1.getText().toString().
-	    replace(" ", "").replace("-", "").replace(":", "").
-	    replace("@", "").trim();
+	stringBuilder.append
+	    (Miscellaneous.
+	     prepareSipHashId(textView1.getText().toString().
+			      replace(" ", "").
+			      replace("-", "").
+			      replace(":", "").
+			      replace("@", "").trim()));
+	string = stringBuilder.toString().trim();
 
-	try
-	{
-	    for(int i = 0; i < string.length(); i += 2)
-	    {
-		stringBuilder.append(string.charAt(i));
-		stringBuilder.append(string.charAt(i + 1));
-		stringBuilder.append(':');
-	    }
-	}
-	catch(Exception exception)
-	{
-	}
-
-	if(stringBuilder.length() > 0 &&
-	   stringBuilder.charAt(stringBuilder.length() - 1) == ':')
-	    string = stringBuilder.substring(0, stringBuilder.length() - 1).
-		trim();
-	else
-	    string = stringBuilder.toString().trim();
-
-	if(string.length() != 23)
+	if(string.length() != 19)
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
 		 "A Smoke ID must be of the form 0102-0304-0506-0708.");
 	    return;
 	}
-	else if(textView2.getText().toString().toLowerCase().replace("-", "").
-		endsWith(string.replace(":", "").replace("@", "").
-			 toLowerCase()))
+	else if(textView2.getText().toString().equals(string))
 	{
 	    Miscellaneous.showErrorDialog
-		(Settings.this,
-		 "Please do not assign your Smoke ID.");
+		(Settings.this, "Please do not assign your Smoke ID.");
 	    return;
 	}
 
