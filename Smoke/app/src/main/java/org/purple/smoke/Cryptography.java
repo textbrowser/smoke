@@ -1885,7 +1885,7 @@ public class Cryptography
 
 	try
 	{
-	    m_sipHashId = "00:00:00:00:00:00:00:00";
+	    m_sipHashId = "0000-0000-0000-0000";
 	}
 	finally
 	{
@@ -2002,7 +2002,7 @@ public class Cryptography
 
 	try
 	{
-	    m_sipHashId = "00:00:00:00:00:00:00:00";
+	    m_sipHashId = "0000-0000-0000-0000";
 	}
 	finally
 	{
