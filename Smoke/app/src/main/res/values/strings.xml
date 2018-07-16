@@ -64,6 +64,7 @@
     <string name="preview">Preview</string>
     <string name="fiasco_keys">Fiasco Keys</string>
     <string name="generate_pk">Generate PK</string>
+    <string name="share_smoke_id">Share Smoke ID</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
