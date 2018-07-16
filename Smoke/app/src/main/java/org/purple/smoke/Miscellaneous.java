@@ -190,6 +190,15 @@ public class Miscellaneous
 	    return "False";
     }
 
+    public static String prepareSipHashId(String string)
+    {
+	if(string == null)
+	    return "";
+	else
+	    return delimitString
+		(string.replace("-", "").toUpperCase().trim(), '-', 4);
+    }
+
     public static String sipHashIdFromData(byte bytes[])
     {
 	SipHash sipHash = new SipHash();
@@ -423,10 +432,7 @@ public class Miscellaneous
 		     0,
 		     participantElement.m_name +
 		     " (" +
-		     Miscellaneous.
-		     delimitString(participantElement.m_sipHashId.
-				   replace(":", ""), '-', 4).
-		     toUpperCase() +
+		     prepareSipHashId(participantElement.m_sipHashId) +
 		     ")");
 	    }
 	}
