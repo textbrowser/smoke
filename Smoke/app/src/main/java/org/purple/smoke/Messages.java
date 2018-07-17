@@ -50,7 +50,7 @@ public class Messages
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
-    public final static byte SHARE_SIPHASHID[] = new byte[] {0x02};
+    public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
 							      ** byte is not
@@ -477,6 +477,11 @@ public class Messages
 	    }
 	    else
 		return Miscellaneous.joinByteArrays
+		    /*
+		    ** The SipHash ID will be removed by the Neighbor object
+		    ** before the message is created.
+		    */
+
 		    (pk, aes256, sha512, sipHashId.getBytes("UTF-8"));
 	}
 	catch(Exception exception)
@@ -1187,7 +1192,7 @@ public class Messages
 		 ** [ A Byte ]
 		 */
 
-		 SHARE_SIPHASHID,
+		 SHARE_SIPHASH_ID,
 
 		 /*
 		 ** [ A Timestamp ]

@@ -520,7 +520,7 @@ public class Kernel
 					(s_cryptography);
 				    break;
 				case MessageElement.
-				    SHARE_SIPHASHID_MESSAGE_TYPE:
+				    SHARE_SIPHASH_ID_MESSAGE_TYPE:
 				    bytes = Messages.shareSipHashIdMessage
 					(s_cryptography);
 				    break;
@@ -569,7 +569,7 @@ public class Kernel
 					     bytesToMessageString(bytes));
 					break;
 				    case MessageElement.
-					SHARE_SIPHASHID_MESSAGE_TYPE:
+					SHARE_SIPHASH_ID_MESSAGE_TYPE:
 					enqueueMessage
 					    (Messages.
 					     bytesToMessageString(bytes));
@@ -2170,7 +2170,7 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_messageType = MessageElement.
-		SHARE_SIPHASHID_MESSAGE_TYPE;
+		SHARE_SIPHASH_ID_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
 	finally

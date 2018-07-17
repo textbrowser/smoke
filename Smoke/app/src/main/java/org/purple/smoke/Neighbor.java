@@ -283,7 +283,7 @@ public abstract class Neighbor
 
 				    (Arrays.copyOfRange(bytes,
 							0,
-							bytes.length - 23),
+							bytes.length - 19),
 				     Cryptography.
 				     hmac(Miscellaneous.
 					  joinByteArrays(bytes, timestamp),

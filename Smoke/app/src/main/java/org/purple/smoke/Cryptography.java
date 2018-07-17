@@ -126,6 +126,7 @@ public class Cryptography
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
+    public final static int SIPHASH_ID_LENGTH = 19; // 0000-0000-0000-0000
 
     private Cryptography()
     {
