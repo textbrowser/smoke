@@ -1199,7 +1199,13 @@ public class Messages
 		 ** [ SipHash Identity ]
 		 */
 
-		 cryptography.sipHashId().getBytes("UTF-8"));
+		 cryptography.sipHashId().getBytes("UTF-8"),
+
+		 /*
+		 ** [ Temporary Bytes ]
+		 */
+
+		 Cryptography.randomBytes(8));
 
 	    /*
 	    ** [ AES-256 ]
