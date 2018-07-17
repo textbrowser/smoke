@@ -209,6 +209,8 @@ Future Items
 14.    NTRU via BouncyCastle.
 15.    New messages should be at the top of the view; Member Chat. Optional.
 16.    Replace Chat member view with a recycler view.
+17.    Member Chat theme: bubble colors, bubble font colors,
+       bubble time font color and size.
 
 Ignored / Impossible Items
 
@@ -242,11 +244,9 @@ Remaining Items
 2.     Fire through SmokeStack. Requires discovery or unsolicited data.
 3.     Retain password for re-authentication upon background activity.
        Optional.
-4.     Receiving requested keys which do not include signatures should
-       be functional.
-5.     Separation of Fire channels.
-6.     Steam and Vapor.
-7.     Steam should offer a caching mechanism, transforming Smoke into
+4.     Separation of Fire channels.
+5.     Steam and Vapor.
+6.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
-8.     Member Chat theme: bubble colors, bubble font colors,
-       bubble time font color and size.
+7.     Receiving requested keys which do not include signatures should
+       be functional.
