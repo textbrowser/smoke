@@ -101,7 +101,7 @@ public class Kernel
     private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
 	864000; // Seconds in ten days.
-    private final static int PUBLISH_KEYS_INTERVAL = 15000; // 15 Seconds
+    private final static int PUBLISH_KEYS_INTERVAL = 45000; // 45 Seconds
     private final static int PURGE_INTERVAL = 30000; // 30 Seconds
     private final static int REQUEST_MESSAGES_INTERVAL = 60000; // 60 Seconds
     private final static int STATUS_INTERVAL = 15000; /*
@@ -658,42 +658,24 @@ public class Kernel
 				s_databaseHelper.readNonSharedSipHashIds
 				(s_cryptography);
 
-			    if(arrayList == null)
-				arrayList = new ArrayList<> ();
+			    if(arrayList != null)
+				for(SipHashIdElement sipHashIdElement :
+					arrayList)
+				{
+				    if(sipHashIdElement == null)
+					continue;
 
-			    {
-				/*
-				** Self-sending.
-				*/
+				    byte bytes[] = Messages.epksMessage
+					(s_cryptography,
+					 sipHashIdElement.m_sipHashId,
+					 sipHashIdElement.m_stream,
+					 Messages.CHAT_KEY_TYPE);
 
-				SipHashIdElement sipHashIdElement =
-				    new SipHashIdElement();
-
-				sipHashIdElement.m_sipHashId = s_cryptography.
-				    sipHashId();
-				sipHashIdElement.m_stream = Miscellaneous.
-				    joinByteArrays(s_cryptography.
-						   sipHashEncryptionKey(),
-						   s_cryptography.
-						   sipHashMacKey());
-				arrayList.add(sipHashIdElement);
-			    }
-
-			    for(SipHashIdElement sipHashIdElement : arrayList)
-			    {
-				if(sipHashIdElement == null)
-				    continue;
-
-				byte bytes[] = Messages.epksMessage
-				    (s_cryptography,
-				     sipHashIdElement.m_sipHashId,
-				     sipHashIdElement.m_stream,
-				     Messages.CHAT_KEY_TYPE);
-
-				if(bytes != null)
-				    enqueueMessage
-					(Messages.bytesToMessageString(bytes));
-			    }
+				    if(bytes != null)
+					enqueueMessage
+					    (Messages.
+					     bytesToMessageString(bytes));
+				}
 			}
 			else
 			{
