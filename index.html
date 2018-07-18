@@ -64,15 +64,19 @@
 	2018.08.19
 	<br>
 	<ul>
+	  <li>Allow generation of only PK material in Settings.</li>
 	  <li>Allow new participant names via context menus; Settings::Participants.</li>
 	  <li>Automatically set the Ozone to the Smoke ID on new installations.</li>
 	  <li>Blocking socket reads.</li>
+	  <li>Calling via ephemeral McEliece; MemberChat only.</li>
 	  <li>Clear internal messaging log on Chat::Clear.</li>
 	  <li>Corrected faulty widget listeners in Fire.</li>
 	  <li>Corrected slight time differences between time stamps in messages destined for SmokeStacks and messages destined for participants.</li>
+	  <li>Increased key-publishing period from 15 seconds to 45 seconds. Also removed self-publishing.</li>
 	  <li>Material Design-compliant color selections.</li>
 	  <li>McEliece parameters m = 12, t = 68. Compatibility with m = 11, t = 50 is preserved.</li>
 	  <li>New Fiasco Keys column in Settings::Participants.</li>
+	  <li>New chat-message format. Incompatible with previous releases.</li>
 	  <li>Periodically request Ozone messages.</li>
 	  <li>Removed the superfluous field name from the participants database table.</li>
 	  <li>Replaced complex if-statements with switch statements.</li>
