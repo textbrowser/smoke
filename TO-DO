@@ -250,3 +250,4 @@ Remaining Items
        a data replicator.
 7.     Receiving requested keys which do not include signatures should
        be functional.
+8.     Stronger surreptitious forwarding.

@@ -106,10 +106,12 @@
 
                 <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="250dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
-                    android:fadeScrollbars="false">
+                    android:background="#00ffffff"
+                    android:fadeScrollbars="false"
+                    android:scrollbars="vertical">
 
                     <TableLayout
                         android:id="@+id/neighbors"
@@ -398,7 +400,7 @@
 
                 <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="250dp"
                     android:layout_marginEnd="5dp"
                     android:fadeScrollbars="false"
                     android:scrollbars="vertical">
