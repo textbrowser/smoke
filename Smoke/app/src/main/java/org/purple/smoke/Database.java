@@ -834,8 +834,14 @@ public class Database extends SQLiteOpenHelper
 		     "(SELECT p.encryption_public_key_digest || " +
 		     "p.signature_public_key_digest FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
-		     "(SELECT COUNT(p.oid) FROM participants_keys p " +
+		     "(SELECT p.encryption_public_key_signed " +
+		     "FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
+		     "(SELECT p.signature_public_key_signed " +
+		     "FROM participants p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS c, " +
+		     "(SELECT COUNT(p.oid) FROM participants_keys p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS d, " +
 		     "s.name, " +
 		     "s.siphash_id, " +
 		     "s.stream, " +
@@ -847,8 +853,14 @@ public class Database extends SQLiteOpenHelper
 		     "(SELECT p.encryption_public_key_digest || " +
 		     "p.signature_public_key_digest FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
-		     "(SELECT COUNT(p.oid) FROM participants_keys p " +
+		     "(SELECT p.encryption_public_key_signed " +
+		     "FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
+		     "(SELECT p.signature_public_key_signed " +
+		     "FROM participants p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS c, " +
+		     "(SELECT COUNT(p.oid) FROM participants_keys p " +
+		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS d, " +
 		     "s.name, " +
 		     "s.siphash_id, " +
 		     "s.stream, " +
@@ -891,7 +903,12 @@ public class Database extends SQLiteOpenHelper
 				!string_a.equals(string_b);
 			    continue;
 			}
-			else if(i == 1)
+			else if(i == 1 || i == 2)
+			{
+			    if(cursor.isNull(i))
+				continue;
+			}
+			else if(i == 3)
 			{
 			    sipHashIdElement.m_fiascoKeys = cursor.getInt(i);
 			    continue;
@@ -920,7 +937,19 @@ public class Database extends SQLiteOpenHelper
 
 			switch(i)
 			{
+			case 1:
+			    if(bytes != null)
+				sipHashIdElement.m_keysSigned =
+				    Arrays.equals(bytes, "true".getBytes());
+
+			    break;
 			case 2:
+			    if(bytes != null)
+				sipHashIdElement.m_keysSigned &=
+				    Arrays.equals(bytes, "true".getBytes());
+
+			    break;
+			case 4:
 			    if(bytes != null)
 				sipHashIdElement.m_name = new String(bytes);
 			    else
@@ -928,7 +957,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 3:
+			case 5:
 			    if(bytes != null)
 				sipHashIdElement.m_sipHashId = new String
 				    (bytes, "UTF-8");
@@ -937,7 +966,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 4:
+			case 6:
 			    if(bytes != null)
 				sipHashIdElement.m_stream = Miscellaneous.
 				    deepCopy(bytes);
@@ -1685,6 +1714,8 @@ public class Database extends SQLiteOpenHelper
 
 	    PublicKey publicKey = null;
 	    PublicKey signatureKey = null;
+	    boolean encryptionKeySigned = false;
+	    boolean signatureKeySigned = false;
 	    byte keyType[] = null;
 	    byte publicKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
@@ -1759,11 +1790,10 @@ public class Database extends SQLiteOpenHelper
 			(string.getBytes(), Base64.NO_WRAP);
 
 		    if(!publicKey.getAlgorithm().equals("McEliece-CCA2"))
-			if(!Cryptography.
-			   verifySignature(publicKey,
-					   publicKeySignature,
-					   publicKey.getEncoded()))
-			    return "";
+			if(Cryptography.verifySignature(publicKey,
+							publicKeySignature,
+							publicKey.getEncoded()))
+			    encryptionKeySigned = true;
 
 		    ii += 1;
 		    break;
@@ -1807,10 +1837,10 @@ public class Database extends SQLiteOpenHelper
 		    signatureKeySignature = Base64.decode
 			(string.getBytes(), Base64.NO_WRAP);
 
-		    if(!Cryptography.verifySignature(signatureKey,
-						     signatureKeySignature,
-						     signatureKey.getEncoded()))
-			return "";
+		    if(Cryptography.verifySignature(signatureKey,
+						    signatureKeySignature,
+						    signatureKey.getEncoded()))
+			signatureKeySigned = true;
 
 		    break;
 		}
@@ -1836,15 +1866,17 @@ public class Database extends SQLiteOpenHelper
 
 	    sparseArray.append(0, "encryption_public_key");
 	    sparseArray.append(1, "encryption_public_key_digest");
-	    sparseArray.append(2, "function_digest");
-	    sparseArray.append(3, "identity");
-	    sparseArray.append(4, "keystream");
-	    sparseArray.append(5, "last_status_timestamp");
-	    sparseArray.append(6, "options");
-	    sparseArray.append(7, "signature_public_key");
-	    sparseArray.append(8, "signature_public_key_digest");
-	    sparseArray.append(9, "siphash_id");
-	    sparseArray.append(10, "siphash_id_digest");
+	    sparseArray.append(2, "encryption_public_key_signed");
+	    sparseArray.append(3, "function_digest");
+	    sparseArray.append(4, "identity");
+	    sparseArray.append(5, "keystream");
+	    sparseArray.append(6, "last_status_timestamp");
+	    sparseArray.append(7, "options");
+	    sparseArray.append(8, "signature_public_key");
+	    sparseArray.append(9, "signature_public_key_digest");
+	    sparseArray.append(10, "signature_public_key_signed");
+	    sparseArray.append(11, "siphash_id");
+	    sparseArray.append(12, "siphash_id_digest");
 
 	    for(int i = 0; i < sparseArray.size(); i++)
 	    {
@@ -1857,6 +1889,10 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case "encryption_public_key_digest":
 		    bytes = Cryptography.sha512(publicKey.getEncoded());
+		    break;
+		case "encryption_public_key_signed":
+		    bytes = cryptography.etm
+			((encryptionKeySigned ? "true" : "false").getBytes());
 		    break;
 		case "function_digest":
 		    bytes = cryptography.hmac("chat".getBytes());
@@ -1879,6 +1915,10 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case "signature_public_key_digest":
 		    bytes = Cryptography.sha512(signatureKey.getEncoded());
+		    break;
+		case "signature_public_key_signed":
+		    bytes = cryptography.etm
+			((signatureKeySigned ? "true" : "false").getBytes());
 		    break;
 		case "siphash_id":
 		    bytes = cryptography.etm(sipHashId.getBytes("UTF-8"));
@@ -3427,6 +3467,7 @@ public class Database extends SQLiteOpenHelper
 	str = "CREATE TABLE IF NOT EXISTS participants (" +
 	    "encryption_public_key TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
+	    "encryption_public_key_signed TEXT NOT NULL, " +
 	    "function_digest NOT NULL, " + // chat, e-mail, etc.
 	    "identity TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
@@ -3434,6 +3475,7 @@ public class Database extends SQLiteOpenHelper
 	    "options TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
 	    "signature_public_key_digest TEXT NOT NULL, " +
+	    "signature_public_key_signed TEXT NOT NULL, " +
 	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "special_value_a TEXT, " + /*

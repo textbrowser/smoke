@@ -186,6 +186,8 @@ Completed Items
 144.   Preview attachment.
 145.   Increase network buffer sizes for large attachments.
 146.   Resize Member Chat bubbles according to contents.
+147.   Receiving requested keys which do not include signatures should
+       be functional.
 
 Future Items
 
@@ -248,6 +250,4 @@ Remaining Items
 5.     Steam and Vapor.
 6.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
-7.     Receiving requested keys which do not include signatures should
-       be functional.
-8.     Stronger surreptitious forwarding.
+7.     Stronger surreptitious forwarding.

@@ -1088,11 +1088,15 @@ public class Settings extends AppCompatActivity
 		    textView1.setText(sipHashIdElement.m_name);
 		    break;
 		case 1:
-		    if(sipHashIdElement.m_epksCompleted)
-			textView1.setCompoundDrawablesWithIntrinsicBounds
-			    (R.drawable.lock, 0, 0, 0);
-		    else
-			textView1.setCompoundDrawablesWithIntrinsicBounds
+		    if(sipHashIdElement.m_epksCompleted &&
+		       sipHashIdElement.m_keysSigned)
+                        textView1.setCompoundDrawablesWithIntrinsicBounds
+			    (R.drawable.keys_signed, 0, 0, 0);
+                    else if(sipHashIdElement.m_epksCompleted)
+                        textView1.setCompoundDrawablesWithIntrinsicBounds
+			    (R.drawable.keys_not_signed, 0, 0, 0);
+                    else
+                        textView1.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.warning, 0, 0, 0);
 
 		    textView1.setCompoundDrawablePadding(5);
@@ -2365,6 +2369,7 @@ public class Settings extends AppCompatActivity
 		child.setVisibility(View.VISIBLE);
 	}
 
+	findViewById(R.id.generate_pki).setVisibility(View.VISIBLE);
 	findViewById(R.id.overwrite).setVisibility(View.VISIBLE);
     }
 
