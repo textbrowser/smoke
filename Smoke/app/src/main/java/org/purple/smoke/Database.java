@@ -158,6 +158,7 @@ public class Database extends SQLiteOpenHelper
 	    }
 	    catch(Exception exception)
 	    {
+		m_db = null;
 	    }
     }
 
@@ -2013,6 +2014,67 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return sipHashId;
+    }
+
+    public String[] keysSigned(Cryptography cryptography, String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null)
+	    return null;
+
+	Cursor cursor = null;
+	String strings[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT encryption_public_key_signed, " +
+		 "signature_public_key_signed " +
+		 "FROM participants WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toUpperCase().
+						   trim().
+						   getBytes("UTF-8")),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		strings = new String[] {"false", "false"};
+
+		for(int i = 0; i < 2; i++)
+		{
+		    byte bytes[] = cryptography.mtd
+			(Base64.decode(cursor.getString(i).getBytes(),
+				       Base64.DEFAULT));
+
+		    if(bytes == null)
+		    {
+			StringBuilder stringBuilder = new StringBuilder();
+
+			stringBuilder.append("Database::keysSigned(): ");
+			stringBuilder.append("error on column ");
+			stringBuilder.append(cursor.getColumnName(i));
+			stringBuilder.append(".");
+			writeLog(stringBuilder.toString());
+		    }
+		    else
+			strings[i] = new String(bytes);
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    strings = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return strings;
     }
 
     public String[] nameSipHashIdFromDigest(Cryptography cryptography,

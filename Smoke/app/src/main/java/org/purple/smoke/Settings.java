@@ -39,18 +39,21 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
-import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -2896,17 +2899,65 @@ public class Settings extends AppCompatActivity
 		    stringBuilder.append(sipHashId);
 		    stringBuilder.append(").");
 		}
+
+		textView1.setText(stringBuilder.toString());
 	    }
 	    else
 	    {
+		String strings[] = m_databaseHelper.
+		    keysSigned(s_cryptography, sipHashId);
+
+		if(strings == null)
+		    strings = new String[] {"false", "false"};
+
 		stringBuilder.append(name);
 		stringBuilder.append(" (");
 		stringBuilder.append(sipHashId);
 		stringBuilder.append(")\n");
-		stringBuilder.append("\nChat Encryption Key\n");
+		stringBuilder.append("\nChat Encryption Key (");
+		textView1.append(stringBuilder.toString());
+
+		Spannable spannable = new SpannableStringBuilder
+		    (strings[0].equals("true") ?
+		     "Signature Verified" : "Signature Not Verified");
+
+		if(strings[0].equals("true"))
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(46, 125, 50)),
+			 0, spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		else
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(198, 40, 40)),
+			 0, spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		textView1.append(spannable);
+		stringBuilder.setLength(0);
+		stringBuilder.append(")\n");
 		stringBuilder.append(string1);
-		stringBuilder.append("\nChat Signature Key\n");
+		stringBuilder.append("\nChat Signature Key (");
+		textView1.append(stringBuilder);
+		spannable = new SpannableStringBuilder
+		    (strings[1].equals("true") ?
+		     "Signature Verified" : "Signature Not Verified");
+
+		if(strings[1].equals("true"))
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(46, 125, 50)),
+			 0, spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		else
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(198, 40, 40)),
+			 0, spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		textView1.append(spannable);
+		stringBuilder.setLength(0);
+		stringBuilder.append(")\n");
 		stringBuilder.append(string2);
+		textView1.append(stringBuilder.toString());
 	    }
 
 	    textView1.setBackgroundColor(Color.rgb(255, 255, 255));
@@ -2915,7 +2966,6 @@ public class Settings extends AppCompatActivity
 		 (int) (10 * density),
 		 (int) (10 * density),
 		 (int) (10 * density));
-	    textView1.setText(stringBuilder.toString());
 	    textView1.setTextSize(16);
 	    popupWindow.setContentView(textView1);
 	    popupWindow.setOutsideTouchable(true);
