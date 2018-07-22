@@ -1255,8 +1255,8 @@ public class Database extends SQLiteOpenHelper
 	return memberChatElement;
     }
 
-    public PublicKey publicKeyForSipHashId(Cryptography cryptography,
-					   String sipHashId)
+    public PublicKey publicEncryptionKeyForSipHashId(Cryptography cryptography,
+						     String sipHashId)
     {
 	prepareDb();
 
@@ -1271,6 +1271,52 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery
 		("SELECT " +
 		 "encryption_public_key " +
+		 "FROM participants WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toUpperCase().
+						   trim().getBytes("UTF-8")),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
+
+		if(bytes != null)
+		    publicKey = Cryptography.publicKeyFromBytes(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    publicKey = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return publicKey;
+    }
+
+    public PublicKey publicSignatureKeyForSipHashId(Cryptography cryptography,
+						    String sipHashId)
+    {
+	prepareDb();
+
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	PublicKey publicKey = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "signature_public_key " +
 		 "FROM participants WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString(cryptography.

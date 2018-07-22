@@ -204,7 +204,7 @@ public class Messages
 		return null;
 
 	    PublicKey publicKey = Database.getInstance().
-		publicKeyForSipHashId(cryptography, sipHashId);
+		publicEncryptionKeyForSipHashId(cryptography, sipHashId);
 
 	    if(publicKey == null)
 		return null;
@@ -347,7 +347,7 @@ public class Messages
 	try
 	{
 	    PublicKey publicKey = Database.getInstance().
-		publicKeyForSipHashId(cryptography, sipHashId);
+		publicEncryptionKeyForSipHashId(cryptography, sipHashId);
 
 	    if(publicKey == null)
 		return null;
@@ -585,7 +585,7 @@ public class Messages
 	try
 	{
 	    PublicKey publicKey = Database.getInstance().
-		publicKeyForSipHashId(cryptography, sipHashId);
+		publicEncryptionKeyForSipHashId(cryptography, sipHashId);
 
 	    if(publicKey == null)
 		return null;

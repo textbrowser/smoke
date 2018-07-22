@@ -232,10 +232,17 @@ public class Cryptography
 
     public String fancyKeyInformationOutput(KeyPair keyPair)
     {
-	if(keyPair == null || keyPair.getPublic() == null)
+	if(keyPair == null)
+	    return "";
+	else
+	    return fancyKeyInformationOutput(keyPair.getPublic());
+    }
+
+    public String fancyKeyInformationOutput(PublicKey publicKey)
+    {
+	if(publicKey == null)
 	    return "";
 
-	PublicKey publicKey = keyPair.getPublic();
 	String algorithm = publicKey.getAlgorithm();
 	StringBuilder stringBuilder = new StringBuilder();
 

@@ -2857,6 +2857,66 @@ public class Settings extends AppCompatActivity
 	case 4:
 	    shareKeysOf(String.valueOf(itemId));
 	    break;
+	case 5:
+	    PopupWindow popupWindow = new PopupWindow(Settings.this);
+	    String sipHashId = m_databaseHelper.readSipHashIdString
+		(s_cryptography, String.valueOf(itemId));
+	    String string1 = s_cryptography.fancyKeyInformationOutput
+		(m_databaseHelper.
+		 publicEncryptionKeyForSipHashId(s_cryptography,
+						 sipHashId)).trim();
+	    String string2 = s_cryptography.fancyKeyInformationOutput
+		(m_databaseHelper.
+		 publicSignatureKeyForSipHashId(s_cryptography,
+						sipHashId)).trim();
+	    StringBuilder stringBuilder = new StringBuilder();
+	    TextView textView1 = new TextView(Settings.this);
+	    float density = getApplicationContext().getResources().
+		getDisplayMetrics().density;
+
+	    if(string1.isEmpty() || string2.isEmpty())
+	    {
+		if(sipHashId.isEmpty())
+		{
+		    stringBuilder.append("Unable to gather details ");
+		    stringBuilder.append("for the selected participant.");
+		}
+		else
+		{
+		    stringBuilder.append("Unable to gather details for ");
+		    stringBuilder.append(sipHashId);
+		    stringBuilder.append(".");
+		}
+	    }
+	    else
+	    {
+		stringBuilder.append(sipHashId);
+		stringBuilder.append(" Details\n");
+		stringBuilder.append("\nChat Encryption Key\n");
+		stringBuilder.append(string1);
+		stringBuilder.append("\nChat Signature Key\n");
+		stringBuilder.append(string2);
+	    }
+
+	    textView1.setBackgroundColor(Color.rgb(255, 255, 255));
+	    textView1.setPaddingRelative
+		((int) (10 * density),
+		 (int) (10 * density),
+		 (int) (10 * density),
+		 (int) (10 * density));
+	    textView1.setText(stringBuilder.toString());
+	    textView1.setTextSize(16);
+	    popupWindow.setContentView(textView1);
+	    popupWindow.setOutsideTouchable(true);
+
+	    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+	    {
+		popupWindow.setHeight(450);
+		popupWindow.setWidth(700);
+	    }
+
+	    popupWindow.showAsDropDown(findViewById(R.id.participants));
+	    break;
 	}
 
 	return true;
@@ -2962,6 +3022,7 @@ public class Settings extends AppCompatActivity
 
 	    menu.add(4, view.getId(), 0, "Share Keys (" + tag1 + ")").
 		setEnabled((boolean) tag2);
+	    menu.add(5, view.getId(), 0, "View Details (" + tag1 + ")");
 	}
     }
 
