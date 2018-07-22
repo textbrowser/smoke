@@ -379,12 +379,19 @@ public class MemberChat extends AppCompatActivity
 				    ImageView imageView = (ImageView)
 					findViewById(R.id.status);
 
+				    findViewById(R.id.status_tooltip).
+					setVisibility(View.GONE);
+
 				    if(participantElement.
 				       m_keyStream == null ||
 				       participantElement.
 				       m_keyStream.length != 96)
+				    {
+					findViewById(R.id.status_tooltip).
+					    setVisibility(View.VISIBLE);
 					imageView.setImageResource
 					    (R.drawable.chat_faulty_session);
+				    }
 				    else if(Math.abs(System.
 						     currentTimeMillis() -
 						     participantElement.
