@@ -2859,6 +2859,7 @@ public class Settings extends AppCompatActivity
 	    break;
 	case 5:
 	    PopupWindow popupWindow = new PopupWindow(Settings.this);
+	    String name = "";
 	    String sipHashId = m_databaseHelper.readSipHashIdString
 		(s_cryptography, String.valueOf(itemId));
 	    String string1 = s_cryptography.fancyKeyInformationOutput
@@ -2874,6 +2875,12 @@ public class Settings extends AppCompatActivity
 	    float density = getApplicationContext().getResources().
 		getDisplayMetrics().density;
 
+	    name = m_databaseHelper.nameFromSipHashId
+		(s_cryptography, sipHashId).trim();
+
+	    if(name.isEmpty())
+		name = sipHashId;
+
 	    if(string1.isEmpty() || string2.isEmpty())
 	    {
 		if(sipHashId.isEmpty())
@@ -2884,14 +2891,18 @@ public class Settings extends AppCompatActivity
 		else
 		{
 		    stringBuilder.append("Unable to gather details for ");
+		    stringBuilder.append(name);
+		    stringBuilder.append(" (");
 		    stringBuilder.append(sipHashId);
-		    stringBuilder.append(".");
+		    stringBuilder.append(").");
 		}
 	    }
 	    else
 	    {
+		stringBuilder.append(name);
+		stringBuilder.append(" (");
 		stringBuilder.append(sipHashId);
-		stringBuilder.append(" Details\n");
+		stringBuilder.append(")\n");
 		stringBuilder.append("\nChat Encryption Key\n");
 		stringBuilder.append(string1);
 		stringBuilder.append("\nChat Signature Key\n");
