@@ -251,3 +251,6 @@ Remaining Items
 6.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
 7.     Stronger surreptitious forwarding.
+8.     The texting cache prevents messages from being displayed after
+       a device is awakened unless the Chat or MemberChat activity is
+       recycled.
