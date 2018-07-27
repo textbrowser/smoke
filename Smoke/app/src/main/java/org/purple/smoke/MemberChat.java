@@ -244,6 +244,9 @@ public class MemberChat extends AppCompatActivity
 	{
 	    public void onClick(View view)
 	    {
+		if(MemberChat.this.isFinishing())
+		    return;
+
 		findViewById(R.id.preview_layout).setVisibility(View.GONE);
 		m_attachment = null;
 	    }
@@ -303,6 +306,19 @@ public class MemberChat extends AppCompatActivity
 		    }
 		});
 		textView1.setText("");
+	    }
+	});
+
+	button1 = (Button) findViewById(R.id.status);
+        button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(MemberChat.this.isFinishing())
+		    return;
+
+		registerForContextMenu(findViewById(R.id.status));
+		openContextMenu(findViewById(R.id.status));
 	    }
 	});
     }
@@ -377,24 +393,24 @@ public class MemberChat extends AppCompatActivity
 				@Override
 				public void run()
 				{
-				    ImageView imageView = (ImageView)
+				    Button button = (Button)
 					findViewById(R.id.status);
 
 				    if(participantElement.
 				       m_keyStream == null ||
 				       participantElement.
 				       m_keyStream.length != 96)
-					imageView.setImageResource
+					button.setBackgroundResource
 					    (R.drawable.chat_faulty_session);
 				    else if(Math.abs(System.
 						     currentTimeMillis() -
 						     participantElement.
 						     m_lastStatusTimestamp) >
 					    Chat.STATUS_WINDOW)
-					imageView.setImageResource
+					button.setBackgroundResource
 					    (R.drawable.chat_status_offline);
 				    else
-					imageView.setImageResource
+					button.setBackgroundResource
 					    (R.drawable.chat_status_online);
 				}
 			    });
@@ -694,12 +710,6 @@ public class MemberChat extends AppCompatActivity
 	*/
 
 	prepareSchedulers();
-
-	/*
-	** Register other things.
-	*/
-
-	registerForContextMenu(findViewById(R.id.status));
 
 	/*
 	** Restore states.

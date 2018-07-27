@@ -96,16 +96,12 @@
             android:hint="@string/message"
             android:inputType="textPersonName" />
 
-        <ImageView
+        <Button
             android:id="@+id/status"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
             android:layout_weight="0"
-            android:contentDescription="@string/network_status"
-            app:srcCompat="@drawable/chat_status_offline" />
+            android:background="@drawable/chat_status_offline" />
 
         <Button
             android:id="@+id/send_chat_message"
