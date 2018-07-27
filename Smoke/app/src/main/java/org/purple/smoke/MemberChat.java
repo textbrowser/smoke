@@ -489,9 +489,11 @@ public class MemberChat extends AppCompatActivity
 
 		bar.setIndeterminate(true);
 		bar.setVisibility(ProgressBar.VISIBLE);
+		findViewById(R.id.preview_layout).setVisibility(View.GONE);
 		getWindow().setFlags
 		    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
 		     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+		m_attachment = null;
 		Miscellaneous.enableChildren
 		    (findViewById(R.id.main_layout), false);
 
