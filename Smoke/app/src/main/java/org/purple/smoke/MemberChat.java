@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -35,8 +34,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.Ringtone;
@@ -49,13 +48,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
-import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -379,19 +380,12 @@ public class MemberChat extends AppCompatActivity
 				    ImageView imageView = (ImageView)
 					findViewById(R.id.status);
 
-				    findViewById(R.id.status_tooltip).
-					setVisibility(View.GONE);
-
 				    if(participantElement.
 				       m_keyStream == null ||
 				       participantElement.
 				       m_keyStream.length != 96)
-				    {
-					findViewById(R.id.status_tooltip).
-					    setVisibility(View.VISIBLE);
 					imageView.setImageResource
 					    (R.drawable.chat_faulty_session);
-				    }
 				    else if(Math.abs(System.
 						     currentTimeMillis() -
 						     participantElement.
@@ -490,13 +484,16 @@ public class MemberChat extends AppCompatActivity
 	       requestCode == SELECT_IMAGE_REQUEST &&
 	       resultCode == RESULT_OK)
 	    {
-		final ProgressDialog dialog = new ProgressDialog
-		    (MemberChat.this);
+		final ProgressBar bar = (ProgressBar) findViewById
+		    (R.id.progress_bar);
 
-		dialog.setCancelable(false);
-		dialog.setIndeterminate(true);
-		dialog.setMessage("Reading image data.");
-		dialog.show();
+		bar.setIndeterminate(true);
+		bar.setVisibility(ProgressBar.VISIBLE);
+		getWindow().setFlags
+		    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+		     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+		Miscellaneous.enableChildren
+		    (findViewById(R.id.main_layout), false);
 
 		class SingleShot implements Runnable
 		{
@@ -587,7 +584,12 @@ public class MemberChat extends AppCompatActivity
 					findViewById(R.id.preview_layout).
 					    setVisibility(View.GONE);
 
-				    dialog.dismiss();
+				    bar.setVisibility(ProgressBar.INVISIBLE);
+				    getWindow().clearFlags
+					(WindowManager.LayoutParams.
+					 FLAG_NOT_TOUCHABLE);
+				    Miscellaneous.enableChildren
+					(findViewById(R.id.main_layout), true);
 				}
 			    });
 			}
@@ -866,7 +868,7 @@ public class MemberChat extends AppCompatActivity
 	    }
 
 	    break;
-	case 25:
+	case 25: // Save Attachment
 	    try
 	    {
 		View view = (View) m_layoutManager.findViewByPosition(itemId);
@@ -878,13 +880,16 @@ public class MemberChat extends AppCompatActivity
 
 		    if(imageView != null)
 		    {
-			final ProgressDialog dialog = new ProgressDialog
-			    (MemberChat.this);
+			final ProgressBar bar = (ProgressBar) findViewById
+			    (R.id.progress_bar);
 
-			dialog.setCancelable(false);
-			dialog.setIndeterminate(true);
-			dialog.setMessage("Saving attachment.");
-			dialog.show();
+			bar.setIndeterminate(true);
+			bar.setVisibility(ProgressBar.VISIBLE);
+			getWindow().setFlags
+			    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+			     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+			Miscellaneous.enableChildren
+			    (findViewById(R.id.main_layout), false);
 
 			class SingleShot implements Runnable
 			{
@@ -966,7 +971,14 @@ public class MemberChat extends AppCompatActivity
 					@Override
 					public void run()
 					{
-					    dialog.dismiss();
+					    bar.setVisibility
+						(ProgressBar.INVISIBLE);
+					    getWindow().clearFlags
+						(WindowManager.LayoutParams.
+						 FLAG_NOT_TOUCHABLE);
+					    Miscellaneous.enableChildren
+						(findViewById(R.id.main_layout),
+						 true);
 					}
 				    });
 				}
