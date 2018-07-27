@@ -3081,7 +3081,7 @@ public class Settings extends AppCompatActivity
 	       s_cryptography.ozoneMacKey().length != 64)
 		menuItem.setEnabled(false);
 
-	    menu.add(4, view.getId(), 0, "Share Keys (" + tag1 + ")").
+	    menu.add(4, view.getId(), 0, "Share Keys Of (" + tag1 + ")").
 		setEnabled((boolean) tag2);
 	    menu.add(5, view.getId(), 0, "View Details (" + tag1 + ")");
 	}
