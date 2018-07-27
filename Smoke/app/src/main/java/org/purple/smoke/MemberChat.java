@@ -1157,6 +1157,7 @@ public class MemberChat extends AppCompatActivity
 
 	try
 	{
+	    m_adapter.notifyDataSetChanged();
 	    m_layoutManager.smoothScrollToPosition
 		(m_recyclerView, null, m_adapter.getItemCount() - 1);
 	}

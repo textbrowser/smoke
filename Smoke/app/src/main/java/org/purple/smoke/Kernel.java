@@ -858,20 +858,23 @@ public class Kernel
 
 	try
 	{
+	    /*
+	    ** Remove neighbor objects which do not exist in the database.
+	    ** Also removed will be neighbors having disconnected statuses.
+	    */
+
 	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
 	    {
-		/*
-		** Remove neighbor objects which do not exist in the
-		** database.
-		*/
-
 		boolean found = false;
 		int oid = m_neighbors.keyAt(i);
 
 		for(NeighborElement neighbor : neighbors)
 		    if(neighbor != null && neighbor.m_oid == oid)
 		    {
-			found = true;
+			if(!neighbor.m_statusControl.toLowerCase().
+			   equals("disconnect"))
+			    found = true;
+
 			break;
 		    }
 
