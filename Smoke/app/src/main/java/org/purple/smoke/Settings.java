@@ -2603,7 +2603,7 @@ public class Settings extends AppCompatActivity
 	*/
 
 	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
-	checkBox1.setChecked(!isAuthenticated);
+	checkBox1.setChecked(false);
 	checkBox1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.generate_pki);
 	button1.setEnabled(checkBox1.isChecked());
