@@ -363,6 +363,7 @@ public class Settings extends AppCompatActivity
 			    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 			Miscellaneous.enableChildren
 			    (findViewById(R.id.linear_layout), true);
+			disablePKIButtons();
 
 			if(m_error)
 			    Miscellaneous.showErrorDialog
@@ -428,6 +429,16 @@ public class Settings extends AppCompatActivity
 	     "delete the neighbor " + ipAndPort + "?");
     }
 
+    private void disablePKIButtons()
+    {
+	Button button1 = (Button) findViewById(R.id.generate_pki);
+	CheckBox checkBox1 = (CheckBox) findViewById(R.id.overwrite);
+
+	button1.setEnabled(checkBox1.isChecked());
+	button1 = (Button) findViewById(R.id.set_password);
+	button1.setEnabled(checkBox1.isChecked());
+    }
+
     private void enableWidgets(boolean state)
     {
 	Button button1 = null;
@@ -455,9 +466,9 @@ public class Settings extends AppCompatActivity
 	checkBox1.setChecked(!state);
 	checkBox1.setEnabled(state);
 	button1 = (Button) findViewById(R.id.generate_pki);
-	button1.setEnabled(checkBox1.isChecked());
+	button1.setEnabled(!state);
 	button1 = (Button) findViewById(R.id.set_password);
-	button1.setEnabled(checkBox1.isChecked());
+	button1.setEnabled(!state);
 
 	RadioButton radioButton1 = null;
 
@@ -580,6 +591,7 @@ public class Settings extends AppCompatActivity
 				 FLAG_NOT_TOUCHABLE);
 			    Miscellaneous.enableChildren
 				(findViewById(R.id.linear_layout), true);
+			    disablePKIButtons();
 
 			    if(!m_error.isEmpty())
 				Miscellaneous.showErrorDialog
@@ -1917,6 +1929,7 @@ public class Settings extends AppCompatActivity
 			     FLAG_NOT_TOUCHABLE);
 			Miscellaneous.enableChildren
 			    (findViewById(R.id.linear_layout), true);
+			disablePKIButtons();
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
@@ -2134,6 +2147,7 @@ public class Settings extends AppCompatActivity
 			     FLAG_NOT_TOUCHABLE);
 			Miscellaneous.enableChildren
 			    (findViewById(R.id.linear_layout), true);
+			disablePKIButtons();
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
@@ -2219,6 +2233,7 @@ public class Settings extends AppCompatActivity
 			     FLAG_NOT_TOUCHABLE);
 			Miscellaneous.enableChildren
 			    (findViewById(R.id.linear_layout), true);
+			disablePKIButtons();
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
@@ -2295,6 +2310,7 @@ public class Settings extends AppCompatActivity
 			     FLAG_NOT_TOUCHABLE);
 			Miscellaneous.enableChildren
 			    (findViewById(R.id.linear_layout), true);
+			disablePKIButtons();
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
@@ -2608,12 +2624,12 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.generate_pki);
 
 	if(isAuthenticated)
-	    button1.setEnabled(checkBox1.isChecked());
+	    button1.setEnabled(false);
 
 	button1 = (Button) findViewById(R.id.set_password);
 
 	if(isAuthenticated)
-	    button1.setEnabled(checkBox1.isChecked());
+	    button1.setEnabled(false);
 
 	TextView textView1 = null;
 
