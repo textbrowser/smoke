@@ -2606,9 +2606,14 @@ public class Settings extends AppCompatActivity
 	checkBox1.setChecked(false);
 	checkBox1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.generate_pki);
-	button1.setEnabled(checkBox1.isChecked());
+
+	if(isAuthenticated)
+	    button1.setEnabled(checkBox1.isChecked());
+
 	button1 = (Button) findViewById(R.id.set_password);
-	button1.setEnabled(checkBox1.isChecked());
+
+	if(isAuthenticated)
+	    button1.setEnabled(checkBox1.isChecked());
 
 	TextView textView1 = null;
 
