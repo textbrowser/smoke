@@ -2360,122 +2360,188 @@ public class Settings extends AppCompatActivity
 
     private void showDetailsOfParticipant(String oid)
     {
-	PopupWindow popupWindow = new PopupWindow(Settings.this);
-	String name = "";
-	String sipHashId = m_databaseHelper.readSipHashIdString
-	    (s_cryptography, oid);
-	String string1 = s_cryptography.fancyKeyInformationOutput
-	    (m_databaseHelper.
-	     publicEncryptionKeyForSipHashId(s_cryptography,
-					     sipHashId)).trim();
-	String string2 = s_cryptography.fancyKeyInformationOutput
-	    (m_databaseHelper.
-	     publicSignatureKeyForSipHashId(s_cryptography,
-					    sipHashId)).trim();
-	StringBuilder stringBuilder = new StringBuilder();
-	TextView textView1 = new TextView(Settings.this);
-	float density = getApplicationContext().getResources().
-	    getDisplayMetrics().density;
+	if(Settings.this.isFinishing())
+	    return;
 
-	name = m_databaseHelper.nameFromSipHashId
-	    (s_cryptography, sipHashId).trim();
+	final ProgressBar bar = (ProgressBar) findViewById
+	    (R.id.share_keys_progress_bar);
 
-	if(name.isEmpty())
-	    name = sipHashId;
+	bar.setIndeterminate(true);
+	bar.setVisibility(ProgressBar.VISIBLE);
+	getWindow().setFlags
+	    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+	     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+	Miscellaneous.enableChildren
+	    (findViewById(R.id.linear_layout), false);
 
-	if(string1.isEmpty() || string2.isEmpty())
+	class SingleShot implements Runnable
 	{
-	    if(sipHashId.isEmpty())
+	    private String m_error = "";
+	    private String m_name = "";
+	    private String m_oid = "";
+	    private String m_sipHashId = "";
+	    private String m_string1 = "";
+	    private String m_string2 = "";
+	    private String m_strings[] = null;
+
+	    SingleShot(String oid)
 	    {
-		stringBuilder.append("Unable to gather details ");
-		stringBuilder.append("for the selected participant.");
-	    }
-	    else
-	    {
-		stringBuilder.append("Unable to gather details for ");
-		stringBuilder.append(name);
-		stringBuilder.append(" (");
-		stringBuilder.append(sipHashId);
-		stringBuilder.append(").");
+		m_oid = oid;
 	    }
 
-	    textView1.setText(stringBuilder.toString());
+	    @Override
+	    public void run()
+	    {
+		m_sipHashId = m_databaseHelper.readSipHashIdString
+		    (s_cryptography, m_oid);
+
+		/*
+		** Retrieve everything that requires the SipHash.
+		*/
+
+		m_name = m_databaseHelper.nameFromSipHashId
+		    (s_cryptography, m_sipHashId).trim();
+		m_string1 = s_cryptography.fancyKeyInformationOutput
+		    (m_databaseHelper.
+		     publicEncryptionKeyForSipHashId(s_cryptography,
+						     m_sipHashId)).trim();
+		m_string2 = s_cryptography.fancyKeyInformationOutput
+		    (m_databaseHelper.
+		     publicSignatureKeyForSipHashId(s_cryptography,
+						    m_sipHashId)).trim();
+		m_strings = m_databaseHelper.
+		    keysSigned(s_cryptography, m_sipHashId);
+
+		if(m_name.isEmpty())
+		    m_name = m_sipHashId;
+
+		if(m_strings == null)
+		    m_strings = new String[] {"false", "false"};
+
+		Settings.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			bar.setVisibility(ProgressBar.INVISIBLE);
+			getWindow().clearFlags
+			    (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+			Miscellaneous.enableChildren
+			    (findViewById(R.id.linear_layout), true);
+			disablePKIButtons();
+
+			PopupWindow popupWindow = new PopupWindow
+			    (Settings.this);
+			StringBuilder stringBuilder = new StringBuilder();
+			TextView textView1 = new TextView(Settings.this);
+			float density = getApplicationContext().getResources().
+			    getDisplayMetrics().density;
+
+			if(m_string1.isEmpty() || m_string2.isEmpty())
+			{
+			    if(m_sipHashId.isEmpty())
+			    {
+				stringBuilder.append
+				    ("Unable to gather details ");
+				stringBuilder.append
+				    ("for the selected participant.");
+			    }
+			    else
+			    {
+				stringBuilder.append
+				    ("Unable to gather details for ");
+				stringBuilder.append(m_name);
+				stringBuilder.append(" (");
+				stringBuilder.append(m_sipHashId);
+				stringBuilder.append(").");
+			    }
+
+			    textView1.setText(stringBuilder.toString());
+			}
+			else
+			{
+			    stringBuilder.append(m_name);
+			    stringBuilder.append(" (");
+			    stringBuilder.append(m_sipHashId);
+			    stringBuilder.append(")\n");
+			    stringBuilder.append("\nChat Encryption Key (");
+			    textView1.append(stringBuilder.toString());
+
+			    Spannable spannable = new SpannableStringBuilder
+				(m_strings[0].equals("true") ?
+				 "Signature Verified" :
+				 "Signature Not Verified");
+
+			    if(m_strings[0].equals("true"))
+				spannable.setSpan
+				    (new ForegroundColorSpan(Color.
+							     rgb(46, 125, 50)),
+				     0, spannable.length(),
+				     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			    else
+				spannable.setSpan
+				    (new ForegroundColorSpan(Color.
+							     rgb(198, 40, 40)),
+				     0, spannable.length(),
+				     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+			    textView1.append(spannable);
+			    stringBuilder.setLength(0);
+			    stringBuilder.append(")\n");
+			    stringBuilder.append(m_string1);
+			    stringBuilder.append("\nChat Signature Key (");
+			    textView1.append(stringBuilder);
+			    spannable = new SpannableStringBuilder
+				(m_strings[1].equals("true") ?
+				 "Signature Verified" :
+				 "Signature Not Verified");
+
+			    if(m_strings[1].equals("true"))
+				spannable.setSpan
+				    (new ForegroundColorSpan(Color.
+							     rgb(46, 125, 50)),
+				     0, spannable.length(),
+				     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			    else
+				spannable.setSpan
+				    (new ForegroundColorSpan(Color.
+							     rgb(198, 40, 40)),
+				     0, spannable.length(),
+				     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+			    textView1.append(spannable);
+			    stringBuilder.setLength(0);
+			    stringBuilder.append(")\n");
+			    stringBuilder.append(m_string2);
+			    textView1.append(stringBuilder.toString());
+			}
+
+			textView1.setBackgroundColor(Color.rgb(255, 255, 255));
+			textView1.setPaddingRelative
+			    ((int) (10 * density),
+			     (int) (10 * density),
+			     (int) (10 * density),
+			     (int) (10 * density));
+			textView1.setTextSize(16);
+			popupWindow.setContentView(textView1);
+			popupWindow.setOutsideTouchable(true);
+
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+			{
+			    popupWindow.setHeight(450);
+			    popupWindow.setWidth(700);
+			}
+
+			popupWindow.showAsDropDown
+			    (findViewById(R.id.participants));
+		    }
+		});
+	    }
 	}
-	else
-	{
-	    String strings[] = m_databaseHelper.
-		keysSigned(s_cryptography, sipHashId);
 
-	    if(strings == null)
-		strings = new String[] {"false", "false"};
+	Thread thread = new Thread(new SingleShot(oid));
 
-	    stringBuilder.append(name);
-	    stringBuilder.append(" (");
-	    stringBuilder.append(sipHashId);
-	    stringBuilder.append(")\n");
-	    stringBuilder.append("\nChat Encryption Key (");
-	    textView1.append(stringBuilder.toString());
-
-	    Spannable spannable = new SpannableStringBuilder
-		(strings[0].equals("true") ?
-		 "Signature Verified" : "Signature Not Verified");
-
-	    if(strings[0].equals("true"))
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(46, 125, 50)),
-		     0, spannable.length(),
-		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    else
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(198, 40, 40)),
-		     0, spannable.length(),
-		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-	    textView1.append(spannable);
-	    stringBuilder.setLength(0);
-	    stringBuilder.append(")\n");
-	    stringBuilder.append(string1);
-	    stringBuilder.append("\nChat Signature Key (");
-	    textView1.append(stringBuilder);
-	    spannable = new SpannableStringBuilder
-		(strings[1].equals("true") ?
-		 "Signature Verified" : "Signature Not Verified");
-
-	    if(strings[1].equals("true"))
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(46, 125, 50)),
-		     0, spannable.length(),
-		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    else
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(198, 40, 40)),
-		     0, spannable.length(),
-		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-	    textView1.append(spannable);
-	    stringBuilder.setLength(0);
-	    stringBuilder.append(")\n");
-	    stringBuilder.append(string2);
-	    textView1.append(stringBuilder.toString());
-	}
-
-	textView1.setBackgroundColor(Color.rgb(255, 255, 255));
-	textView1.setPaddingRelative
-	    ((int) (10 * density),
-	     (int) (10 * density),
-	     (int) (10 * density),
-	     (int) (10 * density));
-	textView1.setTextSize(16);
-	popupWindow.setContentView(textView1);
-	popupWindow.setOutsideTouchable(true);
-
-	if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-	{
-	    popupWindow.setHeight(450);
-	    popupWindow.setWidth(700);
-	}
-
-	popupWindow.showAsDropDown(findViewById(R.id.participants));
+	thread.start();
     }
 
     private void showFireActivity()
