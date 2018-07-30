@@ -238,6 +238,10 @@ public abstract class Neighbor
 
 		    if(System.nanoTime() - m_accumulatedTime >= 10000000000L)
 		    {
+			/*
+			** Send every 10 seconds.
+			*/
+
 			m_accumulatedTime = System.nanoTime();
 			send(getCapabilities());
 			send(getIdentities());

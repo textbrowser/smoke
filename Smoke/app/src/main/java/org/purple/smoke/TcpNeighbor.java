@@ -37,6 +37,8 @@ import java.security.cert.X509Certificate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.net.ssl.HandshakeCompletedEvent;
+import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
@@ -214,6 +216,17 @@ public class TcpNeighbor extends Neighbor
 		    createSocket(socket, m_proxyIpAddress, m_proxyPort, true);
 	    }
 
+	    m_socket.addHandshakeCompletedListener
+		(new HandshakeCompletedListener()
+		{
+		    @Override
+		    public void handshakeCompleted
+			(HandshakeCompletedEvent event)
+		    {
+			scheduleSend(getCapabilities());
+			scheduleSend(getIdentities());
+		    }
+		});
 	    m_socket.setEnabledProtocols(m_protocols);
 	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
 	    m_socket.setTcpNoDelay(false);
