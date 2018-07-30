@@ -95,12 +95,19 @@ public class MemberChat extends AppCompatActivity
 		   intent.getStringExtra("org.purple.smoke.sipHashId").
 		   equals(m_sipHashId))
 		{
-		    m_adapter.notifyDataSetChanged(); /*
-						      ** Items are inserted
-						      ** into the database
-						      ** haphazardly.
-						      */
-		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
+		    try
+		    {
+			m_adapter.notifyDataSetChanged(); /*
+							  ** Items are inserted
+							  ** into the database
+							  ** haphazardly.
+							  */
+			m_adapter.notifyItemInserted
+			    (m_adapter.getItemCount() - 1);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 
 		    if(!local)
 		    {
@@ -124,6 +131,22 @@ public class MemberChat extends AppCompatActivity
 			(MemberChat.this,
 			 intent,
 			 findViewById(R.id.main_layout));
+
+		break;
+	    case "org.purple.smoke.notify_data_set_changed":
+		try
+		{
+		    m_adapter.notifyDataSetChanged(); /*
+						      ** Items are inserted
+						      ** into the database
+						      ** haphazardly.
+						      */
+		    m_adapter.notifyItemInserted
+			(m_adapter.getItemCount() - 1);
+		}
+		catch(Exception exception)
+		{
+		}
 
 		break;
 	    case "org.purple.smoke.state_participants_populated":
@@ -165,7 +188,7 @@ public class MemberChat extends AppCompatActivity
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
-    private String m_name = "00:00:00:00:00:00:00:00";
+    private String m_name = "0000-0000-0000-0000";
     private String m_mySipHashId = "";
     private String m_sipHashId = m_name;
     private boolean m_receiverRegistered = false;
@@ -623,7 +646,7 @@ public class MemberChat extends AppCompatActivity
 	m_recyclerView.setHasFixedSize(true);
 
 	if(m_sipHashId.isEmpty())
-	    m_name = m_sipHashId = "00:00:00:00:00:00:00:00";
+	    m_name = m_sipHashId = "0000-0000-0000-0000";
 
 	/*
 	** Prepare various widgets.
@@ -796,7 +819,7 @@ public class MemberChat extends AppCompatActivity
 		 "Secret");
 	    break;
 	case 3:
-	    Kernel.getInstance().retrieveChatMessages();
+	    Kernel.getInstance().retrieveChatMessages(m_sipHashId);
 	    break;
 	case 10:
 	    Miscellaneous.showPromptDialog
@@ -1114,6 +1137,7 @@ public class MemberChat extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_local_message");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.notify_data_set_changed");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    LocalBroadcastManager.getInstance(this).

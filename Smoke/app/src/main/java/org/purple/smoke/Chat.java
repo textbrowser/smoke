@@ -1227,7 +1227,7 @@ public class Chat extends AppCompatActivity
 		populateParticipants();
 		break;
 	    case 1: // Retrieve Messages
-		Kernel.getInstance().retrieveChatMessages();
+		Kernel.getInstance().retrieveChatMessages("");
 		requestMessages();
 		break;
 	    case 2: // Show Details

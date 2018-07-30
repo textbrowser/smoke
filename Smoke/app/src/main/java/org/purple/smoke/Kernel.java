@@ -486,14 +486,7 @@ public class Kernel
 				    intent.putExtra
 					("org.purple.smoke.sipHashId",
 					 messageElement.m_id);
-
-				    LocalBroadcastManager
-					localBroadcastManager =
-					LocalBroadcastManager.getInstance
-					(Smoke.getApplication());
-
-				    localBroadcastManager.sendBroadcast
-					(intent);
+				    sendBroadcast(intent);
 				    break;
 				case MessageElement.FIRE_MESSAGE_TYPE:
 				    bytes = Messages.fireMessage
@@ -518,6 +511,23 @@ public class Kernel
 				    RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				    bytes = Messages.chatMessageRetrieval
 					(s_cryptography);
+
+				    if(!messageElement.m_id.isEmpty())
+				    {
+					s_databaseHelper.writeParticipantMessage
+					    (s_cryptography,
+					     "local",
+					     "Requesting messages from " +
+					     "SmokeStack(s).",
+					     messageElement.m_id,
+					     null,
+					     timestamp);
+					sendBroadcast
+					    (new Intent("org.purple.smoke." +
+							"notify_data_set_" +
+							"changed"));
+				    }
+
 				    break;
 				case MessageElement.
 				    SHARE_SIPHASH_ID_MESSAGE_TYPE:
@@ -746,7 +756,7 @@ public class Kernel
 		public void run()
 		{
 		    if(isConnected() && s_cryptography.ozoneMacKey() != null)
-			retrieveChatMessages();
+			retrieveChatMessages("");
 		}
 	    }, 10000, REQUEST_MESSAGES_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -840,6 +850,23 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
+	}
+    }
+
+    private void sendBroadcast(Intent intent)
+    {
+	if(intent == null)
+	    return;
+
+	try
+	{
+	    LocalBroadcastManager localBroadcastManager =
+		LocalBroadcastManager.getInstance(Smoke.getApplication());
+
+	    localBroadcastManager.sendBroadcast(intent);
+	}
+	catch(Exception exception)
+	{
 	}
     }
 
@@ -1204,11 +1231,7 @@ public class Kernel
 					("org.purple.smoke.message",
 					 strings[3]);
 
-				LocalBroadcastManager localBroadcastManager =
-				    LocalBroadcastManager.getInstance
-				    (Smoke.getApplication());
-
-				localBroadcastManager.sendBroadcast(intent);
+				sendBroadcast(intent);
 				return 2; // Echo Fire!
 			    }
 			}
@@ -1288,14 +1311,8 @@ public class Kernel
 		    */
 
 		    State.getInstance().populateParticipants();
-
-		    Intent intent = new Intent
-			("org.purple.smoke.populate_participants");
-		    LocalBroadcastManager localBroadcastManager =
-			LocalBroadcastManager.
-			getInstance(Smoke.getApplication());
-
-		    localBroadcastManager.sendBroadcast(intent);
+		    sendBroadcast
+			(new Intent("org.purple.smoke.populate_participants"));
 
 		    /*
 		    ** Response-share.
@@ -1626,12 +1643,7 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.sequence", sequence);
 		    intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		    intent.putExtra("org.purple.smoke.timestamp", timestamp);
-
-		    LocalBroadcastManager localBroadcastManager =
-			LocalBroadcastManager.getInstance
-			(Smoke.getApplication());
-
-		    localBroadcastManager.sendBroadcast(intent);
+		    sendBroadcast(intent);
 		}
 
 		return 1;
@@ -1834,12 +1846,7 @@ public class Kernel
 			    intent.putExtra("org.purple.smoke.name", array[0]);
 			    intent.putExtra
 				("org.purple.smoke.sipHashId", array[1]);
-
-			    LocalBroadcastManager localBroadcastManager =
-				LocalBroadcastManager.getInstance
-				(Smoke.getApplication());
-
-			    localBroadcastManager.sendBroadcast(intent);
+			    sendBroadcast(intent);
 			    return 1;
 			}
 		    }
@@ -1900,12 +1907,7 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.name", array[0]);
 		    intent.putExtra("org.purple.smoke.refresh", true);
 		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);
-
-		    LocalBroadcastManager localBroadcastManager =
-			LocalBroadcastManager.getInstance
-			(Smoke.getApplication());
-
-		    localBroadcastManager.sendBroadcast(intent);
+		    sendBroadcast(intent);
 
 		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
@@ -2178,7 +2180,7 @@ public class Kernel
 	}
     }
 
-    public void retrieveChatMessages()
+    public void retrieveChatMessages(String sipHashId)
     {
 	m_messagesToSendMutex.writeLock().lock();
 
@@ -2186,6 +2188,7 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_id = sipHashId;
 	    messageElement.m_messageType =
 		MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
