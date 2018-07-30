@@ -102,42 +102,8 @@ public class MemberChat extends AppCompatActivity
 						      */
 		    m_adapter.notifyItemInserted(m_adapter.getItemCount() - 1);
 
-		    if(local)
+		    if(!local)
 		    {
-			String message = intent.getStringExtra
-			    ("org.purple.smoke.message");
-			long timestamp = intent.getLongExtra
-			    ("org.purple.smoke.timestamp", 0);
-
-			State.getInstance().logChatMessage
-			    (message,
-			     "me",
-			     m_mySipHashId,
-			     false,
-			     -1,
-			     timestamp);
-		    }
-		    else
-		    {
-			String message = intent.getStringExtra
-			    ("org.purple.smoke.message");
-			String name = intent.getStringExtra
-			    ("org.purple.smoke.name");
-			boolean purple = intent.getBooleanExtra
-			    ("org.purple.smoke.purple", false);
-			long sequence = intent.getLongExtra
-			    ("org.purple.smoke.sequence", 1);
-			long timestamp = intent.getLongExtra
-			    ("org.purple.smoke.timestamp", 0);
-
-			State.getInstance().logChatMessage
-			    (message,
-			     name,
-			     m_sipHashId,
-			     purple,
-			     sequence,
-			     timestamp);
-
 			try
 			{
 			    Ringtone ringtone = null;
