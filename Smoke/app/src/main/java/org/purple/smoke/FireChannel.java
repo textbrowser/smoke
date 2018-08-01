@@ -85,7 +85,6 @@ public class FireChannel extends View
     private ViewGroup m_parent = null;
     private final SimpleDateFormat m_simpleDateFormat =
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-    private final static int CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
     private final static int STATUS_INTERVAL = 30000;
 
     private void createSchedulers()
@@ -464,7 +463,7 @@ public class FireChannel extends View
 		    {
 		    }
 		}
-	    }, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 
 	    prepareListeners();
 

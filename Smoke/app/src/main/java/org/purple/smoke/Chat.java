@@ -133,7 +133,7 @@ public class Chat extends AppCompatActivity
     public final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     public final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     public final static long CHAT_WINDOW = 60000; // 1 Minute
-    public final static long CONNECTION_STATUS_INTERVAL = 1500; // 1.5 Seconds
+    public final static long CONNECTION_STATUS_INTERVAL = 3500; // 3.5 Seconds
     public final static long STATUS_WINDOW = 30000; // 30 Seconds
 
     private String nameFromCheckBoxText(String text)
@@ -253,7 +253,8 @@ public class Chat extends AppCompatActivity
 
 		if(checkBox1 != null)
 		{
-		    if(Math.abs(System.currentTimeMillis() - timestamp) >
+		    if(!Kernel.getInstance().isConnected() ||
+		       Math.abs(System.currentTimeMillis() - timestamp) >
 		       STATUS_WINDOW)
 			checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.chat_status_offline, 0, 0, 0);
@@ -441,6 +442,7 @@ public class Chat extends AppCompatActivity
 	    (null, "show_chat_details").equals("true");
 	boolean showIcons = m_databaseHelper.readSetting
 	    (null, "show_chat_icons").equals("true");
+	boolean state = Kernel.getInstance().isConnected();
 	int i = 0;
 
 	for(ParticipantElement participantElement : arrayList)
@@ -453,13 +455,12 @@ public class Chat extends AppCompatActivity
 
 	    if(showIcons)
 	    {
-		long current = System.currentTimeMillis();
-
 		if(participantElement.m_keyStream == null ||
 		   participantElement.m_keyStream.length != 96)
 		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_faulty_session, 0, 0, 0);
-		else if(Math.abs(current -
+		else if(!state ||
+			Math.abs(System.currentTimeMillis() -
 				 participantElement.m_lastStatusTimestamp) >
 			STATUS_WINDOW)
 		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
@@ -720,7 +721,8 @@ public class Chat extends AppCompatActivity
 	       participantElement.m_keyStream.length != 96)
 		checkBox1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_faulty_session, 0, 0, 0);
-	    else if(Math.abs(System.currentTimeMillis() -
+	    else if(!Kernel.getInstance().isConnected() ||
+		    Math.abs(System.currentTimeMillis() -
 			     participantElement.m_lastStatusTimestamp) >
 		    STATUS_WINDOW)
 		checkBox1.setCompoundDrawablesWithIntrinsicBounds

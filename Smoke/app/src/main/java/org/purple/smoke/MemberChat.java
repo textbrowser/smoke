@@ -185,7 +185,6 @@ public class MemberChat extends AppCompatActivity
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter m_adapter = null;
-    private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_name = "0000-0000-0000-0000";
@@ -196,7 +195,6 @@ public class MemberChat extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
-    private final static int STATUS_INTERVAL = 5000; // 5 Seconds
     private int m_oid = -1;
 
     private int getBytesPerPixel(Config config)
@@ -314,47 +312,6 @@ public class MemberChat extends AppCompatActivity
 
     private void prepareSchedulers()
     {
-	if(m_connectionStatusScheduler == null)
-	{
-	    m_connectionStatusScheduler = Executors.
-		newSingleThreadScheduledExecutor();
-	    m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    try
-		    {
-			if(Thread.currentThread().isInterrupted())
-			    return;
-
-			final boolean state = Kernel.getInstance().
-			    isConnected();
-
-			MemberChat.this.runOnUiThread(new Runnable()
-			{
-			    @Override
-			    public void run()
-			    {
-				Button button1 = (Button) findViewById
-				    (R.id.send_chat_message);
-
-				if(state)
-				    button1.setTextColor
-					(Color.rgb(46, 125, 50));
-				else
-				    button1.setTextColor
-					(Color.rgb(198, 40, 40));
-			    }
-			});
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		}
-	    }, 0, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
-	}
-
 	if(m_statusScheduler == null)
 	{
 	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -385,23 +342,30 @@ public class MemberChat extends AppCompatActivity
 				@Override
 				public void run()
 				{
-				    Button button = (Button)
-					findViewById(R.id.status);
+				    Button button = (Button) findViewById
+					(R.id.send_chat_message);
 
-				    if(participantElement == null || !state)
-					button.setBackgroundResource
-					    (R.drawable.chat_status_offline);
-				    else if(participantElement.
-					    m_keyStream == null ||
-					    participantElement.
-					    m_keyStream.length != 96)
+				    if(state)
+					button.setTextColor
+					    (Color.rgb(46, 125, 50));
+				    else
+					button.setTextColor
+					    (Color.rgb(198, 40, 40));
+
+				    button = (Button) findViewById(R.id.status);
+
+				    if(participantElement == null ||
+				       participantElement.
+				       m_keyStream == null ||
+				       participantElement.
+				       m_keyStream.length != 96)
 					button.setBackgroundResource
 					    (R.drawable.chat_faulty_session);
 				    else if(Math.abs(System.
 						     currentTimeMillis() -
 						     participantElement.
 						     m_lastStatusTimestamp) >
-					    Chat.STATUS_WINDOW)
+					    Chat.STATUS_WINDOW || !state)
 					button.setBackgroundResource
 					    (R.drawable.chat_status_offline);
 				    else
@@ -421,7 +385,7 @@ public class MemberChat extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
