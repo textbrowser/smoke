@@ -365,15 +365,18 @@ public class MemberChat extends AppCompatActivity
 		{
 		    try
 		    {
+			if(Thread.currentThread().isInterrupted())
+			    return;
+
 			ArrayList<ParticipantElement> arrayList =
 			    m_databaseHelper.readParticipants
 			    (s_cryptography, m_sipHashId);
 
-			if(arrayList == null || arrayList.isEmpty())
-			    return;
-
 			final ParticipantElement participantElement =
-			    arrayList.get(0);
+			    arrayList == null || arrayList.isEmpty() ?
+			    null : arrayList.get(0);
+			final boolean state = Kernel.getInstance().
+			    isConnected();
 
 			try
 			{
@@ -385,10 +388,13 @@ public class MemberChat extends AppCompatActivity
 				    Button button = (Button)
 					findViewById(R.id.status);
 
-				    if(participantElement.
-				       m_keyStream == null ||
-				       participantElement.
-				       m_keyStream.length != 96)
+				    if(participantElement == null || !state)
+					button.setBackgroundResource
+					    (R.drawable.chat_status_offline);
+				    else if(participantElement.
+					    m_keyStream == null ||
+					    participantElement.
+					    m_keyStream.length != 96)
 					button.setBackgroundResource
 					    (R.drawable.chat_faulty_session);
 				    else if(Math.abs(System.
@@ -408,7 +414,8 @@ public class MemberChat extends AppCompatActivity
 			{
 			}
 
-			arrayList.clear();
+			if(arrayList != null)
+			    arrayList.clear();
 		    }
 		    catch(Exception exception)
 		    {
