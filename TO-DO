@@ -243,7 +243,7 @@ Ignored / Impossible Items
 Remaining Items
 
 1.     pull-database for multiple devices.
-2.     Fire through SmokeStack. Requires discovery or unsolicited data.
+2.     Fire through SmokeStack. Requires identities.
 3.     Retain password for re-authentication upon background activity.
        Optional.
 4.     Separation of Fire channels.
@@ -251,6 +251,3 @@ Remaining Items
 6.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
 7.     Stronger surreptitious forwarding.
-8.     The texting cache prevents messages from being displayed after
-       a device is awakened unless the Chat or MemberChat activity is
-       recycled.
