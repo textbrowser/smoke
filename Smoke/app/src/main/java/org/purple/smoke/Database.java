@@ -149,7 +149,7 @@ public class Database extends SQLiteOpenHelper
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    private void prepareDb()
+    private synchronized void prepareDb()
     {
 	if(m_db == null)
 	    try
