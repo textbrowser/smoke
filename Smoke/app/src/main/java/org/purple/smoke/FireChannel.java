@@ -99,6 +99,9 @@ public class FireChannel extends View
 		{
 		    try
 		    {
+			if(Thread.currentThread().isInterrupted())
+			    return;
+
 			if(Kernel.getInstance().isConnected())
 			    Kernel.getInstance().enqueueFireStatus
 				(m_id, m_name);

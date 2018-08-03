@@ -65,6 +65,7 @@ public abstract class Neighbor
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
+    protected Object m_parsingSchedulerObject = new Object();
     protected ScheduledExecutorService m_readSocketScheduler = null;
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
@@ -158,6 +159,21 @@ public abstract class Neighbor
 	    {
 		try
 		{
+		    /*
+		    ** Await new data.
+		    */
+
+		    synchronized(m_parsingSchedulerObject)
+		    {
+			try
+			{
+			    m_parsingSchedulerObject.wait();
+			}
+			catch(Exception exception)
+			{
+			}
+		    }
+
 		    /*
 		    ** Detect our end-of-message delimiter.
 		    */
@@ -430,6 +446,11 @@ public abstract class Neighbor
     protected synchronized void abort()
     {
 	m_parsingScheduler.shutdown();
+
+	synchronized(m_parsingSchedulerObject)
+	{
+	    m_parsingSchedulerObject.notify();
+	}
 
 	try
 	{

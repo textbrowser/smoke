@@ -879,7 +879,8 @@ public class Chat extends AppCompatActivity
 	    {
 		try
 		{
-		    if(!m_databaseHelper.readSetting(null, "show_chat_icons").
+		    if(Thread.currentThread().isInterrupted() ||
+		       !m_databaseHelper.readSetting(null, "show_chat_icons").
 		       equals("true"))
 			return;
 
@@ -891,9 +892,6 @@ public class Chat extends AppCompatActivity
 
 		    for(String string : arrayList)
 		    {
-			if(Thread.currentThread().isInterrupted())
-			    return;
-
 			final String sipHashId = string;
 
 			Chat.this.runOnUiThread(new Runnable()

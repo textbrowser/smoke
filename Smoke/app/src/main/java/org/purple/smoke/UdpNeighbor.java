@@ -256,6 +256,11 @@ public class UdpNeighbor extends Neighbor
 		    m_lastTimeRead.set(System.nanoTime());
 		    m_stringBuffer.append
 			(new String(byteArrayOutputStream.toByteArray()));
+
+		    synchronized(m_parsingSchedulerObject)
+		    {
+			m_parsingSchedulerObject.notify();
+		    }
 		}
 		catch(Exception exception)
 		{
