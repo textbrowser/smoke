@@ -1053,16 +1053,14 @@ public class MemberChat extends AppCompatActivity
     {
 	super.onCreateContextMenu(menu, view, menuInfo);
 
-	MenuItem menuItem = null;
+	boolean state = Kernel.getInstance().isConnected();
 
-	menu.add(0, -1, 0, "Call via McEliece");
-	menu.add(1, -1, 0, "Call via RSA");
+	menu.add(0, -1, 0, "Call via McEliece").setEnabled(state);
+	menu.add(1, -1, 0, "Call via RSA").setEnabled(state);
 	menu.add(2, -1, 0, "Custom Session");
-	menuItem = menu.add(3, -1, 0, "Retrieve Messages");
-	menuItem.setEnabled
-	    (Kernel.getInstance().isConnected() &&
-	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").
-	     isEmpty());
+	menu.add(3, -1, 0, "Retrieve Messages").setEnabled
+	    (!m_databaseHelper.readSetting(s_cryptography, "ozone_address").
+	     isEmpty() && state);
     }
 
     @Override
