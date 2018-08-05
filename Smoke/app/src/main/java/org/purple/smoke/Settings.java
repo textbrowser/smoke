@@ -1138,9 +1138,6 @@ public class Settings extends AppCompatActivity
 		row.addView(textView1);
 	    }
 
-	    if(i % 2 == 0)
-		row.setBackgroundColor(Color.rgb(179, 229, 252));
-
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
