@@ -350,10 +350,10 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append("] ");
 
 	if(initial)
-	    stringBuilder.append("Received a half-and-half organic call from ");
+	    stringBuilder.append("Received a half-and-half call from ");
 	else
 	    stringBuilder.append
-		("Received a half-and-half organic response from ");
+		("Received a half-and-half call-response from ");
 
 	stringBuilder.append(name.trim());
 	stringBuilder.append(" (");

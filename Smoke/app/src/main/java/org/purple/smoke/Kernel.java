@@ -975,10 +975,20 @@ public class Kernel
 	    if(m_callQueue.containsKey(sipHashId))
 		return false;
 
+	    s_databaseHelper.writeParticipantMessage
+		(s_cryptography,
+		 "local",
+		 "Preparing a call via " +
+		 (algorithm == ParticipantCall.Algorithms.MCELIECE ?
+		  "McEliece." : "RSA." + " Please be patient."),
+		 sipHashId,
+		 null,
+		 System.currentTimeMillis());
+	    sendBroadcast
+		(new Intent("org.purple.smoke.notify_data_set_changed"));
 	    m_callQueue.put
-		(sipHashId, new ParticipantCall(algorithm,
-						sipHashId,
-						participantOid));
+		(sipHashId,
+		 new ParticipantCall(algorithm, sipHashId, participantOid));
 	}
 	finally
 	{
@@ -1896,9 +1906,28 @@ public class Kernel
 			("org.purple.smoke.half_and_half_call");
 
 		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
+		    {
 			intent.putExtra("org.purple.smoke.initial", true);
+			s_databaseHelper.writeParticipantMessage
+			    (s_cryptography,
+			     "local",
+			     "Received a half-and-half call. " +
+			     "Dispatching a response. Please be patient.",
+			     array[1],
+			     null,
+			     System.currentTimeMillis());
+		    }
 		    else
+		    {
 			intent.putExtra("org.purple.smoke.initial", false);
+			s_databaseHelper.writeParticipantMessage
+			    (s_cryptography,
+			     "local",
+			     "Received a half-and-half call-response.",
+			     array[1],
+			     null,
+			     System.currentTimeMillis());
+		    }
 
 		    intent.putExtra
 			("org.purple.smoke.keyType",
@@ -1908,6 +1937,9 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.refresh", true);
 		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);
 		    sendBroadcast(intent);
+		    sendBroadcast
+			(new Intent("org.purple.smoke." +
+				    "notify_data_set_changed"));
 
 		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
