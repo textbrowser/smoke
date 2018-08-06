@@ -1119,6 +1119,11 @@ public class MemberChat extends AppCompatActivity
 	    m_adapter.notifyDataSetChanged();
 	    m_layoutManager.smoothScrollToPosition
 		(m_recyclerView, null, m_adapter.getItemCount() - 1);
+
+	    TextView textView1 = (TextView) findViewById(R.id.chat_message);
+
+	    textView1.setText
+		(State.getInstance().getCharSequence("member_chat.message"));
 	}
 	catch(Exception exception)
 	{
