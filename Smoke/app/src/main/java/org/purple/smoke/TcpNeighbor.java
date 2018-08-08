@@ -123,7 +123,6 @@ public class TcpNeighbor extends Neighbor
 	    OutputStream outputStream = m_socket.getOutputStream();
 
 	    outputStream.write(message.getBytes());
-	    outputStream.flush();
 	    m_bytesWritten.getAndAdd(message.length());
 	}
 	catch(Exception exception)
