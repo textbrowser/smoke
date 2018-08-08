@@ -42,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
@@ -112,7 +113,7 @@ public class ChatBubble extends View
 		RoundedBitmapDrawable roundedBitmapDrawable =
 		    RoundedBitmapDrawableFactory.create(getResources(), bitmap);
 
-		roundedBitmapDrawable.setCornerRadius(25.0f);
+		roundedBitmapDrawable.setCornerRadius(10.0f);
 		roundedBitmapDrawable.setAntiAlias(true);
 		imageView.setImageDrawable(roundedBitmapDrawable);
 		imageView.setVisibility(View.VISIBLE);
@@ -158,6 +159,7 @@ public class ChatBubble extends View
     public void setText(Locations location, String text)
     {
 	ImageView imageView = m_view.findViewById(R.id.image);
+	LinearLayout linearLayout = m_view.findViewById(R.id.linear_layout);
 	TextView textView = m_view.findViewById(R.id.text);
 
 	textView.setText("");
@@ -202,12 +204,14 @@ public class ChatBubble extends View
 	if(location == Locations.LEFT)
 	{
 	    if(m_fromSmokeStack)
-		textView.setBackgroundResource(R.drawable.bubble_ozone_text);
+		linearLayout.setBackgroundResource
+		    (R.drawable.bubble_ozone_text);
 	    else
-		textView.setBackgroundResource(R.drawable.bubble_left_text);
+		linearLayout.setBackgroundResource
+		    (R.drawable.bubble_left_text);
 	}
 	else
-	    textView.setBackgroundResource(R.drawable.bubble_right_text);
+	    linearLayout.setBackgroundResource(R.drawable.bubble_right_text);
 
 	textView.setPaddingRelative
 	    ((int) (10 * density),
