@@ -249,6 +249,9 @@ public class Cryptography
 	stringBuilder.append("Algorithm: ");
 	stringBuilder.append(algorithm);
 	stringBuilder.append("\n");
+	stringBuilder.append("Disk Size: ");
+	stringBuilder.append(publicKey.getEncoded().length);
+	stringBuilder.append(" Bytes\n");
 	stringBuilder.append("Fingerprint: ");
 	stringBuilder.append(publicKeyFingerPrint(publicKey));
 	stringBuilder.append("\n");
