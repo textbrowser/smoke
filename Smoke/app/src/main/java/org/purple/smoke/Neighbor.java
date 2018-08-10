@@ -49,9 +49,9 @@ public abstract class Neighbor
     private ScheduledExecutorService m_sendOutboundScheduler = null;
     private String m_scopeId = "";
     private UUID m_uuid = null;
+    private final Object m_echoQueueMutex = new Object();
+    private final Object m_queueMutex = new Object();
     private final String m_echoMode = "full";
-    private final static Object m_echoQueueMutex = new Object();
-    private final static Object m_queueMutex = new Object();
     private final static int BYTES_PER_READ = 1 * 1024 * 1024; // 1 MiB
     private final static int LANE_WIDTH = 32 * 1024 * 1024; // 32 MiB
     private final static int PARSING_INTERVAL = 100; // Milliseconds
@@ -71,9 +71,9 @@ public abstract class Neighbor
     protected String m_ipPort = "";
     protected String m_version = "";
     protected byte m_bytes[] = null;
+    protected final Object m_errorMutex = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
-    protected final static Object m_errorMutex = new Object();
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
     protected final static int READ_SOCKET_INTERVAL = 100; // 100 Milliseconds
     protected final static int SO_TIMEOUT = 0; // 0 Seconds
