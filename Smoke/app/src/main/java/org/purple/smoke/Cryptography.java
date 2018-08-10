@@ -243,64 +243,73 @@ public class Cryptography
 	if(publicKey == null)
 	    return "";
 
-	String algorithm = publicKey.getAlgorithm();
-	StringBuilder stringBuilder = new StringBuilder();
+	try
+	{
+	    String algorithm = publicKey.getAlgorithm();
+	    StringBuilder stringBuilder = new StringBuilder();
 
-	stringBuilder.append("Algorithm: ");
-	stringBuilder.append(algorithm);
-	stringBuilder.append("\n");
-	stringBuilder.append("Disk Size: ");
-	stringBuilder.append(publicKey.getEncoded().length);
-	stringBuilder.append(" Bytes\n");
-	stringBuilder.append("Fingerprint: ");
-	stringBuilder.append(publicKeyFingerPrint(publicKey));
-	stringBuilder.append("\n");
-	stringBuilder.append("Format: ");
-	stringBuilder.append(publicKey.getFormat());
+	    stringBuilder.append("Algorithm: ");
+	    stringBuilder.append(algorithm);
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Disk Size: ");
+	    stringBuilder.append(publicKey.getEncoded().length);
+	    stringBuilder.append(" Bytes\n");
+	    stringBuilder.append("Fingerprint: ");
+	    stringBuilder.append(publicKeyFingerPrint(publicKey));
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Format: ");
+	    stringBuilder.append(publicKey.getFormat());
 
-	if(algorithm.equals("EC") ||
-	   algorithm.equals("McEliece-CCA2") ||
-	   algorithm.equals("RSA"))
-	    try
-	    {
-		switch(algorithm)
+	    if(algorithm.equals("EC") ||
+	       algorithm.equals("McEliece-CCA2") ||
+	       algorithm.equals("RSA"))
+		try
 		{
-		case "EC":
-		    ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
+		    switch(algorithm)
+		    {
+		    case "EC":
+			ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
 
-		    if(ecPublicKey != null)
-			stringBuilder.append("\n").append("Size: ").
-			    append(ecPublicKey.getW().getAffineX().
-				   bitLength());
+			if(ecPublicKey != null)
+			    stringBuilder.append("\n").append("Size: ").
+				append(ecPublicKey.getW().getAffineX().
+				       bitLength());
 
-		    break;
-		case "McEliece-CCA2":
-		    BCMcElieceCCA2PublicKey mcEliecePublicKey =
-			(BCMcElieceCCA2PublicKey) publicKey;
+			break;
+		    case "McEliece-CCA2":
+			BCMcElieceCCA2PublicKey mcEliecePublicKey =
+			    (BCMcElieceCCA2PublicKey) publicKey;
 
-		    if(mcEliecePublicKey != null)
-			stringBuilder.append("\n").append("m = ").
-			    append((int) (Math.log(mcEliecePublicKey.getN()) /
-					  Math.log(2))).
-			    append(", t = ").
-			    append(mcEliecePublicKey.getT());
+			if(mcEliecePublicKey != null)
+			    stringBuilder.append("\n").append("m = ").
+				append((int) (Math.log(mcEliecePublicKey.
+						       getN()) /
+					      Math.log(2))).
+				append(", t = ").
+				append(mcEliecePublicKey.getT());
 
-		    break;
-		case "RSA":
-		    RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
+			break;
+		    case "RSA":
+			RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
 
-		    if(rsaPublicKey != null)
-			stringBuilder.append("\n").append("Size: ").
-			    append(rsaPublicKey.getModulus().bitLength());
+			if(rsaPublicKey != null)
+			    stringBuilder.append("\n").append("Size: ").
+				append(rsaPublicKey.getModulus().bitLength());
 
-		    break;
+			break;
+		    }
 		}
-	    }
-	    catch(Exception exception)
-	    {
-	    }
+		catch(Exception exception)
+		{
+		}
 
-	return stringBuilder.toString();
+	    return stringBuilder.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
     }
 
     public String sipHashId()
