@@ -65,13 +65,13 @@ public abstract class Neighbor
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
-    protected Object m_parsingSchedulerObject = new Object();
     protected ScheduledExecutorService m_readSocketScheduler = null;
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
     protected byte m_bytes[] = null;
     protected final Object m_errorMutex = new Object();
+    protected final Object m_parsingSchedulerObject = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;

@@ -181,17 +181,17 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
-    private Database m_databaseHelper = Database.getInstance();
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter m_adapter = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
-    private String m_name = "0000-0000-0000-0000";
     private String m_mySipHashId = "";
+    private String m_name = "0000-0000-0000-0000";
     private String m_sipHashId = m_name;
     private boolean m_receiverRegistered = false;
     private byte m_attachment[] = null;
+    private final Database m_databaseHelper = Database.getInstance();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
@@ -199,14 +199,17 @@ public class MemberChat extends AppCompatActivity
 
     private int getBytesPerPixel(Config config)
     {
-	if(config == Config.ALPHA_8)
+        switch(config)
+	{
+	case ALPHA_8:
 	    return 1;
-	else if(config == Config.ARGB_4444)
+	case ARGB_4444:
 	    return 2;
-	else if(config == Config.ARGB_8888)
+	case ARGB_8888:
 	    return 4;
-	else if(config == Config.RGB_565)
+	case RGB_565:
 	    return 2;
+        }
 
 	return 1;
     }
@@ -654,10 +657,17 @@ public class MemberChat extends AppCompatActivity
 
 	String string =	Miscellaneous.prepareSipHashId(m_sipHashId);
 
-	if(string.isEmpty())
-	    getSupportActionBar().setTitle("Smoke | Member Chat");
-	else
-	    getSupportActionBar().setTitle("Smoke | " + m_name + "@" + string);
+	try
+	{
+	    if(string.isEmpty())
+		getSupportActionBar().setTitle("Smoke | Member Chat");
+	    else
+		getSupportActionBar().setTitle
+		    ("Smoke | " + m_name + "@" + string);
+	}
+	catch(Exception exception)
+	{
+	}
 
 	/*
 	** Prepare listeners.
@@ -924,6 +934,9 @@ public class MemberChat extends AppCompatActivity
 					    fileOutputStream.write
 						(byteArrayOutputStream.
 						 toByteArray());
+					}
+					catch(Exception exception)
+					{
 					}
 					finally
 					{

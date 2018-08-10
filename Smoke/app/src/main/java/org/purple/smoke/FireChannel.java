@@ -75,7 +75,6 @@ public class FireChannel extends View
 	};
 
     private Context m_context = null;
-    private Hashtable<String, Participant> m_participants = new Hashtable<> ();
     private LayoutInflater m_inflater = null;
     private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
@@ -83,6 +82,8 @@ public class FireChannel extends View
     private String m_name = "";
     private View m_view = null;
     private ViewGroup m_parent = null;
+    private final Hashtable<String, Participant> m_participants =
+	new Hashtable<> ();
     private final SimpleDateFormat m_simpleDateFormat =
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
     private final static int STATUS_INTERVAL = 30000;

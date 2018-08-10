@@ -2128,6 +2128,9 @@ public class Cryptography
 	{
 	    m_identity = Miscellaneous.deepCopy(identity);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_identityMutex.writeLock().unlock();
@@ -2164,6 +2167,9 @@ public class Cryptography
 		m_ozoneEncryptionKey = null;
 	    }
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_ozoneEncryptionKeyMutex.writeLock().unlock();
@@ -2185,6 +2191,9 @@ public class Cryptography
 
 		m_ozoneMacKey = null;
 	    }
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{

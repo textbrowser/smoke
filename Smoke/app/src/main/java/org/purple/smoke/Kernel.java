@@ -165,6 +165,9 @@ public class Kernel
 		    if(m_neighbors.get(neighborElement.m_oid) != null)
 			continue;
 		}
+		catch(Exception exception)
+		{
+		}
 		finally
 		{
 		    m_neighborsMutex.readLock().unlock();
@@ -241,6 +244,9 @@ public class Kernel
 	    try
 	    {
 		m_neighbors.append(neighborElement.m_oid, neighbor);
+	    }
+	    catch(Exception exception)
+	    {
 	    }
 	    finally
 	    {
@@ -325,6 +331,9 @@ public class Kernel
 
 			    participantCall = m_callQueue.get(sipHashId);
 			}
+			catch(Exception exception)
+			{
+			}
 			finally
 			{
 			    m_callQueueMutex.writeLock().unlock();
@@ -345,6 +354,9 @@ public class Kernel
 
 			    if(m_callQueue.containsKey(sipHashId))
 				m_callQueue.put(sipHashId, participantCall);
+			}
+			catch(Exception exception)
+			{
 			}
 			finally
 			{
@@ -440,6 +452,9 @@ public class Kernel
 					remove(0);
 				else
 				    break;
+			    }
+			    catch(Exception exception)
+			    {
 			    }
 			    finally
 			    {
@@ -824,6 +839,9 @@ public class Kernel
 
 	    m_neighbors.clear();
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_neighborsMutex.writeLock().unlock();
@@ -846,6 +864,9 @@ public class Kernel
 		if(m_neighbors.get(j) != null)
 		    m_neighbors.get(j).scheduleSend(message);
 	    }
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -914,6 +935,9 @@ public class Kernel
 		}
 	    }
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_neighborsMutex.writeLock().unlock();
@@ -950,6 +974,9 @@ public class Kernel
 
 		return stringBuilder.toString();
 	    }
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -989,6 +1016,9 @@ public class Kernel
 	    m_callQueue.put
 		(sipHashId,
 		 new ParticipantCall(algorithm, sipHashId, participantOid));
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -1037,6 +1067,9 @@ public class Kernel
 		}
 	    }
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_fireStreamsMutex.writeLock().unlock();
@@ -1079,6 +1112,9 @@ public class Kernel
 			return true;
 	    }
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
@@ -1118,10 +1154,15 @@ public class Kernel
 
 	    return m_chatMessageRetrievalIdentity;
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_chatMessageRetrievalIdentityMutex.writeLock().unlock();
 	}
+
+	return null;
     }
 
     public int ourMessage(String buffer)
@@ -1884,6 +1925,9 @@ public class Kernel
 			{
 			    m_callQueue.remove(array[1]);
 			}
+			catch(Exception exception)
+			{
+			}
 			finally
 			{
 			    m_callQueueMutex.writeLock().unlock();
@@ -1983,6 +2027,9 @@ public class Kernel
 					     m_callQueue.get(sipHashId).
 					     m_startTime) / 1000000000);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_callQueueMutex.readLock().unlock();
@@ -2028,6 +2075,9 @@ public class Kernel
 		}
 	    }
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
@@ -2051,6 +2101,9 @@ public class Kernel
 		   m_neighbors.get(j).getOid() != oid)
 		    m_neighbors.get(j).scheduleEchoSend(message);
 	    }
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2076,6 +2129,9 @@ public class Kernel
 		    m_neighbors.get(j).scheduleEchoSend(message);
 	    }
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
@@ -2100,6 +2156,9 @@ public class Kernel
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
@@ -2116,6 +2175,9 @@ public class Kernel
 	{
 	    if(m_fireStreams.containsKey(name))
 		keystream = m_fireStreams.get(name);
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2137,6 +2199,9 @@ public class Kernel
 	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
@@ -2153,6 +2218,9 @@ public class Kernel
 	{
 	    if(m_fireStreams.containsKey(name))
 		keystream = m_fireStreams.get(name);
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2174,6 +2242,9 @@ public class Kernel
 		MessageElement.FIRE_STATUS_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
@@ -2192,6 +2263,9 @@ public class Kernel
 		SHARE_SIPHASH_ID_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
@@ -2205,6 +2279,9 @@ public class Kernel
 	try
 	{
 	    m_fireStreams.remove(name);
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2224,6 +2301,9 @@ public class Kernel
 	    messageElement.m_messageType =
 		MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
