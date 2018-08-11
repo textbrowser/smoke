@@ -724,25 +724,26 @@ public class Messages
 	    stringBuilder.append("\n");
 
 	    /*
-	    ** [ Encryption Public Key ]
+	    ** [ Encryption and Signature Public Keys ]
 	    */
 
-	    PublicKey publicKey = null;
-	    byte bytes[] = null;
+	    PublicKey encryptionKey = cryptography.chatEncryptionPublicKey();
+	    PublicKey signatureKey = cryptography.chatSignaturePublicKey();
 
-	    publicKey = cryptography.chatEncryptionPublicKey();
-
-	    if(publicKey == null)
+	    if(encryptionKey == null || signatureKey == null)
 		return null;
+
+	    byte bytes[] = null;
 
 	    /*
 	    ** [ Encryption Public Key Signature ]
 	    */
 
-	    if(!publicKey.getAlgorithm().equals("McEliece-CCA2"))
+	    if(!encryptionKey.getAlgorithm().equals("McEliece-CCA2"))
 	    {
 		bytes = cryptography.signViaChatEncryption
-		    (publicKey.getEncoded());
+		    (Miscellaneous.joinByteArrays(encryptionKey.getEncoded(),
+						  signatureKey.getEncoded()));
 
 		if(bytes == null)
 		    return null;
@@ -750,32 +751,27 @@ public class Messages
 	    else
 		bytes = new byte[1];
 
-	    stringBuilder.append(Base64.encodeToString(publicKey.getEncoded(),
-						       Base64.NO_WRAP));
+	    stringBuilder.
+		append(Base64.encodeToString(encryptionKey.getEncoded(),
+					     Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
 	    /*
-	    ** [ Signature Public Key ]
-	    */
-
-	    publicKey = cryptography.chatSignaturePublicKey();
-
-	    if(publicKey == null)
-		return null;
-
-	    /*
 	    ** [ Signature Public Key Signature ]
 	    */
 
-	    bytes = cryptography.signViaChatSignature(publicKey.getEncoded());
+	    bytes = cryptography.signViaChatSignature
+		(Miscellaneous.joinByteArrays(encryptionKey.getEncoded(),
+					      signatureKey.getEncoded()));
 
 	    if(bytes == null)
 		return null;
 
-	    stringBuilder.append(Base64.encodeToString(publicKey.getEncoded(),
-						       Base64.NO_WRAP));
+	    stringBuilder.
+		append(Base64.encodeToString(signatureKey.getEncoded(),
+					     Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 

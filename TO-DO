@@ -188,6 +188,7 @@ Completed Items
 146.   Resize Member Chat bubbles according to contents.
 147.   Receiving requested keys which do not include signatures should
        be functional.
+148.   Sign encryption and signature keys as a pair.
 
 Future Items
 
@@ -251,4 +252,3 @@ Remaining Items
 6.     Steam should offer a caching mechanism, transforming Smoke into
        a data replicator.
 7.     Stronger surreptitious forwarding.
-8.     Sign encryption and signature keys as a pair.
