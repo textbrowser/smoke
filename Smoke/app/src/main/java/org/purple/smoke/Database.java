@@ -147,25 +147,19 @@ public class Database extends SQLiteOpenHelper
     private Database(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
 
-    private synchronized void prepareDb()
-    {
-	if(m_db == null)
-	    try
-	    {
-		m_db = getWritableDatabase();
-	    }
-	    catch(Exception exception)
-	    {
-		m_db = null;
-	    }
+	try
+	{
+	    m_db = getWritableDatabase();
+	}
+	catch(Exception exception)
+	{
+	    m_db = null;
+	}
     }
 
     public ArrayList<FireElement> readFires(Cryptography cryptography)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -248,8 +242,6 @@ public class Database extends SQLiteOpenHelper
     public ArrayList<NeighborElement> readNeighborOids
 	(Cryptography cryptography)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -330,8 +322,6 @@ public class Database extends SQLiteOpenHelper
 
     public ArrayList<NeighborElement> readNeighbors(Cryptography cryptography)
     {
-	prepareDb();
-
 	if(!State.getInstance().isAuthenticated())
 	    return null;
 
@@ -598,8 +588,6 @@ public class Database extends SQLiteOpenHelper
     public ArrayList<SipHashIdElement> readNonSharedSipHashIds
 	(Cryptography cryptography)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -682,8 +670,6 @@ public class Database extends SQLiteOpenHelper
     public ArrayList<ParticipantElement> readParticipants
 	(Cryptography cryptography, String sipHashId)
     {
-	prepareDb();
-
 	if(!State.getInstance().isAuthenticated())
 	    return null;
 
@@ -819,8 +805,6 @@ public class Database extends SQLiteOpenHelper
     public ArrayList<SipHashIdElement> readSipHashIds
 	(String sipHashId, Cryptography cryptography)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1002,8 +986,6 @@ public class Database extends SQLiteOpenHelper
 
     public ArrayList<String> readSipHashIdStrings(Cryptography cryptography)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1070,8 +1052,6 @@ public class Database extends SQLiteOpenHelper
 						   byte attachment[],
 						   long timestamp)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return ExceptionLevels.EXCEPTION_FATAL;
 
@@ -1153,8 +1133,6 @@ public class Database extends SQLiteOpenHelper
     public MemberChatElement readMemberChat
 	(Cryptography cryptography, String sipHashId, int position)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1259,8 +1237,6 @@ public class Database extends SQLiteOpenHelper
     public PublicKey publicEncryptionKeyForSipHashId(Cryptography cryptography,
 						     String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1305,8 +1281,6 @@ public class Database extends SQLiteOpenHelper
     public PublicKey publicSignatureKeyForSipHashId(Cryptography cryptography,
 						    String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1351,8 +1325,6 @@ public class Database extends SQLiteOpenHelper
     public PublicKey signatureKeyForDigest(Cryptography cryptography,
 					   byte digest[])
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   digest == null ||
 	   digest.length < 0 ||
@@ -1412,8 +1384,6 @@ public class Database extends SQLiteOpenHelper
     public SipHashIdElement readSipHashId(Cryptography cryptography,
 					  String oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1508,8 +1478,6 @@ public class Database extends SQLiteOpenHelper
     public String nameFromSipHashId(Cryptography cryptography,
 				    String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return "";
 
@@ -1550,8 +1518,6 @@ public class Database extends SQLiteOpenHelper
 
     public String readNeighborStatusControl(Cryptography cryptography, int oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1589,8 +1555,6 @@ public class Database extends SQLiteOpenHelper
     public String readParticipantOptions(Cryptography cryptography,
 					 String sipHashId)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return "";
 
@@ -1634,8 +1598,6 @@ public class Database extends SQLiteOpenHelper
 
     public String readSetting(Cryptography cryptography, String name)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return "";
 
@@ -1701,8 +1663,6 @@ public class Database extends SQLiteOpenHelper
     public String readSipHashIdString(Cryptography cryptography,
 				      String oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -1739,8 +1699,6 @@ public class Database extends SQLiteOpenHelper
     public String writeParticipant(Cryptography cryptography,
 				   byte data[])
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   data == null ||
 	   data.length < 0 ||
@@ -2027,8 +1985,6 @@ public class Database extends SQLiteOpenHelper
 
     public String[] keysSigned(Cryptography cryptography, String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null)
 	    return null;
 
@@ -2089,8 +2045,6 @@ public class Database extends SQLiteOpenHelper
     public String[] nameSipHashIdFromDigest(Cryptography cryptography,
 					    byte digest[])
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   digest == null ||
 	   digest.length < 0 ||
@@ -2145,8 +2099,6 @@ public class Database extends SQLiteOpenHelper
 
     public String[] readOutboundMessage(int oid)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return null;
 
@@ -2189,8 +2141,6 @@ public class Database extends SQLiteOpenHelper
 
     public boolean containsCongestionDigest(long value)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return false;
 
@@ -2235,8 +2185,6 @@ public class Database extends SQLiteOpenHelper
     public boolean containsParticipant(Cryptography cryptography,
 				       String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return false;
 
@@ -2272,8 +2220,6 @@ public class Database extends SQLiteOpenHelper
 
     public boolean deleteEntry(String oid, String table)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return false;
 
@@ -2300,8 +2246,6 @@ public class Database extends SQLiteOpenHelper
 
     public boolean deleteFiascoKeys(String oid)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return false;
 
@@ -2331,8 +2275,6 @@ public class Database extends SQLiteOpenHelper
 					   byte keyStream[],
 					   int oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return false;
 
@@ -2371,8 +2313,6 @@ public class Database extends SQLiteOpenHelper
 
     public boolean writeCongestionDigest(long value)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return false;
 
@@ -2422,8 +2362,6 @@ public class Database extends SQLiteOpenHelper
 				 String transport,
 				 String version)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return false;
 
@@ -2628,8 +2566,6 @@ public class Database extends SQLiteOpenHelper
 					String name,
 					int oid)
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   m_db == null ||
 	   name == null ||
@@ -2666,8 +2602,6 @@ public class Database extends SQLiteOpenHelper
 					   String name,
 					   String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return false;
 
@@ -2840,8 +2774,6 @@ public class Database extends SQLiteOpenHelper
     public byte[] neighborRemoteCertificate(Cryptography cryptography,
 					    int oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -2875,8 +2807,6 @@ public class Database extends SQLiteOpenHelper
     public byte[] participantKeyStream(Cryptography cryptography,
 				       String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return null;
 
@@ -2915,8 +2845,6 @@ public class Database extends SQLiteOpenHelper
     public byte[] participantKeyStream(Cryptography cryptography,
 				       byte digest[])
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   digest == null ||
 	   digest.length < 0 ||
@@ -2956,8 +2884,6 @@ public class Database extends SQLiteOpenHelper
 				       byte array[],
 				       byte bytes[])
     {
-	prepareDb();
-
 	if(array == null ||
 	   array.length < 0 ||
 	   bytes == null ||
@@ -3016,8 +2942,6 @@ public class Database extends SQLiteOpenHelper
     public int participantOidFromSipHash(Cryptography cryptography,
 					 String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return -1;
 
@@ -3053,8 +2977,6 @@ public class Database extends SQLiteOpenHelper
 
     public long count(String table)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return -1;
 
@@ -3087,8 +3009,6 @@ public class Database extends SQLiteOpenHelper
 
     public long countOfMessages(Cryptography cryptography, String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return -1;
 
@@ -3140,8 +3060,6 @@ public class Database extends SQLiteOpenHelper
 
     public void cleanDanglingOutboundQueued()
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -3171,8 +3089,6 @@ public class Database extends SQLiteOpenHelper
 
     public void cleanDanglingParticipants()
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -3225,8 +3141,6 @@ public class Database extends SQLiteOpenHelper
 
     public void clearTable(String table)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -3250,8 +3164,6 @@ public class Database extends SQLiteOpenHelper
 					 String sipHashId,
 					 int oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return;
 
@@ -3281,8 +3193,6 @@ public class Database extends SQLiteOpenHelper
     public void deleteParticipantMessages(Cryptography cryptography,
 					  String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return;
 
@@ -3313,8 +3223,6 @@ public class Database extends SQLiteOpenHelper
 				       String message,
 				       int oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null || message.trim().isEmpty())
 	    return;
 
@@ -3345,8 +3253,6 @@ public class Database extends SQLiteOpenHelper
 				      String controlStatus,
 				      String oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return;
 
@@ -3377,8 +3283,6 @@ public class Database extends SQLiteOpenHelper
 					  String oid,
 					  byte certificate[])
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return;
 
@@ -3691,8 +3595,6 @@ public class Database extends SQLiteOpenHelper
 
     public void purgeCongestion(int lifetime)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -3722,8 +3624,6 @@ public class Database extends SQLiteOpenHelper
 
     public void purgeNeighborQueue(String oid)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -3746,8 +3646,6 @@ public class Database extends SQLiteOpenHelper
 
     public void purgeParticipantsKeyStreams(int lifetime)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -3777,8 +3675,6 @@ public class Database extends SQLiteOpenHelper
 
     public void reset()
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -3843,8 +3739,6 @@ public class Database extends SQLiteOpenHelper
 				byte encryptionKey[],
 				byte keyStream[])
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   encryptionKey == null ||
 	   encryptionKey.length < 0 ||
@@ -3904,8 +3798,6 @@ public class Database extends SQLiteOpenHelper
 					String uptime,
 					String oid)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return;
 
@@ -3995,8 +3887,6 @@ public class Database extends SQLiteOpenHelper
     public void updateParticipantLastTimestamp(Cryptography cryptography,
 					       String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return;
 
@@ -4035,8 +3925,6 @@ public class Database extends SQLiteOpenHelper
     public void updateParticipantLastTimestamp(Cryptography cryptography,
 					       byte digest[])
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   digest == null ||
 	   digest.length < 0 ||
@@ -4077,8 +3965,6 @@ public class Database extends SQLiteOpenHelper
 			      String sipHashId,
 			      byte keyStream[])
     {
-	prepareDb();
-
 	if(cryptography == null ||
 	   keyStream == null ||
 	   keyStream.length < 0 ||
@@ -4136,8 +4022,6 @@ public class Database extends SQLiteOpenHelper
 
     public void writeLog(String event)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
@@ -4164,8 +4048,6 @@ public class Database extends SQLiteOpenHelper
 					String options,
 					String sipHashId)
     {
-	prepareDb();
-
 	if(cryptography == null || m_db == null)
 	    return;
 
@@ -4203,8 +4085,6 @@ public class Database extends SQLiteOpenHelper
 			     String name,
 			     String value)
     {
-	prepareDb();
-
 	if(m_db == null)
 	    return;
 
