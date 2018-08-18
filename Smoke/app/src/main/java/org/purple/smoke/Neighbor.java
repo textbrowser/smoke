@@ -197,7 +197,7 @@ public abstract class Neighbor
 		    }
 
 		    if(m_stringBuffer.length() > MAXIMUM_BYTES)
-			m_stringBuffer.setLength(MAXIMUM_BYTES);
+			m_stringBuffer.setLength(0);
 		}
 		catch(Exception exception)
 		{
