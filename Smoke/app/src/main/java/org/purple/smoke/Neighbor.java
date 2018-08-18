@@ -178,22 +178,36 @@ public abstract class Neighbor
 		    ** Detect our end-of-message delimiter.
 		    */
 
-		    int indexOf = m_stringBuffer.indexOf(Messages.EOM);
+		    int indexOf = -1;
 
-		    while(indexOf >= 0)
+		    while((indexOf = m_stringBuffer.indexOf(Messages.EOM)) >= 0)
 		    {
 			String buffer = m_stringBuffer.
 			    substring(0, indexOf + Messages.EOM.length());
 
 			m_stringBuffer.delete(0, buffer.length());
-			indexOf = m_stringBuffer.indexOf(Messages.EOM);
 
-			int rc = Kernel.getInstance().ourMessage(buffer);
+			if(buffer.contains("type=0097a&content="))
+			{
+			    scheduleSend
+				(Messages.
+				 authenticateMessage(m_cryptography,
+						     Messages.
+						     stripMessage(buffer)));
+			    continue;
+			}
 
-			if(rc == 0)
+			switch(Kernel.getInstance().ourMessage(buffer))
+			{
+			case 0:
 			    echo(buffer);
-			else if(rc == 2)
+			    break;
+			case 2:
 			    echoForce(buffer);
+			    break;
+			default:
+			    break;
+			}
 		    }
 
 		    if(m_stringBuffer.length() > MAXIMUM_BYTES)

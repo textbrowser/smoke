@@ -63,6 +63,47 @@ public class Messages
 							      */
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 6;
 
+    public static String authenticateMessage(Cryptography cryptography,
+					     String string)
+    {
+	if(cryptography == null || string == null || string.length() <= 0)
+	    return "";
+
+	try
+	{
+	    byte signature[] = cryptography.signViaChatSignature
+		(string.getBytes());
+
+	    if(signature == null)
+		return "";
+
+	    StringBuilder results = new StringBuilder();
+
+	    results.append("POST HTTP/1.1\r\n");
+	    results.append
+		("Content-Type: application/x-www-form-urlencoded\r\n");
+	    results.append("Content-Length: %1\r\n");
+	    results.append("\r\n");
+	    results.append("type=0097b&content=%2\r\n\r\n\r\n");
+
+	    String base64 = Base64.encodeToString(signature, Base64.NO_WRAP);
+	    int indexOf = results.indexOf("%1");
+	    int length = base64.length() +
+		"type=0097b&content=\r\n\r\n\r\n".length();
+
+	    results = results.replace
+		(indexOf, indexOf + 2, String.valueOf(length));
+	    indexOf = results.indexOf("%2");
+	    results = results.replace(indexOf, indexOf + 2, base64);
+	    return results.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
+    }
+
     public static String bytesToMessageString(byte bytes[])
     {
 	if(bytes == null || bytes.length <= 0)
