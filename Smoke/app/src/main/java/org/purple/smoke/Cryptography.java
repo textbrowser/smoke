@@ -130,6 +130,7 @@ public class Cryptography
 
     private Cryptography()
     {
+	prepareSecureRandom();
     }
 
     private static synchronized void prepareSecureRandom()
@@ -563,8 +564,6 @@ public class Cryptography
 	    m_macKeyMutex.readLock().unlock();
 	}
 
-	prepareSecureRandom();
-
 	byte bytes[] = null;
 
 	try
@@ -766,7 +765,6 @@ public class Cryptography
 
     public byte[] identity()
     {
-	prepareSecureRandom();
 	m_identityMutex.writeLock().lock();
 
 	try
@@ -1101,37 +1099,52 @@ public class Cryptography
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
 						       int keySize1,
 						       int keySize2)
-	throws InvalidAlgorithmParameterException, NoSuchAlgorithmException
     {
 	if(algorithm.equals("McEliece-Fujisaki"))
 	{
-	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance
-		("McElieceFujisaki");
-	    McElieceCCA2KeyGenParameterSpec parameters = null;
+	    try
+	    {
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance
+		    ("McElieceFujisaki");
+		McElieceCCA2KeyGenParameterSpec parameters = null;
 
-	    if(keySize2 == 0)
-		parameters = new McElieceCCA2KeyGenParameterSpec
-		    (MCELIECE_M,
-		     MCELIECE_T,
-		     McElieceCCA2KeyGenParameterSpec.SHA256);
-	    else
-		parameters = new McElieceCCA2KeyGenParameterSpec
-		    (keySize1,
-		     keySize2,
-		     McElieceCCA2KeyGenParameterSpec.SHA256);
+		if(keySize2 == 0)
+		    parameters = new McElieceCCA2KeyGenParameterSpec
+			(MCELIECE_M,
+			 MCELIECE_T,
+			 McElieceCCA2KeyGenParameterSpec.SHA256);
+		else
+		    parameters = new McElieceCCA2KeyGenParameterSpec
+			(keySize1,
+			 keySize2,
+			 McElieceCCA2KeyGenParameterSpec.SHA256);
 
-	    keyPairGenerator.initialize(parameters);
-	    return keyPairGenerator.generateKeyPair();
+		keyPairGenerator.initialize(parameters);
+		return keyPairGenerator.generateKeyPair();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    return null;
 	}
 	else
 	{
 	    prepareSecureRandom();
 
-	    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
-		getInstance(algorithm);
+	    try
+	    {
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+		    getInstance(algorithm);
 
-	    keyPairGenerator.initialize(keySize1, s_secureRandom);
-	    return keyPairGenerator.generateKeyPair();
+		keyPairGenerator.initialize(keySize1, s_secureRandom);
+		return keyPairGenerator.generateKeyPair();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    return null;
 	}
     }
 
@@ -1238,29 +1251,45 @@ public class Cryptography
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
 						  int iterations)
-	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
 	int length = 256; // Bits.
 
-	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
-	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-	    ("PBKDF2WithHmacSHA1");
+	try
+	{
+	    KeySpec keySpec = new PBEKeySpec
+		(password, salt, iterations, length);
+	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		("PBKDF2WithHmacSHA1");
 
-	return secretKeyFactory.generateSecret(keySpec);
+	    return secretKeyFactory.generateSecret(keySpec);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public static SecretKey generateMacKey(byte salt[],
 					   char password[],
 					   int iterations)
-	throws InvalidKeySpecException, NoSuchAlgorithmException
     {
 	int length = 512; // Bits.
 
-	KeySpec keySpec = new PBEKeySpec(password, salt, iterations, length);
-	SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-	    ("PBKDF2WithHmacSHA1");
+	try
+	{
+	    KeySpec keySpec = new PBEKeySpec
+		(password, salt, iterations, length);
+	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		("PBKDF2WithHmacSHA1");
 
-	return secretKeyFactory.generateSecret(keySpec);
+	    return secretKeyFactory.generateSecret(keySpec);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public static String fingerPrint(byte bytes[])
@@ -1624,6 +1653,8 @@ public class Cryptography
     {
 	if(data == null || data.length < 0 || publicKey == null)
 	    return null;
+
+	prepareSecureRandom();
 
 	byte bytes[] = null;
 
