@@ -472,6 +472,9 @@ public class Kernel
 				switch(messageElement.m_messageType)
 				{
 				case MessageElement.CHAT_MESSAGE_TYPE:
+				    byte messageIdentity[] = Cryptography.
+					randomBytes(64);
+
 				    bytes = Messages.chatMessage
 					(s_cryptography,
 					 messageElement.m_message,
@@ -489,7 +492,9 @@ public class Kernel
 					 "local",
 					 messageElement.m_message,
 					 messageElement.m_id,
+					 false,
 					 messageElement.m_attachment,
+					 messageIdentity,
 					 timestamp);
 
 				    Intent intent = new Intent
@@ -535,6 +540,8 @@ public class Kernel
 					     "Requesting messages from " +
 					     "SmokeStack(s).",
 					     messageElement.m_id,
+					     false,
+					     null,
 					     null,
 					     timestamp);
 					sendBroadcast
@@ -1009,6 +1016,8 @@ public class Kernel
 		 (algorithm == ParticipantCall.Algorithms.MCELIECE ?
 		  "McEliece." : "RSA." + " Please be patient."),
 		 sipHashId,
+		 false,
+		 null,
 		 null,
 		 System.currentTimeMillis());
 	    sendBroadcast
@@ -1679,7 +1688,9 @@ public class Kernel
 					   "true" : "false",
 					   message,
 					   strings[1],
+					   false,
 					   attachment,
+					   null,
 					   timestamp) !=
 		   Database.ExceptionLevels.EXCEPTION_PERMISSIBLE)
 		{
@@ -1958,6 +1969,8 @@ public class Kernel
 			     "Received a half-and-half call. " +
 			     "Dispatching a response. Please be patient.",
 			     array[1],
+			     false,
+			     null,
 			     null,
 			     System.currentTimeMillis());
 		    }
@@ -1969,6 +1982,8 @@ public class Kernel
 			     "local",
 			     "Received a half-and-half call-response.",
 			     array[1],
+			     false,
+			     null,
 			     null,
 			     System.currentTimeMillis());
 		    }

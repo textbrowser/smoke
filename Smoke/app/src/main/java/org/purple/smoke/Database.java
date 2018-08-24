@@ -1049,7 +1049,9 @@ public class Database extends SQLiteOpenHelper
 						   String fromSmokeStack,
 						   String message,
 						   String sipHashId,
+						   boolean messageRead,
 						   byte attachment[],
+						   byte messageIdentity[],
 						   long timestamp)
     {
 	if(cryptography == null || m_db == null)
@@ -1093,6 +1095,23 @@ public class Database extends SQLiteOpenHelper
 				       hmac((message +
 					     sipHashId +
 					     timestamp).getBytes()),
+				       Base64.DEFAULT));
+
+	    if(messageIdentity == null)
+		values.put
+		    ("message_identity_digest",
+		     Base64.encodeToString(Cryptography.randomBytes(64),
+					   Base64.DEFAULT));
+	    else
+		values.put
+		    ("message_identity_digest",
+		     Base64.encodeToString(cryptography.hmac(messageIdentity),
+					   Base64.DEFAULT));
+	    values.put
+		("message_read",
+		 Base64.encodeToString(messageRead ?
+				       cryptography.etm("true".getBytes()) :
+				       cryptography.etm("false".getBytes()),
 				       Base64.DEFAULT));
 	    values.put
 		("siphash_id_digest",
@@ -3549,6 +3568,8 @@ public class Database extends SQLiteOpenHelper
 	    "from_smokestack TEXT NOT NULL, " +
 	    "message TEXT NOT NULL, " +
 	    "message_digest TEXT NOT NULL, " +
+	    "message_identity_digest TEXT NOT NULL, " +
+	    "message_read TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "timestamp INTEGER NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
