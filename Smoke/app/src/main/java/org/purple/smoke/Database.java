@@ -1240,7 +1240,8 @@ public class Database extends SQLiteOpenHelper
 		    case 3:
 			if(bytes != null)
 			    memberChatElement.m_messageRead =
-				(bytes == "true".getBytes() ? true : false);
+				(new String(bytes).equals("true") ?
+				 true : false);
 
 			break;
 		    }

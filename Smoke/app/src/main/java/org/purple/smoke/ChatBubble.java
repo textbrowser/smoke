@@ -56,6 +56,7 @@ public class ChatBubble extends View
     private LayoutInflater m_inflater = null;
     private View m_view = null;
     private boolean m_fromSmokeStack = false;
+    private boolean m_messageRead = false;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
     public static enum Locations {LEFT, RIGHT};
@@ -159,8 +160,17 @@ public class ChatBubble extends View
 
     public void setRead(boolean state)
     {
+	m_messageRead = state;
 	m_view.findViewById(R.id.message_read).setVisibility
 	    (state ? View.VISIBLE : View.GONE);
+
+	float density = m_context.getResources().getDisplayMetrics().density;
+
+	m_view.findViewById(R.id.text).setPaddingRelative
+	    ((int) (10 * density),                         // Start
+	     (int) (10 * density),                         // Top
+	     (int) (10 * density),                         // End
+	     (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
     }
 
     public void setText(Locations location, String text)
@@ -220,10 +230,10 @@ public class ChatBubble extends View
 	else
 	    linearLayout.setBackgroundResource(R.drawable.bubble_right_text);
 
-	textView.setPaddingRelative
-	    ((int) (10 * density),  // Start
-	     (int) (10 * density),  // Top
-	     (int) (10 * density),  // End
-	     (int) (20 * density)); // Bottom
+	m_view.findViewById(R.id.text).setPaddingRelative
+	    ((int) (10 * density),                         // Start
+	     (int) (10 * density),                         // Top
+	     (int) (10 * density),                         // End
+	     (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
     }
 }
