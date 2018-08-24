@@ -214,9 +214,9 @@ public class ChatBubble extends View
 	    linearLayout.setBackgroundResource(R.drawable.bubble_right_text);
 
 	textView.setPaddingRelative
-	    ((int) (10 * density),
-	     (int) (10 * density),
-	     (int) (10 * density),
-	     (int) (10 * density));
+	    ((int) (10 * density),  // Start
+	     (int) (10 * density),  // Top
+	     (int) (10 * density),  // End
+	     (int) (20 * density)); // Bottom
     }
 }
