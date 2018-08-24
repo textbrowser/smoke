@@ -373,10 +373,15 @@ public class Messages
 				     byte attachment[],
 				     byte destinationKey[],
 				     byte keyStream[],
+				     byte messageIdentity[],
 				     long sequence,
 				     long timestamp)
     {
-	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	if(cryptography == null ||
+	   keyStream == null ||
+	   keyStream.length <= 0 ||
+	   messageIdentity == null ||
+	   messageIdentity.length <= 0)
 	    return null;
 
 	/*
@@ -448,6 +453,14 @@ public class Messages
 		     encodeToString(Miscellaneous.compressed(new byte[1]),
 				    Base64.NO_WRAP));
 
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Message Identity ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(messageIdentity, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
 	    /*

@@ -472,9 +472,6 @@ public class Kernel
 				switch(messageElement.m_messageType)
 				{
 				case MessageElement.CHAT_MESSAGE_TYPE:
-				    byte messageIdentity[] = Cryptography.
-					randomBytes(64);
-
 				    bytes = Messages.chatMessage
 					(s_cryptography,
 					 messageElement.m_message,
@@ -484,6 +481,7 @@ public class Kernel
 					 sha512(messageElement.m_id.
 						getBytes("UTF-8")),
 					 messageElement.m_keyStream,
+					 messageElement.m_messageIdentity,
 					 State.getInstance().
 					 chatSequence(messageElement.m_id),
 					 timestamp);
@@ -494,7 +492,7 @@ public class Kernel
 					 messageElement.m_id,
 					 false,
 					 messageElement.m_attachment,
-					 messageIdentity,
+					 messageElement.m_messageIdentity,
 					 timestamp);
 
 				    Intent intent = new Intent
@@ -624,6 +622,7 @@ public class Kernel
 					 messageElement.m_attachment,
 					 null,
 					 messageElement.m_keyStream,
+					 messageElement.m_messageIdentity,
 					 State.getInstance().
 					 chatSequence(messageElement.m_id),
 					 timestamp);
