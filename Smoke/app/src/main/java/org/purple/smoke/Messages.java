@@ -56,7 +56,7 @@ public class Messages
 							      ** byte is not
 							      ** considered.
 							      */
-    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 5; /*
+    public final static int CHAT_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
 							      ** byte is not
 							      ** considered.

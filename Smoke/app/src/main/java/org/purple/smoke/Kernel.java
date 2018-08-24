@@ -1569,6 +1569,7 @@ public class Kernel
 		String message = null;
 		boolean updateTimeStamp = true;
 		byte attachment[] = null;
+		byte messageIdentity[] = null;
 		byte publicKeySignature[] = null;
 		int ii = 0;
 		long sequence = 0;
@@ -1621,6 +1622,11 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 4:
+			messageIdentity = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
+			ii += 1;
+			break;
+		    case 5:
 			String array[] = s_databaseHelper.
 			    nameSipHashIdFromDigest(s_cryptography, pk);
 
@@ -1659,6 +1665,8 @@ public class Kernel
 				 "\n".getBytes(),
 				 strings[3].getBytes(),
 				 "\n".getBytes(),
+				 strings[4].getBytes(),
+				 "\n".getBytes(),
 				 s_cryptography.
 				 chatEncryptionPublicKeyDigest())))
 				return 1;
@@ -1689,7 +1697,7 @@ public class Kernel
 					   strings[1],
 					   false,
 					   attachment,
-					   null,
+					   messageIdentity,
 					   timestamp) !=
 		   Database.ExceptionLevels.EXCEPTION_PERMISSIBLE)
 		{
