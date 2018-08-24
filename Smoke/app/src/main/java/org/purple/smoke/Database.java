@@ -1164,8 +1164,9 @@ public class Database extends SQLiteOpenHelper
 		("SELECT attachment, " + // 0
 		 "from_smokestack, " +   // 1
 		 "message, " +           // 2
-		 "timestamp, " +         // 3
-		 "oid " +                // 4
+		 "message_read, " +      // 3
+		 "timestamp, " +         // 4
+		 "oid " +                // 5
 		 "FROM participants_messages WHERE siphash_id_digest = ? " +
 		 "ORDER BY timestamp LIMIT 1 OFFSET CAST(? AS INTEGER)",
 		 new String[] {Base64.
@@ -1188,7 +1189,7 @@ public class Database extends SQLiteOpenHelper
 			memberChatElement.m_oid = cursor.getInt(i);
 			continue;
 		    }
-		    else if(i == 3)
+		    else if(i == 4)
 		    {
 			memberChatElement.m_timestamp = cursor.getLong(i);
 			continue;
@@ -1234,6 +1235,12 @@ public class Database extends SQLiteOpenHelper
 			else
 			    memberChatElement.m_message =
 				"error (" + oid + ")";
+
+			break;
+		    case 3:
+			if(bytes != null)
+			    memberChatElement.m_messageRead =
+				(bytes == "true".getBytes() ? true : false);
 
 			break;
 		    }

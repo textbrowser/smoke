@@ -73,6 +73,7 @@ public class ChatBubble extends View
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_view = m_inflater.inflate(R.layout.chat_bubble, viewGroup, false);
+	m_view.findViewById(R.id.message_read).setVisibility(View.GONE);
     }
 
     public View view()
@@ -154,6 +155,12 @@ public class ChatBubble extends View
     public void setOid(int oid)
     {
 	m_view.setId(oid);
+    }
+
+    public void setRead(boolean state)
+    {
+	m_view.findViewById(R.id.message_read).setVisibility
+	    (state ? View.VISIBLE : View.GONE);
     }
 
     public void setText(Locations location, String text)
