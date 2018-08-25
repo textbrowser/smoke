@@ -167,7 +167,7 @@ public class ChatBubble extends View
 	else
 	{
 	    m_view.findViewById(R.id.message_read).setVisibility
-		(state ? View.VISIBLE : View.GONE);
+		(m_messageRead ? View.VISIBLE : View.GONE);
 
 	    float density = m_context.getResources().getDisplayMetrics().
 		density;

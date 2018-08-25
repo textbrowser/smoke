@@ -111,6 +111,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    if(!local)
 	    {
 		m_chatBubble.setName(ChatBubble.Locations.LEFT, m_name);
+		m_chatBubble.setRead(ChatBubble.Locations.LEFT, false);
 		m_chatBubble.setText
 		    (ChatBubble.Locations.LEFT, stringBuilder.toString());
 	    }
