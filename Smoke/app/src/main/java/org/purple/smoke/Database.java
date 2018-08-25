@@ -3634,6 +3634,7 @@ public class Database extends SQLiteOpenHelper
 	    "message_digest TEXT NOT NULL, " +
 	    "message_identity_digest TEXT NOT NULL, " + // Random.
 	    "message_read TEXT NOT NULL, " +
+	    "message_sent TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "timestamp INTEGER NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +

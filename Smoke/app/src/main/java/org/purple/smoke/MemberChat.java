@@ -1064,7 +1064,7 @@ public class MemberChat extends AppCompatActivity
 				    View view,
 				    ContextMenuInfo menuInfo)
     {
-	if(menu == null || menuInfo == null || view == null)
+	if(menu == null || view == null)
 	    return;
 
 	super.onCreateContextMenu(menu, view, menuInfo);
