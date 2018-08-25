@@ -1049,7 +1049,6 @@ public class Database extends SQLiteOpenHelper
 						   String fromSmokeStack,
 						   String message,
 						   String sipHashId,
-						   boolean messageRead,
 						   byte attachment[],
 						   byte messageIdentity[],
 						   long timestamp)
@@ -1107,11 +1106,10 @@ public class Database extends SQLiteOpenHelper
 		    ("message_identity_digest",
 		     Base64.encodeToString(cryptography.hmac(messageIdentity),
 					   Base64.DEFAULT));
+
 	    values.put
 		("message_read",
-		 Base64.encodeToString(messageRead ?
-				       cryptography.etm("true".getBytes()) :
-				       cryptography.etm("false".getBytes()),
+		 Base64.encodeToString(cryptography.etm("false".getBytes()),
 				       Base64.DEFAULT));
 	    values.put
 		("siphash_id_digest",
@@ -3276,6 +3274,49 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void writeMessageRead(Cryptography cryptography,
+				 String sipHashId,
+				 byte messageIdentity[])
+    {
+	if(cryptography == null ||
+	   m_db == null ||
+	   messageIdentity == null ||
+	   messageIdentity.length < 0)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("message_read",
+		 Base64.encodeToString(cryptography.etm("true".getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update
+		("participants_messages",
+		 values,
+		 "message_identity_digest = ? AND siphash_id_digest = ?",
+		 new String[] {Base64.encodeToString(cryptography.
+						     hmac(messageIdentity),
+						     Base64.DEFAULT),
+			       Base64.encodeToString(cryptography.
+						     hmac(sipHashId.
+							  toUpperCase().trim().
+							  getBytes("UTF-8")),
+						     Base64.DEFAULT)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void neighborControlStatus(Cryptography cryptography,
 				      String controlStatus,
 				      String oid)
@@ -3576,7 +3617,7 @@ public class Database extends SQLiteOpenHelper
 	    "from_smokestack TEXT NOT NULL, " +
 	    "message TEXT NOT NULL, " +
 	    "message_digest TEXT NOT NULL, " +
-	    "message_identity_digest TEXT NOT NULL, " +
+	    "message_identity_digest TEXT NOT NULL, " + // Random.
 	    "message_read TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "timestamp INTEGER NOT NULL, " +

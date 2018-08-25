@@ -158,19 +158,26 @@ public class ChatBubble extends View
 	m_view.setId(oid);
     }
 
-    public void setRead(boolean state)
+    public void setRead(Locations location, boolean state)
     {
 	m_messageRead = state;
-	m_view.findViewById(R.id.message_read).setVisibility
-	    (state ? View.VISIBLE : View.GONE);
 
-	float density = m_context.getResources().getDisplayMetrics().density;
+	if(location == Locations.LEFT)
+	    m_view.findViewById(R.id.message_read).setVisibility(View.GONE);
+	else
+	{
+	    m_view.findViewById(R.id.message_read).setVisibility
+		(state ? View.VISIBLE : View.GONE);
 
-	m_view.findViewById(R.id.text).setPaddingRelative
-	    ((int) (10 * density),                         // Start
-	     (int) (10 * density),                         // Top
-	     (int) (10 * density),                         // End
-	     (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
+	    float density = m_context.getResources().getDisplayMetrics().
+		density;
+
+	    m_view.findViewById(R.id.text).setPaddingRelative
+		((int) (10 * density),                         // Start
+		 (int) (10 * density),                         // Top
+		 (int) (10 * density),                         // End
+		 (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
+	}
     }
 
     public void setText(Locations location, String text)
@@ -226,14 +233,21 @@ public class ChatBubble extends View
 	    else
 		linearLayout.setBackgroundResource
 		    (R.drawable.bubble_left_text);
+
+	    m_view.findViewById(R.id.text).setPaddingRelative
+		((int) (10 * density),  // Start
+		 (int) (10 * density),  // Top
+		 (int) (10 * density),  // End
+		 (int) (10 * density)); // Bottom
 	}
 	else
+	{
 	    linearLayout.setBackgroundResource(R.drawable.bubble_right_text);
-
-	m_view.findViewById(R.id.text).setPaddingRelative
-	    ((int) (10 * density),                         // Start
-	     (int) (10 * density),                         // Top
-	     (int) (10 * density),                         // End
-	     (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
+	    m_view.findViewById(R.id.text).setPaddingRelative
+		((int) (10 * density),                         // Start
+		 (int) (10 * density),                         // Top
+		 (int) (10 * density),                         // End
+		 (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
+	}
     }
 }

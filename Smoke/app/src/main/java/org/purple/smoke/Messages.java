@@ -49,6 +49,7 @@ public class Messages
     public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
+    public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
     public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
@@ -1158,6 +1159,110 @@ public class Messages
 	    stringBuilder.append
 		(Base64.encodeToString(destination, Base64.NO_WRAP));
 	    return stringBuilder.toString().getBytes("ISO-8859-1");
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public static byte[] messageRead(Cryptography cryptography,
+				     String sipHashId,
+				     byte keyStream[],
+				     byte messageIdentity[])
+    {
+	if(cryptography == null ||
+	   keyStream == null ||
+	   keyStream.length <= 0 ||
+	   messageIdentity == null ||
+	   messageIdentity.length <= 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
+	*/
+
+	try
+	{
+	    PublicKey publicKey = Database.getInstance().
+		publicEncryptionKeyForSipHashId(cryptography, sipHashId);
+
+	    if(publicKey == null)
+		return null;
+
+	    /*
+	    ** [ PK ]
+	    */
+
+	    byte pk[] = Cryptography.pkiEncrypt
+		(publicKey, cryptography.chatEncryptionPublicKeyDigest());
+
+	    if(pk == null)
+		return null;
+
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(
+		 /*
+		 ** [ A Byte ]
+		 */
+
+		 MESSAGE_READ_TYPE,
+
+		 /*
+		 ** [ Message Identity ]
+		 */
+
+		 messageIdentity);
+
+	    /*
+	    ** [ Public Key Signature ]
+	    */
+
+	    byte signature[] = cryptography.signViaChatSignature
+		(Miscellaneous.
+		 joinByteArrays(cryptography.
+				chatEncryptionPublicKeyDigest(),
+				bytes,
+				Cryptography.sha512(publicKey.getEncoded())));
+
+	    if(signature == null)
+		return null;
+
+	    /*
+	    ** [ AES-256 ]
+	    */
+
+	    byte aes256[] = Cryptography.encrypt
+		(Miscellaneous.joinByteArrays(bytes, signature),
+		 Arrays.copyOfRange(keyStream, 0, 32));
+
+	    if(aes256 == null)
+		return null;
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, aes256),
+		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+
+	    if(sha512 == null)
+		return null;
+
+	    /*
+	    ** [ Destination ]
+	    */
+
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+
+	    return Miscellaneous.joinByteArrays
+		(pk, aes256, sha512, destination);
 	}
 	catch(Exception exception)
 	{

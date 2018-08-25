@@ -490,7 +490,6 @@ public class Kernel
 					 "local",
 					 messageElement.m_message,
 					 messageElement.m_id,
-					 false,
 					 messageElement.m_attachment,
 					 messageElement.m_messageIdentity,
 					 timestamp);
@@ -538,7 +537,6 @@ public class Kernel
 					     "Requesting messages from " +
 					     "SmokeStack(s).",
 					     messageElement.m_id,
-					     false,
 					     null,
 					     null,
 					     timestamp);
@@ -1015,7 +1013,6 @@ public class Kernel
 		 (algorithm == ParticipantCall.Algorithms.MCELIECE ?
 		  "McEliece." : "RSA." + " Please be patient."),
 		 sipHashId,
-		 false,
 		 null,
 		 null,
 		 System.currentTimeMillis());
@@ -1455,7 +1452,7 @@ public class Kernel
 	    if(pk.length == 64)
 	    {
 		/*
-		** Chat, Chat Status
+		** Chat, Chat Status, Message-Read Proof
 		*/
 
 		byte keyStream[] = s_databaseHelper.participantKeyStream
@@ -1556,6 +1553,41 @@ public class Kernel
 
 		    s_databaseHelper.updateParticipantLastTimestamp
 			(s_cryptography, pk);
+		    return 1;
+		}
+		else if(abyte[0] == Messages.MESSAGE_READ_TYPE[0])
+		{
+		    PublicKey signatureKey = s_databaseHelper.
+			signatureKeyForDigest(s_cryptography, pk);
+
+		    if(signatureKey == null)
+			return 1;
+
+		    if(!Cryptography.
+		       verifySignature
+		       (signatureKey,
+			Arrays.copyOfRange(aes256, 65, aes256.length),
+			Miscellaneous.
+			joinByteArrays(pk,
+				       Arrays.
+				       copyOfRange(aes256, 0, 65),
+				       s_cryptography.
+				       chatEncryptionPublicKeyDigest())))
+			return 1;
+
+		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
+			(s_cryptography, pk);
+
+		    if(array == null || array.length != 2)
+			return 1;
+
+		    s_databaseHelper.writeMessageRead
+			(s_cryptography,
+			 array[1],
+			 Arrays.copyOfRange(aes256, 1, 65));
+		    sendBroadcast
+			(new Intent
+			 ("org.purple.smoke.notify_data_set_changed"));
 		    return 1;
 		}
 
@@ -1695,7 +1727,6 @@ public class Kernel
 					   "true" : "false",
 					   message,
 					   strings[1],
-					   false,
 					   attachment,
 					   messageIdentity,
 					   timestamp) !=
@@ -1713,6 +1744,20 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		    intent.putExtra("org.purple.smoke.timestamp", timestamp);
 		    sendBroadcast(intent);
+
+		    /*
+		    ** Prepare a read-proof message.
+		    */
+
+		    keyStream = s_databaseHelper.participantKeyStream
+			(s_cryptography, pk); // Current key stream.
+		    enqueueMessage
+			(Messages.
+			 bytesToMessageString(Messages.
+					      messageRead(s_cryptography,
+							  strings[1],
+							  keyStream,
+							  messageIdentity)));
 		}
 
 		return 1;
@@ -1976,7 +2021,6 @@ public class Kernel
 			     "Received a half-and-half call. " +
 			     "Dispatching a response. Please be patient.",
 			     array[1],
-			     false,
 			     null,
 			     null,
 			     System.currentTimeMillis());
@@ -1989,7 +2033,6 @@ public class Kernel
 			     "local",
 			     "Received a half-and-half call-response.",
 			     array[1],
-			     false,
 			     null,
 			     null,
 			     System.currentTimeMillis());
