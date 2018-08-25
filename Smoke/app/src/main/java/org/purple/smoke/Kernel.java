@@ -2218,6 +2218,8 @@ public class Kernel
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
 	    messageElement.m_message = message;
+	    messageElement.m_messageIdentity = Miscellaneous.deepCopy
+		(Cryptography.randomBytes(64));
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}

@@ -47,6 +47,5 @@ public class MessageElement
 
     public MessageElement()
     {
-	m_messageIdentity = Cryptography.randomBytes(64);
     }
 }
