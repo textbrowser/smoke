@@ -211,7 +211,7 @@ public class ChatBubble extends View
 		((int) (10 * density),                         // Start
 		 (int) (10 * density),                         // Top
 		 (int) (10 * density),                         // End
-		 (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
+		 (int) ((m_messageSent ? 20 : 10) * density)); // Bottom
 	}
     }
 
@@ -289,7 +289,8 @@ public class ChatBubble extends View
 		((int) (10 * density),                         // Start
 		 (int) (10 * density),                         // Top
 		 (int) (10 * density),                         // End
-		 (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
+		 (int) ((m_messageRead ||
+			 m_messageSent ? 20 : 10) * density)); // Bottom
 	}
     }
 }
