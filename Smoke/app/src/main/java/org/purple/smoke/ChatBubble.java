@@ -55,6 +55,7 @@ public class ChatBubble extends View
     private Date m_date = new Date(System.currentTimeMillis());
     private LayoutInflater m_inflater = null;
     private View m_view = null;
+    private boolean m_error = false;
     private boolean m_fromSmokeStack = false;
     private boolean m_messageRead = false;
     private final SimpleDateFormat m_simpleDateFormat = new
@@ -74,7 +75,11 @@ public class ChatBubble extends View
 	m_inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_view = m_inflater.inflate(R.layout.chat_bubble, viewGroup, false);
+	m_view.findViewById(R.id.image).setVisibility(View.GONE);
 	m_view.findViewById(R.id.message_read).setVisibility(View.GONE);
+	m_view.findViewById(R.id.message_sent).setVisibility(View.GONE);
+	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
+	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
     }
 
     public View view()
@@ -85,6 +90,11 @@ public class ChatBubble extends View
     public void setDate(long timestamp)
     {
 	m_date = new Date(timestamp);
+    }
+
+    public void setError(boolean state)
+    {
+	m_error = state;
     }
 
     public void setFromeSmokeStack(boolean state)
@@ -227,7 +237,9 @@ public class ChatBubble extends View
 
 	if(location == Locations.LEFT)
 	{
-	    if(m_fromSmokeStack)
+	    if(m_error)
+		linearLayout.setBackgroundResource(R.drawable.bubble_error);
+	    else if(m_fromSmokeStack)
 		linearLayout.setBackgroundResource
 		    (R.drawable.bubble_ozone_text);
 	    else
@@ -242,7 +254,12 @@ public class ChatBubble extends View
 	}
 	else
 	{
-	    linearLayout.setBackgroundResource(R.drawable.bubble_right_text);
+	    if(m_error)
+		linearLayout.setBackgroundResource(R.drawable.bubble_error);
+	    else
+		linearLayout.setBackgroundResource
+		    (R.drawable.bubble_right_text);
+
 	    m_view.findViewById(R.id.text).setPaddingRelative
 		((int) (10 * density),                         // Start
 		 (int) (10 * density),                         // Top

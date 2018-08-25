@@ -88,8 +88,17 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 
 	public void setData(MemberChatElement memberChatElement, int position)
 	{
-	    if(m_chatBubble == null || memberChatElement == null)
+	    if(m_chatBubble == null)
 		return;
+	    else if(memberChatElement == null)
+	    {
+		m_chatBubble.setError(true);
+		m_chatBubble.setName(ChatBubble.Locations.LEFT, "?");
+		m_chatBubble.setText
+		    (ChatBubble.Locations.LEFT, "Smoke malfunction!\n");
+		m_position = position;
+		return;
+	    }
 
 	    StringBuilder stringBuilder = new StringBuilder();
 	    boolean local = false;
@@ -156,9 +165,6 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 
 	MemberChatElement memberChatElement =
 	    (s_database.readMemberChat(s_cryptography, m_sipHashId, position));
-
-	if(memberChatElement == null)
-	    return;
 
 	viewHolder.setData(memberChatElement, position);
     }

@@ -138,6 +138,8 @@ public class Database extends SQLiteOpenHelper
     private final static int DATABASE_VERSION = 1;
     private final static int WRITE_PARTICIPANT_TIME_DELTA = 60000; // 60 Seconds
     private static Database s_instance = null;
+    public final static String PARTICIPANTS_MESSAGES_MESSAGE_STATUS_FIELDS[] =
+    {"message_read", "message_sent"};
     public static enum ExceptionLevels
     {
 	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
@@ -3286,9 +3288,10 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public void writeMessageRead(Cryptography cryptography,
-				 String sipHashId,
-				 byte messageIdentity[])
+    public void writeMessageStatus(Cryptography cryptography,
+				   String fieldName,
+				   String sipHashId,
+				   byte messageIdentity[])
     {
 	if(cryptography == null ||
 	   m_db == null ||
@@ -3303,7 +3306,7 @@ public class Database extends SQLiteOpenHelper
 	    ContentValues values = new ContentValues();
 
 	    values.put
-		("message_read",
+		(fieldName,
 		 Base64.encodeToString(cryptography.etm("true".getBytes()),
 				       Base64.DEFAULT));
 	    m_db.update

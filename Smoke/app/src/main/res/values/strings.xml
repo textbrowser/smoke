@@ -65,6 +65,7 @@
     <string name="generate_pk">Generate PK</string>
     <string name="share_smoke_id">Share Smoke ID</string>
     <string name="message_was_read">Message was read.</string>
+    <string name="message_was_sent">Message was sent.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

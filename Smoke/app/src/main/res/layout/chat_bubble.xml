@@ -56,16 +56,23 @@
                 android:layout_height="match_parent"
                 />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/message_read"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-                android:background="@android:color/transparent"
+                android:layout_toStartOf="@+id/message_sent"
                 android:contentDescription="@string/message_was_read"
                 app:srcCompat="@drawable/message_read" />
+
+            <ImageView
+                android:id="@+id/message_sent"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/message_was_sent"
+                app:srcCompat="@drawable/message_sent" />
         </RelativeLayout>
 
     </LinearLayout>

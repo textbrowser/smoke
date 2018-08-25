@@ -1581,8 +1581,10 @@ public class Kernel
 		    if(array == null || array.length != 2)
 			return 1;
 
-		    s_databaseHelper.writeMessageRead
+		    s_databaseHelper.writeMessageStatus
 			(s_cryptography,
+			 Database.
+			 PARTICIPANTS_MESSAGES_MESSAGE_STATUS_FIELDS[0],
 			 array[1],
 			 Arrays.copyOfRange(aes256, 1, 65));
 		    sendBroadcast
