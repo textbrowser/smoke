@@ -190,6 +190,7 @@ Completed Items
        be functional.
 148.   Sign encryption and signature keys as a pair.
 149.   Fire through SmokeStack.
+150.   Return message-read status in status messages.
 
 Future Items
 
@@ -255,4 +256,3 @@ Remaining Items
 7.     Zoom integration.
 8.     Gallery integration.
 9.     Drawers.
-10.    Return message-read status in status messages.
