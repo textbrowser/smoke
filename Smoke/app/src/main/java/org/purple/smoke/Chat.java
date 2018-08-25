@@ -1271,6 +1271,9 @@ public class Chat extends AppCompatActivity
 				    View view,
 				    ContextMenuInfo menuInfo)
     {
+	if(menu == null || view == null)
+	    return;
+
 	super.onCreateContextMenu(menu, view, menuInfo);
 
 	MenuItem menuItem = null;

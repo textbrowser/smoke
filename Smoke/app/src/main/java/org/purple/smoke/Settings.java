@@ -3158,6 +3158,9 @@ public class Settings extends AppCompatActivity
 				    View view,
 				    ContextMenuInfo menuInfo)
     {
+	if(menu == null || view == null)
+	    return;
+
 	Object tag1 = view.getTag(R.id.participants);
 	Object tag2 = view.getTag(R.id.refresh_participants);
 

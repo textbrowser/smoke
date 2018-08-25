@@ -64,6 +64,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 					View view,
 					ContextMenuInfo menuInfo)
 	{
+	    if(menu == null || view == null)
+		return;
+
 	    /*
 	    ** Please update the first parameter if the context menu
 	    ** in MemberChat is modified!
@@ -72,7 +75,11 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    MenuItem menuItem = null;
 
 	    menu.add(10, -1, 1, "Delete All Messages");
-	    menu.add(15, view.getId(), 2, "Delete Message");
+	    menuItem = menu.add(15, view.getId(), 2, "Delete Message");
+
+	    if(view.getId() == -1)
+		menuItem.setEnabled(false);
+
 	    menu.add(20, m_position, 0, "Copy Text");
 	    menuItem = menu.add(25, m_position, 3, "Save Attachment");
 
@@ -95,7 +102,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		m_chatBubble.setError(true);
 		m_chatBubble.setName(ChatBubble.Locations.LEFT, "?");
 		m_chatBubble.setText
-		    (ChatBubble.Locations.LEFT, "Smoke malfunction!\n");
+		    (ChatBubble.Locations.LEFT,
+		     "Smoke malfunction! The database entry is zero!\n");
 		m_position = position;
 		return;
 	    }

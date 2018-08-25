@@ -80,6 +80,7 @@ public class ChatBubble extends View
 	m_view.findViewById(R.id.message_sent).setVisibility(View.GONE);
 	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
 	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
+	m_view.setId(-1);
     }
 
     public View view()
