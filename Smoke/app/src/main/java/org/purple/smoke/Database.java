@@ -1112,6 +1112,10 @@ public class Database extends SQLiteOpenHelper
 		 Base64.encodeToString(cryptography.etm("false".getBytes()),
 				       Base64.DEFAULT));
 	    values.put
+		("message_sent",
+		 Base64.encodeToString(cryptography.etm("false".getBytes()),
+				       Base64.DEFAULT));
+	    values.put
 		("siphash_id_digest",
 		 Base64.encodeToString(cryptography.
 				       hmac(sipHashId.toUpperCase().
@@ -1163,8 +1167,9 @@ public class Database extends SQLiteOpenHelper
 		 "from_smokestack, " +   // 1
 		 "message, " +           // 2
 		 "message_read, " +      // 3
-		 "timestamp, " +         // 4
-		 "oid " +                // 5
+		 "message_sent, " +      // 4
+		 "timestamp, " +         // 5
+		 "oid " +                // 6
 		 "FROM participants_messages WHERE siphash_id_digest = ? " +
 		 "ORDER BY timestamp LIMIT 1 OFFSET CAST(? AS INTEGER)",
 		 new String[] {Base64.
@@ -1187,7 +1192,7 @@ public class Database extends SQLiteOpenHelper
 			memberChatElement.m_oid = cursor.getInt(i);
 			continue;
 		    }
-		    else if(i == 4)
+		    else if(i == 5)
 		    {
 			memberChatElement.m_timestamp = cursor.getLong(i);
 			continue;
@@ -1238,6 +1243,13 @@ public class Database extends SQLiteOpenHelper
 		    case 3:
 			if(bytes != null)
 			    memberChatElement.m_messageRead =
+				(new String(bytes).equals("true") ?
+				 true : false);
+
+			break;
+		    case 4:
+			if(bytes != null)
+			    memberChatElement.m_messageSent =
 				(new String(bytes).equals("true") ?
 				 true : false);
 
