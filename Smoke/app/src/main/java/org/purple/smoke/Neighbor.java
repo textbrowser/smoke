@@ -255,6 +255,7 @@ public abstract class Neighbor
 	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
+	    private boolean m_messageSent = false;
 	    private long m_accumulatedTime = System.nanoTime();
 
 	    @Override
@@ -288,7 +289,7 @@ public abstract class Neighbor
 		    ** from the database.
 		    */
 
-		    if(array != null && array.length == 2)
+		    if(array != null && array.length == 3)
 		    {
 			byte bytes[] = m_cryptography.mtd
 			    (Base64.decode(array[0], Base64.DEFAULT));
@@ -333,10 +334,16 @@ public abstract class Neighbor
 
 			if(array[0].isEmpty())
 			    m_databaseHelper.deleteEntry
-				(array[1], "outbound_queue");
+				(array[2], "outbound_queue");
 			else if(send(array[0]))
+			{
 			    m_databaseHelper.deleteEntry
-				(array[1], "outbound_queue");
+				(array[2], "outbound_queue");
+
+			    if(m_databaseHelper.
+			       writeMessageStatus(m_cryptography, array[1]))
+				Kernel.getInstance().broadcastMessageSent();
+			}
 		    }
 
 		    /*

@@ -138,8 +138,6 @@ public class Database extends SQLiteOpenHelper
     private final static int DATABASE_VERSION = 1;
     private final static int WRITE_PARTICIPANT_TIME_DELTA = 60000; // 60 Seconds
     private static Database s_instance = null;
-    public final static String PARTICIPANTS_MESSAGES_MESSAGE_STATUS_FIELDS[] =
-    {"message_read", "message_sent"};
     public static enum ExceptionLevels
     {
 	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
@@ -2147,15 +2145,17 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT message, oid FROM outbound_queue " +
+		("SELECT message, message_identity_digest, oid " +
+		 "FROM outbound_queue " +
 		 "WHERE neighbor_oid = ? ORDER BY oid LIMIT 1",
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		array = new String[2];
+		array = new String[3];
 		array[0] = cursor.getString(0);
-		array[1] = String.valueOf(cursor.getInt(1));
+		array[1] = cursor.getString(1);
+		array[2] = String.valueOf(cursor.getInt(2));
 	    }
 	}
 	catch(Exception exception)
@@ -2389,6 +2389,41 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return false;
+    }
+
+    public boolean writeMessageStatus(Cryptography cryptography,
+				      String messageIdentityDigest)
+    {
+	if(cryptography == null || m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("message_sent",
+		 Base64.encodeToString(cryptography.etm("true".getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update
+		("participants_messages",
+		 values,
+		 "message_identity_digest = ?",
+		 new String[] {messageIdentityDigest});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
     }
 
     public boolean writeNeighbor(Cryptography cryptography,
@@ -3260,6 +3295,7 @@ public class Database extends SQLiteOpenHelper
 
     public void enqueueOutboundMessage(Cryptography cryptography,
 				       String message,
+				       byte messageIdentity[],
 				       int oid)
     {
 	if(cryptography == null || m_db == null || message.trim().isEmpty())
@@ -3275,6 +3311,18 @@ public class Database extends SQLiteOpenHelper
 		("message",
 		 Base64.encodeToString(cryptography.etm(message.getBytes()),
 				       Base64.DEFAULT));
+
+	    if(messageIdentity == null)
+		values.put
+		    ("message_identity_digest",
+		     Base64.encodeToString(Cryptography.randomBytes(64),
+					   Base64.DEFAULT));
+	    else
+		values.put
+		    ("message_identity_digest",
+		     Base64.encodeToString(cryptography.hmac(messageIdentity),
+					   Base64.DEFAULT));
+
 	    values.put("neighbor_oid", oid);
 	    m_db.insert("outbound_queue", null, values);
 	    m_db.setTransactionSuccessful();
@@ -3289,7 +3337,6 @@ public class Database extends SQLiteOpenHelper
     }
 
     public void writeMessageStatus(Cryptography cryptography,
-				   String fieldName,
 				   String sipHashId,
 				   byte messageIdentity[])
     {
@@ -3306,7 +3353,7 @@ public class Database extends SQLiteOpenHelper
 	    ContentValues values = new ContentValues();
 
 	    values.put
-		(fieldName,
+		("message_read",
 		 Base64.encodeToString(cryptography.etm("true".getBytes()),
 				       Base64.DEFAULT));
 	    m_db.update
@@ -3553,6 +3600,7 @@ public class Database extends SQLiteOpenHelper
 
 	str = "CREATE TABLE IF NOT EXISTS outbound_queue (" +
 	    "message TEXT NOT NULL, " +
+	    "message_identity_digest TEXT NOT NULL, " +
 	    "neighbor_oid INTEGER NOT NULL, " +
 	    "PRIMARY KEY (message, neighbor_oid))";
 

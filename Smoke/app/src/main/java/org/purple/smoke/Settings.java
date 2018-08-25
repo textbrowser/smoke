@@ -572,7 +572,8 @@ public class Settings extends AppCompatActivity
 		    }
 
 		    if(!Kernel.getInstance().
-		       enqueueMessage(Messages.bytesToMessageString(bytes)))
+		       enqueueMessage(Messages.bytesToMessageString(bytes),
+				      null))
 		    {
 			m_error = "enqueueMessage() failure";
 			break;
@@ -2215,7 +2216,8 @@ public class Settings extends AppCompatActivity
 			m_error = "pkpRequestMessage() failure";
 		    else if(!Kernel.getInstance().
 			    enqueueMessage(Messages.
-					   bytesToMessageString(bytes)))
+					   bytesToMessageString(bytes),
+					   null))
 			m_error = "enqueueMessage() failure";
 		}
 
@@ -2292,7 +2294,8 @@ public class Settings extends AppCompatActivity
 			m_error = "epksMessage() failure";
 		    else if(!Kernel.getInstance().
 			    enqueueMessage(Messages.
-					   bytesToMessageString(bytes)))
+					   bytesToMessageString(bytes),
+					   null))
 			m_error = "enqueueMessage() failure";
 		}
 

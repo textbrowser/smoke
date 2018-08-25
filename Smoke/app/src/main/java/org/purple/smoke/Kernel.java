@@ -568,7 +568,8 @@ public class Kernel
 				    case MessageElement.CHAT_MESSAGE_TYPE:
 					enqueueMessage
 					    (Messages.
-					     bytesToMessageString(bytes));
+					     bytesToMessageString(bytes),
+					     messageElement.m_messageIdentity);
 					State.getInstance().
 					    incrementChatSequence
 					    (messageElement.m_id);
@@ -577,7 +578,8 @@ public class Kernel
 					enqueueMessage
 					    (Messages.
 					     bytesToMessageStringNonBase64
-					     (bytes));
+					     (bytes),
+					     null);
 					break;
 				    case MessageElement.
 					FIRE_STATUS_MESSAGE_TYPE:
@@ -600,7 +602,8 @@ public class Kernel
 					SHARE_SIPHASH_ID_MESSAGE_TYPE:
 					enqueueMessage
 					    (Messages.
-					     bytesToMessageString(bytes));
+					     bytesToMessageString(bytes),
+					     null);
 					break;
 				    }
 				}
@@ -629,7 +632,8 @@ public class Kernel
 					enqueueMessage
 					    ("OZONE-" + Base64.
 					     encodeToString(bytes,
-							    Base64.NO_WRAP));
+							    Base64.NO_WRAP),
+					     null);
 				}
 			}
 		    }
@@ -703,7 +707,8 @@ public class Kernel
 				    if(bytes != null)
 					enqueueMessage
 					    (Messages.
-					     bytesToMessageString(bytes));
+					     bytesToMessageString(bytes),
+					     null);
 				}
 			}
 			else
@@ -732,7 +737,8 @@ public class Kernel
 				    if(bytes != null)
 					enqueueMessage
 					    (Messages.
-					     bytesToMessageString(bytes));
+					     bytesToMessageString(bytes),
+					     null);
 				}
 			}
 		    }
@@ -1033,7 +1039,7 @@ public class Kernel
 	return true;
     }
 
-    public boolean enqueueMessage(String message)
+    public boolean enqueueMessage(String message, byte messageIdentity[])
     {
 	if(message.trim().isEmpty())
 	    return false;
@@ -1048,7 +1054,10 @@ public class Kernel
 	    if(arrayList.get(i) != null &&
 	       arrayList.get(i).m_statusControl.toLowerCase().equals("connect"))
 		s_databaseHelper.enqueueOutboundMessage
-		    (s_cryptography, message, arrayList.get(i).m_oid);
+		    (s_cryptography,
+		     message,
+		     messageIdentity,
+		     arrayList.get(i).m_oid);
 
 	arrayList.clear();
 	return true;
@@ -1401,7 +1410,7 @@ public class Kernel
 
 		    if(bytes != null)
 			enqueueMessage
-			    (Messages.bytesToMessageString(bytes));
+			    (Messages.bytesToMessageString(bytes), null);
 		}
 
 		return 1;
@@ -1583,8 +1592,6 @@ public class Kernel
 
 		    s_databaseHelper.writeMessageStatus
 			(s_cryptography,
-			 Database.
-			 PARTICIPANTS_MESSAGES_MESSAGE_STATUS_FIELDS[0],
 			 array[1],
 			 Arrays.copyOfRange(aes256, 1, 65));
 		    sendBroadcast
@@ -1759,7 +1766,8 @@ public class Kernel
 					      messageRead(s_cryptography,
 							  strings[1],
 							  keyStream,
-							  messageIdentity)));
+							  messageIdentity)),
+			 null);
 		}
 
 		return 1;
@@ -2123,6 +2131,11 @@ public class Kernel
     {
 	s_databaseHelper.writeCongestionDigest
 	    (s_congestionSipHash.hmac(data));
+    }
+
+    public void broadcastMessageSent()
+    {
+	sendBroadcast(new Intent("org.purple.smoke.notify_data_set_changed"));
     }
 
     public void clearNeighborQueues()

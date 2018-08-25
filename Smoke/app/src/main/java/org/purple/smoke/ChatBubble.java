@@ -58,6 +58,7 @@ public class ChatBubble extends View
     private boolean m_error = false;
     private boolean m_fromSmokeStack = false;
     private boolean m_messageRead = false;
+    private boolean m_messageSent = false;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
     public static enum Locations {LEFT, RIGHT};
@@ -77,7 +78,7 @@ public class ChatBubble extends View
 	m_view = m_inflater.inflate(R.layout.chat_bubble, viewGroup, false);
 	m_view.findViewById(R.id.image).setVisibility(View.GONE);
 	m_view.findViewById(R.id.message_read).setVisibility(View.GONE);
-	m_view.findViewById(R.id.message_sent).setVisibility(View.GONE);
+	m_view.findViewById(R.id.message_sent).setVisibility(View.INVISIBLE);
 	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
 	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
 	m_view.setId(-1);
@@ -179,6 +180,29 @@ public class ChatBubble extends View
 	{
 	    m_view.findViewById(R.id.message_read).setVisibility
 		(m_messageRead ? View.VISIBLE : View.GONE);
+
+	    float density = m_context.getResources().getDisplayMetrics().
+		density;
+
+	    m_view.findViewById(R.id.text).setPaddingRelative
+		((int) (10 * density),                         // Start
+		 (int) (10 * density),                         // Top
+		 (int) (10 * density),                         // End
+		 (int) ((m_messageRead ? 20 : 10) * density)); // Bottom
+	}
+    }
+
+    public void setSent(Locations location, boolean state)
+    {
+	m_messageSent = state;
+
+	if(location == Locations.LEFT)
+	    m_view.findViewById(R.id.message_sent).setVisibility
+		(View.INVISIBLE);
+	else
+	{
+	    m_view.findViewById(R.id.message_sent).setVisibility
+		(m_messageSent ? View.VISIBLE : View.INVISIBLE);
 
 	    float density = m_context.getResources().getDisplayMetrics().
 		density;

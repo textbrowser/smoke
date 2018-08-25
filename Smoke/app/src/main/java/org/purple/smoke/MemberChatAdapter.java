@@ -129,6 +129,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    {
 		m_chatBubble.setName(ChatBubble.Locations.LEFT, m_name);
 		m_chatBubble.setRead(ChatBubble.Locations.LEFT, false);
+		m_chatBubble.setSent
+		    (ChatBubble.Locations.LEFT,
+		     memberChatElement.m_messageSent);
 		m_chatBubble.setText
 		    (ChatBubble.Locations.LEFT, stringBuilder.toString());
 	    }
@@ -138,6 +141,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		m_chatBubble.setRead
 		    (ChatBubble.Locations.RIGHT,
 		     memberChatElement.m_messageRead);
+		m_chatBubble.setSent
+		    (ChatBubble.Locations.RIGHT,
+		     memberChatElement.m_messageSent);
 		m_chatBubble.setText
 		    (ChatBubble.Locations.RIGHT, stringBuilder.toString());
 	    }
