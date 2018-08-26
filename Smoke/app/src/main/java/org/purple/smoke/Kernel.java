@@ -1590,13 +1590,12 @@ public class Kernel
 		    if(array == null || array.length != 2)
 			return 1;
 
-		    s_databaseHelper.writeMessageStatus
-			(s_cryptography,
-			 array[1],
-			 Arrays.copyOfRange(aes256, 1, 65));
-		    sendBroadcast
-			(new Intent
-			 ("org.purple.smoke.notify_data_set_changed"));
+		    if(s_databaseHelper.
+		       writeMessageStatus(s_cryptography,
+					  array[1],
+					  Arrays.copyOfRange(aes256, 1, 65)))
+			notifyOfDataSetChange();
+
 		    return 1;
 		}
 
@@ -2133,11 +2132,6 @@ public class Kernel
 	    (s_congestionSipHash.hmac(data));
     }
 
-    public void broadcastMessageSent()
-    {
-	sendBroadcast(new Intent("org.purple.smoke.notify_data_set_changed"));
-    }
-
     public void clearNeighborQueues()
     {
 	m_neighborsMutex.readLock().lock();
@@ -2369,6 +2363,11 @@ public class Kernel
 	{
 	    m_fireStreamsMutex.writeLock().unlock();
 	}
+    }
+
+    public void notifyOfDataSetChange()
+    {
+	sendBroadcast(new Intent("org.purple.smoke.notify_data_set_changed"));
     }
 
     public void retrieveChatMessages(String sipHashId)

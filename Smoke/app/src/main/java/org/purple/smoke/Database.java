@@ -2426,6 +2426,52 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public boolean writeMessageStatus(Cryptography cryptography,
+				      String sipHashId,
+				      byte messageIdentity[])
+    {
+	if(cryptography == null ||
+	   m_db == null ||
+	   messageIdentity == null ||
+	   messageIdentity.length < 0)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("message_read",
+		 Base64.encodeToString(cryptography.etm("true".getBytes()),
+				       Base64.DEFAULT));
+	    m_db.update
+		("participants_messages",
+		 values,
+		 "message_identity_digest = ? AND siphash_id_digest = ?",
+		 new String[] {Base64.encodeToString(cryptography.
+						     hmac(messageIdentity),
+						     Base64.DEFAULT),
+			       Base64.encodeToString(cryptography.
+						     hmac(sipHashId.
+							  toUpperCase().trim().
+							  getBytes("UTF-8")),
+						     Base64.DEFAULT)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
+    }
+
     public boolean writeNeighbor(Cryptography cryptography,
 				 String proxyIpAddress,
 				 String proxyPort,
@@ -3329,49 +3375,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
         {
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
-    }
-
-    public void writeMessageStatus(Cryptography cryptography,
-				   String sipHashId,
-				   byte messageIdentity[])
-    {
-	if(cryptography == null ||
-	   m_db == null ||
-	   messageIdentity == null ||
-	   messageIdentity.length < 0)
-	    return;
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
-	    values.put
-		("message_read",
-		 Base64.encodeToString(cryptography.etm("true".getBytes()),
-				       Base64.DEFAULT));
-	    m_db.update
-		("participants_messages",
-		 values,
-		 "message_identity_digest = ? AND siphash_id_digest = ?",
-		 new String[] {Base64.encodeToString(cryptography.
-						     hmac(messageIdentity),
-						     Base64.DEFAULT),
-			       Base64.encodeToString(cryptography.
-						     hmac(sipHashId.
-							  toUpperCase().trim().
-							  getBytes("UTF-8")),
-						     Base64.DEFAULT)});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-	{
 	}
 	finally
 	{

@@ -342,7 +342,7 @@ public abstract class Neighbor
 
 			    if(m_databaseHelper.
 			       writeMessageStatus(m_cryptography, array[1]))
-				Kernel.getInstance().broadcastMessageSent();
+				Kernel.getInstance().notifyOfDataSetChange();
 			}
 		    }
 
