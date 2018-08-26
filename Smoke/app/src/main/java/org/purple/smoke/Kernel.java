@@ -1183,6 +1183,12 @@ public class Kernel
     {
 	long value = s_congestionSipHash.hmac(buffer.getBytes());
 
+	/*
+	** 0 - Echo
+	** 1 - Fine
+	** 2 - Force Echo
+	*/
+
 	if(s_databaseHelper.containsCongestionDigest(value))
 	    return 1;
 	else if(s_databaseHelper.writeCongestionDigest(value))
