@@ -77,7 +77,7 @@ public class ChatBubble extends View
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_view = m_inflater.inflate(R.layout.chat_bubble, viewGroup, false);
 	m_view.findViewById(R.id.image).setVisibility(View.GONE);
-	m_view.findViewById(R.id.message_read).setVisibility(View.GONE);
+	m_view.findViewById(R.id.message_read).setVisibility(View.INVISIBLE);
 	m_view.findViewById(R.id.message_sent).setVisibility(View.INVISIBLE);
 	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
 	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
@@ -175,11 +175,12 @@ public class ChatBubble extends View
 	m_messageRead = state;
 
 	if(location == Locations.LEFT)
-	    m_view.findViewById(R.id.message_read).setVisibility(View.GONE);
+	    m_view.findViewById(R.id.message_read).setVisibility
+		(View.INVISIBLE);
 	else
 	{
 	    m_view.findViewById(R.id.message_read).setVisibility
-		(m_messageRead ? View.VISIBLE : View.GONE);
+		(m_messageRead ? View.VISIBLE : View.INVISIBLE);
 
 	    float density = m_context.getResources().getDisplayMetrics().
 		density;
