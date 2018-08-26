@@ -36,9 +36,10 @@
         <ImageView
             android:id="@+id/image"
             android:layout_width="215dp"
-            android:layout_height="285dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/attachment"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
