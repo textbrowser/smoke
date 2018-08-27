@@ -77,6 +77,16 @@ import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
+    private abstract class ContextMenuEnumerator
+    {
+	public final static int DELETE = 0;
+	public final static int DELETE_FIASCO_KEYS = 1;
+	public final static int NEW_NAME = 2;
+	public final static int REQUEST_KEYS_VIA_OZONE = 3;
+	public final static int SHARE_KEYS_OF = 4;
+	public final static int VIEW_DETAILS = 5;
+    }
+
     private class PopulateNeighbors implements Runnable
     {
 	private ArrayList<NeighborElement> m_arrayList = null;
@@ -2971,7 +2981,7 @@ public class Settings extends AppCompatActivity
 
 		    switch(groupId)
 		    {
-		    case 0:
+		    case ContextMenuEnumerator.DELETE:
 			switch(itemId)
 			{
 			default:
@@ -3003,18 +3013,15 @@ public class Settings extends AppCompatActivity
 			}
 
 			break;
-		    case 1:
-			string = State.getInstance().
-			    getString("settings_participant_name_input");
+		    case ContextMenuEnumerator.DELETE_FIASCO_KEYS:
+			if(State.getInstance().
+			   getString("dialog_accepted").equals("true"))
+			    if(m_databaseHelper.
+			       deleteFiascoKeys(String.valueOf(itemId)))
+				populateParticipants();
 
-			if(m_databaseHelper.
-			   deleteFiascoKeys(String.valueOf(itemId)))
-			    populateParticipants();
-
-			State.getInstance().removeKey
-			    ("settings_participant_name_input");
 			break;
-		    case 2:
+		    case ContextMenuEnumerator.NEW_NAME:
 			string = State.getInstance().
 			    getString("settings_participant_name_input");
 
@@ -3040,7 +3047,7 @@ public class Settings extends AppCompatActivity
 
 	switch(groupId)
 	{
-	case 0:
+	case ContextMenuEnumerator.DELETE:
 	    Miscellaneous.showPromptDialog
 		(Settings.this,
 		 listener,
@@ -3049,7 +3056,7 @@ public class Settings extends AppCompatActivity
 		 menuItem.getTitle().toString().replace("Delete (", "").
 		 replace(")", "") + "?");
 	    break;
-	case 1:
+	case ContextMenuEnumerator.DELETE_FIASCO_KEYS:
 	    Miscellaneous.showPromptDialog
 		(Settings.this,
 		 listener,
@@ -3058,7 +3065,7 @@ public class Settings extends AppCompatActivity
 		 menuItem.getTitle().toString().
 		 replace("Delete Fiasco Keys (", "").replace(")", "") + "?");
 	    break;
-	case 2:
+	case ContextMenuEnumerator.NEW_NAME:
 	    Miscellaneous.showTextInputDialog
 		(Settings.this,
 		 listener,
@@ -3068,13 +3075,13 @@ public class Settings extends AppCompatActivity
 		 replace(")", "") + ".",
 		 "Name");
 	    break;
-	case 3:
+	case ContextMenuEnumerator.REQUEST_KEYS_VIA_OZONE:
 	    requestKeysOf(String.valueOf(itemId));
 	    break;
-	case 4:
+	case ContextMenuEnumerator.SHARE_KEYS_OF:
 	    shareKeysOf(String.valueOf(itemId));
 	    break;
-	case 5:
+	case ContextMenuEnumerator.VIEW_DETAILS:
 	    showDetailsOfParticipant(String.valueOf(itemId));
 	    break;
 	}
@@ -3170,12 +3177,24 @@ public class Settings extends AppCompatActivity
 	if(tag1 != null && tag2 != null)
 	{
 	    super.onCreateContextMenu(menu, view, menuInfo);
-	    menu.add(0, view.getId(), 0, "Delete (" + tag1 + ")");
-	    menu.add(1, view.getId(), 0, "Delete Fiasco Keys (" + tag1 + ")");
-	    menu.add(2, view.getId(), 0, "New Name (" + tag1 + ")");
+	    menu.add(ContextMenuEnumerator.DELETE,
+		     view.getId(),
+		     0,
+		     "Delete (" + tag1 + ")");
+	    menu.add(ContextMenuEnumerator.DELETE_FIASCO_KEYS,
+		     view.getId(),
+		     0,
+		     "Delete Fiasco Keys (" + tag1 + ")");
+	    menu.add(ContextMenuEnumerator.NEW_NAME,
+		     view.getId(),
+		     0,
+		     "New Name (" + tag1 + ")");
 
 	    MenuItem menuItem = menu.add
-		(3, view.getId(), 0, "Request Keys via Ozone (" + tag1 + ")");
+		(ContextMenuEnumerator.REQUEST_KEYS_VIA_OZONE,
+		 view.getId(),
+		 0,
+		 "Request Keys via Ozone (" + tag1 + ")");
 
 	    if(s_cryptography.ozoneEncryptionKey() == null ||
 	       s_cryptography.ozoneEncryptionKey().length != 32 ||
@@ -3183,9 +3202,15 @@ public class Settings extends AppCompatActivity
 	       s_cryptography.ozoneMacKey().length != 64)
 		menuItem.setEnabled(false);
 
-	    menu.add(4, view.getId(), 0, "Share Keys Of (" + tag1 + ")").
+	    menu.add(ContextMenuEnumerator.SHARE_KEYS_OF,
+		     view.getId(),
+		     0,
+		     "Share Keys Of (" + tag1 + ")").
 		setEnabled((boolean) tag2);
-	    menu.add(5, view.getId(), 0, "View Details (" + tag1 + ")");
+	    menu.add(ContextMenuEnumerator.VIEW_DETAILS,
+		     view.getId(),
+		     0,
+		     "View Details (" + tag1 + ")");
 	}
     }
 
