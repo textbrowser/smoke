@@ -68,6 +68,18 @@ import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
 {
+    private abstract class ContextMenuEnumerator
+    {
+	public final static int CUSTOM_SESSION = 0;
+	public final static int NEW_WINDOW = 1;
+	public final static int OPTIONAL_SIGNATURES = 2;
+	public final static int PURGE_SESSION = 3;
+	public final static int REFRESH_PARTICIPANTS_TABLE = 4;
+	public final static int RETRIEVE_MESSAGES = 5;
+	public final static int SHOW_DETAILS = 6;
+	public final static int SHOW_ICONS = 7;
+    }
+
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private Database m_databaseHelper = null;
@@ -1098,7 +1110,7 @@ public class Chat extends AppCompatActivity
 		    if(itemId > -1)
 			switch(groupId)
 		        {
-			case 0: // Custom Session
+			case ContextMenuEnumerator.CUSTOM_SESSION:
 			    try
 			    {
 				String string = State.getInstance().
@@ -1134,7 +1146,7 @@ public class Chat extends AppCompatActivity
 
 			    State.getInstance().removeKey("chat_secret_input");
 			    break;
-			case 3: // Purge Session
+			case ContextMenuEnumerator.PURGE_SESSION:
 			    if(State.getInstance().getString("dialog_accepted").
 			       equals("true"))
 				if(m_databaseHelper.
@@ -1151,7 +1163,7 @@ public class Chat extends AppCompatActivity
 	if(itemId > -1)
 	    switch(groupId)
 	    {
-	    case 0:
+	    case ContextMenuEnumerator.CUSTOM_SESSION:
 		Miscellaneous.showTextInputDialog
 		    (Chat.this,
 		     listener,
@@ -1161,7 +1173,7 @@ public class Chat extends AppCompatActivity
 		     replace(")", "") + ".",
 		     "Secret");
 		break;
-	    case 1:
+	    case ContextMenuEnumerator.NEW_WINDOW:
 		State.getInstance().setString
 		    ("member_chat_oid", String.valueOf(itemId));
 		State.getInstance().setString
@@ -1174,7 +1186,7 @@ public class Chat extends AppCompatActivity
 		    (s_cryptography, "member_chat_siphash_id", sipHashId);
 		showMemberChatActivity();
 		break;
-	    case 2:
+	    case ContextMenuEnumerator.OPTIONAL_SIGNATURES:
 		menuItem.setChecked(!menuItem.isChecked());
 
 		String strings[] = null;
@@ -1216,7 +1228,7 @@ public class Chat extends AppCompatActivity
 		m_databaseHelper.writeParticipantOptions
 		    (s_cryptography, stringBuilder.toString(), sipHashId);
 		break;
-	    case 3:
+	    case ContextMenuEnumerator.PURGE_SESSION:
 		Miscellaneous.showPromptDialog
 		    (Chat.this,
 		     listener,
@@ -1230,14 +1242,14 @@ public class Chat extends AppCompatActivity
 	else
 	    switch(groupId)
 	    {
-	    case 0: // Refresh Participants Table
+	    case ContextMenuEnumerator.REFRESH_PARTICIPANTS_TABLE:
 		populateParticipants();
 		break;
-	    case 1: // Retrieve Messages
+	    case ContextMenuEnumerator.RETRIEVE_MESSAGES:
 		Kernel.getInstance().retrieveChatMessages("");
 		requestMessages();
 		break;
-	    case 2: // Show Details
+	    case ContextMenuEnumerator.SHOW_DETAILS:
 		State.getInstance().populateParticipants();
 		menuItem.setChecked(!menuItem.isChecked());
 		m_databaseHelper.writeSetting
@@ -1246,7 +1258,7 @@ public class Chat extends AppCompatActivity
 		     menuItem.isChecked() ? "true" : "false");
 		populateParticipants();
 		break;
-	    case 3: // Show Icons
+	    case ContextMenuEnumerator.SHOW_ICONS:
 		menuItem.setChecked(!menuItem.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,
@@ -1281,21 +1293,21 @@ public class Chat extends AppCompatActivity
 	if(view.getTag() != null)
 	{
 	    menu.add
-		(0,
+		(ContextMenuEnumerator.CUSTOM_SESSION,
 		 view.getId(),
 		 0,
 		 "Custom Session (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")");
 	    menu.add
-		(1,
+		(ContextMenuEnumerator.NEW_WINDOW,
 		 view.getId(),
 		 0,
 		 "New Window (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")");
 	    menuItem = menu.add
-		(2,
+		(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
 		 view.getId(),
 		 0,
 		 "Optional Signatures (" +
@@ -1307,7 +1319,7 @@ public class Chat extends AppCompatActivity
 					toString()).
 		 contains("optional_signatures = true"));
 	    menu.add
-		(3,
+		(ContextMenuEnumerator.PURGE_SESSION,
 		 view.getId(),
 		 0,
 		 "Purge Session (" +
@@ -1315,17 +1327,29 @@ public class Chat extends AppCompatActivity
 		 ")");
 	}
 
-	menu.add(0, -1, 0, "Refresh Participants Table");
-	menuItem = menu.add(1, -1, 0, "Retrieve Messages");
+	menu.add(ContextMenuEnumerator.REFRESH_PARTICIPANTS_TABLE,
+		 -1,
+		 0,
+		 "Refresh Participants Table");
+	menuItem = menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
+			    -1,
+			    0,
+			    "Retrieve Messages");
 	menuItem.setEnabled
 	    (Kernel.getInstance().isConnected() &&
 	     !m_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty());
-	menuItem = menu.add(2, -1, 0, "Show Details").setCheckable(true);
+	menuItem = menu.add(ContextMenuEnumerator.SHOW_DETAILS,
+			    -1,
+			    0,
+			    "Show Details").setCheckable(true);
 	menuItem.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_details").equals("true"));
-	menuItem = menu.add(3, -1, 0, "Show Icons").setCheckable(true);
+	menuItem = menu.add(ContextMenuEnumerator.SHOW_ICONS,
+			    -1,
+			    0,
+			    "Show Icons").setCheckable(true);
 	menuItem.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_icons").equals("true"));
