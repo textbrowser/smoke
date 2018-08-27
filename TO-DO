@@ -191,6 +191,7 @@ Completed Items
 148.   Sign encryption and signature keys as a pair.
 149.   Fire through SmokeStack.
 150.   Return message-read status in status messages.
+151.   Allow resending of messages.
 
 Future Items
 
@@ -256,4 +257,3 @@ Remaining Items
 7.     Zoom integration.
 8.     Gallery integration.
 9.     Drawers.
-10.    Allow resending of messages.
