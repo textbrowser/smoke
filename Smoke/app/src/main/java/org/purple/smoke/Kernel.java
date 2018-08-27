@@ -463,15 +463,41 @@ public class Kernel
 
 			    if(messageElement == null)
 				continue;
+			    else
+				messageElement.m_timestamp =
+				    System.currentTimeMillis();
 
 			    byte bytes[] = null;
-			    long timestamp = System.currentTimeMillis();
 
 			    try
 			    {
 				switch(messageElement.m_messageType)
 				{
 				case MessageElement.CHAT_MESSAGE_TYPE:
+				case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
+				    if(messageElement.m_messageType ==
+				       MessageElement.RESEND_CHAT_MESSAGE_TYPE)
+				    {
+					MemberChatElement memberChatElement =
+					    s_databaseHelper.readMemberChat
+					    (s_cryptography,
+					     messageElement.m_id,
+					     messageElement.m_oid);
+
+					if(memberChatElement != null)
+					{
+					    messageElement.m_attachment =
+						memberChatElement.m_attachment;
+					    messageElement.m_keyStream =
+						s_databaseHelper.
+						participantKeyStream
+						(s_cryptography,
+						 messageElement.m_id);
+					    messageElement.m_message =
+						memberChatElement.m_message;
+					}
+				    }
+
 				    bytes = Messages.chatMessage
 					(s_cryptography,
 					 messageElement.m_message,
@@ -484,7 +510,7 @@ public class Kernel
 					 messageElement.m_messageIdentity,
 					 State.getInstance().
 					 chatSequence(messageElement.m_id),
-					 timestamp);
+					 messageElement.m_timestamp);
 				    s_databaseHelper.writeParticipantMessage
 					(s_cryptography,
 					 "local",
@@ -492,7 +518,7 @@ public class Kernel
 					 messageElement.m_id,
 					 messageElement.m_attachment,
 					 messageElement.m_messageIdentity,
-					 timestamp);
+					 messageElement.m_timestamp);
 
 				    Intent intent = new Intent
 					("org.purple.smoke.chat_local_message");
@@ -539,7 +565,7 @@ public class Kernel
 					     messageElement.m_id,
 					     null,
 					     null,
-					     timestamp);
+					     messageElement.m_timestamp);
 					sendBroadcast
 					    (new Intent("org.purple.smoke." +
 							"notify_data_set_" +
@@ -566,13 +592,20 @@ public class Kernel
 				    switch(messageElement.m_messageType)
 				    {
 				    case MessageElement.CHAT_MESSAGE_TYPE:
+				    case MessageElement.
+					 RESEND_CHAT_MESSAGE_TYPE:
 					enqueueMessage
 					    (Messages.
 					     bytesToMessageString(bytes),
 					     messageElement.m_messageIdentity);
-					State.getInstance().
-					    incrementChatSequence
-					    (messageElement.m_id);
+
+					if(messageElement.m_messageType !=
+					   MessageElement.
+					   RESEND_CHAT_MESSAGE_TYPE)
+					    State.getInstance().
+						incrementChatSequence
+						(messageElement.m_id);
+
 					break;
 				    case MessageElement.FIRE_MESSAGE_TYPE:
 					enqueueMessage
@@ -612,8 +645,10 @@ public class Kernel
 			    {
 			    }
 
-			    if(messageElement.m_messageType ==
-			       MessageElement.CHAT_MESSAGE_TYPE)
+			    switch(messageElement.m_messageType)
+			    {
+			    case MessageElement.CHAT_MESSAGE_TYPE:
+			    case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
 				if(s_cryptography.ozoneMacKey() != null)
 				{
 				    bytes = Messages.chatMessage
@@ -626,7 +661,7 @@ public class Kernel
 					 messageElement.m_messageIdentity,
 					 State.getInstance().
 					 chatSequence(messageElement.m_id),
-					 timestamp);
+					 messageElement.m_timestamp);
 
 				    if(bytes != null)
 					enqueueMessage
@@ -635,6 +670,11 @@ public class Kernel
 							    Base64.NO_WRAP),
 					     null);
 				}
+
+				break;
+			    default:
+				break;
+			    }
 			}
 		    }
 		    catch(Exception exception)
@@ -2374,6 +2414,31 @@ public class Kernel
     public void notifyOfDataSetChange()
     {
 	sendBroadcast(new Intent("org.purple.smoke.notify_data_set_changed"));
+    }
+
+    public void resendMessage(String sipHashId, int oid)
+    {
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
+	    MessageElement messageElement = new MessageElement();
+
+	    messageElement.m_id = sipHashId;
+	    messageElement.m_messageIdentity = Miscellaneous.deepCopy
+		(Cryptography.randomBytes(64));
+	    messageElement.m_messageType =
+		MessageElement.RESEND_CHAT_MESSAGE_TYPE;
+	    messageElement.m_oid = oid;
+	    m_messagesToSend.add(messageElement);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_messagesToSendMutex.writeLock().unlock();
+	}
     }
 
     public void retrieveChatMessages(String sipHashId)

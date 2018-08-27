@@ -707,7 +707,6 @@ public class MemberChat extends AppCompatActivity
 
 	    textView1.setText
 		(State.getInstance().getCharSequence("member_chat.message"));
-
 	}
 	catch(Exception exception)
 	{
@@ -861,6 +860,7 @@ public class MemberChat extends AppCompatActivity
 		 "selected message?");
 	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:
+	    Kernel.getInstance().resendMessage(m_sipHashId, itemId);
 	    break;
 	case ContextMenuEnumerator.RETRIEVE_MESSAGES:
 	    Kernel.getInstance().retrieveChatMessages(m_sipHashId);
