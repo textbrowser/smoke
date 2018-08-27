@@ -1017,7 +1017,7 @@ public class Kernel
 		 "local",
 		 "Preparing a call via " +
 		 (algorithm == ParticipantCall.Algorithms.MCELIECE ?
-		  "McEliece." : "RSA." + " Please be patient."),
+		  "McEliece." : "RSA.") + " Please be patient.",
 		 sipHashId,
 		 null,
 		 null,
