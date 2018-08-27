@@ -533,7 +533,7 @@ public class Kernel
 				    {
 					s_databaseHelper.writeParticipantMessage
 					    (s_cryptography,
-					     "local",
+					     "local-protocol",
 					     "Requesting messages from " +
 					     "SmokeStack(s).",
 					     messageElement.m_id,
@@ -1014,7 +1014,7 @@ public class Kernel
 
 	    s_databaseHelper.writeParticipantMessage
 		(s_cryptography,
-		 "local",
+		 "local-protocol",
 		 "Preparing a call via " +
 		 (algorithm == ParticipantCall.Algorithms.MCELIECE ?
 		  "McEliece." : "RSA.") + " Please be patient.",
@@ -2032,7 +2032,7 @@ public class Kernel
 			intent.putExtra("org.purple.smoke.initial", true);
 			s_databaseHelper.writeParticipantMessage
 			    (s_cryptography,
-			     "local",
+			     "local-protocol",
 			     "Received a half-and-half call. " +
 			     "Dispatching a response. Please be patient.",
 			     array[1],
@@ -2045,7 +2045,7 @@ public class Kernel
 			intent.putExtra("org.purple.smoke.initial", false);
 			s_databaseHelper.writeParticipantMessage
 			    (s_cryptography,
-			     "local",
+			     "local-protocol",
 			     "Received a half-and-half call-response.",
 			     array[1],
 			     null,

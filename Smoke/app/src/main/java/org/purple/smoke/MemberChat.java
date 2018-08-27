@@ -197,6 +197,19 @@ public class MemberChat extends AppCompatActivity
     private final static int SELECT_IMAGE_REQUEST = 0;
     private int m_oid = -1;
 
+    public abstract class ContextMenuEnumerator
+    {
+	public final static int CALL_VIA_MCELIECE = 0;
+	public final static int CALL_VIA_RSA = 1;
+	public final static int COPY_TEXT = 2;
+	public final static int CUSTOM_SESSION = 3;
+	public final static int DELETE_ALL_MESSAGES = 4;
+	public final static int DELETE_MESSAGE = 5;
+	public final static int RESEND_MESSAGE = 6;
+	public final static int RETRIEVE_MESSAGES = 7;
+	public final static int SAVE_ATTACHMENT = 8;
+    }
+
     private int getBytesPerPixel(Config config)
     {
         switch(config)
@@ -721,7 +734,7 @@ public class MemberChat extends AppCompatActivity
 		{
 		    switch(groupId)
 		    {
-		    case 2:
+		    case ContextMenuEnumerator.CUSTOM_SESSION:
 			try
 			{
 			    String string = State.getInstance().
@@ -758,7 +771,7 @@ public class MemberChat extends AppCompatActivity
 			State.getInstance().removeKey
 			    ("member_chat_secret_input");
 			break;
-		    case 10:
+		    case ContextMenuEnumerator.DELETE_ALL_MESSAGES:
 			if(State.getInstance().getString("dialog_accepted").
 			   equals("true"))
 			{
@@ -768,7 +781,7 @@ public class MemberChat extends AppCompatActivity
 			}
 
 			break;
-		    case 15:
+		    case ContextMenuEnumerator.DELETE_MESSAGE:
 			if(State.getInstance().getString("dialog_accepted").
 			   equals("true"))
 			{
@@ -784,39 +797,15 @@ public class MemberChat extends AppCompatActivity
 
 	switch(groupId)
 	{
-	case 0:
+	case ContextMenuEnumerator.CALL_VIA_MCELIECE:
 	    Kernel.getInstance().call
 		(m_oid, ParticipantCall.Algorithms.MCELIECE, m_sipHashId);
 	    break;
-	case 1:
+	case ContextMenuEnumerator.CALL_VIA_RSA:
 	    Kernel.getInstance().
 		call(m_oid, ParticipantCall.Algorithms.RSA, m_sipHashId);
 	    break;
-	case 2:
-	    Miscellaneous.showTextInputDialog
-		(MemberChat.this,
-		 listener,
-		 "Please provide a secret.",
-		 "Secret");
-	    break;
-	case 3:
-	    Kernel.getInstance().retrieveChatMessages(m_sipHashId);
-	    break;
-	case 10:
-	    Miscellaneous.showPromptDialog
-		(MemberChat.this,
-		 listener,
-		 "Are you sure that you wish to delete all " +
-		 "of the messages?");
-	    break;
-	case 15:
-	    Miscellaneous.showPromptDialog
-		(MemberChat.this,
-		 listener,
-		 "Are you sure that you wish to delete the " +
-		 "selected message?");
-	    break;
-	case 20:
+	case ContextMenuEnumerator.COPY_TEXT:
 	    try
 	    {
 		View view = (View) m_layoutManager.findViewByPosition(itemId);
@@ -850,7 +839,33 @@ public class MemberChat extends AppCompatActivity
 	    }
 
 	    break;
-	case 25: // Save Attachment
+	case ContextMenuEnumerator.CUSTOM_SESSION:
+	    Miscellaneous.showTextInputDialog
+		(MemberChat.this,
+		 listener,
+		 "Please provide a secret.",
+		 "Secret");
+	    break;
+	case ContextMenuEnumerator.DELETE_ALL_MESSAGES:
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete all " +
+		 "of the messages?");
+	    break;
+	case ContextMenuEnumerator.DELETE_MESSAGE:
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete the " +
+		 "selected message?");
+	    break;
+	case ContextMenuEnumerator.RESEND_MESSAGE:
+	    break;
+	case ContextMenuEnumerator.RETRIEVE_MESSAGES:
+	    Kernel.getInstance().retrieveChatMessages(m_sipHashId);
+	    break;
+	case ContextMenuEnumerator.SAVE_ATTACHMENT:
 	    try
 	    {
 		View view = (View) m_layoutManager.findViewByPosition(itemId);
@@ -1071,10 +1086,22 @@ public class MemberChat extends AppCompatActivity
 
 	boolean state = Kernel.getInstance().isConnected();
 
-	menu.add(0, -1, 0, "Call via McEliece").setEnabled(state);
-	menu.add(1, -1, 0, "Call via RSA").setEnabled(state);
-	menu.add(2, -1, 0, "Custom Session");
-	menu.add(3, -1, 0, "Retrieve Messages").setEnabled
+	menu.add(ContextMenuEnumerator.CALL_VIA_MCELIECE,
+		 -1,
+		 0,
+		 "Call via McEliece").setEnabled(state);
+	menu.add(ContextMenuEnumerator.CALL_VIA_RSA,
+		 -1,
+		 0,
+		 "Call via RSA").setEnabled(state);
+	menu.add(ContextMenuEnumerator.CUSTOM_SESSION,
+		 -1,
+		 0,
+		 "Custom Session");
+	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
+		 -1,
+		 0,
+		 "Retrieve Messages").setEnabled
 	    (!m_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty() && state);
     }

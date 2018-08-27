@@ -49,6 +49,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	ChatBubble m_chatBubble = null;
 	String m_name = "";
 	String m_sipHashId = "";
+	boolean m_canResend = false;
+	boolean m_hasAttachment = false;
 	int m_position = -1;
 
         public ViewHolder(ChatBubble chatBubble, String sipHashId)
@@ -74,23 +76,27 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 
 	    MenuItem menuItem = null;
 
-	    menu.add(10, -1, 1, "Delete All Messages");
-	    menuItem = menu.add(15, view.getId(), 2, "Delete Message");
-
-	    if(view.getId() == -1)
-		menuItem.setEnabled(false);
-
-	    menu.add(20, m_position, 0, "Copy Text");
-	    menuItem = menu.add(25, m_position, 3, "Save Attachment");
-
-	    MemberChatElement memberChatElement =
-		s_database.readMemberChat(s_cryptography,
-					  m_sipHashId,
-					  m_position);
-
-	    menuItem.setEnabled(memberChatElement != null &&
-				memberChatElement.m_attachment != null &&
-				memberChatElement.m_attachment.length > 0);
+	    menu.add(MemberChat.ContextMenuEnumerator.COPY_TEXT,
+		     m_position,
+		     0,
+		     "Copy Text");
+	    menu.add(MemberChat.ContextMenuEnumerator.DELETE_ALL_MESSAGES,
+		     -1,
+		     1,
+		     "Delete All Messages");
+	    menu.add(MemberChat.ContextMenuEnumerator.DELETE_MESSAGE,
+		     view.getId(),
+		     2,
+		     "Delete Message").setEnabled(view.getId() != -1);
+	    menu.add(MemberChat.ContextMenuEnumerator.RESEND_MESSAGE,
+		     m_position,
+		     3,
+		     "Resend Message").setEnabled(m_canResend);
+	    menu.add
+		(MemberChat.ContextMenuEnumerator.SAVE_ATTACHMENT,
+		 m_position,
+		 4,
+		 "Save Attachment").setEnabled(m_hasAttachment);
 	}
 
 	public void setData(MemberChatElement memberChatElement, int position)
@@ -99,11 +105,13 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		return;
 	    else if(memberChatElement == null)
 	    {
+		m_canResend = false;
 		m_chatBubble.setError(true);
 		m_chatBubble.setName(ChatBubble.Locations.LEFT, "?");
 		m_chatBubble.setText
 		    (ChatBubble.Locations.LEFT,
 		     "Smoke malfunction! The database entry is zero!\n");
+		m_hasAttachment = false;
 		m_position = position;
 		return;
 	    }
@@ -111,7 +119,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    StringBuilder stringBuilder = new StringBuilder();
 	    boolean local = false;
 
-	    if(memberChatElement.m_fromSmokeStack.equals("local"))
+	    if(memberChatElement.m_fromSmokeStack.equals("local") ||
+	       memberChatElement.m_fromSmokeStack.equals("local-protocol"))
 		local = true;
 
 	    stringBuilder.append(memberChatElement.m_message.trim());
@@ -119,6 +128,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    if(!memberChatElement.m_message.trim().isEmpty())
 		stringBuilder.append("\n");
 
+	    m_canResend = memberChatElement.m_fromSmokeStack.equals("local");
 	    m_chatBubble.setDate(memberChatElement.m_timestamp);
 	    m_chatBubble.setFromeSmokeStack
 		(memberChatElement.m_fromSmokeStack.equals("true"));
@@ -148,6 +158,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		    (ChatBubble.Locations.RIGHT, stringBuilder.toString());
 	    }
 
+	    m_hasAttachment = memberChatElement.m_attachment != null &&
+		memberChatElement.m_attachment.length > 0;
 	    m_position = position;
 	}
     }
