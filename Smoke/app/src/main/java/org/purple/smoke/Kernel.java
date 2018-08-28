@@ -482,7 +482,7 @@ public class Kernel
 					    s_databaseHelper.readMemberChat
 					    (s_cryptography,
 					     messageElement.m_id,
-					     messageElement.m_oid);
+					     messageElement.m_position);
 
 					if(memberChatElement != null)
 					{
@@ -2416,7 +2416,7 @@ public class Kernel
 	sendBroadcast(new Intent("org.purple.smoke.notify_data_set_changed"));
     }
 
-    public void resendMessage(String sipHashId, int oid)
+    public void resendMessage(String sipHashId, int position)
     {
 	m_messagesToSendMutex.writeLock().lock();
 
@@ -2429,7 +2429,7 @@ public class Kernel
 		(Cryptography.randomBytes(64));
 	    messageElement.m_messageType =
 		MessageElement.RESEND_CHAT_MESSAGE_TYPE;
-	    messageElement.m_oid = oid;
+	    messageElement.m_position = position;
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)

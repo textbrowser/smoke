@@ -43,7 +43,7 @@ public class MessageElement
     public final static int RETRIEVE_MESSAGES_MESSAGE_TYPE = 4;
     public final static int SHARE_SIPHASH_ID_MESSAGE_TYPE = 5;
     public int m_messageType = -1;
-    public int m_oid = -1;
+    public int m_position = -1;
     public long m_sequence = -1;
     public long m_timestamp = -1;
 
