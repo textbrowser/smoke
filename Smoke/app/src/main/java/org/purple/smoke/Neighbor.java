@@ -158,6 +158,9 @@ public abstract class Neighbor
 	    {
 		try
 		{
+		    if(!connected())
+			return;
+
 		    /*
 		    ** Await new data.
 		    */
@@ -506,6 +509,11 @@ public abstract class Neighbor
 	synchronized(m_echoQueueMutex)
 	{
 	    m_echoQueue.clear();
+	}
+
+	synchronized(m_parsingSchedulerObject)
+	{
+	    m_parsingSchedulerObject.notify();
 	}
 
 	synchronized(m_queueMutex)
