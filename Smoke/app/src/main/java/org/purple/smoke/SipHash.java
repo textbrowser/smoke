@@ -85,12 +85,38 @@ public class SipHash
 	m_v3 ^= m_v0;
     }
 
+    public SipHash()
+    {
+    }
+
+    public SipHash(byte key[])
+    {
+	if(key == null || key.length != KEY_LENGTH)
+	    return;
+
+	m_key = Miscellaneous.deepCopy(key);
+    }
+
+    public SipHash(byte key[], int c_rounds_index, int d_rounds_index)
+    {
+	if(key == null || key.length != KEY_LENGTH)
+	    return;
+
+	if(c_rounds_index >= 0 && c_rounds_index < C_ROUNDS.length)
+	    m_c_rounds_index = c_rounds_index;
+
+	if(d_rounds_index >= 0 && d_rounds_index < D_ROUNDS.length)
+	    m_d_rounds_index = d_rounds_index;
+
+	m_key = Miscellaneous.deepCopy(key);
+    }
+
     public long hmac(byte data[])
     {
 	return hmac(data, m_key);
     }
 
-    public long hmac(byte data[], byte key[])
+    public synchronized long hmac(byte data[], byte key[])
     {
 	if(data == null || key == null || key.length != KEY_LENGTH)
 	    return 0;
@@ -166,33 +192,7 @@ public class SipHash
 	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;
     }
 
-    public SipHash()
-    {
-    }
-
-    public SipHash(byte key[])
-    {
-	if(key == null || key.length != KEY_LENGTH)
-	    return;
-
-	m_key = Miscellaneous.deepCopy(key);
-    }
-
-    public SipHash(byte key[], int c_rounds_index, int d_rounds_index)
-    {
-	if(key == null || key.length != KEY_LENGTH)
-	    return;
-
-	if(c_rounds_index >= 0 && c_rounds_index < C_ROUNDS.length)
-	    m_c_rounds_index = c_rounds_index;
-
-	if(d_rounds_index >= 0 && d_rounds_index < D_ROUNDS.length)
-	    m_d_rounds_index = d_rounds_index;
-
-	m_key = Miscellaneous.deepCopy(key);
-    }
-
-    static public boolean test1()
+    public static boolean test1()
     {
 	/*
 	** Please read the Test Values section of
