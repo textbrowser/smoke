@@ -3058,7 +3058,7 @@ public class Database extends SQLiteOpenHelper
 
 	return keyStream;
     }
- 
+
     public int participantOidFromSipHash(Cryptography cryptography,
 					 String sipHashId)
     {
