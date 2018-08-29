@@ -172,6 +172,14 @@ public class ChatBubble extends View
 
     public void setRead(Locations location, boolean state)
     {
+	if(m_error)
+	{
+	    m_messageRead = state;
+	    m_view.findViewById(R.id.message_read).setVisibility
+		(View.INVISIBLE);
+	    return;
+	}
+
 	m_messageRead = state;
 
 	if(location == Locations.LEFT)
@@ -195,6 +203,14 @@ public class ChatBubble extends View
 
     public void setSent(Locations location, boolean state)
     {
+	if(m_error)
+	{
+	    m_messageSent = state;
+	    m_view.findViewById(R.id.message_sent).setVisibility
+		(View.INVISIBLE);
+	    return;
+	}
+
 	m_messageSent = state;
 
 	if(location == Locations.LEFT)
