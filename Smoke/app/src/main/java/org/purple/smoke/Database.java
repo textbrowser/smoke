@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 
@@ -3759,26 +3762,43 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public void purgeNeighborQueue(String oid)
+    public void purgeNeighborQueue(final String oid)
     {
 	if(m_db == null)
 	    return;
 
-	m_db.beginTransactionNonExclusive();
+	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
 
-	try
-	{
-	    m_db.delete
-		("outbound_queue", "neighbor_oid = ?", new String[] {oid});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-        {
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
+		    m_db.beginTransactionNonExclusive();
+
+		    try
+		    {
+			m_db.delete("outbound_queue",
+				    "neighbor_oid = ?",
+				    new String[] {oid});
+			m_db.setTransactionSuccessful();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_db.endTransaction();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, TimeUnit.MILLISECONDS);
     }
 
     public void purgeParticipantsKeyStreams(int lifetime)
