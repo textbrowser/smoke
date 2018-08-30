@@ -257,3 +257,4 @@ Remaining Items
 7.     Zoom integration.
 8.     Gallery integration.
 9.     Drawers.
+10.    Purging of neighbor queues should occur off of the main thread.
