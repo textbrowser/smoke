@@ -192,6 +192,7 @@ Completed Items
 149.   Fire through SmokeStack.
 150.   Return message-read status in status messages.
 151.   Allow resending of messages.
+152.   Purging of neighbor queues should occur off of the main thread.
 
 Future Items
 
@@ -257,4 +258,3 @@ Remaining Items
 7.     Zoom integration.
 8.     Gallery integration.
 9.     Drawers.
-10.    Purging of neighbor queues should occur off of the main thread.
