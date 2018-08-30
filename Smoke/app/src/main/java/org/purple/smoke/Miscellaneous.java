@@ -366,7 +366,7 @@ public class Miscellaneous
 
     public static int imagePercentFromArrayLength(int length)
     {
-	final int upper = 5 * 1024 * 1024;
+	final int upper = 8 * 1024 * 1024;
 
 	if(length <= upper)
 	    return 100;
