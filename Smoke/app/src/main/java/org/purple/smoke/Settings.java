@@ -2342,8 +2342,7 @@ public class Settings extends AppCompatActivity
     {
 	if(Settings.this.isFinishing())
 	    return;
-	else if(s_cryptography.ozoneEncryptionKey() == null ||
-		s_cryptography.ozoneMacKey() == null)
+	else if(!s_cryptography.hasValidOzoneKeys())
 	{
 	    Miscellaneous.showErrorDialog
 		(Settings.this, "Please prepare Ozone credentials.");

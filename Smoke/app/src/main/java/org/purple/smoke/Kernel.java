@@ -662,7 +662,7 @@ public class Kernel
 			    {
 			    case MessageElement.CHAT_MESSAGE_TYPE:
 			    case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
-				if(s_cryptography.ozoneMacKey() != null)
+				if(s_cryptography.hasValidOzoneMacKey())
 				{
 				    bytes = Messages.chatMessage
 					(s_cryptography,
