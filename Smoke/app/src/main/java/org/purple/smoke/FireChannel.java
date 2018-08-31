@@ -528,12 +528,12 @@ public class FireChannel extends View
     public void append(String id, String message, String name)
     {
 	if(id == null ||
-	   id.isEmpty() ||
+	   id.trim().isEmpty() ||
 	   m_view == null ||
 	   message == null ||
-	   message.isEmpty() ||
+	   message.trim().isEmpty() ||
 	   name == null ||
-	   name.isEmpty())
+	   name.trim().isEmpty())
 	    return;
 
 	status(id, name);

@@ -243,16 +243,23 @@ public class ChatBubble extends View
 	{
 	    Spannable spannable = new SpannableStringBuilder(text);
 
-	    if(location == Locations.LEFT)
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(255, 255, 255)),
-		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    else
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(117, 117, 117)),
-		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    if(spannable.length() > 0)
+	    {
+		if(location == Locations.LEFT)
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(255, 255, 255)),
+			 0,
+			 spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		else
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(117, 117, 117)),
+			 0,
+			 spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-	    textView.append(spannable);
+		textView.append(spannable);
+	    }
 	}
 
 	{
@@ -260,19 +267,28 @@ public class ChatBubble extends View
 		((m_fromSmokeStack ? "Ozone " : "") +
 		 m_simpleDateFormat.format(m_date));
 
-	    if(location == Locations.LEFT)
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(224, 224, 224)),
-		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    else
-		spannable.setSpan
-		    (new ForegroundColorSpan(Color.rgb(158, 158, 158)),
-		     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    if(spannable.length() > 0)
+	    {
+		if(location == Locations.LEFT)
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(224, 224, 224)),
+			 0,
+			 spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		else
+		    spannable.setSpan
+			(new ForegroundColorSpan(Color.rgb(158, 158, 158)),
+			 0,
+			 spannable.length(),
+			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-	    spannable.setSpan
-		(new RelativeSizeSpan(0.90f),
-		 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    textView.append(spannable);
+		spannable.setSpan
+		    (new RelativeSizeSpan(0.90f),
+		     0,
+		     spannable.length(),
+		     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		textView.append(spannable);
+	    }
 	}
 
 	float density = m_context.getResources().getDisplayMetrics().density;
