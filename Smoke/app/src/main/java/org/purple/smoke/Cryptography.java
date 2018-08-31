@@ -373,6 +373,22 @@ public class Cryptography
 	return false;
     }
 
+    public boolean hasValidOzoneKeys()
+    {
+	byte bytes1[] = ozoneEncryptionKey();
+	byte bytes2[] = ozoneMacKey();
+
+	return !(bytes1 == null || bytes1.length != 32 ||
+		 bytes2 == null || bytes2.length != 64);
+    }
+
+    public boolean hasValidOzoneMacKey()
+    {
+	byte bytes[] = ozoneMacKey();
+
+	return !(bytes == null || bytes.length != 64);
+    }
+
     public boolean isValidSipHashMac(byte data[], byte mac[])
     {
 	if(data == null || data.length < 0 || mac == null || mac.length < 0)

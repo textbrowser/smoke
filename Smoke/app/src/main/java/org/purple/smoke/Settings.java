@@ -3194,13 +3194,7 @@ public class Settings extends AppCompatActivity
 		     0,
 		     "New Name (" + tag1 + ")");
 
-	    boolean validOzone = true;
-
-	    if(s_cryptography.ozoneEncryptionKey() == null ||
-	       s_cryptography.ozoneEncryptionKey().length != 32 ||
-	       s_cryptography.ozoneMacKey() == null ||
-	       s_cryptography.ozoneMacKey().length != 64)
-		validOzone = false;
+	    boolean validOzone = s_cryptography.hasValidOzoneKeys();
 
 	    menu.add
 		(ContextMenuEnumerator.REQUEST_KEYS_VIA_OZONE,
