@@ -575,8 +575,21 @@ public class Kernel
 				    break;
 				case MessageElement.
 				    SHARE_SIPHASH_ID_MESSAGE_TYPE:
-				    bytes = Messages.shareSipHashIdMessage
-					(s_cryptography);
+				    if(messageElement.m_id.equals("-1"))
+					bytes = Messages.shareSipHashIdMessage
+					    (s_cryptography,
+					     s_cryptography.sipHashId());
+				    else
+				    {
+					String sipHashId = s_databaseHelper.
+					    readSipHashIdString
+					    (s_cryptography,
+					     messageElement.m_id);
+
+					bytes = Messages.shareSipHashIdMessage
+					    (s_cryptography, sipHashId);
+				    }
+
 				    break;
 				}
 			    }
@@ -2373,7 +2386,7 @@ public class Kernel
 	}
     }
 
-    public void enqueueShareSipHashIdMessage()
+    public void enqueueShareSipHashIdMessage(int oid)
     {
 	m_messagesToSendMutex.writeLock().lock();
 
@@ -2381,6 +2394,7 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_id = String.valueOf(oid);
 	    messageElement.m_messageType = MessageElement.
 		SHARE_SIPHASH_ID_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);

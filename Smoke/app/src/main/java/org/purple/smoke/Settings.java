@@ -84,7 +84,8 @@ public class Settings extends AppCompatActivity
 	public final static int NEW_NAME = 2;
 	public final static int REQUEST_KEYS_VIA_OZONE = 3;
 	public final static int SHARE_KEYS_OF = 4;
-	public final static int VIEW_DETAILS = 5;
+	public final static int SHARE_SMOKE_ID_OF = 5;
+	public final static int VIEW_DETAILS = 6;
     }
 
     private class PopulateNeighbors implements Runnable
@@ -1481,7 +1482,7 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
-		shareSipHashId();
+		shareSipHashId(-1);
 	    }
         });
 
@@ -2337,7 +2338,7 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
-    private void shareSipHashId()
+    private void shareSipHashId(int oid)
     {
 	if(Settings.this.isFinishing())
 	    return;
@@ -2349,7 +2350,7 @@ public class Settings extends AppCompatActivity
 	    return;
 	}
 
-	Kernel.getInstance().enqueueShareSipHashIdMessage();
+	Kernel.getInstance().enqueueShareSipHashIdMessage(oid);
     }
 
     private void showAuthenticateActivity()
@@ -3081,6 +3082,9 @@ public class Settings extends AppCompatActivity
 	case ContextMenuEnumerator.SHARE_KEYS_OF:
 	    shareKeysOf(String.valueOf(itemId));
 	    break;
+	case ContextMenuEnumerator.SHARE_SMOKE_ID_OF:
+	    shareSipHashId(itemId);
+	    break;
 	case ContextMenuEnumerator.VIEW_DETAILS:
 	    showDetailsOfParticipant(String.valueOf(itemId));
 	    break;
@@ -3190,23 +3194,30 @@ public class Settings extends AppCompatActivity
 		     0,
 		     "New Name (" + tag1 + ")");
 
-	    MenuItem menuItem = menu.add
-		(ContextMenuEnumerator.REQUEST_KEYS_VIA_OZONE,
-		 view.getId(),
-		 0,
-		 "Request Keys via Ozone (" + tag1 + ")");
+	    boolean validOzone = true;
 
 	    if(s_cryptography.ozoneEncryptionKey() == null ||
 	       s_cryptography.ozoneEncryptionKey().length != 32 ||
 	       s_cryptography.ozoneMacKey() == null ||
 	       s_cryptography.ozoneMacKey().length != 64)
-		menuItem.setEnabled(false);
+		validOzone = false;
 
+	    menu.add
+		(ContextMenuEnumerator.REQUEST_KEYS_VIA_OZONE,
+		 view.getId(),
+		 0,
+		 "Request Keys via Ozone (" + tag1 + ")").
+		setEnabled(validOzone);
 	    menu.add(ContextMenuEnumerator.SHARE_KEYS_OF,
 		     view.getId(),
 		     0,
 		     "Share Keys Of (" + tag1 + ")").
 		setEnabled((boolean) tag2);
+	    menu.add(ContextMenuEnumerator.SHARE_SMOKE_ID_OF,
+		     view.getId(),
+		     0,
+		     "Share Smoke ID Of (" + tag1 + ")").
+		setEnabled(validOzone);
 	    menu.add(ContextMenuEnumerator.VIEW_DETAILS,
 		     view.getId(),
 		     0,

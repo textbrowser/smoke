@@ -1334,7 +1334,8 @@ public class Messages
 	return null;
     }
 
-    public static byte[] shareSipHashIdMessage(Cryptography cryptography)
+    public static byte[] shareSipHashIdMessage(Cryptography cryptography,
+					       String sipHashId)
     {
 	if(cryptography == null)
 	    return null;
@@ -1359,7 +1360,7 @@ public class Messages
 		 ** [ SipHash Identity ]
 		 */
 
-		 cryptography.sipHashId().getBytes("UTF-8"),
+		 sipHashId.getBytes("UTF-8"),
 
 		 /*
 		 ** [ Temporary Bytes ]
