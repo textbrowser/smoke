@@ -2911,12 +2911,13 @@ public class Settings extends AppCompatActivity
 	    textView1 = (TextView) findViewById(R.id.ozone);
 	    textView1.setText
 		(m_databaseHelper.readSetting(s_cryptography, "ozone_address"));
-	    populateNeighbors(null);
 	    populateParticipants();
 	    startKernel();
 
 	    if(checkBox1.isChecked())
 		startTimers();
+	    else
+		populateNeighbors(null);
 	}
 	else
 	{
