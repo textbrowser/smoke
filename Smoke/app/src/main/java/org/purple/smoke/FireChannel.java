@@ -505,7 +505,7 @@ public class FireChannel extends View
 		stringBuilder.append("The Fire channel ");
 		stringBuilder.append(m_name);
 		stringBuilder.append(" cannot be registered with the Kernel." +
-				     "Please close this channel.");
+				     " Please close this channel.");
 		stringBuilder.append("\n\n");
 
 		Spannable spannable = new SpannableStringBuilder
