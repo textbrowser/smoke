@@ -23,12 +23,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:fadeScrollbars="false"
         tools:context="org.purple.smoke.Settings">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:fadeScrollbars="false">
 
             <LinearLayout

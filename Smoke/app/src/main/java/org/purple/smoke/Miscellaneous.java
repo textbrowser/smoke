@@ -58,7 +58,7 @@ import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-public class Miscellaneous
+public abstract class Miscellaneous
 {
     private final static int INTEGER_BYTES = 4;
     private final static int LONG_BYTES = 8;
