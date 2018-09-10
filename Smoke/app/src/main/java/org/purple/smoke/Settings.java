@@ -1963,8 +1963,8 @@ public class Settings extends AppCompatActivity
 				 "",
 				 "",
 				 "HTTP",
-				 BuildConfig.ROSEMARY_IPV4_HOST,
-				 BuildConfig.ROSEMARY_IPV4_PORT,
+				 BuildConfig.TULIP_IPV4_HOST,
+				 BuildConfig.TULIP_IPV4_PORT,
 				 "",
 				 "TCP",
 				 "IPv4");
