@@ -258,3 +258,5 @@ Remaining Items
 7.     Zoom integration.
 8.     Gallery integration.
 9.     Drawers.
+10.    Digest of PEM(certificate).
+11.    Inspect length in substring() usage.
