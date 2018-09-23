@@ -990,7 +990,10 @@ public class Settings extends AppCompatActivity
 			("Remote Certificate's Fingerprint: ");
 		    stringBuilder.append
 			(Cryptography.
-			 fingerPrint(neighborElement.m_remoteCertificate));
+			 fingerPrint(Miscellaneous.
+				     pemFormat(neighborElement.
+					       m_remoteCertificate).
+				     getBytes()));
 		}
 
 		if(!neighborElement.m_sessionCipher.isEmpty())

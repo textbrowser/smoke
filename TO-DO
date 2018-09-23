@@ -193,6 +193,8 @@ Completed Items
 150.   Return message-read status in status messages.
 151.   Allow resending of messages.
 152.   Purging of neighbor queues should occur off of the main thread.
+153.   Digest of PEM(certificate).
+154.   Inspect length in substring() usage.
 
 Future Items
 
@@ -258,5 +260,3 @@ Remaining Items
 7.     Zoom integration.
 8.     Gallery integration.
 9.     Drawers.
-10.    Digest of PEM(certificate).
-11.    Inspect length in substring() usage.

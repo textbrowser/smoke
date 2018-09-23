@@ -47,7 +47,7 @@ public class About
 	if(s_about.isEmpty())
 	{
 	    s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    s_about = "Version 2018.09.01 Beautiful Balthazar " +
+	    s_about = "Version 2018.10.10 Oblong October " +
 		(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		"\nBuild Date " +
 		s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +

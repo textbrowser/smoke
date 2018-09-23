@@ -39,6 +39,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.text.InputType;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.SubMenu;
@@ -98,7 +99,11 @@ public abstract class Miscellaneous
 
 	    for(int i = 0; i < string.length(); i += offset)
 	    {
-		stringBuilder.append(string.substring(i, i + offset));
+		if(i < string.length() - offset)
+		    stringBuilder.append(string.substring(i, i + offset));
+		else
+		    stringBuilder.append(string.substring(i));
+
 		stringBuilder.append(delimiter);
 	    }
 
@@ -127,7 +132,11 @@ public abstract class Miscellaneous
 
 	    for(int i = 0; i < string.length(); i += offset)
 	    {
-		stringBuilder.append(string.substring(i, i + offset));
+		if(i < string.length() - offset)
+		    stringBuilder.append(string.substring(i, i + offset));
+		else
+		    stringBuilder.append(string.substring(i));
+
 		stringBuilder.append(delimiter);
 	    }
 
@@ -188,6 +197,40 @@ public abstract class Miscellaneous
 	    return "True";
 	else
 	    return "False";
+    }
+
+    public static String pemFormat(byte bytes[])
+    {
+	if(bytes == null || bytes.length <= 0)
+	    return "";
+
+	try
+	{
+	    String string = Base64.encodeToString(bytes, Base64.NO_WRAP);
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append("-----BEGIN CERTIFICATE-----\n");
+
+	    for(int i = 0; i < string.length(); i += 64)
+		if(i < string.length() - 64)
+		{
+		    stringBuilder.append(string.substring(i, i + 64));
+		    stringBuilder.append("\n");
+		}
+		else
+		{
+		    stringBuilder.append(string.substring(i));
+		    stringBuilder.append("\n");
+		    break;
+		}
+
+	    stringBuilder.append("-----END CERTIFICATE-----\n");
+	    return stringBuilder.toString();
+	}
+	catch(Exception exception)
+	{
+	    return "";
+	}
     }
 
     public static String prepareSipHashId(String string)
