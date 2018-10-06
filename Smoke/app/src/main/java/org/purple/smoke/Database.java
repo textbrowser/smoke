@@ -3839,16 +3839,27 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.delete("congestion_control", null, null);
-	    m_db.delete("fire", null, null);
-	    m_db.delete("log", null, null);
-	    m_db.delete("neighbors", null, null);
-	    m_db.delete("outbound_queue", null, null);
-	    m_db.delete("participants", null, null);
-	    m_db.delete("participants_keys", null, null);
-	    m_db.delete("participants_messages", null, null);
-	    m_db.delete("settings", null, null);
-	    m_db.delete("siphash_ids", null, null);
+	    String tables[] = new String[]
+		{"congestion_control",
+		 "fire",
+		 "log",
+		 "neighbors",
+		 "outbound_queue",
+		 "participants",
+		 "participants_keys",
+		 "participants_messages",
+		 "settings",
+		 "siphash_ids"};
+
+	    for(int i = 0; i < tables.length; i++)
+		try
+		{
+		    m_db.delete(tables[i], null, null);
+		}
+		catch(Exception exception)
+		{
+		}
+
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
