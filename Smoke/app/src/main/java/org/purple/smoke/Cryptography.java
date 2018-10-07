@@ -1350,7 +1350,7 @@ public class Cryptography
 
     public static boolean memcmp(byte a[], byte b[])
     {
-	if(a == null || a.length < 0 || b == null || b.length < 0)
+	if(a == null || b == null)
 	    return false;
 
 	int rc = 0;
