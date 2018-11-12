@@ -141,7 +141,7 @@ public class Database extends SQLiteOpenHelper
     private final static int DATABASE_VERSION = 1;
     private final static int WRITE_PARTICIPANT_TIME_DELTA = 60000; // 60 Seconds
     private static Database s_instance = null;
-    public static enum ExceptionLevels
+    public enum ExceptionLevels
     {
 	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
     }
@@ -1246,15 +1246,13 @@ public class Database extends SQLiteOpenHelper
 		    case 3:
 			if(bytes != null)
 			    memberChatElement.m_messageRead =
-				(new String(bytes).equals("true") ?
-				 true : false);
+				(new String(bytes).equals("true"));
 
 			break;
 		    case 4:
 			if(bytes != null)
 			    memberChatElement.m_messageSent =
-				(new String(bytes).equals("true") ?
-				 true : false);
+				(new String(bytes).equals("true"));
 
 			break;
 		    }
