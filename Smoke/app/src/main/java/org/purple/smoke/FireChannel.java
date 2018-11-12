@@ -139,9 +139,19 @@ public class FireChannel extends View
 				    if(textView1.getId() == -1)
 					continue;
 
-				    Participant participant = m_participants.
-					get(textView1.
-					    getTag(R.id.participants));
+				    Participant participant = null;
+
+				    try
+				    {
+					participant = m_participants.
+					    get((String) textView1.
+						getTag(R.id.participants));
+				    }
+				    catch(Exception exception)
+				    {
+					participant = null;
+				    }
+
 				    long current = System.currentTimeMillis();
 
 				    if(participant == null ||
@@ -149,9 +159,16 @@ public class FireChannel extends View
 						participant.m_timestamp) >=
 				       2 * STATUS_INTERVAL)
 				    {
-					m_participants.remove
-					    (textView1.
-					     getTag(R.id.participants));
+					try
+					{
+					    m_participants.remove
+						((String) textView1.
+						 getTag(R.id.participants));
+					}
+					catch(Exception exception)
+					{
+					}
+
 					tableLayout.removeView(row);
 
 					StringBuilder stringBuilder =
