@@ -30,12 +30,13 @@ package org.purple.smoke;
 import android.os.Build;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class About
 {
     private final static SimpleDateFormat s_simpleDateFormat = new
-	SimpleDateFormat("yyyy-MM-dd h:mm:ss");
+	SimpleDateFormat("yyyy-MM-dd h:mm:ss", Locale.getDefault());
     private static String s_about = "";
 
     private About()

@@ -2488,7 +2488,8 @@ public class Kernel
 
 		if(powerManager != null)
 		    m_wakeLock = powerManager.newWakeLock
-			(PowerManager.PARTIAL_WAKE_LOCK, "SmokeWakeLockTag");
+			(PowerManager.PARTIAL_WAKE_LOCK,
+			 "Smoke:SmokeWakeLockTag");
 
 		if(m_wakeLock != null)
 		    m_wakeLock.setReferenceCounted(false);

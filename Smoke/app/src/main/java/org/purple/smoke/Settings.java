@@ -70,6 +70,7 @@ import android.widget.TextView;
 import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -1031,7 +1032,8 @@ public class Settings extends AppCompatActivity
 
 		stringBuilder.append
 		    (String.
-		     format("%d:%02d",
+		     format(Locale.getDefault(),
+			    "%d:%02d",
 			    TimeUnit.NANOSECONDS.toMinutes(uptime),
 			    TimeUnit.NANOSECONDS.toSeconds(uptime) -
 			    TimeUnit.MINUTES.
