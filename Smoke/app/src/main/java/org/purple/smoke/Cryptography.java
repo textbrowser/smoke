@@ -27,12 +27,10 @@
 
 package org.purple.smoke;
 
-import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -41,7 +39,6 @@ import java.security.Signature;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.EncodedKeySpec;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -1328,7 +1325,7 @@ public class Cryptography
 	{
 	    for(int i = 0; i < fingerprint.length(); i += 2)
 		if(i < fingerprint.length() - 2)
-		    stringBuilder.append(fingerprint.substring(i, i + 2)).
+		    stringBuilder.append(fingerprint, i, i + 2).
 			append(":");
 		else
 		    stringBuilder.append(fingerprint.substring(i));

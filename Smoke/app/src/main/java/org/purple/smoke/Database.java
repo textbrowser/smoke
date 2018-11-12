@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
@@ -3849,10 +3848,10 @@ public class Database extends SQLiteOpenHelper
 		 "settings",
 		 "siphash_ids"};
 
-	    for(int i = 0; i < tables.length; i++)
+	    for(String string : tables)
 		try
 		{
-		    m_db.delete(tables[i], null, null);
+		    m_db.delete(string, null, null);
 		}
 		catch(Exception exception)
 		{

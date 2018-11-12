@@ -353,15 +353,13 @@ public class Fire extends AppCompatActivity
 			    try
 			    {
 				final TextView textView1 =
-				    (TextView) findViewById(R.id.channel);
-				final TextView textView2 =
 				    (TextView) findViewById(R.id.digest);
 
 				m_encryptionKey = s_cryptography.
 				    generateFireEncryptionKey(channel, salt);
 				m_keyStream = s_cryptography.
 				    generateFireDigestKeyStream
-				    (textView2.getText().toString().trim());
+				    (textView1.getText().toString().trim());
 
 				Fire.this.runOnUiThread(new Runnable()
 				{

@@ -133,7 +133,7 @@ public abstract class Miscellaneous
 	    for(int i = 0; i < string.length(); i += offset)
 	    {
 		if(i < string.length() - offset)
-		    stringBuilder.append(string.substring(i, i + offset));
+		    stringBuilder.append(string, i, i + offset);
 		else
 		    stringBuilder.append(string.substring(i));
 
@@ -214,7 +214,7 @@ public abstract class Miscellaneous
 	    for(int i = 0; i < string.length(); i += 64)
 		if(i < string.length() - 64)
 		{
-		    stringBuilder.append(string.substring(i, i + 64));
+		    stringBuilder.append(string, i, i + 64);
 		    stringBuilder.append("\n");
 		}
 		else

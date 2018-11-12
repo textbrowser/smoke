@@ -234,7 +234,6 @@ public class ChatBubble extends View
 
     public void setText(Locations location, String text)
     {
-	ImageView imageView = m_view.findViewById(R.id.image);
 	LinearLayout linearLayout = m_view.findViewById(R.id.linear_layout);
 	TextView textView = m_view.findViewById(R.id.text);
 
