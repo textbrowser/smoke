@@ -32,13 +32,12 @@ import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class Messages
 {
     private final static SimpleDateFormat s_fireSimpleDateFormat = new
-	SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
+	SimpleDateFormat("MMddyyyyHHmmss");
     public final static String EOM = "\r\n\r\n\r\n";
     public final static String FIRE_CHAT_MESSAGE_TYPE = "0040b";
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
