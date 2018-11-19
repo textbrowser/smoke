@@ -51,7 +51,10 @@ import java.util.regex.Matcher;
 
 public class Database extends SQLiteOpenHelper
 {
+    private Cursor m_readMemberChatCursor = null;
     private SQLiteDatabase m_db = null;
+    private String m_readMemberChatSipHashId = "";
+    private final Object m_readMemberChatCursorMutex = new Object();
     private final static Comparator<FireElement>
 	s_readFiresComparator = new Comparator<FireElement> ()
 	{
@@ -1131,7 +1134,16 @@ public class Database extends SQLiteOpenHelper
 	    */
 
 	    values.put("timestamp", timestamp);
-	    m_db.insertOrThrow("participants_messages", null, values);
+
+	    if(m_db.insertOrThrow("participants_messages", null, values) != -1)
+		synchronized(m_readMemberChatCursorMutex)
+		{
+		    if(m_readMemberChatCursor != null)
+			m_readMemberChatCursor.close();
+
+		    m_readMemberChatCursor = null;
+		}
+
 	    m_db.setTransactionSuccessful();
 	}
 	catch(SQLiteConstraintException exception)
@@ -1159,113 +1171,138 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || m_db == null)
 	    return null;
 
-	Cursor cursor = null;
 	MemberChatElement memberChatElement = null;
 
-	try
+	synchronized(m_readMemberChatCursorMutex)
 	{
-	    cursor = m_db.rawQuery
-		("SELECT attachment, " + // 0
-		 "from_smokestack, " +   // 1
-		 "message, " +           // 2
-		 "message_read, " +      // 3
-		 "message_sent, " +      // 4
-		 "timestamp, " +         // 5
-		 "oid " +                // 6
-		 "FROM participants_messages WHERE siphash_id_digest = ? " +
-		 "ORDER BY timestamp LIMIT 1 OFFSET CAST(? AS INTEGER)",
-		 new String[] {Base64.
-			       encodeToString(cryptography.
-					      hmac(sipHashId.toUpperCase().
-						   trim().getBytes("UTF-8")),
-					      Base64.DEFAULT),
-			       String.valueOf(position)});
-
-	    if(cursor != null && cursor.moveToFirst())
+	    try
 	    {
-		memberChatElement = new MemberChatElement();
+		if(m_readMemberChatCursor != null)
+		    if(!m_readMemberChatSipHashId.equals(sipHashId))
+		    {
+			m_readMemberChatCursor.close();
+			m_readMemberChatCursor = null;
+		    }
 
-		int oid = cursor.getInt(cursor.getColumnCount() - 1);
-
-		for(int i = 0; i < cursor.getColumnCount(); i++)
+		if(m_readMemberChatCursor == null)
 		{
-		    if(i == cursor.getColumnCount() - 1)
+		    m_readMemberChatCursor = m_db.rawQuery
+			("SELECT attachment, " + // 0
+			 "from_smokestack, " +   // 1
+			 "message, " +           // 2
+			 "message_read, " +      // 3
+			 "message_sent, " +      // 4
+			 "timestamp, " +         // 5
+			 "oid " +                // 6
+			 "FROM participants_messages " +
+			 "WHERE siphash_id_digest = ? ORDER BY timestamp",
+			 new String[] {Base64.
+				       encodeToString(cryptography.
+						      hmac(sipHashId.
+							   toUpperCase().
+							   trim().
+							   getBytes("UTF-8")),
+						      Base64.DEFAULT)});
+		    m_readMemberChatSipHashId = sipHashId;
+		}
+
+		if(m_readMemberChatCursor != null &&
+		   m_readMemberChatCursor.moveToPosition(position))
+		{
+		    memberChatElement = new MemberChatElement();
+
+		    int oid = m_readMemberChatCursor.getInt
+			(m_readMemberChatCursor.getColumnCount() - 1);
+
+		    for(int i = 0;
+			i < m_readMemberChatCursor.getColumnCount();
+			i++)
 		    {
-			memberChatElement.m_oid = cursor.getInt(i);
-			continue;
-		    }
-		    else if(i == 5)
-		    {
-			memberChatElement.m_timestamp = cursor.getLong(i);
-			continue;
-		    }
+			if(i == m_readMemberChatCursor.getColumnCount() - 1)
+			{
+			    memberChatElement.m_oid =
+				m_readMemberChatCursor.getInt(i);
+			    continue;
+			}
+			else if(i == 5)
+			{
+			    memberChatElement.m_timestamp =
+				m_readMemberChatCursor.getLong(i);
+			    continue;
+			}
 
-		    byte bytes[] = cryptography.mtd
-			(Base64.decode(cursor.getString(i).getBytes(),
-				       Base64.DEFAULT));
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(m_readMemberChatCursor.
+					   getString(i).getBytes(),
+					   Base64.DEFAULT));
 
-		    if(bytes == null)
-		    {
-			StringBuilder stringBuilder = new StringBuilder();
+			if(bytes == null)
+			{
+			    StringBuilder stringBuilder = new StringBuilder();
 
-			stringBuilder.append
-			    ("Database::readMemberChat(): ");
-			stringBuilder.append("error on column ");
-			stringBuilder.append(cursor.getColumnName(i));
-			stringBuilder.append(".");
-			writeLog(stringBuilder.toString());
-		    }
+			    stringBuilder.append
+				("Database::readMemberChat(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append
+				(m_readMemberChatCursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			}
 
-		    switch(i)
-		    {
-		    case 0:
-			if(bytes != null)
-			    memberChatElement.m_attachment =
-				Miscellaneous.deepCopy(bytes);
+			switch(i)
+			{
+			case 0:
+			    if(bytes != null)
+				memberChatElement.m_attachment =
+				    Miscellaneous.deepCopy(bytes);
 
-			break;
-		    case 1:
-			if(bytes != null)
-			    memberChatElement.m_fromSmokeStack =
-				new String(bytes).trim();
-			else
-			    memberChatElement.m_fromSmokeStack =
-				"error (" + oid + ")";
+			    break;
+			case 1:
+			    if(bytes != null)
+				memberChatElement.m_fromSmokeStack =
+				    new String(bytes).trim();
+			    else
+				memberChatElement.m_fromSmokeStack =
+				    "error (" + oid + ")";
 
-			break;
-		    case 2:
-			if(bytes != null)
-			    memberChatElement.m_message =
-				new String(bytes);
-			else
-			    memberChatElement.m_message =
-				"error (" + oid + ")";
+			    break;
+			case 2:
+			    if(bytes != null)
+				memberChatElement.m_message =
+				    new String(bytes);
+			    else
+				memberChatElement.m_message =
+				    "error (" + oid + ")";
 
-			break;
-		    case 3:
-			if(bytes != null)
-			    memberChatElement.m_messageRead =
-				(new String(bytes).equals("true"));
+			    break;
+			case 3:
+			    if(bytes != null)
+				memberChatElement.m_messageRead =
+				    (new String(bytes).equals("true"));
 
-			break;
-		    case 4:
-			if(bytes != null)
-			    memberChatElement.m_messageSent =
-				(new String(bytes).equals("true"));
+			    break;
+			case 4:
+			    if(bytes != null)
+				memberChatElement.m_messageSent =
+				    (new String(bytes).equals("true"));
 
-			break;
+			    break;
+			}
 		    }
 		}
 	    }
-	}
-	catch(Exception exception)
-	{
-	    memberChatElement = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
+	    catch(Exception exception)
+	    {
+		memberChatElement = null;
+
+		if(m_readMemberChatCursor != null)
+		    m_readMemberChatCursor.close();
+
+		m_readMemberChatCursor = null;
+	    }
+	    finally
+	    {
+	    }
 	}
 
 	return memberChatElement;
@@ -3291,14 +3328,24 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.delete
-		("participants_messages", "oid = ? AND siphash_id_digest = ?",
-		 new String[] {String.valueOf(oid),
-			       Base64.encodeToString(cryptography.
-						     hmac(sipHashId.
-							  toUpperCase().trim().
-							  getBytes("UTF-8")),
-						     Base64.DEFAULT)});
+	    if(m_db.delete("participants_messages",
+			   "oid = ? AND siphash_id_digest = ?",
+			   new String[] {String.valueOf(oid),
+					 Base64.
+					 encodeToString(cryptography.
+							hmac(sipHashId.
+							     toUpperCase().
+							     trim().
+							     getBytes("UTF-8")),
+							Base64.DEFAULT)}) > 0)
+		synchronized(m_readMemberChatCursorMutex)
+		{
+		    if(m_readMemberChatCursor != null)
+			m_readMemberChatCursor.close();
+
+		    m_readMemberChatCursor = null;
+		}
+
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -3320,14 +3367,22 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.delete
-		("participants_messages", "siphash_id_digest = ?",
-		 new String[] {Base64.
-			       encodeToString(cryptography.
-					      hmac(sipHashId.
-						   toUpperCase().trim().
-						   getBytes("UTF-8")),
-					      Base64.DEFAULT)});
+	    if(m_db.delete("participants_messages", "siphash_id_digest = ?",
+			   new String[] {Base64.
+					 encodeToString(cryptography.
+							hmac(sipHashId.
+							     toUpperCase().
+							     trim().
+							     getBytes("UTF-8")),
+							Base64.DEFAULT)}) > 0)
+		synchronized(m_readMemberChatCursorMutex)
+		{
+		    if(m_readMemberChatCursor != null)
+			m_readMemberChatCursor.close();
+
+		    m_readMemberChatCursor = null;
+		}
+
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -3865,6 +3920,14 @@ public class Database extends SQLiteOpenHelper
 	finally
 	{
 	    m_db.endTransaction();
+	}
+
+	synchronized(m_readMemberChatCursorMutex)
+	{
+	    if(m_readMemberChatCursor != null)
+		m_readMemberChatCursor.close();
+
+	    m_readMemberChatCursor = null;
 	}
     }
 
