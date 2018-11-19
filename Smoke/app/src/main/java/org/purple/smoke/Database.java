@@ -3315,6 +3315,15 @@ public class Database extends SQLiteOpenHelper
 	{
 	    m_db.endTransaction();
 	}
+
+	if(table.equals("participants_messages"))
+	    synchronized(m_readMemberChatCursorMutex)
+	    {
+		if(m_readMemberChatCursor != null)
+		    m_readMemberChatCursor.close();
+
+		m_readMemberChatCursor = null;
+	    }
     }
 
     public void deleteParticipantMessage(Cryptography cryptography,
