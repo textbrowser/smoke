@@ -1,262 +1,252 @@
 Completed Items
 
-1.     Remove UI-related references in Settings::prepareListeners()::...::run().
-2.     Replace the (final) iterations variable in
-       Settings::prepareListeners()::...::run().
-3.     Exit menus.
-4.     Logging class. See Database::writeLog().
-5.     Decide if the State class requires cryptographic data.
-       Duplicates Cryptography. Removed methods from State.
-6.     Prepare for Chat, E-Mail, etc. public key pairs.
-7.     Enable Settings widgets after an initial password is accepted.
-8.     Display neighbors contents.
-9.     Display information pertaining to the owner's public keys.
-10.    Determine gradle's version in the make files.
-11.    Spinner objects in the neighbors table bleed. The table will expand
-       as necessary.
-12.    Neighbors periodic refresh.
-13.    Retrieve/store user name.
-14.    Introduce termination logic on critical TCP read/write errors.
-15.    Wrap neighbor text.
-16.    Synchronized methods or containers? Both.
-17.    Neighbor class.
-18.    UDP sockets.
-19.    UDP multicast.
-20.    Display remote server's certificate information. Public key fingerprint.
-21.    Neighbor details should be optional.
-22.    Database method for retrieving neighbor OIDs.
-23.    Outbound database table.
-24.    Reset spinners after credentials are initialized.
-25.    Reset option. Remove smoke.db. Reset widget states.
-26.    Inbound database table.
-27.    SipHash (https://en.wikipedia.org/wiki/SipHash).
-28.    ECDSA.
-29.    Reset option in Authenticate activity.
-30.    Connection status text colors.
-31.    Dynamic textview objects trim text. Append an extra new line.
-32.    EPKS.
-33.    If a SipHash ID is deleted, its corresponding participants
-       entry should also be removed. Foreign key constraints.
-34.    Deleting a neighbor does not cause an immediate disconnect.
-35.    Replace Date object with AtomicLong objects.
-36.    Copying of read-only values.
-37.    Potential database locking problem with repeated replacement
-       of neighbor objects. Replaced replace() with intelligent
-       insert().
-38.    Verify hexadecimal characters of SipHash identities.
-39.    Local congestion control.
-40.    SQLite secure delete (onConfigure()).
-41.    Sort table contents.
-42.    Change case of final-static objects in Neighbor, Settings, SipHash,
-       TcpNeighbor classes.
-43.    Kernel.
-44.    Smoke echo? Expensive. Optional.
-45.    Display count of queued echo packets per neighbor.
-46.    Notify the Chat activity of new participants.
-47.    Asynchronous database writes.
-48.    Refresh context menu on Chat table.
-49.    Retain Chat participant states on refresh.
-50.    Detect removal of participants.
-51.    Display destination's name during session initialization.
-52.    Complete Cryptography.pkiEncrypt().
-53.    The initial call (1/2-1/2) should store the generated stream in a
-       map (or hash).
-       Upon receiving a timely response, the total key stream should be
-       saved to smoke.db. If a timely response is not received, the partial
-       data should be purged.
-54.    Java serialization requires safety.
-       (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
-55.    Inadvertent calling may sever an established session.
-       Do not save a key stream unless a response is received.
-       As the half-response does not produce a response, the automatic
-       response's result is ignored.
-56.    Organic half-and-half: resolve collisions. As Smoke is not ordered,
-       order is impossible to predict.
-57.    Chat activity state is not retained. States of selected items
-       will not be retained as such states are expensive.
-       The Bundle object is not saved.
-58.    Compare provided encryption and signature public keys.
-59.    Inspect destination tags.
-60.    The Socket class supports the Proxy class.
-       Modify Settings so that TCP neighbors support SOCKS proxies.
-61.    Disable proxy fields for non-TCP.
-62.    Depict Android version in About. New About.java file too.
-63.    Deleting a connected neighbor and quickly re-adding it
-       is problematic. If the current thread has been interrupted,
-       exit run().
-64.    Retain first-contact server certificate. Inspect stored
-       bytes with received bytes.
-65.    Retain Chat widget selection states. Remove State objects
-       if participants are removed via the Settings activity.
-66.    Optimize loops.
-67.    Display date and time of sent message.
-68.    Compress IPv6 Scope ID field when hidden.
-69.    Allow resetting of Chat session keys via context menu.
-70.    Dynamic DNS for home servers. Functional.
-71.    Custom key streams via context menus.
-       Generate and separate.
-72.    Include network information in neighbors pertaining to
-       errors.
-73.    Application icon.
-74.    Messages must be temporarily retained if the Chat activity
-       loses focus.
-75.    HTTP proxy.
-76.    Validate the SipHash implementation. Please see SipHash::test1().
-77.    Connect the state of the Call button to the number of selected
-       participants (Chat).
-78.    Capitalize SipHash input.
-79.    Display exchange status in the Participants table. Icons.
-80.    Less populateParticipants() in the Chat activity.
-81.    Next (Tab) order; Settings.
-82.    Detect removal of neighbors.
-83.    Simple binary status in Chat. Kernel scheduler.
-84.    Non-exclusive database transactions.
-85.    Zero ports are valid. If a system which is allowing
-       connections on port zero, Smoke will be able to connect to it.
-86.    SipHash description bubble.
-87.    EPKS description bubble.
-88.    A release target for the make files.
-89.    Broadcast a reminder to the Settings activity if a Chat message
-       has been received while the Settings activity is active.
-90.    Bind recipient and sender.
-91.    Optional per-participant signatures.
-92.    Messages may arrive while the Settings activity is the primary
-       activity. Calls are not logged.
-93.    Improve PBKDF2 uses. Initially, generate a temporary stream of
-       20 bytes (SHA-1). Afterwards, generate a stream using the
-       temporary stream as password material. The length of the second
-       stream varies per application.
-94.    New date format: YYYY-MM-DD. ISO 8601.
-95.    Describe the Ozone feature.
-96.    Expand messages to multiples of 8 KiB.
-97.    Display message-retrieval action.
-98.    Prompt for neighbor removal.
-99.    Connecting status until in/out data has been received/transmitted.
-100.   Key-sharing messages should be written to smoke.db.
-101.   Messages from the past may trigger presence.
-102.   Outbound queues must be purged on parent neighbor removal.
-103.   Depict connection status in the Chat activity.
-       Status messages.
-104.   Allow sharing of participant pairs.
-105.   Remote storage of messages. SmokeStack.
-106.   When verifying signatures, recipients should retrieve
-       appropriate personal identity digests.
-107.   Prevent-sleep option in Settings.
-108.   Per request, include the source in the application bundle.
-109.   Do not enqueue messages in disconnected neighbors.
-110.   Requesting offline messages stalls if there are several active
-       neighbors.
-111.   https://developer.android.com/reference/android/net/wifi/
-       WifiManager.WifiLock.html
-112.   Signed release.
-113.   Fire channels must be retained if the Fire activity is dismissed.
-114.   Allow log clearing.
-115.   Fire. ("AES/CTS/NoPadding")
-116.   Scroll within scroll in Fire channels.
-117.   Periodic key publishing requires more intelligence.
-118.   Calling via multiple neighbors is chaotic.
-119.   Remove expired private keystreams.
-120.   Network status in Member Chat.
-121.   Member status in Member Chat.
-122.   Last activity and Member Chat. Restore.
-123.   Elongate messages in Member Chat.
-124.   Individual member pages.
-125.   Retrieve a subset of message data in Member Chat. New data via scroll.
-126.   Send messages in Member Chat.
-127.   Append new messages in Member Chat.
-128.   Scroll on sending of local messages; Member Chat.
-129.   Notify of other member messages in Member Chat.
-130.   Record received messages in Chat from Member Chat.
-131.   Context menu items in Member Chat: delete all, delete selected.
-132.   Banner text may shadow member status in Member Chat.
-133.   Deploy new user name to Fire channels.
-134.   Chat messages will appear blue if they are assembled from the internal
-       log and are beyond the specific time window.
-135.   Push sent messages from Member Chat to Chat.
-136.   The timestamp in participants_messages must be used for sorting.
-137.   Rich context menu containing other members.
-138.   Participant list may be large. Create a special State container and
-       thread for retrieval.
-139.   Schedulers may silently fail. try-catch blocks!
-140.   Populate Chat member list without accessing the database.
-141.   Participant status icon should not be modified if newly-received message
-       is from an Ozone.
-142.   MemberChat attachment.
-143.   Save attachment.
-144.   Preview attachment.
-145.   Increase network buffer sizes for large attachments.
-146.   Resize Member Chat bubbles according to contents.
-147.   Receiving requested keys which do not include signatures should
-       be functional.
-148.   Sign encryption and signature keys as a pair.
-149.   Fire through SmokeStack.
-150.   Return message-read status in status messages.
-151.   Allow resending of messages.
-152.   Purging of neighbor queues should occur off of the main thread.
-153.   Digest of PEM(certificate).
-154.   Inspect length in substring() usage.
+- A release target for the make files.
+- Allow log clearing.
+- Allow resending of messages.
+- Allow resetting of Chat session keys via context menu.
+- Allow sharing of participant pairs.
+- Append new messages in Member Chat.
+- Application icon.
+- As the half-response does not produce a response, the automatic response's
+  result is ignored.
+- Asynchronous database writes.
+- Banner text may shadow member status in Member Chat.
+- Bind recipient and sender.
+- Broadcast a reminder to the Settings activity if a Chat message has been
+  received while the Settings activity is active.
+- Calling via multiple neighbors is chaotic.
+- Capitalize SipHash input.
+- Change case of final-static objects in Neighbor, Settings, SipHash,
+- Chat activity state is not retained. States of selected items will not be
+  retained as such states are expensive.
+- Chat messages will appear blue if they are assembled from the internal log
+  and are beyond the specific time window.
+- Compare provided encryption and signature public keys.
+- Complete Cryptography.pkiEncrypt().
+- Compress IPv6 Scope ID field when hidden.
+- Connect the state of the Call button to the number of selected participants
+  (Chat).
+- Connecting status until in/out data has been received/transmitted.
+- Connection status text colors.
+- Context menu items in Member Chat: delete all, delete selected.
+- Copying of read-only values.
+- Custom key streams via context menus.
+- Database method for retrieving neighbor OIDs.
+- Decide if the State class requires cryptographic data.
+- Deleting a connected neighbor and quickly re-adding it is problematic. If
+  the current thread has been interrupted, exit run().
+- Deleting a neighbor does not cause an immediate disconnect.
+- Depict Android version in About. New About.java file too.
+- Depict connection status in the Chat activity.
+- Deploy new user name to Fire channels.
+- Describe the Ozone feature.
+- Detect removal of neighbors.
+- Detect removal of participants.
+- Determine gradle's version in the make files.
+- Digest of PEM(certificate).
+- Disable proxy fields for non-TCP.
+- Display count of queued echo packets per neighbor.
+- Display date and time of sent message.
+- Display destination's name during session initialization.
+- Display exchange status in the Participants table. Icons.
+- Display information pertaining to the owner's public keys.
+- Display message-retrieval action.
+- Display neighbors contents.
+- Display remote server's certificate information. Public key fingerprint.
+- Do not enqueue messages in disconnected neighbors.
+- Do not save a key stream unless a response is received.
+- Duplicates Cryptography. Removed methods from State.
+- Dynamic DNS for home servers. Functional.
+- Dynamic textview objects trim text. Append an extra new line.
+- ECDSA.
+- EPKS description bubble.
+- EPKS.
+- Elongate messages in Member Chat.
+- Enable Settings widgets after an initial password is accepted.
+- Exit menus.
+- Expand messages to multiples of 8 KiB.
+- Fire channels must be retained if the Fire activity is dismissed.
+- Fire through SmokeStack.
+- Fire. ("AES/CTS/NoPadding")
+- Generate and separate.
+- HTTP proxy.
+- If a SipHash ID is deleted, its corresponding participants entry should also
+  be removed. Foreign key constraints.
+- Improve PBKDF2 uses. Initially, generate a temporary stream of 20 bytes
+  (SHA-1). Afterwards, generate a stream using the temporary stream as
+  password material. The length of the second stream varies per application.
+- Inadvertent calling may sever an established session.
+- Inbound database table.
+- Include network information in neighbors pertaining to errors.
+- Increase network buffer sizes for large attachments.
+- Individual member pages.
+- Inspect destination tags.
+- Inspect length in substring() usage.
+- Introduce termination logic on critical TCP read/write errors.
+- Java serialization requires safety.
+  (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
+- Kernel.
+- Key-sharing messages should be written to smoke.db.
+- Last activity and Member Chat. Restore.
+- Less populateParticipants() in the Chat activity.
+- Local congestion control.
+- Logging class. See Database::writeLog().
+- Member status in Member Chat.
+- MemberChat attachment.
+- Messages from the past may trigger presence.
+- Messages may arrive while the Settings activity is the primary activity.
+  Calls are not logged.
+- Messages must be temporarily retained if the Chat activity loses focus.
+- Modify Settings so that TCP neighbors support SOCKS proxies.
+- Neighbor class.
+- Neighbor details should be optional.
+- Neighbors periodic refresh.
+- Network status in Member Chat.
+- New date format: YYYY-MM-DD. ISO 8601.
+- Next (Tab) order; Settings.
+- Non-exclusive database transactions.
+- Notify of other member messages in Member Chat.
+- Notify the Chat activity of new participants.
+- Optimize loops.
+- Optional per-participant signatures.
+- Organic half-and-half: resolve collisions. As Smoke is not ordered, order is
+  impossible to predict.
+- Outbound database table.
+- Outbound queues must be purged on parent neighbor removal.
+- Participant list may be large. Create a special State container and thread
+  for retrieval.
+- Participant status icon should not be modified if newly-received message is
+  from an Ozone.
+- Per request, include the source in the application bundle.
+- Periodic key publishing requires more intelligence.
+- Populate Chat member list without accessing the database.
+- Potential database locking problem with repeated replacement of neighbor
+  objects. Replaced replace() with intelligent insert().
+- Prepare for Chat, E-Mail, etc. public key pairs.
+- Prevent-sleep option in Settings.
+- Preview attachment.
+- Prompt for neighbor removal.
+- Purging of neighbor queues should occur off of the main thread.
+- Push sent messages from Member Chat to Chat.
+- Receiving requested keys which do not include signatures should be functional.
+- Record received messages in Chat from Member Chat.
+- Refresh context menu on Chat table.
+- Remote storage of messages. SmokeStack.
+- Remove UI-related references in Settings::prepareListeners()::...::run().
+- Remove expired private keystreams.
+- Replace Date object with AtomicLong objects.
+- Replace the (final) iterations variable in
+- Requesting offline messages stalls if there are several active neighbors.
+  https://developer.android.com/reference/android/net/wifi/
+  WifiManager.WifiLock.html
+- Reset option in Authenticate activity.
+- Reset option. Remove smoke.db. Reset widget states.
+- Reset spinners after credentials are initialized.
+- Resize Member Chat bubbles according to contents.
+- Retain Chat participant states on refresh.
+- Retain Chat widget selection states. Remove State objects if participants
+  are removed via the Settings activity.
+- Retain first-contact server certificate. Inspect stored bytes with received
+  bytes.
+- Retrieve a subset of message data in Member Chat. New data via scroll.
+- Retrieve/store user name.
+- Return message-read status in status messages.
+- Rich context menu containing other members.
+- SQLite secure delete (onConfigure()).
+- Save attachment.
+- Schedulers may silently fail. try-catch blocks!
+- Scroll on sending of local messages; Member Chat.
+- Scroll within scroll in Fire channels.
+- Send messages in Member Chat.
+- Settings::prepareListeners()::...::run().
+- Sign encryption and signature keys as a pair.
+- Signed release.
+- Simple binary status in Chat. Kernel scheduler.
+- SipHash (https://en.wikipedia.org/wiki/SipHash).
+- SipHash description bubble.
+- Smoke echo? Expensive. Optional.
+- Sort table contents.
+- Spinner objects in the neighbors table bleed. The table will expand as
+  necessary.
+- Status messages.
+- Synchronized methods or containers? Both.
+- TcpNeighbor classes.
+- The Bundle object is not saved.
+- The Socket class supports the Proxy class.
+- The initial call (1/2-1/2) should store the generated stream in a map
+  (or hash).
+- The timestamp in participants_messages must be used for sorting.
+- UDP multicast.
+- UDP sockets.
+- Upon receiving a timely response, the total key stream should be saved to
+  smoke.db. If a timely response is not received, the partial data should be
+  purged.
+- Validate the SipHash implementation. Please see SipHash::test1().
+- Verify hexadecimal characters of SipHash identities.
+- When verifying signatures, recipients should retrieve appropriate personal
+  identity digests.
+- Wrap neighbor text.
+- Zero ports are valid. If a system which is allowing connections on port
+  zero, Smoke will be able to connect to it.
 
 Future Items
 
-1.     Disable Chat:Send if there is at least one selected participant
-       without a session.
-2.     (130 / 16 + 1) * 16 + 8 <= 154.
-3.     Themes, of course.
-4.     Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with
-       Long.BYTES.
-5.     SMP.
-6.     Resolve DNS through a proxy if a proxy is defined.
-7.     Allow exporting of smoke.db to other devices.
-8.     Bluetooth (http://www.oracle.com/technetwork/articles/javame/
-                  index-156193.html).
-9.     Automatic SipHash hyphens.
-10.    Names or PINs alongside SipHashes. The extra bits will increase
-       the possibilities.
-11.    Protocol-less snubbing without key revocation.
-12.    Introduce real-time typing status.
-13.    Vacuum databases.
-14.    NTRU via BouncyCastle.
-15.    New messages should be at the top of the view; Member Chat. Optional.
-16.    Replace Chat member view with a recycler view.
-17.    Member Chat theme: bubble colors, bubble font colors,
-       bubble time font color and size.
+- (130 / 16 + 1) * 16 + 8 <= 154.
+- Allow exporting of smoke.db to other devices.
+- Automatic SipHash hyphens.
+- Bluetooth
+  (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
+- Disable Chat:Send if there is at least one selected participant without a
+  session.
+- Introduce real-time typing status.
+- Member Chat theme: bubble colors, bubble font colors, bubble time font color
+  and size.
+- NTRU via BouncyCastle.
+- Names or PINs alongside SipHashes. The extra bits will increase the
+  possibilities.
+- New messages should be at the top of the view; Member Chat. Optional.
+- Protocol-less snubbing without key revocation.
+- Replace Chat member view with a recycler view.
+- Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with Long.BYTES.
+- Resolve DNS through a proxy if a proxy is defined.
+- SMP.
+- Themes, of course.
+- Vacuum databases.
 
 Ignored / Impossible Items
 
-1.     Android exit.
-2.     Create a BroadcastReceiver and notify all other activities on exit.
-3.     Scroll bars on Spinner objects.
-4.     Detect removal of smoke.db.
-5.     Participant import. Superseded by EPKS.
-6.     Virtual keyboard.
-7.     Periodic data transfers may raise Android warnings.
-       User is responsible for data limits.
-8.     Validate neighbor IP address. User is responsible.
-9.     Disable echo on low memory. Notify the user, although memory
-       will be required.
-10.    Select All context menu in the Chat activity.
-11.    It may be possible to replace m_neighborsScheduler.
-12.    XMPP.
-13.    Face authentication.
-14.    Source-level string translations.
-15.    Socket channels. A lot of work.
-16.    Optional SipHash identities in received messages. Unique people.
-17.    SCTP (http://www.oracle.com/technetwork/articles/javase/
-             index-139946.html).
-18.    Smoke as a service.
-19.    Consider LruCache as a replacement of the database congestion container.
-20.    Retrieve Member Chat data in a thread. Not necessary.
+- Android exit.
+- Consider LruCache as a replacement of the database congestion container.
+- Create a BroadcastReceiver and notify all other activities on exit.
+- Detect removal of smoke.db.
+- Disable echo on low memory. Notify the user, although memory will be required.
+- Face authentication.
+- It may be possible to replace m_neighborsScheduler.
+- Optional SipHash identities in received messages. Unique people.
+- Participant import. Superseded by EPKS.
+- Periodic data transfers may raise Android warnings.
+- Retrieve Member Chat data in a thread. Not necessary.
+- SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
+- Scroll bars on Spinner objects.
+- Select All context menu in the Chat activity.
+- Smoke as a service.
+- Socket channels. A lot of work.
+- Source-level string translations.
+- User is responsible for data limits.
+- Validate neighbor IP address. User is responsible.
+- Virtual keyboard.
+- XMPP.
 
 Remaining Items
 
-1.     pull-database for multiple devices.
-2.     Retain password for re-authentication upon background activity.
-       Optional.
-3.     Separation of Fire channels.
-4.     Steam and Vapor.
-5.     Steam should offer a caching mechanism, transforming Smoke into
-       a data replicator.
-6.     Stronger surreptitious forwarding. Larger RSA keys.
-7.     Zoom integration.
-8.     Gallery integration.
-9.     Drawers.
+- Drawers.
+- Gallery integration.
+- Retain password for re-authentication upon background activity. Optional.
+- Separation of Fire channels.
+- Socket latency.
+- Steam and Vapor.
+- Steam should offer a caching mechanism, transforming Smoke into a data
+  replicator.
+- Stronger surreptitious forwarding. Larger RSA keys.
+- Zoom integration.
+- pull-database for multiple devices.

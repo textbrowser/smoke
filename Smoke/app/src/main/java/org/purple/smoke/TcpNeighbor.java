@@ -232,7 +232,7 @@ public class TcpNeighbor extends Neighbor
 		});
 	    m_socket.setEnabledProtocols(m_protocols);
 	    m_socket.setSoTimeout(HANDSHAKE_TIMEOUT); // SSL/TLS process.
-	    m_socket.setTcpNoDelay(false);
+	    m_socket.setTcpNoDelay(true);
 	    m_startTime.set(System.nanoTime());
 	    setError("");
 	}
