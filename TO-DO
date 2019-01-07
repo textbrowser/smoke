@@ -241,9 +241,9 @@ Remaining Items
 
 - Drawers.
 - Gallery integration.
+- Identity-sharing confirmation from SmokeStack.
 - Retain password for re-authentication upon background activity. Optional.
 - Separation of Fire channels.
-- Socket latency.
 - Steam and Vapor.
 - Steam should offer a caching mechanism, transforming Smoke into a data
   replicator.
