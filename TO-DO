@@ -248,5 +248,6 @@ Remaining Items
 - Steam should offer a caching mechanism, transforming Smoke into a data
   replicator.
 - Stronger surreptitious forwarding. Larger RSA keys.
+- TCP socket setPerformancePreferences().
 - Zoom integration.
 - pull-database for multiple devices.
