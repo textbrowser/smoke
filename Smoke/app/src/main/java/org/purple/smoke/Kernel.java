@@ -58,6 +58,7 @@ public class Kernel
 {
     private ArrayList<MessageElement> m_messagesToSend = null;
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
+    private AtomicLong m_shareSipHashIdIdentity = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private Hashtable<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
@@ -119,6 +120,7 @@ public class Kernel
 	    (System.currentTimeMillis());
 	m_fireStreams = new Hashtable<> ();
 	m_messagesToSend = new ArrayList<> ();
+	m_shareSipHashIdIdentity = new AtomicLong(0);
 
 	try
 	{
@@ -574,10 +576,16 @@ public class Kernel
 				    break;
 				case MessageElement.
 				    SHARE_SIPHASH_ID_MESSAGE_TYPE:
+				    m_shareSipHashIdIdentity.set
+					(Miscellaneous.
+					 byteArrayToLong(Cryptography.
+							 randomBytes(8)));
+
 				    if(messageElement.m_id.equals("-1"))
 					bytes = Messages.shareSipHashIdMessage
 					    (s_cryptography,
-					     s_cryptography.sipHashId());
+					     s_cryptography.sipHashId(),
+					     m_shareSipHashIdIdentity.get());
 				    else
 				    {
 					String sipHashId = s_databaseHelper.
@@ -586,7 +594,9 @@ public class Kernel
 					     messageElement.m_id);
 
 					bytes = Messages.shareSipHashIdMessage
-					    (s_cryptography, sipHashId);
+					    (s_cryptography,
+					     sipHashId,
+					     m_shareSipHashIdIdentity.get());
 				    }
 
 				    break;

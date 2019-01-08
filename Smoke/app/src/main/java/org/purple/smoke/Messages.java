@@ -1331,7 +1331,8 @@ public class Messages
     }
 
     public static byte[] shareSipHashIdMessage(Cryptography cryptography,
-					       String sipHashId)
+					       String sipHashId,
+					       long identity)
     {
 	if(cryptography == null)
 	    return null;
@@ -1359,10 +1360,10 @@ public class Messages
 		 sipHashId.getBytes("UTF-8"),
 
 		 /*
-		 ** [ Temporary Bytes ]
+		 ** [ Temporary Identity ]
 		 */
 
-		 Cryptography.randomBytes(8));
+		 Miscellaneous.longToByteArray(identity));
 
 	    /*
 	    ** [ AES-256 ]
