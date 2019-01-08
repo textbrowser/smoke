@@ -106,7 +106,7 @@ public class ChatBubble extends View
 
     public void setImageAttachment(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	{
 	    m_view.findViewById(R.id.image).setVisibility(View.GONE);
 	    return;

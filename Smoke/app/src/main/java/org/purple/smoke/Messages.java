@@ -67,7 +67,7 @@ public class Messages
     public static String authenticateMessage(Cryptography cryptography,
 					     String string)
     {
-	if(cryptography == null || string == null || string.length() <= 0)
+	if(cryptography == null || string == null || string.length() == 0)
 	    return "";
 
 	try
@@ -107,7 +107,7 @@ public class Messages
 
     public static String bytesToMessageString(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return "";
 
 	try
@@ -141,7 +141,7 @@ public class Messages
 
     public static String bytesToMessageStringNonBase64(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return "";
 
 	try
@@ -174,7 +174,7 @@ public class Messages
 
     public static String identityMessage(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return "";
 
 	try
@@ -226,7 +226,7 @@ public class Messages
 				     byte publicKeyType,
 				     byte tag)
     {
-	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	if(cryptography == null || keyStream == null || keyStream.length == 0)
 	    return null;
 
 	try
@@ -379,9 +379,9 @@ public class Messages
     {
 	if(cryptography == null ||
 	   keyStream == null ||
-	   keyStream.length <= 0 ||
+	   keyStream.length == 0 ||
 	   messageIdentity == null ||
-	   messageIdentity.length <= 0)
+	   messageIdentity.length == 0)
 	    return null;
 
 	/*
@@ -626,7 +626,7 @@ public class Messages
 				    String sipHashId,
 				    byte keyStream[])
     {
-	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	if(cryptography == null || keyStream == null || keyStream.length == 0)
 	    return null;
 
 	/*
@@ -742,9 +742,9 @@ public class Messages
     {
 	if(cryptography == null ||
 	   keyStream == null ||
-	   keyStream.length <= 0 ||
+	   keyStream.length == 0 ||
 	   keyType == null ||
-	   keyType.length <= 0)
+	   keyType.length == 0)
 	    return null;
 
 	/*
@@ -872,13 +872,13 @@ public class Messages
 				     byte keyType[])
     {
 	if(encryptionPublicKey == null ||
-	   encryptionPublicKey.length <= 0 ||
+	   encryptionPublicKey.length == 0 ||
 	   keyStream == null ||
-	   keyStream.length <= 0 ||
+	   keyStream.length == 0 ||
 	   keyType == null ||
-	   keyType.length <= 0 ||
+	   keyType.length == 0 ||
 	   signaturePublicKey == null ||
-	   signaturePublicKey.length <= 0)
+	   signaturePublicKey.length == 0)
 	    return null;
 
 	/*
@@ -976,7 +976,7 @@ public class Messages
 				     String name,
 				     byte keyStream[])
     {
-	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	if(cryptography == null || keyStream == null || keyStream.length == 0)
 	    return null;
 
 	/*
@@ -1074,7 +1074,7 @@ public class Messages
 				    String name,
 				    byte keyStream[])
     {
-	if(cryptography == null || keyStream == null || keyStream.length <= 0)
+	if(cryptography == null || keyStream == null || keyStream.length == 0)
 	    return null;
 
 	/*
@@ -1170,9 +1170,9 @@ public class Messages
     {
 	if(cryptography == null ||
 	   keyStream == null ||
-	   keyStream.length <= 0 ||
+	   keyStream.length == 0 ||
 	   messageIdentity == null ||
-	   messageIdentity.length <= 0)
+	   messageIdentity.length == 0)
 	    return null;
 
 	/*

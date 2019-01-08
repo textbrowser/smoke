@@ -388,7 +388,7 @@ public class Cryptography
 
     public boolean isValidSipHashMac(byte data[], byte mac[])
     {
-	if(data == null || data.length < 0 || mac == null || mac.length < 0)
+	if(data == null || mac == null)
 	    return false;
 
 	m_sipHashMacKeyMutex.readLock().lock();
@@ -405,7 +405,7 @@ public class Cryptography
 
     public boolean iAmTheDestination(byte data[], byte mac[])
     {
-	if(data == null || data.length < 0 || mac == null || mac.length < 0)
+	if(data == null || mac == null)
 	    return false;
 
 	m_sipHashIdDigestMutex.readLock().lock();
@@ -505,7 +505,7 @@ public class Cryptography
 
     public byte[] decryptWithSipHashKey(byte data[])
     {
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -550,7 +550,7 @@ public class Cryptography
 	** Encrypt-then-MAC.
 	*/
 
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	m_encryptionKeyMutex.readLock().lock();
@@ -743,7 +743,7 @@ public class Cryptography
 
     public byte[] hmac(byte data[])
     {
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	m_macKeyMutex.readLock().lock();
@@ -802,7 +802,7 @@ public class Cryptography
 	** MAC-then-decrypt.
 	*/
 
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	m_encryptionKeyMutex.readLock().lock();
@@ -931,7 +931,7 @@ public class Cryptography
 
     public byte[] pkiDecrypt(byte data[])
     {
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
@@ -978,7 +978,7 @@ public class Cryptography
 
     public byte[] signViaChatEncryption(byte data[])
     {
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
@@ -1021,7 +1021,7 @@ public class Cryptography
 
     public byte[] signViaChatSignature(byte data[])
     {
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	m_chatSignaturePublicKeyPairMutex.readLock().lock();
@@ -1363,11 +1363,7 @@ public class Cryptography
 					  byte bytes[],
 					  byte data[])
     {
-	if(bytes == null ||
-	   bytes.length < 0 ||
-	   data == null ||
-	   data.length < 0 ||
-	   publicKey == null)
+	if(bytes == null || data == null || publicKey == null)
 	    return false;
 
 	Signature signature = null;
@@ -1410,10 +1406,7 @@ public class Cryptography
 
     public static byte[] decrypt(byte data[], byte keyBytes[])
     {
-	if(data == null ||
-	   data.length < 0 ||
-	   keyBytes == null ||
-	   keyBytes.length < 0)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -1442,10 +1435,7 @@ public class Cryptography
 
     public static byte[] decryptFire(byte data[], byte keyBytes[])
     {
-	if(data == null ||
-	   data.length < 0 ||
-	   keyBytes == null ||
-	   keyBytes.length < 0)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -1474,10 +1464,7 @@ public class Cryptography
 
     public static byte[] encrypt(byte data[], byte keyBytes[])
     {
-	if(data == null ||
-	   data.length < 0 ||
-	   keyBytes == null ||
-	   keyBytes.length < 0)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	prepareSecureRandom();
@@ -1509,10 +1496,7 @@ public class Cryptography
 
     public static byte[] encryptFire(byte data[], byte keyBytes[])
     {
-	if(data == null ||
-	   data.length < 0 ||
-	   keyBytes == null ||
-	   keyBytes.length < 0)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	prepareSecureRandom();
@@ -1552,7 +1536,7 @@ public class Cryptography
 
     public static byte[] keyForSipHash(byte data[])
     {
-	if(data == null || data.length < 0)
+	if(data == null)
 	    return null;
 
 	return pbkdf2(sha512(data),
@@ -1563,10 +1547,7 @@ public class Cryptography
 
     public static byte[] hmac(byte data[], byte keyBytes[])
     {
-	if(data == null ||
-	   data.length < 0 ||
-	   keyBytes == null ||
-	   keyBytes.length < 0)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -1590,10 +1571,7 @@ public class Cryptography
 
     public static byte[] hmacFire(byte data[], byte keyBytes[])
     {
-	if(data == null ||
-	   data.length < 0 ||
-	   keyBytes == null ||
-	   keyBytes.length < 0)
+	if(data == null || keyBytes == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -1637,7 +1615,7 @@ public class Cryptography
 
     public static byte[] pkiDecrypt(PrivateKey privateKey, byte data[])
     {
-	if(data == null || data.length < 0 || privateKey == null)
+	if(data == null || privateKey == null)
 	    return null;
 
 	byte bytes[] = null;
@@ -1664,7 +1642,7 @@ public class Cryptography
 
     public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
     {
-	if(data == null || data.length < 0 || publicKey == null)
+	if(data == null || publicKey == null)
 	    return null;
 
 	prepareSecureRandom();
@@ -1780,7 +1758,7 @@ public class Cryptography
 	    {
 		byte key[] = keyForSipHash(bytes);
 
-		if(key == null || key.length < 0)
+		if(key == null)
 		    return false;
 
 		SipHash sipHash = new SipHash();
@@ -1791,7 +1769,7 @@ public class Cryptography
 
 		bytes = Miscellaneous.longToByteArray(value);
 
-		if(bytes == null || bytes.length < 0)
+		if(bytes == null)
 		    return false;
 
 		m_sipHashIdDigestMutex.writeLock().lock();

@@ -79,19 +79,19 @@ public class UdpNeighbor extends Neighbor
 	    if(m_socket == null)
 		return false;
 
-	    StringBuffer stringBuffer = new StringBuffer(message);
+	    StringBuilder stringBuilder = new StringBuilder(message);
 
-	    while(stringBuffer.length() > 0)
+	    while(stringBuilder.length() > 0)
 	    {
-		byte bytes[] = stringBuffer.substring
-		    (0, Math.min(576, stringBuffer.length())).getBytes();
+		byte bytes[] = stringBuilder.substring
+		    (0, Math.min(576, stringBuilder.length())).getBytes();
 
 		m_socket.send
 		    (new DatagramPacket(bytes,
 					bytes.length,
 					InetAddress.getByName(m_ipAddress),
 					Integer.parseInt(m_ipPort)));
-		stringBuffer.delete(0, bytes.length);
+		stringBuilder.delete(0, bytes.length);
 	    }
 
 	    Kernel.writeCongestionDigest(message);

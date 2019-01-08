@@ -66,7 +66,7 @@ public abstract class Miscellaneous
 
     public static String byteArrayAsHexString(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return "";
 
 	try
@@ -88,7 +88,7 @@ public abstract class Miscellaneous
 						       char delimiter,
 						       int offset)
     {
-	if(bytes == null || bytes.length <= 0 || offset < 0)
+	if(bytes == null || bytes.length == 0 || offset < 0)
 	    return "";
 
 	String string = byteArrayAsHexString(bytes);
@@ -201,7 +201,7 @@ public abstract class Miscellaneous
 
     public static String pemFormat(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return "";
 
 	try
@@ -254,7 +254,7 @@ public abstract class Miscellaneous
 
     public static byte[] compressed(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return null;
 
 	try
@@ -286,7 +286,7 @@ public abstract class Miscellaneous
 
     public static byte[] decompressed(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return null;
 
 	try
@@ -325,7 +325,7 @@ public abstract class Miscellaneous
 
     public static byte[] deepCopy(byte bytes[])
     {
-	if(bytes == null || bytes.length <= 0)
+	if(bytes == null || bytes.length == 0)
 	    return null;
 
 	byte array[] = new byte[bytes.length];

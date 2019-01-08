@@ -1399,10 +1399,7 @@ public class Database extends SQLiteOpenHelper
     public PublicKey signatureKeyForDigest(Cryptography cryptography,
 					   byte digest[])
     {
-	if(cryptography == null ||
-	   digest == null ||
-	   digest.length < 0 ||
-	   m_db == null)
+	if(cryptography == null || digest == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
@@ -1773,10 +1770,7 @@ public class Database extends SQLiteOpenHelper
     public String writeParticipant(Cryptography cryptography,
 				   byte data[])
     {
-	if(cryptography == null ||
-	   data == null ||
-	   data.length < 0 ||
-	   m_db == null)
+	if(cryptography == null || data == null || m_db == null)
 	    return "";
 
 	ContentValues values = null;
@@ -2119,10 +2113,7 @@ public class Database extends SQLiteOpenHelper
     public String[] nameSipHashIdFromDigest(Cryptography cryptography,
 					    byte digest[])
     {
-	if(cryptography == null ||
-	   digest == null ||
-	   digest.length < 0 ||
-	   m_db == null)
+	if(cryptography == null || digest == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
@@ -2360,7 +2351,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
-	    if(keyStream == null || keyStream.length < 0)
+	    if(keyStream == null)
 		values.put
 		    ("keystream",
 		     Base64.encodeToString(cryptography.etm("".getBytes()),
@@ -2467,10 +2458,7 @@ public class Database extends SQLiteOpenHelper
 				      String sipHashId,
 				      byte messageIdentity[])
     {
-	if(cryptography == null ||
-	   m_db == null ||
-	   messageIdentity == null ||
-	   messageIdentity.length < 0)
+	if(cryptography == null || m_db == null || messageIdentity == null)
 	    return false;
 
 	m_db.beginTransactionNonExclusive();
@@ -3002,10 +2990,7 @@ public class Database extends SQLiteOpenHelper
     public byte[] participantKeyStream(Cryptography cryptography,
 				       byte digest[])
     {
-	if(cryptography == null ||
-	   digest == null ||
-	   digest.length < 0 ||
-	   m_db == null)
+	if(cryptography == null || digest == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
@@ -3042,12 +3027,9 @@ public class Database extends SQLiteOpenHelper
 				       byte bytes[])
     {
 	if(array == null ||
-	   array.length < 0 ||
 	   bytes == null ||
-	   bytes.length < 0 ||
 	   cryptography == null ||
 	   digest == null ||
-	   digest.length < 0 ||
 	   m_db == null)
 	    return null;
 
@@ -3978,9 +3960,7 @@ public class Database extends SQLiteOpenHelper
     {
 	if(cryptography == null ||
 	   encryptionKey == null ||
-	   encryptionKey.length < 0 ||
 	   keyStream == null ||
-	   keyStream.length < 0 ||
 	   m_db == null ||
 	   name.isEmpty())
 	    return;
@@ -4162,10 +4142,7 @@ public class Database extends SQLiteOpenHelper
     public void updateParticipantLastTimestamp(Cryptography cryptography,
 					       byte digest[])
     {
-	if(cryptography == null ||
-	   digest == null ||
-	   digest.length < 0 ||
-	   m_db == null)
+	if(cryptography == null || digest == null || m_db == null)
 	    return;
 
 	m_db.beginTransactionNonExclusive();
@@ -4202,10 +4179,7 @@ public class Database extends SQLiteOpenHelper
 			      String sipHashId,
 			      byte keyStream[])
     {
-	if(cryptography == null ||
-	   keyStream == null ||
-	   keyStream.length < 0 ||
-	   m_db == null)
+	if(cryptography == null || keyStream == null || m_db == null)
 	    return;
 
 	m_db.beginTransactionNonExclusive();
