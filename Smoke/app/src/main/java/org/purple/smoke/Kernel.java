@@ -1243,13 +1243,13 @@ public class Kernel
 
     public int ourMessage(String buffer)
     {
-	long value = s_congestionSipHash.hmac(buffer.getBytes());
-
 	/*
 	** 0 - Echo
 	** 1 - Fine
 	** 2 - Force Echo
 	*/
+
+	long value = s_congestionSipHash.hmac(buffer.getBytes());
 
 	if(s_databaseHelper.containsCongestionDigest(value))
 	    return 1;
@@ -1258,6 +1258,10 @@ public class Kernel
 
 	try
 	{
+	    /*
+	    ** Fire!
+	    */
+
 	    m_fireStreamsMutex.readLock().lock();
 
 	    try
@@ -1381,6 +1385,10 @@ public class Kernel
 
 	    if(bytes == null || bytes.length < 128)
 		return 0;
+
+	    /*
+	    ** Ozone!
+	    */
 
 	    boolean ourMessageViaChatTemporaryIdentity = false; /*
 								** Did the
