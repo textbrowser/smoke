@@ -112,8 +112,6 @@ public class Kernel
     private final static long CALL_LIFETIME = 30000; // 30 Seconds
     private final static long CHAT_TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
-    private final static int SHARE_SIPHASH_ID_WINDOW = 30000; // 30 Seconds
-
     private static Kernel s_instance = null;
 
     private Kernel()
