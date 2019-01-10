@@ -70,6 +70,7 @@ Completed Items
 - Fire. ("AES/CTS/NoPadding")
 - Generate and separate.
 - HTTP proxy.
+- Identity-sharing confirmation from SmokeStack.
 - If a SipHash ID is deleted, its corresponding participants entry should also
   be removed. Foreign key constraints.
 - Improve PBKDF2 uses. Initially, generate a temporary stream of 20 bytes
@@ -243,7 +244,6 @@ Remaining Items
 
 - Drawers.
 - Gallery integration.
-- Identity-sharing confirmation from SmokeStack.
 - Retain password for re-authentication upon background activity. Optional.
 - Separation of Fire channels.
 - Steam and Vapor.
