@@ -126,6 +126,10 @@ public class Settings extends AppCompatActivity
 	    case "org.purple.smoke.populate_participants":
 		populateParticipants();
 		break;
+	    case "org.purple.smoke.siphash_share_confirmation":
+		Miscellaneous.showNotification
+		    (Settings.this, intent, findViewById(R.id.main_layout));
+		break;
 	    }
 	}
     }
@@ -187,7 +191,7 @@ public class Settings extends AppCompatActivity
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
-    private final static int TIMER_INTERVAL = 2000; // 2 Seconds
+    private final static long TIMER_INTERVAL = 2000; // 2 Seconds
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {3072}; // RSA
 
     private boolean generateOzone(String string)
@@ -3256,6 +3260,8 @@ public class Settings extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.populate_participants");
+	    intentFilter.addAction
+		("org.purple.smoke.siphash_share_confirmation");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

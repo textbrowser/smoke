@@ -121,7 +121,7 @@ public class MemberChat extends AppCompatActivity
 				(getApplicationContext(), notification);
 			    ringtone.play();
 			}
-			catch(Exception e)
+			catch(Exception exception)
 			{
 			}
 		    }
@@ -183,7 +183,7 @@ public class MemberChat extends AppCompatActivity
 
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
-    private RecyclerView.Adapter m_adapter = null;
+    private RecyclerView.Adapter<?> m_adapter = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_mySipHashId = "";
@@ -807,7 +807,7 @@ public class MemberChat extends AppCompatActivity
 	case ContextMenuEnumerator.COPY_TEXT:
 	    try
 	    {
-		View view = (View) m_layoutManager.findViewByPosition(itemId);
+		View view = m_layoutManager.findViewByPosition(itemId);
 
 		if(view != null)
 		{
@@ -868,7 +868,7 @@ public class MemberChat extends AppCompatActivity
 	case ContextMenuEnumerator.SAVE_ATTACHMENT:
 	    try
 	    {
-		View view = (View) m_layoutManager.findViewByPosition(itemId);
+		View view = m_layoutManager.findViewByPosition(itemId);
 
 		if(view != null)
 		{

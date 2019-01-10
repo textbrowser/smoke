@@ -530,17 +530,24 @@ public abstract class Miscellaneous
 	   view == null)
 	    return;
 
-	if(intent.getAction().equals("org.purple.smoke.chat_message"))
+	String message = "";
+
+	switch(intent.getAction())
 	{
+	case "org.purple.smoke.chat_message":
 	    if(((Activity) context).isFinishing())
 		return;
 
-	    String message = intent.getStringExtra("org.purple.smoke.message");
+	    message = intent.getStringExtra("org.purple.smoke.message");
+
+	    if(message == null)
+		return;
+
 	    String name = intent.getStringExtra("org.purple.smoke.name");
 	    String sipHashId = intent.getStringExtra
 		("org.purple.smoke.sipHashId");
 
-	    if(message == null || name == null || sipHashId == null)
+	    if(name == null || sipHashId == null)
 		return;
 
 	    boolean purple = intent.getBooleanExtra
@@ -553,9 +560,6 @@ public abstract class Miscellaneous
 	    State.getInstance().logChatMessage
 		(message, name, sipHashId, purple, sequence, timestamp);
 	    message = message.trim();
-
-	    TextView textView1 = new TextView(context);
-	    final PopupWindow popupWindow = new PopupWindow(context);
 
 	    if(name.length() > 15)
 	    {
@@ -587,60 +591,69 @@ public abstract class Miscellaneous
 		}
 	    }
 
-	    textView1.setBackgroundColor(Color.rgb(255, 236, 179));
-
 	    if(message.isEmpty())
-		textView1.setText
-		    ("A message from " + name + " has arrived.");
+		message = "A message from " + name + " has arrived.";
 	    else
-		textView1.setText
-		    ("A message (" + message + ") from " + name +
-		     " has arrived.");
+		message = "A message (" + message + ") from " + name +
+		    " has arrived.";
 
-	    float density = context.getResources().getDisplayMetrics().density;
-
-	    textView1.setPaddingRelative
-		((int) (10 * density),
-		 (int) (10 * density),
-		 (int) (10 * density),
-		 (int) (10 * density));
-	    textView1.setTextSize(16);
-	    popupWindow.setContentView(textView1);
-	    popupWindow.setOutsideTouchable(true);
-
-	    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-	    {
-		popupWindow.setHeight(300);
-		popupWindow.setWidth(450);
-	    }
-
-	    popupWindow.showAtLocation
-		(view, Gravity.START | Gravity.TOP, 75, 75);
-
-	    try
-	    {
-		Ringtone ringtone = null;
-		Uri notification = RingtoneManager.getDefaultUri
-		    (RingtoneManager.TYPE_NOTIFICATION);
-
-		ringtone = RingtoneManager.getRingtone(context, notification);
-		ringtone.play();
-	    }
-	    catch(Exception e)
-	    {
-	    }
-
-	    Handler handler = new Handler();
-
-	    handler.postDelayed(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    popupWindow.dismiss();
-		}
-	    }, 10000); // 10 Seconds
+	    break;
+	case "org.purple.smoke.siphash_share_confirmation":
+	    message = "A SmokeStack has received the Smoke Identity.";
+	    break;
 	}
+
+	if(message.isEmpty())
+	    return;
+
+	TextView textView1 = new TextView(context);
+	final PopupWindow popupWindow = new PopupWindow(context);
+
+	textView1.setBackgroundColor(Color.rgb(255, 236, 179));
+	textView1.setText(message);
+
+	float density = context.getResources().getDisplayMetrics().density;
+
+	textView1.setPaddingRelative
+	    ((int) (10 * density),
+	     (int) (10 * density),
+	     (int) (10 * density),
+	     (int) (10 * density));
+	textView1.setTextSize(16);
+	popupWindow.setContentView(textView1);
+	popupWindow.setOutsideTouchable(true);
+
+	if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+	{
+	    popupWindow.setHeight(300);
+	    popupWindow.setWidth(450);
+	}
+
+	popupWindow.showAtLocation(view, Gravity.START | Gravity.TOP, 75, 75);
+
+	try
+	{
+	    Ringtone ringtone = null;
+	    Uri notification = RingtoneManager.getDefaultUri
+		(RingtoneManager.TYPE_NOTIFICATION);
+
+	    ringtone = RingtoneManager.getRingtone(context, notification);
+	    ringtone.play();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	Handler handler = new Handler();
+
+	handler.postDelayed(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		popupWindow.dismiss();
+	    }
+	}, 10000); // 10 Seconds
     }
 
     public static void showPromptDialog

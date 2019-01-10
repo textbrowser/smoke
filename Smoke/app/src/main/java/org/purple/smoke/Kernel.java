@@ -37,6 +37,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
+import android.util.Log;
 import android.util.SparseArray;
 import java.net.InetAddress;
 import java.security.PublicKey;
@@ -90,27 +91,29 @@ public class Kernel
 	new SimpleDateFormat("MMddyyyyHHmmss");
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
-    private final static int CALL_INTERVAL = 250; // 0.250 Seconds
-    private final static int CHAT_TEMPORARY_IDENTITY_INTERVAL =
-	5000; // 5 Seconds
     private final static int CONGESTION_LIFETIME = 60; // Seconds
     private final static int FIRE_TIME_DELTA = 30000; // 30 Seconds
     private final static int MCELIECE_OUTPUT_SIZES[] = {320, 352, 576, 608};
-    private final static int MESSAGES_TO_SEND_INTERVAL =
-	100; // 100 Milliseconds
-    private final static int NEIGHBORS_INTERVAL = 5000; // 5 Seconds
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
 	864000; // Seconds in ten days.
-    private final static int PUBLISH_KEYS_INTERVAL = 45000; // 45 Seconds
-    private final static int PURGE_INTERVAL = 30000; // 30 Seconds
-    private final static int REQUEST_MESSAGES_INTERVAL = 60000; // 60 Seconds
-    private final static int STATUS_INTERVAL = 15000; /*
-						      ** Should be less than
-						      ** Chat.STATUS_WINDOW.
-						      */
+    private final static long CALL_INTERVAL = 250; // 0.250 Seconds
+    private final static long CHAT_TEMPORARY_IDENTITY_INTERVAL =
+	5000; // 5 Seconds
+    private final static long MESSAGES_TO_SEND_INTERVAL =
+	100; // 100 Milliseconds
+    private final static long NEIGHBORS_INTERVAL = 5000; // 5 Seconds
+    private final static long PUBLISH_KEYS_INTERVAL = 45000; // 45 Seconds
+    private final static long PURGE_INTERVAL = 30000; // 30 Seconds
+    private final static long REQUEST_MESSAGES_INTERVAL = 60000; // 60 Seconds
+    private final static long STATUS_INTERVAL = 15000; /*
+						       ** Should be less than
+						       ** Chat.STATUS_WINDOW.
+						       */
     private final static long CALL_LIFETIME = 30000; // 30 Seconds
     private final static long CHAT_TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
+    private final static int SHARE_SIPHASH_ID_WINDOW = 30000; // 30 Seconds
+
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -1383,12 +1386,35 @@ public class Kernel
 	    byte bytes[] =
 		Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT);
 
-	    if(bytes == null || bytes.length < 128)
+	    if(bytes == null || bytes.length < 112)
 		return 0;
 
 	    /*
 	    ** Ozone!
 	    */
+
+	    if(s_cryptography.ozoneEncryptionKey() != null &&
+	       s_cryptography.ozoneMacKey() != null)
+	    {
+		byte array1[] = Arrays.copyOfRange
+		    (bytes, 0, bytes.length - 128);
+		byte array2[] = Arrays.copyOfRange
+		    (bytes, bytes.length - 128, bytes.length - 64);
+
+		if(Cryptography.
+		   memcmp(array2,
+			  Cryptography.hmac(array1,
+					    s_cryptography.ozoneMacKey())))
+		{
+		    Intent intent = new Intent
+			("org.purple.smoke.siphash_share_confirmation");
+		    String sipHashId = "";
+
+		    intent.putExtra("org.purple.smoke.sipHashId", sipHashId);
+		    sendBroadcast(intent);
+		    return 1;
+		}
+	    }
 
 	    boolean ourMessageViaChatTemporaryIdentity = false; /*
 								** Did the

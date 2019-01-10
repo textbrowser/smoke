@@ -86,7 +86,7 @@ public class FireChannel extends View
 	new Hashtable<> ();
     private final SimpleDateFormat m_simpleDateFormat =
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-    private final static int STATUS_INTERVAL = 30000;
+    private final static long STATUS_INTERVAL = 30000;
 
     private void createSchedulers()
     {

@@ -228,7 +228,7 @@ public class Fire extends AppCompatActivity
 	    m_fireHash.put(fireElement.m_name, fireElement.m_oid);
 	}
 
-	ArrayAdapter arrayAdapter = null;
+	ArrayAdapter<?> arrayAdapter = null;
 
 	arrayAdapter = new ArrayAdapter<>
 	    (Fire.this, android.R.layout.simple_spinner_item, array);

@@ -54,10 +54,11 @@ public abstract class Neighbor
     private final String m_echoMode = "full";
     private final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB
     private final static int LANE_WIDTH = 32 * 1024 * 1024; // 32 MiB
-    private final static int PARSING_INTERVAL = 100; // Milliseconds
-    private final static int SEND_OUTBOUND_TIMER_INTERVAL = 200; // Milliseconds
-    private final static int TIMER_INTERVAL = 2500; // 2.5 Seconds
+    private final static long PARSING_INTERVAL = 100; // Milliseconds
+    private final static long SEND_OUTBOUND_TIMER_INTERVAL =
+	200; // Milliseconds
     private final static long SILENCE = 90000; // 90 Seconds
+    private final static long TIMER_INTERVAL = 2500; // 2.5 Seconds
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
@@ -75,8 +76,8 @@ public abstract class Neighbor
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
-    protected final static int READ_SOCKET_INTERVAL = 100; // 100 Milliseconds
     protected final static int SO_TIMEOUT = 0; // 0 Seconds
+    protected final static long READ_SOCKET_INTERVAL = 100; // 100 Milliseconds
     public final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
 
     private void saveStatistics()
