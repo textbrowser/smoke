@@ -60,16 +60,17 @@ public class Kernel
     private ArrayList<MessageElement> m_messagesToSend = null;
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private AtomicLong m_shareSipHashIdIdentity = null;
+    private AtomicLong m_shareSipHashIdIdentityLastTick = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private Hashtable<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
-    private ScheduledExecutorService m_chatTemporaryIdentityScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_publishKeysScheduler = null;
     private ScheduledExecutorService m_purgeScheduler = null;
     private ScheduledExecutorService m_requestMessagesScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private ScheduledExecutorService m_temporaryIdentityScheduler = null;
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
@@ -97,23 +98,22 @@ public class Kernel
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
 	864000; // Seconds in ten days.
     private final static long CALL_INTERVAL = 250; // 0.250 Seconds
-    private final static long CHAT_TEMPORARY_IDENTITY_INTERVAL =
-	5000; // 5 Seconds
+    private final static long CALL_LIFETIME = 30000; // 30 Seconds
     private final static long MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static long NEIGHBORS_INTERVAL = 5000; // 5 Seconds
     private final static long PUBLISH_KEYS_INTERVAL = 45000; // 45 Seconds
     private final static long PURGE_INTERVAL = 30000; // 30 Seconds
     private final static long REQUEST_MESSAGES_INTERVAL = 60000; // 60 Seconds
+    private final static long SHARE_SIPHASH_ID_CONFIRMATION_WINDOW =
+	15000; // 15 Seconds
     private final static long STATUS_INTERVAL = 15000; /*
 						       ** Should be less than
 						       ** Chat.STATUS_WINDOW.
 						       */
-    private final static long CALL_LIFETIME = 30000; // 30 Seconds
-    private final static long CHAT_TEMPORARY_IDENTITY_LIFETIME =
+    private final static long TEMPORARY_IDENTITY_INTERVAL = 5000; // 5 Seconds
+    private final static long TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
-    private final static long SHARE_SIPHASH_ID_CONFIRMATION_WINDOW =
-	15000; // 15 Seconds
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -124,6 +124,8 @@ public class Kernel
 	m_fireStreams = new Hashtable<> ();
 	m_messagesToSend = new ArrayList<> ();
 	m_shareSipHashIdIdentity = new AtomicLong(0);
+	m_shareSipHashIdIdentityLastTick = new AtomicLong
+	    (System.currentTimeMillis());
 
 	try
 	{
@@ -399,39 +401,6 @@ public class Kernel
 	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
-	if(m_chatTemporaryIdentityScheduler == null)
-	{
-	    m_chatTemporaryIdentityScheduler = Executors.
-		newSingleThreadScheduledExecutor();
-	    m_chatTemporaryIdentityScheduler.scheduleAtFixedRate(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    try
-		    {
-			m_chatMessageRetrievalIdentityMutex.writeLock().lock();
-
-			try
-			{
-			    if(System.currentTimeMillis() -
-			       m_chatTemporaryIdentityLastTick.get() >
-			       CHAT_TEMPORARY_IDENTITY_LIFETIME)
-				m_chatMessageRetrievalIdentity = null;
-			}
-			finally
-			{
-			    m_chatMessageRetrievalIdentityMutex.writeLock().
-				unlock();
-			}
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		}
-	    }, 1500, CHAT_TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
-	}
-
 	if(m_messagesToSendScheduler == null)
 	{
 	    m_messagesToSendScheduler = Executors.
@@ -583,6 +552,8 @@ public class Kernel
 					(Miscellaneous.
 					 byteArrayToLong(Cryptography.
 							 randomBytes(8)));
+				    m_shareSipHashIdIdentityLastTick.set
+					(System.currentTimeMillis());
 
 				    if(messageElement.m_id.equals("-1"))
 					bytes = Messages.shareSipHashIdMessage
@@ -891,6 +862,44 @@ public class Kernel
 		    }
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_temporaryIdentityScheduler == null)
+	{
+	    m_temporaryIdentityScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_temporaryIdentityScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			m_chatMessageRetrievalIdentityMutex.writeLock().lock();
+
+			try
+			{
+			    if(System.currentTimeMillis() -
+			       m_chatTemporaryIdentityLastTick.get() >
+			       TEMPORARY_IDENTITY_LIFETIME)
+				m_chatMessageRetrievalIdentity = null;
+			}
+			finally
+			{
+			    m_chatMessageRetrievalIdentityMutex.writeLock().
+				unlock();
+			}
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+
+		    if(System.currentTimeMillis() -
+		       m_shareSipHashIdIdentityLastTick.get() >
+		       TEMPORARY_IDENTITY_LIFETIME)
+			m_shareSipHashIdIdentity.set(0);
+		}
+	    }, 1500, TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
