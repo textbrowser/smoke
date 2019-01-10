@@ -112,6 +112,8 @@ public class Kernel
     private final static long CALL_LIFETIME = 30000; // 30 Seconds
     private final static long CHAT_TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
+    private final static long SHARE_SIPHASH_ID_CONFIRMATION_WINDOW =
+	15000; // 15 Seconds
     private static Kernel s_instance = null;
 
     private Kernel()
@@ -1404,9 +1406,30 @@ public class Kernel
 			  Cryptography.hmac(array1,
 					    s_cryptography.ozoneMacKey())))
 		{
+		    byte aes256[] = Cryptography.decrypt
+			(array1, s_cryptography.ozoneEncryptionKey());
+
+		    if(aes256 == null)
+			return 1;
+
+		    long current = System.currentTimeMillis();
+		    long timestamp = Miscellaneous.byteArrayToLong
+			(Arrays.copyOfRange(aes256, 1, 1 + 8));
+
+		    if(current - timestamp < 0)
+		    {
+			if(timestamp - current >
+			   SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
+			    return 1;
+		    }
+		    else if(current - timestamp >
+			    SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
+			return 1;
+
 		    Intent intent = new Intent
 			("org.purple.smoke.siphash_share_confirmation");
-		    String sipHashId = "";
+		    String sipHashId = new String
+			(Arrays.copyOfRange(aes256, 9, 9 + 19), "UTF-8");
 
 		    intent.putExtra("org.purple.smoke.sipHashId", sipHashId);
 		    sendBroadcast(intent);

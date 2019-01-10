@@ -531,6 +531,7 @@ public abstract class Miscellaneous
 	    return;
 
 	String message = "";
+	String sipHashId = "";
 
 	switch(intent.getAction())
 	{
@@ -544,10 +545,13 @@ public abstract class Miscellaneous
 		return;
 
 	    String name = intent.getStringExtra("org.purple.smoke.name");
-	    String sipHashId = intent.getStringExtra
-		("org.purple.smoke.sipHashId");
 
-	    if(name == null || sipHashId == null)
+	    if(name == null)
+		return;
+
+	    sipHashId = intent.getStringExtra("org.purple.smoke.sipHashId");
+
+	    if(sipHashId == null)
 		return;
 
 	    boolean purple = intent.getBooleanExtra
@@ -599,7 +603,13 @@ public abstract class Miscellaneous
 
 	    break;
 	case "org.purple.smoke.siphash_share_confirmation":
-	    message = "A SmokeStack has received the Smoke Identity.";
+	    sipHashId = intent.getStringExtra("org.purple.smoke.sipHashId");
+
+	    if(sipHashId == null)
+		return;
+
+	    message = "A SmokeStack has received the Smoke Identity " +
+		sipHashId + ".";
 	    break;
 	}
 
