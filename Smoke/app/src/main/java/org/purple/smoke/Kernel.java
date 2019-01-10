@@ -1407,8 +1407,6 @@ public class Kernel
 			  Cryptography.hmac(array1,
 					    s_cryptography.ozoneMacKey())))
 		{
-		    m_shareSipHashIdIdentity.set(0);
-
 		    byte aes256[] = Cryptography.decrypt
 			(array1, s_cryptography.ozoneEncryptionKey());
 
@@ -1428,6 +1426,18 @@ public class Kernel
 		    else if(current - timestamp >
 			    SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
 			return 1;
+
+		    /*
+		    ** Did we share something?
+		    */
+
+		    long identity = Miscellaneous.byteArrayToLong
+			(Arrays.copyOfRange(aes256, 28, 28 + 8));
+
+		    if(identity != m_shareSipHashIdIdentity.get())
+			return 1;
+
+		    m_shareSipHashIdIdentity.set(0);
 
 		    Intent intent = new Intent
 			("org.purple.smoke.siphash_share_confirmation");
