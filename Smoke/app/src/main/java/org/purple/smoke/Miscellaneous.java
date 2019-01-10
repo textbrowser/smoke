@@ -548,11 +548,18 @@ public abstract class Miscellaneous
 
 	    if(name == null)
 		return;
+	    else
+		name = name.trim();
 
 	    sipHashId = intent.getStringExtra("org.purple.smoke.sipHashId");
 
 	    if(sipHashId == null)
 		return;
+	    else
+		sipHashId = sipHashId.toUpperCase();
+
+	    if(name.isEmpty())
+		name = "unknown";
 
 	    boolean purple = intent.getBooleanExtra
 		("org.purple.smoke.purple", false);
@@ -607,9 +614,15 @@ public abstract class Miscellaneous
 
 	    if(sipHashId == null)
 		return;
+	    else
+		sipHashId = sipHashId.toUpperCase();
 
-	    message = "A SmokeStack has received the Smoke Identity " +
-		sipHashId + ".";
+	    if(Cryptography.SIPHASH_ID_LENGTH == sipHashId.length())
+		message = "A SmokeStack has received the Smoke Identity " +
+		    sipHashId + ".";
+	    else
+		message = "A SmokeStack has received the Smoke Identity.";
+
 	    break;
 	}
 
