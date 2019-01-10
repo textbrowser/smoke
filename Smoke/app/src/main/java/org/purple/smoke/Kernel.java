@@ -1386,14 +1386,15 @@ public class Kernel
 	    byte bytes[] =
 		Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT);
 
-	    if(bytes == null || bytes.length < 112)
+	    if(bytes == null || bytes.length < 128)
 		return 0;
 
 	    /*
 	    ** Ozone!
 	    */
 
-	    if(s_cryptography.ozoneEncryptionKey() != null &&
+	    if(m_shareSipHashIdIdentity.get() != 0 &&
+	       s_cryptography.ozoneEncryptionKey() != null &&
 	       s_cryptography.ozoneMacKey() != null)
 	    {
 		byte array1[] = Arrays.copyOfRange
@@ -1406,6 +1407,8 @@ public class Kernel
 			  Cryptography.hmac(array1,
 					    s_cryptography.ozoneMacKey())))
 		{
+		    m_shareSipHashIdIdentity.set(0);
+
 		    byte aes256[] = Cryptography.decrypt
 			(array1, s_cryptography.ozoneEncryptionKey());
 
