@@ -1139,10 +1139,13 @@ public class Database extends SQLiteOpenHelper
 	    if(m_db.insertOrThrow("participants_messages", null, values) != -1)
 		synchronized(m_readMemberChatCursorMutex)
 		{
-		    if(m_readMemberChatCursor != null)
-			m_readMemberChatCursor.close();
+		    if(m_readMemberChatSipHashId.equals(sipHashId))
+		    {
+			if(m_readMemberChatCursor != null)
+			    m_readMemberChatCursor.close();
 
-		    m_readMemberChatCursor = null;
+			m_readMemberChatCursor = null;
+		    }
 		}
 
 	    m_db.setTransactionSuccessful();
@@ -1300,6 +1303,7 @@ public class Database extends SQLiteOpenHelper
 		    m_readMemberChatCursor.close();
 
 		m_readMemberChatCursor = null;
+		m_readMemberChatSipHashId = "";
 	    }
 	    finally
 	    {
@@ -2436,11 +2440,55 @@ public class Database extends SQLiteOpenHelper
 		("message_sent",
 		 Base64.encodeToString(cryptography.etm("true".getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update
-		("participants_messages",
-		 values,
-		 "message_identity_digest = ?",
-		 new String[] {messageIdentityDigest});
+
+	    if(m_db.update("participants_messages",
+			   values,
+			   "message_identity_digest = ?",
+			   new String[] {messageIdentityDigest}) > 0)
+	    {
+		Cursor cursor = null;
+
+		try
+		{
+		    cursor = m_db.rawQuery
+			("SELECT siphash_id_digest FROM " +
+			 "participants_messages " +
+			 "WHERE message_identity_digest = ?",
+			 new String[] {messageIdentityDigest});
+
+		    if(cursor != null && cursor.moveToFirst())
+		    {
+			String sipHashIdDigest1 = cursor.getString(0);
+
+			synchronized(m_readMemberChatCursorMutex)
+			{
+			    String sipHashIdDigest2 = Base64.
+				encodeToString
+				(cryptography.
+				 hmac(m_readMemberChatSipHashId.toUpperCase().
+				      trim().getBytes("UTF-8")),
+				 Base64.DEFAULT);
+
+			    if(sipHashIdDigest1.equals(sipHashIdDigest2))
+			    {
+				if(m_readMemberChatCursor != null)
+				    m_readMemberChatCursor.close();
+
+				m_readMemberChatCursor = null;
+			    }
+			}
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+		finally
+		{
+		    if(cursor != null)
+			cursor.close();
+		}
+	    }
+
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -2472,18 +2520,30 @@ public class Database extends SQLiteOpenHelper
 		("message_read",
 		 Base64.encodeToString(cryptography.etm("true".getBytes()),
 				       Base64.DEFAULT));
-	    m_db.update
-		("participants_messages",
-		 values,
-		 "message_identity_digest = ? AND siphash_id_digest = ?",
-		 new String[] {Base64.encodeToString(cryptography.
-						     hmac(messageIdentity),
-						     Base64.DEFAULT),
-			       Base64.encodeToString(cryptography.
-						     hmac(sipHashId.
-							  toUpperCase().trim().
-							  getBytes("UTF-8")),
-						     Base64.DEFAULT)});
+
+	    if(m_db.update
+	       ("participants_messages",
+		values,
+		"message_identity_digest = ? AND siphash_id_digest = ?",
+		new String[] {Base64.encodeToString(cryptography.
+						    hmac(messageIdentity),
+						    Base64.DEFAULT),
+			      Base64.encodeToString(cryptography.
+						    hmac(sipHashId.
+							 toUpperCase().trim().
+							 getBytes("UTF-8")),
+						    Base64.DEFAULT)}) > 0)
+		synchronized(m_readMemberChatCursorMutex)
+		{
+		    if(m_readMemberChatSipHashId.equals(sipHashId))
+		    {
+			if(m_readMemberChatCursor != null)
+			    m_readMemberChatCursor.close();
+
+			m_readMemberChatCursor = null;
+		    }
+		}
+
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -3306,6 +3366,7 @@ public class Database extends SQLiteOpenHelper
 		    m_readMemberChatCursor.close();
 
 		m_readMemberChatCursor = null;
+		m_readMemberChatSipHashId = "";
 	    }
     }
 
@@ -3332,10 +3393,13 @@ public class Database extends SQLiteOpenHelper
 							Base64.DEFAULT)}) > 0)
 		synchronized(m_readMemberChatCursorMutex)
 		{
-		    if(m_readMemberChatCursor != null)
-			m_readMemberChatCursor.close();
+		    if(m_readMemberChatSipHashId.equals(sipHashId))
+		    {
+			if(m_readMemberChatCursor != null)
+			    m_readMemberChatCursor.close();
 
-		    m_readMemberChatCursor = null;
+			m_readMemberChatCursor = null;
+		    }
 		}
 
 	    m_db.setTransactionSuccessful();
@@ -3369,10 +3433,13 @@ public class Database extends SQLiteOpenHelper
 							Base64.DEFAULT)}) > 0)
 		synchronized(m_readMemberChatCursorMutex)
 		{
-		    if(m_readMemberChatCursor != null)
-			m_readMemberChatCursor.close();
+		    if(m_readMemberChatSipHashId.equals(sipHashId))
+		    {
+			if(m_readMemberChatCursor != null)
+			    m_readMemberChatCursor.close();
 
-		    m_readMemberChatCursor = null;
+			m_readMemberChatCursor = null;
+		    }
 		}
 
 	    m_db.setTransactionSuccessful();
@@ -3920,6 +3987,7 @@ public class Database extends SQLiteOpenHelper
 		m_readMemberChatCursor.close();
 
 	    m_readMemberChatCursor = null;
+	    m_readMemberChatSipHashId = "";
 	}
     }
 
