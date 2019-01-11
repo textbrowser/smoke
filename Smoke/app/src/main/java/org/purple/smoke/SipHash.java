@@ -116,6 +116,7 @@ public class SipHash
 	return hmac(data, m_key);
     }
 
+    @SuppressWarnings("fallthrough")
     public synchronized long hmac(byte data[], byte key[])
     {
 	if(data == null || key == null || key.length != KEY_LENGTH)
