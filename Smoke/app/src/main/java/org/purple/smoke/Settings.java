@@ -265,6 +265,7 @@ public class Settings extends AppCompatActivity
     private void addNeighbor()
     {
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
+	CheckBox checkBox2 = (CheckBox) findViewById(R.id.initialize_ozone);
 	RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
@@ -300,8 +301,24 @@ public class Settings extends AppCompatActivity
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
 		 "An error occurred while saving the neighbor information.");
-	else if(!checkBox1.isChecked())
-	    populateNeighbors(null);
+	else
+	{
+	    if(!checkBox1.isChecked())
+		populateNeighbors(null);
+
+	    if(checkBox2.isChecked())
+	    {
+		String string = textView1.getText().toString() + ":" +
+		    textView2.getText().toString() + ":" +
+		    spinner1.getSelectedItem();
+
+		if(generateOzone(string))
+		{
+		    textView1 = (TextView) findViewById(R.id.ozone);
+		    textView1.setText(string);
+		}
+	    }
+	}
     }
 
     private void addParticipant()
