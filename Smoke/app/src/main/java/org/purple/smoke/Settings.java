@@ -1335,6 +1335,8 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
+		CheckBox checkbox1 = (CheckBox) findViewById
+		    (R.id.initialize_ozone);
 		RadioButton radioButton1 = (RadioButton) findViewById
 		    (R.id.neighbors_ipv4);
 		Spinner spinner1 = (Spinner) findViewById
@@ -1352,6 +1354,7 @@ public class Settings extends AppCompatActivity
 		TextView textView3 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
+		checkbox1.setChecked(false);
 		proxyIpAddress.setText("");
 		proxyPort.setText("");
 		radioButton1.setChecked(true);
