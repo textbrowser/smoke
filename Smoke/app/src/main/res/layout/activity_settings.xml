@@ -242,6 +242,12 @@
 
                 </RadioGroup>
 
+                <CheckBox
+                    android:id="@+id/initialize_ozone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/initialize_ozone" />
+
                 <EditText
                     android:id="@+id/proxy_ip_address"
                     android:layout_width="match_parent"

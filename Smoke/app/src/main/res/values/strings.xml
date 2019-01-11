@@ -66,6 +66,7 @@
     <string name="share_smoke_id">Share Smoke ID</string>
     <string name="message_was_read">Message was read.</string>
     <string name="message_was_sent">Message was sent.</string>
+    <string name="initialize_ozone">Initialize Ozone</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
