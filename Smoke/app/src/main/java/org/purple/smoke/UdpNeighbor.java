@@ -83,6 +83,9 @@ public class UdpNeighbor extends Neighbor
 
 	    while(stringBuilder.length() > 0)
 	    {
+		if(m_aborted.get())
+		    return false;
+
 		byte bytes[] = stringBuilder.substring
 		    (0, Math.min(576, stringBuilder.length())).getBytes();
 

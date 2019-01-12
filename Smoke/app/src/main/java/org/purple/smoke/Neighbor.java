@@ -37,6 +37,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -59,6 +60,7 @@ public abstract class Neighbor
 	200; // Milliseconds
     private final static long SILENCE = 90000; // 90 Seconds
     private final static long TIMER_INTERVAL = 2500; // 2.5 Seconds
+    protected AtomicBoolean m_aborted = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
@@ -129,6 +131,7 @@ public abstract class Neighbor
 		       String version,
 		       int oid)
     {
+	m_aborted = new AtomicBoolean(false);
 	m_bytes = new byte[BYTES_PER_READ];
 	m_bytesRead = new AtomicLong(0);
 	m_bytesWritten = new AtomicLong(0);
@@ -159,7 +162,7 @@ public abstract class Neighbor
 	    {
 		try
 		{
-		    if(!connected())
+		    if(!connected() || m_aborted.get())
 			return;
 
 		    /*
@@ -185,6 +188,9 @@ public abstract class Neighbor
 
 		    while((indexOf = m_stringBuffer.indexOf(Messages.EOM)) >= 0)
 		    {
+			if(m_aborted.get())
+			    break;
+
 			String buffer = m_stringBuffer.
 			    substring(0, indexOf + Messages.EOM.length());
 
@@ -267,7 +273,7 @@ public abstract class Neighbor
 	    {
 		try
 		{
-		    if(!connected())
+		    if(!connected() || m_aborted.get())
 			return;
 
 		    if(System.nanoTime() - m_accumulatedTime >= 10000000000L)
@@ -469,6 +475,7 @@ public abstract class Neighbor
 
     protected synchronized void abort()
     {
+	m_aborted.set(true);
 	m_parsingScheduler.shutdown();
 
 	synchronized(m_parsingSchedulerObject)
