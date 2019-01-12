@@ -42,7 +42,7 @@ public class About
     {
     }
 
-    public static String about()
+    public static synchronized String about()
     {
 	if(s_about.isEmpty())
 	{

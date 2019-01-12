@@ -61,6 +61,9 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(FireElement e1, FireElement e2)
 	    {
+		if(e1 == null || e2 == null)
+		    return -1;
+
 		return e1.m_name.compareTo(e2.m_name);
 	    }
 	};
@@ -70,6 +73,9 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(NeighborElement e1, NeighborElement e2)
 	    {
+		if(e1 == null || e2 == null)
+		    return -1;
+
 		/*
 		** Sort by IP address, port, and transport.
 		*/
@@ -111,6 +117,9 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(ParticipantElement e1, ParticipantElement e2)
 	    {
+		if(e1 == null || e2 == null)
+		    return -1;
+
 		int i = e1.m_name.compareTo(e2.m_name);
 
 		if(i != 0)
@@ -125,6 +134,9 @@ public class Database extends SQLiteOpenHelper
 	    @Override
 	    public int compare(SipHashIdElement e1, SipHashIdElement e2)
 	    {
+		if(e1 == null || e2 == null)
+		    return -1;
+
 		/*
 		** Sort by name and SipHash identity.
 		*/
@@ -1631,7 +1643,7 @@ public class Database extends SQLiteOpenHelper
     public String readParticipantOptions(Cryptography cryptography,
 					 String sipHashId)
     {
-	if(m_db == null)
+	if(cryptography == null || m_db == null)
 	    return "";
 
 	Cursor cursor = null;
@@ -2058,7 +2070,7 @@ public class Database extends SQLiteOpenHelper
 
     public String[] keysSigned(Cryptography cryptography, String sipHashId)
     {
-	if(cryptography == null)
+	if(cryptography == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
@@ -3324,17 +3336,18 @@ public class Database extends SQLiteOpenHelper
 	    return;
 
 	for(NeighborElement neighborElement : arrayList)
-	    saveNeighborInformation(cryptography,
-				    "0",             // Bytes Read
-				    "0",             // Bytes Written
-				    "0",             // Queue Size
-				    "",              // Error
-				    "",              // IP Address
-				    "0",             // Port
-				    "",              // Session Cipher
-				    "disconnected",  // Status
-				    "0",             // Uptime
-				    String.valueOf(neighborElement.m_oid));
+	    if(neighborElement != null)
+		saveNeighborInformation(cryptography,
+					"0",             // Bytes Read
+					"0",             // Bytes Written
+					"0",             // Queue Size
+					"",              // Error
+					"",              // IP Address
+					"0",             // Port
+					"",              // Session Cipher
+					"disconnected",  // Status
+					"0",             // Uptime
+					String.valueOf(neighborElement.m_oid));
 
 	arrayList.clear();
     }
@@ -3458,7 +3471,10 @@ public class Database extends SQLiteOpenHelper
 				       byte messageIdentity[],
 				       int oid)
     {
-	if(cryptography == null || m_db == null || message.trim().isEmpty())
+	if(cryptography == null ||
+	   m_db == null ||
+	   message == null ||
+	   message.trim().isEmpty())
 	    return;
 
 	m_db.beginTransactionNonExclusive();
@@ -4031,6 +4047,7 @@ public class Database extends SQLiteOpenHelper
 	   encryptionKey == null ||
 	   keyStream == null ||
 	   m_db == null ||
+	   name == null ||
 	   name.isEmpty())
 	    return;
 

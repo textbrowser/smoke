@@ -146,7 +146,7 @@ public class ChatBubble extends View
 	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
 	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
 
-	if(name.trim().isEmpty())
+	if(name == null || name.trim().isEmpty())
 	    return;
 
 	if(location == Locations.LEFT)
@@ -240,7 +240,8 @@ public class ChatBubble extends View
 	textView.setText("");
 
 	{
-	    Spannable spannable = new SpannableStringBuilder(text);
+	    Spannable spannable = new SpannableStringBuilder
+		(text == null ? "" : text);
 
 	    if(spannable.length() > 0)
 	    {

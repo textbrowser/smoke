@@ -156,7 +156,7 @@ public class Chat extends AppCompatActivity
 	** Text
 	*/
 
-	if(text.isEmpty())
+	if(text == null || text.isEmpty())
 	    return "unknown";
 
 	try

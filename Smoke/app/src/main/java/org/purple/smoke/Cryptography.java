@@ -1165,6 +1165,9 @@ public class Cryptography
 						       byte privateBytes[],
 						       byte publicBytes[])
     {
+	if(privateBytes == null || publicBytes == null)
+	    return null;
+
 	try
 	{
 	    if(algorithm.equals("McEliece-Fujisaki"))
@@ -1209,6 +1212,9 @@ public class Cryptography
 
     public static PublicKey publicKeyFromBytes(byte publicBytes[])
     {
+	if(publicBytes == null)
+	    return null;
+
 	try
 	{
 	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
@@ -1247,6 +1253,9 @@ public class Cryptography
 
     public static PublicKey publicRSAKeyFromBytes(byte publicBytes[])
     {
+	if(publicBytes == null)
+	    return null;
+
 	try
 	{
 	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
@@ -1265,6 +1274,9 @@ public class Cryptography
 						  char password[],
 						  int iterations)
     {
+	if(password == null || salt == null)
+	    return null;
+
 	int length = 256; // Bits.
 
 	try
@@ -1287,6 +1299,9 @@ public class Cryptography
 					   char password[],
 					   int iterations)
     {
+	if(password == null || salt == null)
+	    return null;
+
 	int length = 512; // Bits.
 
 	try
@@ -1598,6 +1613,9 @@ public class Cryptography
 				int iterations,
 				int length)
     {
+	if(password == null || salt == null)
+	    return null;
+
 	try
 	{
 	    KeySpec keySpec = new PBEKeySpec
@@ -1680,6 +1698,9 @@ public class Cryptography
 
     public static byte[] randomBytes(int length)
     {
+	if(length <= 0)
+	    return null;
+
 	prepareSecureRandom();
 
 	byte bytes[] = null;
