@@ -3484,7 +3484,7 @@ public class Database extends SQLiteOpenHelper
 					   Base64.DEFAULT));
 
 	    values.put("neighbor_oid", oid);
-	    m_db.insert("outbound_queue", null, values);
+	    m_db.insertOrThrow("outbound_queue", null, values);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -4060,7 +4060,7 @@ public class Database extends SQLiteOpenHelper
 		("stream_digest",
 		 Base64.encodeToString(cryptography.hmac(bytes),
 				       Base64.DEFAULT));
-	    m_db.insert("fire", null, values);
+	    m_db.insertOrThrow("fire", null, values);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -4288,7 +4288,7 @@ public class Database extends SQLiteOpenHelper
 					     hmac(sipHashId.toUpperCase().
 						  trim().getBytes("UTF-8")),
 					     Base64.DEFAULT));
-	    m_db.insert("participants_keys", null, values);
+	    m_db.insertOrThrow("participants_keys", null, values);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
