@@ -372,16 +372,12 @@ public class TcpNeighbor extends Neighbor
 
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
+		    m_stringBuffer.append
+			(new String(m_bytes, 0, (int) bytesRead));
 
-		    if(bytesRead > 0)
+		    synchronized(m_parsingSchedulerObject)
 		    {
-			m_stringBuffer.
-			    append(new String(m_bytes, 0, (int) bytesRead));
-
-			synchronized(m_parsingSchedulerObject)
-			{
-			    m_parsingSchedulerObject.notify();
-			}
+			m_parsingSchedulerObject.notify();
 		    }
 		}
 		catch(java.net.SocketException exception)
