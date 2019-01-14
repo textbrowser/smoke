@@ -292,12 +292,19 @@ public class FireChannel extends View
 
 		if(m_connectionStatusScheduler != null)
 	        {
-		    m_connectionStatusScheduler.shutdown();
+		    try
+		    {
+			m_connectionStatusScheduler.shutdown();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 
 		    try
 		    {
-			m_connectionStatusScheduler.awaitTermination
-			    (60, TimeUnit.SECONDS);
+			if(!m_connectionStatusScheduler.
+			   awaitTermination(60, TimeUnit.SECONDS))
+			    m_connectionStatusScheduler.shutdownNow();
 		    }
 		    catch(Exception exception)
 		    {
@@ -310,12 +317,19 @@ public class FireChannel extends View
 
 		if(m_statusScheduler != null)
 	        {
-		    m_statusScheduler.shutdown();
+		    try
+		    {
+			m_statusScheduler.shutdown();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 
 		    try
 		    {
-			m_statusScheduler.awaitTermination
-			    (60, TimeUnit.SECONDS);
+			if(!m_statusScheduler.
+			   awaitTermination(60, TimeUnit.SECONDS))
+			    m_statusScheduler.shutdownNow();
 		    }
 		    catch(Exception exception)
 		    {

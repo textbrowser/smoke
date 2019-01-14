@@ -2650,11 +2650,18 @@ public class Settings extends AppCompatActivity
     {
 	if(m_scheduler != null)
 	{
-	    m_scheduler.shutdown();
+	    try
+	    {
+		m_scheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 
 	    try
 	    {
-		m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
+		if(!m_scheduler.awaitTermination(60, TimeUnit.SECONDS))
+		    m_scheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
 	    {

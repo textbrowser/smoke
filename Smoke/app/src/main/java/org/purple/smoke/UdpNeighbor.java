@@ -132,11 +132,19 @@ public class UdpNeighbor extends Neighbor
 
 	synchronized(m_readSocketScheduler)
 	{
-	    m_readSocketScheduler.shutdown();
+	    try
+	    {
+		m_readSocketScheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 
 	    try
 	    {
-		m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
+		if(!m_readSocketScheduler.
+		   awaitTermination(60, TimeUnit.SECONDS))
+		    m_readSocketScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
 	    {

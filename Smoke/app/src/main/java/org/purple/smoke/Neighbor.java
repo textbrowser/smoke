@@ -479,7 +479,13 @@ public abstract class Neighbor
 
 	synchronized(m_parsingScheduler)
 	{
-	    m_parsingScheduler.shutdown();
+	    try
+	    {
+		m_parsingScheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
 
 	synchronized(m_parsingSchedulerObject)
@@ -491,7 +497,8 @@ public abstract class Neighbor
 	{
 	    try
 	    {
-		m_parsingScheduler.awaitTermination(60, TimeUnit.SECONDS);
+		if(!m_parsingScheduler.awaitTermination(60, TimeUnit.SECONDS))
+		    m_parsingScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
 	    {
@@ -500,11 +507,18 @@ public abstract class Neighbor
 
 	synchronized(m_scheduler)
 	{
-	    m_scheduler.shutdown();
+	    try
+	    {
+		m_scheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 
 	    try
 	    {
-		m_scheduler.awaitTermination(60, TimeUnit.SECONDS);
+		if(!m_scheduler.awaitTermination(60, TimeUnit.SECONDS))
+		    m_scheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
 	    {
@@ -513,11 +527,19 @@ public abstract class Neighbor
 
 	synchronized(m_sendOutboundScheduler)
 	{
-	    m_sendOutboundScheduler.shutdown();
+	    try
+	    {
+		m_sendOutboundScheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 
 	    try
 	    {
-		m_sendOutboundScheduler.awaitTermination(60, TimeUnit.SECONDS);
+		if(!m_sendOutboundScheduler.
+		   awaitTermination(60, TimeUnit.SECONDS))
+		    m_sendOutboundScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
 	    {
