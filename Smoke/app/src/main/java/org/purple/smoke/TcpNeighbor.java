@@ -154,14 +154,18 @@ public class TcpNeighbor extends Neighbor
 	disconnect();
 	super.abort();
 	m_isValidCertificate.set(false);
-	m_readSocketScheduler.shutdown();
 
-	try
+	synchronized(m_readSocketScheduler)
 	{
-	    m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
-	}
-	catch(Exception exception)
-	{
+	    m_readSocketScheduler.shutdown();
+
+	    try
+	    {
+		m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
     }
 

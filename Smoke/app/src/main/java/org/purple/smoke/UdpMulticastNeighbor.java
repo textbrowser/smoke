@@ -118,14 +118,18 @@ public class UdpMulticastNeighbor extends Neighbor
     {
 	disconnect();
 	super.abort();
-	m_readSocketScheduler.shutdown();
 
-	try
+	synchronized(m_readSocketScheduler)
 	{
-	    m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
-	}
-	catch(Exception exception)
-	{
+	    m_readSocketScheduler.shutdown();
+
+	    try
+	    {
+		m_readSocketScheduler.awaitTermination(60, TimeUnit.SECONDS);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
     }
 
