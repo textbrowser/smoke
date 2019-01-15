@@ -209,7 +209,6 @@ public class TcpNeighbor extends Neighbor
 	    {
 		m_socket = (SSLSocket) sslContext.getSocketFactory().
 		    createSocket();
-		m_socket.setPerformancePreferences(0, 1, 1);
 		m_socket.setReceiveBufferSize(65536);
 		m_socket.setSendBufferSize(65536);
 		m_socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
@@ -225,7 +224,6 @@ public class TcpNeighbor extends Neighbor
 		    socket = new Socket
 			(new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
 
-		socket.setPerformancePreferences(0, 1, 1);
 		socket.setReceiveBufferSize(65536);
 		socket.setSendBufferSize(65536);
 		socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
