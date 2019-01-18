@@ -60,7 +60,7 @@ public class UdpMulticastNeighbor extends Neighbor
 
     protected boolean send(String message)
     {
-	if(!connected())
+	if(!connected() || message == null)
 	    return false;
 
 	try

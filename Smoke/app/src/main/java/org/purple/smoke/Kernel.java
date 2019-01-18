@@ -934,7 +934,7 @@ public class Kernel
 
     private void scheduleSend(String message)
     {
-	if(message.trim().isEmpty())
+	if(message == null || message.trim().isEmpty())
 	    return;
 
 	m_neighborsMutex.readLock().lock();
@@ -1115,7 +1115,7 @@ public class Kernel
 
     public boolean enqueueMessage(String message, byte messageIdentity[])
     {
-	if(message.trim().isEmpty())
+	if(message == null || message.trim().isEmpty())
 	    return false;
 
 	ArrayList<NeighborElement> arrayList =
@@ -1260,6 +1260,9 @@ public class Kernel
 	** 1 - Fine
 	** 2 - Force Echo
 	*/
+
+	if(buffer == null)
+	    return 1;
 
 	long value = s_congestionSipHash.hmac(buffer.getBytes());
 
@@ -2267,8 +2270,9 @@ public class Kernel
 
     public static void writeCongestionDigest(String message)
     {
-	s_databaseHelper.writeCongestionDigest
-	    (s_congestionSipHash.hmac(message.getBytes()));
+	if(message != null)
+	    s_databaseHelper.writeCongestionDigest
+		(s_congestionSipHash.hmac(message.getBytes()));
     }
 
     public static void writeCongestionDigest(byte data[])
@@ -2305,7 +2309,9 @@ public class Kernel
 
     public void echo(String message, int oid)
     {
-	if(!State.getInstance().neighborsEcho() || message.trim().isEmpty())
+	if(!State.getInstance().neighborsEcho() ||
+	   message == null ||
+	   message.trim().isEmpty())
 	    return;
 
 	m_neighborsMutex.readLock().lock();
@@ -2332,7 +2338,7 @@ public class Kernel
 
     public void echoForce(String message, int oid)
     {
-	if(message.trim().isEmpty())
+	if(message == null || message.trim().isEmpty())
 	    return;
 
 	m_neighborsMutex.readLock().lock();

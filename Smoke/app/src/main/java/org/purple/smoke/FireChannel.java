@@ -598,7 +598,10 @@ public class FireChannel extends View
 
     public void status(String id, String name)
     {
-	if(id == null || id.isEmpty() || name == null || name.trim().isEmpty())
+	if(id == null ||
+	   id.trim().isEmpty() ||
+	   name == null ||
+	   name.trim().isEmpty())
 	    return;
 
 	if(m_participants.containsKey(id))

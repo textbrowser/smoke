@@ -208,6 +208,9 @@ public class Messages
 
     public static String stripMessage(String message)
     {
+	if(message == null)
+	    return "";
+
 	/*
 	** Remove Smoke-specific leading and trailing data.
 	*/

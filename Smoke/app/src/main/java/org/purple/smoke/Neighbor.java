@@ -609,7 +609,7 @@ public abstract class Neighbor
 
     public void scheduleEchoSend(String message)
     {
-	if(!connected())
+	if(!connected() || message == null)
 	    return;
 
 	synchronized(m_echoQueueMutex)
@@ -621,7 +621,7 @@ public abstract class Neighbor
 
     public void scheduleSend(String message)
     {
-	if(!connected())
+	if(!connected() || message == null)
 	    return;
 
 	synchronized(m_queueMutex)
