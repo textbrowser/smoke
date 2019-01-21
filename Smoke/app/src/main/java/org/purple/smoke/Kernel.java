@@ -1354,9 +1354,9 @@ public class Kernel
 				   FIRE_TIME_DELTA)
 				    return 1;
 
-				int length = strings.length;
+				int length = strings.length - 1;
 
-				for(int i = 0; i < length - 1; i++)
+				for(int i = 0; i < length; i++)
 				    strings[i] = new String
 					(Base64.decode(strings[i],
 						       Base64.NO_WRAP),
