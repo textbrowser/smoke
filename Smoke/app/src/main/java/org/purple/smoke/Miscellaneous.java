@@ -96,10 +96,11 @@ public abstract class Miscellaneous
 	try
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
+	    int length = string.length();
 
-	    for(int i = 0; i < string.length(); i += offset)
+	    for(int i = 0; i < length; i += offset)
 	    {
-		if(i < string.length() - offset)
+		if(i < length - offset)
 		    stringBuilder.append(string, i, i + offset);
 		else
 		    stringBuilder.append(string.substring(i));
@@ -129,10 +130,11 @@ public abstract class Miscellaneous
 	try
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
+	    int length = string.length();
 
-	    for(int i = 0; i < string.length(); i += offset)
+	    for(int i = 0; i < length; i += offset)
 	    {
-		if(i < string.length() - offset)
+		if(i < length - offset)
 		    stringBuilder.append(string, i, i + offset);
 		else
 		    stringBuilder.append(string.substring(i));
@@ -208,11 +210,12 @@ public abstract class Miscellaneous
 	{
 	    String string = Base64.encodeToString(bytes, Base64.NO_WRAP);
 	    StringBuilder stringBuilder = new StringBuilder();
+	    int length = string.length();
 
 	    stringBuilder.append("-----BEGIN CERTIFICATE-----\n");
 
-	    for(int i = 0; i < string.length(); i += 64)
-		if(i < string.length() - 64)
+	    for(int i = 0; i < length; i += 64)
+		if(i < length - 64)
 		{
 		    stringBuilder.append(string, i, i + 64);
 		    stringBuilder.append("\n");
@@ -399,8 +402,9 @@ public abstract class Miscellaneous
 	    return 0;
 
 	int count = 0;
+	int length = stringBuilder.length();
 
-	for(int i = 0; i < stringBuilder.length(); i++)
+	for(int i = 0; i < length; i++)
 	    if(character == stringBuilder.charAt(i))
 		count += 1;
 
@@ -491,9 +495,12 @@ public abstract class Miscellaneous
 	    return;
 	}
 
-	for(int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+	ViewGroup viewGroup = (ViewGroup) view;
+	int count = viewGroup.getChildCount();
+
+	for(int i = 0; i < count; i++)
 	{
-	    View child = ((ViewGroup) view).getChildAt(i);
+	    View child = viewGroup.getChildAt(i);
 
 	    enableChildren(child, state);
 	}

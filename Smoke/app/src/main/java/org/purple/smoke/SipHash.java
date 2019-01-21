@@ -138,13 +138,16 @@ public class SipHash
 	** Compression
 	*/
 
-	for(int i = 0; i < data.length / 8; i++)
+	int length1 = data.length / 8;
+	int length2 = C_ROUNDS[m_c_rounds_index];
+
+	for(int i = 0; i < length1; i++)
 	{
 	    long m = byteArrayToLong(data, 8 * i);
 
 	    m_v3 ^= m;
 
-	    for(int j = 0; j < C_ROUNDS[m_c_rounds_index]; j++)
+	    for(int j = 0; j < length2; j++)
 		round();
 
 	    m_v0 ^= m;
@@ -174,9 +177,10 @@ public class SipHash
 	    break;
 	}
 
+	length1 = C_ROUNDS[m_c_rounds_index];
 	m_v3 ^= b;
 
-	for(int i = 0; i < C_ROUNDS[m_c_rounds_index]; i++)
+	for(int i = 0; i < length1; i++)
 	    round();
 
 	m_v0 ^= b;
@@ -185,9 +189,10 @@ public class SipHash
 	** Finalization
 	*/
 
+	length1 = D_ROUNDS[m_d_rounds_index];
 	m_v2 ^= 0xff;
 
-	for(int i = 0; i < D_ROUNDS[m_d_rounds_index]; i++)
+	for(int i = 0; i < length1; i++)
 	    round();
 
 	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;

@@ -785,8 +785,9 @@ public class Settings extends AppCompatActivity
 	    Spinner spinner = null;
 	    TableRow row = null;
 	    TextView textView1 = null;
+	    int count = tableLayout.getChildCount();
 
-	    for(int j = 0; j < tableLayout.getChildCount(); j++)
+	    for(int j = 0; j < count; j++)
 	    {
 		TableRow r = (TableRow) tableLayout.getChildAt(j);
 
@@ -2601,13 +2602,12 @@ public class Settings extends AppCompatActivity
 
     private void showWidgets()
     {
-	for(int i = 0;
-	    i < ((ViewGroup) findViewById(R.id.linear_layout)).
-		getChildCount();
-	    i++)
+	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
+	int count = viewGroup.getChildCount();
+
+	for(int i = 0; i < count; i++)
 	{
-	    View child = ((ViewGroup) findViewById(R.id.linear_layout)).
-		getChildAt(i);
+	    View child = viewGroup.getChildAt(i);
 
 	    if(child != findViewById(R.id.neighbors_scope_id))
 		child.setVisibility(View.VISIBLE);
@@ -2957,13 +2957,12 @@ public class Settings extends AppCompatActivity
 	}
 	else
 	{
-	    for(int i = 0;
-		i < ((ViewGroup) findViewById(R.id.linear_layout)).
-		    getChildCount();
-		i++)
+	    ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
+	    int count = viewGroup.getChildCount();
+
+	    for(int i = 0; i < count; i++)
 	    {
-		View child = ((ViewGroup) findViewById(R.id.linear_layout)).
-		    getChildAt(i);
+		View child = viewGroup.getChildAt(i);
 
 		if(!(child == findViewById(R.id.password1) ||
 		     child == findViewById(R.id.password2) ||
