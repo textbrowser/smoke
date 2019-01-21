@@ -46,6 +46,7 @@ public class Smoke extends Application
     public void onCreate()
     {
 	super.onCreate();
+	About.about();
 	s_instance = this;
     }
 

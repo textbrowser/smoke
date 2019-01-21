@@ -913,7 +913,9 @@ public class Kernel
 
 	try
 	{
-	    for(int i = 0; i < m_neighbors.size(); i++)
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
 	    {
 		int j = m_neighbors.keyAt(i);
 
@@ -941,7 +943,9 @@ public class Kernel
 
 	try
 	{
-	    for(int i = 0; i < m_neighbors.size(); i++)
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
 	    {
 		int j = m_neighbors.keyAt(i);
 
@@ -1124,7 +1128,9 @@ public class Kernel
 	if(arrayList == null || arrayList.isEmpty())
 	    return false;
 
-	for(int i = 0; i < arrayList.size(); i++)
+	int size = arrayList.size();
+
+	for(int i = 0; i < size; i++)
 	    if(arrayList.get(i) != null &&
 	       arrayList.get(i).m_statusControl.toLowerCase().equals("connect"))
 		s_databaseHelper.enqueueOutboundMessage
@@ -1191,7 +1197,9 @@ public class Kernel
 	    if(m_neighbors.size() == 0)
 		return false;
 
-	    for(int i = 0; i < m_neighbors.size(); i++)
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
 	    {
 		int j = m_neighbors.keyAt(i);
 
@@ -1346,7 +1354,9 @@ public class Kernel
 				   FIRE_TIME_DELTA)
 				    return 1;
 
-				for(int i = 0; i < strings.length - 1; i++)
+				int length = strings.length;
+
+				for(int i = 0; i < length - 1; i++)
 				    strings[i] = new String
 					(Base64.decode(strings[i],
 						       Base64.NO_WRAP),
@@ -2287,7 +2297,9 @@ public class Kernel
 
 	try
 	{
-	    for(int i = 0; i < m_neighbors.size(); i++)
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
 	    {
 		int j = m_neighbors.keyAt(i);
 
@@ -2318,7 +2330,9 @@ public class Kernel
 
 	try
 	{
-	    for(int i = 0; i < m_neighbors.size(); i++)
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
 	    {
 		int j = m_neighbors.keyAt(i);
 
@@ -2345,7 +2359,9 @@ public class Kernel
 
 	try
 	{
-	    for(int i = 0; i < m_neighbors.size(); i++)
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
 	    {
 		int j = m_neighbors.keyAt(i);
 

@@ -1338,8 +1338,10 @@ public class Cryptography
 
 	try
 	{
-	    for(int i = 0; i < fingerprint.length(); i += 2)
-		if(i < fingerprint.length() - 2)
+	    int length = fingerprint.length();
+
+	    for(int i = 0; i < length; i += 2)
+		if(i < length - 2)
 		    stringBuilder.append(fingerprint, i, i + 2).
 			append(":");
 		else

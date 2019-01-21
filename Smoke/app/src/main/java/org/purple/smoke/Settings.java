@@ -1657,7 +1657,7 @@ public class Settings extends AppCompatActivity
 			(null, "always_awake", isChecked ? "true" : "false");
 
 		    TextView textView1 = (TextView) findViewById(R.id.about);
-		    textView1.setText(About.about());
+		    textView1.setText(About.s_about);
 		    textView1.append("\n");
 		    textView1.append
 			("WakeLock Locked: " +
@@ -2873,7 +2873,7 @@ public class Settings extends AppCompatActivity
 	TextView textView1 = null;
 
 	textView1 = (TextView) findViewById(R.id.about);
-	textView1.setText(About.about());
+	textView1.setText(About.s_about);
 	textView1.append("\n");
 	textView1.append
 	    ("WakeLock Locked: " +

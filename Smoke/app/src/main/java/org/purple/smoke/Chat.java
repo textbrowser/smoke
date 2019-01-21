@@ -591,8 +591,9 @@ public class Chat extends AppCompatActivity
 		    (R.id.chat_messages);
 		TableLayout tableLayout = (TableLayout) findViewById
 		    (R.id.participants);
+		int count = tableLayout.getChildCount();
 
-		for(int i = 0; i < tableLayout.getChildCount(); i++)
+		for(int i = 0; i < count; i++)
 		{
 		    TableRow row = (TableRow) tableLayout.getChildAt(i);
 
@@ -1013,7 +1014,9 @@ public class Chat extends AppCompatActivity
 		    str += new String(a);
 		}
 
-		for(int i = 0; i < tableLayout.getChildCount(); i++)
+		int count = tableLayout.getChildCount();
+
+		for(int i = 0; i < count; i++)
 		{
 		    TableRow row = (TableRow) tableLayout.getChildAt(i);
 
@@ -1207,15 +1210,22 @@ public class Chat extends AppCompatActivity
 		{
 		    stringBuilder.setLength(0);
 
-		    for(int i = 0; i < strings.length; i++)
-			if(!(strings[i].equals("optional_signatures = false") ||
-			     strings[i].equals("optional_signatures = true")))
-			{
-			    stringBuilder.append(strings[i]);
+		    int i = 0;
+		    int length = strings.length;
 
-			    if(i != strings.length - 1)
+		    for(String string : strings)
+		    {
+			if(!(string.equals("optional_signatures = false") ||
+			     string.equals("optional_signatures = true")))
+			{
+			    stringBuilder.append(string);
+
+			    if(i != length - 1)
 				stringBuilder.append(";");
 			}
+
+			i += 1;
+		    }
 
 		    if(stringBuilder.length() > 0)
 			stringBuilder.append(";");

@@ -178,9 +178,10 @@ public class Fire extends AppCompatActivity
 	fireChannel = new FireChannel(s_id, name, Fire.this, viewGroup);
 	State.getInstance().addFire(fireChannel);
 
+	int count = viewGroup.getChildCount();
 	int index = -1;
 
-	for(int i = 0; i < viewGroup.getChildCount(); i++)
+	for(int i = 0; i < count; i++)
 	{
 	    String other = State.getInstance().nameOfFireFromView
 		(viewGroup.getChildAt(i));
