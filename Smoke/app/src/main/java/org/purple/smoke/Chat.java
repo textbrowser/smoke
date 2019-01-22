@@ -903,19 +903,15 @@ public class Chat extends AppCompatActivity
 		    if(arrayList == null || arrayList.isEmpty())
 			return;
 
-		    for(String string : arrayList)
-		    {
-			final String sipHashId = string;
-
+		    for(final String string : arrayList)
 			Chat.this.runOnUiThread(new Runnable()
 			{
 			    @Override
 			    public void run()
 			    {
-				refreshCheckBox(sipHashId);
+				refreshCheckBox(string);
 			    }
 		        });
-		    }
 
 		    arrayList.clear();
 		}
