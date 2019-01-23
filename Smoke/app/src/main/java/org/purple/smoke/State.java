@@ -80,10 +80,15 @@ public class State
 	{
 	    return m_bundle.getCharSequence(key, "");
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return "";
     }
 
     public FireChannel fireChannel(String name)
@@ -110,10 +115,15 @@ public class State
 	{
 	    return m_bundle.getString(key, "");
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return "";
     }
 
     public String nameOfFireFromView(View view)
@@ -138,10 +148,15 @@ public class State
 	    return m_bundle.getChar
 		("chat_checkbox_" + String.valueOf(oid), '0') == '1';
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return false;
     }
 
     public boolean containsFire(String name)
@@ -157,10 +172,15 @@ public class State
 	{
 	    return m_bundle.getChar("is_authenticated", '0') == '1';
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return false;
     }
 
     public boolean neighborsEcho()
@@ -171,10 +191,15 @@ public class State
 	{
 	    return m_bundle.getChar("neighbors_echo", '0') == '1';
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return false;
     }
 
     public char getChar(String key)
@@ -185,10 +210,15 @@ public class State
 	{
 	    return m_bundle.getChar(key, '0');
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return '0';
     }
 
     public int chatCheckedParticipants()
@@ -199,10 +229,15 @@ public class State
 	{
 	    return m_bundle.getInt("chat_checkbox_counter", 0);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return 0;
     }
 
     public long chatSequence(String sipHashId)
@@ -213,10 +248,15 @@ public class State
 	{
 	    return m_bundle.getLong("chat_sequence" + sipHashId, 1);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.readLock().unlock();
 	}
+
+	return 0;
     }
 
     public static synchronized State getInstance()
@@ -287,6 +327,9 @@ public class State
 	{
 	    m_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.writeLock().unlock();
@@ -303,6 +346,9 @@ public class State
 		m_participants = new ArrayList<> ();
 	    else
 		m_participants.clear();
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -351,6 +397,9 @@ public class State
 
 			localBroadcastManager.sendBroadcast(intent);
 		    }
+		    catch(Exception exception)
+		    {
+		    }
 		    finally
 		    {
 			m_participantsMutex.writeLock().unlock();
@@ -370,6 +419,9 @@ public class State
 	try
 	{
 	    m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -392,6 +444,9 @@ public class State
 	try
 	{
 	    m_bundle.remove(key);
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -437,6 +492,9 @@ public class State
 	{
 	    m_bundle.putChar("is_authenticated", state ? '1' : '0');
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.writeLock().unlock();
@@ -453,6 +511,9 @@ public class State
 	{
 	    contains = m_bundle.containsKey
 		("chat_checkbox_" + String.valueOf(oid));
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -472,6 +533,9 @@ public class State
 			("chat_checkbox_counter",
 			 chatCheckedParticipants() + 1);
 	    }
+	    catch(Exception exception)
+	    {
+	    }
 	    finally
 	    {
 		m_bundleMutex.writeLock().unlock();
@@ -484,6 +548,9 @@ public class State
 	    try
 	    {
 		m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+	    }
+	    catch(Exception exception)
+	    {
 	    }
 	    finally
 	    {
@@ -503,6 +570,9 @@ public class State
 		{
 		    m_bundle.putInt("chat_checkbox_counter", counter);
 		}
+		catch(Exception exception)
+		{
+		}
 		finally
 		{
 		    m_bundleMutex.writeLock().unlock();
@@ -519,6 +589,9 @@ public class State
 	{
 	    m_bundle.putChar("neighbors_echo", state ? '1' : '0');
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_bundleMutex.writeLock().unlock();
@@ -532,6 +605,9 @@ public class State
 	try
 	{
 	    m_bundle.putString(key, value);
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{

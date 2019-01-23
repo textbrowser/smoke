@@ -222,10 +222,15 @@ public class Cryptography
 	    else
 		return "";
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
 	}
+
+	return "";
     }
 
     public String fancyKeyInformationOutput(KeyPair keyPair)
@@ -339,6 +344,9 @@ public class Cryptography
 		    m_chatEncryptionPublicKeyPair.getPublic().hashCode())
 		return true;
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
@@ -361,6 +369,9 @@ public class Cryptography
 	    else if(key.hashCode() ==
 		    m_chatSignaturePublicKeyPair.getPublic().hashCode())
 		return true;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -497,10 +508,15 @@ public class Cryptography
 	    return sha512
 		(m_chatEncryptionPublicKeyPair.getPublic().getEncoded());
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
 	}
+
+	return null;
     }
 
     public byte[] decryptWithSipHashKey(byte data[])
@@ -530,6 +546,10 @@ public class Cryptography
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal
 		    (Arrays.copyOfRange(data, 16, data.length));
+	    }
+	    catch(Exception exception)
+	    {
+		return null;
 	    }
 	    finally
 	    {
@@ -599,6 +619,10 @@ public class Cryptography
 		bytes = cipher.doFinal(data);
 		bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	    }
+	    catch(Exception exception)
+	    {
+		return null;
+	    }
 	    finally
 	    {
 		m_encryptionKeyMutex.readLock().unlock();
@@ -616,6 +640,10 @@ public class Cryptography
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
 		bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
+	    }
+	    catch(Exception exception)
+	    {
+		return null;
 	    }
 	    finally
 	    {
@@ -854,6 +882,10 @@ public class Cryptography
 		digest2 = mac.doFinal
 		    (Arrays.copyOf(data, data.length - 512 / 8));
 	    }
+	    catch(Exception exception)
+	    {
+		return null;
+	    }
 	    finally
 	    {
 		m_macKeyMutex.readLock().unlock();
@@ -887,6 +919,10 @@ public class Cryptography
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal
 		    (Arrays.copyOfRange(data, 16, data.length - 512 / 8));
+	    }
+	    catch(Exception exception)
+	    {
+		bytes = null;
 	    }
 	    finally
 	    {
@@ -1103,10 +1139,15 @@ public class Cryptography
 	    else
 		return 0;
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
 	}
+
+	return 0;
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
@@ -1804,6 +1845,9 @@ public class Cryptography
 				byteArrayAsHexStringDelimited(bytes, '-', 4).
 				toUpperCase().getBytes()));
 		}
+		catch(Exception exception)
+		{
+		}
 		finally
 		{
 		    m_sipHashIdDigestMutex.writeLock().unlock();
@@ -1816,6 +1860,9 @@ public class Cryptography
 		    m_sipHashId = Miscellaneous.
 			byteArrayAsHexStringDelimited(bytes, '-', 4).
 			toUpperCase();
+		}
+		catch(Exception exception)
+		{
 		}
 		finally
 		{
@@ -1899,6 +1946,9 @@ public class Cryptography
 
 	    m_ozoneEncryptionKey = null;
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_ozoneEncryptionKeyMutex.writeLock().unlock();
@@ -1912,6 +1962,9 @@ public class Cryptography
 		Arrays.fill(m_ozoneMacKey, (byte) 0);
 
 	    m_ozoneMacKey = null;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -1927,6 +1980,9 @@ public class Cryptography
 
 	    m_sipHashEncryptionKey = null;
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_sipHashEncryptionKeyMutex.writeLock().unlock();
@@ -1940,6 +1996,9 @@ public class Cryptography
 		Arrays.fill(m_sipHashIdDigest, (byte) 0);
 
 	    m_sipHashIdDigest = null;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -1965,6 +2024,9 @@ public class Cryptography
 		Arrays.fill(m_sipHashMacKey, (byte) 0);
 
 	    m_sipHashMacKey = null;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2016,6 +2078,9 @@ public class Cryptography
 
 	    m_ozoneEncryptionKey = null;
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_ozoneEncryptionKeyMutex.writeLock().unlock();
@@ -2029,6 +2094,9 @@ public class Cryptography
 		Arrays.fill(m_ozoneMacKey, (byte) 0);
 
 	    m_ozoneMacKey = null;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2044,6 +2112,9 @@ public class Cryptography
 
 	    m_sipHashEncryptionKey = null;
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    m_sipHashEncryptionKeyMutex.writeLock().unlock();
@@ -2057,6 +2128,9 @@ public class Cryptography
 		Arrays.fill(m_sipHashIdDigest, (byte) 0);
 
 	    m_sipHashIdDigest = null;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2082,6 +2156,9 @@ public class Cryptography
 		Arrays.fill(m_sipHashMacKey, (byte) 0);
 
 	    m_sipHashMacKey = null;
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{
@@ -2114,6 +2191,10 @@ public class Cryptography
 	    m_chatEncryptionPublicKeyPair = generatePrivatePublicKeyPair
 		(algorithm, privateBytes, publicBytes);
 	}
+	catch(Exception exception)
+	{
+	    m_chatEncryptionPublicKeyPair = null;
+	}
 	finally
 	{
 	    m_chatEncryptionPublicKeyPairMutex.writeLock().unlock();
@@ -2144,6 +2225,10 @@ public class Cryptography
 	{
 	    m_chatSignaturePublicKeyPair = generatePrivatePublicKeyPair
 		(algorithm, privateBytes, publicBytes);
+	}
+	catch(Exception exception)
+	{
+	    m_chatSignaturePublicKeyPair = null;
 	}
 	finally
 	{

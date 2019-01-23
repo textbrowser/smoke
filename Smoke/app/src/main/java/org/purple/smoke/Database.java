@@ -2267,6 +2267,9 @@ public class Database extends SQLiteOpenHelper
 		    cursor.close();
 	    }
 	}
+	catch(Exception exception)
+	{
+	}
 	finally
 	{
 	    s_congestionControlMutex.readLock().unlock();
@@ -2436,6 +2439,9 @@ public class Database extends SQLiteOpenHelper
 	    {
 		m_db.endTransaction();
 	    }
+	}
+	catch(Exception exception)
+	{
 	}
 	finally
 	{

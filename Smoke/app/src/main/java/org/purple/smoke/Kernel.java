@@ -74,6 +74,7 @@ public class Kernel
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
+    private final Object m_callSchedulerObject = new Object();
     private final Object m_messagesToSendSchedulerObject = new Object();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
@@ -276,6 +277,35 @@ public class Kernel
 		{
 		    try
 		    {
+			boolean empty = false;
+
+			m_callQueueMutex.readLock().lock();
+
+			try
+			{
+			    empty = m_callQueue.isEmpty();
+			}
+			catch(Exception exception)
+			{
+			    empty = false;
+			}
+			finally
+			{
+			    m_callQueueMutex.readLock().unlock();
+			}
+
+			if(empty)
+			    synchronized(m_callSchedulerObject)
+			    {
+				try
+				{
+				    m_callSchedulerObject.wait();
+				}
+				catch(Exception exception)
+				{
+				}
+			    }
+
 			ParticipantCall participantCall = null;
 			String sipHashId = "";
 
@@ -884,25 +914,22 @@ public class Kernel
 		@Override
 		public void run()
 		{
+		    m_chatMessageRetrievalIdentityMutex.writeLock().lock();
+
 		    try
 		    {
-			m_chatMessageRetrievalIdentityMutex.writeLock().lock();
-
-			try
-			{
-			    if(System.currentTimeMillis() -
-			       m_chatTemporaryIdentityLastTick.get() >
-			       TEMPORARY_IDENTITY_LIFETIME)
-				m_chatMessageRetrievalIdentity = null;
-			}
-			finally
-			{
-			    m_chatMessageRetrievalIdentityMutex.writeLock().
-				unlock();
-			}
+			if(System.currentTimeMillis() -
+			   m_chatTemporaryIdentityLastTick.get() >
+			   TEMPORARY_IDENTITY_LIFETIME)
+			    m_chatMessageRetrievalIdentity = null;
 		    }
 		    catch(Exception exception)
 		    {
+		    }
+		    finally
+		    {
+			m_chatMessageRetrievalIdentityMutex.writeLock().
+			    unlock();
 		    }
 
 		    if(System.currentTimeMillis() -
@@ -1047,10 +1074,10 @@ public class Kernel
 
     public String fireIdentities()
     {
+	m_fireStreamsMutex.readLock().lock();
+
 	try
 	{
-	    m_fireStreamsMutex.readLock().lock();
-
 	    if(!m_fireStreams.isEmpty())
 	    {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -1123,6 +1150,11 @@ public class Kernel
 	finally
 	{
 	    m_callQueueMutex.writeLock().unlock();
+	}
+
+	synchronized(m_callSchedulerObject)
+	{
+	    m_callSchedulerObject.notify();
 	}
 
 	return true;
@@ -1411,6 +1443,9 @@ public class Kernel
 		    }
 		}
 	    }
+	    catch(Exception exception)
+	    {
+	    }
 	    finally
 	    {
 		m_fireStreamsMutex.readLock().unlock();
@@ -1513,6 +1548,9 @@ public class Kernel
 			    (System.currentTimeMillis());
 			ourMessageViaChatTemporaryIdentity = true;
 		    }
+	    }
+	    catch(Exception exception)
+	    {
 	    }
 	    finally
 	    {
@@ -2085,6 +2123,9 @@ public class Kernel
 			{
 			    participantCall = m_callQueue.get(array[1]);
 			}
+			catch(Exception exception)
+			{
+			}
 			finally
 			{
 			    m_callQueueMutex.readLock().unlock();
@@ -2264,8 +2305,7 @@ public class Kernel
 	try
 	{
 	    if(m_callQueue.containsKey(sipHashId))
-		return
-		    Math.abs
+		return Math.abs
 		    (CALL_LIFETIME / 1000 - (System.nanoTime() -
 					     m_callQueue.get(sipHashId).
 					     m_startTime) / 1000000000);
