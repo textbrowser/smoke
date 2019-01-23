@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -358,7 +359,8 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
-		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+		 Cryptography.
+		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
 		(pk, aes256, sha512, destination);
@@ -427,7 +429,7 @@ public class Messages
 	    */
 
 	    stringBuilder.append
-		(Base64.encodeToString(message.getBytes("UTF-8"),
+		(Base64.encodeToString(message.getBytes(StandardCharsets.UTF_8),
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
@@ -538,7 +540,10 @@ public class Messages
 		    ** before the message is created.
 		    */
 
-		    (pk, aes256, sha512, sipHashId.getBytes("UTF-8"));
+		    (pk,
+		     aes256,
+		     sha512,
+		     sipHashId.getBytes(StandardCharsets.UTF_8));
 	}
 	catch(Exception exception)
 	{
@@ -726,7 +731,8 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
-		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+		 Cryptography.
+		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
 		(pk, aes256, sha512, destination);
@@ -857,7 +863,8 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(aes256, sha512),
-		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+		 Cryptography.
+		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays(aes256, sha512, destination);
 	}
@@ -962,7 +969,8 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(aes256, sha512),
-		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+		 Cryptography.
+		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays(aes256, sha512, destination);
 	}
@@ -995,26 +1003,29 @@ public class Messages
 
 	    stringBuilder.append
 		(Base64.
-		 encodeToString(FIRE_CHAT_MESSAGE_TYPE.getBytes("ISO-8859-1"),
+		 encodeToString(FIRE_CHAT_MESSAGE_TYPE.
+				getBytes(StandardCharsets.ISO_8859_1),
 				Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
 	    if(name.trim().isEmpty())
 		stringBuilder.append
-		    (Base64.encodeToString("unknown".getBytes("UTF-8"),
+		    (Base64.encodeToString("unknown".
+					   getBytes(StandardCharsets.UTF_8),
 					   Base64.NO_WRAP));
 	    else
 		stringBuilder.append
-		    (Base64.encodeToString(name.trim().getBytes("UTF-8"),
+		    (Base64.encodeToString(name.trim().
+					   getBytes(StandardCharsets.UTF_8),
 					   Base64.NO_WRAP));
 
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(id.getBytes("ISO-8859-1"),
+		(Base64.encodeToString(id.getBytes(StandardCharsets.ISO_8859_1),
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(message.getBytes("UTF-8"),
+		(Base64.encodeToString(message.getBytes(StandardCharsets.UTF_8),
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
@@ -1025,10 +1036,11 @@ public class Messages
 		(Base64.
 		 encodeToString(s_fireSimpleDateFormat.
 				format(new Date(System.currentTimeMillis())).
-				getBytes("ISO-8859-1"), Base64.NO_WRAP));
+				getBytes(StandardCharsets.ISO_8859_1),
+				Base64.NO_WRAP));
 
 	    byte aes256[] = Cryptography.encryptFire
-		(stringBuilder.toString().getBytes("ISO-8859-1"),
+		(stringBuilder.toString().getBytes(StandardCharsets.ISO_8859_1),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
 	    if(aes256 == null)
@@ -1063,7 +1075,8 @@ public class Messages
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(destination, Base64.NO_WRAP));
-	    return stringBuilder.toString().getBytes("ISO-8859-1");
+	    return stringBuilder.toString().getBytes
+		(StandardCharsets.ISO_8859_1);
 	}
 	catch(Exception exception)
 	{
@@ -1093,22 +1106,25 @@ public class Messages
 
 	    stringBuilder.append
 		(Base64.
-		 encodeToString(FIRE_STATUS_MESSAGE_TYPE.getBytes("ISO-8859-1"),
+		 encodeToString(FIRE_STATUS_MESSAGE_TYPE.
+				getBytes(StandardCharsets.ISO_8859_1),
 				Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
 	    if(name.trim().isEmpty())
 		stringBuilder.append
-		    (Base64.encodeToString("unknown".getBytes("UTF-8"),
+		    (Base64.encodeToString("unknown".
+					   getBytes(StandardCharsets.UTF_8),
 					   Base64.NO_WRAP));
 	    else
 		stringBuilder.append
-		    (Base64.encodeToString(name.trim().getBytes("UTF-8"),
+		    (Base64.encodeToString(name.trim().
+					   getBytes(StandardCharsets.UTF_8),
 					   Base64.NO_WRAP));
 
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(id.getBytes("ISO-8859-1"),
+		(Base64.encodeToString(id.getBytes(StandardCharsets.ISO_8859_1),
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
@@ -1119,10 +1135,11 @@ public class Messages
 		(Base64.
 		 encodeToString(s_fireSimpleDateFormat.
 				format(new Date(System.currentTimeMillis())).
-				getBytes("ISO-8859-1"), Base64.NO_WRAP));
+				getBytes(StandardCharsets.ISO_8859_1),
+				Base64.NO_WRAP));
 
 	    byte aes256[] = Cryptography.encryptFire
-		(stringBuilder.toString().getBytes("ISO-8859-1"),
+		(stringBuilder.toString().getBytes(StandardCharsets.ISO_8859_1),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
 	    if(aes256 == null)
@@ -1157,7 +1174,8 @@ public class Messages
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(destination, Base64.NO_WRAP));
-	    return stringBuilder.toString().getBytes("ISO-8859-1");
+	    return stringBuilder.toString().
+		getBytes(StandardCharsets.ISO_8859_1);
 	}
 	catch(Exception exception)
 	{
@@ -1258,7 +1276,8 @@ public class Messages
 
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
-		 Cryptography.sha512(sipHashId.getBytes("UTF-8")));
+		 Cryptography.
+		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
 		(pk, aes256, sha512, destination);
@@ -1296,13 +1315,13 @@ public class Messages
 		 ** [ Destination SipHash Identity ]
 		 */
 
-		 cryptography.sipHashId().getBytes("UTF-8"),
+		 cryptography.sipHashId().getBytes(StandardCharsets.UTF_8),
 
 		 /*
 		 ** [ Requested SipHash Identity ]
 		 */
 
-		 requestedSipHashId.getBytes("UTF-8"));
+		 requestedSipHashId.getBytes(StandardCharsets.UTF_8));
 
 	    /*
 	    ** [ AES-256 ]
@@ -1360,7 +1379,7 @@ public class Messages
 		 ** [ SipHash Identity ]
 		 */
 
-		 sipHashId.getBytes("UTF-8"),
+		 sipHashId.getBytes(StandardCharsets.UTF_8),
 
 		 /*
 		 ** [ Temporary Identity ]

@@ -63,6 +63,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
@@ -742,8 +743,9 @@ public class MemberChat extends AppCompatActivity
 			    if(!string.isEmpty())
 			    {
 				byte bytes[] = Cryptography.pbkdf2
-				    (Cryptography.sha512(string.
-							 getBytes("UTF-8")),
+				    (Cryptography.
+				     sha512(string.getBytes(StandardCharsets.
+							    UTF_8)),
 				     string.toCharArray(),
 				     Chat.CUSTOM_SESSION_ITERATION_COUNT,
 				     160); // SHA-1
@@ -753,8 +755,10 @@ public class MemberChat extends AppCompatActivity
 
 				if(bytes != null)
 				    bytes = Cryptography.pbkdf2
-					(Cryptography.sha512(string.
-							     getBytes("UTF-8")),
+					(Cryptography.
+					 sha512(string.
+						getBytes(StandardCharsets.
+							 UTF_8)),
 					 new String(bytes).toCharArray(),
 					 1,
 					 96 * 8); // AES-256, SHA-512

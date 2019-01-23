@@ -67,6 +67,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -204,7 +205,8 @@ public class Settings extends AppCompatActivity
 	{
 	    if(!string.trim().isEmpty())
 	    {
-		salt = Cryptography.sha512(string.trim().getBytes("UTF-8"));
+		salt = Cryptography.sha512
+		    (string.trim().getBytes(StandardCharsets.UTF_8));
 
 		if(salt != null)
 		    bytes = Cryptography.pbkdf2

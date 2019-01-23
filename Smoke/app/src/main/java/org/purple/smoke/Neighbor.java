@@ -31,6 +31,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -431,9 +432,10 @@ public abstract class Neighbor
 
 	    stringBuilder.append(Kernel.getInstance().fireIdentities());
 	    stringBuilder.append
-		(Messages.identityMessage(Cryptography.
-					  sha512(m_cryptography.sipHashId().
-						 getBytes("UTF-8"))));
+		(Messages.
+		 identityMessage(Cryptography.
+				 sha512(m_cryptography.sipHashId().
+					getBytes(StandardCharsets.UTF_8))));
 	    return stringBuilder.toString();
 	}
 	catch(Exception exception)
