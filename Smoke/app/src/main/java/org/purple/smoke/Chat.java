@@ -57,6 +57,7 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1119,7 +1120,9 @@ public class Chat extends AppCompatActivity
 				{
 				    byte bytes[] = Cryptography.pbkdf2
 					(Cryptography.
-					 sha512(string.getBytes("UTF-8")),
+					 sha512(string.
+						getBytes(StandardCharsets.
+							 UTF_8)),
 					 string.toCharArray(),
 					 CUSTOM_SESSION_ITERATION_COUNT,
 					 160); // SHA-1
@@ -1127,7 +1130,9 @@ public class Chat extends AppCompatActivity
 				    if(bytes != null)
 					bytes = Cryptography.pbkdf2
 					    (Cryptography.
-					     sha512(string.getBytes("UTF-8")),
+					     sha512(string.
+						    getBytes(StandardCharsets.
+							     UTF_8)),
 					     new String(bytes).toCharArray(),
 					     1,
 					     96 * 8); // AES-256, SHA-512

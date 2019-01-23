@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -443,7 +444,7 @@ public class Cryptography
 
 	    try
 	    {
-		salt = sha512(m_sipHashId.getBytes("UTF-8"));
+		salt = sha512(m_sipHashId.getBytes(StandardCharsets.UTF_8));
 		temporary = pbkdf2(salt,
 				   m_sipHashId.toCharArray(),
 				   SIPHASH_STREAM_CREATION_ITERATION_COUNT,
@@ -666,8 +667,9 @@ public class Cryptography
 	{
 	    salt = sha512
 		(Miscellaneous.
-		 joinByteArrays(digest.getBytes("ISO-8859-1"),
-				"sha384".getBytes("ISO-8859-1")));
+		 joinByteArrays(digest.getBytes(StandardCharsets.ISO_8859_1),
+				"sha384".getBytes(StandardCharsets.
+						  ISO_8859_1)));
 	}
 	catch(Exception exception)
 	{
@@ -684,7 +686,8 @@ public class Cryptography
 	{
 	    stream = pbkdf2
 		(salt,
-		 new String(digest.getBytes("UTF-8")).toCharArray(),
+		 new String(digest.
+			    getBytes(StandardCharsets.UTF_8)).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
 		 896);
 	}
@@ -702,7 +705,7 @@ public class Cryptography
 
 	try
 	{
-	    aes256 = "aes256".getBytes("ISO-8859-1"); // Latin-1.
+	    aes256 = "aes256".getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
 	}
 	catch(Exception exception)
 	{
@@ -713,7 +716,7 @@ public class Cryptography
 
 	try
 	{
-	    c = channel.getBytes("ISO-8859-1"); // Latin-1.
+	    c = channel.getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
 	}
 	catch(Exception exception)
 	{
@@ -724,7 +727,7 @@ public class Cryptography
 
 	try
 	{
-	    s = salt.getBytes("ISO-8859-1"); // Latin-1.
+	    s = salt.getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
 	}
 	catch(Exception exception)
 	{
@@ -735,7 +738,7 @@ public class Cryptography
 
 	try
 	{
-	    sha384 = "sha384".getBytes("ISO-8859-1"); // Latin-1.
+	    sha384 = "sha384".getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
 	}
 	catch(Exception exception)
 	{
@@ -754,7 +757,7 @@ public class Cryptography
 		(s,
 		 new String(new String(Miscellaneous.
 				       joinByteArrays(c, aes256, sha384)).
-			    getBytes("UTF-8")).toCharArray(),
+			    getBytes(StandardCharsets.UTF_8)).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
 		 2304);
 
