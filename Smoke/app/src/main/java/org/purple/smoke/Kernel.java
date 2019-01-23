@@ -40,6 +40,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -519,7 +520,8 @@ public class Kernel
 					 messageElement.m_attachment,
 					 Cryptography.
 					 sha512(messageElement.m_id.
-						getBytes("UTF-8")),
+						getBytes(StandardCharsets.
+							 UTF_8)),
 					 messageElement.m_keyStream,
 					 messageElement.m_messageIdentity,
 					 State.getInstance().
@@ -1403,7 +1405,7 @@ public class Kernel
 				    strings[i] = new String
 					(Base64.decode(strings[i],
 						       Base64.NO_WRAP),
-					 "UTF-8");
+					 StandardCharsets.UTF_8);
 
 				value = s_congestionSipHash.hmac
 				    (("fire" +
@@ -1510,7 +1512,8 @@ public class Kernel
 		    Intent intent = new Intent
 			("org.purple.smoke.siphash_share_confirmation");
 		    String sipHashId = new String
-			(Arrays.copyOfRange(aes256, 9, 9 + 19), "UTF-8");
+			(Arrays.copyOfRange(aes256, 9, 9 + 19),
+			 StandardCharsets.UTF_8);
 
 		    intent.putExtra("org.purple.smoke.sipHashId", sipHashId);
 		    sendBroadcast(intent);
@@ -1591,7 +1594,7 @@ public class Kernel
 		    */
 
 		    byte salt[] = Cryptography.sha512
-			(sipHashId.trim().getBytes("UTF-8"));
+			(sipHashId.trim().getBytes(StandardCharsets.UTF_8));
 		    byte temporary[] = Cryptography.
 			pbkdf2(salt,
 			       sipHashId.toCharArray(),
@@ -1854,7 +1857,7 @@ public class Kernel
 		    case 1:
 			message = new String
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
-			     "UTF-8").trim();
+			     StandardCharsets.UTF_8).trim();
 			ii += 1;
 			break;
 		    case 2:
