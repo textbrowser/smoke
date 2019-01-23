@@ -37,7 +37,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
-import android.util.Log;
 import android.util.SparseArray;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
