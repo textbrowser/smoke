@@ -74,6 +74,7 @@ public class Kernel
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
+    private final Object m_messagesToSendSchedulerObject = new Object();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
@@ -412,6 +413,17 @@ public class Kernel
 		{
 		    try
 		    {
+			synchronized(m_messagesToSendSchedulerObject)
+			{
+			    try
+			    {
+				m_messagesToSendSchedulerObject.wait();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+			}
+
 			while(true)
 			{
 			    MessageElement messageElement = null;
@@ -421,8 +433,7 @@ public class Kernel
 			    try
 			    {
 				if(!m_messagesToSend.isEmpty())
-				    messageElement = m_messagesToSend.
-					remove(0);
+				    messageElement = m_messagesToSend.remove(0);
 				else
 				    break;
 			    }
@@ -2406,6 +2417,11 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	synchronized(m_messagesToSendSchedulerObject)
+	{
+	    m_messagesToSendSchedulerObject.notify();
+	}
     }
 
     public void enqueueFireMessage(String message, String id, String name)
@@ -2448,6 +2464,11 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
+	}
+
+	synchronized(m_messagesToSendSchedulerObject)
+	{
+	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
@@ -2492,6 +2513,11 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	synchronized(m_messagesToSendSchedulerObject)
+	{
+	    m_messagesToSendSchedulerObject.notify();
+	}
     }
 
     public void enqueueShareSipHashIdMessage(int oid)
@@ -2513,6 +2539,11 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
+	}
+
+	synchronized(m_messagesToSendSchedulerObject)
+	{
+	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
@@ -2561,6 +2592,11 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	synchronized(m_messagesToSendSchedulerObject)
+	{
+	    m_messagesToSendSchedulerObject.notify();
+	}
     }
 
     public void retrieveChatMessages(String sipHashId)
@@ -2582,6 +2618,11 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
+	}
+
+	synchronized(m_messagesToSendSchedulerObject)
+	{
+	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
