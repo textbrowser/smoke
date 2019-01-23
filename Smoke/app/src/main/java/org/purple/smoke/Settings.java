@@ -2644,7 +2644,7 @@ public class Settings extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }
 
