@@ -144,7 +144,7 @@ public class FireChannel extends View
 				    try
 				    {
 					participant = m_participants.
-					    get((String) textView1.
+					    get(textView1.
 						getTag(R.id.participants));
 				    }
 				    catch(Exception exception)
@@ -162,7 +162,7 @@ public class FireChannel extends View
 					try
 					{
 					    m_participants.remove
-						((String) textView1.
+						(textView1.
 						 getTag(R.id.participants));
 					}
 					catch(Exception exception)
