@@ -431,12 +431,6 @@ public class FireChannel extends View
 	});
     }
 
-    @Override
-    protected void onDraw(Canvas canvas)
-    {
-	super.onDraw(canvas);
-    }
-
     public FireChannel(String id,
 		       String name,
 		       Context context,
