@@ -53,7 +53,6 @@ public class ChatBubble extends View
 {
     private Context m_context = null;
     private Date m_date = new Date(System.currentTimeMillis());
-    private LayoutInflater m_inflater = null;
     private View m_view = null;
     private boolean m_error = false;
     private boolean m_fromSmokeStack = false;
@@ -73,9 +72,11 @@ public class ChatBubble extends View
     {
 	super(context);
 	m_context = context;
-	m_inflater = (LayoutInflater) m_context.getSystemService
+
+	LayoutInflater inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
-	m_view = m_inflater.inflate(R.layout.chat_bubble, viewGroup, false);
+
+	m_view = inflater.inflate(R.layout.chat_bubble, viewGroup, false);
 	m_view.findViewById(R.id.image).setVisibility(View.GONE);
 	m_view.findViewById(R.id.message_read).setVisibility(View.INVISIBLE);
 	m_view.findViewById(R.id.message_sent).setVisibility(View.INVISIBLE);

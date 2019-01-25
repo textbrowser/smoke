@@ -131,8 +131,6 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
-    private ScheduledExecutorService m_connectionStatusScheduler = null;
-    private ScheduledExecutorService m_statusScheduler = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -826,9 +824,8 @@ public class Chat extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	m_connectionStatusScheduler = Executors.
-	    newSingleThreadScheduledExecutor();
-	m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
+	Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate
+	    (new Runnable()
         {
 	    @Override
 	    public void run()
@@ -885,8 +882,8 @@ public class Chat extends AppCompatActivity
 	}, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
-	m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
-	m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate
+	    (new Runnable()
         {
 	    @Override
 	    public void run()

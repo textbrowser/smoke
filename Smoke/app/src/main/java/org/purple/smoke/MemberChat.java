@@ -187,7 +187,6 @@ public class MemberChat extends AppCompatActivity
     private RecyclerView.Adapter<?> m_adapter = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
-    private String m_mySipHashId = "";
     private String m_name = "0000-0000-0000-0000";
     private String m_sipHashId = m_name;
     private boolean m_receiverRegistered = false;
@@ -615,7 +614,6 @@ public class MemberChat extends AppCompatActivity
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_layoutManager.setReverseLayout(true);
 	m_layoutManager.setStackFromEnd(true);
-	m_mySipHashId = s_cryptography.sipHashId();
 	m_name = m_sipHashId = State.getInstance().getString
 	    ("member_chat_siphash_id");
 
