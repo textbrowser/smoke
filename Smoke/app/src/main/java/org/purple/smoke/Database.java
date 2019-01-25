@@ -3212,38 +3212,6 @@ public class Database extends SQLiteOpenHelper
 	return oid;
     }
 
-    public long count(String table)
-    {
-	if(m_db == null)
-	    return -1;
-
-	Cursor cursor = null;
-	long c = 0;
-
-	try
-	{
-	    StringBuilder stringBuilder = new StringBuilder();
-
-	    stringBuilder.append("SELECT COUNT(*) FROM ");
-	    stringBuilder.append(table);
-	    cursor = m_db.rawQuery(stringBuilder.toString(), null);
-
-	    if(cursor != null && cursor.moveToFirst())
-		c = cursor.getLong(0);
-	}
-	catch(Exception exception)
-	{
-	    c = -1;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return c;
-    }
-
     public long countOfMessages(Cryptography cryptography, String sipHashId)
     {
 	if(cryptography == null || m_db == null)
