@@ -1324,9 +1324,6 @@ public class Database extends SQLiteOpenHelper
 		m_readMemberChatCursor = null;
 		m_readMemberChatSipHashId = "";
 	    }
-	    finally
-	    {
-	    }
 	}
 
 	return memberChatElement;
