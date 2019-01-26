@@ -322,7 +322,6 @@ public class TcpNeighbor extends Neighbor
 		m_proxyInetSocketAddress = null;
 	    }
 
-	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    private boolean m_error = false;

@@ -46,12 +46,15 @@ public abstract class Neighbor
 {
     private ArrayList<String> m_echoQueue = null;
     private ArrayList<String> m_queue = null;
-    private ScheduledExecutorService m_parsingScheduler = null;
-    private ScheduledExecutorService m_scheduler = null;
-    private ScheduledExecutorService m_sendOutboundScheduler = null;
     private UUID m_uuid = null;
     private final Object m_echoQueueMutex = new Object();
     private final Object m_queueMutex = new Object();
+    private final ScheduledExecutorService m_parsingScheduler =
+	Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService m_scheduler =
+	Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService m_sendOutboundScheduler =
+	Executors.newSingleThreadScheduledExecutor();
     private final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB
     private final static int LANE_WIDTH = 32 * 1024 * 1024; // 32 MiB
     private final static long PARSING_INTERVAL = 100; // Milliseconds
@@ -67,7 +70,8 @@ public abstract class Neighbor
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
-    protected ScheduledExecutorService m_readSocketScheduler = null;
+    protected final ScheduledExecutorService m_readSocketScheduler =
+	Executors.newSingleThreadScheduledExecutor();
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
@@ -141,10 +145,7 @@ public abstract class Neighbor
 	m_ipPort = ipPort;
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
-	m_parsingScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_queue = new ArrayList<> ();
-	m_scheduler = Executors.newSingleThreadScheduledExecutor();
-	m_sendOutboundScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_startTime = new AtomicLong(System.nanoTime());
 	m_uuid = UUID.randomUUID();
 	m_version = version;

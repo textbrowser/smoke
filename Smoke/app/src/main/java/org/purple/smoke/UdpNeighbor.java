@@ -210,7 +210,6 @@ public class UdpNeighbor extends Neighbor
     {
 	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
 
-	m_readSocketScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    private boolean m_error = false;
