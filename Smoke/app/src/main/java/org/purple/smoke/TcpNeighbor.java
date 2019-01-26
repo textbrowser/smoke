@@ -34,7 +34,6 @@ import java.net.Proxy;
 import java.net.Socket;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.HandshakeCompletedEvent;

@@ -31,7 +31,6 @@ import java.io.ByteArrayOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class UdpNeighbor extends Neighbor

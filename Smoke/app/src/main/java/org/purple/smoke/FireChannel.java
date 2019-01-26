@@ -29,7 +29,6 @@ package org.purple.smoke;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Spannable;
@@ -145,7 +144,8 @@ public class FireChannel extends View
 				    {
 					participant = m_participants.
 					    get(textView1.
-						getTag(R.id.participants));
+						getTag(R.id.participants).
+						toString());
 				    }
 				    catch(Exception exception)
 				    {
@@ -163,7 +163,8 @@ public class FireChannel extends View
 					{
 					    m_participants.remove
 						(textView1.
-						 getTag(R.id.participants));
+						 getTag(R.id.participants).
+						 toString());
 					}
 					catch(Exception exception)
 					{
