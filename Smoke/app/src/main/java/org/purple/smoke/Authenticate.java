@@ -178,6 +178,8 @@ public class Authenticate extends AppCompatActivity
 
 			try
 			{
+			    m_databaseHelper.cleanDanglingOutboundQueued();
+			    m_databaseHelper.cleanDanglingParticipants();
 			    encryptionKey = Cryptography.generateEncryptionKey
 				(m_encryptionSalt,
 				 m_password.toCharArray(),
@@ -499,8 +501,6 @@ public class Authenticate extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
-	m_databaseHelper.cleanDanglingOutboundQueued();
-	m_databaseHelper.cleanDanglingParticipants();
         setContentView(R.layout.activity_authenticate);
 
 	try

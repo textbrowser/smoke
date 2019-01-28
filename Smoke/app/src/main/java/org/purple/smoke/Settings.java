@@ -437,8 +437,6 @@ public class Settings extends AppCompatActivity
 			if(m_databaseHelper.
 			   deleteEntry(String.valueOf(oid), "neighbors"))
 			{
-			    m_databaseHelper.cleanDanglingOutboundQueued();
-
 			    /*
 			    ** Prepare the kernel's neighbors container
 			    ** if a neighbor was deleted as the OID
@@ -2639,6 +2637,8 @@ public class Settings extends AppCompatActivity
 			Settings.this.runOnUiThread
 			    (new PopulateNeighbors(m_databaseHelper.
 			     readNeighbors(s_cryptography)));
+			m_databaseHelper.cleanDanglingOutboundQueued();
+			m_databaseHelper.cleanDanglingParticipants();
 		    }
 		    catch(Exception exception)
 		    {
@@ -2734,7 +2734,7 @@ public class Settings extends AppCompatActivity
 		(null, "automatic_neighbors_refresh", "true");
 	}
 	else if(m_databaseHelper.
-	   readSetting(null, "automatic_neighbors_refresh").equals("true"))
+		readSetting(null, "automatic_neighbors_refresh").equals("true"))
 	    checkBox1.setChecked(true);
 	else
 	    checkBox1.setChecked(false);
@@ -2748,8 +2748,8 @@ public class Settings extends AppCompatActivity
 
 	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
 
-	if(m_databaseHelper.
-	   readSetting(null, "neighbors_details").equals("true"))
+	if(m_databaseHelper.readSetting(null, "neighbors_details").
+	   equals("true"))
 	    checkBox1.setChecked(true);
 	else
 	    checkBox1.setChecked(false);
@@ -2939,8 +2939,6 @@ public class Settings extends AppCompatActivity
 	if(spinner1.getAdapter().getCount() > 1)
 	    spinner1.setSelection(1); // RSA
 
-	m_databaseHelper.cleanDanglingOutboundQueued();
-	m_databaseHelper.cleanDanglingParticipants();
 	populateFancyKeyData();
 
 	if(isAuthenticated)
@@ -3036,8 +3034,6 @@ public class Settings extends AppCompatActivity
 					("member_chat_oid", "");
 				    State.getInstance().setString
 					("member_chat_siphash_id", "");
-				    m_databaseHelper.
-					cleanDanglingParticipants();
 				    m_databaseHelper.writeSetting
 					(s_cryptography,
 					 "member_chat_oid", "");
