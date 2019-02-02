@@ -57,6 +57,7 @@ public abstract class Neighbor
 	Executors.newSingleThreadScheduledExecutor();
     private final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB
     private final static int LANE_WIDTH = 32 * 1024 * 1024; // 32 MiB
+    private final static long DATA_LIFETIME = 15000; // 15 Seconds
     private final static long PARSING_INTERVAL = 100; // Milliseconds
     private final static long SEND_OUTBOUND_TIMER_INTERVAL =
 	200; // Milliseconds
@@ -66,6 +67,7 @@ public abstract class Neighbor
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
+    protected AtomicLong m_lastParsed = null;
     protected AtomicLong m_lastTimeRead = null;
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
@@ -143,6 +145,7 @@ public abstract class Neighbor
 	m_echoQueue = new ArrayList<> ();
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
+	m_lastParsed = new AtomicLong(System.currentTimeMillis());
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
 	m_queue = new ArrayList<> ();
@@ -190,6 +193,8 @@ public abstract class Neighbor
 			if(m_aborted.get())
 			    break;
 
+			m_lastParsed.set(System.currentTimeMillis());
+
 			String buffer = m_stringBuffer.
 			    substring(0, indexOf + Messages.EOM.length());
 
@@ -218,7 +223,9 @@ public abstract class Neighbor
 			}
 		    }
 
-		    if(m_stringBuffer.length() > MAXIMUM_BYTES)
+		    if(System.currentTimeMillis() - m_lastParsed.get() >
+		       DATA_LIFETIME ||
+		       m_stringBuffer.length() > MAXIMUM_BYTES)
 			m_stringBuffer.setLength(0);
 		}
 		catch(Exception exception)

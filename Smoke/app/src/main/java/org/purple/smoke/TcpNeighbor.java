@@ -190,6 +190,7 @@ public class TcpNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
+	    m_lastParsed.set(System.currentTimeMillis());
 	    m_lastTimeRead.set(System.nanoTime());
 
 	    InetSocketAddress inetSocketAddress = new InetSocketAddress
@@ -274,6 +275,7 @@ public class TcpNeighbor extends Neighbor
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
 	    m_isValidCertificate.set(false);
+	    m_lastParsed.set(0);
 	    m_socket = null;
 	    m_startTime.set(System.nanoTime());
 	}

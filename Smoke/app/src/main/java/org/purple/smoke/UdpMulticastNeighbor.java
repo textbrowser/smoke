@@ -154,6 +154,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
+	    m_lastParsed.set(System.currentTimeMillis());
 	    m_lastTimeRead.set(System.nanoTime());
 	    m_socket = new MulticastSocket(Integer.parseInt(m_ipPort));
 	    m_socket.joinGroup(InetAddress.getByName(m_ipAddress));
@@ -189,6 +190,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
+	    m_lastParsed.set(0);
 	    m_socket = null;
 	    m_startTime.set(System.nanoTime());
 	}
