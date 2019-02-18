@@ -92,6 +92,7 @@ Completed Items
 - Less populateParticipants() in the Chat activity.
 - Local congestion control.
 - Logging class. See Database::writeLog().
+- Material icons.
 - Member status in Member Chat.
 - MemberChat attachment.
 - Messages from the past may trigger presence.
@@ -245,7 +246,6 @@ Remaining Items
 - Bubbles are too narrow on wide devices.
 - Drawers.
 - Gallery integration.
-- Material icons.
 - Retain password for re-authentication upon background activity. Optional.
 - Separation of Fire channels.
 - Steam and Vapor.
