@@ -216,6 +216,7 @@ Future Items
 - SMP.
 - Themes, of course.
 - Vacuum databases.
+- pull-database for multiple devices. Ignore, database is encrypted.
 
 Ignored / Impossible Items
 
@@ -236,4 +237,3 @@ Remaining Items
   replicator.
 - Stronger surreptitious forwarding. Larger RSA keys.
 - Zoom integration.
-- pull-database for multiple devices.
