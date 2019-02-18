@@ -44,6 +44,7 @@ Completed Items
 - Detect removal of participants.
 - Determine gradle's version in the make files.
 - Digest of PEM(certificate).
+- Disable echo on low memory. Cannot. Instead, clear queues.
 - Disable proxy fields for non-TCP.
 - Display count of queued echo packets per neighbor.
 - Display date and time of sent message.
@@ -219,11 +220,7 @@ Future Items
 Ignored / Impossible Items
 
 - Android exit.
-- Consider LruCache as a replacement of the database congestion container.
 - Create a BroadcastReceiver and notify all other activities on exit.
-- Detect removal of smoke.db.
-- Disable echo on low memory. Notify the user, although memory will be
-  required.
 - Face authentication.
 - It may be possible to replace m_neighborsScheduler.
 - Optional SipHash identities in received messages. Unique people.

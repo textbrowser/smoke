@@ -2345,6 +2345,23 @@ public class Kernel
 	    (s_congestionSipHash.hmac(data));
     }
 
+    public void clearMessagesToSend()
+    {
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
+	    m_messagesToSend.clear();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_messagesToSendMutex.writeLock().unlock();
+	}
+    }
+
     public void clearNeighborQueues()
     {
 	m_neighborsMutex.readLock().lock();

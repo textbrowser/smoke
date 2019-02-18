@@ -57,6 +57,14 @@ public class Smoke extends Application
 
 	try
 	{
+	    Kernel.getInstance().clearMessagesToSend();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
 	    Kernel.getInstance().clearNeighborQueues();
 	}
 	catch(Exception exception)
