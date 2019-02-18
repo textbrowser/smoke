@@ -219,23 +219,8 @@ Future Items
 
 Ignored / Impossible Items
 
-- Android exit.
-- Create a BroadcastReceiver and notify all other activities on exit.
-- Face authentication.
-- It may be possible to replace m_neighborsScheduler.
 - Optional SipHash identities in received messages. Unique people.
-- Participant import. Superseded by EPKS.
-- Periodic data transfers may raise Android warnings.
-- Retrieve Member Chat data in a thread. Not necessary.
-- SCTP (http://www.oracle.com/technetwork/articles/javase/index-139946.html).
-- Scroll bars on Spinner objects.
-- Select All context menu in the Chat activity.
-- Smoke as a service.
-- Socket channels. A lot of work.
 - Source-level string translations.
-- User is responsible for data limits.
-- Validate neighbor IP address. User is responsible.
-- Virtual keyboard.
 - XMPP.
 
 Remaining Items
@@ -245,6 +230,7 @@ Remaining Items
 - Gallery integration.
 - Retain password for re-authentication upon background activity. Optional.
 - Separation of Fire channels.
+- Smoke as a service.
 - Steam and Vapor.
 - Steam should offer a caching mechanism, transforming Smoke into a data
   replicator.
