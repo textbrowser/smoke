@@ -2691,6 +2691,10 @@ public class Settings extends AppCompatActivity
 	{
 	}
 
+	Intent intent = new Intent(this, SmokeService.class);
+
+	startService(intent);
+
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
         Button button1 = (Button) findViewById(R.id.add_neighbor);
 
