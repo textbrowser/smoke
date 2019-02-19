@@ -37,7 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-	<service android:exported="false"
+	<service android:enabled="true"
+		 android:exported="false"
 		 android:name=".SmokeService" />
     </application>
 </manifest>
