@@ -106,6 +106,7 @@ Completed Items
 - Neighbors periodic refresh.
 - Network status in Member Chat.
 - New date format: YYYY-MM-DD. ISO 8601.
+- New messages should be at the top of the view; Member Chat.
 - Next (Tab) order; Settings.
 - Non-exclusive database transactions.
 - Notify of other member messages in Member Chat.
@@ -185,55 +186,40 @@ Completed Items
 - Upon receiving a timely response, the total key stream should be saved to
   smoke.db. If a timely response is not received, the partial data should be
   purged.
+- Vacuum databases.
 - Validate the SipHash implementation. Please see SipHash::test1().
 - Verify hexadecimal characters of SipHash identities.
 - When verifying signatures, recipients should retrieve appropriate personal
   identity digests.
 - Wrap neighbor text.
-- Zero ports are valid. If a system which is allowing connections on port
+- Zero ports are valid. If a system is allowing connections on port
   zero, Smoke will be able to connect to it.
 
 Future Items
 
 - (130 / 16 + 1) * 16 + 8 <= 154.
-- Allow exporting of smoke.db to other devices.
 - Automatic SipHash hyphens.
 - Bluetooth
   (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
 - Disable Chat:Send if there is at least one selected participant without a
   session.
 - Introduce real-time typing status.
-- Member Chat theme: bubble colors, bubble font colors, bubble time font color
-  and size.
 - NTRU via BouncyCastle.
 - Names or PINs alongside SipHashes. The extra bits will increase the
   possibilities.
-- New messages should be at the top of the view; Member Chat. Optional.
-- Protocol-less snubbing without key revocation.
 - Replace Chat member view with a recycler view.
 - Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with Long.BYTES.
 - Resolve DNS through a proxy if a proxy is defined.
-- SMP.
 - Themes, of course.
-- Vacuum databases.
-- pull-database for multiple devices. Ignore, database is encrypted.
-
-Ignored / Impossible Items
-
-- Optional SipHash identities in received messages. Unique people.
-- Source-level string translations.
-- XMPP.
 
 Remaining Items
 
+- Aliases.
 - Bubbles are too narrow on wide devices.
 - Drawers.
-- Gallery integration.
-- Retain password for re-authentication upon background activity. Optional.
-- Separation of Fire channels.
-- Smoke as a service.
+- Gallery integration. Zoom.
+- Retain password for re-authentication upon background activity, a service.
+- SMP.
 - Steam and Vapor.
-- Steam should offer a caching mechanism, transforming Smoke into a data
-  replicator.
 - Stronger surreptitious forwarding. Larger RSA keys.
-- Zoom integration.
+- Translations.
