@@ -38,6 +38,7 @@ import android.util.Log;
 public class SmokeService extends Service
 {
     private final static int NOTIFICATION_ID = 1936551787;
+    private static int s_count = 0;
 
     @Override
     public IBinder onBind(Intent intent)
@@ -64,7 +65,10 @@ public class SmokeService extends Service
 
     private void start()
     {
-	prepareNotification();
+	s_count += 1;
+
+	if(s_count == 1)
+	    prepareNotification();
     }
 
     private void stop()
