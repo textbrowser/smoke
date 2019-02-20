@@ -30,35 +30,88 @@ package org.purple.smoke;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 public class SmokeService extends Service
 {
+    private final static int NOTIFICATION_ID = 1936551787;
+
     @Override
     public IBinder onBind(Intent intent)
     {
 	return null;
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int StartId)
+    private void prepareNotification()
     {
 	Intent notificationIntent = new Intent(this, Settings.class);
 	Notification notification = null;
-	PendingIntent pendingIntent =
-	    PendingIntent.getActivity(this, 0, notificationIntent, 0);
+	PendingIntent pendingIntent = PendingIntent.getActivity
+	    (this, 0, notificationIntent, 0);
 
-	notification = new Notification.Builder
-	    (this, "Smoke")
-	    .setContentTitle("Smoke Activity")
-	    .setContentText("Smoke Activity")
-	    .setSmallIcon(R.drawable.smoke)
-	    .setContentIntent(pendingIntent)
-	    .setTicker("Smoke Activity")
-	    .build();
-	startForeground(1, notification);
+	notification = new Notification.Builder(this, "Smoke").
+	    setContentTitle("Smoke Activity").
+	    setContentText("Smoke Activity").
+	    setSmallIcon(R.drawable.smoke).
+	    setContentIntent(pendingIntent).
+	    setTicker("Smoke Activity").
+	    build();
+	startForeground(NOTIFICATION_ID, notification);
+    }
+
+    private void start()
+    {
+	prepareNotification();
+    }
+
+    private void stop()
+    {
+	stopForeground(true);
+	stopSelf();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int StartId)
+    {
+	if(intent != null && intent.getAction() != null)
+	    switch(intent.getAction())
+	    {
+	    case "start":
+		start();
+		break;
+	    case "stop":
+		stop();
+		break;
+	    default:
+		break;
+	    }
+
 	return START_STICKY;
+    }
+
+    public static void startForegroundTask(Context context)
+    {
+	if(context == null)
+	    return;
+
+	Intent intent = new Intent(context, SmokeService.class);
+
+	intent.setAction("start");
+	context.startForegroundService(intent);
+    }
+
+    public static void stopForegroundTask(Context context)
+    {
+	if(context == null)
+	    return;
+
+	Intent intent = new Intent(context, SmokeService.class);
+
+	intent.setAction("stop");
+	context.startForegroundService(intent);
     }
 
     @Override

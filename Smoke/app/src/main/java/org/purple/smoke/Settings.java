@@ -1488,7 +1488,7 @@ public class Settings extends AppCompatActivity
 
     private void prepareForegroundService()
     {
-	startService(new Intent(this, SmokeService.class));
+	SmokeService.startForegroundTask(getApplicationContext());
     }
 
     private void prepareListeners()
@@ -2997,8 +2997,8 @@ public class Settings extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-	super.onDestroy();
 	stopTimers();
+	super.onDestroy();
     }
 
     @Override
