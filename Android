@@ -1,3 +1,2 @@
-Smoke has been successfully tested on Android versions 7.0, 7.1, and 8.1.
-
-Android versions 4.x, 5.x, and 6.x are not supported.
+Smoke has been successfully tested on Android versions 7.x and 8.x.
+Android versions older than 7.x and 8.x are not supported.
