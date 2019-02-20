@@ -67,6 +67,7 @@
     <string name="message_was_read">Message was read.</string>
     <string name="message_was_sent">Message was sent.</string>
     <string name="initialize_ozone">Initialize Ozone</string>
+    <string name="foreground_service">Foreground Service</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

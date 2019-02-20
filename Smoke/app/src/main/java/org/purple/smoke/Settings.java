@@ -495,6 +495,8 @@ public class Settings extends AppCompatActivity
 
 	CheckBox checkBox1 = null;
 
+	checkBox1 = (CheckBox) findViewById(R.id.foreground_service);
+	checkBox1.setChecked(true);
 	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
 	checkBox1.setChecked(!state);
 	checkBox1.setEnabled(state);
@@ -1488,7 +1490,11 @@ public class Settings extends AppCompatActivity
 
     private void prepareForegroundService()
     {
-	SmokeService.startForegroundTask(getApplicationContext());
+	if(m_databaseHelper.
+	   readSetting(null, "foreground_service").equals("true"))
+	    SmokeService.startForegroundTask(getApplicationContext());
+	else
+	    SmokeService.stopForegroundTask(getApplicationContext());
     }
 
     private void prepareListeners()
@@ -1908,6 +1914,31 @@ public class Settings extends AppCompatActivity
 			    (null, "neighbors_echo", "false");
 			Kernel.getInstance().clearNeighborQueues();
 			State.getInstance().setNeighborsEcho(false);
+		    }
+		}
+	    });
+
+	checkBox1 = (CheckBox) findViewById(R.id.foreground_service);
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    if(isChecked)
+		    {
+			SmokeService.startForegroundTask
+			    (getApplicationContext());
+			m_databaseHelper.writeSetting
+			    (null, "foreground_service", "true");
+		    }
+		    else
+		    {
+			SmokeService.stopForegroundTask
+			    (getApplicationContext());
+			m_databaseHelper.writeSetting
+			    (null, "foreground_service", "false");
 		    }
 		}
 	    });
@@ -2748,6 +2779,14 @@ public class Settings extends AppCompatActivity
 	checkBox1 = (CheckBox) findViewById(R.id.echo);
 
 	if(m_databaseHelper.readSetting(null, "neighbors_echo").equals("true"))
+	    checkBox1.setChecked(true);
+	else
+	    checkBox1.setChecked(false);
+
+	checkBox1 = (CheckBox) findViewById(R.id.foreground_service);
+
+	if(m_databaseHelper.
+	   readSetting(null, "foreground_service").equals("true"))
 	    checkBox1.setChecked(true);
 	else
 	    checkBox1.setChecked(false);

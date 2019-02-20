@@ -74,7 +74,7 @@ public class SmokeService extends Service
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int StartId)
+    public int onStartCommand(Intent intent, int flags, int startId)
     {
 	if(intent != null && intent.getAction() != null)
 	    switch(intent.getAction())
@@ -89,7 +89,7 @@ public class SmokeService extends Service
 		break;
 	    }
 
-	return START_STICKY;
+	return super.onStartCommand(intent, flags, startId);
     }
 
     public static void startForegroundTask(Context context)
@@ -100,7 +100,7 @@ public class SmokeService extends Service
 	Intent intent = new Intent(context, SmokeService.class);
 
 	intent.setAction("start");
-	context.startForegroundService(intent);
+	context.startService(intent);
     }
 
     public static void stopForegroundTask(Context context)
@@ -111,11 +111,12 @@ public class SmokeService extends Service
 	Intent intent = new Intent(context, SmokeService.class);
 
 	intent.setAction("stop");
-	context.startForegroundService(intent);
+	context.startService(intent);
     }
 
     @Override
     public void onCreate()
     {
+	super.onCreate();
     }
 }

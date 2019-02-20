@@ -69,6 +69,7 @@ Completed Items
 - Fire channels must be retained if the Fire activity is dismissed.
 - Fire through SmokeStack.
 - Fire. ("AES/CTS/NoPadding")
+- Foreground service, optional.
 - Generate and separate.
 - HTTP proxy.
 - Identity-sharing confirmation from SmokeStack.
@@ -218,7 +219,6 @@ Remaining Items
 - Bubbles are too narrow on wide devices.
 - Drawers.
 - Gallery integration. Zoom.
-- Retain password for re-authentication upon background activity, a service.
 - SMP.
 - Steam and Vapor.
 - Stronger surreptitious forwarding. Larger RSA keys.
