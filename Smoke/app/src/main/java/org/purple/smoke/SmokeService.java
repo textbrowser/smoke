@@ -27,46 +27,42 @@
 
 package org.purple.smoke;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SmokeService extends Service
 {
-    private Timer m_timer = null;
-    private TimerTask m_timerTask = null;
-
     @Override
     public IBinder onBind(Intent intent)
     {
 	return null;
     }
 
-    public SmokeService()
-    {
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int StartId)
     {
-	Kernel.getInstance();
-	m_timer = new Timer();
-	m_timerTask = new TimerTask()
-	{
-	    @Override
-	    public void run()
-	    {
-	    }
-	};
-	m_timer.schedule(m_timerTask, 1000, 1000);
+	Intent notificationIntent = new Intent(this, Settings.class);
+	Notification notification = null;
+	PendingIntent pendingIntent =
+	    PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+	notification = new Notification.Builder
+	    (this, "Smoke")
+	    .setContentTitle("Smoke Activity")
+	    .setContentText("Smoke Activity")
+	    .setSmallIcon(R.drawable.smoke)
+	    .setContentIntent(pendingIntent)
+	    .setTicker("Smoke Activity")
+	    .build();
+	startForeground(1, notification);
 	return START_STICKY;
     }
 
     @Override
     public void onCreate()
     {
-	Kernel.getInstance();
     }
 }
