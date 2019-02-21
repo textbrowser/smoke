@@ -495,8 +495,6 @@ public class Settings extends AppCompatActivity
 
 	CheckBox checkBox1 = null;
 
-	checkBox1 = (CheckBox) findViewById(R.id.foreground_service);
-	checkBox1.setChecked(true);
 	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
 	checkBox1.setChecked(!state);
 	checkBox1.setEnabled(state);
@@ -1491,10 +1489,10 @@ public class Settings extends AppCompatActivity
     private void prepareForegroundService()
     {
 	if(m_databaseHelper.
-	   readSetting(null, "foreground_service").equals("true"))
-	    SmokeService.startForegroundTask(getApplicationContext());
-	else
+	   readSetting(null, "foreground_service").equals("false"))
 	    SmokeService.stopForegroundTask(getApplicationContext());
+	else
+	    SmokeService.startForegroundTask(getApplicationContext());
     }
 
     private void prepareListeners()
@@ -2786,10 +2784,10 @@ public class Settings extends AppCompatActivity
 	checkBox1 = (CheckBox) findViewById(R.id.foreground_service);
 
 	if(m_databaseHelper.
-	   readSetting(null, "foreground_service").equals("true"))
-	    checkBox1.setChecked(true);
-	else
+	   readSetting(null, "foreground_service").equals("false"))
 	    checkBox1.setChecked(false);
+	else
+	    checkBox1.setChecked(true);
 
 	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
 
