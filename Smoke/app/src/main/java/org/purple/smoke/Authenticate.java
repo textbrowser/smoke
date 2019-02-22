@@ -500,6 +500,7 @@ public class Authenticate extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	SmokeService.stopForegroundTask(getApplicationContext());
 	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_authenticate);
 

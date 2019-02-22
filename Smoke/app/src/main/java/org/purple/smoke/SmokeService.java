@@ -89,7 +89,7 @@ public class SmokeService extends Service
 		break;
 	    }
 
-	return START_STICKY;
+	return super.onStartCommand(intent, flags, startId);
     }
 
     public static void startForegroundTask(Context context)
