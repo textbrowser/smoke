@@ -52,10 +52,10 @@ public class SmokeService extends Service
 	    (this, 0, notificationIntent, 0);
 
 	notification = new Notification.Builder(this, "Smoke").
-	    setContentTitle("Smoke Activity").
-	    setContentText("Smoke Activity").
-	    setSmallIcon(R.drawable.smoke).
 	    setContentIntent(pendingIntent).
+	    setContentText("Smoke Activity").
+	    setContentTitle("Smoke Activity").
+	    setSmallIcon(R.drawable.smoke).
 	    setTicker("Smoke Activity").
 	    build();
 	startForeground(NOTIFICATION_ID, notification);
