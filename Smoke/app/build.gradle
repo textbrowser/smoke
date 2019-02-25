@@ -13,8 +13,8 @@ android {
     }
     buildTypes {
         android.applicationVariants.all { variant ->
-            buildConfigField "String", "TULIP_IPV4_HOST", "\"tulip-ipv4.tilaa.cloud\""
-            buildConfigField "String", "TULIP_IPV4_PORT", "\"4710\""
+            buildConfigField "String", "SMOKE_IPV4_HOST", "\"127.0.0.1\""
+            buildConfigField "String", "SMOKE_IPV4_PORT", "\"4710\""
             variant.outputs.all {
                 outputFileName = "./apk/smoke.apk"
             }

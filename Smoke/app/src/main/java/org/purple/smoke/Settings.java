@@ -1459,8 +1459,8 @@ public class Settings extends AppCompatActivity
 				 "",
 				 "",
 				 "HTTP",
-				 BuildConfig.TULIP_IPV4_HOST,
-				 BuildConfig.TULIP_IPV4_PORT,
+				 BuildConfig.SMOKE_IPV4_HOST,
+				 BuildConfig.SMOKE_IPV4_PORT,
 				 "",
 				 "TCP",
 				 "IPv4");
