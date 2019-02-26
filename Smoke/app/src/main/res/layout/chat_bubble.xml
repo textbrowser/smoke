@@ -59,22 +59,14 @@
                 />
 
             <ImageView
-                android:id="@+id/message_read"
+                android:id="@+id/message_status"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:contentDescription="@string/message_was_read"
-                app:srcCompat="@drawable/message_read" />
-
-            <ImageView
-                android:id="@+id/message_sent"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
                 android:layout_alignParentBottom="true"
-                android:layout_toStartOf="@+id/message_read"
-                android:contentDescription="@string/message_was_sent"
+                android:contentDescription="@string/message_status"
                 app:srcCompat="@drawable/message_sent" />
+
         </RelativeLayout>
 
     </LinearLayout>

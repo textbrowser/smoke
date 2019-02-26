@@ -71,8 +71,7 @@ public class ChatBubble extends View
 
 	m_view = inflater.inflate(R.layout.chat_bubble, viewGroup, false);
 	m_view.findViewById(R.id.image).setVisibility(View.GONE);
-	m_view.findViewById(R.id.message_read).setVisibility(View.INVISIBLE);
-	m_view.findViewById(R.id.message_sent).setVisibility(View.INVISIBLE);
+	m_view.findViewById(R.id.message_status).setVisibility(View.INVISIBLE);
 	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
 	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
 	m_view.setId(-1);
@@ -166,22 +165,24 @@ public class ChatBubble extends View
 
     public void setRead(Locations location, boolean state)
     {
+	m_messageRead = state;
+
 	if(m_error)
 	{
 	    m_messageRead = state;
-	    m_view.findViewById(R.id.message_read).setVisibility
+	    m_view.findViewById(R.id.message_status).setVisibility
 		(View.INVISIBLE);
 	    return;
 	}
 
-	m_messageRead = state;
-
 	if(location == Locations.LEFT)
-	    m_view.findViewById(R.id.message_read).setVisibility
+	    m_view.findViewById(R.id.message_status).setVisibility
 		(View.INVISIBLE);
 	else
 	{
-	    m_view.findViewById(R.id.message_read).setVisibility
+	    ((ImageView) m_view.findViewById(R.id.message_status)).
+		setImageResource(R.drawable.message_read);
+	    m_view.findViewById(R.id.message_status).setVisibility
 		(m_messageRead ? View.VISIBLE : View.INVISIBLE);
 
 	    float density = m_context.getResources().getDisplayMetrics().
@@ -197,22 +198,26 @@ public class ChatBubble extends View
 
     public void setSent(Locations location, boolean state)
     {
+	m_messageSent = state;
+
 	if(m_error)
 	{
 	    m_messageSent = state;
-	    m_view.findViewById(R.id.message_sent).setVisibility
+	    m_view.findViewById(R.id.message_status).setVisibility
 		(View.INVISIBLE);
 	    return;
 	}
-
-	m_messageSent = state;
+	else if(m_messageRead)
+	    return;
 
 	if(location == Locations.LEFT)
-	    m_view.findViewById(R.id.message_sent).setVisibility
+	    m_view.findViewById(R.id.message_status).setVisibility
 		(View.INVISIBLE);
 	else
 	{
-	    m_view.findViewById(R.id.message_sent).setVisibility
+	    ((ImageView) m_view.findViewById(R.id.message_status)).
+		setImageResource(R.drawable.message_sent);
+	    m_view.findViewById(R.id.message_status).setVisibility
 		(m_messageSent ? View.VISIBLE : View.INVISIBLE);
 
 	    float density = m_context.getResources().getDisplayMetrics().
