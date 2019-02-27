@@ -450,6 +450,10 @@ public abstract class Miscellaneous
 	ArrayList<ParticipantElement> arrayList = State.getInstance().
 	    participants();
 
+	/*
+	** Do not clear arrayList!
+	*/
+
 	if(arrayList != null && arrayList.size() > 0)
 	{
 	    SubMenu subMenu = null;
