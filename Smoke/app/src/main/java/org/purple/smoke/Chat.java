@@ -403,8 +403,7 @@ public class Chat extends AppCompatActivity
 
     private void populateChat()
     {
-	ArrayList<MessageElement> arrayList = State.getInstance().
-	    chatLog();
+	ArrayList<MessageElement> arrayList = State.getInstance().chatLog();
 
 	if(arrayList == null || arrayList.isEmpty())
 	    return;
@@ -572,7 +571,7 @@ public class Chat extends AppCompatActivity
 	    i += 1;
 	}
 
-	arrayList.clear();
+	// Do not clear arrayList!
     }
 
     private void prepareListeners()
