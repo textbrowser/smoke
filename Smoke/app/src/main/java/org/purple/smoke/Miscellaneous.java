@@ -464,7 +464,10 @@ public abstract class Miscellaneous
 		subMenu = menu.getItem(menu.size() - 1).getSubMenu();
 
 	    if(subMenu == null)
+	    {
+		arrayList.clear();
 		return;
+	    }
 
 	    subMenu.clear();
 
@@ -482,6 +485,8 @@ public abstract class Miscellaneous
 		     prepareSipHashId(participantElement.m_sipHashId) +
 		     ")");
 	    }
+
+	    arrayList.clear();
 	}
     }
 

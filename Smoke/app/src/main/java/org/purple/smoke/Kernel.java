@@ -771,6 +771,7 @@ public class Kernel
 				(s_cryptography);
 
 			    if(arrayList != null)
+			    {
 				for(SipHashIdElement sipHashIdElement :
 					arrayList)
 				{
@@ -789,6 +790,9 @@ public class Kernel
 					     bytesToMessageString(bytes),
 					     null);
 				}
+
+				arrayList.clear();
+			    }
 			}
 			else
 			{
@@ -803,6 +807,7 @@ public class Kernel
 				(s_cryptography);
 
 			    if(arrayList != null)
+			    {
 				for(SipHashIdElement sipHashIdElement :
 					arrayList)
 				{
@@ -819,6 +824,9 @@ public class Kernel
 					     bytesToMessageString(bytes),
 					     null);
 				}
+
+				arrayList.clear();
+			    }
 			}
 		    }
 		    catch(Exception exception)

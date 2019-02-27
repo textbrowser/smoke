@@ -571,6 +571,8 @@ public class Chat extends AppCompatActivity
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
+
+	arrayList.clear();
     }
 
     private void prepareListeners()

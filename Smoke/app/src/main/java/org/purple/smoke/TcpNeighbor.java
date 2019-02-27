@@ -351,11 +351,12 @@ public class TcpNeighbor extends Neighbor
 
 			m_socket.setSoTimeout(SO_TIMEOUT);
 
+		    byte bytes[] = new byte[BYTES_PER_READ];
 		    int i = 0;
 
 		    try
 		    {
-			i = m_socket.getInputStream().read(m_bytes);
+			i = m_socket.getInputStream().read(bytes);
 		    }
 		    catch(Exception exception)
 		    {
@@ -383,7 +384,7 @@ public class TcpNeighbor extends Neighbor
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
 		    m_stringBuffer.append
-			(new String(m_bytes, 0, (int) bytesRead));
+			(new String(bytes, 0, (int) bytesRead));
 
 		    synchronized(m_parsingSchedulerObject)
 		    {

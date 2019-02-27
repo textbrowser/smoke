@@ -103,6 +103,9 @@ public class Settings extends AppCompatActivity
 	public void run()
 	{
 	    populateNeighbors(m_arrayList);
+
+	    if(m_arrayList != null)
+		m_arrayList.clear();
 	}
     }
 

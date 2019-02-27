@@ -55,7 +55,6 @@ public abstract class Neighbor
 	Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService m_sendOutboundScheduler =
 	Executors.newSingleThreadScheduledExecutor();
-    private final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB
     private final static int LANE_WIDTH = 32 * 1024 * 1024; // 32 MiB
     private final static long DATA_LIFETIME = 15000; // 15 Seconds
     private final static long PARSING_INTERVAL = 100; // Milliseconds
@@ -77,11 +76,11 @@ public abstract class Neighbor
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
-    protected byte m_bytes[] = null;
     protected final Object m_errorMutex = new Object();
     protected final Object m_parsingSchedulerObject = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
+    protected final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
     protected final static int SO_TIMEOUT = 0; // 0 Seconds
     protected final static long READ_SOCKET_INTERVAL = 100; // 100 Milliseconds
@@ -137,7 +136,6 @@ public abstract class Neighbor
 		       int oid)
     {
 	m_aborted = new AtomicBoolean(false);
-	m_bytes = new byte[BYTES_PER_READ];
 	m_bytesRead = new AtomicLong(0);
 	m_bytesWritten = new AtomicLong(0);
 	m_cryptography = Cryptography.getInstance();

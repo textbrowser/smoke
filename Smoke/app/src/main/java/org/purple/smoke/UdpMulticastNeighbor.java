@@ -225,12 +225,10 @@ public class UdpMulticastNeighbor extends Neighbor
 		    else if(m_socket == null)
 			return;
 
-		    ByteArrayOutputStream byteArrayOutputStream =
-			new ByteArrayOutputStream();
 		    DatagramPacket datagramPacket = null;
+		    byte bytes[] = new byte[BYTES_PER_READ];
 
-		    datagramPacket = new DatagramPacket
-			(m_bytes, m_bytes.length);
+		    datagramPacket = new DatagramPacket(bytes, bytes.length);
 
 		    try
 		    {
@@ -244,11 +242,16 @@ public class UdpMulticastNeighbor extends Neighbor
 			return;
 		    }
 
+		    ByteArrayOutputStream byteArrayOutputStream = null;
+
 		    if(datagramPacket.getLength() > 0)
+		    {
+			byteArrayOutputStream = new ByteArrayOutputStream();
 			byteArrayOutputStream.write
 			    (datagramPacket.getData(),
 			     0,
 			     datagramPacket.getLength());
+		    }
 
 		    int bytesRead = datagramPacket.getLength();
 
@@ -264,8 +267,10 @@ public class UdpMulticastNeighbor extends Neighbor
 
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
-		    m_stringBuffer.append
-			(new String(byteArrayOutputStream.toByteArray()));
+
+		    if(byteArrayOutputStream != null)
+			m_stringBuffer.append
+			    (new String(byteArrayOutputStream.toByteArray()));
 
 		    synchronized(m_parsingSchedulerObject)
 		    {
