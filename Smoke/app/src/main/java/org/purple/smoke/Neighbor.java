@@ -55,7 +55,7 @@ public abstract class Neighbor
 	Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService m_sendOutboundScheduler =
 	Executors.newSingleThreadScheduledExecutor();
-    private final static int LANE_WIDTH = 32 * 1024 * 1024; // 32 MiB
+    private final static int LANE_WIDTH = 8 * 1024 * 1024; // 8 MiB
     private final static long DATA_LIFETIME = 15000; // 15 Seconds
     private final static long PARSING_INTERVAL = 100; // Milliseconds
     private final static long SEND_OUTBOUND_TIMER_INTERVAL =
@@ -224,7 +224,7 @@ public abstract class Neighbor
 		    if(System.currentTimeMillis() - m_lastParsed.get() >
 		       DATA_LIFETIME ||
 		       m_stringBuffer.length() > MAXIMUM_BYTES)
-			m_stringBuffer.setLength(0);
+			m_stringBuffer.delete(0, m_stringBuffer.length());
 		}
 		catch(Exception exception)
 		{
@@ -569,7 +569,7 @@ public abstract class Neighbor
 	    m_queue.clear();
 	}
 
-	m_stringBuffer.setLength(0);
+	m_stringBuffer.delete(0, m_stringBuffer.length());
     }
 
     protected void echo(String message)
@@ -586,7 +586,7 @@ public abstract class Neighbor
     {
 	synchronized(m_errorMutex)
 	{
-	    m_error.setLength(0);
+	    m_error.delete(0, m_error.length());
 	    m_error.append(error);
 	}
     }

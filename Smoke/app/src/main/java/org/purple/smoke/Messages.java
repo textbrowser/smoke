@@ -342,7 +342,7 @@ public class Messages
 	    if(aes256 == null)
 		return null;
 
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 
 	    /*
 	    ** [ SHA-512 HMAC ]
@@ -505,7 +505,7 @@ public class Messages
 				stringBuilder.toString().getBytes()),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 
 	    if(aes256 == null)
 		return null;
@@ -842,7 +842,7 @@ public class Messages
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 
 	    if(aes256 == null)
 		return null;
@@ -948,7 +948,7 @@ public class Messages
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream, 0, 32));
 
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 
 	    if(aes256 == null)
 		return null;
@@ -1067,7 +1067,7 @@ public class Messages
 							80,
 							keyStream.length)));
 
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append
 		(Base64.encodeToString(aes256, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
@@ -1166,7 +1166,7 @@ public class Messages
 							80,
 							keyStream.length)));
 
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append
 		(Base64.encodeToString(aes256, Base64.NO_WRAP));
 	    stringBuilder.append("\n");

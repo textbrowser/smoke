@@ -749,7 +749,7 @@ public class Settings extends AppCompatActivity
 
 	    for(NeighborElement neighborElement : arrayList)
 	    {
-		stringBuilder.setLength(0);
+		stringBuilder.delete(0, stringBuilder.length());
 		stringBuilder.append(neighborElement.m_remoteIpAddress);
 
 		if(neighborElement.m_ipVersion.equals("IPv6"))
@@ -802,7 +802,7 @@ public class Settings extends AppCompatActivity
 		if(t == null)
 		    continue;
 
-		stringBuilder.setLength(0);
+		stringBuilder.delete(0, stringBuilder.length());
 		stringBuilder.append(neighborElement.m_remoteIpAddress);
 
 		if(neighborElement.m_ipVersion.equals("IPv6"))
@@ -932,7 +932,7 @@ public class Settings extends AppCompatActivity
                 break;
 	    }
 
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append("Control: ");
 
 	    try
@@ -2563,7 +2563,7 @@ public class Settings extends AppCompatActivity
 				     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 			    textView1.append(spannable);
-			    stringBuilder.setLength(0);
+			    stringBuilder.delete(0, stringBuilder.length());
 			    stringBuilder.append(")\n");
 			    stringBuilder.append(m_string1);
 			    stringBuilder.append("\nChat Signature Key (");
@@ -2587,7 +2587,7 @@ public class Settings extends AppCompatActivity
 				     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 			    textView1.append(spannable);
-			    stringBuilder.setLength(0);
+			    stringBuilder.delete(0, stringBuilder.length());
 			    stringBuilder.append(")\n");
 			    stringBuilder.append(m_string2);
 			    textView1.append(stringBuilder.toString());

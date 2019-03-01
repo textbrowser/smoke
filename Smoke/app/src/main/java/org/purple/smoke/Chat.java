@@ -523,7 +523,7 @@ public class Chat extends AppCompatActivity
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
-	    stringBuilder.setLength(0);
+	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append(participantElement.m_name.trim());
 
 	    if(showDetails)
@@ -611,7 +611,7 @@ public class Chat extends AppCompatActivity
 			     ParticipantCall.Algorithms.RSA,
 			     checkBox1.getTag().toString());
 
-			stringBuilder.setLength(0);
+			stringBuilder.delete(0, stringBuilder.length());
 			stringBuilder.append("[");
 			stringBuilder.append
 			    (m_simpleDateFormat.format(new Date()));
@@ -1206,7 +1206,7 @@ public class Chat extends AppCompatActivity
 		}
 		else
 		{
-		    stringBuilder.setLength(0);
+		    stringBuilder.delete(0, stringBuilder.length());
 
 		    int i = 0;
 		    int length = strings.length;
