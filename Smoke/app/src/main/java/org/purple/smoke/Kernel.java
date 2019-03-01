@@ -336,7 +336,10 @@ public class Kernel
 				    it.next();
 
 				if(entry.getValue() == null)
+				{
 				    it.remove();
+				    continue;
+				}
 
 				if((System.nanoTime() - entry.getValue().
 				    m_startTime) / 1000000 > CALL_LIFETIME)

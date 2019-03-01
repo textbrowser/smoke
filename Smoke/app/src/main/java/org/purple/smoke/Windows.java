@@ -27,36 +27,49 @@
 
 package org.purple.smoke;
 
-import android.os.Build;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
-public class About
+public abstract class Windows
 {
-    private final static SimpleDateFormat s_simpleDateFormat = new
-	SimpleDateFormat("yyyy-MM-dd h:mm:ss", Locale.getDefault());
-    public static String s_about = "";
-
-    private About()
+    public static void showProgressDialog(Context context,
+					  Dialog dialog,
+					  String text)
     {
-    }
+	if(context == null ||
+	   dialog == null ||
+	   text == null ||
+	   text.trim().isEmpty())
+	    return;
 
-    public static synchronized String about()
-    {
-	if(s_about.isEmpty())
+	try
 	{
-	    s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    s_about = "Version 2019.03.03 Curious Circuit " +
-		(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
-		"\nBuild Date " +
-		s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +
-		" UTC\nAndroid " + Build.VERSION.RELEASE +
-		(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ?
-		 "\nAndroid version not supported." : "");
-	}
+	    if(((Activity) context).isFinishing())
+		return;
 
-	return s_about;
+	    LayoutInflater inflater = (LayoutInflater) context.getSystemService
+		(Context.LAYOUT_INFLATER_SERVICE);
+	    View view = inflater.inflate(R.layout.progress, null);
+
+	    ((TextView) view.findViewById(R.id.text)).setText(text);
+	    dialog.setCancelable(false);
+	    dialog.setContentView(view);
+	    dialog.show();
+	}
+	catch(Exception exception_1)
+	{
+	    try
+	    {
+		dialog.dismiss();
+	    }
+	    catch(Exception exception_2)
+	    {
+	    }
+	}
     }
 }

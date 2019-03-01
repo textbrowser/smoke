@@ -38,12 +38,13 @@ import android.view.ViewGroup;
 public class MemberChatAdapter extends RecyclerView.Adapter
 				       <MemberChatAdapter.ViewHolder>
 {
+    private MemberChat m_memberChat = null;
     private String m_sipHashId = "";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_database = Database.getInstance();
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
+    public class ViewHolder extends RecyclerView.ViewHolder
 	implements OnCreateContextMenuListener
     {
 	ChatBubble m_chatBubble = null;
@@ -88,15 +89,26 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		     view.getId(),
 		     2,
 		     "Delete Message").setEnabled(view.getId() != -1);
+	    menu.add(MemberChat.ContextMenuEnumerator.DELETE_SELECTED_MESSAGES,
+		     -1,
+		     3,
+		     "Delete Selected Message(s)").setEnabled
+		(m_memberChat.selectedMessagesCount() > 0);
 	    menu.add(MemberChat.ContextMenuEnumerator.RESEND_MESSAGE,
 		     m_position,
-		     3,
+		     4,
 		     "Resend Message").setEnabled(m_canResend);
 	    menu.add
 		(MemberChat.ContextMenuEnumerator.SAVE_ATTACHMENT,
 		 m_position,
-		 4,
+		 5,
 		 "Save Attachment").setEnabled(m_hasAttachment);
+	    menuItem = menu.add
+		(MemberChat.ContextMenuEnumerator.SELECTION_STATE,
+		 m_position,
+		 6,
+		 "Selection State").setCheckable(true);
+	    menuItem.setChecked(m_memberChat.messageSelectionState());
 	}
 
 	public void setData(MemberChatElement memberChatElement, int position)
@@ -107,6 +119,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    {
 		m_canResend = false;
 		m_chatBubble.setError(true);
+		m_chatBubble.setMessageSelectionStateEnabled(false);
 		m_chatBubble.setName(ChatBubble.Locations.LEFT, "?");
 		m_chatBubble.setText
 		    (ChatBubble.Locations.LEFT,
@@ -133,6 +146,10 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    m_chatBubble.setFromeSmokeStack
 		(memberChatElement.m_fromSmokeStack.equals("true"));
 	    m_chatBubble.setImageAttachment(memberChatElement.m_attachment);
+	    m_chatBubble.setMessageSelected
+		(m_memberChat.isMessageSelected(memberChatElement.m_oid));
+	    m_chatBubble.setMessageSelectionStateEnabled
+		(m_memberChat.messageSelectionState());
 	    m_chatBubble.setOid(memberChatElement.m_oid);
 
 	    if(!local)
@@ -164,8 +181,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	}
     }
 
-    public MemberChatAdapter(String sipHashId)
+    public MemberChatAdapter(MemberChat memberChat, String sipHashId)
     {
+	m_memberChat = memberChat;
 	m_sipHashId = sipHashId;
     }
 
@@ -174,7 +192,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	(ViewGroup parent, int viewType)
     {
 	return new ViewHolder
-	    (new ChatBubble(parent.getContext(), parent), m_sipHashId);
+	    (new ChatBubble(parent.getContext(), m_memberChat, parent),
+	     m_sipHashId);
     }
 
     @Override

@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -66,9 +67,12 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MemberChat extends AppCompatActivity
 {
@@ -157,6 +161,52 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    private class RemoveSelectedMessages implements Runnable
+    {
+	private Dialog m_dialog = null;
+	private String m_sipHashId = null;
+
+	private RemoveSelectedMessages(Dialog dialog, String sipHashId)
+	{
+	    m_dialog = dialog;
+	    m_sipHashId = sipHashId;
+	}
+
+	@Override
+	public void run()
+	{
+	    m_selectedMessagesMutex.writeLock().lock();
+
+	    try
+	    {
+		Iterator<Hashtable.Entry<Integer, Boolean> >
+		    it = m_selectedMessages.entrySet().iterator();
+
+		while(it.hasNext())
+		{
+		    Hashtable.Entry<Integer, Boolean> entry = it.next();
+
+		    if(entry.getKey() == null || entry.getValue() == null)
+		    {
+			it.remove();
+			continue;
+		    }
+
+		    m_databaseHelper.deleteParticipantMessage
+			(s_cryptography, m_sipHashId, entry.getKey());
+		    it.remove();
+		}
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_selectedMessagesMutex.writeLock().unlock();
+	    }
+	}
+    }
+
     private class SmokeLinearLayoutManager extends LinearLayoutManager
     {
 	SmokeLinearLayoutManager(Context context)
@@ -182,6 +232,7 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    private Hashtable<Integer, Boolean> m_selectedMessages = null;
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter<?> m_adapter = null;
@@ -189,9 +240,12 @@ public class MemberChat extends AppCompatActivity
     private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_name = "0000-0000-0000-0000";
     private String m_sipHashId = m_name;
+    private boolean m_messageSelectionStateEnabled = false;
     private boolean m_receiverRegistered = false;
     private byte m_attachment[] = null;
     private final Database m_databaseHelper = Database.getInstance();
+    private final ReentrantReadWriteLock m_selectedMessagesMutex =
+	new ReentrantReadWriteLock();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
@@ -205,9 +259,11 @@ public class MemberChat extends AppCompatActivity
 	public final static int CUSTOM_SESSION = 3;
 	public final static int DELETE_ALL_MESSAGES = 4;
 	public final static int DELETE_MESSAGE = 5;
-	public final static int RESEND_MESSAGE = 6;
-	public final static int RETRIEVE_MESSAGES = 7;
-	public final static int SAVE_ATTACHMENT = 8;
+	public final static int DELETE_SELECTED_MESSAGES = 6;
+	public final static int RESEND_MESSAGE = 7;
+	public final static int RETRIEVE_MESSAGES = 8;
+	public final static int SAVE_ATTACHMENT = 9;
+	public final static int SELECTION_STATE = 10;
     }
 
     private int getBytesPerPixel(Config config)
@@ -611,7 +667,7 @@ public class MemberChat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-	m_layoutManager = new SmokeLinearLayoutManager(this);
+	m_layoutManager = new SmokeLinearLayoutManager(MemberChat.this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_layoutManager.setReverseLayout(true);
 	m_layoutManager.setStackFromEnd(true);
@@ -631,6 +687,7 @@ public class MemberChat extends AppCompatActivity
 	m_receiver = new MemberChatBroadcastReceiver();
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 	m_recyclerView.setHasFixedSize(true);
+	m_selectedMessages = new Hashtable<> ();
 
 	if(m_sipHashId.isEmpty())
 	    m_name = m_sipHashId = "0000-0000-0000-0000";
@@ -639,7 +696,7 @@ public class MemberChat extends AppCompatActivity
 	** Prepare various widgets.
 	*/
 
-	m_adapter = new MemberChatAdapter(m_sipHashId);
+	m_adapter = new MemberChatAdapter(this, m_sipHashId);
 	m_adapter.registerAdapterDataObserver
 	    (new RecyclerView.AdapterDataObserver()
 	    {
@@ -713,6 +770,20 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    public boolean isMessageSelected(int oid)
+    {
+	m_selectedMessagesMutex.readLock().lock();
+
+	try
+	{
+	    return m_selectedMessages.getOrDefault(oid, false);
+	}
+	finally
+	{
+	    m_selectedMessagesMutex.readLock().unlock();
+	}
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem menuItem)
     {
@@ -779,6 +850,7 @@ public class MemberChat extends AppCompatActivity
 			{
 			    m_databaseHelper.deleteParticipantMessages
 				(s_cryptography, m_sipHashId);
+			    m_selectedMessages.clear();
 			    m_adapter.notifyDataSetChanged();
 			}
 
@@ -789,6 +861,47 @@ public class MemberChat extends AppCompatActivity
 			{
 			    m_databaseHelper.deleteParticipantMessage
 				(s_cryptography, m_sipHashId, itemId);
+			    m_selectedMessages.remove(itemId);
+			    m_adapter.notifyDataSetChanged();
+			}
+
+			break;
+		    case ContextMenuEnumerator.DELETE_SELECTED_MESSAGES:
+			if(State.getInstance().getString("dialog_accepted").
+			   equals("true"))
+			{
+			    Dialog d = null;
+
+			    try
+			    {
+				d = new Dialog(MemberChat.this);
+				Windows.showProgressDialog
+				    (MemberChat.this,
+				     d,
+				     "Deleting selected message(s).");
+
+				Thread thread = new Thread
+				    (new RemoveSelectedMessages(d,
+								m_sipHashId));
+
+				thread.start();
+				thread.join();
+			    }
+			    catch(Exception exception_1)
+			    {
+			    }
+			    finally
+			    {
+				try
+				{
+				    if(d != null)
+					d.dismiss();
+				}
+				catch(Exception exception_2)
+				{
+				}
+			    }
+
 			    m_adapter.notifyDataSetChanged();
 			}
 
@@ -861,6 +974,13 @@ public class MemberChat extends AppCompatActivity
 		 listener,
 		 "Are you sure that you wish to delete the " +
 		 "selected message?");
+	    break;
+	case ContextMenuEnumerator.DELETE_SELECTED_MESSAGES:
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete the " +
+		 "selected message(s)?");
 	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:
 	    Kernel.getInstance().resendMessage(m_sipHashId, itemId);
@@ -1004,6 +1124,11 @@ public class MemberChat extends AppCompatActivity
 	    }
 
 	    break;
+	case ContextMenuEnumerator.SELECTION_STATE:
+	    m_messageSelectionStateEnabled = !m_messageSelectionStateEnabled;
+	    m_selectedMessages.clear();
+	    m_adapter.notifyDataSetChanged();
+	    break;
 	}
 
 	return true;
@@ -1067,6 +1192,16 @@ public class MemberChat extends AppCompatActivity
 	}
 
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    public boolean messageSelectionState()
+    {
+	return m_messageSelectionStateEnabled;
+    }
+
+    public int selectedMessagesCount()
+    {
+	return m_selectedMessages.size();
     }
 
     @Override
@@ -1191,5 +1326,13 @@ public class MemberChat extends AppCompatActivity
 	}
 
 	saveState();
+    }
+
+    public void setMessageSelected(int oid, boolean isChecked)
+    {
+	if(isChecked)
+	    m_selectedMessages.put(oid, isChecked);
+	else
+	    m_selectedMessages.remove(oid);
     }
 }

@@ -40,6 +40,8 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,21 +52,28 @@ import java.util.Locale;
 
 public class ChatBubble extends View
 {
+    private CheckBox m_selected = null;
+    private CompoundButton.OnCheckedChangeListener m_selected_listener = null;
     private Context m_context = null;
     private Date m_date = new Date(System.currentTimeMillis());
+    private MemberChat m_memberChat = null;
     private View m_view = null;
     private boolean m_error = false;
     private boolean m_fromSmokeStack = false;
     private boolean m_messageRead = false;
     private boolean m_messageSent = false;
+    private int m_oid = -1;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
     public enum Locations {LEFT, RIGHT}
 
-    public ChatBubble(Context context, ViewGroup viewGroup)
+    public ChatBubble(Context context,
+		      MemberChat memberChat,
+		      ViewGroup viewGroup)
     {
 	super(context);
 	m_context = context;
+	m_memberChat = memberChat;
 
 	LayoutInflater inflater = (LayoutInflater) m_context.getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
@@ -74,7 +83,23 @@ public class ChatBubble extends View
 	m_view.findViewById(R.id.message_status).setVisibility(View.INVISIBLE);
 	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
 	m_view.findViewById(R.id.name_right).setVisibility(View.GONE);
+	m_view.findViewById(R.id.selected).setVisibility(View.GONE);
 	m_view.setId(-1);
+
+	/*
+	** Prepare widget variables.
+	*/
+
+	m_selected = (CheckBox) m_view.findViewById(R.id.selected);
+	m_selected_listener = new CompoundButton.OnCheckedChangeListener()
+	{
+	    @Override
+	    public void onCheckedChanged
+		(CompoundButton buttonView, final boolean isChecked)
+	    {
+		m_memberChat.setMessageSelected(m_oid, isChecked);
+	    }
+	};
     }
 
     public View view()
@@ -134,6 +159,19 @@ public class ChatBubble extends View
 	}
     }
 
+    public void setMessageSelected(boolean state)
+    {
+	m_selected.setOnCheckedChangeListener(null);
+	m_selected.setChecked(state);
+	m_selected.setOnCheckedChangeListener(m_selected_listener);
+    }
+
+    public void setMessageSelectionStateEnabled(boolean state)
+    {
+	m_view.findViewById(R.id.selected).setVisibility
+	    (state ? View.VISIBLE : View.GONE);
+    }
+
     public void setName(Locations location, String name)
     {
 	m_view.findViewById(R.id.name_left).setVisibility(View.GONE);
@@ -160,6 +198,7 @@ public class ChatBubble extends View
 
     public void setOid(int oid)
     {
+	m_oid = oid;
 	m_view.setId(oid);
     }
 
