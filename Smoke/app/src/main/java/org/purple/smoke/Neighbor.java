@@ -46,6 +46,7 @@ public abstract class Neighbor
 {
     private ArrayList<String> m_echoQueue = null;
     private ArrayList<String> m_queue = null;
+    private AtomicBoolean m_capabilitiesSent = null;
     private UUID m_uuid = null;
     private final Object m_echoQueueMutex = new Object();
     private final Object m_queueMutex = new Object();
@@ -138,6 +139,7 @@ public abstract class Neighbor
 	m_aborted = new AtomicBoolean(false);
 	m_bytesRead = new AtomicLong(0);
 	m_bytesWritten = new AtomicLong(0);
+	m_capabilitiesSent = new AtomicBoolean(false);
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
 	m_echoQueue = new ArrayList<> ();
@@ -280,14 +282,17 @@ public abstract class Neighbor
 		    if(!connected() || m_aborted.get())
 			return;
 
-		    if(System.nanoTime() - m_accumulatedTime >= 10000000000L)
+		    if(System.nanoTime() - m_accumulatedTime >= 30000000000L)
 		    {
 			/*
-			** Send every 10 seconds.
+			** Send every 30 seconds.
 			*/
 
 			m_accumulatedTime = System.nanoTime();
-			send(getCapabilities());
+
+			if(!m_capabilitiesSent.get())
+			    m_capabilitiesSent.set(send(getCapabilities()));
+
 			send(getIdentities());
 		    }
 
@@ -554,6 +559,8 @@ public abstract class Neighbor
 
     protected void disconnect()
     {
+	m_capabilitiesSent.set(false);
+
 	synchronized(m_echoQueueMutex)
 	{
 	    m_echoQueue.clear();
