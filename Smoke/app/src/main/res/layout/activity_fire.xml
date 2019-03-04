@@ -47,7 +47,7 @@
                     android:paddingEnd="5dp"
                     android:text="@string/details"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="normal|bold" />
 
                 <LinearLayout
@@ -56,11 +56,6 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/name" />
 
                     <EditText
                         android:id="@+id/name"
@@ -96,7 +91,7 @@
                         android:paddingEnd="5dp"
                         android:text="@string/fire"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textStyle="normal|bold" />
 
                     <Switch
@@ -134,12 +129,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:columnCount="2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/channel" />
+                    android:columnCount="1">
 
                     <EditText
                         android:id="@+id/channel"
@@ -150,11 +140,6 @@
                         android:importantForAutofill="no"
                         android:inputType="textPersonName" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/digest_key" />
-
                     <EditText
                         android:id="@+id/digest"
                         android:layout_width="match_parent"
@@ -163,11 +148,6 @@
                         android:hint="@string/digest_key"
                         android:importantForAutofill="no"
                         android:inputType="textPersonName" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/salt" />
 
                     <EditText
                         android:id="@+id/salt"
@@ -219,7 +199,7 @@
                     android:paddingEnd="5dp"
                     android:text="@string/fire_channels"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="normal|bold" />
 
                 <LinearLayout
@@ -237,7 +217,7 @@
 
                     <Button
                         android:id="@+id/delete"
-                        style="@style/Widget.AppCompat.Button"
+                        style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/delete" />
