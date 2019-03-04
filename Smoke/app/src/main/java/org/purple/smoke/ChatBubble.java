@@ -62,6 +62,7 @@ public class ChatBubble extends View
     private boolean m_fromSmokeStack = false;
     private boolean m_messageRead = false;
     private boolean m_messageSent = false;
+    private boolean m_selectionState = false;
     private int m_oid = -1;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
@@ -168,6 +169,11 @@ public class ChatBubble extends View
 
     public void setMessageSelectionStateEnabled(boolean state)
     {
+	m_selectionState = state;
+	m_view.findViewById(R.id.name_left).setVisibility
+	    (state ? View.INVISIBLE : View.VISIBLE);
+	m_view.findViewById(R.id.name_right).setVisibility
+	    (state ? View.INVISIBLE : View.VISIBLE);
 	m_view.findViewById(R.id.selected).setVisibility
 	    (state ? View.VISIBLE : View.GONE);
     }
@@ -185,14 +191,20 @@ public class ChatBubble extends View
 	    TextView textView = m_view.findViewById(R.id.name_left);
 
 	    textView.setText(name.substring(0, 1).toUpperCase());
-	    textView.setVisibility(View.VISIBLE);
+
+	    if(!m_selectionState)
+		textView.setVisibility(View.VISIBLE);
 	}
 	else
 	{
 	    TextView textView = m_view.findViewById(R.id.name_right);
 
 	    textView.setText(name.substring(0, 1).toUpperCase());
-	    textView.setVisibility(View.VISIBLE);
+
+	    if(!m_selectionState)
+		textView.setVisibility(View.VISIBLE);
+	    else
+		textView.setVisibility(View.INVISIBLE);
 	}
     }
 
