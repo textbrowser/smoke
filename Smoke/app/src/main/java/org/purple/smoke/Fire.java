@@ -48,11 +48,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
@@ -486,9 +486,9 @@ public class Fire extends AppCompatActivity
 	    }
 	});
 
-	CheckBox checkBox1 = (CheckBox) findViewById(R.id.show_details);
+	Switch switch1 = (Switch) findViewById(R.id.show_details);
 
-	checkBox1.setOnCheckedChangeListener
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -565,9 +565,9 @@ public class Fire extends AppCompatActivity
 	if(State.getInstance().isAuthenticated())
 	    populateFires();
 
-	CheckBox checkBox1 = (CheckBox) findViewById(R.id.show_details);
+	Switch switch1 = (Switch) findViewById(R.id.show_details);
 
-	checkBox1.setChecked
+	switch1.setChecked
 	    (m_databaseHelper.readSetting(null, "fire_show_details").
 	     equals("true"));
 	prepareAutoFill();

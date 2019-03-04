@@ -43,8 +43,8 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/sectiongradient"
-                    android:paddingEnd="5dp"
                     android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/details"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
@@ -53,8 +53,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -69,6 +69,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/your_name"
+                        android:importantForAutofill="no"
                         android:inputType="textPersonName" />
 
                     <Button
@@ -91,27 +92,28 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/sectiongradient"
-                        android:paddingEnd="5dp"
                         android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/fire"
                         android:textColor="@android:color/white"
                         android:textSize="20sp"
                         android:textStyle="normal|bold" />
 
-                    <CheckBox
+                    <Switch
                         android:id="@+id/show_details"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:checked="true" />
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/auto_fill_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -130,8 +132,8 @@
                     android:id="@+id/grid_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:columnCount="2">
 
                     <TextView
@@ -145,6 +147,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/channel"
+                        android:importantForAutofill="no"
                         android:inputType="textPersonName" />
 
                     <TextView
@@ -158,6 +161,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/digest_key"
+                        android:importantForAutofill="no"
                         android:inputType="textPersonName" />
 
                     <TextView
@@ -171,6 +175,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/salt"
+                        android:importantForAutofill="no"
                         android:inputType="textPersonName" />
                 </GridLayout>
 
@@ -178,8 +183,8 @@
                     android:id="@+id/fire_buttons_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -210,8 +215,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/sectiongradient"
-                    android:paddingEnd="5dp"
                     android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/fire_channels"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
@@ -220,8 +225,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
                     <Spinner
