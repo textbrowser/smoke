@@ -621,38 +621,47 @@ public class MemberChat extends AppCompatActivity
 				@Override
 				public void run()
 				{
-				    BitmapFactory.Options options = new
-					BitmapFactory.Options();
-
-				    options.inSampleSize = 2;
-
-				    Bitmap bitmap = BitmapFactory.decodeStream
-					(new ByteArrayInputStream(m_bytes),
-					 null,
-					 options);
-
-				    if(bitmap != null)
+				    try(ByteArrayInputStream
+					byteArrayOutputStream =
+					new ByteArrayInputStream(m_bytes))
 				    {
-					ImageView imageView = (ImageView)
-					    findViewById(R.id.preview);
+					BitmapFactory.Options options = new
+					    BitmapFactory.Options();
 
-					findViewById(R.id.preview_layout).
-					    setVisibility(View.VISIBLE);
-					imageView.setImageBitmap
-					    (Bitmap.
-					     createScaledBitmap
-					     (bitmap,
-					      bitmap.getWidth(),
-					      Math.min(200,
-						       bitmap.getHeight()),
-					      false));
-					m_attachment = Miscellaneous.deepCopy
-					    (m_bytes);
-					bitmap.recycle();
+					options.inSampleSize = 2;
+
+					Bitmap bitmap =
+					    BitmapFactory.decodeStream
+					    (byteArrayOutputStream,
+					     null,
+					     options);
+
+					if(bitmap != null)
+					{
+					    ImageView imageView = (ImageView)
+						findViewById(R.id.preview);
+
+					    findViewById(R.id.preview_layout).
+						setVisibility(View.VISIBLE);
+					    imageView.setImageBitmap
+						(Bitmap.
+						 createScaledBitmap
+						 (bitmap,
+						  bitmap.getWidth(),
+						  Math.min(200,
+							   bitmap.getHeight()),
+						  false));
+					    m_attachment = Miscellaneous.
+						deepCopy(m_bytes);
+					    bitmap.recycle();
+					}
+					else
+					    findViewById(R.id.preview_layout).
+						setVisibility(View.GONE);
 				    }
-				    else
-					findViewById(R.id.preview_layout).
-					    setVisibility(View.GONE);
+				    catch(Exception exception)
+				    {
+				    }
 
 				    bar.setVisibility(ProgressBar.INVISIBLE);
 				    getWindow().clearFlags
@@ -1039,6 +1048,11 @@ public class MemberChat extends AppCompatActivity
 			    @Override
 			    public void run()
 			    {
+				ByteArrayInputStream byteArrayInputStream =
+				    null;
+				ByteArrayOutputStream byteArrayOutputStream =
+				    null;
+
 				try
 				{
 				    BitmapFactory.Options options =
@@ -1052,22 +1066,21 @@ public class MemberChat extends AppCompatActivity
 						       m_sipHashId,
 						       itemId);
 
+				    byteArrayInputStream =
+					new ByteArrayInputStream
+					(memberChatElement.m_attachment);
+
 				    /*
 				    ** Convert the bytes into a bitmap.
 				    */
 
 				    Bitmap bitmap = BitmapFactory.decodeStream
-					(new ByteArrayInputStream
-					 (memberChatElement.m_attachment),
-					 null,
-					 options);
+					(byteArrayInputStream, null, options);
 
 				    if(bitmap != null)
 				    {
-					ByteArrayOutputStream
-					    byteArrayOutputStream = new
+					byteArrayOutputStream = new
 					    ByteArrayOutputStream();
-
 					bitmap.compress
 					    (Bitmap.CompressFormat.JPEG,
 					     100,
@@ -1106,6 +1119,26 @@ public class MemberChat extends AppCompatActivity
 				}
 				catch(Exception exception)
 				{
+				}
+				finally
+				{
+				    try
+				    {
+					if(byteArrayInputStream != null)
+					    byteArrayInputStream.close();
+				    }
+				    catch(Exception exception)
+				    {
+				    }
+
+				    try
+				    {
+					if(byteArrayOutputStream != null)
+					    byteArrayOutputStream.close();
+				    }
+				    catch(Exception exception)
+				    {
+				    }
 				}
 
 				try
