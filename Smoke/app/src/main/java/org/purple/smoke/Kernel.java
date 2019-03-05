@@ -899,11 +899,6 @@ public class Kernel
 			for(ParticipantElement participantElement : arrayList)
 			    if(participantElement != null)
 			    {
-				if(System.currentTimeMillis() -
-				   participantElement.m_lastStatusTimestamp >
-				   Chat.STATUS_WINDOW)
-				    continue;
-
 				byte bytes[] = Messages.chatStatus
 				    (s_cryptography,
 				     participantElement.m_sipHashId,
