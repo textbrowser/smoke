@@ -272,13 +272,22 @@ public abstract class Miscellaneous
 		{
 		    gzipOutputStream.write(bytes);
 		}
+
+		return byteArrayOutputStream.toByteArray();
+	    }
+	    catch(Exception exception)
+	    {
 	    }
 	    finally
 	    {
-		byteArrayOutputStream.close();
+		try
+		{
+		    byteArrayOutputStream.close();
+		}
+		catch(Exception exception)
+		{
+		}
 	    }
-
-	    return byteArrayOutputStream.toByteArray();
 	}
 	catch(Exception exception)
 	{
@@ -310,14 +319,30 @@ public abstract class Miscellaneous
 		    while((rc = gzipInputStream.read(buffer)) > 0)
 			byteArrayOutputStream.write(buffer, 0, rc);
 		}
+
+		return byteArrayOutputStream.toByteArray();
+	    }
+	    catch(Exception exception)
+	    {
 	    }
 	    finally
 	    {
-		byteArrayInputStream.close();
-		byteArrayOutputStream.close();
-	    }
+		try
+		{
+		    byteArrayInputStream.close();
+		}
+		catch(Exception exception)
+		{
+		}
 
-	    return byteArrayOutputStream.toByteArray();
+		try
+		{
+		    byteArrayOutputStream.close();
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
 	}
 	catch(Exception exception)
 	{

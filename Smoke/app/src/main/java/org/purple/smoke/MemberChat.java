@@ -557,6 +557,9 @@ public class MemberChat extends AppCompatActivity
 		    @Override
 		    public void run()
 		    {
+			ByteArrayOutputStream byteArrayOutputStream = null;
+			InputStream inputStream = null;
+
 			try
 			{
 			    Bitmap bitmap = null;
@@ -564,9 +567,6 @@ public class MemberChat extends AppCompatActivity
 				BitmapFactory.Options();
 
 			    options.inSampleSize = 2;
-
-			    InputStream inputStream = null;
-
 			    inputStream = getContentResolver().
 				openInputStream(m_uri);
 			    bitmap = BitmapFactory.decodeStream
@@ -574,9 +574,8 @@ public class MemberChat extends AppCompatActivity
 
 			    if(bitmap != null)
 			    {
-				ByteArrayOutputStream byteArrayOutputStream =
+				byteArrayOutputStream =
 				    new ByteArrayOutputStream();
-
 				bitmap.compress
 				    (Bitmap.CompressFormat.JPEG,
 				     Miscellaneous.
@@ -593,6 +592,26 @@ public class MemberChat extends AppCompatActivity
 			catch(Exception exception)
 			{
 			    m_bytes = null;
+			}
+			finally
+			{
+			    try
+			    {
+				if(byteArrayOutputStream != null)
+				    byteArrayOutputStream.close();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+
+			    try
+			    {
+				if(inputStream != null)
+				    inputStream.close();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
 			}
 
 			try

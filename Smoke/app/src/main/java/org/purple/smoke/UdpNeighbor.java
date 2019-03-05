@@ -218,6 +218,8 @@ public class UdpNeighbor extends Neighbor
 	    @Override
 	    public void run()
 	    {
+		ByteArrayOutputStream byteArrayOutputStream = null;
+
 		try
 		{
 		    if(!connected())
@@ -248,8 +250,6 @@ public class UdpNeighbor extends Neighbor
 			disconnect();
 			return;
 		    }
-
-		    ByteArrayOutputStream byteArrayOutputStream = null;
 
 		    if(datagramPacket.getLength() > 0)
 		    {
@@ -286,6 +286,17 @@ public class UdpNeighbor extends Neighbor
 		}
 		catch(Exception exception)
 		{
+		}
+		finally
+		{
+		    try
+		    {
+			if(byteArrayOutputStream != null)
+			    byteArrayOutputStream.close();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 		}
 	    }
 	}, 0, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);

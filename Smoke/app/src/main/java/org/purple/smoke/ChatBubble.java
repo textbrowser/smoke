@@ -131,14 +131,18 @@ public class ChatBubble extends View
 	    return;
 	}
 
+	ByteArrayInputStream byteArrayInputStream = null;
+
 	try
 	{
+	    byteArrayInputStream = new ByteArrayInputStream(bytes);
+
 	    BitmapFactory.Options options = new BitmapFactory.Options();
 
 	    options.inSampleSize = 2;
 
 	    Bitmap bitmap = BitmapFactory.decodeStream
-		(new ByteArrayInputStream(bytes), null, options);
+		(byteArrayInputStream, null, options);
 	    ImageView imageView = m_view.findViewById(R.id.image);
 
 	    if(bitmap != null)
@@ -157,6 +161,17 @@ public class ChatBubble extends View
 	catch(Exception exception)
 	{
 	    m_view.findViewById(R.id.image).setVisibility(View.GONE);
+	}
+	finally
+	{
+	    try
+	    {
+		if(byteArrayInputStream != null)
+		    byteArrayInputStream.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
     }
 
