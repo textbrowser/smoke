@@ -89,17 +89,6 @@ purge:
 
 release: clean
 	rm -rf Smoke/build Smoke/captures
-	mkdir -p Smoke/app/src/main/assets
-	zip -r smoke.src.d.zip \
-	Android \
-	Documentation \
-	Makefile \
-	Makefile.linux \
-	Smoke \
-	TO-DO \
-	adb.bash \
-	-x *.git* -x *.gradle* -x *.idea* \
-	&& mv smoke.src.d.zip Smoke/app/src/main/assets/.
 	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
 	--build-file Smoke/build.gradle assembleRelease \
 	--configure-on-demand --daemon --parallel
