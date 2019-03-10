@@ -64,8 +64,6 @@
     <string name="fiasco_keys">Fiasco Keys</string>
     <string name="generate_pk">Generate PK</string>
     <string name="share_smoke_id">Share Smoke ID</string>
-    <string name="message_was_read">Message was read.</string>
-    <string name="message_was_sent">Message was sent.</string>
     <string name="initialize_ozone">Initialize Ozone</string>
     <string name="foreground_service">Foreground Service</string>
     <string name="message_status">Message Status</string>
