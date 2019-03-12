@@ -64,6 +64,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
@@ -130,6 +131,8 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
+    private ScheduledExecutorService m_scheduler1 = null;
+    private ScheduledExecutorService m_scheduler2 = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -749,6 +752,57 @@ public class Chat extends AppCompatActivity
 	arrayList.clear();
     }
 
+    private void releaseResources()
+    {
+	if(m_scheduler1 != null)
+	{
+	    try
+	    {
+		m_scheduler1.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_scheduler1.awaitTermination(60, TimeUnit.SECONDS))
+		    m_scheduler1.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_scheduler1 = null;
+	    }
+	}
+
+	if(m_scheduler2 != null)
+	{
+	    try
+	    {
+		m_scheduler2.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_scheduler2.awaitTermination(60, TimeUnit.SECONDS))
+		    m_scheduler2.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_scheduler2 = null;
+	    }
+	}
+    }
+
     private void requestMessages()
     {
 	StringBuilder stringBuilder = new StringBuilder();
@@ -824,8 +878,10 @@ public class Chat extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate
-	    (new Runnable()
+	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_receiver = new ChatBroadcastReceiver();
+	m_scheduler1 = Executors.newSingleThreadScheduledExecutor();
+	m_scheduler1.scheduleAtFixedRate(new Runnable()
         {
 	    @Override
 	    public void run()
@@ -880,10 +936,8 @@ public class Chat extends AppCompatActivity
 		}
 	    }
 	}, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
-	m_databaseHelper = Database.getInstance(getApplicationContext());
-	m_receiver = new ChatBroadcastReceiver();
-	Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate
-	    (new Runnable()
+	m_scheduler2 = Executors.newSingleThreadScheduledExecutor();
+	m_scheduler2.scheduleAtFixedRate(new Runnable()
         {
 	    @Override
 	    public void run()
@@ -1448,6 +1502,7 @@ public class Chat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
+	releaseResources();
 	saveState();
     }
 
@@ -1493,6 +1548,7 @@ public class Chat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
+	releaseResources();
 	saveState();
     }
 }
