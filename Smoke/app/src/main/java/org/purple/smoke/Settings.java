@@ -1707,11 +1707,13 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
+		CheckBox checkBox1 = (CheckBox) findViewById(R.id.as_alias);
 		TextView textView1 = (TextView) findViewById
 		    (R.id.participant_name);
 		TextView textView2 = (TextView) findViewById
 		    (R.id.participant_siphash_id);
 
+		checkBox1.setChecked(false);
 		textView1.setText("");
 		textView2.setText("");
 		textView1.requestFocus();
@@ -1899,14 +1901,26 @@ public class Settings extends AppCompatActivity
 		     (int) (10 * density),
 		     (int) (10 * density),
 		     (int) (10 * density));
-		textView1.setText
-		    ("A Smoke ID is a sequence of digits and " +
-		     "letters assigned to a specific subscriber " +
-		     "(public key pair). " +
-		     "The tokens allow participants to exchange public " +
-		     "key pairs via the Echo Public Key Sharing (EPKS) " +
-		     "protocol. " +
-		     "An example Smoke ID is ABAB-0101-CDCD-0202.");
+
+		if(((CheckBox) findViewById(R.id.as_alias)).isChecked())
+		    textView1.setText
+			("A Smoke Alias is an arrangement of digits and " +
+			 "letters assigned to a specific subscriber " +
+			 "(public key pair). " +
+			 "The tokens allow participants to exchange public " +
+			 "key pairs via the Echo Public Key Sharing (EPKS) " +
+			 "protocol. " +
+			 "An example Smoke Alias is textbrowser@gmail.com.");
+		else
+		    textView1.setText
+			("A Smoke ID is an arrangement of digits and " +
+			 "letters assigned to a specific subscriber " +
+			 "(public key pair). " +
+			 "The tokens allow participants to exchange public " +
+			 "key pairs via the Echo Public Key Sharing (EPKS) " +
+			 "protocol. " +
+			 "An example Smoke ID is ABAB-0101-CDCD-0202.");
+
 		textView1.setTextSize(16);
 		popupWindow.setContentView(textView1);
 		popupWindow.setOutsideTouchable(true);
@@ -1921,8 +1935,28 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
+	CheckBox checkBox1 = null;
 
+	checkBox1 = (CheckBox) findViewById(R.id.as_alias);
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    TextView textView1 = (TextView) findViewById
+			(R.id.participant_siphash_id);
+
+		    if(isChecked)
+			textView1.setHint("Smoke Alias");
+		    else
+			textView1.setHint("Smoke ID");
+		}
+	    });
+
+
+	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 	checkBox1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
