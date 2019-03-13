@@ -2253,6 +2253,33 @@ public class Settings extends AppCompatActivity
 	thread.start();
     }
 
+    private void releaseResources()
+    {
+	if(m_scheduler != null)
+	{
+	    try
+	    {
+		m_scheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_scheduler.awaitTermination(60, TimeUnit.SECONDS))
+		    m_scheduler.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_scheduler = null;
+	    }
+	}
+    }
+
     private void requestKeysOf(final String oid)
     {
 	if(Settings.this.isFinishing())
@@ -3309,6 +3336,8 @@ public class Settings extends AppCompatActivity
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
+
+	releaseResources();
     }
 
     @Override
@@ -3368,5 +3397,7 @@ public class Settings extends AppCompatActivity
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
+
+	releaseResources();
     }
 }
