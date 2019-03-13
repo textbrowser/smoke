@@ -67,7 +67,7 @@
     <string name="initialize_ozone">Initialize Ozone</string>
     <string name="foreground_service">Foreground Service</string>
     <string name="message_status">Message Status</string>
-    <string name="alias">Alias</string>
+    <string name="smoke_alias">Smoke Alias</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
