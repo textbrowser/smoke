@@ -1392,7 +1392,7 @@ public class Settings extends AppCompatActivity
 					       getEncoded(),
 					       Base64.DEFAULT));
 
-		    boolean e1 = s_cryptography.prepareSipHashIds();
+		    boolean e1 = s_cryptography.prepareSipHashIds(null);
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
 		    boolean e3 = generateOzone
 			(Miscellaneous.
@@ -1738,6 +1738,56 @@ public class Settings extends AppCompatActivity
 		    }
 		}
 	    };
+
+	button1 = (Button) findViewById(R.id.save_alias);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(Settings.this.isFinishing())
+		    return;
+
+		String alias = ((TextView) findViewById(R.id.alias)).
+		    getText().toString().trim();
+
+		if(!alias.isEmpty() && alias.length() < 8)
+		    Miscellaneous.showErrorDialog
+			(Settings.this,
+			 "The alias must include at least eight characters. ");
+		else if(alias.isEmpty())
+		{
+		    s_cryptography.prepareSipHashIds(null);
+		    m_databaseHelper.writeSetting(s_cryptography, "alias", "");
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "identity",
+			 Base64.encodeToString(s_cryptography.identity(),
+					       Base64.DEFAULT));
+		}
+		else
+		{
+		    s_cryptography.prepareSipHashIds(alias);
+		    m_databaseHelper.writeSetting
+			(s_cryptography, "alias", alias);
+		    m_databaseHelper.writeSetting
+			(s_cryptography,
+			 "identity",
+			 Base64.encodeToString(s_cryptography.identity(),
+					       Base64.DEFAULT));
+		}
+
+		StringBuilder stringBuilder = new StringBuilder();
+		TextView textView1 = (TextView) findViewById
+		    (R.id.siphash_identity);
+
+		stringBuilder.append
+		    (Miscellaneous.
+		     prepareSipHashId(s_cryptography.sipHashId()));
+		textView1.setText(stringBuilder);
+		textView1.setTextIsSelectable(true);
+		textView1.setVisibility(View.VISIBLE);
+	    }
+        });
 
 	button1 = (Button) findViewById(R.id.save_ozone);
 	button1.setOnClickListener(new View.OnClickListener()
@@ -2188,7 +2238,8 @@ public class Settings extends AppCompatActivity
 					       getEncoded(),
 					       Base64.DEFAULT));
 
-		    boolean e1 = s_cryptography.prepareSipHashIds();
+		    boolean e1 = s_cryptography.prepareSipHashIds
+			(m_databaseHelper.readSetting(s_cryptography, "alias"));
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
 		    boolean e3 = generateOzone
 			(Miscellaneous.
@@ -2957,6 +3008,9 @@ public class Settings extends AppCompatActivity
 	textView1.append
 	    ("WiFiLock Locked: " +
 	     Miscellaneous.niceBoolean(Kernel.getInstance().wifiLocked()));
+	textView1 = (TextView) findViewById(R.id.alias);
+	textView1.setText
+	    (m_databaseHelper.readSetting(s_cryptography, "alias"));
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(false);
         textView1 = (TextView) findViewById(R.id.neighbors_port);

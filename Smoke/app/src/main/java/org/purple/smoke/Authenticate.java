@@ -264,7 +264,9 @@ public class Authenticate extends AppCompatActivity
 				}
 
 				boolean e1 = s_cryptography.
-				    prepareSipHashIds();
+				    prepareSipHashIds
+				    (m_databaseHelper.
+				     readSetting(s_cryptography, "alias"));
 				boolean e2 = s_cryptography.
 				    prepareSipHashKeys();
 

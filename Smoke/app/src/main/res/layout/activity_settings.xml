@@ -654,6 +654,29 @@
                     android:textSize="18sp"
                     android:textStyle="normal|bold" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/alias"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/alias"
+                        android:inputType="textPersonName" />
+
+                    <Button
+                        android:id="@+id/save_alias"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/chat_encryption_key_data"
                     android:layout_width="match_parent"

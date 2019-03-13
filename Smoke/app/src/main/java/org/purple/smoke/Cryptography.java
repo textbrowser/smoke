@@ -1813,13 +1813,18 @@ public class Cryptography
 	return s_instance;
     }
 
-    public boolean prepareSipHashIds()
+    public boolean prepareSipHashIds(String alias)
     {
 	try
 	{
-	    byte bytes[] = Miscellaneous.joinByteArrays
-		(chatEncryptionKeyPair().getPublic().getEncoded(),
-		 chatSignatureKeyPair().getPublic().getEncoded());
+	    byte bytes[] = null;
+
+	    if(alias == null || alias.trim().isEmpty())
+		bytes = Miscellaneous.joinByteArrays
+		    (chatEncryptionKeyPair().getPublic().getEncoded(),
+		     chatSignatureKeyPair().getPublic().getEncoded());
+	    else
+		bytes = alias.getBytes(StandardCharsets.UTF_8);
 
 	    if(bytes != null)
 	    {
