@@ -1777,12 +1777,14 @@ public class Settings extends AppCompatActivity
 		{
 		    m_databaseHelper.writeSetting(s_cryptography, "alias", "");
 		    s_cryptography.prepareSipHashIds(null);
+		    s_cryptography.prepareSipHashKeys();
 		}
 		else
 		{
 		    m_databaseHelper.writeSetting
 			(s_cryptography, "alias", alias);
 		    s_cryptography.prepareSipHashIds(alias);
+		    s_cryptography.prepareSipHashKeys();
 		}
 
 		StringBuilder stringBuilder = new StringBuilder();
@@ -3049,9 +3051,6 @@ public class Settings extends AppCompatActivity
 	textView1.append
 	    ("WiFiLock Locked: " +
 	     Miscellaneous.niceBoolean(Kernel.getInstance().wifiLocked()));
-	textView1 = (TextView) findViewById(R.id.alias);
-	textView1.setText
-	    (m_databaseHelper.readSetting(s_cryptography, "alias"));
 	textView1 = (TextView) findViewById(R.id.neighbors_scope_id);
         textView1.setEnabled(false);
         textView1 = (TextView) findViewById(R.id.neighbors_port);
@@ -3112,6 +3111,9 @@ public class Settings extends AppCompatActivity
 	if(isAuthenticated)
 	{
 	    checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
+	    textView1 = (TextView) findViewById(R.id.alias);
+	    textView1.setText
+		(m_databaseHelper.readSetting(s_cryptography, "alias"));
 	    textView1 = (TextView) findViewById(R.id.ozone);
 	    textView1.setText
 		(m_databaseHelper.readSetting(s_cryptography, "ozone_address"));
