@@ -331,33 +331,49 @@ public class Settings extends AppCompatActivity
 	if(Settings.this.isFinishing())
 	    return;
 
+	CheckBox checkBox1 = (CheckBox) findViewById(R.id.as_alias);
 	String string = "";
 	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
 	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
 
-	stringBuilder.append
-	    (Miscellaneous.
-	     prepareSipHashId(textView1.getText().toString().
-			      replace(" ", "").
-			      replace("-", "").
-			      replace(":", "").
-			      replace("@", "").trim()));
-	string = stringBuilder.toString().trim();
+	if(checkBox1.isChecked())
+	{
+	    string = stringBuilder.toString().trim();
 
-	if(string.length() != Cryptography.SIPHASH_ID_LENGTH)
-	{
-	    Miscellaneous.showErrorDialog
-		(Settings.this,
-		 "A Smoke ID must be of the form 0102-0304-0506-0708.");
-	    return;
+	    if(string.length() < 8)
+	    {
+		Miscellaneous.showErrorDialog
+		    (Settings.this,
+		     "A Smoke Alias must include at least eight characters.");
+		return;
+	    }
 	}
-	else if(textView2.getText().toString().equals(string))
+	else
 	{
-	    Miscellaneous.showErrorDialog
-		(Settings.this, "Please do not assign your Smoke ID.");
-	    return;
+	    stringBuilder.append
+		(Miscellaneous.
+		 prepareSipHashId(textView1.getText().toString().
+				  replace(" ", "").
+				  replace("-", "").
+				  replace(":", "").
+				  replace("@", "").trim()));
+	    string = stringBuilder.toString().trim();
+
+	    if(string.length() != Cryptography.SIPHASH_ID_LENGTH)
+	    {
+		Miscellaneous.showErrorDialog
+		    (Settings.this,
+		     "A Smoke ID must be of the form 0102-0304-0506-0708.");
+		return;
+	    }
+	    else if(textView2.getText().toString().equals(string))
+	    {
+		Miscellaneous.showErrorDialog
+		    (Settings.this, "Please do not assign your Smoke ID.");
+		return;
+	    }
 	}
 
 	final ProgressBar bar = (ProgressBar) findViewById
@@ -1755,27 +1771,18 @@ public class Settings extends AppCompatActivity
 		if(!alias.isEmpty() && alias.length() < 8)
 		    Miscellaneous.showErrorDialog
 			(Settings.this,
-			 "The alias must include at least eight characters. ");
+			 "A Smoke Alias must include at " +
+			 "least eight characters. ");
 		else if(alias.isEmpty())
 		{
-		    s_cryptography.prepareSipHashIds(null);
 		    m_databaseHelper.writeSetting(s_cryptography, "alias", "");
-		    m_databaseHelper.writeSetting
-			(s_cryptography,
-			 "identity",
-			 Base64.encodeToString(s_cryptography.identity(),
-					       Base64.DEFAULT));
+		    s_cryptography.prepareSipHashIds(null);
 		}
 		else
 		{
-		    s_cryptography.prepareSipHashIds(alias);
 		    m_databaseHelper.writeSetting
 			(s_cryptography, "alias", alias);
-		    m_databaseHelper.writeSetting
-			(s_cryptography,
-			 "identity",
-			 Base64.encodeToString(s_cryptography.identity(),
-					       Base64.DEFAULT));
+		    s_cryptography.prepareSipHashIds(alias);
 		}
 
 		StringBuilder stringBuilder = new StringBuilder();
