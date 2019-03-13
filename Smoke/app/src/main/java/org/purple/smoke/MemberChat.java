@@ -461,6 +461,33 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    private void releaseResources()
+    {
+	if(m_statusScheduler != null)
+	{
+	    try
+	    {
+		m_statusScheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_statusScheduler.awaitTermination(60, TimeUnit.SECONDS))
+		    m_statusScheduler.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_statusScheduler = null;
+	    }
+	}
+    }
+
     private void saveState()
     {
 	TextView textView1 = (TextView) findViewById(R.id.chat_message);
@@ -1310,6 +1337,7 @@ public class MemberChat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
+	releaseResources();
 	saveState();
     }
 
@@ -1377,6 +1405,7 @@ public class MemberChat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
+	releaseResources();
 	saveState();
     }
 
