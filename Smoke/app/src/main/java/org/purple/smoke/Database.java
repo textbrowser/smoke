@@ -2394,6 +2394,10 @@ public class Database extends SQLiteOpenHelper
 		("DELETE FROM participants WHERE siphash_id_digest IN " +
 		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
 		 new String[] {oid});
+	    m_db.execSQL
+		("DELETE FROM participants_keys WHERE siphash_id_digest IN " +
+		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
+		 new String[] {oid});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
