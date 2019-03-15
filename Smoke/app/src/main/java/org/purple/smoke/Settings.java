@@ -348,6 +348,22 @@ public class Settings extends AppCompatActivity
 		     "A Smoke Alias must include at least eight characters.");
 		return;
 	    }
+	    else if(m_databaseHelper.
+		    readSetting(s_cryptography, "alias").equals(string))
+	    {
+		Miscellaneous.showErrorDialog
+		    (Settings.this, "Please do not assign your Smoke Alias.");
+		return;
+	    }
+
+	    string = Cryptography.sipHashIdFromString(string);
+
+	    if(string.isEmpty())
+	    {
+		Miscellaneous.showErrorDialog
+		    (Settings.this, "A transformation failure occurred!");
+		return;
+	    }
 	}
 	else
 	{
@@ -424,7 +440,7 @@ public class Settings extends AppCompatActivity
 			    Miscellaneous.showErrorDialog
 				(Settings.this,
 				 "An error occurred while attempting " +
-				 "to save the specified Smoke ID.");
+				 "to save the specified Smoke Alias / ID.");
 			else
 			    populateParticipants();
 		    }

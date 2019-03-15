@@ -1406,6 +1406,41 @@ public class Cryptography
 	    return fingerPrint(publicKey.getEncoded());
     }
 
+    public static String sipHashIdFromString(String string)
+    {
+	try
+	{
+	    byte bytes[] = string.getBytes(StandardCharsets.UTF_8);
+
+	    if(bytes != null)
+	    {
+		byte key[] = keyForSipHash(bytes);
+
+		if(key == null)
+		    return "";
+
+		SipHash sipHash = new SipHash();
+		long value = sipHash.hmac(bytes, key);
+
+		if(value == 0)
+		    return "";
+
+		bytes = Miscellaneous.longToByteArray(value);
+
+		if(bytes == null)
+		    return "";
+
+		return Miscellaneous.
+		    byteArrayAsHexStringDelimited(bytes, '-', 4).toUpperCase();
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
+    }
+
     public static boolean memcmp(byte a[], byte b[])
     {
 	if(a == null || b == null)
