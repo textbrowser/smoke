@@ -64,7 +64,7 @@ public class Messages
 							      ** byte is not
 							      ** considered.
 							      */
-    public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 6;
+    public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 7;
 
     public static String authenticateMessage(Cryptography cryptography,
 					     String string)
@@ -838,6 +838,16 @@ public class Messages
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
+	    /*
+	    ** [ Sender's Smoke Identity ]
+	    */
+
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(cryptography.sipHashId().
+				       getBytes(StandardCharsets.UTF_8),
+				       Base64.NO_WRAP));
+
 	    byte aes256[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream, 0, 32));
@@ -943,6 +953,16 @@ public class Messages
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
+
+	    /*
+	    ** [ Sender's Smoke Identity ]
+	    */
+
+	    stringBuilder.append("\n");
+	    stringBuilder.append
+		(Base64.encodeToString(sipHashId.
+				       getBytes(StandardCharsets.UTF_8),
+				       Base64.NO_WRAP));
 
 	    byte aes256[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),

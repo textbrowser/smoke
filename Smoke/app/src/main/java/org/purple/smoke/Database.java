@@ -1955,20 +1955,19 @@ public class Database extends SQLiteOpenHelper
 						      getEncoded())))
 			signatureKeySigned = true;
 
+		    ii += 1;
+		    break;
+		case 6:
+		    sipHashId = new String
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP),
+			 StandardCharsets.UTF_8);
+
+		    if(sipHashId == null ||
+		       sipHashId.length() != Cryptography.SIPHASH_ID_LENGTH)
+			return "";
+
 		    break;
 		}
-
-	    /*
-	    ** We shall use the two public keys to generate the
-	    ** provider's SipHash ID. If a SipHash ID is not defined,
-	    ** we'll reject the data.
-	    */
-
-	    sipHashId = Miscellaneous.
-		sipHashIdFromData(Miscellaneous.
-				  joinByteArrays(encryptionKey.getEncoded(),
-						 signatureKey.getEncoded())).
-		toUpperCase();
 
 	    if(nameFromSipHashId(cryptography, sipHashId).isEmpty())
 		return "";
