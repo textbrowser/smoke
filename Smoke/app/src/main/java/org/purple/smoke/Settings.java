@@ -2314,9 +2314,13 @@ public class Settings extends AppCompatActivity
 		    boolean e1 = s_cryptography.prepareSipHashIds
 			(m_databaseHelper.readSetting(s_cryptography, "alias"));
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
-		    boolean e3 = generateOzone
-			(Miscellaneous.
-			 prepareSipHashId(s_cryptography.sipHashId()));
+		    boolean e3 = true;
+
+		    if(m_databaseHelper.
+		       readSetting(s_cryptography, "ozone_address").isEmpty())
+			e3 = generateOzone
+			    (Miscellaneous.
+			     prepareSipHashId(s_cryptography.sipHashId()));
 
 		    if(!e1 || !e2 || !e3)
 		    {
