@@ -1958,9 +1958,18 @@ public class Settings extends AppCompatActivity
 			(R.id.participant_siphash_id);
 
 		    if(isChecked)
+		    {
+			textView1.setFilters(new InputFilter[] {});
 			textView1.setHint("Smoke Alias");
+		    }
 		    else
+		    {
+			textView1.setFilters
+			    (new InputFilter[] {new InputFilter.AllCaps(),
+						s_sipHashInputFilter});
 			textView1.setHint("Smoke ID");
+			textView1.setText("");
+		    }
 		}
 	    });
 

@@ -3,9 +3,9 @@
 ADB = ~/Android/Sdk/platform-tools/adb
 EMULATOR = ~/Android/Sdk/tools/emulator
 GRADLEW = ./Smoke/gradlew
-JARSIGNER = "/snap/android-studio/69/android-studio/jre/bin/jarsigner"
-JDK = "/snap/android-studio/69/android-studio/jre"
-export JAVA_HOME = /snap/android-studio/69/android-studio/jre
+JARSIGNER = "/snap/android-studio/current/android-studio/jre/bin/jarsigner"
+JDK = "/snap/android-studio/current/android-studio/jre"
+export JAVA_HOME = /snap/android-studio/current/android-studio/jre
 
 all:
 	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
