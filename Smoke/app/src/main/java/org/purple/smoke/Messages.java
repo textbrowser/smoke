@@ -837,12 +837,12 @@ public class Messages
 					     Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
 
 	    /*
 	    ** [ Sender's Smoke Identity ]
 	    */
 
-	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(cryptography.sipHashId().
 				       getBytes(StandardCharsets.UTF_8),
