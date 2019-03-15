@@ -333,14 +333,13 @@ public class Settings extends AppCompatActivity
 
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.as_alias);
 	String string = "";
-	StringBuilder stringBuilder = new StringBuilder();
 	TextView textView1 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
 	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
 
 	if(checkBox1.isChecked())
 	{
-	    string = stringBuilder.toString().trim();
+	    string = textView1.getText().toString().trim();
 
 	    if(string.length() < 8)
 	    {
@@ -352,6 +351,8 @@ public class Settings extends AppCompatActivity
 	}
 	else
 	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
 	    stringBuilder.append
 		(Miscellaneous.
 		 prepareSipHashId(textView1.getText().toString().
@@ -1954,21 +1955,24 @@ public class Settings extends AppCompatActivity
 		public void onCheckedChanged
 		    (CompoundButton buttonView, boolean isChecked)
 		{
-		    TextView textView1 = (TextView) findViewById
+		    TextView textView1 = (TextView) findViewById(R.id.at_sign);
+		    TextView textView2 = (TextView) findViewById
 			(R.id.participant_siphash_id);
 
 		    if(isChecked)
 		    {
-			textView1.setFilters(new InputFilter[] {});
-			textView1.setHint("Smoke Alias");
+			textView1.setText("|");
+			textView2.setFilters(new InputFilter[] {});
+			textView2.setHint("Smoke Alias");
 		    }
 		    else
 		    {
-			textView1.setFilters
+			textView1.setText("@");
+			textView2.setFilters
 			    (new InputFilter[] {new InputFilter.AllCaps(),
 						s_sipHashInputFilter});
-			textView1.setHint("Smoke ID");
-			textView1.setText("");
+			textView2.setHint("Smoke ID");
+			textView2.setText("");
 		    }
 		}
 	    });
