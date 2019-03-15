@@ -2381,6 +2381,33 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public boolean deletePublicKeys(String oid)
+    {
+	if(m_db == null)
+	    return false;
+
+	m_db.beginTransaction();
+
+	try
+	{
+	    m_db.execSQL
+		("DELETE FROM participants WHERE siphash_id_digest IN " +
+		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
+		 new String[] {oid});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
+    }
+
     public boolean setParticipantKeyStream(Cryptography cryptography,
 					   byte keyStream[],
 					   int oid)

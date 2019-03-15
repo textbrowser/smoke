@@ -282,10 +282,10 @@ public abstract class Neighbor
 		    if(!connected() || m_aborted.get())
 			return;
 
-		    if(System.nanoTime() - m_accumulatedTime >= 30000000000L)
+		    if(System.nanoTime() - m_accumulatedTime >= 15000000000L)
 		    {
 			/*
-			** Send every 30 seconds.
+			** Send every 15 seconds.
 			*/
 
 			m_accumulatedTime = System.nanoTime();

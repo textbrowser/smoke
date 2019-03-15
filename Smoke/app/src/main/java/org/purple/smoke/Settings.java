@@ -83,11 +83,12 @@ public class Settings extends AppCompatActivity
     {
 	public final static int DELETE = 0;
 	public final static int DELETE_FIASCO_KEYS = 1;
-	public final static int NEW_NAME = 2;
-	public final static int REQUEST_KEYS_VIA_OZONE = 3;
-	public final static int SHARE_KEYS_OF = 4;
-	public final static int SHARE_SMOKE_ID_OF = 5;
-	public final static int VIEW_DETAILS = 6;
+	public final static int DELETE_PUBLIC_KEYS = 2;
+	public final static int NEW_NAME = 3;
+	public final static int REQUEST_KEYS_VIA_OZONE = 4;
+	public final static int SHARE_KEYS_OF = 5;
+	public final static int SHARE_SMOKE_ID_OF = 6;
+	public final static int VIEW_DETAILS = 7;
     }
 
     private class PopulateNeighbors implements Runnable
@@ -3254,6 +3255,14 @@ public class Settings extends AppCompatActivity
 				populateParticipants();
 
 			break;
+		    case ContextMenuEnumerator.DELETE_PUBLIC_KEYS:
+			if(State.getInstance().
+			   getString("dialog_accepted").equals("true"))
+			    if(m_databaseHelper.
+			       deletePublicKeys(String.valueOf(itemId)))
+				populateParticipants();
+
+			break;
 		    case ContextMenuEnumerator.NEW_NAME:
 			string = State.getInstance().
 			    getString("settings_participant_name_input");
@@ -3297,6 +3306,15 @@ public class Settings extends AppCompatActivity
 		 "wish to delete the Fiasco keys of " +
 		 menuItem.getTitle().toString().
 		 replace("Delete Fiasco Keys (", "").replace(")", "") + "?");
+	    break;
+	case ContextMenuEnumerator.DELETE_PUBLIC_KEYS:
+	    Miscellaneous.showPromptDialog
+		(Settings.this,
+		 listener,
+		 "Are you sure that you " +
+		 "wish to delete the public keys of " +
+		 menuItem.getTitle().toString().
+		 replace("Delete Public Keys (", "").replace(")", "") + "?");
 	    break;
 	case ContextMenuEnumerator.NEW_NAME:
 	    Miscellaneous.showTextInputDialog
@@ -3421,6 +3439,10 @@ public class Settings extends AppCompatActivity
 		     view.getId(),
 		     0,
 		     "Delete Fiasco Keys (" + tag1 + ")");
+	    menu.add(ContextMenuEnumerator.DELETE_PUBLIC_KEYS,
+		     view.getId(),
+		     0,
+		     "Delete Public Keys (" + tag1 + ")");
 	    menu.add(ContextMenuEnumerator.NEW_NAME,
 		     view.getId(),
 		     0,
