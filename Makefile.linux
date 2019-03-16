@@ -71,7 +71,7 @@ load-apk: all
 
 load-apk-release: release
 	$(JARSIGNER) -verbose -keystore ~/Android-Keys/smoke-release.keystore \
-	./Smoke/app/build/outputs/apk/release/apk/smoke.apk smoke-release
+	./Smoke/app/build/outputs/apk/release/apk/smoke.apk smoke
 	$(JARSIGNER) -verify \
 	./Smoke/app/build/outputs/apk/release/apk/smoke.apk
 	./adb.bash install -r \
