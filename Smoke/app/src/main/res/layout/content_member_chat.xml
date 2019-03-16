@@ -29,19 +29,19 @@
             android:id="@+id/preview_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
             android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
             android:visibility="gone">
 
             <Button
                 android:id="@+id/remove_preview"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="134dp"
                 android:layout_marginStart="139dp"
+                android:layout_marginBottom="139dp"
                 android:background="@drawable/minus"
                 android:visibility="visible" />
 
@@ -49,8 +49,8 @@
                 android:id="@+id/preview"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="5dp"
                 android:adjustViewBounds="true"
