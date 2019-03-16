@@ -801,12 +801,6 @@ public class MemberChat extends AppCompatActivity
 	prepareListeners();
 
 	/*
-	** Prepare schedulers.
-	*/
-
-	prepareSchedulers();
-
-	/*
 	** Restore states.
 	*/
 
@@ -1376,6 +1370,8 @@ public class MemberChat extends AppCompatActivity
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
+
+	prepareSchedulers();
 
 	try
 	{

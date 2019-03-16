@@ -1505,7 +1505,11 @@ public class Settings extends AppCompatActivity
 			    populateOzone();
 			    populateParticipants();
 			    startKernel();
-			    startTimers();
+
+			    if(m_databaseHelper.
+			       readSetting(null, "automatic_neighbors_refresh").
+			       equals("true"))
+				startTimers();
 			}
 		    }
 		});
@@ -3154,9 +3158,7 @@ public class Settings extends AppCompatActivity
 	    populateParticipants();
 	    startKernel();
 
-	    if(checkBox1.isChecked())
-		startTimers();
-	    else
+	    if(!checkBox1.isChecked())
 		populateNeighbors(null);
 	}
 	else
@@ -3534,6 +3536,12 @@ public class Settings extends AppCompatActivity
 	    break;
 	case "MemberChat":
 	    showMemberChatActivity();
+	    break;
+	default:
+	    if(m_databaseHelper.
+	       readSetting(null, "automatic_neighbors_refresh").equals("true"))
+		startTimers();
+
 	    break;
 	}
     }
