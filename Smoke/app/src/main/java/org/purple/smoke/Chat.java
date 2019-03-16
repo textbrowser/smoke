@@ -672,6 +672,112 @@ public class Chat extends AppCompatActivity
         });
     }
 
+    private void prepareTimers()
+    {
+	if(m_scheduler1 == null)
+	{
+	    m_scheduler1 = Executors.newSingleThreadScheduledExecutor();
+	    m_scheduler1.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			if(Thread.currentThread().isInterrupted())
+			    return;
+
+			final boolean state = Kernel.getInstance().
+			    isConnected();
+
+			Chat.this.runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				Button button1 = (Button) findViewById
+				    (R.id.call);
+				boolean isEnabled = State.getInstance().
+				    chatCheckedParticipants() > 0;
+
+				button1.setEnabled(isEnabled && state);
+				button1 = (Button) findViewById
+				    (R.id.send_chat_message);
+
+				if(isEnabled)
+				{
+				    if(state)
+					button1.setTextColor
+					    (Color.rgb(46, 125, 50));
+				    else
+					button1.setTextColor
+					    (Color.rgb(198, 40, 40));
+				}
+				else
+				{
+				    /*
+				    ** 38% of enabled colors.
+				    */
+
+				    if(state)
+					button1.setTextColor
+					    (Color.argb(38, 46, 125, 50));
+				    else
+					button1.setTextColor
+					    (Color.argb(38, 198, 40, 40));
+				}
+			    }
+			});
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_scheduler2 == null)
+	{
+	    m_scheduler2 = Executors.newSingleThreadScheduledExecutor();
+	    m_scheduler2.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			if(Thread.currentThread().isInterrupted() ||
+			   !m_databaseHelper.
+			   readSetting(null, "show_chat_icons").equals("true"))
+			    return;
+
+			ArrayList<String> arrayList =
+			    m_databaseHelper.readSipHashIdStrings
+			    (s_cryptography);
+
+			if(arrayList == null || arrayList.isEmpty())
+			    return;
+
+			for(final String string : arrayList)
+			    Chat.this.runOnUiThread(new Runnable()
+			    {
+				@Override
+				public void run()
+				{
+				    refreshCheckBox(string);
+				}
+			    });
+
+			arrayList.clear();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+    }
+
     private void refreshCheckBox(String sipHashId)
     {
 	CheckBox checkBox1 = findViewById(R.id.participants).findViewWithTag
@@ -880,98 +986,7 @@ public class Chat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
-	m_scheduler1 = Executors.newSingleThreadScheduledExecutor();
-	m_scheduler1.scheduleAtFixedRate(new Runnable()
-        {
-	    @Override
-	    public void run()
-	    {
-		try
-		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-
-		    final boolean state = Kernel.getInstance().isConnected();
-
-		    Chat.this.runOnUiThread(new Runnable()
-		    {
-			@Override
-			public void run()
-			{
-			    Button button1 = (Button) findViewById(R.id.call);
-			    boolean isEnabled = State.getInstance().
-				chatCheckedParticipants() > 0;
-
-			    button1.setEnabled(isEnabled && state);
-			    button1 = (Button) findViewById
-				(R.id.send_chat_message);
-
-			    if(isEnabled)
-			    {
-				if(state)
-				    button1.setTextColor
-					(Color.rgb(46, 125, 50));
-				else
-				    button1.setTextColor
-					(Color.rgb(198, 40, 40));
-			    }
-			    else
-			    {
-				/*
-				** 38% of enabled colors.
-				*/
-
-				if(state)
-				    button1.setTextColor
-					(Color.argb(38, 46, 125, 50));
-				else
-				    button1.setTextColor
-					(Color.argb(38, 198, 40, 40));
-			    }
-			}
-		    });
-		}
-		catch(Exception exception)
-		{
-		}
-	    }
-	}, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
-	m_scheduler2 = Executors.newSingleThreadScheduledExecutor();
-	m_scheduler2.scheduleAtFixedRate(new Runnable()
-        {
-	    @Override
-	    public void run()
-	    {
-		try
-		{
-		    if(Thread.currentThread().isInterrupted() ||
-		       !m_databaseHelper.readSetting(null, "show_chat_icons").
-		       equals("true"))
-			return;
-
-		    ArrayList<String> arrayList =
-			m_databaseHelper.readSipHashIdStrings(s_cryptography);
-
-		    if(arrayList == null || arrayList.isEmpty())
-			return;
-
-		    for(final String string : arrayList)
-			Chat.this.runOnUiThread(new Runnable()
-			{
-			    @Override
-			    public void run()
-			    {
-				refreshCheckBox(string);
-			    }
-		        });
-
-		    arrayList.clear();
-		}
-		catch(Exception exception)
-		{
-		}
-	    }
-	}, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	prepareTimers();
         setContentView(R.layout.activity_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
@@ -1526,6 +1541,7 @@ public class Chat extends AppCompatActivity
 	}
 
 	populateChat();
+	prepareTimers();
     }
 
     @Override
