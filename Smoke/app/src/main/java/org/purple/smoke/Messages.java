@@ -787,6 +787,16 @@ public class Messages
 	    stringBuilder.append("\n");
 
 	    /*
+	    ** [ Sender's Smoke Identity ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(cryptography.sipHashId().
+				       getBytes(StandardCharsets.UTF_8),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
 	    ** [ Encryption and Signature Public Keys ]
 	    */
 
@@ -805,8 +815,11 @@ public class Messages
 	    if(!encryptionKey.getAlgorithm().equals("McEliece-CCA2"))
 	    {
 		bytes = cryptography.signViaChatEncryption
-		    (Miscellaneous.joinByteArrays(encryptionKey.getEncoded(),
-						  signatureKey.getEncoded()));
+		    (Miscellaneous.
+		     joinByteArrays(cryptography.sipHashId().
+				    getBytes(StandardCharsets.UTF_8),
+				    encryptionKey.getEncoded(),
+				    signatureKey.getEncoded()));
 
 		if(bytes == null)
 		    return null;
@@ -826,8 +839,11 @@ public class Messages
 	    */
 
 	    bytes = cryptography.signViaChatSignature
-		(Miscellaneous.joinByteArrays(encryptionKey.getEncoded(),
-					      signatureKey.getEncoded()));
+		(Miscellaneous.
+		 joinByteArrays(cryptography.sipHashId().
+				getBytes(StandardCharsets.UTF_8),
+				encryptionKey.getEncoded(),
+				signatureKey.getEncoded()));
 
 	    if(bytes == null)
 		return null;
@@ -837,16 +853,6 @@ public class Messages
 					     Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
-	    stringBuilder.append("\n");
-
-	    /*
-	    ** [ Sender's Smoke Identity ]
-	    */
-
-	    stringBuilder.append
-		(Base64.encodeToString(cryptography.sipHashId().
-				       getBytes(StandardCharsets.UTF_8),
-				       Base64.NO_WRAP));
 
 	    byte aes256[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
@@ -931,15 +937,24 @@ public class Messages
 		(Base64.encodeToString(keyType, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
-	    byte bytes[] = {0};
+	    /*
+	    ** [ Sender's Smoke Identity ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(sipHashId.
+				       getBytes(StandardCharsets.UTF_8),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    byte bytes[] = {0}; // Artificial signatures.
 
 	    /*
 	    ** [ Encryption Public Key ]
 	    */
 
 	    stringBuilder.append
-		(Base64.encodeToString(encryptionPublicKey,
-				       Base64.NO_WRAP));
+		(Base64.encodeToString(encryptionPublicKey, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
@@ -949,20 +964,9 @@ public class Messages
 	    */
 
 	    stringBuilder.append
-		(Base64.encodeToString(signaturePublicKey,
-				       Base64.NO_WRAP));
+		(Base64.encodeToString(signaturePublicKey, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
-
-	    /*
-	    ** [ Sender's Smoke Identity ]
-	    */
-
-	    stringBuilder.append("\n");
-	    stringBuilder.append
-		(Base64.encodeToString(sipHashId.
-				       getBytes(StandardCharsets.UTF_8),
-				       Base64.NO_WRAP));
 
 	    byte aes256[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),

@@ -1817,6 +1817,7 @@ public class Database extends SQLiteOpenHelper
 	    byte keyType[] = null;
 	    byte encryptionKeySignature[] = null;
 	    byte signatureKeySignature[] = null;
+	    byte sipHashIdBytes[] = null;
 	    int ii = 0;
 
 	    for(String string : strings)
@@ -1849,6 +1850,20 @@ public class Database extends SQLiteOpenHelper
 		    ii += 1;
 		    break;
 		case 2:
+		    sipHashId = new String
+			(Base64.decode(string.getBytes(), Base64.NO_WRAP),
+			 StandardCharsets.UTF_8);
+
+		    if(sipHashId == null ||
+		       sipHashId.length() != Cryptography.SIPHASH_ID_LENGTH)
+			return "";
+		    else
+			sipHashIdBytes = sipHashId.getBytes
+			    (StandardCharsets.UTF_8);
+
+		    ii += 1;
+		    break;
+		case 3:
 		    cursor = m_db.rawQuery
 			("SELECT EXISTS(SELECT 1 " +
 			 "FROM participants WHERE " +
@@ -1886,12 +1901,12 @@ public class Database extends SQLiteOpenHelper
 
 		    ii += 1;
 		    break;
-		case 3:
+		case 4:
 		    encryptionKeySignature = Base64.decode
 			(string.getBytes(), Base64.NO_WRAP);
 		    ii += 1;
 		    break;
-		case 4:
+		case 5:
 		    cursor = m_db.rawQuery
 			("SELECT EXISTS(SELECT 1 " +
 			 "FROM participants WHERE " +
@@ -1930,7 +1945,7 @@ public class Database extends SQLiteOpenHelper
 
 		    ii += 1;
 		    break;
-		case 5:
+		case 6:
 		    signatureKeySignature = Base64.decode
 			(string.getBytes(), Base64.NO_WRAP);
 
@@ -1939,7 +1954,8 @@ public class Database extends SQLiteOpenHelper
 			   verifySignature(encryptionKey,
 					   encryptionKeySignature,
 					   Miscellaneous.
-					   joinByteArrays(encryptionKey.
+					   joinByteArrays(sipHashIdBytes,
+							  encryptionKey.
 							  getEncoded(),
 							  signatureKey.
 							  getEncoded())))
@@ -1949,22 +1965,12 @@ public class Database extends SQLiteOpenHelper
 		       verifySignature(signatureKey,
 				       signatureKeySignature,
 				       Miscellaneous.
-				       joinByteArrays(encryptionKey.
+				       joinByteArrays(sipHashIdBytes,
+						      encryptionKey.
 						      getEncoded(),
 						      signatureKey.
 						      getEncoded())))
 			signatureKeySigned = true;
-
-		    ii += 1;
-		    break;
-		case 6:
-		    sipHashId = new String
-			(Base64.decode(string.getBytes(), Base64.NO_WRAP),
-			 StandardCharsets.UTF_8);
-
-		    if(sipHashId == null ||
-		       sipHashId.length() != Cryptography.SIPHASH_ID_LENGTH)
-			return "";
 
 		    break;
 		}
