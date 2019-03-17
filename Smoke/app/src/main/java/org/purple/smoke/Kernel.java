@@ -2300,6 +2300,12 @@ public class Kernel
 			    scheduleSend(Messages.bytesToMessageString(bytes));
 		    }
 
+		    /*
+		    ** Refresh the Settings activity's Participants table.
+		    */
+
+		    sendBroadcast
+			(new Intent("org.purple.smoke.populate_participants"));
 		    return 1;
 		}
 	    }
