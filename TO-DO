@@ -45,6 +45,8 @@ Completed Items
 - Detect removal of participants.
 - Determine gradle's version in the make files.
 - Digest of PEM(certificate).
+- Disable Delete Fiasco Keys, Delete Public Keys on Participants context menu
+  if information is not available. Not necessary.
 - Disable echo on low memory. Cannot. Instead, clear queues.
 - Disable proxy fields for non-TCP.
 - Display count of queued echo packets per neighbor.
@@ -217,12 +219,10 @@ Future Items
 Remaining Items
 
 - Bubbles are too narrow on wide devices.
-- Disable Delete Fiasco Keys, Delete Public Keys on Participants context menu
-  if information is not available.
 - Drawers.
 - Gallery integration. Zoom.
 - Notification causes abnormal exit on Android 7.
-- SMP.
+- SMP or better.
 - Steam and Vapor.
 - Stronger surreptitious forwarding. Larger RSA keys.
 - Translations.
