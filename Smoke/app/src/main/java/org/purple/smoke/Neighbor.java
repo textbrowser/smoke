@@ -227,6 +227,8 @@ public abstract class Neighbor
 		       DATA_LIFETIME ||
 		       m_stringBuffer.length() > MAXIMUM_BYTES)
 			m_stringBuffer.delete(0, m_stringBuffer.length());
+
+		    m_stringBuffer.trimToSize();
 		}
 		catch(Exception exception)
 		{
@@ -577,6 +579,7 @@ public abstract class Neighbor
 	}
 
 	m_stringBuffer.delete(0, m_stringBuffer.length());
+	m_stringBuffer.trimToSize();
     }
 
     protected void echo(String message)
@@ -594,6 +597,7 @@ public abstract class Neighbor
 	synchronized(m_errorMutex)
 	{
 	    m_error.delete(0, m_error.length());
+	    m_error.trimToSize();
 	    m_error.append(error);
 	}
     }
