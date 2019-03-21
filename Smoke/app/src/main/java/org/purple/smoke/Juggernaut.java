@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.util.Base64;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import org.bouncycastle.crypto.Digest;
@@ -49,30 +50,76 @@ public class Juggernaut
     {
     }
 
-    public JPAKERound1Payload payload1()
+    public String payload1Stream()
     {
 	try
 	{
-	    return m_participant.createRound1PayloadToSend();
+	    JPAKERound1Payload payload = m_participant.
+		createRound1PayloadToSend();
+	    StringBuffer stringBuffer = new StringBuffer();
+
+	    stringBuffer.append
+		(Base64.encodeToString(payload.getGx1().toByteArray(),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+	    stringBuffer.append
+		(Base64.encodeToString(payload.getGx2().toByteArray(),
+				       Base64.NO_WRAP));
+
+	    BigInteger array[] = payload.getKnowledgeProofForX1();
+
+	    stringBuffer.append
+		(Base64.encodeToString(String.valueOf(array.length).getBytes(),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+
+	    for(BigInteger b : array)
+	    {
+		stringBuffer.append
+		    (Base64.encodeToString(b.toByteArray(), Base64.NO_WRAP));
+		stringBuffer.append("\n");
+	    }
+
+	    array = payload.getKnowledgeProofForX2();
+	    stringBuffer.append
+		(Base64.encodeToString(String.valueOf(array.length).getBytes(),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+
+	    for(BigInteger b : array)
+	    {
+		stringBuffer.append
+		    (Base64.encodeToString(b.toByteArray(), Base64.NO_WRAP));
+		stringBuffer.append("\n");
+	    }
+
+	    stringBuffer.append
+		(Base64.encodeToString(payload.getParticipantId().getBytes(),
+				       Base64.NO_WRAP));
+	    return stringBuffer.toString();
 	}
 	catch(Exception exception)
 	{
 	}
 
-	return null;
+	return "";
     }
 
-    public JPAKERound2Payload payload2()
+    public String payload2Stream()
     {
 	try
 	{
-	    return m_participant.createRound2PayloadToSend();
+	    JPAKERound2Payload payload = m_participant.
+		createRound2PayloadToSend();
+	    StringBuffer stringBuffer = new StringBuffer();
+
+	    return stringBuffer.toString();
 	}
 	catch(Exception exception)
 	{
 	}
 
-	return null;
+	return "";
     }
 
     public boolean validatePayload1(BigInteger gx1,
