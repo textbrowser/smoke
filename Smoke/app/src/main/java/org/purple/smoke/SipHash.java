@@ -47,7 +47,7 @@ public class SipHash
     private long m_v1 = 0;
     private long m_v2 = 0;
     private long m_v3 = 0;
-    public final static int KEY_LENGTH = 16;
+    public final static int KEY_LENGTH = 16; // Bytes
 
     private long byteArrayToLong(byte bytes[], int offset)
     {
@@ -56,9 +56,14 @@ public class SipHash
 
 	long value = 0;
 
-	for(int i = 0; i < LONG_BYTES; i++)
-	    value |= (((long) bytes[i + offset]) & 0xff) << (LONG_BYTES * i);
-
+	value |= (((long) bytes[0 + offset]) & 0xff) << (LONG_BYTES * 0);
+	value |= (((long) bytes[1 + offset]) & 0xff) << (LONG_BYTES * 1);
+	value |= (((long) bytes[2 + offset]) & 0xff) << (LONG_BYTES * 2);
+	value |= (((long) bytes[3 + offset]) & 0xff) << (LONG_BYTES * 3);
+	value |= (((long) bytes[4 + offset]) & 0xff) << (LONG_BYTES * 4);
+	value |= (((long) bytes[5 + offset]) & 0xff) << (LONG_BYTES * 5);
+	value |= (((long) bytes[6 + offset]) & 0xff) << (LONG_BYTES * 6);
+	value |= (((long) bytes[7 + offset]) & 0xff) << (LONG_BYTES * 7);
 	return value;
     }
 
@@ -147,8 +152,21 @@ public class SipHash
 
 	    m_v3 ^= m;
 
-	    for(int j = 0; j < length2; j++)
+	    switch(length2)
+	    {
+	    case 2:
 		round();
+		round();
+		break;
+	    case 4:
+		round();
+		round();
+		round();
+		round();
+		break;
+	    default:
+		break;
+	    }
 
 	    m_v0 ^= m;
 	}
@@ -177,11 +195,23 @@ public class SipHash
 	    break;
 	}
 
-	length1 = C_ROUNDS[m_c_rounds_index];
 	m_v3 ^= b;
 
-	for(int i = 0; i < length1; i++)
+	switch(C_ROUNDS[m_c_rounds_index])
+	{
+	case 2:
 	    round();
+	    round();
+	    break;
+	case 4:
+	    round();
+	    round();
+	    round();
+	    round();
+	    break;
+	default:
+	    break;
+	}
 
 	m_v0 ^= b;
 
@@ -189,11 +219,29 @@ public class SipHash
 	** Finalization
 	*/
 
-	length1 = D_ROUNDS[m_d_rounds_index];
 	m_v2 ^= 0xff;
 
-	for(int i = 0; i < length1; i++)
+	switch(D_ROUNDS[m_d_rounds_index])
+	{
+	case 4:
 	    round();
+	    round();
+	    round();
+	    round();
+	    break;
+	case 8:
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    break;
+	default:
+	    break;
+	}
 
 	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;
     }
