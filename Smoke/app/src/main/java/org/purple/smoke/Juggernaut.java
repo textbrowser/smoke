@@ -113,6 +113,28 @@ public class Juggernaut
 		createRound2PayloadToSend();
 	    StringBuffer stringBuffer = new StringBuffer();
 
+	    stringBuffer.append
+		(Base64.encodeToString(payload.getA().toByteArray(),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+
+	    BigInteger array[] = payload.getKnowledgeProofForX2s();
+
+	    stringBuffer.append
+		(Base64.encodeToString(String.valueOf(array.length).getBytes(),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
+
+	    for(BigInteger b : array)
+	    {
+		stringBuffer.append
+		    (Base64.encodeToString(b.toByteArray(), Base64.NO_WRAP));
+		stringBuffer.append("\n");
+	    }
+
+	    stringBuffer.append
+		(Base64.encodeToString(payload.getParticipantId().getBytes(),
+				       Base64.NO_WRAP));
 	    return stringBuffer.toString();
 	}
 	catch(Exception exception)
@@ -122,14 +144,56 @@ public class Juggernaut
 	return "";
     }
 
-    public boolean validatePayload1(BigInteger gx1,
-				    BigInteger gx2,
-				    BigInteger kpx1[],
-				    BigInteger kpx2[],
-				    String participantId)
+    public boolean validatePayload1(String strings[])
     {
 	try
 	{
+	    BigInteger gx1 = null;
+	    BigInteger gx2 = null;
+	    BigInteger kpx1[] = null;
+	    BigInteger kpx2[] = null;
+	    String participantId = "";
+	    byte bytes[] = null;
+
+	    /*
+	    ** strings[0]     - gx1
+	    ** strings[1]     - gx2
+	    ** strings[2]     - length of kpx1
+	    ** strings[3]     - kpx1[0]
+	    ** ...
+	    ** strings[n]     - length of kpx2
+	    ** strings[n + 1] - kpx2[0]
+	    ** ...
+	    ** strings[o]     - participant identity
+	    */
+
+	    bytes = Base64.decode(strings[0], Base64.NO_WRAP);
+	    gx1 = new BigInteger(bytes);
+	    bytes = Base64.decode(strings[1], Base64.NO_WRAP);
+	    gx2 = new BigInteger(bytes);
+	    bytes = Base64.decode(strings[2], Base64.NO_WRAP);
+	    kpx1 = new BigInteger[Integer.parseInt(new String(bytes))];
+
+	    for(int i = 0; i < kpx1.length; i++)
+	    {
+		bytes = Base64.decode(strings[i + 3], Base64.NO_WRAP);
+		kpx1[i] = new BigInteger(bytes);
+	    }
+
+	    bytes = Base64.decode(strings[kpx1.length + 3], Base64.NO_WRAP);
+	    kpx2 = new BigInteger[Integer.parseInt(new String(bytes))];
+
+	    for(int i = 0; i < kpx2.length; i++)
+	    {
+		bytes = Base64.decode
+		    (strings[i + kpx1.length + 4], Base64.NO_WRAP);
+		kpx2[i] = new BigInteger(bytes);
+	    }
+
+	    participantId = new String
+		(Base64.decode(strings[kpx1.length + kpx2.length + 4],
+			       Base64.NO_WRAP));
+
 	    JPAKERound1Payload payload = new JPAKERound1Payload
 		(participantId, gx1, gx2, kpx1, kpx2);
 
@@ -143,12 +207,37 @@ public class Juggernaut
 	return true;
     }
 
-    public boolean validatePayload2(BigInteger a,
-				    BigInteger kpx2s[],
-				    String participantId)
+    public boolean validatePayload2(String strings[])
     {
 	try
 	{
+	    BigInteger a = null;
+	    BigInteger kpx2s[] = null;
+	    String participantId = "";
+	    byte bytes[] = null;
+
+	    /*
+	    ** strings[0]     - a
+	    ** strings[1]     - length of kpx2s
+	    ** strings[2]     - kpx2s[0]
+	    ** ...
+	    ** strings[n]     - participant identity
+	    */
+
+	    bytes = Base64.decode(strings[0], Base64.NO_WRAP);
+	    a = new BigInteger(bytes);
+	    bytes = Base64.decode(strings[1], Base64.NO_WRAP);
+	    kpx2s = new BigInteger[Integer.parseInt(new String(bytes))];
+
+	    for(int i = 0; i < kpx2s.length; i++)
+	    {
+		bytes = Base64.decode(strings[i + 2], Base64.NO_WRAP);
+		kpx2s[i] = new BigInteger(bytes);
+	    }
+
+	    participantId = new String
+		(Base64.decode(strings[kpx2s.length + 2], Base64.NO_WRAP));
+
 	    JPAKERound2Payload payload = new JPAKERound2Payload
 		(participantId, a, kpx2s);
 
