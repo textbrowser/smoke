@@ -260,10 +260,28 @@ public class MemberChat extends AppCompatActivity
 	public final static int DELETE_ALL_MESSAGES = 4;
 	public final static int DELETE_MESSAGE = 5;
 	public final static int DELETE_SELECTED_MESSAGES = 6;
-	public final static int RESEND_MESSAGE = 7;
-	public final static int RETRIEVE_MESSAGES = 8;
-	public final static int SAVE_ATTACHMENT = 9;
-	public final static int SELECTION_STATE = 10;
+	public final static int JUGGERNAUT = 7;
+	public final static int RESEND_MESSAGE = 8;
+	public final static int RETRIEVE_MESSAGES = 9;
+	public final static int SAVE_ATTACHMENT = 10;
+	public final static int SELECTION_STATE = 11;
+    }
+
+    private boolean isParticipantPaired(ArrayList<ParticipantElement> arrayList)
+    {
+	if(arrayList == null)
+	    arrayList = m_databaseHelper.readParticipants
+		(s_cryptography, m_sipHashId);
+
+	ParticipantElement participantElement =
+	    arrayList == null || arrayList.isEmpty() ? null : arrayList.get(0);
+
+	if(arrayList != null)
+	    arrayList.clear();
+
+	return participantElement != null &&
+	    participantElement.m_keyStream != null &&
+	    participantElement.m_keyStream.length == 96;
     }
 
     private int getBytesPerPixel(Config config)
@@ -400,10 +418,10 @@ public class MemberChat extends AppCompatActivity
 			ArrayList<ParticipantElement> arrayList =
 			    m_databaseHelper.readParticipants
 			    (s_cryptography, m_sipHashId);
-
 			final ParticipantElement participantElement =
 			    arrayList == null || arrayList.isEmpty() ?
 			    null : arrayList.get(0);
+			final boolean isPaired = isParticipantPaired(arrayList);
 			final boolean state = Kernel.getInstance().
 			    isConnected();
 
@@ -426,11 +444,7 @@ public class MemberChat extends AppCompatActivity
 
 				    button = (Button) findViewById(R.id.status);
 
-				    if(participantElement == null ||
-				       participantElement.
-				       m_keyStream == null ||
-				       participantElement.
-				       m_keyStream.length != 96)
+				    if(!isPaired)
 					button.setBackgroundResource
 					    (R.drawable.chat_faulty_session);
 				    else if(Math.abs(System.
@@ -1297,6 +1311,9 @@ public class MemberChat extends AppCompatActivity
 
 	super.onCreateContextMenu(menu, view, menuInfo);
 
+	ArrayList<ParticipantElement> arrayList =
+	    m_databaseHelper.readParticipants
+	    (s_cryptography, m_sipHashId);
 	boolean state = Kernel.getInstance().isConnected();
 
 	menu.add(ContextMenuEnumerator.CALL_VIA_MCELIECE,
@@ -1311,6 +1328,11 @@ public class MemberChat extends AppCompatActivity
 		 -1,
 		 0,
 		 "Custom Session");
+	menu.add(ContextMenuEnumerator.JUGGERNAUT,
+		 -1,
+		 0,
+		 "Juggernaut").
+	    setEnabled(isParticipantPaired(null) && state);
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
 		 0,
