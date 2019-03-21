@@ -27,24 +27,104 @@
 
 package org.purple.smoke;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEParticipant;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEPrimeOrderGroup;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEPrimeOrderGroups;
+import org.bouncycastle.crypto.agreement.jpake.JPAKERound1Payload;
+import org.bouncycastle.crypto.agreement.jpake.JPAKERound2Payload;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 
 public class Juggernaut
 {
     private JPAKEParticipant m_participant = null;
     private final Digest m_digest = new SHA512Digest();
-    private final JPAKEPrimeOrderGroup m_group =
-	JPAKEPrimeOrderGroups.NIST_3072;
     private final SecureRandom m_random = new SecureRandom();
+    private final static JPAKEPrimeOrderGroup s_group =
+	JPAKEPrimeOrderGroups.NIST_3072;
 
-    Juggernaut(String secret)
+    Juggernaut()
     {
-	m_participant = new JPAKEParticipant
-	    ("me", secret.toCharArray(), m_group, m_digest, m_random);
+    }
+
+    public JPAKERound1Payload payload1()
+    {
+	try
+	{
+	    return m_participant.createRound1PayloadToSend();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public JPAKERound2Payload payload2()
+    {
+	try
+	{
+	    return m_participant.createRound2PayloadToSend();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public boolean validatePayload1(BigInteger gx1,
+				    BigInteger gx2,
+				    BigInteger kpx1[],
+				    BigInteger kpx2[],
+				    String participantId)
+    {
+	try
+	{
+	    JPAKERound1Payload payload = new JPAKERound1Payload
+		(participantId, gx1, gx2, kpx1, kpx2);
+
+	    m_participant.validateRound1PayloadReceived(payload);
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+
+	return true;
+    }
+
+    public boolean validatePayload2(BigInteger a,
+				    BigInteger kpx2s[],
+				    String participantId)
+    {
+	try
+	{
+	    JPAKERound2Payload payload = new JPAKERound2Payload
+		(participantId, a, kpx2s);
+
+	    m_participant.validateRound2PayloadReceived(payload);
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+
+	return true;
+    }
+
+    public void setSecret(String secret)
+    {
+	try
+	{
+	    m_participant = new JPAKEParticipant
+		("me", secret.toCharArray(), s_group, m_digest, m_random);
+	}
+	catch(Exception exception)
+	{
+	    m_participant = null;
+	}
     }
 }
