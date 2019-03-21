@@ -27,15 +27,24 @@
 
 package org.purple.smoke;
 
+import java.security.SecureRandom;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.agreement.jpake.JPAKEParticipant;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEPrimeOrderGroup;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEPrimeOrderGroups;
+import org.bouncycastle.crypto.digests.SHA512Digest;
 
 public class Juggernaut
 {
+    private JPAKEParticipant m_participant = null;
+    private final Digest m_digest = new SHA512Digest();
     private final JPAKEPrimeOrderGroup m_group =
 	JPAKEPrimeOrderGroups.NIST_3072;
+    private final SecureRandom m_random = new SecureRandom();
 
-    Juggernaut()
+    Juggernaut(String secret)
     {
+	m_participant = new JPAKEParticipant
+	    ("me", secret.toCharArray(), m_group, m_digest, m_random);
     }
 }
