@@ -1045,6 +1045,15 @@ public class MemberChat extends AppCompatActivity
 		 "Are you sure that you wish to delete the " +
 		 "selected message(s)?");
 	    break;
+	case ContextMenuEnumerator.JUGGERNAUT:
+	    Miscellaneous.showTextInputDialog
+		(MemberChat.this,
+		 listener,
+		 "Please provide a secret. The Juggernaut Protocol " +
+		 "will be initiated within 15 seconds after this dialog " +
+		 "is confirmed.",
+		 "Juggernaut Secret");
+	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:
 	    Kernel.getInstance().resendMessage(m_sipHashId, itemId);
 	    break;
