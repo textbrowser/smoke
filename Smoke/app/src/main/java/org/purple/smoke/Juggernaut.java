@@ -83,6 +83,35 @@ public class Juggernaut
 	return m_keyingMaterial;
     }
 
+    public String next(String payload)
+    {
+	String string = "";
+
+	switch(m_participant.getState())
+	{
+	case JPAKEParticipant.STATE_INITIALIZED:
+	    string = payload1Stream();
+	    break;
+	case JPAKEParticipant.STATE_ROUND_1_CREATED:
+	    if(validatePayload1(payload.split("\\n")))
+		string = payload2Stream();
+
+	    break;
+	case JPAKEParticipant.STATE_ROUND_2_CREATED:
+	    if(validatePayload2(payload.split("\\n")))
+		string = payload3Stream(keyingMaterial());
+
+	    break;
+	case JPAKEParticipant.STATE_ROUND_3_CREATED:
+	    validatePayload3(keyingMaterial(), payload.split("\\n"));
+	    break;
+	default:
+	    break;
+	}
+
+	return string;
+    }
+
     public String payload1Stream()
     {
 	try
@@ -339,6 +368,11 @@ public class Juggernaut
 	}
 
 	return true;
+    }
+
+    public int state()
+    {
+	return m_participant.getState();
     }
 
     public static void test1()
