@@ -2874,6 +2874,8 @@ public class Settings extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+	Juggernaut.test1();
+	Juggernaut.test2();
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SettingsBroadcastReceiver();

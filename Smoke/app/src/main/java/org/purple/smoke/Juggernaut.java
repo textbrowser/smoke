@@ -28,6 +28,7 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+import android.util.Log;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import org.bouncycastle.crypto.Digest;
@@ -36,18 +37,50 @@ import org.bouncycastle.crypto.agreement.jpake.JPAKEPrimeOrderGroup;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEPrimeOrderGroups;
 import org.bouncycastle.crypto.agreement.jpake.JPAKERound1Payload;
 import org.bouncycastle.crypto.agreement.jpake.JPAKERound2Payload;
+import org.bouncycastle.crypto.agreement.jpake.JPAKERound3Payload;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 
 public class Juggernaut
 {
+    private BigInteger m_keyingMaterial = null;
     private JPAKEParticipant m_participant = null;
+    private String m_participantId = "";
     private final Digest m_digest = new SHA512Digest();
     private final SecureRandom m_random = new SecureRandom();
     private final static JPAKEPrimeOrderGroup s_group =
 	JPAKEPrimeOrderGroups.NIST_3072;
 
-    Juggernaut()
+    Juggernaut(String participantId, String secret)
     {
+	try
+	{
+	    m_participant = new JPAKEParticipant
+		(participantId,
+		 secret.toCharArray(),
+		 s_group,
+		 m_digest,
+		 m_random);
+	    m_participantId = participantId;
+	}
+	catch(Exception exception)
+	{
+	    m_participant = null;
+	}
+    }
+
+    public BigInteger keyingMaterial()
+    {
+	try
+	{
+	    if(m_keyingMaterial == null)
+		m_keyingMaterial = m_participant.calculateKeyingMaterial();
+	}
+	catch(Exception exception)
+	{
+	    m_keyingMaterial = null;
+	}
+
+	return m_keyingMaterial;
     }
 
     public String payload1Stream()
@@ -65,6 +98,7 @@ public class Juggernaut
 	    stringBuffer.append
 		(Base64.encodeToString(payload.getGx2().toByteArray(),
 				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
 
 	    BigInteger array[] = payload.getKnowledgeProofForX1();
 
@@ -132,6 +166,30 @@ public class Juggernaut
 		stringBuffer.append("\n");
 	    }
 
+	    stringBuffer.append
+		(Base64.encodeToString(payload.getParticipantId().getBytes(),
+				       Base64.NO_WRAP));
+	    return stringBuffer.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
+    }
+
+    public String payload3Stream(BigInteger keyingMaterial)
+    {
+	try
+	{
+	    JPAKERound3Payload payload = m_participant.createRound3PayloadToSend
+		(keyingMaterial);
+	    StringBuffer stringBuffer = new StringBuffer();
+
+	    stringBuffer.append
+		(Base64.encodeToString(payload.getMacTag().toByteArray(),
+				       Base64.NO_WRAP));
+	    stringBuffer.append("\n");
 	    stringBuffer.append
 		(Base64.encodeToString(payload.getParticipantId().getBytes(),
 				       Base64.NO_WRAP));
@@ -217,11 +275,11 @@ public class Juggernaut
 	    byte bytes[] = null;
 
 	    /*
-	    ** strings[0]     - a
-	    ** strings[1]     - length of kpx2s
-	    ** strings[2]     - kpx2s[0]
+	    ** strings[0] - a
+	    ** strings[1] - length of kpx2s
+	    ** strings[2] - kpx2s[0]
 	    ** ...
-	    ** strings[n]     - participant identity
+	    ** strings[n] - participant identity
 	    */
 
 	    bytes = Base64.decode(strings[0], Base64.NO_WRAP);
@@ -251,16 +309,121 @@ public class Juggernaut
 	return true;
     }
 
-    public void setSecret(String secret)
+    public boolean validatePayload3(BigInteger keyingMaterial, String strings[])
     {
 	try
 	{
-	    m_participant = new JPAKEParticipant
-		("me", secret.toCharArray(), s_group, m_digest, m_random);
+	    BigInteger macTag = null;
+	    String participantId = "";
+	    byte bytes[] = null;
+
+	    /*
+	    ** strings[0] - mac tag
+	    ** strings[1] - participant identity
+	    */
+
+	    bytes = Base64.decode(strings[0], Base64.NO_WRAP);
+	    macTag = new BigInteger(bytes);
+	    bytes = Base64.decode(strings[1], Base64.NO_WRAP);
+	    participantId = new String(bytes);
+
+	    JPAKERound3Payload payload = new JPAKERound3Payload
+		(participantId, macTag);
+
+	    m_participant.validateRound3PayloadReceived
+		(payload, keyingMaterial);
 	}
 	catch(Exception exception)
 	{
-	    m_participant = null;
+	    return false;
 	}
+
+	return true;
+    }
+
+    public static void test1()
+    {
+	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!");
+	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!");
+	String payload1 = juggernaut1.payload1Stream();
+	String payload2 = juggernaut2.payload1Stream();
+	boolean ok1 = false;
+	boolean ok2 = false;
+
+	/*
+	** Payload 1
+	*/
+
+	ok1 = juggernaut1.validatePayload1(payload2.split("\\n"));
+	Log.e("test1: Participant a validated payload1?", ok1 + "");
+	ok2 = juggernaut2.validatePayload1(payload1.split("\\n"));
+	Log.e("test1: Participant b validated payload1?", ok2 + "");
+
+	/*
+	** Payload 2
+	*/
+
+	payload1 = juggernaut1.payload2Stream();
+	payload2 = juggernaut2.payload2Stream();
+	ok1 = juggernaut1.validatePayload2(payload2.split("\\n"));
+	Log.e("test1: Participant a validated payload2?", ok1 + "");
+	ok2 = juggernaut2.validatePayload2(payload1.split("\\n"));
+	Log.e("test1: Participant b validated payload2?", ok2 + "");
+
+	/*
+	** Payload 3
+	*/
+
+	payload1 = juggernaut1.payload3Stream(juggernaut1.keyingMaterial());
+	payload2 = juggernaut2.payload3Stream(juggernaut2.keyingMaterial());
+	ok1 = juggernaut1.validatePayload3
+	    (juggernaut1.keyingMaterial(), payload2.split("\\n"));
+	Log.e("test1: Participant a validated payload3?", ok1 + "");
+	ok2 = juggernaut2.validatePayload3
+	    (juggernaut2.keyingMaterial(), payload1.split("\\n"));
+	Log.e("test1: Participant b validated payload3?", ok2 + "");
+    }
+
+    public static void test2()
+    {
+	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!");
+	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut.");
+	String payload1 = juggernaut1.payload1Stream();
+	String payload2 = juggernaut2.payload1Stream();
+	boolean ok1 = false;
+	boolean ok2 = false;
+
+	/*
+	** Payload 1
+	*/
+
+	ok1 = juggernaut1.validatePayload1(payload2.split("\\n"));
+	Log.e("test2: Participant a validated payload1?", ok1 + "");
+	ok2 = juggernaut2.validatePayload1(payload1.split("\\n"));
+	Log.e("test2: Participant b validated payload1?", ok2 + "");
+
+	/*
+	** Payload 2
+	*/
+
+	payload1 = juggernaut1.payload2Stream();
+	payload2 = juggernaut2.payload2Stream();
+	ok1 = juggernaut1.validatePayload2(payload2.split("\\n"));
+	Log.e("test2: Participant a validated payload2?", ok1 + "");
+	ok2 = juggernaut2.validatePayload2(payload1.split("\\n"));
+	Log.e("test2: Participant b validated payload2?", ok2 + "");
+
+	/*
+	** Payload 3
+	*/
+
+	payload1 = juggernaut1.payload3Stream(juggernaut1.keyingMaterial());
+	payload2 = juggernaut2.payload3Stream(juggernaut2.keyingMaterial());
+	ok1 = juggernaut1.validatePayload3
+	    (juggernaut1.keyingMaterial(), payload2.split("\\n"));
+	Log.e("test2: Participant a validated payload3?", ok1 + "");
+	ok2 = juggernaut2.validatePayload3
+	    (juggernaut2.keyingMaterial(), payload1.split("\\n"));
+	Log.e("test2: Participant b validated payload3?", ok2 + "");
     }
 }
