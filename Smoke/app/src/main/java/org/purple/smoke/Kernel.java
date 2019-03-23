@@ -62,6 +62,7 @@ public class Kernel
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private AtomicLong m_shareSipHashIdIdentity = null;
     private AtomicLong m_shareSipHashIdIdentityLastTick = null;
+    private Hashtable<String, Juggernaut> m_juggernauts = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private Hashtable<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
@@ -82,6 +83,8 @@ public class Kernel
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_fireStreamsMutex =
+	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_juggernautsMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_messagesToSendMutex =
 	new ReentrantReadWriteLock();
@@ -125,6 +128,7 @@ public class Kernel
 	m_chatTemporaryIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
 	m_fireStreams = new Hashtable<> ();
+	m_juggernauts = new Hashtable<> ();
 	m_messagesToSend = new ArrayList<> ();
 	m_shareSipHashIdIdentity = new AtomicLong(0);
 	m_shareSipHashIdIdentityLastTick = new AtomicLong
@@ -152,6 +156,34 @@ public class Kernel
 
 	prepareSchedulers();
 	s_fireSimpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
+    private byte[] juggernaut(String secret, String sipHashId)
+    {
+	byte bytes[] = null;
+
+	m_juggernautsMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_juggernauts.contains(sipHashId))
+		m_juggernauts.remove(sipHashId);
+
+	    Juggernaut juggernaut = new Juggernaut(sipHashId, secret);
+
+	    bytes = juggernaut.next(null).getBytes();
+	    m_juggernauts.put(sipHashId, juggernaut);
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+	finally
+	{
+	    m_juggernautsMutex.writeLock().unlock();
+	}
+
+	return bytes;
     }
 
     private void prepareNeighbors()
@@ -569,6 +601,33 @@ public class Kernel
 						     "fire_user_name"),
 					 messageElement.m_keyStream);
 				    break;
+				case MessageElement.JUGGERNAUT_MESSAGE_TYPE:
+				    bytes = juggernaut
+					(messageElement.m_message,
+					 messageElement.m_id);
+				    bytes = Messages.juggernautMessage
+					(s_cryptography,
+					 messageElement.m_id,
+					 bytes,
+					 messageElement.m_keyStream);
+
+				    if(bytes != null)
+				    {
+					s_databaseHelper.writeParticipantMessage
+					    (s_cryptography,
+					     "local-protocol",
+					     "Juggernaut Protocol initiated.",
+					     messageElement.m_id,
+					     null,
+					     null,
+					     messageElement.m_timestamp);
+					sendBroadcast
+					    (new Intent("org.purple.smoke." +
+							"notify_data_set_" +
+							"changed"));
+				    }
+
+				    break;
 				case MessageElement.
 				    RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				    bytes = Messages.chatMessageRetrieval
@@ -662,6 +721,11 @@ public class Kernel
 					    (Messages.
 					     bytesToMessageStringNonBase64
 					     (bytes));
+					break;
+				    case MessageElement.JUGGERNAUT_MESSAGE_TYPE:
+					scheduleSend
+					    (Messages.
+					     bytesToMessageString(bytes));
 					break;
 				    case MessageElement.
 					RETRIEVE_MESSAGES_MESSAGE_TYPE:
@@ -2597,7 +2661,9 @@ public class Kernel
 	}
     }
 
-    public void enqueueJuggernaut(String secret, String sipHashId)
+    public void enqueueJuggernaut(String secret,
+				  String sipHashId,
+				  byte keyStream[])
     {
 	m_messagesToSendMutex.writeLock().lock();
 
@@ -2606,6 +2672,7 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_id = sipHashId;
+	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = secret;
 	    messageElement.m_messageType =
 		MessageElement.JUGGERNAUT_MESSAGE_TYPE;

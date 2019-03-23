@@ -49,6 +49,7 @@ public class Juggernaut
     private final SecureRandom m_random = new SecureRandom();
     private final static JPAKEPrimeOrderGroup s_group =
 	JPAKEPrimeOrderGroups.NIST_3072;
+    private long m_lastEventTime = 0;
 
     Juggernaut(String participantId, String secret)
     {

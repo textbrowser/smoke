@@ -976,8 +976,16 @@ public class MemberChat extends AppCompatActivity
 				getString("member_chat_secret_input").trim();
 
 			    if(!string.isEmpty())
-				Kernel.getInstance().enqueueJuggernaut
-				    (string, m_sipHashId);
+			    {
+				byte keyStream[] = m_databaseHelper.
+				    participantKeyStream
+				    (s_cryptography, m_sipHashId);
+
+				if(!(keyStream == null ||
+				     keyStream.length != 96))
+				    Kernel.getInstance().enqueueJuggernaut
+					(string, m_sipHashId, keyStream);
+			    }
 			}
 			catch(Exception exception)
 			{
