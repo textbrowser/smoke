@@ -93,17 +93,19 @@ public class Juggernaut
 	    string = payload1Stream();
 	    break;
 	case JPAKEParticipant.STATE_ROUND_1_CREATED:
-	    if(validatePayload1(payload.split("\\n")))
+	    if(payload != null && validatePayload1(payload.split("\\n")))
 		string = payload2Stream();
 
 	    break;
 	case JPAKEParticipant.STATE_ROUND_2_CREATED:
-	    if(validatePayload2(payload.split("\\n")))
+	    if(payload != null && validatePayload2(payload.split("\\n")))
 		string = payload3Stream(keyingMaterial());
 
 	    break;
 	case JPAKEParticipant.STATE_ROUND_3_CREATED:
-	    validatePayload3(keyingMaterial(), payload.split("\\n"));
+	    if(payload != null)
+		validatePayload3(keyingMaterial(), payload.split("\\n"));
+
 	    break;
 	default:
 	    break;
@@ -459,5 +461,45 @@ public class Juggernaut
 	ok2 = juggernaut2.validatePayload3
 	    (juggernaut2.keyingMaterial(), payload1.split("\\n"));
 	Log.e("test2: Participant b validated payload3?", ok2 + "");
+    }
+
+    public static void test3()
+    {
+	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!");
+	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!");
+
+	/*
+	** Participants initialize.
+	*/
+
+	String payload1a = juggernaut1.next(null); // STATE_INITIALIZED
+	String payload2a = juggernaut2.next(null); // STATE_INITIALIZED
+
+	/*
+	** Validate state 1, create state 2.
+	*/
+
+	String payload1b = juggernaut1.next
+	    (payload2a); // STATE_ROUND_2_CREATED
+	String payload2b = juggernaut2.next
+	    (payload1a); // STATE_ROUND_2_CREATED
+
+	/*
+	** Validate state 2, create keying material, create state 3.
+	*/
+
+	String payload1c = juggernaut1.next
+	    (payload2b); // STATE_ROUND_3_CREATED
+	String payload2c = juggernaut2.next
+	    (payload1b); // STATE_ROUND_3_CREATED
+
+	/*
+	** Validate state 3.
+	*/
+
+	juggernaut1.next(payload2c); // STATE_3_VALIDATED
+	juggernaut2.next(payload1c); // STATE_3_VALIDATED
+	Log.e(juggernaut1.state() + "", "test3: Participant a state?");
+	Log.e(juggernaut2.state() + "", "test3: Participant b state?");
     }
 }
