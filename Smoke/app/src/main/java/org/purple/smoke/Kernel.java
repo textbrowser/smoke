@@ -2597,6 +2597,34 @@ public class Kernel
 	}
     }
 
+    public void enqueueJuggernaut(String secret, String sipHashId)
+    {
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
+	    MessageElement messageElement = new MessageElement();
+
+	    messageElement.m_id = sipHashId;
+	    messageElement.m_message = secret;
+	    messageElement.m_messageType =
+		MessageElement.JUGGERNAUT_MESSAGE_TYPE;
+	    m_messagesToSend.add(messageElement);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_messagesToSendMutex.writeLock().unlock();
+	}
+
+	synchronized(m_messagesToSendSchedulerObject)
+	{
+	    m_messagesToSendSchedulerObject.notify();
+	}
+    }
+
     public void enqueueShareSipHashIdMessage(int oid)
     {
 	m_messagesToSendMutex.writeLock().lock();

@@ -969,6 +969,23 @@ public class MemberChat extends AppCompatActivity
 			}
 
 			break;
+		    case ContextMenuEnumerator.JUGGERNAUT:
+			try
+			{
+			    String string = State.getInstance().
+				getString("member_chat_secret_input").trim();
+
+			    if(!string.isEmpty())
+				Kernel.getInstance().enqueueJuggernaut
+				    (string, m_sipHashId);
+			}
+			catch(Exception exception)
+			{
+			}
+
+			State.getInstance().removeKey
+			    ("member_chat_secret_input");
+			break;
 		    }
 		}
 	    };
@@ -1050,8 +1067,7 @@ public class MemberChat extends AppCompatActivity
 		(MemberChat.this,
 		 listener,
 		 "Please provide a secret. The Juggernaut Protocol " +
-		 "will be initiated within 15 seconds after this dialog " +
-		 "is confirmed.",
+		 "will be initiated shortly after this dialog is confirmed.",
 		 "Juggernaut Secret");
 	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:

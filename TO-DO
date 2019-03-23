@@ -230,5 +230,6 @@ Remaining Items
   Ozone, Participants
   Password, Public Data
 - Steam and Vapor.
+- Store a digest of the secret string (Miscellaneous.showTextInputDialog()).
 - Stronger surreptitious forwarding. Larger RSA keys.
 - Translations.
