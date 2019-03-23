@@ -469,14 +469,14 @@ public class Juggernaut
 	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!");
 
 	/*
-	** Participants initialize.
+	** Participants initialize. Send payloads.
 	*/
 
 	String payload1a = juggernaut1.next(null); // STATE_INITIALIZED
 	String payload2a = juggernaut2.next(null); // STATE_INITIALIZED
 
 	/*
-	** Validate state 1, create state 2.
+	** Validate state 1, create state 2. Send payloads.
 	*/
 
 	String payload1b = juggernaut1.next
@@ -486,6 +486,7 @@ public class Juggernaut
 
 	/*
 	** Validate state 2, create keying material, create state 3.
+	** Send payloads.
 	*/
 
 	String payload1c = juggernaut1.next

@@ -51,6 +51,7 @@ public class Messages
     public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
+    public final static byte JUGGERNAUT_TYPE[] = new byte[] {0x03};
     public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
     public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
