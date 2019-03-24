@@ -1274,7 +1274,7 @@ public class Messages
 		(Miscellaneous.
 		 joinByteArrays(cryptography.
 				chatEncryptionPublicKeyDigest(),
-				CHAT_MESSAGE_TYPE,
+				JUGGERNAUT_TYPE,
 				stringBuilder.toString().getBytes(),
 				Cryptography.sha512(publicKey.getEncoded())));
 

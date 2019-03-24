@@ -692,8 +692,7 @@ public class MemberChat extends AppCompatActivity
 						  Math.min(200,
 							   bitmap.getHeight()),
 						  false));
-					    m_attachment = Miscellaneous.
-						deepCopy(m_bytes);
+					    m_attachment = m_bytes;
 					    bitmap.recycle();
 					}
 					else

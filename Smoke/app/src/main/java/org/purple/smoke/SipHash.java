@@ -99,7 +99,7 @@ public class SipHash
 	if(key == null || key.length != KEY_LENGTH)
 	    return;
 
-	m_key = Miscellaneous.deepCopy(key);
+	m_key = key;
     }
 
     public SipHash(byte key[], int c_rounds_index, int d_rounds_index)
@@ -113,7 +113,7 @@ public class SipHash
 	if(d_rounds_index >= 0 && d_rounds_index < D_ROUNDS.length)
 	    m_d_rounds_index = d_rounds_index;
 
-	m_key = Miscellaneous.deepCopy(key);
+	m_key = key;
     }
 
     public long hmac(byte data[])

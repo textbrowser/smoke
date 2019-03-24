@@ -55,6 +55,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.bouncycastle.crypto.agreement.jpake.JPAKEParticipant;
 
 public class Kernel
 {
@@ -77,7 +78,6 @@ public class Kernel
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
     private final Object m_callSchedulerObject = new Object();
-    private final Object m_messagesToSendSchedulerObject = new Object();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
@@ -105,6 +105,7 @@ public class Kernel
 	864000; // Seconds in ten days.
     private final static long CALL_INTERVAL = 250; // 0.250 Seconds
     private final static long CALL_LIFETIME = 30000; // 30 Seconds
+    private final static long JUGGERNAUT_WINDOW = 10000; // 10 Seconds
     private final static long MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
     private final static long NEIGHBORS_INTERVAL = 5000; // 5 Seconds
@@ -156,34 +157,6 @@ public class Kernel
 
 	prepareSchedulers();
 	s_fireSimpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
-
-    private byte[] juggernaut(String secret, String sipHashId)
-    {
-	byte bytes[] = null;
-
-	m_juggernautsMutex.writeLock().lock();
-
-	try
-	{
-	    if(m_juggernauts.contains(sipHashId))
-		m_juggernauts.remove(sipHashId);
-
-	    Juggernaut juggernaut = new Juggernaut(sipHashId, secret);
-
-	    bytes = juggernaut.next(null).getBytes();
-	    m_juggernauts.put(sipHashId, juggernaut);
-	}
-	catch(Exception exception)
-	{
-	    bytes = null;
-	}
-	finally
-	{
-	    m_juggernautsMutex.writeLock().unlock();
-	}
-
-	return bytes;
     }
 
     private void prepareNeighbors()
@@ -479,308 +452,337 @@ public class Kernel
 		{
 		    try
 		    {
-			synchronized(m_messagesToSendSchedulerObject)
+			MessageElement messageElement = null;
+
+			m_messagesToSendMutex.writeLock().lock();
+
+			try
 			{
-			    try
-			    {
-				m_messagesToSendSchedulerObject.wait();
-			    }
-			    catch(Exception exception)
-			    {
-			    }
+			    if(!m_messagesToSend.isEmpty())
+				messageElement = m_messagesToSend.remove(0);
+			    else
+				return;
+			}
+			catch(Exception exception)
+			{
+			}
+			finally
+			{
+			    m_messagesToSendMutex.writeLock().unlock();
 			}
 
-			while(true)
+			if(messageElement == null)
+			    return;
+			else
 			{
-			    MessageElement messageElement = null;
-
-			    m_messagesToSendMutex.writeLock().lock();
-
-			    try
+			    if(messageElement.m_delay > 0)
 			    {
-				if(!m_messagesToSend.isEmpty())
-				    messageElement = m_messagesToSend.remove(0);
-				else
-				    break;
-			    }
-			    catch(Exception exception)
-			    {
-			    }
-			    finally
-			    {
-				m_messagesToSendMutex.writeLock().unlock();
-			    }
+				m_messagesToSendMutex.writeLock().lock();
 
-			    if(messageElement == null)
-				continue;
-			    else
-				messageElement.m_timestamp =
-				    System.currentTimeMillis();
-
-			    byte bytes[] = null;
-
-			    try
-			    {
-				switch(messageElement.m_messageType)
+				try
 				{
-				case MessageElement.CHAT_MESSAGE_TYPE:
-				case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
-				    if(messageElement.m_messageType ==
-				       MessageElement.RESEND_CHAT_MESSAGE_TYPE)
+				    messageElement.m_delay -=
+					MESSAGES_TO_SEND_INTERVAL;
+				    m_messagesToSend.add(messageElement);
+				}
+				catch(Exception exception)
+				{
+				}
+				finally
+				{
+				    m_messagesToSendMutex.writeLock().unlock();
+				}
+
+				return;
+			    }
+
+			    messageElement.m_timestamp =
+				System.currentTimeMillis();
+			}
+
+			byte bytes[] = null;
+
+			try
+			{
+			    switch(messageElement.m_messageType)
+			    {
+			    case MessageElement.CHAT_MESSAGE_TYPE:
+			    case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
+				if(messageElement.m_messageType ==
+				   MessageElement.RESEND_CHAT_MESSAGE_TYPE)
+				{
+				    MemberChatElement memberChatElement =
+					s_databaseHelper.readMemberChat
+					(s_cryptography,
+					 messageElement.m_id,
+					 messageElement.m_position);
+
+				    if(memberChatElement != null)
 				    {
-					MemberChatElement memberChatElement =
-					    s_databaseHelper.readMemberChat
+					messageElement.m_attachment =
+					    memberChatElement.m_attachment;
+					messageElement.m_keyStream =
+					    s_databaseHelper.
+					    participantKeyStream
 					    (s_cryptography,
-					     messageElement.m_id,
-					     messageElement.m_position);
-
-					if(memberChatElement != null)
-					{
-					    messageElement.m_attachment =
-						memberChatElement.m_attachment;
-					    messageElement.m_keyStream =
-						s_databaseHelper.
-						participantKeyStream
-						(s_cryptography,
-						 messageElement.m_id);
-					    messageElement.m_message =
-						memberChatElement.m_message;
-					}
+					     messageElement.m_id);
+					messageElement.m_message =
+					    memberChatElement.m_message;
 				    }
+				}
 
-				    bytes = Messages.chatMessage
-					(s_cryptography,
-					 messageElement.m_message,
-					 messageElement.m_id,
-					 messageElement.m_attachment,
-					 Cryptography.
-					 sha512(messageElement.m_id.
-						getBytes(StandardCharsets.
-							 UTF_8)),
-					 messageElement.m_keyStream,
-					 messageElement.m_messageIdentity,
-					 State.getInstance().
-					 chatSequence(messageElement.m_id),
-					 messageElement.m_timestamp);
-				    s_databaseHelper.writeParticipantMessage
-					(s_cryptography,
-					 "local",
-					 messageElement.m_message,
-					 messageElement.m_id,
-					 messageElement.m_attachment,
-					 messageElement.m_messageIdentity,
-					 messageElement.m_timestamp);
+				bytes = Messages.chatMessage
+				    (s_cryptography,
+				     messageElement.m_message,
+				     messageElement.m_id,
+				     messageElement.m_attachment,
+				     Cryptography.
+				     sha512(messageElement.m_id.
+					    getBytes(StandardCharsets.UTF_8)),
+				     messageElement.m_keyStream,
+				     messageElement.m_messageIdentity,
+				     State.getInstance().
+				     chatSequence(messageElement.m_id),
+				     messageElement.m_timestamp);
+				s_databaseHelper.writeParticipantMessage
+				    (s_cryptography,
+				     "local",
+				     messageElement.m_message,
+				     messageElement.m_id,
+				     messageElement.m_attachment,
+				     messageElement.m_messageIdentity,
+				     messageElement.m_timestamp);
 
-				    Intent intent = new Intent
-					("org.purple.smoke.chat_local_message");
+				Intent intent = new Intent
+				    ("org.purple.smoke.chat_local_message");
 
-				    intent.putExtra
-					("org.purple.smoke.message",
-					 messageElement.m_message);
-				    intent.putExtra
-					("org.purple.smoke.sipHashId",
-					 messageElement.m_id);
-				    sendBroadcast(intent);
-				    break;
-				case MessageElement.FIRE_MESSAGE_TYPE:
-				    bytes = Messages.fireMessage
-					(s_cryptography,
-					 messageElement.m_id,
-					 messageElement.m_message,
-					 s_databaseHelper.
-					 readSetting(s_cryptography,
-						     "fire_user_name"),
-					 messageElement.m_keyStream);
-				    break;
-				case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
-				    bytes = Messages.fireStatus
-					(s_cryptography,
-					 messageElement.m_id,
-					 s_databaseHelper.
-					 readSetting(s_cryptography,
-						     "fire_user_name"),
-					 messageElement.m_keyStream);
-				    break;
-				case MessageElement.JUGGERNAUT_MESSAGE_TYPE:
-				    bytes = juggernaut
-					(messageElement.m_message,
-					 messageElement.m_id);
+				intent.putExtra
+				    ("org.purple.smoke.message",
+				     messageElement.m_message);
+				intent.putExtra
+				    ("org.purple.smoke.sipHashId",
+				     messageElement.m_id);
+				sendBroadcast(intent);
+				break;
+			    case MessageElement.FIRE_MESSAGE_TYPE:
+				bytes = Messages.fireMessage
+				    (s_cryptography,
+				     messageElement.m_id,
+				     messageElement.m_message,
+				     s_databaseHelper.
+				     readSetting(s_cryptography,
+						 "fire_user_name"),
+				     messageElement.m_keyStream);
+				break;
+			    case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
+				bytes = Messages.fireStatus
+				    (s_cryptography,
+				     messageElement.m_id,
+				     s_databaseHelper.
+				     readSetting(s_cryptography,
+						 "fire_user_name"),
+				     messageElement.m_keyStream);
+				break;
+			    case MessageElement.JUGGERNAUT_MESSAGE_TYPE:
+				m_juggernautsMutex.readLock().lock();
+
+				try
+				{
+				    Juggernaut juggernaut = m_juggernauts.
+					get(messageElement.m_id);
+
+				    if(juggernaut.state() ==
+				       JPAKEParticipant.STATE_INITIALIZED)
+					bytes = juggernaut.next(null).
+					    getBytes();
+				    else
+					bytes = null;
+				}
+				catch(Exception exception)
+				{
+				    bytes = null;
+				}
+				finally
+				{
+				    m_juggernautsMutex.readLock().unlock();
+				}
+
+				if(bytes != null)
 				    bytes = Messages.juggernautMessage
 					(s_cryptography,
 					 messageElement.m_id,
 					 bytes,
 					 messageElement.m_keyStream);
 
-				    if(bytes != null)
-				    {
-					s_databaseHelper.writeParticipantMessage
-					    (s_cryptography,
-					     "local-protocol",
-					     "Juggernaut Protocol initiated.",
-					     messageElement.m_id,
-					     null,
-					     null,
-					     messageElement.m_timestamp);
-					sendBroadcast
-					    (new Intent("org.purple.smoke." +
-							"notify_data_set_" +
-							"changed"));
-				    }
+				if(bytes != null)
+				{
+				    s_databaseHelper.writeParticipantMessage
+					(s_cryptography,
+					 "local-protocol",
+					 "Juggernaut Protocol initiated.",
+					 messageElement.m_id,
+					 null,
+					 null,
+					 messageElement.m_timestamp);
+				    sendBroadcast
+					(new Intent("org.purple.smoke." +
+						    "notify_data_set_" +
+						    "changed"));
+				}
 
+				break;
+			    case MessageElement.
+				RETRIEVE_MESSAGES_MESSAGE_TYPE:
+				bytes = Messages.chatMessageRetrieval
+				    (s_cryptography);
+
+				if(!messageElement.m_id.isEmpty())
+				{
+				    s_databaseHelper.writeParticipantMessage
+					(s_cryptography,
+					 "local-protocol",
+					 "Requesting messages from " +
+					 "SmokeStack(s).",
+					 messageElement.m_id,
+					 null,
+					 null,
+					 messageElement.m_timestamp);
+				    sendBroadcast
+					(new Intent("org.purple.smoke." +
+						    "notify_data_set_" +
+						    "changed"));
+				}
+
+				break;
+			    case MessageElement.
+				SHARE_SIPHASH_ID_MESSAGE_TYPE:
+				m_shareSipHashIdIdentity.set
+				    (Miscellaneous.
+				     byteArrayToLong(Cryptography.
+						     randomBytes(8)));
+				m_shareSipHashIdIdentityLastTick.set
+				    (System.currentTimeMillis());
+
+				if(messageElement.m_id.equals("-1"))
+				    bytes = Messages.shareSipHashIdMessage
+					(s_cryptography,
+					 s_cryptography.sipHashId(),
+					 m_shareSipHashIdIdentity.get());
+				else
+				{
+				    String sipHashId = s_databaseHelper.
+					readSipHashIdString
+					(s_cryptography,
+					 messageElement.m_id);
+
+				    bytes = Messages.shareSipHashIdMessage
+					(s_cryptography,
+					 sipHashId,
+					 m_shareSipHashIdIdentity.get());
+				}
+
+				break;
+			    }
+			}
+			catch(Exception exception)
+			{
+			    bytes = null;
+			}
+
+			try
+			{
+			    if(bytes != null)
+			    {
+				switch(messageElement.m_messageType)
+				{
+				case MessageElement.CHAT_MESSAGE_TYPE:
+				case MessageElement.
+				    RESEND_CHAT_MESSAGE_TYPE:
+				    enqueueMessage
+					(Messages.
+					 bytesToMessageString(bytes),
+					 messageElement.m_messageIdentity);
+
+				    if(messageElement.m_messageType !=
+				       MessageElement.
+				       RESEND_CHAT_MESSAGE_TYPE)
+					State.getInstance().
+					    incrementChatSequence
+					    (messageElement.m_id);
+
+				    break;
+				case MessageElement.FIRE_MESSAGE_TYPE:
+				    enqueueMessage
+					(Messages.
+					 bytesToMessageStringNonBase64
+					 (bytes),
+					 null);
+				    break;
+				case MessageElement.
+				    FIRE_STATUS_MESSAGE_TYPE:
+				    scheduleSend
+					(Messages.
+					 bytesToMessageStringNonBase64
+					 (bytes));
+				    break;
+				case MessageElement.JUGGERNAUT_MESSAGE_TYPE:
+				    scheduleSend
+					(Messages.
+					 bytesToMessageString(bytes));
 				    break;
 				case MessageElement.
 				    RETRIEVE_MESSAGES_MESSAGE_TYPE:
-				    bytes = Messages.chatMessageRetrieval
-					(s_cryptography);
-
-				    if(!messageElement.m_id.isEmpty())
-				    {
-					s_databaseHelper.writeParticipantMessage
-					    (s_cryptography,
-					     "local-protocol",
-					     "Requesting messages from " +
-					     "SmokeStack(s).",
-					     messageElement.m_id,
-					     null,
-					     null,
-					     messageElement.m_timestamp);
-					sendBroadcast
-					    (new Intent("org.purple.smoke." +
-							"notify_data_set_" +
-							"changed"));
-				    }
-
+				    scheduleSend
+					(Messages.
+					 identityMessage
+					 (messageRetrievalIdentity()));
+				    scheduleSend
+					(Messages.
+					 bytesToMessageString(bytes));
 				    break;
 				case MessageElement.
 				    SHARE_SIPHASH_ID_MESSAGE_TYPE:
-				    m_shareSipHashIdIdentity.set
-					(Miscellaneous.
-					 byteArrayToLong(Cryptography.
-							 randomBytes(8)));
-				    m_shareSipHashIdIdentityLastTick.set
-					(System.currentTimeMillis());
-
-				    if(messageElement.m_id.equals("-1"))
-					bytes = Messages.shareSipHashIdMessage
-					    (s_cryptography,
-					     s_cryptography.sipHashId(),
-					     m_shareSipHashIdIdentity.get());
-				    else
-				    {
-					String sipHashId = s_databaseHelper.
-					    readSipHashIdString
-					    (s_cryptography,
-					     messageElement.m_id);
-
-					bytes = Messages.shareSipHashIdMessage
-					    (s_cryptography,
-					     sipHashId,
-					     m_shareSipHashIdIdentity.get());
-				    }
-
+				    enqueueMessage
+					(Messages.
+					 bytesToMessageString(bytes),
+					 null);
 				    break;
 				}
 			    }
-			    catch(Exception exception)
-			    {
-				bytes = null;
-			    }
+			}
+			catch(Exception exception)
+			{
+			}
 
-			    try
+			switch(messageElement.m_messageType)
+			{
+			case MessageElement.CHAT_MESSAGE_TYPE:
+			case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
+			    if(s_cryptography.hasValidOzoneMacKey())
 			    {
+				bytes = Messages.chatMessage
+				    (s_cryptography,
+				     messageElement.m_message,
+				     messageElement.m_id,
+				     messageElement.m_attachment,
+				     null,
+				     messageElement.m_keyStream,
+				     messageElement.m_messageIdentity,
+				     State.getInstance().
+				     chatSequence(messageElement.m_id),
+				     messageElement.m_timestamp);
+
 				if(bytes != null)
-				{
-				    switch(messageElement.m_messageType)
-				    {
-				    case MessageElement.CHAT_MESSAGE_TYPE:
-				    case MessageElement.
-					 RESEND_CHAT_MESSAGE_TYPE:
-					enqueueMessage
-					    (Messages.
-					     bytesToMessageString(bytes),
-					     messageElement.m_messageIdentity);
-
-					if(messageElement.m_messageType !=
-					   MessageElement.
-					   RESEND_CHAT_MESSAGE_TYPE)
-					    State.getInstance().
-						incrementChatSequence
-						(messageElement.m_id);
-
-					break;
-				    case MessageElement.FIRE_MESSAGE_TYPE:
-					enqueueMessage
-					    (Messages.
-					     bytesToMessageStringNonBase64
-					     (bytes),
-					     null);
-					break;
-				    case MessageElement.
-					FIRE_STATUS_MESSAGE_TYPE:
-					scheduleSend
-					    (Messages.
-					     bytesToMessageStringNonBase64
-					     (bytes));
-					break;
-				    case MessageElement.JUGGERNAUT_MESSAGE_TYPE:
-					scheduleSend
-					    (Messages.
-					     bytesToMessageString(bytes));
-					break;
-				    case MessageElement.
-					RETRIEVE_MESSAGES_MESSAGE_TYPE:
-					scheduleSend
-					    (Messages.
-					     identityMessage
-					     (messageRetrievalIdentity()));
-					scheduleSend
-					    (Messages.
-					     bytesToMessageString(bytes));
-					break;
-				    case MessageElement.
-					SHARE_SIPHASH_ID_MESSAGE_TYPE:
-					enqueueMessage
-					    (Messages.
-					     bytesToMessageString(bytes),
-					     null);
-					break;
-				    }
-				}
-			    }
-			    catch(Exception exception)
-			    {
+				    enqueueMessage
+					("OZONE-" + Base64.
+					 encodeToString(bytes,
+							Base64.NO_WRAP),
+					 null);
 			    }
 
-			    switch(messageElement.m_messageType)
-			    {
-			    case MessageElement.CHAT_MESSAGE_TYPE:
-			    case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
-				if(s_cryptography.hasValidOzoneMacKey())
-				{
-				    bytes = Messages.chatMessage
-					(s_cryptography,
-					 messageElement.m_message,
-					 messageElement.m_id,
-					 messageElement.m_attachment,
-					 null,
-					 messageElement.m_keyStream,
-					 messageElement.m_messageIdentity,
-					 State.getInstance().
-					 chatSequence(messageElement.m_id),
-					 messageElement.m_timestamp);
-
-				    if(bytes != null)
-					enqueueMessage
-					    ("OZONE-" + Base64.
-					     encodeToString(bytes,
-							    Base64.NO_WRAP),
-					     null);
-				}
-
-				break;
-			    default:
-				break;
-			    }
+			    break;
+			default:
+			    break;
 			}
 		    }
 		    catch(Exception exception)
@@ -1363,8 +1365,7 @@ public class Kernel
 	{
 	    if(m_chatMessageRetrievalIdentity == null)
 	    {
-		m_chatMessageRetrievalIdentity = Miscellaneous.deepCopy
-		    (Cryptography.randomBytes(64));
+		m_chatMessageRetrievalIdentity = Cryptography.randomBytes(64);
 		m_chatTemporaryIdentityLastTick.set(System.currentTimeMillis());
 	    }
 
@@ -1746,7 +1747,7 @@ public class Kernel
 	    if(pk.length == 64)
 	    {
 		/*
-		** Chat, Chat Status, Message-Read Proof
+		** Chat, Chat Status, Juggernaut, Message-Read Proof
 		*/
 
 		byte keyStream[] = s_databaseHelper.participantKeyStream
@@ -1810,6 +1811,18 @@ public class Kernel
 							       sipHashId).
 		       contains("optional_signatures = false"))
 		    {
+			long current = System.currentTimeMillis();
+			long timestamp = Miscellaneous.byteArrayToLong
+			    (Arrays.copyOfRange(aes256, 1, 1 + 8));
+
+			if(current - timestamp < 0)
+			{
+			    if(timestamp - current > Chat.STATUS_WINDOW)
+				return 1;
+			}
+			else if(current - timestamp > Chat.STATUS_WINDOW)
+			    return 1;
+
 			PublicKey signatureKey = s_databaseHelper.
 			    signatureKeyForDigest(s_cryptography, pk);
 
@@ -1833,24 +1846,186 @@ public class Kernel
 			    return 1;
 		    }
 
-		    long current = System.currentTimeMillis();
-		    long timestamp = Miscellaneous.byteArrayToLong
-			(Arrays.copyOfRange(aes256, 1, 1 + 8));
-
-		    if(current - timestamp < 0)
-		    {
-			if(timestamp - current > Chat.STATUS_WINDOW)
-			    return 1;
-		    }
-		    else if(current - timestamp > Chat.STATUS_WINDOW)
-			return 1;
-
 		    s_databaseHelper.updateParticipantLastTimestamp
 			(s_cryptography, pk);
 		    return 1;
 		}
+		else if(abyte[0] == Messages.JUGGERNAUT_TYPE[0])
+		{
+		    aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
+
+		    String payload = "";
+		    String strings[] = new String(aes256).split("\\n");
+		    int ii = 0;
+
+		    for(String string : strings)
+			switch(ii)
+			{
+			case 0:
+			    long current = System.currentTimeMillis();
+			    long timestamp = Miscellaneous.byteArrayToLong
+				(Base64.
+				 decode(string.getBytes(), Base64.NO_WRAP));
+
+			    if(current - timestamp < 0)
+			    {
+				if(timestamp - current > JUGGERNAUT_WINDOW)
+				    return 1;
+			    }
+			    else if(current - timestamp > JUGGERNAUT_WINDOW)
+				return 1;
+
+			    ii += 1;
+			    break;
+			case 1:
+			    payload = new String
+				(Base64.
+				 decode(string.getBytes(), Base64.NO_WRAP));
+			    ii += 1;
+			    break;
+			case 2:
+			    PublicKey signatureKey = s_databaseHelper.
+				signatureKeyForDigest(s_cryptography, pk);
+
+			    if(signatureKey == null)
+				return 1;
+
+			    byte publicKeySignature[] = Base64.decode
+				(string.getBytes(), Base64.NO_WRAP);
+
+			    if(!Cryptography.verifySignature
+			       (signatureKey,
+				publicKeySignature,
+				Miscellaneous.
+				joinByteArrays
+				(pk,
+				 abyte,
+				 strings[0].getBytes(),
+				 "\n".getBytes(),
+				 strings[1].getBytes(),
+				 "\n".getBytes(),
+				 s_cryptography.
+				 chatEncryptionPublicKeyDigest())))
+				return 1;
+
+			    break;
+			}
+
+		    String array[] = s_databaseHelper.
+			nameSipHashIdFromDigest(s_cryptography, pk);
+
+		    if(array == null || array.length != 2)
+			return 1;
+
+		    int state = -1;
+
+		    m_juggernautsMutex.writeLock().lock();
+
+		    try
+		    {
+			if(!m_juggernauts.containsKey(array[1]))
+			    /*
+			    ** Misplaced Juggernaut!
+			    */
+
+			    return 1;
+
+			Juggernaut juggernaut = m_juggernauts.get(array[1]);
+
+			if(juggernaut == null)
+			{
+			    m_juggernauts.remove(array[1]);
+			    return 1;
+			}
+
+			if(juggernaut.state() ==
+			   JPAKEParticipant.STATE_INITIALIZED)
+			{
+			    bytes = juggernaut.next(null).getBytes();
+			    bytes = Messages.juggernautMessage
+				(s_cryptography,
+				 array[1],
+				 bytes,
+				 keyStream);
+			    scheduleSend
+				(Messages.bytesToMessageString(bytes));
+			}
+
+			bytes = juggernaut.next(payload).getBytes();
+
+			if(bytes != null)
+			{
+			    bytes = Messages.juggernautMessage
+				(s_cryptography,
+				 array[1],
+				 bytes,
+				 keyStream);
+			    scheduleSend
+				(Messages.bytesToMessageString(bytes));
+			}
+
+			state = juggernaut.state();
+		    }
+		    catch(Exception exception)
+		    {
+			bytes = null;
+		    }
+		    finally
+		    {
+			m_juggernautsMutex.writeLock().unlock();
+		    }
+
+		    if(bytes != null)
+		    {
+			s_databaseHelper.writeParticipantMessage
+			    (s_cryptography,
+			     "local-protocol",
+			     "Received a Juggernaut bundle. State of " +
+			     state + " (" + Juggernaut.stateToText(state) +
+			     "). Responded.",
+			     array[1],
+			     null,
+			     null,
+			     System.currentTimeMillis());
+			sendBroadcast
+			    (new Intent("org.purple.smoke." +
+					"notify_data_set_changed"));
+		    }
+		    else
+		    {
+			if(state == JPAKEParticipant.STATE_ROUND_3_VALIDATED)
+			    s_databaseHelper.writeParticipantMessage
+				(s_cryptography,
+				 "local-protocol",
+				 "The Juggernaut Protocol has been verified!",
+				 array[1],
+				 null,
+				 null,
+				 System.currentTimeMillis());
+			else
+			    s_databaseHelper.writeParticipantMessage
+				(s_cryptography,
+				 "local-protocol",
+				 "Juggernaut Protocol failure (" +
+				 Juggernaut.stateToText(state) + ")!",
+				 array[1],
+				 null,
+				 null,
+				 System.currentTimeMillis());
+
+			sendBroadcast
+			    (new Intent("org.purple.smoke." +
+					"notify_data_set_changed"));
+		    }
+
+		    return 1;
+		}
 		else if(abyte[0] == Messages.MESSAGE_READ_TYPE[0])
 		{
+		    /*
+		    ** We do not have a timpestamp!
+		    */
+
 		    PublicKey signatureKey = s_databaseHelper.
 			signatureKeyForDigest(s_cryptography, pk);
 
@@ -1965,14 +2140,14 @@ public class Kernel
 						  sipHashId).
 			   contains("optional_signatures = false"))
 			{
-			    publicKeySignature = Base64.decode
-				(string.getBytes(), Base64.NO_WRAP);
-
 			    PublicKey signatureKey = s_databaseHelper.
 				signatureKeyForDigest(s_cryptography, pk);
 
 			    if(signatureKey == null)
 				return 1;
+
+			    publicKeySignature = Base64.decode
+				(string.getBytes(), Base64.NO_WRAP);
 
 			    if(!Cryptography.
 			       verifySignature
@@ -2148,15 +2323,15 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 5:
-			publicKeySignature = Base64.decode
-			    (string.getBytes(), Base64.NO_WRAP);
-
 			PublicKey signatureKey = s_databaseHelper.
 			    signatureKeyForDigest
 			    (s_cryptography, senderPublicEncryptionKeyDigest);
 
 			if(signatureKey == null)
 			    return 1;
+
+			publicKeySignature = Base64.decode
+			    (string.getBytes(), Base64.NO_WRAP);
 
 			if(!Cryptography.
 			   verifySignature(signatureKey,
@@ -2542,12 +2717,11 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
-	    messageElement.m_attachment = Miscellaneous.deepCopy(imageBytes);
+	    messageElement.m_attachment = imageBytes;
 	    messageElement.m_id = sipHashId;
-	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    messageElement.m_keyStream = keystream;
 	    messageElement.m_message = message;
-	    messageElement.m_messageIdentity = Miscellaneous.deepCopy
-		(Cryptography.randomBytes(64));
+	    messageElement.m_messageIdentity = Cryptography.randomBytes(64);
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
@@ -2557,11 +2731,6 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
-	}
-
-	synchronized(m_messagesToSendSchedulerObject)
-	{
-	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
@@ -2594,7 +2763,7 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_id = id;
-	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    messageElement.m_keyStream = keystream;
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
@@ -2605,11 +2774,6 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
-	}
-
-	synchronized(m_messagesToSendSchedulerObject)
-	{
-	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
@@ -2642,7 +2806,7 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_id = id;
-	    messageElement.m_keyStream = Miscellaneous.deepCopy(keystream);
+	    messageElement.m_keyStream = keystream;
 	    messageElement.m_messageType =
 		MessageElement.FIRE_STATUS_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
@@ -2654,23 +2818,38 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
-
-	synchronized(m_messagesToSendSchedulerObject)
-	{
-	    m_messagesToSendSchedulerObject.notify();
-	}
     }
 
     public void enqueueJuggernaut(String secret,
 				  String sipHashId,
 				  byte keyStream[])
     {
+	m_juggernautsMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_juggernauts.containsKey(sipHashId))
+		m_juggernauts.remove(sipHashId);
+
+	    Juggernaut juggernaut = new Juggernaut(sipHashId, secret);
+
+	    m_juggernauts.put(sipHashId, juggernaut);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_juggernautsMutex.writeLock().unlock();
+	}
+
 	m_messagesToSendMutex.writeLock().lock();
 
 	try
 	{
 	    MessageElement messageElement = new MessageElement();
 
+	    messageElement.m_delay = 3500; // 3.5 Seconds
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = secret;
@@ -2684,11 +2863,6 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
-	}
-
-	synchronized(m_messagesToSendSchedulerObject)
-	{
-	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
@@ -2711,11 +2885,6 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
-	}
-
-	synchronized(m_messagesToSendSchedulerObject)
-	{
-	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
@@ -2750,8 +2919,7 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_id = sipHashId;
-	    messageElement.m_messageIdentity = Miscellaneous.deepCopy
-		(Cryptography.randomBytes(64));
+	    messageElement.m_messageIdentity = Cryptography.randomBytes(64);
 	    messageElement.m_messageType =
 		MessageElement.RESEND_CHAT_MESSAGE_TYPE;
 	    messageElement.m_position = position;
@@ -2763,11 +2931,6 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
-	}
-
-	synchronized(m_messagesToSendSchedulerObject)
-	{
-	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 
@@ -2790,11 +2953,6 @@ public class Kernel
 	finally
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
-	}
-
-	synchronized(m_messagesToSendSchedulerObject)
-	{
-	    m_messagesToSendSchedulerObject.notify();
 	}
     }
 

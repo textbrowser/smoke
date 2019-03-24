@@ -49,7 +49,6 @@ public class Juggernaut
     private final SecureRandom m_random = new SecureRandom();
     private final static JPAKEPrimeOrderGroup s_group =
 	JPAKEPrimeOrderGroups.NIST_3072;
-    private long m_lastEventTime = 0;
 
     Juggernaut(String participantId, String secret)
     {
@@ -376,6 +375,31 @@ public class Juggernaut
     public int state()
     {
 	return m_participant.getState();
+    }
+
+    public static String stateToText(int state)
+    {
+	switch(state)
+	{
+	case JPAKEParticipant.STATE_INITIALIZED:
+	    return "initialized";
+	case JPAKEParticipant.STATE_KEY_CALCULATED:
+	    return "key calculated";
+	case JPAKEParticipant.STATE_ROUND_1_CREATED:
+	    return "round 1 created";
+	case JPAKEParticipant.STATE_ROUND_1_VALIDATED:
+	    return "round 1 validated";
+	case JPAKEParticipant.STATE_ROUND_2_CREATED:
+	    return "round 2 created";
+	case JPAKEParticipant.STATE_ROUND_2_VALIDATED:
+	    return "round 2 validated";
+	case JPAKEParticipant.STATE_ROUND_3_CREATED:
+	    return "round 3 created";
+	case JPAKEParticipant.STATE_ROUND_3_VALIDATED:
+	    return "round 3 validated";
+	default:
+	    return "unknown";
+	}
     }
 
     public static void test1()

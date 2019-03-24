@@ -1883,10 +1883,10 @@ public class Cryptography
 
 		try
 		{
-		    m_sipHashIdDigest = Miscellaneous.deepCopy
-			(sha512(Miscellaneous.
-				byteArrayAsHexStringDelimited(bytes, '-', 4).
-				toUpperCase().getBytes()));
+		    m_sipHashIdDigest =
+			sha512(Miscellaneous.
+			       byteArrayAsHexStringDelimited(bytes, '-', 4).
+			       toUpperCase().getBytes());
 		}
 		catch(Exception exception)
 		{
@@ -2299,7 +2299,7 @@ public class Cryptography
 
 	try
 	{
-	    m_identity = Miscellaneous.deepCopy(identity);
+	    m_identity = identity;
 	}
 	catch(Exception exception)
 	{
@@ -2331,7 +2331,7 @@ public class Cryptography
 	try
 	{
 	    if(bytes != null && bytes.length == 32)
-		m_ozoneEncryptionKey = Miscellaneous.deepCopy(bytes);
+		m_ozoneEncryptionKey = bytes;
 	    else
 	    {
 		if(m_ozoneEncryptionKey != null)
@@ -2356,7 +2356,7 @@ public class Cryptography
 	try
 	{
 	    if(bytes != null && bytes.length == 64)
-		m_ozoneMacKey = Miscellaneous.deepCopy(bytes);
+		m_ozoneMacKey = bytes;
 	    else
 	    {
 		if(m_ozoneMacKey != null)

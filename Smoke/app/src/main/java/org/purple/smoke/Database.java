@@ -507,8 +507,7 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 11:
 			    if(bytes != null)
-				neighborElement.m_remoteCertificate =
-				    Miscellaneous.deepCopy(bytes);
+				neighborElement.m_remoteCertificate = bytes;
 
 			    break;
 			case 12:
@@ -661,8 +660,7 @@ public class Database extends SQLiteOpenHelper
 				(bytes, StandardCharsets.UTF_8);
 			    break;
 			case 1:
-			    sipHashIdElement.m_stream = Miscellaneous.
-				deepCopy(bytes);
+			    sipHashIdElement.m_stream = bytes;
 			    break;
 			}
 		    }
@@ -780,8 +778,7 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 1:
 			    if(bytes != null)
-				participantElement.m_keyStream =
-				    Miscellaneous.deepCopy(bytes);
+				participantElement.m_keyStream = bytes;
 
 			    break;
 			case 2:
@@ -978,8 +975,7 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 6:
 			    if(bytes != null)
-				sipHashIdElement.m_stream = Miscellaneous.
-				    deepCopy(bytes);
+				sipHashIdElement.m_stream = bytes;
 
 			    break;
 			}
@@ -1276,8 +1272,7 @@ public class Database extends SQLiteOpenHelper
 			{
 			case 0:
 			    if(bytes != null)
-				memberChatElement.m_attachment =
-				    Miscellaneous.deepCopy(bytes);
+				memberChatElement.m_attachment = bytes;
 
 			    break;
 			case 1:
@@ -1535,20 +1530,17 @@ public class Database extends SQLiteOpenHelper
 		    switch(i)
 		    {
 		    case 0:
-			sipHashIdElement.m_encryptionPublicKey =
-			    Miscellaneous.deepCopy(bytes);
+			sipHashIdElement.m_encryptionPublicKey = bytes;
 			break;
 		    case 1:
-			sipHashIdElement.m_signaturePublicKey =
-			    Miscellaneous.deepCopy(bytes);
+			sipHashIdElement.m_signaturePublicKey = bytes;
 			break;
 		    case 2:
 			sipHashIdElement.m_sipHashId = new String
 			    (bytes, StandardCharsets.UTF_8);
 			break;
 		    case 3:
-			sipHashIdElement.m_stream = Miscellaneous.
-			    deepCopy(bytes);
+			sipHashIdElement.m_stream = bytes;
 			break;
 		    }
 		}
