@@ -105,6 +105,7 @@ public class Kernel
 	864000; // Seconds in ten days.
     private final static long CALL_INTERVAL = 250; // 0.250 Seconds
     private final static long CALL_LIFETIME = 30000; // 30 Seconds
+    private final static long JUGGERNAUT_LIFETIME = 15000; // 15 Seconds
     private final static long JUGGERNAUT_WINDOW = 10000; // 10 Seconds
     private final static long MESSAGES_TO_SEND_INTERVAL =
 	100; // 100 Milliseconds
@@ -914,6 +915,38 @@ public class Kernel
 		@Override
 		public void run()
 		{
+		    m_juggernautsMutex.writeLock().lock();
+
+		    try
+		    {
+		    }
+		    catch(Exception exception)
+		    {
+			Iterator<Hashtable.Entry<String, Juggernaut> >
+			    it = m_juggernauts.entrySet().iterator();
+
+			while(it.hasNext())
+			{
+			    Hashtable.Entry<String, Juggernaut> entry =
+				it.next();
+
+			    if(entry.getValue() == null)
+			    {
+				it.remove();
+				continue;
+			    }
+
+			    if((System.currentTimeMillis() -
+				entry.getValue().lastEventTime()) >
+			       JUGGERNAUT_LIFETIME)
+				it.remove();
+			}
+		    }
+		    finally
+		    {
+			m_juggernautsMutex.writeLock().unlock();
+		    }
+
 		    try
 		    {
 			s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
