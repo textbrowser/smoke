@@ -44,14 +44,16 @@ public class Juggernaut
 {
     private BigInteger m_keyingMaterial = null;
     private JPAKEParticipant m_participant = null;
-    private String m_participantId = "";
     private final Digest m_digest = new SHA512Digest();
     private final SecureRandom m_random = new SecureRandom();
     private final static JPAKEPrimeOrderGroup s_group =
 	JPAKEPrimeOrderGroups.NIST_3072;
+    private long m_lastEventTime = 0;
 
     Juggernaut(String participantId, String secret)
     {
+	m_lastEventTime = System.currentTimeMillis();
+
 	try
 	{
 	    m_participant = new JPAKEParticipant
@@ -60,7 +62,6 @@ public class Juggernaut
 		 s_group,
 		 m_digest,
 		 m_random);
-	    m_participantId = participantId;
 	}
 	catch(Exception exception)
 	{
@@ -68,8 +69,10 @@ public class Juggernaut
 	}
     }
 
-    public BigInteger keyingMaterial()
+    private BigInteger keyingMaterial()
     {
+	m_lastEventTime = System.currentTimeMillis();
+
 	try
 	{
 	    if(m_keyingMaterial == null)
@@ -83,38 +86,7 @@ public class Juggernaut
 	return m_keyingMaterial;
     }
 
-    public String next(String payload)
-    {
-	String string = "";
-
-	switch(m_participant.getState())
-	{
-	case JPAKEParticipant.STATE_INITIALIZED:
-	    string = payload1Stream();
-	    break;
-	case JPAKEParticipant.STATE_ROUND_1_CREATED:
-	    if(payload != null && validatePayload1(payload.split("\\n")))
-		string = payload2Stream();
-
-	    break;
-	case JPAKEParticipant.STATE_ROUND_2_CREATED:
-	    if(payload != null && validatePayload2(payload.split("\\n")))
-		string = payload3Stream(keyingMaterial());
-
-	    break;
-	case JPAKEParticipant.STATE_ROUND_3_CREATED:
-	    if(payload != null)
-		validatePayload3(keyingMaterial(), payload.split("\\n"));
-
-	    break;
-	default:
-	    break;
-	}
-
-	return string;
-    }
-
-    public String payload1Stream()
+    private String payload1Stream()
     {
 	try
 	{
@@ -170,7 +142,7 @@ public class Juggernaut
 	return "";
     }
 
-    public String payload2Stream()
+    private String payload2Stream()
     {
 	try
 	{
@@ -209,7 +181,7 @@ public class Juggernaut
 	return "";
     }
 
-    public String payload3Stream(BigInteger keyingMaterial)
+    private String payload3Stream(BigInteger keyingMaterial)
     {
 	try
 	{
@@ -233,7 +205,7 @@ public class Juggernaut
 	return "";
     }
 
-    public boolean validatePayload1(String strings[])
+    private boolean validatePayload1(String strings[])
     {
 	try
 	{
@@ -296,7 +268,7 @@ public class Juggernaut
 	return true;
     }
 
-    public boolean validatePayload2(String strings[])
+    private boolean validatePayload2(String strings[])
     {
 	try
 	{
@@ -340,7 +312,8 @@ public class Juggernaut
 	return true;
     }
 
-    public boolean validatePayload3(BigInteger keyingMaterial, String strings[])
+    private boolean validatePayload3(BigInteger keyingMaterial,
+				     String strings[])
     {
 	try
 	{
@@ -372,9 +345,47 @@ public class Juggernaut
 	return true;
     }
 
+    public String next(String payload)
+    {
+	m_lastEventTime = System.currentTimeMillis();
+
+	String string = "";
+
+	switch(m_participant.getState())
+	{
+	case JPAKEParticipant.STATE_INITIALIZED:
+	    string = payload1Stream();
+	    break;
+	case JPAKEParticipant.STATE_ROUND_1_CREATED:
+	    if(payload != null && validatePayload1(payload.split("\\n")))
+		string = payload2Stream();
+
+	    break;
+	case JPAKEParticipant.STATE_ROUND_2_CREATED:
+	    if(payload != null && validatePayload2(payload.split("\\n")))
+		string = payload3Stream(keyingMaterial());
+
+	    break;
+	case JPAKEParticipant.STATE_ROUND_3_CREATED:
+	    if(payload != null)
+		validatePayload3(keyingMaterial(), payload.split("\\n"));
+
+	    break;
+	default:
+	    break;
+	}
+
+	return string;
+    }
+
     public int state()
     {
 	return m_participant.getState();
+    }
+
+    public long lastEventTime()
+    {
+	return m_lastEventTime;
     }
 
     public static String stateToText(int state)
