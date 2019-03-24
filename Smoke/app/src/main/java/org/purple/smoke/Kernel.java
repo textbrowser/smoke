@@ -1964,7 +1964,9 @@ public class Kernel
 				(Messages.bytesToMessageString(bytes));
 			}
 
-			state = juggernaut.state();
+			if((state = juggernaut.state()) ==
+			   JPAKEParticipant.STATE_ROUND_3_VALIDATED)
+			    m_juggernauts.remove(array[1]);
 		    }
 		    catch(Exception exception)
 		    {
