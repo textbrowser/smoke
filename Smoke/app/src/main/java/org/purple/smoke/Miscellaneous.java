@@ -54,6 +54,7 @@ import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
@@ -802,13 +803,33 @@ public abstract class Miscellaneous
 		 public void onClick(DialogInterface dialog, int which)
 		 {
 		     if(contextIsChat)
+		     {
+			 String string = editText.getText().toString();
+
+			 if(string.length() <= 64)
+			     string = Base64.encodeToString
+				 (Cryptography.
+				  sha512(string.
+					 getBytes(StandardCharsets.UTF_8)),
+				  Base64.NO_WRAP);
+
 			 State.getInstance().setString
-			     ("chat_secret_input",
-			      editText.getText().toString());
+			     ("chat_secret_input", string);
+		     }
 		     else if(contextIsMemberChat)
+		     {
+			 String string = editText.getText().toString();
+
+			 if(string.length() <= 64)
+			     string = Base64.encodeToString
+				 (Cryptography.
+				  sha512(string.
+					 getBytes(StandardCharsets.UTF_8)),
+				  Base64.NO_WRAP);
+
 			 State.getInstance().setString
-			     ("member_chat_secret_input",
-			      editText.getText().toString());
+			     ("member_chat_secret_input", string);
+		     }
 		     else if(contextIsSettings)
 			 State.getInstance().setString
 			     ("settings_participant_name_input",

@@ -180,6 +180,8 @@ Completed Items
 - Spinner objects in the neighbors table bleed. The table will expand as
   necessary.
 - Status messages.
+- Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
+  the secret is brief.
 - Synchronized methods or containers? Both.
 - TCP socket setPerformancePreferences().
 - TcpNeighbor classes.
@@ -231,6 +233,5 @@ Remaining Items
   Ozone, Participants
   Password, Public Data
 - Steam and Vapor.
-- Store a digest of the secret string (Miscellaneous.showTextInputDialog()).
 - Stronger surreptitious forwarding. Larger RSA keys.
 - Translations.
