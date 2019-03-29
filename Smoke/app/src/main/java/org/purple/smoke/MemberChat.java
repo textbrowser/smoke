@@ -1074,7 +1074,9 @@ public class MemberChat extends AppCompatActivity
 		(MemberChat.this,
 		 listener,
 		 "Please provide a secret. The Juggernaut Protocol " +
-		 "will be initiated shortly after this dialog is confirmed.",
+		 "will be initiated shortly (" +
+		 Kernel.JUGGERNAUT_DELAY / 1000.0 +
+		 " seconds) after this dialog is confirmed.",
 		 "Juggernaut Secret");
 	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:

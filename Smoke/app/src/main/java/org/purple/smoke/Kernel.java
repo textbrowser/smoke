@@ -123,6 +123,7 @@ public class Kernel
     private final static long TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
     private static Kernel s_instance = null;
+    public final static long JUGGERNAUT_DELAY = 3500; // 3.5 Seconds
 
     private Kernel()
     {
@@ -2884,7 +2885,7 @@ public class Kernel
 	{
 	    MessageElement messageElement = new MessageElement();
 
-	    messageElement.m_delay = 3500; // 3.5 Seconds
+	    messageElement.m_delay = JUGGERNAUT_DELAY;
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = secret;
