@@ -258,7 +258,7 @@ public abstract class Miscellaneous
 
     public static byte[] compressed(byte bytes[])
     {
-	if(bytes == null || bytes.length == 0)
+	if(bytes == null)
 	    return null;
 
 	try
@@ -299,7 +299,7 @@ public abstract class Miscellaneous
 
     public static byte[] decompressed(byte bytes[])
     {
-	if(bytes == null || bytes.length == 0)
+	if(bytes == null)
 	    return null;
 
 	try
