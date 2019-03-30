@@ -51,7 +51,7 @@ public class SmokeService extends Service
 	PendingIntent pendingIntent = PendingIntent.getActivity
 	    (this, 0, notificationIntent, 0);
 
-	notification = new Notification.Builder(this, "Smoke").
+	notification = new Notification.Builder(this).
 	    setContentIntent(pendingIntent).
 	    setContentText("Smoke Activity").
 	    setContentTitle("Smoke Activity").

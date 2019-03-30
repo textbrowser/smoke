@@ -1014,7 +1014,7 @@ public class MemberChat extends AppCompatActivity
 
 		if(view != null)
 		{
-		    TextView textView = view.findViewById
+		    TextView textView = (TextView) view.findViewById
 			(R.id.text);
 
 		    if(textView != null)
@@ -1092,7 +1092,7 @@ public class MemberChat extends AppCompatActivity
 
 		if(view != null)
 		{
-		    ImageView imageView = view.findViewById
+		    ImageView imageView = (ImageView) view.findViewById
 			(R.id.image);
 
 		    if(imageView != null)

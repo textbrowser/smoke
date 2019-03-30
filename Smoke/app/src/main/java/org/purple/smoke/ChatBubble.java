@@ -143,7 +143,7 @@ public class ChatBubble extends View
 
 	    Bitmap bitmap = BitmapFactory.decodeStream
 		(byteArrayInputStream, null, options);
-	    ImageView imageView = m_view.findViewById(R.id.image);
+	    ImageView imageView = (ImageView) m_view.findViewById(R.id.image);
 
 	    if(bitmap != null)
 	    {
@@ -203,7 +203,7 @@ public class ChatBubble extends View
 
 	if(location == Locations.LEFT)
 	{
-	    TextView textView = m_view.findViewById(R.id.name_left);
+	    TextView textView = (TextView) m_view.findViewById(R.id.name_left);
 
 	    textView.setText(name.substring(0, 1).toUpperCase());
 
@@ -212,7 +212,7 @@ public class ChatBubble extends View
 	}
 	else
 	{
-	    TextView textView = m_view.findViewById(R.id.name_right);
+	    TextView textView = (TextView) m_view.findViewById(R.id.name_right);
 
 	    textView.setText(name.substring(0, 1).toUpperCase());
 
@@ -299,8 +299,9 @@ public class ChatBubble extends View
 
     public void setText(Locations location, String text)
     {
-	LinearLayout linearLayout = m_view.findViewById(R.id.linear_layout);
-	TextView textView = m_view.findViewById(R.id.text);
+	LinearLayout linearLayout = (LinearLayout)
+	    m_view.findViewById(R.id.linear_layout);
+	TextView textView = (TextView) m_view.findViewById(R.id.text);
 
 	textView.setText("");
 

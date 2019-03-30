@@ -116,6 +116,7 @@ Completed Items
 - New messages should be at the top of the view; Member Chat.
 - Next (Tab) order; Settings.
 - Non-exclusive database transactions.
+- Notification causes abnormal exit on Android 7.
 - Notify of other member messages in Member Chat.
 - Notify the Chat activity of new participants.
 - Optimize loops.
@@ -227,7 +228,6 @@ Remaining Items
 - Drawers.
 - Gallery integration. Zoom.
 - Highlight results of Juggernaut, if possible.
-- Notification causes abnormal exit on Android 7.
 - Separate Settings:
   Neighbor Servers
   Ozone, Participants

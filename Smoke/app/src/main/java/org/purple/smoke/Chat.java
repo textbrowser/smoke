@@ -261,7 +261,7 @@ public class Chat extends AppCompatActivity
 	    if(m_databaseHelper.readSetting(null, "show_chat_icons").
 	       equals("true"))
 	    {
-		CheckBox checkBox1 = findViewById
+		CheckBox checkBox1 = (CheckBox) findViewById
 		    (R.id.participants).findViewWithTag(sipHashId);
 
 		if(checkBox1 != null)
@@ -780,8 +780,8 @@ public class Chat extends AppCompatActivity
 
     private void refreshCheckBox(String sipHashId)
     {
-	CheckBox checkBox1 = findViewById(R.id.participants).findViewWithTag
-	    (sipHashId);
+	CheckBox checkBox1 = (CheckBox)
+	    findViewById(R.id.participants).findViewWithTag(sipHashId);
 
 	if(checkBox1 == null)
 	    return;
