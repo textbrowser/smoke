@@ -1445,22 +1445,6 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
-    @Override
-    public void onStop()
-    {
-	super.onStop();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(this).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-
-	releaseResources();
-	saveState();
-    }
-
     public void setMessageSelected(int oid, boolean isChecked)
     {
 	if(isChecked)

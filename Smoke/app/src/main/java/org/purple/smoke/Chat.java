@@ -1550,20 +1550,4 @@ public class Chat extends AppCompatActivity
 	** Do not issue a super.onSaveInstanceState().
 	*/
     }
-
-    @Override
-    public void onStop()
-    {
-	super.onStop();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(this).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-
-	releaseResources();
-	saveState();
-    }
 }

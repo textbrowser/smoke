@@ -724,17 +724,4 @@ public class Fire extends AppCompatActivity
 	    m_receiverRegistered = true;
 	}
     }
-
-    @Override
-    public void onStop()
-    {
-	super.onStop();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(this).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-    }
 }
