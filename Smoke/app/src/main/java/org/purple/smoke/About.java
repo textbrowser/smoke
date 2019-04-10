@@ -48,7 +48,7 @@ public class About
 	if(s_about.isEmpty())
 	{
 	    s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    s_about = "Version 2019.04.04 Smashing Stacks " +
+	    s_about = "Version 2019.04.14 April Acaena " +
 		(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		"\nBuild Date " +
 		s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +

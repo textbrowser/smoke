@@ -93,6 +93,7 @@ Completed Items
   (http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8)
 - Kernel.
 - Key-sharing messages should be written to smoke.db.
+- JuggerKnot (credentials from protocol).
 - Juggernaut.
   (https://en.wikipedia.org/wiki/Password_Authenticated_Key_Exchange_by_Juggling)
   (https://www.borelly.net/cb/docs/javaBC-1.4.8/prov/org/bouncycastle/crypto/agreement/jpake/JPAKEParticipant.html)
@@ -228,7 +229,6 @@ Remaining Items
 - Drawers.
 - Gallery integration. Zoom.
 - Highlight results of Juggernaut, if possible.
-- Juggerknot (credentials from protocol).
 - Separate Settings:
   Neighbor Servers
   Ozone, Participants

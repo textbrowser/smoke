@@ -260,11 +260,12 @@ public class MemberChat extends AppCompatActivity
 	public final static int DELETE_ALL_MESSAGES = 4;
 	public final static int DELETE_MESSAGE = 5;
 	public final static int DELETE_SELECTED_MESSAGES = 6;
-	public final static int JUGGERNAUT = 7;
-	public final static int RESEND_MESSAGE = 8;
-	public final static int RETRIEVE_MESSAGES = 9;
-	public final static int SAVE_ATTACHMENT = 10;
-	public final static int SELECTION_STATE = 11;
+	public final static int JUGGERKNOT = 7;
+	public final static int JUGGERNAUT = 8;
+	public final static int RESEND_MESSAGE = 9;
+	public final static int RETRIEVE_MESSAGES = 10;
+	public final static int SAVE_ATTACHMENT = 11;
+	public final static int SELECTION_STATE = 12;
     }
 
     private boolean isParticipantPaired(ArrayList<ParticipantElement> arrayList)
@@ -968,6 +969,7 @@ public class MemberChat extends AppCompatActivity
 			}
 
 			break;
+		    case ContextMenuEnumerator.JUGGERKNOT:
 		    case ContextMenuEnumerator.JUGGERNAUT:
 			try
 			{
@@ -983,7 +985,11 @@ public class MemberChat extends AppCompatActivity
 				if(!(keyStream == null ||
 				     keyStream.length != 96))
 				    Kernel.getInstance().enqueueJuggernaut
-					(string, m_sipHashId, keyStream);
+					(string,
+					 m_sipHashId,
+					 groupId ==
+					 ContextMenuEnumerator.JUGGERKNOT,
+					 keyStream);
 			    }
 			}
 			catch(Exception exception)
@@ -1069,15 +1075,29 @@ public class MemberChat extends AppCompatActivity
 		 "Are you sure that you wish to delete the " +
 		 "selected message(s)?");
 	    break;
+	case ContextMenuEnumerator.JUGGERKNOT:
 	case ContextMenuEnumerator.JUGGERNAUT:
-	    Miscellaneous.showTextInputDialog
-		(MemberChat.this,
-		 listener,
-		 "Please provide a secret. The Juggernaut Protocol " +
-		 "will be initiated shortly (" +
-		 Kernel.JUGGERNAUT_DELAY / 1000.0 +
-		 " seconds) after this dialog is confirmed.",
-		 "Juggernaut Secret");
+	    if(groupId == ContextMenuEnumerator.JUGGERKNOT)
+		Miscellaneous.showTextInputDialog
+		    (MemberChat.this,
+		     listener,
+		     "Please provide a secret. The Juggernaut Protocol " +
+		     "will be initiated shortly (" +
+		     Kernel.JUGGERNAUT_DELAY / 1000.0 +
+		     " seconds) after this dialog is confirmed. If the " +
+		     "protocol completes correctly, new session credentials " +
+		     "will be generated.",
+		     "Juggernaut Secret");
+	    else
+		Miscellaneous.showTextInputDialog
+		    (MemberChat.this,
+		     listener,
+		     "Please provide a secret. The Juggernaut Protocol " +
+		     "will be initiated shortly (" +
+		     Kernel.JUGGERNAUT_DELAY / 1000.0 +
+		     " seconds) after this dialog is confirmed.",
+		     "Juggernaut Secret");
+
 	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:
 	    Kernel.getInstance().resendMessage(m_sipHashId, itemId);
@@ -1348,6 +1368,7 @@ public class MemberChat extends AppCompatActivity
 	ArrayList<ParticipantElement> arrayList =
 	    m_databaseHelper.readParticipants
 	    (s_cryptography, m_sipHashId);
+	boolean isParticipantPaired = isParticipantPaired(null);
 	boolean state = Kernel.getInstance().isConnected();
 
 	menu.add(ContextMenuEnumerator.CALL_VIA_MCELIECE,
@@ -1362,11 +1383,14 @@ public class MemberChat extends AppCompatActivity
 		 -1,
 		 0,
 		 "Custom Session");
+	menu.add(ContextMenuEnumerator.JUGGERKNOT,
+		 -1,
+		 0,
+		 "JuggerKnot").setEnabled(isParticipantPaired && state);
 	menu.add(ContextMenuEnumerator.JUGGERNAUT,
 		 -1,
 		 0,
-		 "Juggernaut").
-	    setEnabled(isParticipantPaired(null) && state);
+		 "Juggernaut").setEnabled(isParticipantPaired && state);
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
 		 0,

@@ -123,7 +123,7 @@ public class Kernel
     private final static long TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
     private static Kernel s_instance = null;
-    public final static long JUGGERNAUT_DELAY = 3500; // 3.5 Seconds
+    public final static long JUGGERNAUT_DELAY = 7500; // 7.5 Seconds
 
     private Kernel()
     {
@@ -1951,6 +1951,7 @@ public class Kernel
 		    if(array == null || array.length != 2)
 			return 1;
 
+		    byte sessionCredentials[] = null;
 		    int state = -1;
 
 		    m_juggernautsMutex.writeLock().lock();
@@ -2000,7 +2001,11 @@ public class Kernel
 
 			if((state = juggernaut.state()) ==
 			   JPAKEParticipant.STATE_ROUND_3_VALIDATED)
+			{
+			    sessionCredentials = juggernaut.
+				deriveSessionCredentials();
 			    m_juggernauts.remove(array[1]);
+			}
 		    }
 		    catch(Exception exception)
 		    {
@@ -2030,6 +2035,17 @@ public class Kernel
 		    else
 		    {
 			if(state == JPAKEParticipant.STATE_ROUND_3_VALIDATED)
+			{
+			    if(sessionCredentials != null)
+			    {
+				int oid = s_databaseHelper.
+				    participantOidFromSipHash
+				    (s_cryptography, array[1]);
+
+				s_databaseHelper.setParticipantKeyStream
+				    (s_cryptography, sessionCredentials, oid);
+			    }
+
 			    s_databaseHelper.writeParticipantMessage
 				(s_cryptography,
 				 "local-protocol",
@@ -2038,6 +2054,7 @@ public class Kernel
 				 null,
 				 null,
 				 System.currentTimeMillis());
+			}
 			else
 			    s_databaseHelper.writeParticipantMessage
 				(s_cryptography,
@@ -2858,6 +2875,7 @@ public class Kernel
 
     public void enqueueJuggernaut(String secret,
 				  String sipHashId,
+				  boolean isJuggerKnot,
 				  byte keyStream[])
     {
 	m_juggernautsMutex.writeLock().lock();
@@ -2867,7 +2885,8 @@ public class Kernel
 	    if(m_juggernauts.containsKey(sipHashId))
 		m_juggernauts.remove(sipHashId);
 
-	    Juggernaut juggernaut = new Juggernaut(sipHashId, secret);
+	    Juggernaut juggernaut = new Juggernaut
+		(sipHashId, secret, isJuggerKnot);
 
 	    m_juggernauts.put(sipHashId, juggernaut);
 	}

@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.util.Base64;
 import android.util.Log;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEParticipant;
@@ -44,14 +45,17 @@ public class Juggernaut
 {
     private BigInteger m_keyingMaterial = null;
     private JPAKEParticipant m_participant = null;
+    private boolean m_isJuggerKnot = false;
     private final Digest m_digest = new SHA512Digest();
     private final SecureRandom m_random = new SecureRandom();
     private final static JPAKEPrimeOrderGroup s_group =
 	JPAKEPrimeOrderGroups.NIST_3072;
+    private final static int ITERATION_COUNT = 4096;
     private long m_lastEventTime = 0;
 
-    Juggernaut(String participantId, String secret)
+    Juggernaut(String participantId, String secret, boolean isJuggerKnot)
     {
+	m_isJuggerKnot = isJuggerKnot;
 	m_lastEventTime = System.currentTimeMillis();
 
 	try
@@ -378,6 +382,43 @@ public class Juggernaut
 	return string;
     }
 
+    public boolean isJuggerKnot()
+    {
+	return m_isJuggerKnot;
+    }
+
+    public byte[] deriveSessionCredentials()
+    {
+	if(m_isJuggerKnot)
+	    try
+	    {
+		String string = Base64.encodeToString
+		    (m_keyingMaterial.toByteArray(), Base64.NO_WRAP);
+		byte bytes[] = Cryptography.pbkdf2
+		    (Cryptography.
+		     sha512(string.getBytes(StandardCharsets.UTF_8)),
+		     string.toCharArray(),
+		     ITERATION_COUNT,
+		     160); // SHA-1
+
+		if(bytes != null)
+		    bytes = Cryptography.pbkdf2
+			(Cryptography.
+			 sha512(string.getBytes(StandardCharsets.UTF_8)),
+			 string.toCharArray(),
+			 1,
+			 96 * 8); // AES-256, SHA-512
+
+		return bytes;
+	    }
+	    catch(Exception exception)
+	    {
+		return null;
+	    }
+	else
+	    return null;
+    }
+
     public int state()
     {
 	return m_participant.getState();
@@ -415,8 +456,8 @@ public class Juggernaut
 
     public static void test1()
     {
-	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!");
-	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!");
+	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!", false);
+	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!", false);
 	String payload1 = juggernaut1.payload1Stream();
 	String payload2 = juggernaut2.payload1Stream();
 	boolean ok1 = false;
@@ -458,8 +499,8 @@ public class Juggernaut
 
     public static void test2()
     {
-	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!");
-	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut.");
+	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!", false);
+	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut.", false);
 	String payload1 = juggernaut1.payload1Stream();
 	String payload2 = juggernaut2.payload1Stream();
 	boolean ok1 = false;
@@ -501,8 +542,8 @@ public class Juggernaut
 
     public static void test3()
     {
-	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!");
-	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!");
+	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!", false);
+	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!", false);
 
 	/*
 	** Participants initialize. Send payloads.
