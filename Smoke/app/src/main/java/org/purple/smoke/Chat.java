@@ -44,8 +44,9 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.view.ContextMenu;
+import android.util.Base64;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -1198,7 +1199,10 @@ public class Chat extends AppCompatActivity
 					     sha512(string.
 						    getBytes(StandardCharsets.
 							     UTF_8)),
-					     new String(bytes).toCharArray(),
+					     Base64.
+					     encodeToString(bytes,
+							    Base64.NO_WRAP).
+					     toCharArray(),
 					     1,
 					     96 * 8); // AES-256, SHA-512
 

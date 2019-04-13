@@ -2952,7 +2952,9 @@ public class Database extends SQLiteOpenHelper
 			bytes = cryptography.etm
 			    (Cryptography.
 			     pbkdf2(salt,
-				    new String(temporary).toCharArray(),
+				    Base64.encodeToString(temporary,
+							  Base64.NO_WRAP).
+				    toCharArray(),
 				    1,
 				    768)); // 8 * (32 + 64) Bits
 

@@ -257,7 +257,7 @@ public class Juggernaut
 
 	    participantId = new String
 		(Base64.decode(strings[kpx1.length + kpx2.length + 4],
-			       Base64.NO_WRAP));
+			       Base64.NO_WRAP), StandardCharsets.UTF_8);
 
 	    JPAKERound1Payload payload = new JPAKERound1Payload
 		(participantId, gx1, gx2, kpx1, kpx2);
@@ -301,7 +301,8 @@ public class Juggernaut
 	    }
 
 	    participantId = new String
-		(Base64.decode(strings[kpx2s.length + 2], Base64.NO_WRAP));
+		(Base64.decode(strings[kpx2s.length + 2], Base64.NO_WRAP),
+		 StandardCharsets.UTF_8);
 
 	    JPAKERound2Payload payload = new JPAKERound2Payload
 		(participantId, a, kpx2s);
@@ -333,7 +334,7 @@ public class Juggernaut
 	    bytes = Base64.decode(strings[0], Base64.NO_WRAP);
 	    macTag = new BigInteger(bytes);
 	    bytes = Base64.decode(strings[1], Base64.NO_WRAP);
-	    participantId = new String(bytes);
+	    participantId = new String(bytes, StandardCharsets.UTF_8);
 
 	    JPAKERound3Payload payload = new JPAKERound3Payload
 		(participantId, macTag);

@@ -49,6 +49,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
+import android.util.Base64;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -892,7 +893,9 @@ public class MemberChat extends AppCompatActivity
 					 sha512(string.
 						getBytes(StandardCharsets.
 							 UTF_8)),
-					 new String(bytes).toCharArray(),
+					 Base64.
+					 encodeToString(bytes, Base64.NO_WRAP).
+					 toCharArray(),
 					 1,
 					 96 * 8); // AES-256, SHA-512
 

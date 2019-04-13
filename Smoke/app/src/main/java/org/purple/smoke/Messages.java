@@ -165,7 +165,10 @@ public class Messages
 	    results = results.replace
 		(indexOf, indexOf + 2, String.valueOf(length));
 	    indexOf = results.indexOf("%2");
-	    results = results.replace(indexOf, indexOf + 2, new String(bytes));
+	    results = results.replace
+		(indexOf,
+		 indexOf + 2,
+		 new String(bytes, StandardCharsets.UTF_8));
 	    return results.toString();
 	}
 	catch(Exception exception)
