@@ -27,15 +27,18 @@
 
 package org.purple.smoke;
 
+import java.io.FileInputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class VaporReader
 {
     private AtomicBoolean m_completed = null;
     private AtomicBoolean m_paused = null;
+    private AtomicInteger m_offset = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private byte m_credentials[] = null;
@@ -52,6 +55,8 @@ public class VaporReader
 		@Override
 		public void run()
 		{
+		    FileInputStream fileInputStream = null;
+
 		    try
 		    {
 			if(m_completed.get())
@@ -61,9 +66,34 @@ public class VaporReader
 			}
 			else if(m_paused.get())
 			    return;
+
+			fileInputStream = new FileInputStream(m_fileName);
+
+			if(fileInputStream == null)
+			    return;
+
+			byte bytes[] = new byte[PACKET_SIZE];
+			int offset = fileInputStream.read
+			    (bytes, m_offset.get(), bytes.length);
+
+			if(offset == -1)
+			    return;
+			else
+			    m_offset.addAndGet(offset);
 		    }
 		    catch(Exception exception)
 		    {
+		    }
+		    finally
+		    {
+			try
+			{
+			    if(fileInputStream != null)
+				fileInputStream.close();
+			}
+			catch(Exception exception)
+			{
+			}
 		    }
 		}
 	    }, 1500, READ_INTERVAL, TimeUnit.MILLISECONDS);
@@ -74,7 +104,37 @@ public class VaporReader
     {
 	m_credentials = credentials;
 	m_fileName = fileName;
+	m_offset = new AtomicInteger(0);
 	m_paused = new AtomicBoolean(false);
+    }
+
+    public void cancel()
+    {
+	m_paused.set(true);
+
+	if(m_reader != null)
+	{
+	    try
+	    {
+		m_reader.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_reader.awaitTermination(60, TimeUnit.SECONDS))
+		    m_reader.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_reader = null;
+	    }
+	}
     }
 
     public void setPaused(boolean state)
