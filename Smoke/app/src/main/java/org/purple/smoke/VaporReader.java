@@ -38,12 +38,15 @@ public class VaporReader
 {
     private AtomicBoolean m_completed = null;
     private AtomicBoolean m_paused = null;
+    private AtomicBoolean m_read = null;
+    private AtomicInteger m_acknowledgedOffset = null;
     private AtomicInteger m_offset = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
-    private byte m_credentials[] = null;
+    private String m_sipHashId = "";
     private static int PACKET_SIZE = 65536;
     private static long READ_INTERVAL = 250; // 250 Milliseconds
+    private static long RESPONSE_WINDOW = 15000; // 15 Seconds
 
     private void prepareReader()
     {
@@ -64,7 +67,7 @@ public class VaporReader
 			    m_reader.shutdown();
 			    return;
 			}
-			else if(m_paused.get())
+			else if(m_paused.get() || !m_read.get())
 			    return;
 
 			fileInputStream = new FileInputStream(m_fileName);
@@ -73,13 +76,15 @@ public class VaporReader
 			    return;
 
 			byte bytes[] = new byte[PACKET_SIZE];
-			int offset = fileInputStream.read
-			    (bytes, m_offset.get(), bytes.length);
+			int offset = fileInputStream.
+			    read(bytes, m_offset.get(), bytes.length);
 
 			if(offset == -1)
-			    return;
+			    m_completed.set(true);
 			else
 			    m_offset.addAndGet(offset);
+
+			m_read.set(false);
 		    }
 		    catch(Exception exception)
 		    {
@@ -100,17 +105,24 @@ public class VaporReader
 	}
     }
 
-    public VaporReader(String fileName, byte credentials[])
+    public VaporReader(String fileName, String sipHashId)
     {
-	m_credentials = credentials;
+	m_acknowledgedOffset = new AtomicInteger(-1);
+	m_completed = new AtomicBoolean(false);
 	m_fileName = fileName;
 	m_offset = new AtomicInteger(0);
 	m_paused = new AtomicBoolean(false);
+	m_read = new AtomicBoolean(true);
+	m_sipHashId = sipHashId;
     }
 
     public void cancel()
     {
+	m_acknowledgedOffset.set(-1);
+	m_completed.set(true);
+	m_offset.set(0);
 	m_paused.set(true);
+	m_read.set(false);
 
 	if(m_reader != null)
 	{
@@ -135,6 +147,12 @@ public class VaporReader
 		m_reader = null;
 	    }
 	}
+    }
+
+    public void setAcknowledgedOffset(int offset)
+    {
+	if(m_acknowledgedOffset.get() == offset)
+	    m_read.set(true);
     }
 
     public void setPaused(boolean state)
