@@ -27,17 +27,50 @@
 
 package org.purple.smoke;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class VaporFile
+public class VaporReader
 {
-    AtomicBoolean m_paused = null;
-    String m_fileName = "";
-    byte m_credentials[] = null;
+    private AtomicBoolean m_completed = null;
+    private AtomicBoolean m_paused = null;
+    private ScheduledExecutorService m_reader = null;
+    private String m_fileName = "";
+    private byte m_credentials[] = null;
+    private static int PACKET_SIZE = 65536;
+    private static long READ_INTERVAL = 250; // 250 Milliseconds
 
-    public VaporFile(String fileName, byte credentials[])
+    private void prepareReader()
+    {
+	if(m_reader == null)
+	{
+	    m_reader = Executors.newSingleThreadScheduledExecutor();
+	    m_reader.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			if(m_completed.get())
+			{
+			    m_reader.shutdown();
+			    return;
+			}
+			else if(m_paused.get())
+			    return;
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 1500, READ_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+    }
+
+    public VaporReader(String fileName, byte credentials[])
     {
 	m_credentials = credentials;
 	m_fileName = fileName;
