@@ -33,6 +33,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class VaporReader
 {
@@ -41,6 +42,8 @@ public class VaporReader
     private AtomicBoolean m_read = null;
     private AtomicInteger m_acknowledgedOffset = null;
     private AtomicInteger m_offset = null;
+    private AtomicInteger m_rate = null;
+    private AtomicLong m_lastResponse = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private String m_sipHashId = "";
@@ -63,7 +66,13 @@ public class VaporReader
 		    try
 		    {
 			if(m_completed.get() || m_paused.get() || !m_read.get())
-			    return;
+			{
+			    if(m_completed.get() || m_paused.get())
+				return;
+			    else if(System.currentTimeMillis() -
+				    m_lastResponse.get() <= RESPONSE_WINDOW)
+				return;
+			}
 
 			fileInputStream = new FileInputStream(m_fileName);
 
@@ -107,6 +116,7 @@ public class VaporReader
 	m_fileName = fileName;
 	m_offset = new AtomicInteger(0);
 	m_paused = new AtomicBoolean(false);
+	m_rate = new AtomicInteger(0);
 	m_read = new AtomicBoolean(true);
 	m_sipHashId = sipHashId;
     }
@@ -115,8 +125,10 @@ public class VaporReader
     {
 	m_acknowledgedOffset.set(-1);
 	m_completed.set(true);
+	m_lastResponse.set(0);
 	m_offset.set(0);
 	m_paused.set(true);
+	m_rate.set(0);
 	m_read.set(false);
 
 	if(m_reader != null)
@@ -147,11 +159,15 @@ public class VaporReader
     public void setAcknowledgedOffset(int offset)
     {
 	if(m_acknowledgedOffset.get() == offset)
+	{
+	    m_lastResponse.set(System.currentTimeMillis());
 	    m_read.set(true);
+	}
     }
 
     public void setPaused(boolean state)
     {
 	m_paused.set(state);
+	m_rate.set(0);
     }
 }
