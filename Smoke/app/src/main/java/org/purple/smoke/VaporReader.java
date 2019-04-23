@@ -62,12 +62,7 @@ public class VaporReader
 
 		    try
 		    {
-			if(m_completed.get())
-			{
-			    m_reader.shutdown();
-			    return;
-			}
-			else if(m_paused.get() || !m_read.get())
+			if(m_completed.get() || m_paused.get() || !m_read.get())
 			    return;
 
 			fileInputStream = new FileInputStream(m_fileName);
