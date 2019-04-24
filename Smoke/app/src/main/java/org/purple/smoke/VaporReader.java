@@ -114,6 +114,7 @@ public class VaporReader
 	m_acknowledgedOffset = new AtomicInteger(-1);
 	m_completed = new AtomicBoolean(false);
 	m_fileName = fileName;
+	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_offset = new AtomicInteger(0);
 	m_paused = new AtomicBoolean(false);
 	m_rate = new AtomicInteger(0);
