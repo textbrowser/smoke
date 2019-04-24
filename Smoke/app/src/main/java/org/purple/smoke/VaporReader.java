@@ -72,6 +72,8 @@ public class VaporReader
 			    else if(System.currentTimeMillis() -
 				    m_lastResponse.get() <= RESPONSE_WINDOW)
 				return;
+			    else
+				m_offset.set(m_acknowledgedOffset.get());
 			}
 
 			fileInputStream = new FileInputStream(m_fileName);
@@ -89,6 +91,10 @@ public class VaporReader
 			    m_offset.addAndGet(offset);
 
 			m_read.set(false);
+
+			/*
+			** Send bytes, filename, m_acknowledgedOffset.
+			*/
 		    }
 		    catch(Exception exception)
 		    {
@@ -111,7 +117,7 @@ public class VaporReader
 
     public VaporReader(String fileName, String sipHashId)
     {
-	m_acknowledgedOffset = new AtomicInteger(-1);
+	m_acknowledgedOffset = new AtomicInteger(0);
 	m_completed = new AtomicBoolean(false);
 	m_fileName = fileName;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
@@ -124,7 +130,7 @@ public class VaporReader
 
     public void cancel()
     {
-	m_acknowledgedOffset.set(-1);
+	m_acknowledgedOffset.set(0);
 	m_completed.set(true);
 	m_lastResponse.set(0);
 	m_offset.set(0);
@@ -161,6 +167,7 @@ public class VaporReader
     {
 	if(m_acknowledgedOffset.get() == offset)
 	{
+	    m_acknowledgedOffset.set(m_offset.get());
 	    m_lastResponse.set(System.currentTimeMillis());
 	    m_read.set(true);
 	}
