@@ -3895,6 +3895,26 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
 	{
 	}
+
+	/*
+	** Create the vapor_files table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS vapor_files (" +
+	    "absolute_filename TEXT NOT NULL, " +
+	    "absolute_filename_digest TEXT NOT NULL, " +
+	    "paused INTEGER NOT NULL, " +
+	    "read_offset INTEGER NOT NULL, " +
+	    "siphash_id_digest TEXT NOT NULL, " +
+	    "PRIMARY KEY (absolute_filename_digest, siphash_id_digest))";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     @Override
