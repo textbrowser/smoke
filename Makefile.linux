@@ -9,6 +9,7 @@ export JAVA_HOME = /snap/android-studio/current/android-studio/jre
 
 all:
 	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
+	-Dorg.gradle.warning.mode=all \
 	--build-file Smoke/build.gradle assembleDebug \
 	--configure-on-demand --daemon --parallel
 
