@@ -167,6 +167,7 @@ Completed Items
 - Rich context menu containing other members.
 - SQLite secure delete (onConfigure()).
 - Save attachment.
+- Save files and images to Downloads folder.
 - Schedulers may silently fail. try-catch blocks!
 - Scroll on sending of local messages; Member Chat.
 - Scroll within scroll in Fire channels.
@@ -230,7 +231,6 @@ Remaining Items
 - Drawers.
 - Gallery integration. Zoom.
 - Highlight results of Juggernaut, if possible.
-- Save files and images to Downloads folder.
 - Separate Settings:
   Neighbor Servers
   Ozone, Participants

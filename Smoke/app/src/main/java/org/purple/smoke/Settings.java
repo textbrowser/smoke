@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +36,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -2876,6 +2878,10 @@ public class Settings extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	ActivityCompat.requestPermissions(this, new String[]
+	{
+	    Manifest.permission.WRITE_EXTERNAL_STORAGE
+	}, 1);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SettingsBroadcastReceiver();
 	prepareForegroundService();

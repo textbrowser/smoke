@@ -43,6 +43,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -1179,7 +1180,9 @@ public class MemberChat extends AppCompatActivity
 					     byteArrayOutputStream);
 
 					File file = new File
-					    (getExternalFilesDir(null),
+					    (Environment.
+					     getExternalStoragePublicDirectory
+					     (Environment.DIRECTORY_DOWNLOADS),
 					     "smoke-" +
 					     System.currentTimeMillis() +
 					     ".jpg");
