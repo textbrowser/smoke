@@ -2878,10 +2878,6 @@ public class Settings extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	ActivityCompat.requestPermissions(this, new String[]
-	{
-	    Manifest.permission.WRITE_EXTERNAL_STORAGE
-	}, 1);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SettingsBroadcastReceiver();
 	prepareForegroundService();
@@ -3197,8 +3193,16 @@ public class Settings extends AppCompatActivity
 	*/
 
 	if(!State.getInstance().isAuthenticated())
+	{
 	    if(m_databaseHelper.accountPrepared())
 		showAuthenticateActivity();
+	}
+
+	if(!m_databaseHelper.accountPrepared())
+	    ActivityCompat.requestPermissions(this, new String[]
+	    {
+		Manifest.permission.WRITE_EXTERNAL_STORAGE
+	    }, 1);
     }
 
     @Override

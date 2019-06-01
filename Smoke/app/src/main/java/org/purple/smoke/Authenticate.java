@@ -27,9 +27,11 @@
 
 package org.purple.smoke;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.Menu;
@@ -527,6 +529,12 @@ public class Authenticate extends AppCompatActivity
 	TextView textView1 = (TextView) findViewById(R.id.password);
 
 	textView1.setEnabled(!isAuthenticated);
+
+	if(!isAuthenticated)
+	    ActivityCompat.requestPermissions(this, new String[]
+	    {
+		Manifest.permission.WRITE_EXTERNAL_STORAGE
+	    }, 1);
     }
 
     @Override
