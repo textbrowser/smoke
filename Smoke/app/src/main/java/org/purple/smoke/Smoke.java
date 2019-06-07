@@ -27,7 +27,9 @@
 
 package org.purple.smoke;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
 public class Smoke extends Application
 {
@@ -42,9 +44,14 @@ public class Smoke extends Application
 	return s_instance;
     }
 
-    public static synchronized void exit()
+    public static synchronized void exit(Context context)
     {
-	SmokeService.stopForegroundTask(s_instance);
+	SmokeService.stopForegroundTask(getApplication());
+
+	if(context != null && context instanceof Activity)
+	    ((Activity) context).finishAndRemoveTask();
+
+	android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override

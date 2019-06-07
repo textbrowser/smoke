@@ -1,5 +1,6 @@
 Completed Items
 
+- A menu item for terminating the application as well as its service.
 - A release target for the make files.
 - Aliases.
 - Allow log clearing.
@@ -226,7 +227,6 @@ Future Items
 
 Remaining Items
 
-- A menu item for terminating the application as well as its service.
 - Bubbles are too narrow on wide devices.
 - Drawers.
 - Gallery integration. Zoom.

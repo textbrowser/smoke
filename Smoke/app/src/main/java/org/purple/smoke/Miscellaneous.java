@@ -527,7 +527,9 @@ public abstract class Miscellaneous
 
     public static void showErrorDialog(Context context, String error)
     {
-	if(((Activity) context).isFinishing())
+	if(context == null ||
+	   !(context instanceof Activity) ||
+	   ((Activity) context).isFinishing())
 	    return;
 
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
@@ -551,6 +553,7 @@ public abstract class Miscellaneous
 					View view)
     {
 	if(context == null ||
+	   !(context instanceof Activity) ||
 	   intent == null ||
 	   intent.getAction() == null ||
 	   view == null)
@@ -712,7 +715,9 @@ public abstract class Miscellaneous
 	 DialogInterface.OnCancelListener cancelListener,
 	 String prompt)
     {
-	if(((Activity) context).isFinishing())
+	if(context == null ||
+	   !(context instanceof Activity) ||
+	   ((Activity) context).isFinishing())
 	    return;
 
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
@@ -771,7 +776,9 @@ public abstract class Miscellaneous
 	 String prompt,
 	 String title)
     {
-	if(((Activity) context).isFinishing())
+	if(context == null ||
+	   !(context instanceof Activity) ||
+	   ((Activity) context).isFinishing())
 	    return;
 
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();

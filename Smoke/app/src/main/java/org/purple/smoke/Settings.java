@@ -3392,7 +3392,7 @@ public class Settings extends AppCompatActivity
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
-		Smoke.exit();
+		Smoke.exit(Settings.this);
 		return true;
 	    case R.id.action_fire:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");

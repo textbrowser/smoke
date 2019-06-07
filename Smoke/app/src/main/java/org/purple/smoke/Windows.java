@@ -41,6 +41,7 @@ public abstract class Windows
 					  String text)
     {
 	if(context == null ||
+	   !(context instanceof Activity) ||
 	   dialog == null ||
 	   text == null ||
 	   text.trim().isEmpty())

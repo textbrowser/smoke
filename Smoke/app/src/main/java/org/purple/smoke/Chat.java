@@ -1454,7 +1454,7 @@ public class Chat extends AppCompatActivity
 	    switch(itemId)
 	    {
 	    case R.id.action_exit:
-		Smoke.exit();
+		Smoke.exit(Chat.this);
 		return true;
 	    case R.id.action_fire:
 	    {
