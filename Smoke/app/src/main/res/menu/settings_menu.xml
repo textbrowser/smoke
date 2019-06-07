@@ -7,7 +7,11 @@
         android:orderInCategory="200"
         android:title="@string/chat" />
     <item
-        android:id="@+id/action_fire"
+        android:id="@+id/action_exit"
         android:orderInCategory="300"
+        android:title="@string/exit" />
+    <item
+        android:id="@+id/action_fire"
+        android:orderInCategory="400"
         android:title="@string/fire" />
 </menu>
