@@ -110,6 +110,8 @@ public class Fire extends AppCompatActivity
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		break;
+	    default:
+		break;
 	    }
 	}
     }
@@ -638,17 +640,21 @@ public class Fire extends AppCompatActivity
 
 	if(groupId == Menu.NONE)
 	{
-	    if(itemId == R.id.action_chat)
+	    switch(itemId)
 	    {
+	    case R.id.action_chat:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
 		showChatActivity();
 		return true;
-	    }
-	    else if(itemId == R.id.action_settings)
-	    {
+	    case R.id.action_exit:
+		Smoke.exit();
+		return true;
+	    case R.id.action_settings:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
 		return true;
+	    default:
+		break;
 	    }
 	}
 	else

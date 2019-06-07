@@ -684,6 +684,8 @@ public class Kernel
 				}
 
 				break;
+			    default:
+				break;
 			    }
 			}
 			catch(Exception exception)
@@ -748,6 +750,8 @@ public class Kernel
 					(Messages.
 					 bytesToMessageString(bytes),
 					 null);
+				    break;
+				default:
 				    break;
 				}
 			    }
@@ -1945,6 +1949,8 @@ public class Kernel
 				return 1;
 
 			    break;
+			default:
+			    break;
 			}
 
 		    String array[] = s_databaseHelper.
@@ -2229,6 +2235,8 @@ public class Kernel
 
 			strings = array;
 			break;
+		    default:
+			break;
 		    }
 
 		if(message == null)
@@ -2411,6 +2419,8 @@ public class Kernel
 
 			ii += 1;
 			break;
+		    default:
+			break;
 		    }
 
 		String array[] = s_databaseHelper.nameSipHashIdFromDigest
@@ -2450,6 +2460,8 @@ public class Kernel
 			    case (byte) 'R':
 				publicKey = Cryptography.publicRSAKeyFromBytes
 				    (ephemeralPublicKey);
+				break;
+			    default:
 				break;
 			    }
 

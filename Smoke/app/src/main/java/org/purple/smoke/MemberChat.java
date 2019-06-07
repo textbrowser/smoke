@@ -159,6 +159,8 @@ public class MemberChat extends AppCompatActivity
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		break;
+	    default:
+		break;
 	    }
 	}
     }
@@ -299,6 +301,8 @@ public class MemberChat extends AppCompatActivity
 	    return 4;
 	case RGB_565:
 	    return 2;
+	default:
+	    break;
         }
 
 	return 1;
@@ -1003,6 +1007,8 @@ public class MemberChat extends AppCompatActivity
 			State.getInstance().removeKey
 			    ("member_chat_secret_input");
 			break;
+		    default:
+			break;
 		    }
 		}
 	    };
@@ -1276,6 +1282,8 @@ public class MemberChat extends AppCompatActivity
 	    m_selectedMessages.clear();
 	    m_adapter.notifyDataSetChanged();
 	    break;
+	default:
+	    break;
 	}
 
 	return true;
@@ -1298,23 +1306,22 @@ public class MemberChat extends AppCompatActivity
 	    switch(itemId)
 	    {
 	    case R.id.action_chat:
-	    {
 		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
 		showChatActivity();
 		return true;
-	    }
+	    case R.id.action_exit:
+		Smoke.exit();
+		return true;
 	    case R.id.action_fire:
-	    {
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
 		return true;
-	    }
 	    case R.id.action_settings:
-	    {
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
 		return true;
-	    }
+	    default:
+		break;
 	    }
 	else
 	{

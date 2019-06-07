@@ -193,6 +193,8 @@ public class SipHash
 	    break;
 	case 0:
 	    break;
+	default:
+	    break;
 	}
 
 	m_v3 ^= b;

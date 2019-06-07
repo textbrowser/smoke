@@ -650,6 +650,8 @@ public abstract class Miscellaneous
 		message = "A SmokeStack has received the Smoke Identity.";
 
 	    break;
+	default:
+	    break;
 	}
 
 	if(message.isEmpty())

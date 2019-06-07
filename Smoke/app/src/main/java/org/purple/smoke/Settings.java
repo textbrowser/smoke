@@ -137,6 +137,8 @@ public class Settings extends AppCompatActivity
 		Miscellaneous.showNotification
 		    (Settings.this, intent, findViewById(R.id.main_layout));
 		break;
+	    default:
+		break;
 	    }
 	}
     }
@@ -942,6 +944,8 @@ public class Settings extends AppCompatActivity
 				     "disconnect",
 				     String.valueOf(parent.getId()));
 				break;
+			    default:
+				break;
 			    }
 
 			    parent.setSelection(0);
@@ -1207,6 +1211,8 @@ public class Settings extends AppCompatActivity
 		    textView1.setTag(R.id.participants, sipHashId);
 		    textView1.setText
 			(String.valueOf(sipHashIdElement.m_fiascoKeys));
+		    break;
+		default:
 		    break;
 		}
 
@@ -3296,6 +3302,8 @@ public class Settings extends AppCompatActivity
 			State.getInstance().removeKey
 			    ("settings_participant_name_input");
 			break;
+		    default:
+			break;
 		    }
 		}
 	    };
@@ -3355,6 +3363,8 @@ public class Settings extends AppCompatActivity
 	case ContextMenuEnumerator.VIEW_DETAILS:
 	    showDetailsOfParticipant(String.valueOf(itemId));
 	    break;
+	default:
+	    break;
 	}
 
 	return true;
@@ -3375,17 +3385,21 @@ public class Settings extends AppCompatActivity
 
 	if(groupId == Menu.NONE)
 	{
-	    if(itemId == R.id.action_chat)
+	    switch(itemId)
 	    {
+	    case R.id.action_chat:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
 		showChatActivity();
 		return true;
-	    }
-	    else if(itemId == R.id.action_fire)
-	    {
+	    case R.id.action_exit:
+		Smoke.exit();
+		return true;
+	    case R.id.action_fire:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
 		return true;
+	    default:
+		break;
 	    }
 	}
 	else

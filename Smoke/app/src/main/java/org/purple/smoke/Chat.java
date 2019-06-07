@@ -127,6 +127,8 @@ public class Chat extends AppCompatActivity
 		invalidateOptionsMenu();
 		populateParticipants();
 		break;
+	    default:
+		break;
 	    }
 	}
     }
@@ -1229,6 +1231,8 @@ public class Chat extends AppCompatActivity
 				    refreshCheckBox(sipHashId);
 
 			    break;
+			default:
+			    break;
 			}
 		}
 	    };
@@ -1318,6 +1322,8 @@ public class Chat extends AppCompatActivity
 		     replace("Purge Session (", "").
 		     replace(")", "") + "?");
 		break;
+	    default:
+		break;
 	    }
 	else
 	    switch(groupId)
@@ -1345,6 +1351,8 @@ public class Chat extends AppCompatActivity
 		     "show_chat_icons",
 		     menuItem.isChecked() ? "true" : "false");
 		populateParticipants();
+		break;
+	    default:
 		break;
 	    }
 
@@ -1443,7 +1451,12 @@ public class Chat extends AppCompatActivity
 
 	if(groupId == Menu.NONE)
 	{
-	    if(itemId == R.id.action_fire)
+	    switch(itemId)
+	    {
+	    case R.id.action_exit:
+		Smoke.exit();
+		return true;
+	    case R.id.action_fire:
 	    {
 		saveState();
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
@@ -1454,7 +1467,7 @@ public class Chat extends AppCompatActivity
 		finish();
 		return true;
 	    }
-	    else if(itemId == R.id.action_settings)
+	    case R.id.action_settings:
 	    {
 		saveState();
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
@@ -1464,6 +1477,9 @@ public class Chat extends AppCompatActivity
 		startActivity(intent);
 		finish();
 		return true;
+	    }
+	    default:
+		break;
 	    }
 	}
 	else

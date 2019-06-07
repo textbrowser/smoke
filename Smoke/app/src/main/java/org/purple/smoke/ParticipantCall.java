@@ -62,6 +62,8 @@ public class ParticipantCall
 		m_keyPair = Cryptography.
 		    generatePrivatePublicKeyPair("RSA", 2048, 0);
 		break;
+	    default:
+		break;
 	    }
 	}
 	catch(Exception exception)

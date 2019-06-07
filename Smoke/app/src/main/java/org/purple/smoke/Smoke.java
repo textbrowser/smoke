@@ -42,6 +42,11 @@ public class Smoke extends Application
 	return s_instance;
     }
 
+    public static synchronized void exit()
+    {
+	SmokeService.stopForegroundTask(s_instance);
+    }
+
     @Override
     public void onCreate()
     {

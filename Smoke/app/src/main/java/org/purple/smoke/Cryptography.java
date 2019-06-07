@@ -302,6 +302,8 @@ public class Cryptography
 				append(rsaPublicKey.getModulus().bitLength());
 
 			break;
+		    default:
+			break;
 		    }
 		}
 		catch(Exception exception)

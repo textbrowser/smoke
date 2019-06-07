@@ -232,6 +232,8 @@ public class Database extends SQLiteOpenHelper
 				fireElement.m_name = "error (" + oid + ")";
 
 			    break;
+			default:
+			    break;
 			}
 		    }
 
@@ -314,6 +316,8 @@ public class Database extends SQLiteOpenHelper
 			{
 			case 0:
 			    neighborElement.m_statusControl = new String(bytes);
+			    break;
+			default:
 			    break;
 			}
 		    }
@@ -579,6 +583,8 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
+			default:
+			    break;
 			}
 		    }
 
@@ -661,6 +667,8 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 1:
 			    sipHashIdElement.m_stream = bytes;
+			    break;
+			default:
 			    break;
 			}
 		    }
@@ -795,6 +803,8 @@ public class Database extends SQLiteOpenHelper
 				participantElement.m_sipHashId =
 				    "error (" + oid + ")";
 
+			    break;
+			default:
 			    break;
 			}
 		    }
@@ -977,6 +987,8 @@ public class Database extends SQLiteOpenHelper
 			    if(bytes != null)
 				sipHashIdElement.m_stream = bytes;
 
+			    break;
+			default:
 			    break;
 			}
 		    }
@@ -1305,6 +1317,8 @@ public class Database extends SQLiteOpenHelper
 				    (new String(bytes).equals("true"));
 
 			    break;
+			default:
+			    break;
 			}
 		    }
 		}
@@ -1541,6 +1555,8 @@ public class Database extends SQLiteOpenHelper
 			break;
 		    case 3:
 			sipHashIdElement.m_stream = bytes;
+			break;
+		    default:
 			break;
 		    }
 		}
@@ -1965,6 +1981,8 @@ public class Database extends SQLiteOpenHelper
 			signatureKeySigned = true;
 
 		    break;
+		default:
+		    break;
 		}
 
 	    if(nameFromSipHashId(cryptography, sipHashId).isEmpty())
@@ -2039,6 +2057,8 @@ public class Database extends SQLiteOpenHelper
 		case "siphash_id_digest":
 		    bytes = cryptography.hmac
 			(sipHashId.getBytes(StandardCharsets.UTF_8));
+		    break;
+		default:
 		    break;
 		}
 

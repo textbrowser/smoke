@@ -409,6 +409,8 @@ public class Authenticate extends AppCompatActivity
 					case "Settings":
 					    showSettingsActivity();
 					    break;
+					default:
+					    break;
 					}
 				    }
 				}
@@ -558,6 +560,7 @@ public class Authenticate extends AppCompatActivity
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
+		Smoke.exit();
 		return true;
 	    case R.id.action_fire:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
@@ -567,6 +570,8 @@ public class Authenticate extends AppCompatActivity
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
 		return true;
+	    default:
+		break;
 	    }
 	else
 	{
