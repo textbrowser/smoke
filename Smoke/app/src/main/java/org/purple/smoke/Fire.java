@@ -702,7 +702,7 @@ public class Fire extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 3, 250);
+	Miscellaneous.addMembersToMenu(menu, 4, 250);
 	return true;
     }
 

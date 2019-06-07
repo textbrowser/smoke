@@ -3430,7 +3430,7 @@ public class Settings extends AppCompatActivity
 	    (State.getInstance().isAuthenticated());
 	menu.findItem(R.id.action_fire).setEnabled
 	    (State.getInstance().isAuthenticated());
-	Miscellaneous.addMembersToMenu(menu, 3, 250);
+	Miscellaneous.addMembersToMenu(menu, 4, 250);
 	return true;
     }
 

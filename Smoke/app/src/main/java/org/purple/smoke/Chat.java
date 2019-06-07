@@ -1504,7 +1504,7 @@ public class Chat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 3, 150);
+	Miscellaneous.addMembersToMenu(menu, 4, 150);
 	return true;
     }
 

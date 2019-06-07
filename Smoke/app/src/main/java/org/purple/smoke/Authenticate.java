@@ -557,6 +557,8 @@ public class Authenticate extends AppCompatActivity
 		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
 		showChatActivity();
 		return true;
+	    case R.id.action_exit:
+		return true;
 	    case R.id.action_fire:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
@@ -606,7 +608,7 @@ public class Authenticate extends AppCompatActivity
 	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 3, 150);
+	Miscellaneous.addMembersToMenu(menu, 4, 150);
 	return true;
     }
 }
