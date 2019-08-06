@@ -1399,7 +1399,8 @@ public class MemberChat extends AppCompatActivity
 	menu.add(ContextMenuEnumerator.JUGGERKNOT,
 		 -1,
 		 0,
-		 "JuggerKnot").setEnabled(isParticipantPaired && state);
+		 "JuggerKnot Credentials").
+	    setEnabled(isParticipantPaired && state);
 	menu.add(ContextMenuEnumerator.JUGGERNAUT,
 		 -1,
 		 0,
