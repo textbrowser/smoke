@@ -203,7 +203,7 @@ Completed Items
 - Validate the SipHash implementation. Please see SipHash::test1().
 - Verify hexadecimal characters of SipHash identities.
 - View Details vanishes on Android 9. Disable Miscellaneous.enableChildren()
-  for Android version greater than N (Nougat).
+  for Android version greater than N (Nougat). Android is garbage.
 - When verifying signatures, recipients should retrieve appropriate personal
   identity digests.
 - Wrap neighbor text.
