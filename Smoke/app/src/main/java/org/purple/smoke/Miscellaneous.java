@@ -507,6 +507,12 @@ public abstract class Miscellaneous
     public static void enableChildren(View view, boolean state)
     {
 	if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
+	    /*
+	    ** Otherwise, children will force their scrollable parents
+	    ** to scroll after said children are enabled. Android 9
+	    ** garbage.
+	    */
+
 	    return;
 
 	if(view == null)
