@@ -506,6 +506,9 @@ public abstract class Miscellaneous
 
     public static void enableChildren(View view, boolean state)
     {
+	if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
+	    return;
+
 	if(view == null)
 	    return;
 	else if(!(view instanceof ViewGroup))
