@@ -2007,7 +2007,6 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-
 	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 	checkBox1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
