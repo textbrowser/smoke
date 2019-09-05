@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/message"
+            android:hint="@string/please_type_a_message"
             android:inputType="textPersonName" />
 
         <Button
@@ -105,10 +105,10 @@
 
         <Button
             android:id="@+id/send_chat_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_weight="0"
-            android:text="@string/send" />
+            android:background="@drawable/send" />
     </LinearLayout>
 
     <ProgressBar
