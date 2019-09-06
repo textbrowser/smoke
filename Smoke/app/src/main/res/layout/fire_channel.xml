@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="5dp">
@@ -61,15 +60,6 @@
 
   </android.support.v4.widget.NestedScrollView>
 
-  <Button
-      android:id="@+id/send_chat_message"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBaseline="@+id/chat_message"
-      android:layout_alignBottom="@+id/chat_message"
-      android:layout_alignParentEnd="true"
-      tools:text="@string/send" />
-
   <android.support.v4.widget.NestedScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -88,6 +78,15 @@
 
     </TableLayout>
   </android.support.v4.widget.NestedScrollView>
+
+  <Button
+      android:id="@+id/send_chat_message"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignBaseline="@+id/chat_message"
+      android:layout_alignBottom="@+id/chat_message"
+      android:layout_alignParentEnd="true"
+      android:text="@string/send" />
 
   <EditText
       android:id="@+id/chat_message"
