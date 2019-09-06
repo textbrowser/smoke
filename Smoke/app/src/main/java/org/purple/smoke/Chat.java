@@ -508,11 +508,14 @@ public class Chat extends AppCompatActivity
 			{
 			    button1.setEnabled
 				(Kernel.getInstance().isConnected());
+			    button2.setBackgroundResource(R.drawable.send);
 			    button2.setEnabled(true);
 			}
 			else
 			{
 			    button1.setEnabled(false);
+			    button2.setBackgroundResource
+				(R.drawable.send_disabled);
 			    button2.setEnabled(false);
 			}
 		    }
@@ -707,28 +710,12 @@ public class Chat extends AppCompatActivity
 				button1 = (Button) findViewById
 				    (R.id.send_chat_message);
 
-				if(isEnabled)
-				{
-				    if(state)
-					button1.setTextColor
-					    (Color.rgb(46, 125, 50));
-				    else
-					button1.setTextColor
-					    (Color.rgb(198, 40, 40));
-				}
+				if(isEnabled && state)
+				    button1.setBackgroundResource
+					(R.drawable.send);
 				else
-				{
-				    /*
-				    ** 38% of enabled colors.
-				    */
-
-				    if(state)
-					button1.setTextColor
-					    (Color.argb(38, 46, 125, 50));
-				    else
-					button1.setTextColor
-					    (Color.argb(38, 198, 40, 40));
-				}
+				    button1.setBackgroundResource
+					(R.drawable.send_disabled);
 			    }
 			});
 		    }

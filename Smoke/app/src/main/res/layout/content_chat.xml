@@ -24,7 +24,7 @@
         android:id="@+id/chat_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/chat_message"
+        android:layout_above="@id/message_layout"
         android:layout_toStartOf="@+id/call"
         android:fadeScrollbars="false">
 
@@ -32,31 +32,10 @@
             android:id="@+id/chat_messages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
             android:textIsSelectable="true" />
     </ScrollView>
-
-    <EditText
-        android:id="@+id/chat_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/send_chat_message"
-        android:ems="10"
-        android:hint="@string/please_type_a_message"
-        android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/send_chat_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/chat_message"
-        android:layout_alignBottom="@+id/chat_message"
-        android:layout_alignParentEnd="true"
-        android:text="@string/send"
-        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/call"
@@ -67,10 +46,36 @@
         android:text="@string/call"
         android:textAllCaps="false" />
 
+    <LinearLayout
+        android:id="@+id/message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/chat_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/please_type_a_message"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/send_chat_message"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_weight="0"
+            android:background="@drawable/send"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/chat_message"
+        android:layout_above="@id/message_layout"
         android:layout_below="@+id/clear_chat_messages"
         android:layout_toEndOf="@+id/chat_scrollview"
         android:fadeScrollbars="false"
@@ -89,7 +94,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_above="@+id/chat_message"
+        android:layout_above="@id/message_layout"
         android:background="?android:attr/listDivider" />
 
 </RelativeLayout>
