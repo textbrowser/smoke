@@ -36,12 +36,12 @@
 
         <Button
             android:id="@+id/authenticate"
-            style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/password"
-            android:text="@string/authenticate_authenticate" />
+            android:layout_alignParentStart="true"
+            android:text="@string/authenticate_authenticate"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/reset"
@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/authenticate"
             android:layout_toEndOf="@+id/authenticate"
-            android:text="@string/reset_smoke" />
+            android:text="@string/reset_smoke"
+            android:textAllCaps="false" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
