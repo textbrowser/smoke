@@ -54,7 +54,8 @@
         android:layout_alignBaseline="@+id/chat_message"
         android:layout_alignBottom="@+id/chat_message"
         android:layout_alignParentEnd="true"
-        android:text="@string/send" />
+        android:text="@string/send"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/call"
@@ -62,7 +63,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/clear_chat_messages"
-        android:text="@string/call" />
+        android:text="@string/call"
+        android:textAllCaps="false" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
