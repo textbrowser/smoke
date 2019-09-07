@@ -71,7 +71,8 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/save" />
+                        android:text="@string/save"
+                        android:textAllCaps="false" />
 
                 </LinearLayout>
 
@@ -169,14 +170,16 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add" />
+                        android:text="@string/add"
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/reset_fields"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reset_fields" />
+                        android:text="@string/reset_fields"
+                        android:textAllCaps="false" />
 
                     <ProgressBar
                         android:id="@+id/progress_bar"
@@ -217,14 +220,16 @@
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/delete" />
+                        android:text="@string/delete"
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/join"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/join" />
+                        android:text="@string/join"
+                        android:textAllCaps="false" />
                 </LinearLayout>
 
             </LinearLayout>

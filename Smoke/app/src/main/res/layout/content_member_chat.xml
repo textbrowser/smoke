@@ -73,8 +73,9 @@
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="#E0E0E0"
         android:orientation="horizontal">
 
         <Button
@@ -82,8 +83,8 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="0"
             android:background="@drawable/file" />
 
@@ -109,6 +110,7 @@
             android:layout_height="32dp"
             android:layout_weight="0"
             android:background="@drawable/send" />
+
     </LinearLayout>
 
     <ProgressBar

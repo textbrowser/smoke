@@ -27,7 +27,8 @@
       android:layout_alignParentTop="false"
       android:layout_alignParentBottom="false"
       android:layout_toStartOf="@+id/close"
-      android:text="@string/clear" />
+      android:text="@string/clear"
+      android:textAllCaps="false" />
 
   <Button
       android:id="@+id/close"
@@ -36,7 +37,8 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/fire_name"
       android:layout_alignParentEnd="true"
-      android:text="@string/close" />
+      android:text="@string/close"
+      android:textAllCaps="false" />
 
   <android.support.v4.widget.NestedScrollView
       android:id="@+id/chat_scrollview"

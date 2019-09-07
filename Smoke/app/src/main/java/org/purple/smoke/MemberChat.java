@@ -38,7 +38,6 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap.Config;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -443,11 +442,11 @@ public class MemberChat extends AppCompatActivity
 					(R.id.send_chat_message);
 
 				    if(state)
-					button.setTextColor
-					    (Color.rgb(46, 125, 50));
+					button.setBackgroundResource
+					    (R.drawable.send);
 				    else
-					button.setTextColor
-					    (Color.rgb(198, 40, 40));
+					button.setBackgroundResource
+					    (R.drawable.send_disabled);
 
 				    button = (Button) findViewById(R.id.status);
 
