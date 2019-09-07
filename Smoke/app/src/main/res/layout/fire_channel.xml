@@ -38,7 +38,6 @@
         android:id="@+id/chat_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:layout_weight="1"
         android:ems="10"
         android:hint="@string/please_type_a_message"
@@ -62,8 +61,6 @@
       android:layout_alignParentEnd="true"
       android:background="@drawable/sectiongradient"
       android:gravity="center_vertical"
-      android:paddingStart="5dp"
-      android:paddingEnd="5dp"
       android:textColor="@android:color/white"
       android:textSize="18sp"
       android:textStyle="normal|bold" />
@@ -74,7 +71,6 @@
       android:layout_height="1dp"
       android:layout_below="@+id/chat_scrollview"
       android:layout_alignParentStart="true"
-      android:layout_marginStart="5dp"
       android:background="?android:attr/listDivider" />
 
   <android.support.v4.widget.NestedScrollView
