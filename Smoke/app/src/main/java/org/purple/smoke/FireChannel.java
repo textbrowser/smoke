@@ -481,12 +481,14 @@ public class FireChannel extends View
 				Button button1 = (Button) m_view.findViewById
 				    (R.id.send_chat_message);
 
+				button1.setEnabled(state);
+
 				if(state)
-				    button1.setTextColor
-					(Color.rgb(46, 125, 50));
+				    button1.setBackgroundResource
+					(R.drawable.send);
 				else
-				    button1.setTextColor
-					(Color.rgb(198, 40, 40));
+				    button1.setBackgroundResource
+					(R.drawable.send_disabled);
 			    }
 			});
 		    }

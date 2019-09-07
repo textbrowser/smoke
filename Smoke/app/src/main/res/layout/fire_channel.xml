@@ -44,7 +44,7 @@
       android:id="@+id/chat_scrollview"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_above="@+id/chat_message"
+      android:layout_above="@id/message_layout"
       android:layout_below="@+id/fire_name"
       android:layout_toStartOf="@+id/clear_chat_messages"
       android:fadeScrollbars="false"
@@ -65,7 +65,7 @@
   <android.support.v4.widget.NestedScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_above="@+id/chat_message"
+      android:layout_above="@id/message_layout"
       android:layout_below="@+id/close"
       android:layout_toEndOf="@+id/chat_scrollview"
       android:fadeScrollbars="false"
@@ -81,26 +81,32 @@
     </TableLayout>
   </android.support.v4.widget.NestedScrollView>
 
-  <Button
-      android:id="@+id/send_chat_message"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBaseline="@+id/chat_message"
-      android:layout_alignBottom="@+id/chat_message"
-      android:layout_alignParentEnd="true"
-      android:text="@string/send" />
-
-  <EditText
-      android:id="@+id/chat_message"
-      android:layout_width="wrap_content"
+  <LinearLayout
+      android:id="@+id/message_layout"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      android:layout_alignParentStart="true"
-      android:layout_marginStart="5dp"
-      android:layout_toStartOf="@+id/send_chat_message"
-      android:ems="10"
-      android:hint="@string/please_type_a_message"
-      android:inputType="textPersonName" />
+      android:background="#e0e0e0"
+      android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/chat_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="@string/please_type_a_message"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/send_chat_message"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_weight="0"
+        android:background="@drawable/send" />
+
+  </LinearLayout>
 
   <View
       android:id="@+id/divider"
