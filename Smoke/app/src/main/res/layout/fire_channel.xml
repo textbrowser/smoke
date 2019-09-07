@@ -1,22 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingStart="5dp"
     android:paddingEnd="5dp">
-
-  <TextView
-      android:id="@+id/fire_name"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentStart="true"
-      android:layout_alignParentTop="true"
-      android:layout_alignParentEnd="true"
-      android:background="@drawable/sectiongradient"
-      android:gravity="center_vertical"
-      android:paddingStart="5dp"
-      android:paddingEnd="5dp"
-      android:textColor="@android:color/white"
-      android:textSize="18sp"
-      android:textStyle="normal|bold" />
 
   <Button
       android:id="@+id/clear_chat_messages"
@@ -40,6 +26,57 @@
       android:text="@string/close"
       android:textAllCaps="false" />
 
+  <LinearLayout
+      android:id="@+id/message_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:background="#e0e0e0"
+      android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/send_chat_message"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_weight="0"
+        android:background="@drawable/send" />
+
+    <EditText
+        android:id="@+id/chat_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="@string/please_type_a_message"
+        android:inputType="textPersonName" />
+
+  </LinearLayout>
+
+  <TextView
+      android:id="@+id/fire_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentTop="true"
+      android:layout_alignParentEnd="true"
+      android:background="@drawable/sectiongradient"
+      android:gravity="center_vertical"
+      android:paddingStart="5dp"
+      android:paddingEnd="5dp"
+      android:textColor="@android:color/white"
+      android:textSize="18sp"
+      android:textStyle="normal|bold" />
+
+  <View
+      android:id="@+id/divider"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_below="@+id/chat_scrollview"
+      android:layout_alignParentStart="true"
+      android:layout_marginStart="5dp"
+      android:background="?android:attr/listDivider" />
+
   <android.support.v4.widget.NestedScrollView
       android:id="@+id/chat_scrollview"
       android:layout_width="match_parent"
@@ -57,6 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
+        android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:textIsSelectable="true" />
 
@@ -80,41 +118,5 @@
 
     </TableLayout>
   </android.support.v4.widget.NestedScrollView>
-
-  <LinearLayout
-      android:id="@+id/message_layout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:background="#e0e0e0"
-      android:orientation="horizontal">
-
-    <EditText
-        android:id="@+id/chat_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="@string/please_type_a_message"
-        android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/send_chat_message"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_weight="0"
-        android:background="@drawable/send" />
-
-  </LinearLayout>
-
-  <View
-      android:id="@+id/divider"
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:layout_alignParentStart="true"
-      android:layout_below="@+id/chat_scrollview"
-      android:layout_marginStart="5dp"
-      android:background="?android:attr/listDivider" />
 
 </RelativeLayout>
