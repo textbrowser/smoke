@@ -80,7 +80,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="@string/clear_log" />
+                    android:text="@string/clear_log"
+                    android:textAllCaps="false" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -174,7 +175,8 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/refresh_neighbors" />
+                        android:text="@string/refresh_neighbors"
+                        android:textAllCaps="false" />
                 </LinearLayout>
 
                 <EditText
@@ -303,14 +305,16 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add" />
+                        android:text="@string/add"
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/reset_neighbor_fields"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reset_fields" />
+                        android:text="@string/reset_fields"
+                        android:textAllCaps="false" />
 
                 </LinearLayout>
 
@@ -364,14 +368,16 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/save" />
+                        android:text="@string/save"
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/share_via_ozone"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/share_smoke_id" />
+                        android:text="@string/share_smoke_id"
+                        android:textAllCaps="false" />
                 </LinearLayout>
 
                 <TextView
@@ -443,14 +449,16 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/refresh_participants" />
+                        android:text="@string/refresh_participants"
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/epks"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/share_keys" />
+                        android:text="@string/share_keys"
+                        android:textAllCaps="false" />
 
                     <ProgressBar
                         android:id="@+id/share_keys_progress_bar"
@@ -525,14 +533,16 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add" />
+                        android:text="@string/add"
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/reset_participants_fields"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reset_fields" />
+                        android:text="@string/reset_fields"
+                        android:textAllCaps="false" />
 
                     <ProgressBar
                         android:id="@+id/add_participants_progress_bar"
@@ -634,14 +644,16 @@
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/generate" />
+                        android:text="@string/generate"
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/generate_pki"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/generate_pk" />
+                        android:text="@string/generate_pk"
+                        android:textAllCaps="false" />
 
                     <ProgressBar
                         android:id="@+id/generate_progress_bar"
@@ -672,7 +684,7 @@
 
                     <EditText
                         android:id="@+id/alias"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
@@ -683,7 +695,8 @@
                         android:id="@+id/save_alias"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/save" />
+                        android:text="@string/save"
+                        android:textAllCaps="false" />
                 </LinearLayout>
 
                 <TextView
@@ -733,7 +746,8 @@
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reset_smoke" />
+                        android:text="@string/reset_smoke"
+                        android:textAllCaps="false" />
 
                 </LinearLayout>
 
