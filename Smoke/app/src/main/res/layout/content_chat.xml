@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="5dp"
-    android:paddingStart="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.purple.smoke.Chat"
     tools:showIn="@layout/activity_chat">
@@ -15,27 +15,10 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:text="@string/clear"
         android:textAllCaps="false" />
-
-    <ScrollView
-        android:id="@+id/chat_scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/message_layout"
-        android:layout_toStartOf="@+id/call"
-        android:fadeScrollbars="false">
-
-        <TextView
-            android:id="@+id/chat_messages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:textIsSelectable="true" />
-    </ScrollView>
 
     <Button
         android:id="@+id/call"
@@ -51,7 +34,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#e0e0e0"
         android:orientation="horizontal">
 
         <EditText
@@ -73,6 +55,30 @@
 
     </LinearLayout>
 
+    <ScrollView
+        android:id="@+id/chat_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/message_layout"
+        android:layout_toStartOf="@+id/call"
+        android:fadeScrollbars="false">
+
+        <TextView
+            android:id="@+id/chat_messages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:textIsSelectable="true" />
+    </ScrollView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/message_layout"
+        android:background="?android:attr/listDivider" />
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -90,12 +96,5 @@
 
         </TableLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/message_layout"
-        android:background="?android:attr/listDivider" />
 
 </RelativeLayout>

@@ -2,37 +2,13 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="5dp"
-    android:paddingStart="5dp">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme" />
-
-    </android.support.design.widget.AppBarLayout>
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp">
 
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:ems="10"
-            android:hint="@string/authenticate_password"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
 
         <Button
             android:id="@+id/authenticate"
@@ -53,6 +29,17 @@
             android:text="@string/reset_smoke"
             android:textAllCaps="false" />
 
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:ems="10"
+            android:hint="@string/authenticate_password"
+            android:inputType="textPassword"
+            android:selectAllOnFocus="true" />
+
         <ProgressBar
             android:id="@+id/progress_bar"
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
@@ -63,5 +50,18 @@
             android:visibility="invisible" />
 
     </RelativeLayout>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme" />
+
+    </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>
