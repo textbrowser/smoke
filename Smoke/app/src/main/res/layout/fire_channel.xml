@@ -58,6 +58,8 @@
       android:layout_alignParentEnd="true"
       android:background="@drawable/sectiongradient"
       android:gravity="center_vertical"
+      android:paddingStart="5dp"
+      android:paddingEnd="5dp"
       android:textColor="@android:color/white"
       android:textSize="18sp"
       android:textStyle="normal|bold" />
