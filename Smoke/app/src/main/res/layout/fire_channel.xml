@@ -32,13 +32,6 @@
       android:layout_alignParentBottom="true"
       android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/send_chat_message"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_weight="0"
-        android:background="@drawable/send" />
-
     <EditText
         android:id="@+id/chat_message"
         android:layout_width="wrap_content"
@@ -47,6 +40,13 @@
         android:ems="10"
         android:hint="@string/please_type_a_message"
         android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/send_chat_message"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_weight="0"
+        android:background="@drawable/send" />
 
   </LinearLayout>
 
