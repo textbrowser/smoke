@@ -14,4 +14,8 @@
         android:id="@+id/action_fire"
         android:orderInCategory="400"
         android:title="@string/fire" />
+    <item
+        android:id="@+id/action_vapor"
+        android:orderInCategory="500"
+        android:title="@string/vapor" />
 </menu>
