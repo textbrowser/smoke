@@ -455,9 +455,7 @@ public abstract class Miscellaneous
 	}
     }
 
-    public static void addMembersToMenu(Menu menu,
-					int count,
-					int position)
+    public static void addMembersToMenu(Menu menu, int count, int position)
     {
 	if(menu == null)
 	    return;

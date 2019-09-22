@@ -1480,10 +1480,8 @@ public class Chat extends AppCompatActivity
 	    sipHashId = Miscellaneous.prepareSipHashId(sipHashId);
 	    State.getInstance().setString
 		("member_chat_oid", String.valueOf(itemId));
-	    State.getInstance().setString
-		("member_chat_siphash_id", sipHashId);
-	    m_databaseHelper.writeSetting
-		(null, "lastActivity", "MemberChat");
+	    State.getInstance().setString("member_chat_siphash_id", sipHashId);
+	    m_databaseHelper.writeSetting(null, "lastActivity", "MemberChat");
 	    m_databaseHelper.writeSetting
 		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
 	    m_databaseHelper.writeSetting
@@ -1507,7 +1505,7 @@ public class Chat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 4, 150);
+	Miscellaneous.addMembersToMenu(menu, 5, 150);
 	return true;
     }
 
