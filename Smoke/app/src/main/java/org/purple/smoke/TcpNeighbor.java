@@ -379,8 +379,10 @@ public class TcpNeighbor extends Neighbor
 
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
-		    m_stringBuffer.append
-			(new String(bytes, 0, (int) bytesRead));
+
+		    if(m_stringBuffer.length() < MAXIMUM_BYTES)
+			m_stringBuffer.append
+			    (new String(bytes, 0, (int) bytesRead));
 
 		    synchronized(m_parsingSchedulerObject)
 		    {

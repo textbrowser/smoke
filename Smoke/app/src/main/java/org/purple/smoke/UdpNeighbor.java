@@ -275,7 +275,8 @@ public class UdpNeighbor extends Neighbor
 		    m_bytesRead.getAndAdd(bytesRead);
 		    m_lastTimeRead.set(System.nanoTime());
 
-		    if(byteArrayOutputStream != null)
+		    if(byteArrayOutputStream != null &&
+		       m_stringBuffer.length() < MAXIMUM_BYTES)
 			m_stringBuffer.append
 			    (new String(byteArrayOutputStream.toByteArray()));
 
