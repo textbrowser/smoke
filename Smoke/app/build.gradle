@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.android.support:design:25.4.0'
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:support-v4:25.4.0'
-    implementation files('libs/bcprov-ext-jdk15on-161.jar')
+    implementation files('libs/bcprov-ext-jdk15on-163.jar')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }
 
