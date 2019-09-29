@@ -847,9 +847,8 @@ public class Database extends SQLiteOpenHelper
 	    if(sipHashId.isEmpty())
 		cursor = m_db.rawQuery
 		    ("SELECT " +
-		     "(SELECT p.encryption_public_key_digest || " +
-		     "p.signature_public_key_digest FROM participants p " +
-		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
+		     "(SELECT EXISTS(SELECT 1 FROM participants p WHERE " +
+		     "p.siphash_id_digest = s.siphash_id_digest)) AS a, " +
 		     "(SELECT p.encryption_public_key_signed " +
 		     "FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
@@ -866,9 +865,8 @@ public class Database extends SQLiteOpenHelper
 	    else
 		cursor = m_db.rawQuery
 		    ("SELECT " +
-		     "(SELECT p.encryption_public_key_digest || " +
-		     "p.signature_public_key_digest FROM participants p " +
-		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
+		     "(SELECT EXISTS(SELECT 1 FROM participants p WHERE " +
+		     "p.siphash_id_digest = s.siphash_id_digest)) AS a, " +
 		     "(SELECT p.encryption_public_key_signed " +
 		     "FROM participants p " +
 		     "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
@@ -903,21 +901,8 @@ public class Database extends SQLiteOpenHelper
 		    {
 			if(i == 0)
 			{
-			    if(cursor.isNull(i) ||
-			       cursor.getString(i).isEmpty())
-			    {
-				sipHashIdElement.m_epksCompleted = false;
-				continue;
-			    }
-
-			    String string_a = cursor.getString(i);
-			    String string_b = Base64.encodeToString
-				(Cryptography.sha512("".getBytes()),
-				 Base64.DEFAULT);
-
-			    string_b += string_b;
 			    sipHashIdElement.m_epksCompleted =
-				!string_a.equals(string_b);
+				cursor.getInt(i) > 0;
 			    continue;
 			}
 			else if(i == 1 || i == 2)
