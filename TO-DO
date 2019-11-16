@@ -149,6 +149,7 @@ Completed Items
 - Remove UI-related references in Settings::prepareListeners()::...::run().
 - Remove expired private keystreams.
 - Replace Date object with AtomicLong objects.
+- Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with Long.BYTES.
 - Replace the (final) iterations variable in
 - Requesting offline messages stalls if there are several active neighbors.
   https://developer.android.com/reference/android/net/wifi/
@@ -223,7 +224,6 @@ Future Items
 - Names or PINs alongside SipHashes. The extra bits will increase the
   possibilities.
 - Replace Chat member view with a recycler view.
-- Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with Long.BYTES.
 - Resolve DNS through a proxy if a proxy is defined.
 - Themes, of course.
 

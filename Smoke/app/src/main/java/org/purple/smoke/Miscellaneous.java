@@ -62,9 +62,6 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class Miscellaneous
 {
-    private final static int INTEGER_BYTES = 4;
-    private final static int LONG_BYTES = 8;
-
     public static String byteArrayAsHexString(byte bytes[])
     {
 	if(bytes == null || bytes.length == 0)
@@ -356,7 +353,7 @@ public abstract class Miscellaneous
     {
 	try
 	{
-	    return ByteBuffer.allocate(INTEGER_BYTES).putInt(value).array();
+	    return ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
 	}
 	catch(Exception exception)
 	{
@@ -402,7 +399,7 @@ public abstract class Miscellaneous
     {
 	try
 	{
-	    return ByteBuffer.allocate(LONG_BYTES).putLong(value).array();
+	    return ByteBuffer.allocate(Long.BYTES).putLong(value).array();
 
 	}
 	catch(Exception exception)
@@ -438,12 +435,12 @@ public abstract class Miscellaneous
 
     public static long byteArrayToLong(byte bytes[])
     {
-	if(bytes == null || bytes.length != LONG_BYTES)
+	if(bytes == null || bytes.length != Long.BYTES)
 	    return 0;
 
 	try
 	{
-	    ByteBuffer byteBuffer = ByteBuffer.allocate(LONG_BYTES);
+	    ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
 
 	    byteBuffer.put(bytes);
 	    byteBuffer.flip();
