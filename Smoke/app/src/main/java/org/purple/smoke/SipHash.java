@@ -35,7 +35,6 @@ public class SipHash
 {
     private final static int C_ROUNDS[] = {2, 4};
     private final static int D_ROUNDS[] = {4, 8};
-    private final static int LONG_BYTES = 8;
     private final static long C0 = 0x736f6d6570736575L;
     private final static long C1 = 0x646f72616e646f6dL;
     private final static long C2 = 0x6c7967656e657261L;
@@ -51,19 +50,19 @@ public class SipHash
 
     private long byteArrayToLong(byte bytes[], int offset)
     {
-	if(bytes == null || (bytes.length - offset) < LONG_BYTES)
+	if(bytes == null || (bytes.length - offset) < Long.BYTES)
 	    return 0;
 
 	long value = 0;
 
-	value |= (((long) bytes[0 + offset]) & 0xff) << (LONG_BYTES * 0);
-	value |= (((long) bytes[1 + offset]) & 0xff) << (LONG_BYTES * 1);
-	value |= (((long) bytes[2 + offset]) & 0xff) << (LONG_BYTES * 2);
-	value |= (((long) bytes[3 + offset]) & 0xff) << (LONG_BYTES * 3);
-	value |= (((long) bytes[4 + offset]) & 0xff) << (LONG_BYTES * 4);
-	value |= (((long) bytes[5 + offset]) & 0xff) << (LONG_BYTES * 5);
-	value |= (((long) bytes[6 + offset]) & 0xff) << (LONG_BYTES * 6);
-	value |= (((long) bytes[7 + offset]) & 0xff) << (LONG_BYTES * 7);
+	value |= (((long) bytes[0 + offset]) & 0xff) << (Long.BYTES * 0);
+	value |= (((long) bytes[1 + offset]) & 0xff) << (Long.BYTES * 1);
+	value |= (((long) bytes[2 + offset]) & 0xff) << (Long.BYTES * 2);
+	value |= (((long) bytes[3 + offset]) & 0xff) << (Long.BYTES * 3);
+	value |= (((long) bytes[4 + offset]) & 0xff) << (Long.BYTES * 4);
+	value |= (((long) bytes[5 + offset]) & 0xff) << (Long.BYTES * 5);
+	value |= (((long) bytes[6 + offset]) & 0xff) << (Long.BYTES * 6);
+	value |= (((long) bytes[7 + offset]) & 0xff) << (Long.BYTES * 7);
 	return value;
     }
 
@@ -132,7 +131,7 @@ public class SipHash
 	*/
 
 	long k0 = byteArrayToLong(key, 0);
-	long k1 = byteArrayToLong(key, LONG_BYTES);
+	long k1 = byteArrayToLong(key, Long.BYTES);
 
 	m_v0 = k0 ^ C0;
 	m_v1 = k1 ^ C1;
