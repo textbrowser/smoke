@@ -47,8 +47,10 @@ public class About
     {
 	if(s_about.isEmpty())
 	{
+	    // Must agree with Smoke/app/build.gradle.
+
 	    s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    s_about = "Version 2019.12.12 Often Optic " +
+	    s_about = "Version 2019.11.25 Often Optic " +
 		(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		"\nBuild Date " +
 		s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +

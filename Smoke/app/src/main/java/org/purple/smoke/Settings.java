@@ -534,6 +534,8 @@ public class Settings extends AppCompatActivity
 	button1.setEnabled(state);
 	button1 = (Button) findViewById(R.id.save_ozone);
 	button1.setEnabled(state);
+	button1 = (Button) findViewById(R.id.share_via_ozone);
+	button1.setEnabled(state);
 
 	CheckBox checkBox1 = null;
 

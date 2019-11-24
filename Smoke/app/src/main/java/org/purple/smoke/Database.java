@@ -3827,7 +3827,7 @@ public class Database extends SQLiteOpenHelper
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
 	    "PRIMARY KEY (encryption_public_key_digest, " +
-	    "signature_public_key_digest))";
+	    "signature_public_key_digest, siphash_id_digest))";
 
 	try
 	{
