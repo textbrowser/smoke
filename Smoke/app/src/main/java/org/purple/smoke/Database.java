@@ -3901,11 +3901,10 @@ public class Database extends SQLiteOpenHelper
 
 	str = "CREATE TABLE IF NOT EXISTS vapor_files (" +
 	    "absolute_filename TEXT NOT NULL, " +
-	    "absolute_filename_digest TEXT NOT NULL, " +
+	    "destination_digest TEXT NOT NULL, " +
 	    "paused INTEGER NOT NULL, " +
 	    "read_offset INTEGER NOT NULL, " +
-	    "siphash_id_digest TEXT NOT NULL, " +
-	    "PRIMARY KEY (absolute_filename_digest, siphash_id_digest))";
+	    "sha_1_digest TEXT NOT NULL)";
 
 	try
 	{
