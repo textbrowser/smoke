@@ -1980,16 +1980,15 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(0, "encryption_public_key");
 	    sparseArray.append(1, "encryption_public_key_digest");
 	    sparseArray.append(2, "encryption_public_key_signed");
-	    sparseArray.append(3, "function_digest");
-	    sparseArray.append(4, "identity");
-	    sparseArray.append(5, "keystream");
-	    sparseArray.append(6, "last_status_timestamp");
-	    sparseArray.append(7, "options");
-	    sparseArray.append(8, "signature_public_key");
-	    sparseArray.append(9, "signature_public_key_digest");
-	    sparseArray.append(10, "signature_public_key_signed");
-	    sparseArray.append(11, "siphash_id");
-	    sparseArray.append(12, "siphash_id_digest");
+	    sparseArray.append(3, "identity");
+	    sparseArray.append(4, "keystream");
+	    sparseArray.append(5, "last_status_timestamp");
+	    sparseArray.append(6, "options");
+	    sparseArray.append(7, "signature_public_key");
+	    sparseArray.append(8, "signature_public_key_digest");
+	    sparseArray.append(9, "signature_public_key_signed");
+	    sparseArray.append(10, "siphash_id");
+	    sparseArray.append(11, "siphash_id_digest");
 
 	    int size = sparseArray.size();
 
@@ -2008,9 +2007,6 @@ public class Database extends SQLiteOpenHelper
 		case "encryption_public_key_signed":
 		    bytes = cryptography.etm
 			((encryptionKeySigned ? "true" : "false").getBytes());
-		    break;
-		case "function_digest":
-		    bytes = cryptography.hmac("chat".getBytes());
 		    break;
 		case "identity":
 		    bytes = cryptography.etm("".getBytes());
@@ -3807,7 +3803,6 @@ public class Database extends SQLiteOpenHelper
 	    "encryption_public_key TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
 	    "encryption_public_key_signed TEXT NOT NULL, " +
-	    "function_digest NOT NULL, " + // chat, e-mail, etc.
 	    "identity TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
 	    "last_status_timestamp TEXT NOT NULL, " +
@@ -3826,8 +3821,7 @@ public class Database extends SQLiteOpenHelper
 	    "special_value_e TEXT, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
-	    "PRIMARY KEY (encryption_public_key_digest, " +
-	    "signature_public_key_digest, siphash_id_digest))";
+	    "PRIMARY KEY (siphash_id_digest))";
 
 	try
 	{
