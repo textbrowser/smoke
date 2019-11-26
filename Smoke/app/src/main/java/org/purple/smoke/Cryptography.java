@@ -1162,7 +1162,7 @@ public class Cryptography
 						       int keySize1,
 						       int keySize2)
     {
-	if(algorithm.equals("McEliece-Fujisaki"))
+	if(algorithm.startsWith("McEliece-Fujisaki"))
 	{
 	    try
 	    {
@@ -1219,7 +1219,7 @@ public class Cryptography
 
 	try
 	{
-	    if(algorithm.equals("McEliece-Fujisaki"))
+	    if(algorithm.startsWith("McEliece-Fujisaki"))
 	    {
 		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		    (privateBytes);

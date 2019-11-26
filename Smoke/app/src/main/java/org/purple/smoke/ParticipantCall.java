@@ -55,12 +55,12 @@ public class ParticipantCall
 	    switch(m_algorithm)
 	    {
 	    case MCELIECE:
-		m_keyPair = Cryptography.
-		    generatePrivatePublicKeyPair("McEliece-Fujisaki", 0, 0);
+		m_keyPair = Cryptography.generatePrivatePublicKeyPair
+		    ("McEliece-Fujisaki (11, 50)", 0, 0);
 		break;
 	    case RSA:
-		m_keyPair = Cryptography.
-		    generatePrivatePublicKeyPair("RSA", 2048, 0);
+		m_keyPair = Cryptography.generatePrivatePublicKeyPair
+		    ("RSA", 2048, 0);
 		break;
 	    default:
 		break;
