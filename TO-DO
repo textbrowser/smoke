@@ -229,6 +229,8 @@ Future Items
 
 Remaining Items
 
+- Allow for two McEliece parameter sets ((11, 50), (12, 68)):
+  Eleven of Sixty-One, Twelve of Eighty.
 - Bubbles are too narrow on wide devices.
 - Drawers.
 - Gallery integration. Zoom.
