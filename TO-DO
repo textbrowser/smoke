@@ -3,6 +3,8 @@ Completed Items
 - A menu item for terminating the application as well as its service.
 - A release target for the make files.
 - Aliases.
+- Allow for two McEliece parameter sets ((11, 50), (12, 68)):
+  Eleven of Sixty-One, Twelve of Eighty.
 - Allow log clearing.
 - Allow resending of messages.
 - Allow resetting of Chat session keys via context menu.
@@ -229,8 +231,6 @@ Future Items
 
 Remaining Items
 
-- Allow for two McEliece parameter sets ((11, 50), (12, 68)):
-  Eleven of Sixty-One, Twelve of Eighty.
 - Bubbles are too narrow on wide devices.
 - Drawers.
 - Gallery integration. Zoom.

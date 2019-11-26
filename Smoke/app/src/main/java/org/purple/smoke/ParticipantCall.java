@@ -56,7 +56,7 @@ public class ParticipantCall
 	    {
 	    case MCELIECE:
 		m_keyPair = Cryptography.
-		    generatePrivatePublicKeyPair("McEliece-Fujisaki", 11, 50);
+		    generatePrivatePublicKeyPair("McEliece-Fujisaki", 0, 0);
 		break;
 	    case RSA:
 		m_keyPair = Cryptography.
