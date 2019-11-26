@@ -1178,7 +1178,7 @@ public class Cryptography
 		else
 		    parameters = new McElieceCCA2KeyGenParameterSpec
 			(MCELIECE_M[0],
-			 MCELIECE_T[0,
+			 MCELIECE_T[0],
 			 McElieceCCA2KeyGenParameterSpec.SHA256);
 
 		keyPairGenerator.initialize(parameters);
