@@ -2854,9 +2854,11 @@ public class Settings extends AppCompatActivity
 		{
 		    try
 		    {
+			ArrayList<NeighborElement> arrayList =
+			    m_databaseHelper.readNeighbors(s_cryptography);
+
 			Settings.this.runOnUiThread
-			    (new PopulateNeighbors(m_databaseHelper.
-			     readNeighbors(s_cryptography)));
+			    (new PopulateNeighbors(arrayList));
 			m_databaseHelper.cleanDanglingOutboundQueued();
 			m_databaseHelper.cleanDanglingParticipants();
 		    }
