@@ -75,11 +75,45 @@ public class Messages
 
 	try
 	{
-	    byte signature[] = cryptography.signViaChatSignature
-		(string.getBytes());
+	    byte signature[] = null;
+	    byte timestamp[] = Miscellaneous.longToByteArray
+		(System.currentTimeMillis());
+
+	    signature = cryptography.signViaChatSignature
+		(Miscellaneous.
+		 joinByteArrays(timestamp,
+				cryptography.chatSignaturePublicKeyDigest(),
+				string.getBytes()));
 
 	    if(signature == null)
 		return "";
+
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    /*
+	    ** [ A Timestamp ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(timestamp, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Signature Public Key Digest ]
+	    */
+
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(cryptography.chatSignaturePublicKeyDigest(),
+				Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Signature ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(signature, Base64.NO_WRAP));
 
 	    StringBuilder results = new StringBuilder();
 
@@ -90,7 +124,8 @@ public class Messages
 	    results.append("\r\n");
 	    results.append("type=0097b&content=%2\r\n\r\n\r\n");
 
-	    String base64 = Base64.encodeToString(signature, Base64.NO_WRAP);
+	    String base64 = Base64.encodeToString
+		(stringBuilder.toString().getBytes(), Base64.NO_WRAP);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() +
 		"type=0097b&content=\r\n\r\n\r\n".length();

@@ -525,6 +525,30 @@ public class Cryptography
 	return null;
     }
 
+    public byte[] chatSignaturePublicKeyDigest()
+    {
+	m_chatSignaturePublicKeyPairMutex.readLock().lock();
+
+	try
+	{
+	    if(m_chatSignaturePublicKeyPair == null ||
+	       m_chatSignaturePublicKeyPair.getPublic() == null)
+		return null;
+
+	    return sha512
+		(m_chatSignaturePublicKeyPair.getPublic().getEncoded());
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_chatSignaturePublicKeyPairMutex.readLock().unlock();
+	}
+
+	return null;
+    }
+
     public byte[] decryptWithSipHashKey(byte data[])
     {
 	if(data == null)
