@@ -75,13 +75,12 @@ public class Messages
 
 	try
 	{
+	    byte random[] = Cryptography.randomBytes(64);
 	    byte signature[] = null;
-	    byte timestamp[] = Miscellaneous.longToByteArray
-		(System.currentTimeMillis());
 
 	    signature = cryptography.signViaChatSignature
 		(Miscellaneous.
-		 joinByteArrays(timestamp,
+		 joinByteArrays(random,
 				cryptography.chatSignaturePublicKeyDigest(),
 				string.getBytes()));
 
@@ -91,11 +90,11 @@ public class Messages
 	    StringBuilder stringBuilder = new StringBuilder();
 
 	    /*
-	    ** [ A Timestamp ]
+	    ** [ Random Bytes ]
 	    */
 
 	    stringBuilder.append
-		(Base64.encodeToString(timestamp, Base64.NO_WRAP));
+		(Base64.encodeToString(random, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
 	    /*
