@@ -87,33 +87,6 @@ public class Messages
 	    if(signature == null)
 		return "";
 
-	    StringBuilder stringBuilder = new StringBuilder();
-
-	    /*
-	    ** [ Random Bytes ]
-	    */
-
-	    stringBuilder.append
-		(Base64.encodeToString(random, Base64.NO_WRAP));
-	    stringBuilder.append("\n");
-
-	    /*
-	    ** [ Signature Public Key Digest ]
-	    */
-
-	    stringBuilder.append
-		(Base64.
-		 encodeToString(cryptography.chatSignaturePublicKeyDigest(),
-				Base64.NO_WRAP));
-	    stringBuilder.append("\n");
-
-	    /*
-	    ** [ Signature ]
-	    */
-
-	    stringBuilder.append
-		(Base64.encodeToString(signature, Base64.NO_WRAP));
-
 	    StringBuilder results = new StringBuilder();
 
 	    results.append("POST HTTP/1.1\r\n");
@@ -124,7 +97,11 @@ public class Messages
 	    results.append("type=0097b&content=%2\r\n\r\n\r\n");
 
 	    String base64 = Base64.encodeToString
-		(stringBuilder.toString().getBytes(), Base64.NO_WRAP);
+		(Miscellaneous.
+		 joinByteArrays(random,
+				cryptography.chatSignaturePublicKeyDigest(),
+				signature),
+		 Base64.NO_WRAP);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() +
 		"type=0097b&content=\r\n\r\n\r\n".length();
