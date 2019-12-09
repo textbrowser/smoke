@@ -631,7 +631,6 @@ public class MemberChat extends AppCompatActivity
 				      getBytesPerPixel(bitmap.getConfig())),
 				     byteArrayOutputStream);
 				m_bytes = byteArrayOutputStream.toByteArray();
-				bitmap.recycle();
 			    }
 			    else
 				m_bytes = null;
@@ -699,7 +698,6 @@ public class MemberChat extends AppCompatActivity
 							   bitmap.getHeight()),
 						  false));
 					    m_attachment = m_bytes;
-					    bitmap.recycle();
 					}
 					else
 					    findViewById(R.id.preview_layout).
@@ -1213,8 +1211,6 @@ public class MemberChat extends AppCompatActivity
 					    if(fileOutputStream != null)
 						fileOutputStream.close();
 					}
-
-					bitmap.recycle();
 				    }
 				}
 				catch(Exception exception)
