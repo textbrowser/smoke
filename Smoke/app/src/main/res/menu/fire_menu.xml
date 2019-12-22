@@ -16,7 +16,7 @@
         android:orderInCategory="400"
         android:title="@string/action_settings" />
     <item
-        android:id="@+id/action_vapor"
+        android:id="@+id/action_steam"
         android:orderInCategory="500"
-        android:title="@string/vapor" />
+        android:title="@string/steam" />
 </menu>

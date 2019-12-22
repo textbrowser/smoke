@@ -3896,10 +3896,10 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	/*
-	** Create the vapor_files table.
+	** Create the steam_files table.
 	*/
 
-	str = "CREATE TABLE IF NOT EXISTS vapor_files (" +
+	str = "CREATE TABLE IF NOT EXISTS steam_files (" +
 	    "absolute_filename TEXT NOT NULL, " +
 	    "destination_digest TEXT NOT NULL, " +
 	    "paused INTEGER NOT NULL, " +

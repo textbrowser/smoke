@@ -1437,7 +1437,7 @@ public class MemberChat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	menu.findItem(R.id.action_vapor).setEnabled(false);
+	menu.findItem(R.id.action_steam).setEnabled(false);
 	Miscellaneous.addMembersToMenu(menu, 6, 250);
 	return true;
     }

@@ -613,7 +613,7 @@ public class Authenticate extends AppCompatActivity
 	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
-	menu.findItem(R.id.action_vapor).setEnabled(false);
+	menu.findItem(R.id.action_steam).setEnabled(false);
 	Miscellaneous.addMembersToMenu(menu, 4, 150);
 	return true;
     }
