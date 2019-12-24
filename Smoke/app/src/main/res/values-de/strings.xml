@@ -41,8 +41,8 @@
     <string name="message">Schreibe...</string>
     <string name="message_status">Nachrichten Status</string>
     <string name="name">Name</string>
-    <string name="neighbor_servers">Nachbar/Server</string>
-    <string name="ozone">Ozon-Postbox</string>
+    <string name="neighbor_servers">Nachbar-Server</string>
+    <string name="ozone">Ozone-Postbox</string>
     <string name="participants">Teilnehmer</string>
     <string name="password">Passwort</string>
     <string name="password_confirmation">Passwort Bestätigung</string>
@@ -69,4 +69,5 @@
     <string name="smoke_chat_id">Smoke Chat ID</string>
     <string name="smokeid">Smoke ID</string>
     <string name="your_name">Dein Name</string>
+    <string name="exit">Beenden</string>
 </resources>
