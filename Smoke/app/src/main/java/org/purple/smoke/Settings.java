@@ -3035,11 +3035,12 @@ public class Settings extends AppCompatActivity
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
-
-	int index = arrayAdapter.getPosition
-	    (m_databaseHelper.readSetting(null, "iterationCount"));
-
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
+	spinner1.setAdapter(arrayAdapter);
+	array = new String[] {"Argon2id", "PBKDF2"};
+	arrayAdapter = new ArrayAdapter<>
+	    (Settings.this, android.R.layout.simple_spinner_item, array);
+	spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
@@ -3156,12 +3157,25 @@ public class Settings extends AppCompatActivity
 	** Restore some settings.
 	*/
 
+	int index = arrayAdapter.getPosition
+	    (m_databaseHelper.readSetting(null, "iterationCount"));
+
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 
 	if(index >= 0)
 	    spinner1.setSelection(index);
 	else
 	    spinner1.setSelection(0);
+
+	index = arrayAdapter.getPosition
+	    (m_databaseHelper.readSetting(null, "keyDerivationFunction"));
+
+	spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
+
+	if(index >= 0)
+	    spinner1.setSelection(index);
+	else
+	    spinner1.setSelection(1); // PBKDF2
 
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
 	spinner1.setSelection(2); // RSA

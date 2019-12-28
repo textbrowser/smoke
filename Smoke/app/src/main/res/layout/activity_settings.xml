@@ -564,6 +564,17 @@
                         android:layout_height="wrap_content" />
 
                     <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/key_derivation_function" />
+
+                    <Spinner
+                        android:id="@+id/key_derivation_function"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/encryption" />
