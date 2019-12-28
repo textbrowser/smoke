@@ -128,6 +128,19 @@ public class Authenticate extends AppCompatActivity
 		    return;
 		}
 
+		int keyDerivationFunction = 1; // PBKDF2
+
+		try
+		{
+		    keyDerivationFunction = Integer.parseInt
+			(m_databaseHelper.
+			 readSetting(null, "keyDerivationFunction"));
+		}
+		catch(Exception exception)
+		{
+		    keyDerivationFunction = 1;
+		}
+
 		if(!Cryptography.memcmp(m_databaseHelper.
 					readSetting(null,"saltedPassword").
 					getBytes(),
@@ -160,14 +173,17 @@ public class Authenticate extends AppCompatActivity
 		    private byte m_encryptionSalt[] = null;
 		    private byte m_macSalt[] = null;
 		    private int m_iterationCount = 1000;
+		    private int m_keyDerivationFunction = 1; // PBKDF2
 
 		    SingleShot(String password,
 			       byte encryptionSalt[],
 			       byte macSalt[],
-			       int iterationCount)
+			       int iterationCount,
+			       int keyDerivationFunction)
 		    {
 			m_encryptionSalt = encryptionSalt;
 			m_iterationCount = iterationCount;
+			m_keyDerivationFunction = keyDerivationFunction;
 			m_macSalt = macSalt;
 			m_password = password;
 		    }
@@ -185,11 +201,13 @@ public class Authenticate extends AppCompatActivity
 			    encryptionKey = Cryptography.generateEncryptionKey
 				(m_encryptionSalt,
 				 m_password.toCharArray(),
-				 m_iterationCount);
+				 m_iterationCount,
+				 m_keyDerivationFunction);
 			    macKey = Cryptography.generateMacKey
 				(m_macSalt,
 				 m_password.toCharArray(),
-				 m_iterationCount);
+				 m_iterationCount,
+				 m_keyDerivationFunction);
 
 			    if(encryptionKey != null && macKey != null)
 			    {
@@ -428,7 +446,8 @@ public class Authenticate extends AppCompatActivity
 		    (new SingleShot(textView1.getText().toString(),
 				    encryptionSalt,
 				    macSalt,
-				    iterationCount));
+				    iterationCount,
+				    keyDerivationFunction));
 
 		thread.start();
 	    }

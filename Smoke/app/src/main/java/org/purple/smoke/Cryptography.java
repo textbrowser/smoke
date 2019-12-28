@@ -54,10 +54,13 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
+import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
 import org.bouncycastle.pqc.jcajce.spec.McElieceCCA2KeyGenParameterSpec;
+import org.bouncycastle.util.encoders.Hex;
 
 public class Cryptography
 {
@@ -734,7 +737,7 @@ public class Cryptography
 
 	try
 	{
-	    aes256 = "aes256".getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
+	    aes256 = "aes256".getBytes(StandardCharsets.ISO_8859_1); // Latin-1
 	}
 	catch(Exception exception)
 	{
@@ -745,7 +748,7 @@ public class Cryptography
 
 	try
 	{
-	    c = channel.getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
+	    c = channel.getBytes(StandardCharsets.ISO_8859_1); // Latin-1
 	}
 	catch(Exception exception)
 	{
@@ -756,7 +759,7 @@ public class Cryptography
 
 	try
 	{
-	    s = salt.getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
+	    s = salt.getBytes(StandardCharsets.ISO_8859_1); // Latin-1
 	}
 	catch(Exception exception)
 	{
@@ -767,7 +770,7 @@ public class Cryptography
 
 	try
 	{
-	    sha384 = "sha384".getBytes(StandardCharsets.ISO_8859_1); // Latin-1.
+	    sha384 = "sha384".getBytes(StandardCharsets.ISO_8859_1); // Latin-1
 	}
 	catch(Exception exception)
 	{
@@ -1345,24 +1348,53 @@ public class Cryptography
 
     public static SecretKey generateEncryptionKey(byte salt[],
 						  char password[],
-						  int iterations)
+						  int iterations,
+						  int keyDerivationFunction)
     {
 	if(password == null || salt == null)
 	    return null;
 
-	int length = 256; // Bits.
-
-	try
+	if(keyDerivationFunction == 0) // Argon2id
 	{
-	    KeySpec keySpec = new PBEKeySpec
-		(password, salt, iterations, length);
-	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		("PBKDF2WithHmacSHA1");
+	    try
+	    {
+		Argon2BytesGenerator generator = new Argon2BytesGenerator();
+		Argon2Parameters.Builder builder = new Argon2Parameters.Builder
+		    (Argon2Parameters.ARGON2_id).
+		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
+		    withIterations(iterations).
+		    withMemoryAsKB(32).
+		    withParallelism(4).
+		    withAdditional(Hex.decode("010203040506070809")).
+		    withSecret(new String(password).
+			       getBytes(StandardCharsets.UTF_8)).
+		    withSalt(salt);
+		byte bytes[] = new byte[32];
 
-	    return secretKeyFactory.generateSecret(keySpec);
+		generator.init(builder.build());
+		generator.generateBytes(password, bytes);
+		return new SecretKeySpec(bytes, SYMMETRIC_ALGORITHM);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
-	catch(Exception exception)
+	else // PBKDF2
 	{
+	    int length = 256; // Bits.
+
+	    try
+	    {
+		KeySpec keySpec = new PBEKeySpec
+		    (password, salt, iterations, length);
+		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		    ("PBKDF2WithHmacSHA1");
+
+		return secretKeyFactory.generateSecret(keySpec);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
 
 	return null;
@@ -1370,24 +1402,53 @@ public class Cryptography
 
     public static SecretKey generateMacKey(byte salt[],
 					   char password[],
-					   int iterations)
+					   int iterations,
+					   int keyDerivationFunction)
     {
 	if(password == null || salt == null)
 	    return null;
 
-	int length = 512; // Bits.
-
-	try
+	if(keyDerivationFunction == 0) // Argon2id
 	{
-	    KeySpec keySpec = new PBEKeySpec
-		(password, salt, iterations, length);
-	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		("PBKDF2WithHmacSHA1");
+	    try
+	    {
+		Argon2BytesGenerator generator = new Argon2BytesGenerator();
+		Argon2Parameters.Builder builder = new Argon2Parameters.Builder
+		    (Argon2Parameters.ARGON2_id).
+		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
+		    withIterations(iterations).
+		    withMemoryAsKB(64).
+		    withParallelism(4).
+		    withAdditional(Hex.decode("010203040506070809")).
+		    withSecret(new String(password).
+			       getBytes(StandardCharsets.UTF_8)).
+		    withSalt(salt);
+		byte bytes[] = new byte[64];
 
-	    return secretKeyFactory.generateSecret(keySpec);
+		generator.init(builder.build());
+		generator.generateBytes(password, bytes);
+		return new SecretKeySpec(bytes, HASH_ALGORITHM);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
-	catch(Exception exception)
+	else // PBKDF2
 	{
+	    int length = 512; // Bits.
+
+	    try
+	    {
+		KeySpec keySpec = new PBEKeySpec
+		    (password, salt, iterations, length);
+		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
+		    ("PBKDF2WithHmacSHA1");
+
+		return secretKeyFactory.generateSecret(keySpec);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
 
 	return null;

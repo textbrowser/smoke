@@ -1239,14 +1239,17 @@ public class Settings extends AppCompatActivity
 
 	final Spinner spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	final Spinner spinner2 = (Spinner) findViewById
-	    (R.id.pki_encryption_algorithm);
+	    (R.id.key_derivation_function);
 	final Spinner spinner3 = (Spinner) findViewById
+	    (R.id.pki_encryption_algorithm);
+	final Spinner spinner4 = (Spinner) findViewById
 	    (R.id.pki_signature_algorithm);
 	final TextView textView1 = (TextView) findViewById
 	    (R.id.password1);
 	final TextView textView2 = (TextView) findViewById
 	    (R.id.password2);
 	int iterationCount = 1000;
+	int keyDerivationFunction = 1; // PBKDF2
 
 	try
 	{
@@ -1256,6 +1259,23 @@ public class Settings extends AppCompatActivity
 	catch(Exception exception)
 	{
 	    iterationCount = 1000;
+	}
+
+	try
+	{
+	    switch(spinner2.getSelectedItem().toString())
+	    {
+	    case "Argon2id":
+		keyDerivationFunction = 0;
+		break;
+	    default:
+		keyDerivationFunction = 1;
+		break;
+	    }
+	}
+	catch(Exception exception)
+	{
+	    keyDerivationFunction = 1; // PBKDF2
 	}
 
 	final ProgressBar bar = (ProgressBar) findViewById
@@ -1276,14 +1296,17 @@ public class Settings extends AppCompatActivity
 	    private String m_password = "";
 	    private String m_signatureAlgorithm = "";
 	    private int m_iterationCount = 1000;
+	    private int m_keyDerivationFunction = 1; // PBKDF2
 
 	    SingleShot(String encryptionAlgorithm,
 		       String password,
 		       String signatureAlgorithm,
-		       int iterationCount)
+		       int iterationCount,
+		       int keyDerivationFunction)
 	    {
 		m_encryptionAlgorithm = encryptionAlgorithm;
 		m_iterationCount = iterationCount;
+		m_keyDerivationFunction = keyDerivationFunction;
 		m_password = password;
 		m_signatureAlgorithm = signatureAlgorithm;
 
@@ -1349,7 +1372,8 @@ public class Settings extends AppCompatActivity
 			generateEncryptionKey
 			(encryptionSalt,
 			 m_password.toCharArray(),
-			 m_iterationCount);
+			 m_iterationCount,
+			 m_keyDerivationFunction);
 
 		    if(encryptionSalt == null)
 		    {
@@ -1361,7 +1385,8 @@ public class Settings extends AppCompatActivity
 		    macKey = Cryptography.generateMacKey
 			(macSalt,
 			 m_password.toCharArray(),
-			 m_iterationCount);
+			 m_iterationCount,
+			 m_keyDerivationFunction);
 
 		    if(macKey == null)
 		    {
@@ -1400,6 +1425,10 @@ public class Settings extends AppCompatActivity
 			(null,
 			 "iterationCount",
 			 String.valueOf(m_iterationCount));
+		    m_databaseHelper.writeSetting
+			(null,
+			 "keyDerivationFunction",
+			 String.valueOf(m_keyDerivationFunction));
 		    m_databaseHelper.writeSetting
 			(null,
 			 "macSalt",
@@ -1504,8 +1533,8 @@ public class Settings extends AppCompatActivity
 			    Settings.this.enableWidgets(true);
 			    Settings.this.showWidgets();
 			    State.getInstance().setAuthenticated(true);
-			    spinner2.setSelection(2); // RSA
-			    spinner3.setSelection(1); // RSA
+			    spinner3.setSelection(2); // RSA
+			    spinner4.setSelection(1); // RSA
 			    textView1.requestFocus();
 			    textView1.setText("");
 			    textView2.setText("");
@@ -1537,10 +1566,11 @@ public class Settings extends AppCompatActivity
 	}
 
 	Thread thread = new Thread
-	    (new SingleShot(spinner2.getSelectedItem().toString(),
+	    (new SingleShot(spinner3.getSelectedItem().toString(),
 			    textView1.getText().toString(),
-			    spinner3.getSelectedItem().toString(),
-			    iterationCount));
+			    spinner4.getSelectedItem().toString(),
+			    iterationCount,
+			    keyDerivationFunction));
 
 	thread.start();
     }
@@ -3028,6 +3058,7 @@ public class Settings extends AppCompatActivity
         spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
+	    "5", "10", "25", "50", "100", "250", "500", "750", // Argon2id
 	    "1000", "2500", "5000", "7500", "10000", "12500",
 	    "15000", "17500", "20000", "25000", "30000", "35000",
 	    "40000", "45000", "50000", "55000", "60000", "65000",
@@ -3035,11 +3066,27 @@ public class Settings extends AppCompatActivity
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
+
+	int index1 = arrayAdapter.getPosition
+	    (m_databaseHelper.readSetting(null, "iterationCount"));
+
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[] {"Argon2id", "PBKDF2"};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
+
+	int index2 = 1; // PBKDF2
+
+	try
+	{
+	    index2 = Integer.parseInt
+		(m_databaseHelper.readSetting(null, "keyDerivationFunction"));
+	}
+	catch(Exception exception)
+	{
+	}
+
 	spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
@@ -3157,23 +3204,17 @@ public class Settings extends AppCompatActivity
 	** Restore some settings.
 	*/
 
-	int index = arrayAdapter.getPosition
-	    (m_databaseHelper.readSetting(null, "iterationCount"));
-
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 
-	if(index >= 0)
-	    spinner1.setSelection(index);
+	if(index1 >= 0)
+	    spinner1.setSelection(index1);
 	else
 	    spinner1.setSelection(0);
 
-	index = arrayAdapter.getPosition
-	    (m_databaseHelper.readSetting(null, "keyDerivationFunction"));
-
 	spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
 
-	if(index >= 0)
-	    spinner1.setSelection(index);
+	if(index2 >= 0)
+	    spinner1.setSelection(index2);
 	else
 	    spinner1.setSelection(1); // PBKDF2
 
