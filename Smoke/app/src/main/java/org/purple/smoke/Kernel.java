@@ -1723,7 +1723,7 @@ public class Kernel
 							 Base64.NO_WRAP).
 				   toCharArray(),
 				   1,
-				   768); // 8 * (32 + 64) Bits
+				   768); // 8 * (32 + 64) bits.
 		    else
 			bytes = null;
 

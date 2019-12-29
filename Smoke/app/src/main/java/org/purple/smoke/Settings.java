@@ -231,7 +231,7 @@ public class Settings extends AppCompatActivity
 			       Base64.encodeToString(bytes, Base64.NO_WRAP).
 			       toCharArray(),
 			       1,
-			       768); // 8 * (32 + 64) Bits
+			       768); // 8 * (32 + 64) bits.
 		else
 		    ok = false;
 	    }
@@ -917,26 +917,26 @@ public class Settings extends AppCompatActivity
 			{
 			    switch(position)
 			    {
-			    case 1: // Connect
+			    case 1: // Connect.
 				m_databaseHelper.neighborControlStatus
 				    (s_cryptography,
 				     "connect",
 				     String.valueOf(parent.getId()));
 				break;
-			    case 2: // Delete
+			    case 2: // Delete.
 				deleteNeighbor(ipAndPort, parent.getId());
 				break;
-			    case 3: // Disconnect
+			    case 3: // Disconnect.
 				m_databaseHelper.neighborControlStatus
 				    (s_cryptography,
 				     "disconnect",
 				     String.valueOf(parent.getId()));
 				break;
-			    case 4: // Purge Queue
+			    case 4: // Purge queue.
 				m_databaseHelper.purgeNeighborQueue
 				    (String.valueOf(parent.getId()));
 				break;
-			    case 5: // Reset SSL/TLS Credentials
+			    case 5: // Reset SSL/TLS credentials.
 				m_databaseHelper.neighborRecordCertificate
 				    (s_cryptography,
 				     String.valueOf(parent.getId()),

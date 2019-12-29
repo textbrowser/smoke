@@ -46,7 +46,7 @@ public class SipHash
     private long m_v1 = 0;
     private long m_v2 = 0;
     private long m_v3 = 0;
-    public final static int KEY_LENGTH = 16; // Bytes
+    public final static int KEY_LENGTH = 16; // Bytes.
 
     private long byteArrayToLong(byte bytes[], int offset)
     {
