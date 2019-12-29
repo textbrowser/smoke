@@ -1365,7 +1365,8 @@ public class Cryptography
 		    withIterations(iterations).
 		    withMemoryAsKB(32).
 		    withParallelism(4).
-		    withAdditional(Hex.decode("010203040506070809")).
+		    withAdditional
+		    (Hex.decode("0102030405060708090a0b0c0d0e0f")).
 		    withSecret(new String(password).
 			       getBytes(StandardCharsets.UTF_8)).
 		    withSalt(salt);
@@ -1419,7 +1420,8 @@ public class Cryptography
 		    withIterations(iterations).
 		    withMemoryAsKB(64).
 		    withParallelism(4).
-		    withAdditional(Hex.decode("010203040506070809")).
+		    withAdditional
+		    (Hex.decode("0908070605040302010f0e0d0c0b0a")).
 		    withSecret(new String(password).
 			       getBytes(StandardCharsets.UTF_8)).
 		    withSalt(salt);
