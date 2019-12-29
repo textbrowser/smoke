@@ -1898,6 +1898,7 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
+		Spinner spinner1 = null;
 		TextView textView1 = (TextView) findViewById(R.id.password1);
 		TextView textView2 = (TextView) findViewById(R.id.password2);
 
@@ -1922,12 +1923,11 @@ public class Settings extends AppCompatActivity
 		}
 
 		int iterationCount = 1000;
+		int maximum = 7500;
 
 		try
 		{
-		    final Spinner spinner1 = (Spinner) findViewById
-			(R.id.iteration_count);
-
+		    spinner1 = (Spinner) findViewById(R.id.iteration_count);
 		    iterationCount = Integer.parseInt
 			(spinner1.getSelectedItem().toString());
 		}
@@ -1936,7 +1936,14 @@ public class Settings extends AppCompatActivity
 		    iterationCount = 1000;
 		}
 
-		if(iterationCount > 7500)
+		spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
+
+		if(spinner1.getSelectedItem().toString().equals("Argon2id"))
+		    maximum = 25;
+		else
+		    maximum = 7500;
+
+		if(iterationCount > maximum)
 		    Miscellaneous.showPromptDialog
 			(Settings.this,
 			 listener2,
