@@ -1923,7 +1923,7 @@ public class Settings extends AppCompatActivity
 		}
 
 		int iterationCount = 1000;
-		int maximum = 7500;
+		int iterationCountLimit = 7500;
 
 		try
 		{
@@ -1939,11 +1939,11 @@ public class Settings extends AppCompatActivity
 		spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
 
 		if(spinner1.getSelectedItem().toString().equals("Argon2id"))
-		    maximum = 25;
+		    iterationCountLimit = 10;
 		else
-		    maximum = 7500;
+		    iterationCountLimit = 7500;
 
-		if(iterationCount > maximum)
+		if(iterationCount > iterationCountLimit)
 		    Miscellaneous.showPromptDialog
 			(Settings.this,
 			 listener2,
@@ -3065,7 +3065,7 @@ public class Settings extends AppCompatActivity
         spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "5", "10", "25", "50", "100", "250", "500", "750", // Argon2id
+	    "5", "10", "25", "50", // Argon2id
 	    "1000", "2500", "5000", "7500", "10000", "12500",
 	    "15000", "17500", "20000", "25000", "30000", "35000",
 	    "40000", "45000", "50000", "55000", "60000", "65000",
