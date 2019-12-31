@@ -1193,8 +1193,8 @@ public class Cryptography
 	{
 	    try
 	    {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance
-		    ("McElieceFujisaki");
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+		    getInstance("McElieceFujisaki");
 		McElieceCCA2KeyGenParameterSpec parameters = null;
 
 		if(keySize2 == 0 || keySize2 == 1)
@@ -1364,7 +1364,10 @@ public class Cryptography
 		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
 		    withIterations(iterations).
 		    withMemoryAsKB(32).
-		    withParallelism(4).
+		    withParallelism(4). /*
+					** Should depend upon the
+					** number of CPU cores.
+					*/
 		    withAdditional
 		    (Hex.decode("010203040506070809000a0b0c0d0e0f" +
 				"010203040506070809000a0b0c0d0e0f")).
@@ -1389,8 +1392,8 @@ public class Cryptography
 	    {
 		KeySpec keySpec = new PBEKeySpec
 		    (password, salt, iterations, length);
-		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		    ("PBKDF2WithHmacSHA1");
+		SecretKeyFactory secretKeyFactory = SecretKeyFactory.
+		    getInstance("PBKDF2WithHmacSHA1");
 
 		return secretKeyFactory.generateSecret(keySpec);
 	    }
@@ -1420,7 +1423,10 @@ public class Cryptography
 		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
 		    withIterations(iterations).
 		    withMemoryAsKB(64).
-		    withParallelism(4).
+		    withParallelism(4). /*
+					** Should depend upon the
+					** number of CPU cores.
+					*/
 		    withAdditional
 		    (Hex.decode("000908070605040302010f0e0d0c0b0a" +
 				"000908070605040302010f0e0d0c0b0a" +
@@ -1447,8 +1453,8 @@ public class Cryptography
 	    {
 		KeySpec keySpec = new PBEKeySpec
 		    (password, salt, iterations, length);
-		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		    ("PBKDF2WithHmacSHA1");
+		SecretKeyFactory secretKeyFactory = SecretKeyFactory.
+		    getInstance("PBKDF2WithHmacSHA1");
 
 		return secretKeyFactory.generateSecret(keySpec);
 	    }
