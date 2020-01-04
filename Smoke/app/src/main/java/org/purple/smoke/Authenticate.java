@@ -427,6 +427,9 @@ public class Authenticate extends AppCompatActivity
 					case "Settings":
 					    showSettingsActivity();
 					    break;
+					case "Steam":
+					    showSteamActivity();
+					    break;
 					default:
 					    break;
 					}
@@ -516,6 +519,14 @@ public class Authenticate extends AppCompatActivity
     private void showSettingsActivity()
     {
 	Intent intent = new Intent(Authenticate.this, Settings.class);
+
+	startActivity(intent);
+	finish();
+    }
+
+    private void showSteamActivity()
+    {
+	Intent intent = new Intent(Authenticate.this, Steam.class);
 
 	startActivity(intent);
 	finish();
@@ -632,7 +643,7 @@ public class Authenticate extends AppCompatActivity
 	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
-	menu.findItem(R.id.action_steam).setEnabled(false);
+	menu.findItem(R.id.action_steam).setEnabled(isAuthenticated);
 	Miscellaneous.addMembersToMenu(menu, 4, 150);
 	return true;
     }

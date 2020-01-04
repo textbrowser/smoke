@@ -3523,7 +3523,6 @@ public class Settings extends AppCompatActivity
 	    (State.getInstance().isAuthenticated());
 	menu.findItem(R.id.action_fire).setEnabled
 	    (State.getInstance().isAuthenticated());
-	menu.findItem(R.id.action_steam).setEnabled(false);
 	Miscellaneous.addMembersToMenu(menu, 5, 250);
 	return true;
     }
@@ -3641,6 +3640,8 @@ public class Settings extends AppCompatActivity
 	    break;
 	case "MemberChat":
 	    showMemberChatActivity();
+	    break;
+	case "Steam":
 	    break;
 	default:
 	    if(m_databaseHelper.
