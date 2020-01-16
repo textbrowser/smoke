@@ -565,10 +565,20 @@ public class MemberChat extends AppCompatActivity
 	finish();
     }
 
-     @Override
-     protected void onActivityResult(int requestCode,
-				     int resultCode,
-				     Intent data)
+    private void showSteamActivity()
+    {
+	saveState();
+
+	Intent intent = new Intent(MemberChat.this, Steam.class);
+
+	startActivity(intent);
+	finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,
+				    int resultCode,
+				    Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -1314,6 +1324,10 @@ public class MemberChat extends AppCompatActivity
 	    case R.id.action_settings:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
+		return true;
+	    case R.id.action_steam:
+		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+		showSteamActivity();
 		return true;
 	    default:
 		break;

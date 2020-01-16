@@ -2857,6 +2857,14 @@ public class Settings extends AppCompatActivity
 	finish();
     }
 
+    private void showSteamActivity()
+    {
+	Intent intent = new Intent(Settings.this, Steam.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showWidgets()
     {
 	ViewGroup viewGroup = (ViewGroup) findViewById(R.id.linear_layout);
@@ -3476,6 +3484,10 @@ public class Settings extends AppCompatActivity
 	    case R.id.action_fire:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
+		return true;
+	    case R.id.action_steam:
+		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+		showSteamActivity();
 		return true;
 	    default:
 		break;

@@ -546,6 +546,14 @@ public class Fire extends AppCompatActivity
 	finish();
     }
 
+    private void showSteamActivity()
+    {
+	Intent intent = new Intent(Fire.this, Steam.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -652,6 +660,10 @@ public class Fire extends AppCompatActivity
 	    case R.id.action_settings:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
+		return true;
+	    case R.id.action_steam:
+		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+		showSteamActivity();
 		return true;
 	    default:
 		break;

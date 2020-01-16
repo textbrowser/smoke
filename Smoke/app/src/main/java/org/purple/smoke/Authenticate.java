@@ -600,6 +600,10 @@ public class Authenticate extends AppCompatActivity
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
 		return true;
+	    case R.id.action_steam:
+		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+		showSteamActivity();
+		return true;
 	    default:
 		break;
 	    }

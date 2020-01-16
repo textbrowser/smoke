@@ -1465,6 +1465,17 @@ public class Chat extends AppCompatActivity
 		finish();
 		return true;
 	    }
+	    case R.id.action_steam:
+	    {
+		saveState();
+		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+
+		Intent intent = new Intent(Chat.this, Steam.class);
+
+		startActivity(intent);
+		finish();
+		return true;
+	    }
 	    default:
 		break;
 	    }
