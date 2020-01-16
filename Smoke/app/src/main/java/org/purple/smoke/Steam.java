@@ -114,8 +114,6 @@ public class Steam extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
-	m_databaseHelper.cleanDanglingOutboundQueued();
-	m_databaseHelper.cleanDanglingParticipants();
 	m_receiver = new SteamBroadcastReceiver();
         setContentView(R.layout.activity_steam);
 

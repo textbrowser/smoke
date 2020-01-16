@@ -559,8 +559,6 @@ public class Fire extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
-	m_databaseHelper.cleanDanglingOutboundQueued();
-	m_databaseHelper.cleanDanglingParticipants();
 	m_receiver = new FireBroadcastReceiver();
         setContentView(R.layout.activity_fire);
 
