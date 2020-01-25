@@ -2084,7 +2084,7 @@ public class Kernel
 		else if(abyte[0] == Messages.MESSAGE_READ_TYPE[0])
 		{
 		    /*
-		    ** We do not have a timpestamp!
+		    ** We do not have a timestamp!
 		    */
 
 		    PublicKey signatureKey = s_databaseHelper.
