@@ -36,6 +36,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Spinner;
+import java.util.ArrayList;
 
 public class Steam extends AppCompatActivity
 {
@@ -68,10 +70,26 @@ public class Steam extends AppCompatActivity
 	}
     }
 
+    private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+
+    private void populateParticipants()
+    {
+	if(m_participantsSpinner == null)
+	    return;
+
+	ArrayList<ParticipantElement> arrayList = State.getInstance().
+	    participants();
+
+	if(arrayList == null || arrayList.isEmpty())
+	{
+	    m_participantsSpinner.setEnabled(false);
+	    return;
+	}
+    }
 
     private void prepareListeners()
     {
@@ -124,6 +142,9 @@ public class Steam extends AppCompatActivity
 	catch(Exception exception)
 	{
 	}
+
+	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
+	populateParticipants();
     }
 
     @Override
