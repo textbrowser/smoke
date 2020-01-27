@@ -36,6 +36,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import java.util.ArrayList;
 
@@ -89,6 +90,25 @@ public class Steam extends AppCompatActivity
 	    m_participantsSpinner.setEnabled(false);
 	    return;
 	}
+
+	m_participantsSpinner.setAdapter(null);
+
+	ArrayList<String> list = new ArrayList<> ();
+
+	for(ParticipantElement participant : arrayList)
+	    if(participant != null)
+		list.add
+		    (participant.m_name + "(" + participant.m_sipHashId + ")");
+
+	if(!list.isEmpty())
+	{
+	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+		(Steam.this, android.R.layout.simple_spinner_item, list);
+
+	    m_participantsSpinner.setAdapter(arrayAdapter);
+	}
+	else
+	    m_participantsSpinner.setEnabled(false);
     }
 
     private void prepareListeners()
