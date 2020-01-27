@@ -852,7 +852,10 @@ public class MemberChat extends AppCompatActivity
 
 	try
 	{
-	    return m_selectedMessages.getOrDefault(oid, false);
+	    if(m_selectedMessages.containsKey(oid))
+		return m_selectedMessages.get(oid);
+	    else
+		return false;
 	}
 	finally
 	{
