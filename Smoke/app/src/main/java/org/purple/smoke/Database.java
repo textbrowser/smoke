@@ -3901,7 +3901,10 @@ public class Database extends SQLiteOpenHelper
 
 	str = "CREATE TABLE IF NOT EXISTS steam_files (" +
 	    "absolute_filename TEXT NOT NULL, " +
-	    "destination_digest TEXT NOT NULL, " +
+	    "destination TEXT NOT NULL, " +
+	    "file_size TEXT NOT NULL, " +
+	    "is_download INTEGER NOT NULL, " +
+	    "keystream TEXT NOT NULL, " +
 	    "paused INTEGER NOT NULL, " +
 	    "read_offset INTEGER NOT NULL, " +
 	    "sha_1_digest TEXT NOT NULL)";
