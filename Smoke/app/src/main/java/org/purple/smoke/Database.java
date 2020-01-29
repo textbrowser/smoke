@@ -3027,8 +3027,25 @@ public class Database extends SQLiteOpenHelper
     public boolean writeSteam(Cryptography cryptography,
 			      SteamElement steamElement)
     {
-	if(cryptography == null || steamElement == null)
+	if(cryptography == null || m_db == null || steamElement == null)
 	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    m_db.insert("steam", null, values);
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
 
 	return true;
     }
