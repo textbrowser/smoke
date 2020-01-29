@@ -2776,7 +2776,7 @@ public class Kernel
     public void enqueueChatMessage(String message,
 				   String sipHashId,
 				   byte imageBytes[],
-				   byte keystream[])
+				   byte keyStream[])
     {
 	m_messagesToSendMutex.writeLock().lock();
 
@@ -2786,7 +2786,7 @@ public class Kernel
 
 	    messageElement.m_attachment = imageBytes;
 	    messageElement.m_id = sipHashId;
-	    messageElement.m_keyStream = keystream;
+	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = message;
 	    messageElement.m_messageIdentity = Cryptography.randomBytes(64);
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
@@ -2803,14 +2803,14 @@ public class Kernel
 
     public void enqueueFireMessage(String message, String id, String name)
     {
-	byte keystream[] = null;
+	byte keyStream[] = null;
 
 	m_fireStreamsMutex.readLock().lock();
 
 	try
 	{
 	    if(m_fireStreams.containsKey(name))
-		keystream = m_fireStreams.get(name);
+		keyStream = m_fireStreams.get(name);
 	}
 	catch(Exception exception)
 	{
@@ -2820,7 +2820,7 @@ public class Kernel
 	    m_fireStreamsMutex.readLock().unlock();
 	}
 
-	if(keystream == null)
+	if(keyStream == null)
 	    return;
 
 	m_messagesToSendMutex.writeLock().lock();
@@ -2830,7 +2830,7 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_id = id;
-	    messageElement.m_keyStream = keystream;
+	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
@@ -2846,14 +2846,14 @@ public class Kernel
 
     public void enqueueFireStatus(String id, String name)
     {
-	byte keystream[] = null;
+	byte keyStream[] = null;
 
 	m_fireStreamsMutex.readLock().lock();
 
 	try
 	{
 	    if(m_fireStreams.containsKey(name))
-		keystream = m_fireStreams.get(name);
+		keyStream = m_fireStreams.get(name);
 	}
 	catch(Exception exception)
 	{
@@ -2863,7 +2863,7 @@ public class Kernel
 	    m_fireStreamsMutex.readLock().unlock();
 	}
 
-	if(keystream == null)
+	if(keyStream == null)
 	    return;
 
 	m_messagesToSendMutex.writeLock().lock();
@@ -2873,7 +2873,7 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_id = id;
-	    messageElement.m_keyStream = keystream;
+	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_messageType =
 		MessageElement.FIRE_STATUS_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);

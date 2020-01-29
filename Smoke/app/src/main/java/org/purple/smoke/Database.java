@@ -3024,6 +3024,15 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
+    public boolean writeSteam(Cryptography cryptography,
+			      SteamElement steamElement)
+    {
+	if(cryptography == null || steamElement == null)
+	    return false;
+
+	return true;
+    }
+
     public byte[] fireStream(Cryptography cryptography, String name)
     {
 	if(cryptography == null || m_db == null)
