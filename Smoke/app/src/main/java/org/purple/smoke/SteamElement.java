@@ -34,6 +34,7 @@ public class SteamElement
     public String m_sha1Digest = "";
     public boolean m_paused = false;
     public byte m_keyStream[] = null;
+    public byte m_randomBytes[] = null;
     public int m_direction = 0;
     public int m_oid = -1;
     public long m_fileSize = 0;

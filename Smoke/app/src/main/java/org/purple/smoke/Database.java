@@ -3051,7 +3051,16 @@ public class Database extends SQLiteOpenHelper
 	    values.put
 		("keystream",
 		 cryptography.etmBase64String(steamElement.m_keyStream));
-	    m_db.insert("steam", null, values);
+	    values.put("paused", steamElement.m_paused);
+	    values.put
+		("random_bytes", Cryptography.randomBytes(64));
+	    values.put
+		("read_offset",
+		 cryptography.etmBase64String(steamElement.m_readOffset));
+	    values.put
+		("sha_1_digest",
+		 cryptography.etmBase64String(steamElement.m_sha1Digest));
+	    m_db.insertOrThrow("steam", null, values);
 	}
 	catch(Exception exception)
 	{
@@ -3947,6 +3956,7 @@ public class Database extends SQLiteOpenHelper
 	    "is_download INTEGER NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
 	    "paused INTEGER NOT NULL, " +
+	    "random_bytes TEXT NOT NULL PRIMARY KEY, " +
 	    "read_offset INTEGER NOT NULL, " +
 	    "sha_1_digest TEXT NOT NULL)";
 
