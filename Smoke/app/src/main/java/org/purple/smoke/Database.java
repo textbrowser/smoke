@@ -3036,6 +3036,21 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
+	    values.put
+		("absolute_filename",
+		 cryptography.etmBase64String(steamElement.m_fileName));
+	    values.put
+		("destination",
+		 cryptography.etmBase64String(steamElement.m_destination));
+	    values.put
+		("file_size",
+		 cryptography.etmBase64String(steamElement.m_fileSize));
+	    values.put
+		("is_download",
+		 cryptography.etmBase64String(steamElement.m_direction));
+	    values.put
+		("keystream",
+		 cryptography.etmBase64String(steamElement.m_keyStream));
 	    m_db.insert("steam", null, values);
 	}
 	catch(Exception exception)

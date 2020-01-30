@@ -238,6 +238,28 @@ public class Cryptography
 	return "";
     }
 
+    public String etmBase64String(String string)
+    {
+	return Base64.encodeToString(etm(string.getBytes()), Base64.DEFAULT);
+    }
+
+    public String etmBase64String(byte data[])
+    {
+	return Base64.encodeToString(etm(data), Base64.DEFAULT);
+    }
+
+    public String etmBase64String(int value)
+    {
+	return Base64.encodeToString
+	    (etm(String.valueOf(value).getBytes()), Base64.DEFAULT);
+    }
+
+    public String etmBase64String(long value)
+    {
+	return Base64.encodeToString
+	    (etm(String.valueOf(value).getBytes()), Base64.DEFAULT);
+    }
+
     public String fancyKeyInformationOutput(KeyPair keyPair)
     {
 	if(keyPair == null)
