@@ -27,9 +27,13 @@
 
 package org.purple.smoke;
 
+import java.io.File;
+
 public class SteamElement
 {
-    public String m_destination = "";
+    public static int DOWNLOAD = 0;
+    public static int UPLOAD = 1;
+    public int m_destination = DOWNLOAD;
     public String m_fileName = "";
     public String m_sha1Digest = "";
     public boolean m_paused = false;
@@ -42,5 +46,16 @@ public class SteamElement
 
     public SteamElement()
     {
+    }
+
+    public SteamElement(String fileName)
+    {
+	File file = new File(fileName);
+
+	m_destination = UPLOAD;
+	m_fileName = file.getAbsolutePath();
+	m_fileSize = file.length();
+	m_keyStream = Cryptography.randomBytes(96);
+	m_randomBytes = Cryptography.randomBytes(64);
     }
 }

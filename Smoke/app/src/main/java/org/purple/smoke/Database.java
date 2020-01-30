@@ -3053,7 +3053,7 @@ public class Database extends SQLiteOpenHelper
 		 cryptography.etmBase64String(steamElement.m_keyStream));
 	    values.put("paused", steamElement.m_paused);
 	    values.put
-		("random_bytes", Cryptography.randomBytes(64));
+		("random_bytes", steamElement.m_randomBytes);
 	    values.put
 		("read_offset",
 		 cryptography.etmBase64String(steamElement.m_readOffset));
