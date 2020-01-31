@@ -28,6 +28,8 @@
 package org.purple.smoke;
 
 import android.util.Base64;
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -1923,16 +1925,52 @@ public class Cryptography
 	return bytes;
     }
 
+    public static byte[] sha1FileDigest(File file)
+    {
+	FileInputStream fileInputStream = null;
+
+	try
+	{
+	    fileInputStream = new FileInputStream(file);
+
+	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+	    byte buffer[] = new byte[4096];
+	    int n = 0;
+
+	    while(n != -1)
+	    {
+		n = fileInputStream.read(buffer);
+
+		if(n > 0)
+		    messageDigest.update(buffer, 0, n);
+	    }
+
+	    return messageDigest.digest();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    try
+	    {
+		if(fileInputStream != null)
+		    fileInputStream.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	}
+
+	return null;
+    }
+
     public static byte[] sha512(byte[] ... data)
     {
 	byte bytes[] = null;
 
 	try
 	{
-	    /*
-	    ** Thread-safe.
-	    */
-
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
 
 	    for(byte b[] : data)
