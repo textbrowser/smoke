@@ -28,7 +28,6 @@
 package org.purple.smoke;
 
 import android.util.Base64;
-import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -1925,13 +1924,13 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] sha1FileDigest(File file)
+    public static byte[] sha1FileDigest(String fileName)
     {
 	FileInputStream fileInputStream = null;
 
 	try
 	{
-	    fileInputStream = new FileInputStream(file);
+	    fileInputStream = new FileInputStream(fileName);
 
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
 	    byte buffer[] = new byte[4096];
@@ -1939,6 +1938,9 @@ public class Cryptography
 
 	    while(n != -1)
 	    {
+		if(Thread.currentThread().isInterrupted())
+		    return null;
+
 		n = fileInputStream.read(buffer);
 
 		if(n > 0)

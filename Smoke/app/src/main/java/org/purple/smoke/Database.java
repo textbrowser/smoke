@@ -3024,56 +3024,6 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
-    public boolean writeSteam(Cryptography cryptography,
-			      SteamElement steamElement)
-    {
-	if(cryptography == null || m_db == null || steamElement == null)
-	    return false;
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
-	    values.put
-		("absolute_filename",
-		 cryptography.etmBase64String(steamElement.m_fileName));
-	    values.put
-		("destination",
-		 cryptography.etmBase64String(steamElement.m_destination));
-	    values.put
-		("file_size",
-		 cryptography.etmBase64String(steamElement.m_fileSize));
-	    values.put
-		("is_download",
-		 cryptography.etmBase64String(steamElement.m_direction));
-	    values.put
-		("keystream",
-		 cryptography.etmBase64String(steamElement.m_keyStream));
-	    values.put("paused", steamElement.m_paused);
-	    values.put
-		("random_bytes", steamElement.m_randomBytes);
-	    values.put
-		("read_offset",
-		 cryptography.etmBase64String(steamElement.m_readOffset));
-	    values.put
-		("sha_1_digest",
-		 cryptography.etmBase64String(steamElement.m_sha1Digest));
-	    m_db.insertOrThrow("steam", null, values);
-	}
-	catch(Exception exception)
-	{
-	    return false;
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
-
-	return true;
-    }
-
     public byte[] fireStream(Cryptography cryptography, String name)
     {
 	if(cryptography == null || m_db == null)
@@ -4561,5 +4511,77 @@ public class Database extends SQLiteOpenHelper
 	{
 	    m_db.endTransaction();
 	}
+    }
+
+    public void writeSteam(final Cryptography cryptography,
+			   final SteamElement steamElement)
+    {
+	if(cryptography == null || m_db == null || steamElement == null)
+	    return;
+
+	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
+
+		    m_db.beginTransactionNonExclusive();
+
+		    try
+		    {
+			ContentValues values = new ContentValues();
+
+			values.put
+			    ("absolute_filename",
+			     cryptography.
+			     etmBase64String(steamElement.m_fileName));
+			values.put
+			    ("destination",
+			     cryptography.
+			     etmBase64String(steamElement.m_destination));
+			values.put
+			    ("file_size",
+			     cryptography.
+			     etmBase64String(steamElement.m_fileSize));
+			values.put
+			    ("is_download",
+			     cryptography.
+			     etmBase64String(steamElement.m_direction));
+			values.put
+			    ("keystream",
+			     cryptography.
+			     etmBase64String(steamElement.m_keyStream));
+			values.put("paused", steamElement.m_paused);
+			values.put
+			    ("random_bytes", steamElement.m_randomBytes);
+			values.put
+			    ("read_offset",
+			     cryptography.
+			     etmBase64String(steamElement.m_readOffset));
+			values.put
+			    ("sha_1_digest",
+			     cryptography.
+			     etmBase64String(Cryptography.
+					     sha1FileDigest(steamElement.
+							    m_fileName)));
+			m_db.insertOrThrow("steam", null, values);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_db.endTransaction();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, TimeUnit.MILLISECONDS);
     }
 }
