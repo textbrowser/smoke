@@ -115,6 +115,15 @@ public class Steam extends AppCompatActivity
     {
     }
 
+    private void saveSteam()
+    {
+	SteamElement steamElement = null;
+	String fileName = "";
+
+	steamElement = new SteamElement(fileName);
+	m_databaseHelper.writeSteam(s_cryptography, steamElement);
+    }
+
     private void showChatActivity()
     {
 	Intent intent = new Intent(Steam.this, Chat.class);
