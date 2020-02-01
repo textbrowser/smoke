@@ -39,7 +39,7 @@
         </activity>
 	<activity
             android:name=".Steam"
-            android:noHistory="true" />
+            android:noHistory="false" />
 	<service android:enabled="true"
 		 android:exported="false"
 		 android:name=".SmokeService" />

@@ -286,19 +286,6 @@ public class Steam extends AppCompatActivity
     }
 
     @Override
-    public void onPause()
-    {
-	super.onPause();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(this).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -313,6 +300,29 @@ public class Steam extends AppCompatActivity
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	Miscellaneous.addMembersToMenu(menu, 5, 250);
 	return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+	Intent intent = new Intent();
+
+	intent.putExtra("Result", "Done");
+	setResult(RESULT_OK, intent);
+	super.onBackPressed();
+    }
+
+    @Override
+    public void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    LocalBroadcastManager.getInstance(this).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
     }
 
     @Override
