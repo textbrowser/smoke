@@ -36,14 +36,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import java.util.ArrayList;
 
 public class Steam extends AppCompatActivity
 {
-    private Database m_databaseHelper = null;
-
     private class SteamBroadcastReceiver extends BroadcastReceiver
     {
 	public SteamBroadcastReceiver()
@@ -71,11 +72,15 @@ public class Steam extends AppCompatActivity
 	}
     }
 
+    private Button m_attachmentButton = null;
+    private Database m_databaseHelper = null;
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
+    private TextView m_fileName = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static int SELECT_FILE_REQUEST = 0;
 
     private void populateParticipants()
     {
@@ -113,6 +118,16 @@ public class Steam extends AppCompatActivity
 
     private void prepareListeners()
     {
+	m_attachmentButton.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(Steam.this.isFinishing())
+		    return;
+
+		showFileActivity();
+	    }
+	});
     }
 
     private void saveSteam()
@@ -130,6 +145,15 @@ public class Steam extends AppCompatActivity
 
 	startActivity(intent);
 	finish();
+    }
+
+    private void showFileActivity()
+    {
+	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+
+	intent.setType("*/*");
+	intent = Intent.createChooser(intent, "File Selection");
+        startActivityForResult(intent, SELECT_FILE_REQUEST);
     }
 
     private void showFireActivity()
@@ -172,8 +196,32 @@ public class Steam extends AppCompatActivity
 	{
 	}
 
+	m_attachmentButton = (Button) findViewById(R.id.attachment);
+	m_fileName = (TextView) findViewById(R.id.filename);
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
 	populateParticipants();
+	prepareListeners();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,
+				    int resultCode,
+				    Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try
+	{
+	    if(data != null &&
+	       requestCode == SELECT_FILE_REQUEST &&
+	       resultCode == RESULT_OK)
+	    {
+		m_fileName.setText(data.getData().getPath());
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     @Override
