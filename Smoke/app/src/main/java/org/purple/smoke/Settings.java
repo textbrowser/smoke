@@ -3660,6 +3660,7 @@ public class Settings extends AppCompatActivity
 	    showMemberChatActivity();
 	    break;
 	case "Steam":
+	    showSteamActivity();
 	    break;
 	default:
 	    if(m_databaseHelper.
