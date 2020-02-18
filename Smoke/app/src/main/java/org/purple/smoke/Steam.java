@@ -110,22 +110,18 @@ public class Steam extends AppCompatActivity
 		list.add
 		    (participant.m_name + "(" + participant.m_sipHashId + ")");
 
-	if(!list.isEmpty())
-	{
-	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
-		(Steam.this, android.R.layout.simple_spinner_item, list);
+	ArrayAdapter<String> arrayAdapter = null;
 
-	    m_participantsSpinner.setAdapter(arrayAdapter);
-	}
+	if(!list.isEmpty())
+	    arrayAdapter = new ArrayAdapter<>
+		(Steam.this, android.R.layout.simple_spinner_item, list);
 	else
-	{
-	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+	    arrayAdapter = new ArrayAdapter<>
 		(Steam.this,
 		 android.R.layout.simple_spinner_item,
 		 new String[] {"(Empty)"});
 
-	    m_participantsSpinner.setAdapter(arrayAdapter);
-	}
+	m_participantsSpinner.setAdapter(arrayAdapter);
     }
 
     private void prepareListeners()

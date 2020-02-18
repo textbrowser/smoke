@@ -218,7 +218,15 @@ public class Fire extends AppCompatActivity
 	spinner.setAdapter(null);
 
 	if(arrayList == null || arrayList.isEmpty())
+	{
+	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+		(Fire.this,
+		 android.R.layout.simple_spinner_item,
+		 new String[] {"(Empty)"});
+
+	    spinner.setAdapter(arrayAdapter);
 	    return;
+	}
 
 	ArrayList<String> array = new ArrayList<>();
 
@@ -233,10 +241,17 @@ public class Fire extends AppCompatActivity
 
 	ArrayAdapter<?> arrayAdapter = null;
 
-	arrayAdapter = new ArrayAdapter<>
-	    (Fire.this, android.R.layout.simple_spinner_item, array);
-	spinner.setAdapter(arrayAdapter);
+	if(!array.isEmpty())
+	    arrayAdapter = new ArrayAdapter<>
+		(Fire.this, android.R.layout.simple_spinner_item, array);
+	else
+	    arrayAdapter = new ArrayAdapter<>
+		(Fire.this,
+		 android.R.layout.simple_spinner_item,
+		 new String[] {"(Empty)"});
+
 	arrayList.clear();
+	spinner.setAdapter(arrayAdapter);
     }
 
     private void prepareAutoFill()
