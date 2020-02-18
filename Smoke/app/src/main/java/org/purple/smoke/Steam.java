@@ -92,7 +92,12 @@ public class Steam extends AppCompatActivity
 
 	if(arrayList == null || arrayList.isEmpty())
 	{
-	    m_participantsSpinner.setEnabled(false);
+	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+		(Steam.this,
+		 android.R.layout.simple_spinner_item,
+		 new String[] {"(Empty)"});
+
+	    m_participantsSpinner.setAdapter(arrayAdapter);
 	    return;
 	}
 
@@ -113,7 +118,14 @@ public class Steam extends AppCompatActivity
 	    m_participantsSpinner.setAdapter(arrayAdapter);
 	}
 	else
-	    m_participantsSpinner.setEnabled(false);
+	{
+	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+		(Steam.this,
+		 android.R.layout.simple_spinner_item,
+		 new String[] {"(Empty)"});
+
+	    m_participantsSpinner.setAdapter(arrayAdapter);
+	}
     }
 
     private void prepareListeners()
