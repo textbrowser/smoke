@@ -3299,6 +3299,14 @@ public class Database extends SQLiteOpenHelper
 	return count;
     }
 
+    public long countOfSteams()
+    {
+	if(m_db == null)
+	    return -1;
+
+	return 0;
+    }
+
     public static synchronized Database getInstance()
     {
 	return s_instance; // Should never be null.

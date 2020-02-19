@@ -82,6 +82,12 @@ public class Steam extends AppCompatActivity
 	Cryptography.getInstance();
     private final static int SELECT_FILE_REQUEST = 0;
 
+    public abstract class ContextMenuEnumerator
+    {
+	public final static int DELETE_ALL_STEAMS = 0;
+	public final static int DELETE_STEAM = 1;
+    }
+
     private void populateParticipants()
     {
 	if(m_participantsSpinner == null)

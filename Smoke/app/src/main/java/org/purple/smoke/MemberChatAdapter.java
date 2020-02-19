@@ -208,8 +208,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	if(viewHolder == null)
 	    return;
 
-	MemberChatElement memberChatElement =
-	    (s_database.readMemberChat(s_cryptography, m_sipHashId, position));
+	MemberChatElement memberChatElement = s_database.readMemberChat
+	    (s_cryptography, m_sipHashId, position);
 
 	viewHolder.setData(memberChatElement, position);
     }
