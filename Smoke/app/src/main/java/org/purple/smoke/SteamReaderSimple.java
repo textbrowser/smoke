@@ -35,21 +35,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class SteamReader
+public class SteamReaderSimple
 {
     private AtomicBoolean m_completed = null;
     private AtomicBoolean m_paused = null;
     private AtomicBoolean m_read = null;
-    private AtomicInteger m_acknowledgedOffset = null;
     private AtomicInteger m_offset = null;
     private AtomicInteger m_rate = null;
-    private AtomicLong m_lastResponse = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
-    private String m_sipHashId = "";
     private static int PACKET_SIZE = 4096;
     private static long READ_INTERVAL = 250; // 250 Milliseconds
-    private static long RESPONSE_WINDOW = 15000; // 15 Seconds
 
     private void prepareReader()
     {
@@ -65,16 +61,8 @@ public class SteamReader
 
 		    try
 		    {
-			if(m_completed.get() || m_paused.get() || !m_read.get())
-			{
-			    if(m_completed.get() || m_paused.get())
-				return;
-			    else if(System.currentTimeMillis() -
-				    m_lastResponse.get() <= RESPONSE_WINDOW)
-				return;
-			    else
-				m_offset.set(m_acknowledgedOffset.get());
-			}
+			if(m_completed.get() || m_paused.get())
+			    return;
 
 			fileInputStream = new FileInputStream(m_fileName);
 
@@ -90,10 +78,8 @@ public class SteamReader
 			else
 			    m_offset.addAndGet(offset);
 
-			m_read.set(false);
-
 			/*
-			** Send bytes, filename, m_acknowledgedOffset.
+			** Send raw bytes.
 			*/
 		    }
 		    catch(Exception exception)
@@ -115,28 +101,21 @@ public class SteamReader
 	}
     }
 
-    public SteamReader(String fileName, String sipHashId)
+    public SteamReaderSimple(String fileName)
     {
-	m_acknowledgedOffset = new AtomicInteger(0);
 	m_completed = new AtomicBoolean(false);
 	m_fileName = fileName;
-	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_offset = new AtomicInteger(0);
 	m_paused = new AtomicBoolean(false);
 	m_rate = new AtomicInteger(0);
-	m_read = new AtomicBoolean(true);
-	m_sipHashId = sipHashId;
     }
 
     public void cancel()
     {
-	m_acknowledgedOffset.set(0);
 	m_completed.set(true);
-	m_lastResponse.set(0);
 	m_offset.set(0);
 	m_paused.set(true);
 	m_rate.set(0);
-	m_read.set(false);
 
 	if(m_reader != null)
 	{
@@ -160,16 +139,6 @@ public class SteamReader
 	    {
 		m_reader = null;
 	    }
-	}
-    }
-
-    public void setAcknowledgedOffset(int offset)
-    {
-	if(m_acknowledgedOffset.get() == offset)
-	{
-	    m_acknowledgedOffset.set(m_offset.get());
-	    m_lastResponse.set(System.currentTimeMillis());
-	    m_read.set(true);
 	}
     }
 
