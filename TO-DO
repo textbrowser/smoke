@@ -119,6 +119,7 @@ Completed Items
 - New date format: YYYY-MM-DD. ISO 8601.
 - New messages should be at the top of the view; Member Chat.
 - Next (Tab) order; Settings.
+- Non-TLS connections.
 - Non-exclusive database transactions.
 - Notification causes abnormal exit on Android 7.
 - Notify of other member messages in Member Chat.
@@ -133,6 +134,7 @@ Completed Items
   for retrieval.
 - Participant status icon should not be modified if newly-received message is
   from an Ozone.
+- Passthrough devices.
 - Per request, include the source in the application bundle.
 - Periodic key publishing requires more intelligence.
 - Populate Chat member list without accessing the database.
@@ -236,7 +238,6 @@ Remaining Items
 - Drawers.
 - Gallery integration. Zoom.
 - Highlight results of Juggernaut, if possible.
-- Non-TLS connections.
 - Separate Settings:
   Neighbor Servers
   Ozone, Participants

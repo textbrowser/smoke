@@ -2213,6 +2213,7 @@ public class Settings extends AppCompatActivity
 					   int position,
 					   long id)
 		{
+		    CheckBox nonTls = (CheckBox) findViewById(R.id.non_tls);
 		    Spinner proxyType = (Spinner)
 			findViewById(R.id.proxy_type);
 		    TextView proxyIpAddress =
@@ -2229,12 +2230,15 @@ public class Settings extends AppCompatActivity
 			boolean isAuthenticated = State.getInstance().
 			    isAuthenticated();
 
+			nonTls.setEnabled(isAuthenticated);
 			proxyIpAddress.setEnabled(isAuthenticated);
 			proxyPort.setEnabled(isAuthenticated);
 			proxyType.setEnabled(isAuthenticated);
 		    }
 		    else
 		    {
+			nonTls.setChecked(false);
+			nonTls.setEnabled(false);
 			proxyIpAddress.setEnabled(false);
 			proxyIpAddress.setText("");
 			proxyPort.setEnabled(false);
