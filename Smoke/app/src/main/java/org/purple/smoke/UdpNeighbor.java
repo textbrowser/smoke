@@ -203,14 +203,14 @@ public class UdpNeighbor extends Neighbor
 	}
     }
 
-    public UdpNeighbor(String ipAddress,
+    public UdpNeighbor(String passthrough,
+		       String ipAddress,
 		       String ipPort,
 		       String scopeId,
 		       String version,
 		       int oid)
     {
-	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
-
+	super(passthrough, ipAddress, ipPort, scopeId, "UDP", version, oid);
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    private boolean m_error = false;

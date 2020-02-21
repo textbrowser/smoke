@@ -369,7 +369,8 @@ public class Database extends SQLiteOpenHelper
 		 "n.last_error, " +
 		 "n.local_ip_address, " +
 		 "n.local_port, " +
-		 "n.optional_tls, " +
+		 "n.non_tls, " +
+		 "n.passthrough, " +
 		 "n.proxy_ip_address, " +
 		 "n.proxy_port, " +
 		 "n.proxy_type, " +
@@ -487,14 +488,22 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 8:
 			    if(bytes != null)
-				neighborElement.m_optionalTls =
-				    new String(bytes);
+				neighborElement.m_nonTls = new String(bytes);
 			    else
-				neighborElement.m_optionalTls =
+				neighborElement.m_nonTls =
 				    "error (" + oid + ")";
 
 			    break;
 			case 9:
+			    if(bytes != null)
+				neighborElement.m_passthrough =
+				    new String(bytes);
+			    else
+				neighborElement.m_passthrough =
+				    "error (" + oid + ")";
+
+			    break;
+			case 10:
 			    if(bytes != null)
 				neighborElement.m_proxyIpAddress =
 				    new String(bytes);
@@ -503,7 +512,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 10:
+			case 11:
 			    if(bytes != null)
 				neighborElement.m_proxyPort = new String(bytes);
 			    else
@@ -511,7 +520,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 11:
+			case 12:
 			    if(bytes != null)
 				neighborElement.m_proxyType = new String(bytes);
 			    else
@@ -519,31 +528,31 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 12:
+			case 13:
 			    if(bytes != null)
 				neighborElement.m_remoteCertificate = bytes;
 
 			    break;
-			case 13:
-			    if(bytes != null)
-				neighborElement.m_remoteIpAddress =
-				    new String(bytes);
-			    else
-				neighborElement.m_remoteIpAddress =
-				    "error (" + oid + ")";
-
-			    break;
 			case 14:
 			    if(bytes != null)
-				neighborElement.m_remotePort =
+				neighborElement.m_remoteIpAddress =
 				    new String(bytes);
 			    else
-				neighborElement.m_remotePort =
+				neighborElement.m_remoteIpAddress =
 				    "error (" + oid + ")";
 
 			    break;
 			case 15:
 			    if(bytes != null)
+				neighborElement.m_remotePort =
+				    new String(bytes);
+			    else
+				neighborElement.m_remotePort =
+				    "error (" + oid + ")";
+
+			    break;
+			case 16:
+			    if(bytes != null)
 				neighborElement.m_remoteScopeId =
 				    new String(bytes);
 			    else
@@ -551,7 +560,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 16:
+			case 17:
 			    if(bytes != null)
 				neighborElement.m_sessionCipher =
 				    new String(bytes);
@@ -560,7 +569,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 17:
+			case 18:
 			    if(bytes != null)
 				neighborElement.m_status = new String(bytes);
 			    else
@@ -568,7 +577,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 18:
+			case 19:
 			    if(bytes != null)
 				neighborElement.m_statusControl =
 				    new String(bytes);
@@ -577,7 +586,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 19:
+			case 20:
 			    if(bytes != null)
 				neighborElement.m_transport = new String(bytes);
 			    else
@@ -585,7 +594,7 @@ public class Database extends SQLiteOpenHelper
 				    "error (" + oid + ")";
 
 			    break;
-			case 20:
+			case 21:
 			    if(bytes != null)
 				neighborElement.m_uptime = new String(bytes);
 			    else
@@ -2640,7 +2649,8 @@ public class Database extends SQLiteOpenHelper
     }
 
     public boolean writeNeighbor(Cryptography cryptography,
-				 String optionalTls,
+				 String nonTls,
+				 String passthrough,
 				 String proxyIpAddress,
 				 String proxyPort,
 				 String proxyType,
@@ -2686,23 +2696,24 @@ public class Database extends SQLiteOpenHelper
 	    sparseArray.append(6, "local_ip_address_digest");
 	    sparseArray.append(7, "local_port");
 	    sparseArray.append(8, "local_port_digest");
-	    sparseArray.append(9, "optional_tls");
-	    sparseArray.append(10, "proxy_ip_address");
-	    sparseArray.append(11, "proxy_port");
-	    sparseArray.append(12, "proxy_type");
-	    sparseArray.append(13, "remote_certificate");
-	    sparseArray.append(14, "remote_ip_address");
-	    sparseArray.append(15, "remote_ip_address_digest");
-	    sparseArray.append(16, "remote_port");
-            sparseArray.append(17, "remote_port_digest");
-            sparseArray.append(18, "remote_scope_id");
-            sparseArray.append(19, "session_cipher");
-            sparseArray.append(20, "status");
-            sparseArray.append(21, "status_control");
-            sparseArray.append(22, "transport");
-            sparseArray.append(23, "transport_digest");
-            sparseArray.append(24, "uptime");
-            sparseArray.append(25, "user_defined_digest");
+	    sparseArray.append(9, "non_tls");
+	    sparseArray.append(10, "passthrough");
+	    sparseArray.append(11, "proxy_ip_address");
+	    sparseArray.append(12, "proxy_port");
+	    sparseArray.append(13, "proxy_type");
+	    sparseArray.append(14, "remote_certificate");
+	    sparseArray.append(15, "remote_ip_address");
+	    sparseArray.append(16, "remote_ip_address_digest");
+	    sparseArray.append(17, "remote_port");
+            sparseArray.append(18, "remote_port_digest");
+            sparseArray.append(19, "remote_scope_id");
+            sparseArray.append(20, "session_cipher");
+            sparseArray.append(21, "status");
+            sparseArray.append(22, "status_control");
+            sparseArray.append(23, "transport");
+            sparseArray.append(24, "transport_digest");
+            sparseArray.append(25, "uptime");
+            sparseArray.append(26, "user_defined_digest");
 
 	    /*
 	    ** Proxy information.
@@ -2760,8 +2771,11 @@ public class Database extends SQLiteOpenHelper
 		case "local_port_digest":
 		    bytes = cryptography.hmac("".getBytes());
 		    break;
-		case "optional_tls":
-		    bytes = cryptography.hmac(optionalTls.getBytes());
+		case "non_tls":
+		    bytes = cryptography.etm(nonTls.getBytes());
+		    break;
+		case "passthrough":
+		    bytes = cryptography.etm(passthrough.getBytes());
 		    break;
 		case "proxy_ip_address":
 		    bytes = cryptography.etm(proxyIpAddress.getBytes());
@@ -3771,7 +3785,8 @@ public class Database extends SQLiteOpenHelper
 	    "local_ip_address_digest TEXT NOT NULL, " +
 	    "local_port TEXT NOT NULL, " +
 	    "local_port_digest TEXT NOT NULL, " +
-	    "optional_tls TEXT NOT NULL, " +
+	    "non_tls TEXT NOT NULL, " +
+	    "passthrough TEXT NOT NULL, " +
 	    "proxy_ip_address TEXT NOT NULL, " +
 	    "proxy_port TEXT NOT NULL, " +
 	    "proxy_type TEXT NOT NULL, " +

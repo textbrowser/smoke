@@ -249,10 +249,16 @@
                     android:text="@string/initialize_ozone" />
 
                 <CheckBox
-                    android:id="@+id/optional_tls"
+                    android:id="@+id/non_tls"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/optional_tls" />
+                    android:text="@string/non_tls" />
+
+                <CheckBox
+                    android:id="@+id/passthrough"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/passthrough" />
 
                 <EditText
                     android:id="@+id/proxy_ip_address"

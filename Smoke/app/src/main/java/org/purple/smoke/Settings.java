@@ -277,7 +277,8 @@ public class Settings extends AppCompatActivity
     {
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 	CheckBox checkBox2 = (CheckBox) findViewById(R.id.initialize_ozone);
-	CheckBox checkBox3 = (CheckBox) findViewById(R.id.optional_tls);
+	CheckBox checkBox3 = (CheckBox) findViewById(R.id.non_tls);
+	CheckBox checkBox4 = (CheckBox) findViewById(R.id.passthrough);
 	RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
@@ -301,6 +302,7 @@ public class Settings extends AppCompatActivity
 	else if(!m_databaseHelper.
 		writeNeighbor(s_cryptography,
 			      checkBox3.isChecked() ? "true" : "false",
+			      checkBox4.isChecked() ? "true" : "false",
 			      proxyIpAddress.getText().toString(),
 			      proxyPort.getText().toString(),
 			      spinner2.getSelectedItem().
@@ -1039,6 +1041,8 @@ public class Settings extends AppCompatActivity
 		stringBuilder.append(neighborElement.m_localPort);
 	    }
 
+	    stringBuilder.append("\nPassthrough: ");
+	    stringBuilder.append(neighborElement.m_passthrough);
 	    stringBuilder.append("\nProxy: ");
 
 	    if(!neighborElement.m_proxyIpAddress.isEmpty() &&
@@ -1543,6 +1547,7 @@ public class Settings extends AppCompatActivity
 			    m_databaseHelper.writeNeighbor
 				(s_cryptography,
 				 "false",
+				 "false",
 				 "",
 				 "",
 				 "HTTP",
@@ -1758,8 +1763,8 @@ public class Settings extends AppCompatActivity
 
 		CheckBox checkBox1 = (CheckBox) findViewById
 		    (R.id.initialize_ozone);
-		CheckBox checkBox2 = (CheckBox) findViewById
-		    (R.id.optional_tls);
+		CheckBox checkBox2 = (CheckBox) findViewById(R.id.non_tls);
+		CheckBox checkBox3 = (CheckBox) findViewById(R.id.passthrough);
 		RadioButton radioButton1 = (RadioButton) findViewById
 		    (R.id.neighbors_ipv4);
 		Spinner spinner1 = (Spinner) findViewById
@@ -1779,6 +1784,7 @@ public class Settings extends AppCompatActivity
 
 		checkBox1.setChecked(false);
 		checkBox2.setChecked(false);
+		checkBox3.setChecked(false);
 		proxyIpAddress.setText("");
 		proxyPort.setText("");
 		radioButton1.setChecked(true);

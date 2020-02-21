@@ -196,14 +196,14 @@ public class UdpMulticastNeighbor extends Neighbor
 	}
     }
 
-    public UdpMulticastNeighbor(String ipAddress,
+    public UdpMulticastNeighbor(String passthrough,
+				String ipAddress,
 				String ipPort,
 				String scopeId,
 				String version,
 				int oid)
     {
-	super(ipAddress, ipPort, scopeId, "UDP", version, oid);
-
+	super(passthrough, ipAddress, ipPort, scopeId, "UDP", version, oid);
 	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    private boolean m_error = false;

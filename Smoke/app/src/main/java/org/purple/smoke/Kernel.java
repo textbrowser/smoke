@@ -216,16 +216,30 @@ public class Kernel
 	    Neighbor neighbor = null;
 
 	    if(neighborElement.m_transport.equals("TCP"))
-		neighbor = new TcpNeighbor
-		    (neighborElement.m_optionalTls,
-		     neighborElement.m_proxyIpAddress,
-		     neighborElement.m_proxyPort,
-		     neighborElement.m_proxyType,
-		     neighborElement.m_remoteIpAddress,
-		     neighborElement.m_remotePort,
-		     neighborElement.m_remoteScopeId,
-		     neighborElement.m_ipVersion,
-		     neighborElement.m_oid);
+	    {
+		if(neighborElement.m_nonTls.equals("true"))
+		    neighbor = new TcpNeighbor
+			(neighborElement.m_passthrough,
+			 neighborElement.m_proxyIpAddress,
+			 neighborElement.m_proxyPort,
+			 neighborElement.m_proxyType,
+			 neighborElement.m_remoteIpAddress,
+			 neighborElement.m_remotePort,
+			 neighborElement.m_remoteScopeId,
+			 neighborElement.m_ipVersion,
+			 neighborElement.m_oid);
+		else
+		    neighbor = new TcpTlsNeighbor
+			(neighborElement.m_passthrough,
+			 neighborElement.m_proxyIpAddress,
+			 neighborElement.m_proxyPort,
+			 neighborElement.m_proxyType,
+			 neighborElement.m_remoteIpAddress,
+			 neighborElement.m_remotePort,
+			 neighborElement.m_remoteScopeId,
+			 neighborElement.m_ipVersion,
+			 neighborElement.m_oid);
+	    }
 	    else if(neighborElement.m_transport.equals("UDP"))
 	    {
 		try
@@ -235,14 +249,16 @@ public class Kernel
 
 		    if(inetAddress.isMulticastAddress())
 			neighbor = new UdpMulticastNeighbor
-			    (neighborElement.m_remoteIpAddress,
+			    (neighborElement.m_passthrough,
+			     neighborElement.m_remoteIpAddress,
 			     neighborElement.m_remotePort,
 			     neighborElement.m_remoteScopeId,
 			     neighborElement.m_ipVersion,
 			     neighborElement.m_oid);
 		    else
 			neighbor = new UdpNeighbor
-			    (neighborElement.m_remoteIpAddress,
+			    (neighborElement.m_passthrough,
+			     neighborElement.m_remoteIpAddress,
 			     neighborElement.m_remotePort,
 			     neighborElement.m_remoteScopeId,
 			     neighborElement.m_ipVersion,
@@ -1106,7 +1122,8 @@ public class Kernel
 		int j = m_neighbors.keyAt(i);
 
 		if(m_neighbors.get(j) != null)
-		    m_neighbors.get(j).scheduleSend(message);
+		    if(!m_neighbors.get(j).passthrough())
+			m_neighbors.get(j).scheduleSend(message);
 	    }
 	}
 	catch(Exception exception)
@@ -2732,7 +2749,8 @@ public class Kernel
 		int j = m_neighbors.keyAt(i);
 
 		if(m_neighbors.get(j) != null &&
-		   m_neighbors.get(j).getOid() != oid)
+		   m_neighbors.get(j).getOid() != oid &&
+		   !m_neighbors.get(j).passthrough())
 		    m_neighbors.get(j).scheduleEchoSend(message);
 	    }
 	}
@@ -2761,7 +2779,8 @@ public class Kernel
 		int j = m_neighbors.keyAt(i);
 
 		if(m_neighbors.get(j) != null &&
-		   m_neighbors.get(j).getOid() != oid)
+		   m_neighbors.get(j).getOid() != oid &&
+		   !m_neighbors.get(j).passthrough())
 		    m_neighbors.get(j).scheduleEchoSend(message);
 	    }
 	}

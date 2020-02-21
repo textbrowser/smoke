@@ -47,6 +47,7 @@ public abstract class Neighbor
     private ArrayList<String> m_echoQueue = null;
     private ArrayList<String> m_queue = null;
     private AtomicBoolean m_capabilitiesSent = null;
+    private AtomicBoolean m_passthrough = null;
     private UUID m_uuid = null;
     private final Object m_echoQueueMutex = new Object();
     private final Object m_queueMutex = new Object();
@@ -94,6 +95,7 @@ public abstract class Neighbor
 	String localIp = getLocalIp();
 	String localPort = String.valueOf(getLocalPort());
 	String sessionCiper = getSessionCipher();
+	String status = "connecting";
 	boolean connected = connected();
 	long uptime = System.nanoTime() - m_startTime.get();
 
@@ -107,6 +109,16 @@ public abstract class Neighbor
 	    error = m_error.toString();
 	}
 
+	if(connected)
+	{
+	    if(m_passthrough.get())
+		status = "connected";
+	    else if(m_bytesRead.get() > 0 && m_bytesWritten.get() > 0)
+		status = "connected";
+	}
+	else
+	    status = "disconnected";
+
 	m_databaseHelper.saveNeighborInformation
 	    (m_cryptography,
 	     String.valueOf(m_bytesRead.get()),
@@ -116,20 +128,22 @@ public abstract class Neighbor
 	     localIp,
 	     localPort,
 	     sessionCiper,
-	     connected ? (m_bytesRead.get() > 0 &&
-			  m_bytesWritten.get() > 0 ?
-			  "connected" : "connecting") : "disconnected",
+	     status,
 	     String.valueOf(uptime),
 	     String.valueOf(m_oid.get()));
     }
 
     private void terminateOnSilence()
     {
+	if(m_passthrough.get())
+	    return;
+
 	if((System.nanoTime() - m_lastTimeRead.get()) / 1000000 > SILENCE)
 	    disconnect();
     }
 
-    protected Neighbor(String ipAddress,
+    protected Neighbor(String passthrough,
+		       String ipAddress,
 		       String ipPort,
 		       String scopeId,
 		       String transport,
@@ -148,6 +162,7 @@ public abstract class Neighbor
 	m_lastParsed = new AtomicLong(System.currentTimeMillis());
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
+	m_passthrough = new AtomicBoolean(passthrough.equals("true"));
 	m_queue = new ArrayList<> ();
 	m_startTime = new AtomicLong(System.nanoTime());
 	m_uuid = UUID.randomUUID();
@@ -292,10 +307,13 @@ public abstract class Neighbor
 
 			m_accumulatedTime = System.nanoTime();
 
-			if(!m_capabilitiesSent.get())
-			    m_capabilitiesSent.set(send(getCapabilities()));
+			if(!m_passthrough.get())
+			{
+			    if(!m_capabilitiesSent.get())
+				m_capabilitiesSent.set(send(getCapabilities()));
 
-			send(getIdentities());
+			    send(getIdentities());
+			}
 		    }
 
 		    /*
@@ -396,6 +414,9 @@ public abstract class Neighbor
 
     protected String getCapabilities()
     {
+	if(m_passthrough.get())
+	    return "";
+
 	try
 	{
 	    StringBuilder message = new StringBuilder();
@@ -436,6 +457,9 @@ public abstract class Neighbor
 
     protected String getIdentities()
     {
+	if(m_passthrough.get())
+	    return "";
+
 	try
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
@@ -602,6 +626,11 @@ public abstract class Neighbor
 	}
     }
 
+    public boolean passthrough()
+    {
+	return m_passthrough.get();
+    }
+
     public int getOid()
     {
 	return m_oid.get();
@@ -625,7 +654,10 @@ public abstract class Neighbor
 
     public void scheduleEchoSend(String message)
     {
-	if(!connected() || message == null)
+	if(!connected() ||
+	   m_passthrough.get() ||
+	   message == null ||
+	   message.trim().isEmpty())
 	    return;
 
 	synchronized(m_echoQueueMutex)
@@ -637,7 +669,10 @@ public abstract class Neighbor
 
     public void scheduleSend(String message)
     {
-	if(!connected() || message == null)
+	if(!connected() ||
+	   m_passthrough.get() ||
+	   message == null ||
+	   message.trim().isEmpty())
 	    return;
 
 	synchronized(m_queueMutex)
