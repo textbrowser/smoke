@@ -101,7 +101,7 @@ public class Steam extends AppCompatActivity
 	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
 		(Steam.this,
 		 android.R.layout.simple_spinner_item,
-		 new String[] {"(Empty)"});
+		 new String[] {"Other (Non-Smoke)"});
 
 	    m_participantsSpinner.setAdapter(arrayAdapter);
 	    return;
@@ -111,21 +111,15 @@ public class Steam extends AppCompatActivity
 
 	ArrayList<String> list = new ArrayList<> ();
 
+	list.add("Other (Non-Smoke)");
+
 	for(ParticipantElement participant : arrayList)
 	    if(participant != null)
 		list.add
 		    (participant.m_name + "(" + participant.m_sipHashId + ")");
 
-	ArrayAdapter<String> arrayAdapter = null;
-
-	if(!list.isEmpty())
-	    arrayAdapter = new ArrayAdapter<>
-		(Steam.this, android.R.layout.simple_spinner_item, list);
-	else
-	    arrayAdapter = new ArrayAdapter<>
-		(Steam.this,
-		 android.R.layout.simple_spinner_item,
-		 new String[] {"(Empty)"});
+	ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+	    (Steam.this, android.R.layout.simple_spinner_item, list);
 
 	m_participantsSpinner.setAdapter(arrayAdapter);
     }

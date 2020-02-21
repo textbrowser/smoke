@@ -225,6 +225,7 @@ Future Items
 - NTRU via BouncyCastle.
 - Names or PINs alongside SipHashes. The extra bits will increase the
   possibilities.
+- Optional cryptographic discovery.
 - Replace Chat member view with a recycler view.
 - Resolve DNS through a proxy if a proxy is defined.
 - Themes, of course.
@@ -235,7 +236,6 @@ Remaining Items
 - Drawers.
 - Gallery integration. Zoom.
 - Highlight results of Juggernaut, if possible.
-- Optional cryptographic discovery.
 - Separate Settings:
   Neighbor Servers
   Ozone, Participants
