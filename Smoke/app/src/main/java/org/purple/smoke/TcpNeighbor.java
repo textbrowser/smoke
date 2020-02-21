@@ -45,6 +45,7 @@ import javax.net.ssl.X509TrustManager;
 
 public class TcpNeighbor extends Neighbor
 {
+    private AtomicBoolean m_isOptionalTls = null;
     private AtomicBoolean m_isValidCertificate = null;
     private InetSocketAddress m_proxyInetSocketAddress = null;
     private SSLSocket m_socket = null;
@@ -277,7 +278,8 @@ public class TcpNeighbor extends Neighbor
 	}
     }
 
-    public TcpNeighbor(String proxyIpAddress,
+    public TcpNeighbor(String optionalTls,
+		       String proxyIpAddress,
 		       String proxyPort,
 		       String proxyType,
 		       String ipAddress,
@@ -287,6 +289,7 @@ public class TcpNeighbor extends Neighbor
 		       int oid)
     {
 	super(ipAddress, ipPort, scopeId, "TCP", version, oid);
+	m_isOptionalTls = new AtomicBoolean(optionalTls.equals("true"));
 	m_isValidCertificate = new AtomicBoolean(false);
 
 	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)

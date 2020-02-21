@@ -71,4 +71,5 @@
     <string name="exit">Exit</string>
     <string name="steam">Steam</string>
     <string name="key_derivation_function">Key Derivation Function</string>
+    <string name="optional_tls">Optional TLS</string>
 </resources>

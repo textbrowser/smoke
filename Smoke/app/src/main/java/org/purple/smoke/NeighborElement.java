@@ -36,6 +36,7 @@ public class NeighborElement
     public String m_ipVersion = "";
     public String m_localIpAddress = "";
     public String m_localPort = "";
+    public String m_optionalTls = "";
     public String m_proxyIpAddress = "";
     public String m_proxyPort = "";
     public String m_proxyType = "";

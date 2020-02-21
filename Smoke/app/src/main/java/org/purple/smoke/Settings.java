@@ -277,6 +277,7 @@ public class Settings extends AppCompatActivity
     {
 	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 	CheckBox checkBox2 = (CheckBox) findViewById(R.id.initialize_ozone);
+	CheckBox checkBox3 = (CheckBox) findViewById(R.id.optional_tls);
 	RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
@@ -299,6 +300,7 @@ public class Settings extends AppCompatActivity
 		(Settings.this, "Please complete the IP Address field.");
 	else if(!m_databaseHelper.
 		writeNeighbor(s_cryptography,
+			      checkBox3.isChecked() ? "true" : "false",
 			      proxyIpAddress.getText().toString(),
 			      proxyPort.getText().toString(),
 			      spinner2.getSelectedItem().
@@ -1540,6 +1542,7 @@ public class Settings extends AppCompatActivity
 			    textView2.setText("");
 			    m_databaseHelper.writeNeighbor
 				(s_cryptography,
+				 "false",
 				 "",
 				 "",
 				 "HTTP",
@@ -1753,8 +1756,10 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
-		CheckBox checkbox1 = (CheckBox) findViewById
+		CheckBox checkBox1 = (CheckBox) findViewById
 		    (R.id.initialize_ozone);
+		CheckBox checkBox2 = (CheckBox) findViewById
+		    (R.id.optional_tls);
 		RadioButton radioButton1 = (RadioButton) findViewById
 		    (R.id.neighbors_ipv4);
 		Spinner spinner1 = (Spinner) findViewById
@@ -1772,7 +1777,8 @@ public class Settings extends AppCompatActivity
 		TextView textView3 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
-		checkbox1.setChecked(false);
+		checkBox1.setChecked(false);
+		checkBox2.setChecked(false);
 		proxyIpAddress.setText("");
 		proxyPort.setText("");
 		radioButton1.setChecked(true);
