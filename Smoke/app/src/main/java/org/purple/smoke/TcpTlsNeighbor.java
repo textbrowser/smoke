@@ -308,7 +308,8 @@ public class TcpTlsNeighbor extends Neighbor
 
 	m_proxyType = proxyType;
 
-	if(!m_proxyIpAddress.isEmpty() && m_proxyPort != -1 &&
+	if(!m_proxyIpAddress.isEmpty() &&
+	   m_proxyPort != -1 &&
 	   !m_proxyType.isEmpty())
 	    try
 	    {
