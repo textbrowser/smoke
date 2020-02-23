@@ -62,9 +62,9 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class Miscellaneous
 {
-    public static int INTEGER_BYTES = 4;
-    public static int LONG_BYTES = 8;
-    public static long LONG_LONG_BYTES = 8;
+    public static final int INTEGER_BYTES = 4;
+    public static final int LONG_BYTES = 8;
+    public static final long LONG_LONG_BYTES = 8;
 
     public static String byteArrayAsHexString(byte bytes[])
     {
