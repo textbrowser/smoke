@@ -3334,7 +3334,27 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return -1;
 
-	return 0;
+	Cursor cursor = null;
+	long count = 0;
+
+	try
+	{
+	    cursor = m_db.rawQuery("SELECT COUNT(*) FROM steam_files", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+		count = cursor.getLong(0);
+	}
+	catch(Exception exception)
+	{
+	    count = -1;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return count;
     }
 
     public static synchronized Database getInstance()
@@ -4608,7 +4628,7 @@ public class Database extends SQLiteOpenHelper
 			     etmBase64String(Cryptography.
 					     sha1FileDigest(steamElement.
 							    m_fileName)));
-			m_db.insertOrThrow("steam", null, values);
+			m_db.insertOrThrow("steam_files", null, values);
 		    }
 		    catch(Exception exception)
 		    {
