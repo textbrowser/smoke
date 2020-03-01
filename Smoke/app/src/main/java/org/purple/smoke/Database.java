@@ -466,7 +466,8 @@ public class Database extends SQLiteOpenHelper
 			    if(bytes != null)
 				neighborElement.m_error = new String(bytes);
 			    else
-				neighborElement.m_error = "error (" + oid + ")";
+				neighborElement.m_error =
+				    "error (" + oid + ")";
 
 			    break;
 			case 6:
@@ -1587,7 +1588,83 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || m_db == null)
 	    return null;
 
+	Cursor cursor = null;
 	SteamElement steamElement = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT absolute_filename, " + // 0
+		 "destination, " +              // 1
+		 "file_size, " +                // 2
+		 "is_download, " +              // 3
+		 "paused, " +                   // 4
+		 "read_offset, " +              // 5
+		 "sha_1_digest, " +             // 6
+		 "oid " +                       // 7
+		 "FROM steam_files", null);
+
+	    if(cursor != null && cursor.moveToPosition(position))
+	    {
+		steamElement = new SteamElement();
+
+		int count = cursor.getColumnCount();
+		int oid = cursor.getInt(count - 1);
+
+		for(int i = 0; i < count; i++)
+		{
+		    if(i == count - 1)
+		    {
+			steamElement.m_oid = cursor.getInt(i);
+			continue;
+		    }
+
+		    byte bytes[] = cryptography.mtd
+			(Base64.decode(cursor.getString(i).getBytes(),
+				       Base64.DEFAULT));
+
+		    if(bytes == null)
+		    {
+			StringBuilder stringBuilder = new StringBuilder();
+
+			stringBuilder.append("Database::readSteam(): ");
+			stringBuilder.append("error on column ");
+			stringBuilder.append(cursor.getColumnName(i));
+			stringBuilder.append(".");
+			writeLog(stringBuilder.toString());
+		    }
+
+		    switch(i)
+		    {
+		    case 0:
+			if(bytes != null)
+			    steamElement.m_fileName = new String(bytes);
+			else
+			    steamElement.m_fileName = "error (" + oid + ")";
+
+			break;
+		    case 1:
+			if(bytes != null)
+			    steamElement.m_destination = new String(bytes);
+			else
+			    steamElement.m_destination = "error (" + oid + ")";
+
+			break;
+		    default:
+			break;
+		    }
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    steamElement = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
 
 	return steamElement;
     }

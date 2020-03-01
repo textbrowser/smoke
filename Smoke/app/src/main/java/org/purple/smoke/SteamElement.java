@@ -33,13 +33,13 @@ public class SteamElement
 {
     public static int DOWNLOAD = 0;
     public static int UPLOAD = 1;
-    public int m_destination = DOWNLOAD;
+    public String m_destination = "";
     public String m_fileName = "";
     public String m_sha1Digest = "";
     public boolean m_paused = false;
     public byte m_keyStream[] = null;
     public byte m_randomBytes[] = null;
-    public int m_direction = 0;
+    public int m_direction = DOWNLOAD;
     public int m_oid = -1;
     public long m_fileSize = 0;
     public long m_readOffset = 0;
@@ -52,7 +52,7 @@ public class SteamElement
     {
 	File file = new File(fileName);
 
-	m_destination = UPLOAD;
+	m_direction = UPLOAD;
 	m_fileName = file.getAbsolutePath();
 	m_fileSize = file.length();
 	m_keyStream = Cryptography.randomBytes(96);
