@@ -1582,6 +1582,16 @@ public class Database extends SQLiteOpenHelper
 	return sipHashIdElement;
     }
 
+    public SteamElement readSteam(Cryptography cryptography, int position)
+    {
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	SteamElement steamElement = null;
+
+	return steamElement;
+    }
+
     public String nameFromSipHashId(Cryptography cryptography,
 				    String sipHashId)
     {

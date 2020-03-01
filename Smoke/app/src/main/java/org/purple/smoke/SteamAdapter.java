@@ -118,7 +118,8 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	if(viewHolder == null)
 	    return;
 
-	SteamElement steamElement = null;
+	SteamElement steamElement = s_database.readSteam
+	    (s_cryptography, position);
 
 	viewHolder.setData(steamElement, position);
     }
