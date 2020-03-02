@@ -1650,6 +1650,34 @@ public class Database extends SQLiteOpenHelper
 			    steamElement.m_destination = "error (" + oid + ")";
 
 			break;
+		    case 2:
+			if(bytes != null)
+			{
+			    try
+			    {
+				steamElement.m_fileSize = Integer.parseInt
+				    (new String(bytes));
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+			}
+
+			break;
+		    case 3:
+			if(bytes != null)
+			{
+			    try
+			    {
+				steamElement.m_direction = Integer.parseInt
+				    (new String(bytes));
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+			}
+
+			break;
 		    default:
 			break;
 		    }
