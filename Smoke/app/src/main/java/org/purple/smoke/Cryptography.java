@@ -244,6 +244,12 @@ public class Cryptography
 	return Base64.encodeToString(etm(string.getBytes()), Base64.DEFAULT);
     }
 
+    public String etmBase64String(boolean state)
+    {
+	return Base64.encodeToString
+	    (etm(String.valueOf(state).getBytes()), Base64.DEFAULT);
+    }
+
     public String etmBase64String(byte data[])
     {
 	return Base64.encodeToString(etm(data), Base64.DEFAULT);
