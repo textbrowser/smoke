@@ -273,7 +273,9 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT status_control, oid FROM neighbors", null);
+		("SELECT passthrough, " +
+		 "status_control, " +
+		 "oid FROM neighbors", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -315,6 +317,9 @@ public class Database extends SQLiteOpenHelper
 			switch(i)
 			{
 			case 0:
+			    neighborElement.m_passthrough = new String(bytes);
+			    break;
+			case 1:
 			    neighborElement.m_statusControl = new String(bytes);
 			    break;
 			default:

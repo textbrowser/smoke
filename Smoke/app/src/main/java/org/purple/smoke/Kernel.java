@@ -1310,6 +1310,7 @@ public class Kernel
 
 	for(int i = 0; i < size; i++)
 	    if(arrayList.get(i) != null &&
+	       arrayList.get(i).m_passthrough.toLowerCase().equals("false") &&
 	       arrayList.get(i).m_statusControl.toLowerCase().equals("connect"))
 		s_databaseHelper.enqueueOutboundMessage
 		    (s_cryptography,
