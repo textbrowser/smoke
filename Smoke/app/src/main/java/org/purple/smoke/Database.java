@@ -1692,6 +1692,27 @@ public class Database extends SQLiteOpenHelper
 			}
 
 			break;
+		    case 5:
+			if(bytes != null)
+			{
+			    try
+			    {
+				steamElement.m_readOffset = Integer.parseInt
+				    (new String(bytes));
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+			}
+
+			break;
+		    case 6:
+			if(bytes != null)
+			    steamElement.m_sha1Digest = new String(bytes);
+			else
+			    steamElement.m_sha1Digest = "error (" + oid + ")";
+
+			break;
 		    default:
 			break;
 		    }
