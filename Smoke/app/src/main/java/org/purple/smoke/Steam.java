@@ -73,6 +73,7 @@ public class Steam extends AppCompatActivity
     }
 
     private Button m_attachmentButton = null;
+    private Button m_sendButton = null;
     private Database m_databaseHelper = null;
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
@@ -134,6 +135,15 @@ public class Steam extends AppCompatActivity
 		    return;
 
 		showFileActivity();
+	    }
+	});
+
+	m_sendButton.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(Steam.this.isFinishing())
+		    return;
 	    }
 	});
     }
@@ -207,6 +217,7 @@ public class Steam extends AppCompatActivity
 	m_attachmentButton = (Button) findViewById(R.id.attachment);
 	m_fileName = (TextView) findViewById(R.id.filename);
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
+	m_sendButton = (Button) findViewById(R.id.send);
 	populateParticipants();
 	prepareListeners();
     }
