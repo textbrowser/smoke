@@ -252,7 +252,10 @@ public class Cryptography
 
     public String etmBase64String(byte data[])
     {
-	return Base64.encodeToString(etm(data), Base64.DEFAULT);
+	if(data == null)
+	    return Base64.encodeToString(etm("".getBytes()), Base64.DEFAULT);
+	else
+	    return Base64.encodeToString(etm(data), Base64.DEFAULT);
     }
 
     public String etmBase64String(int value)

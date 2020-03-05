@@ -203,7 +203,7 @@ public class Database extends SQLiteOpenHelper
 		    {
 			if(i == count - 1)
 			{
-			    fireElement.m_oid = cursor.getInt(i);
+			    fireElement.m_oid = oid;
 			    continue;
 			}
 
@@ -405,7 +405,7 @@ public class Database extends SQLiteOpenHelper
 		    {
 			if(i == count - 1)
 			{
-			    neighborElement.m_oid = cursor.getInt(i);
+			    neighborElement.m_oid = oid;
 			    continue;
 			}
 
@@ -779,7 +779,7 @@ public class Database extends SQLiteOpenHelper
 		    {
 			if(i == count - 1)
 			{
-			    participantElement.m_oid = cursor.getInt(i);
+			    participantElement.m_oid = oid;
 			    continue;
 			}
 
@@ -942,7 +942,7 @@ public class Database extends SQLiteOpenHelper
 			}
 			else if(i == count - 1)
 			{
-			    sipHashIdElement.m_oid = cursor.getInt(i);
+			    sipHashIdElement.m_oid = oid;
 			    continue;
 			}
 
@@ -1261,8 +1261,7 @@ public class Database extends SQLiteOpenHelper
 		    {
 			if(i == count - 1)
 			{
-			    memberChatElement.m_oid =
-				m_readMemberChatCursor.getInt(i);
+			    memberChatElement.m_oid = oid;
 			    continue;
 			}
 			else if(i == 5)
@@ -1620,7 +1619,7 @@ public class Database extends SQLiteOpenHelper
 		{
 		    if(i == count - 1)
 		    {
-			steamElement.m_oid = cursor.getInt(i);
+			steamElement.m_oid = oid;
 			continue;
 		    }
 
@@ -4118,11 +4117,11 @@ public class Database extends SQLiteOpenHelper
 	    "absolute_filename TEXT NOT NULL, " +
 	    "destination TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
-	    "is_download INTEGER NOT NULL, " +
+	    "is_download TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
-	    "paused INTEGER NOT NULL, " +
+	    "paused TEXT NOT NULL, " +
 	    "random_bytes TEXT NOT NULL PRIMARY KEY, " +
-	    "read_offset INTEGER NOT NULL, " +
+	    "read_offset TEXT NOT NULL, " +
 	    "sha_1_digest TEXT NOT NULL)";
 
 	try
@@ -4792,6 +4791,7 @@ public class Database extends SQLiteOpenHelper
 					     sha1FileDigest(steamElement.
 							    m_fileName)));
 			m_db.insertOrThrow("steam_files", null, values);
+			m_db.setTransactionSuccessful();
 		    }
 		    catch(Exception exception)
 		    {

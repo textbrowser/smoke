@@ -50,11 +50,20 @@ public class SteamElement
 
     public SteamElement(String fileName)
     {
-	File file = new File(fileName);
+	if(!fileName.trim().isEmpty())
+	{
+	    File file = new File(fileName.trim());
+
+	    if(file != null)
+	    {
+		m_fileName = file.getAbsolutePath();
+		m_fileSize = file.length();
+	    }
+	    else
+		m_fileName = fileName.trim();
+	}
 
 	m_direction = UPLOAD;
-	m_fileName = file.getAbsolutePath();
-	m_fileSize = file.length();
 	m_keyStream = Cryptography.randomBytes(96);
 	m_randomBytes = Cryptography.randomBytes(64);
     }
