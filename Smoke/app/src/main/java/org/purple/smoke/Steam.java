@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -144,6 +145,8 @@ public class Steam extends AppCompatActivity
 	    {
 		if(Steam.this.isFinishing())
 		    return;
+
+		saveSteam();
 	    }
 	});
     }
@@ -151,9 +154,12 @@ public class Steam extends AppCompatActivity
     private void saveSteam()
     {
 	SteamElement steamElement = null;
-	String fileName = "";
+	String fileName = ((EditText) findViewById(R.id.filename)).
+	    getText().toString();
 
 	steamElement = new SteamElement(fileName);
+	steamElement.m_destination = m_participantsSpinner.getSelectedItem().
+	    toString();
 	m_databaseHelper.writeSteam(s_cryptography, steamElement);
     }
 

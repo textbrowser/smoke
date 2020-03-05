@@ -4731,7 +4731,10 @@ public class Database extends SQLiteOpenHelper
     public void writeSteam(final Cryptography cryptography,
 			   final SteamElement steamElement)
     {
-	if(cryptography == null || m_db == null || steamElement == null)
+	if(cryptography == null ||
+	   m_db == null ||
+	   steamElement == null ||
+	   steamElement.m_fileName.trim().isEmpty())
 	    return;
 
 	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()

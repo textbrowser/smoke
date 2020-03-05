@@ -256,8 +256,7 @@ public class Settings extends AppCompatActivity
 			m_databaseHelper.writeSetting
 			    (s_cryptography,
 			     "ozone_address_stream",
-			     Base64.encodeToString(bytes,
-						   Base64.DEFAULT));
+			     Base64.encodeToString(bytes, Base64.DEFAULT));
 			s_cryptography.setOzoneEncryptionKey
 			    (Arrays.copyOfRange(bytes, 0, 32));
 			s_cryptography.setOzoneMacKey
@@ -305,13 +304,11 @@ public class Settings extends AppCompatActivity
 			      checkBox4.isChecked() ? "true" : "false",
 			      proxyIpAddress.getText().toString(),
 			      proxyPort.getText().toString(),
-			      spinner2.getSelectedItem().
-			      toString(),
+			      spinner2.getSelectedItem().toString(),
 			      textView1.getText().toString(),
 			      textView2.getText().toString(),
 			      textView3.getText().toString(),
-			      spinner1.getSelectedItem().
-			      toString(),
+			      spinner1.getSelectedItem().toString(),
 			      ipVersion))
 	    Miscellaneous.showErrorDialog
 		(Settings.this,
