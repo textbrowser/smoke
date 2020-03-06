@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import java.text.DecimalFormat;
 
 public class SteamBubble extends View
 {
@@ -43,6 +44,26 @@ public class SteamBubble extends View
     private TextView m_fileSize = null;
     private View m_view = null;
     private int m_oid = -1;
+
+    private String formatSize(long size)
+    {
+	DecimalFormat decimalFormat = new DecimalFormat("#.00");
+	StringBuilder stringBuilder = new StringBuilder();
+
+	if(size >= 1073741824)
+	    stringBuilder.append
+		(decimalFormat.format(size / 1073741824.0)).append(" GiB");
+	else if(size >= 1048576)
+	    stringBuilder.append
+		(decimalFormat.format(size / 1048576.0)).append(" MiB");
+	else if(size >= 1024)
+	    stringBuilder.append
+		(decimalFormat.format(size / 1024.0)).append(" KiB");
+	else
+	    stringBuilder.append(size).append(" B");
+
+	return stringBuilder.toString();
+    }
 
     public SteamBubble(Context context,
 		       Steam steam,
@@ -74,9 +95,10 @@ public class SteamBubble extends View
 	    return;
 
 	m_destination.setText(steamElement.m_destination);
-	m_digest.setText(steamElement.m_sha1Digest);
+	m_digest.setText
+	    (Miscellaneous.byteArrayAsHexString(steamElement.m_sha1Digest));
 	m_fileName.setText(steamElement.m_fileName);
-	m_fileSize.setText(String.valueOf(steamElement.m_fileSize));
+	m_fileSize.setText(formatSize(steamElement.m_fileSize));
 	m_oid = steamElement.m_oid;
 	m_view.setId(m_oid);
     }

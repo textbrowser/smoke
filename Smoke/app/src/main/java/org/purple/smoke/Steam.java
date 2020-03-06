@@ -220,10 +220,11 @@ public class Steam extends AppCompatActivity
 	String fileName = m_fileName.getText().toString();
 
 	steamElement = new SteamElement(fileName);
-	steamElement.m_destination = m_participantsSpinner.getSelectedItem().
-	    toString();
+	steamElement.m_destination =
+	    m_participantsSpinner.getSelectedItem().toString();
 	m_databaseHelper.writeSteam(s_cryptography, steamElement);
 	m_fileName.setText("");
+	m_participantsSpinner.setSelection(0); // Other (Non-Smoke)
     }
 
     private void showChatActivity()
@@ -323,7 +324,7 @@ public class Steam extends AppCompatActivity
 	       requestCode == SELECT_FILE_REQUEST &&
 	       resultCode == RESULT_OK)
 	    {
-		m_fileName.setText(data.getData().getPath());
+		m_fileName.setText(data.getData().toString());
 	    }
 	}
 	catch(Exception exception)

@@ -1713,9 +1713,7 @@ public class Database extends SQLiteOpenHelper
 			break;
 		    case 6:
 			if(bytes != null)
-			    steamElement.m_sha1Digest = new String(bytes);
-			else
-			    steamElement.m_sha1Digest = "error (" + oid + ")";
+			    steamElement.m_sha1Digest = bytes;
 
 			break;
 		    default:

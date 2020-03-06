@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -455,6 +456,34 @@ public abstract class Miscellaneous
 	{
 	    return 0;
 	}
+    }
+
+    public static long fileSize(String fileName)
+    {
+	AssetFileDescriptor assetFileDescriptor = null;
+
+	try
+	{
+	    assetFileDescriptor = Smoke.getApplication().getContentResolver().
+		openAssetFileDescriptor(Uri.parse(fileName), "r");
+	    return assetFileDescriptor.getLength();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    try
+	    {
+		if(assetFileDescriptor != null)
+		    assetFileDescriptor.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	}
+
+	return 0;
     }
 
     public static void addMembersToMenu(Menu menu, int count, int position)
