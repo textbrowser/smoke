@@ -31,11 +31,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class SteamBubble extends View
 {
     private Context m_context = null;
     private Steam m_steam = null;
+    private TextView m_destination = null;
+    private TextView m_digest = null;
+    private TextView m_fileName = null;
+    private TextView m_fileSize = null;
     private View m_view = null;
     private int m_oid = -1;
 
@@ -52,6 +57,10 @@ public class SteamBubble extends View
 
 	m_view = inflater.inflate(R.layout.steam_bubble, viewGroup, false);
 	m_view.setId(-1);
+	m_destination = (TextView) m_view.findViewById(R.id.destination);
+	m_digest = (TextView) m_view.findViewById(R.id.digest);
+	m_fileName = (TextView) m_view.findViewById(R.id.filename);
+	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
     }
 
     public View view()
@@ -59,9 +68,16 @@ public class SteamBubble extends View
 	return m_view;
     }
 
-    public void setOid(int oid)
+    public void setData(SteamElement steamElement)
     {
-	m_oid = oid;
-	m_view.setId(oid);
+	if(steamElement == null)
+	    return;
+
+	m_destination.setText(steamElement.m_destination);
+	m_digest.setText(steamElement.m_sha1Digest);
+	m_fileName.setText(steamElement.m_fileName);
+	m_fileSize.setText(String.valueOf(steamElement.m_fileSize));
+	m_oid = steamElement.m_oid;
+	m_view.setId(m_oid);
     }
 }

@@ -90,6 +90,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	    }
 
 	    m_position = position;
+	    m_steamBubble.setData(steamElement);
 	}
     }
 

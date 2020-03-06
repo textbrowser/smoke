@@ -32,14 +32,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -73,11 +75,39 @@ public class Steam extends AppCompatActivity
 	}
     }
 
+    private class SteamLinearLayoutManager extends LinearLayoutManager
+    {
+	SteamLinearLayoutManager(Context context)
+	{
+	    super(context);
+	}
+
+	@Override
+	public void onLayoutChildren(RecyclerView.Recycler recycler,
+				     RecyclerView.State state)
+	{
+	    /*
+	    ** Android may terminate!
+	    */
+
+	    try
+	    {
+		super.onLayoutChildren(recycler, state);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	}
+    }
+
     private Button m_attachmentButton = null;
     private Button m_sendButton = null;
     private Database m_databaseHelper = null;
+    private RecyclerView m_recyclerView = null;
+    private RecyclerView.Adapter<?> m_adapter = null;
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
+    private SteamLinearLayoutManager m_layoutManager = null;
     private TextView m_fileName = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
@@ -151,10 +181,39 @@ public class Steam extends AppCompatActivity
 	});
     }
 
+    private void prepareWidgets()
+    {
+	if(m_adapter == null)
+	{
+	    m_adapter = new SteamAdapter(this);
+	    m_adapter.registerAdapterDataObserver
+		(new RecyclerView.AdapterDataObserver()
+	    {
+		@Override
+		public void onItemRangeInserted
+		    (int positionStart, int itemCount)
+		{
+		    m_layoutManager.smoothScrollToPosition
+			(m_recyclerView, null, positionStart);
+		}
+
+		@Override
+		public void onItemRangeRemoved
+		    (int positionStart, int itemCount)
+		{
+		    m_layoutManager.smoothScrollToPosition
+			(m_recyclerView, null, positionStart - itemCount);
+		}
+	    });
+	    m_recyclerView.setAdapter(m_adapter);
+	    m_recyclerView.setLayoutManager(m_layoutManager);
+	}
+    }
+
     private void saveSteam()
     {
 	SteamElement steamElement = null;
-	String fileName = ((EditText) findViewById(R.id.filename)).
+	String fileName = ((TextView) findViewById(R.id.filename)).
 	    getText().toString();
 
 	steamElement = new SteamElement(fileName);
@@ -211,6 +270,9 @@ public class Steam extends AppCompatActivity
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SteamBroadcastReceiver();
         setContentView(R.layout.activity_steam);
+	m_layoutManager = new SteamLinearLayoutManager(Steam.this);
+	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+	m_layoutManager.setStackFromEnd(false);
 
 	try
 	{
@@ -223,9 +285,25 @@ public class Steam extends AppCompatActivity
 	m_attachmentButton = (Button) findViewById(R.id.attachment);
 	m_fileName = (TextView) findViewById(R.id.filename);
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
+	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+	m_recyclerView.setHasFixedSize(true);
 	m_sendButton = (Button) findViewById(R.id.send);
 	populateParticipants();
 	prepareListeners();
+	prepareWidgets();
+
+	/*
+	** Restore states.
+	*/
+
+	try
+	{
+	    m_layoutManager.smoothScrollToPosition
+		(m_recyclerView, null, m_adapter.getItemCount() - 1);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     @Override
@@ -365,6 +443,16 @@ public class Steam extends AppCompatActivity
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
+	}
+
+	try
+	{
+	    m_adapter.notifyDataSetChanged();
+	    m_layoutManager.smoothScrollToPosition
+		(m_recyclerView, null, m_adapter.getItemCount() - 1);
+	}
+	catch(Exception exception)
+	{
 	}
     }
 }
