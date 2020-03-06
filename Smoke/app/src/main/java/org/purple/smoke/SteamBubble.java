@@ -42,6 +42,7 @@ public class SteamBubble extends View
     private TextView m_digest = null;
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
+    private TextView m_sent = null;
     private View m_view = null;
     private int m_oid = -1;
 
@@ -82,6 +83,7 @@ public class SteamBubble extends View
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
+	m_sent = (TextView) m_view.findViewById(R.id.sent);
     }
 
     public View view()
@@ -98,8 +100,10 @@ public class SteamBubble extends View
 	m_digest.setText
 	    (Miscellaneous.byteArrayAsHexString(steamElement.m_sha1Digest));
 	m_fileName.setText(steamElement.m_fileName);
-	m_fileSize.setText(formatSize(steamElement.m_fileSize));
+	m_fileSize.setText
+	    ("Total Size: " + formatSize(steamElement.m_fileSize));
 	m_oid = steamElement.m_oid;
+	m_sent.setText("Total Sent: " + formatSize(steamElement.m_readOffset));
 	m_view.setId(m_oid);
     }
 }
