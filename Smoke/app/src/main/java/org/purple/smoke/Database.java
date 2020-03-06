@@ -1604,10 +1604,9 @@ public class Database extends SQLiteOpenHelper
 		 "file_digest, " +              // 2
 		 "file_size, " +                // 3
 		 "is_download, " +              // 4
-		 "paused, " +                   // 5
-		 "read_offset, " +              // 6
-		 "status, " +                   // 7
-		 "oid " +                       // 8
+		 "read_offset, " +              // 5
+		 "status, " +                   // 6
+		 "oid " +                       // 7
 		 "FROM steam_files", null);
 
 	    if(cursor != null && cursor.moveToPosition(position))
@@ -1619,7 +1618,12 @@ public class Database extends SQLiteOpenHelper
 
 		for(int i = 0; i < count; i++)
 		{
-		    if(i == count - 1)
+		    if(i == 6)
+		    {
+			steamElement.m_status = cursor.getString(i).trim();
+			continue;
+		    }
+		    else if(i == count - 1)
 		    {
 			steamElement.m_oid = oid;
 			continue;
@@ -1694,20 +1698,6 @@ public class Database extends SQLiteOpenHelper
 			{
 			    try
 			    {
-				steamElement.m_paused = Integer.parseInt
-				    (new String(bytes)) == 1;
-			    }
-			    catch(Exception exception)
-			    {
-			    }
-			}
-
-			break;
-		    case 6:
-			if(bytes != null)
-			{
-			    try
-			    {
 				steamElement.m_readOffset = Integer.parseInt
 				    (new String(bytes));
 			    }
@@ -1715,13 +1705,6 @@ public class Database extends SQLiteOpenHelper
 			    {
 			    }
 			}
-
-			break;
-		    case 7:
-			if(bytes != null)
-			    steamElement.m_status = new String(bytes);
-			else
-			    steamElement.m_status = "error (" + oid + ")";
 
 			break;
 		    default:
@@ -4127,7 +4110,6 @@ public class Database extends SQLiteOpenHelper
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
-	    "paused TEXT NOT NULL, " +
 	    "random_bytes TEXT NOT NULL PRIMARY KEY, " +
 	    "read_offset TEXT NOT NULL, " +
 	    "status TEXT NOT NULL)";
@@ -4787,10 +4769,6 @@ public class Database extends SQLiteOpenHelper
 			     cryptography.
 			     etmBase64String(steamElement.m_keyStream));
 			values.put
-			    ("paused",
-			     cryptography.
-			     etmBase64String(steamElement.m_paused));
-			values.put
 			    ("random_bytes",
 			     cryptography.
 			     etmBase64String(steamElement.m_randomBytes));
@@ -4798,10 +4776,7 @@ public class Database extends SQLiteOpenHelper
 			    ("read_offset",
 			     cryptography.
 			     etmBase64String(steamElement.m_readOffset));
-			values.put
-			    ("status",
-			     cryptography.
-			     etmBase64String(steamElement.m_status));
+			values.put("status", steamElement.m_status);
 			m_db.insertOrThrow("steam_files", null, values);
 			m_db.setTransactionSuccessful();
 			Miscellaneous.sendBroadcast
