@@ -40,6 +40,7 @@ public class SteamBubble extends View
     private Button m_control = null;
     private Context m_context = null;
     private Steam m_steam = null;
+    private String m_controlString = "";
     private TextView m_destination = null;
     private TextView m_digest = null;
     private TextView m_fileName = null;
@@ -107,25 +108,28 @@ public class SteamBubble extends View
 	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
 	m_fileName.setText("File: " + steamElement.m_fileName);
 	m_fileSize.setText
-	    ("Total Size: " + formatSize(steamElement.m_fileSize));
+	    ("Size: " + formatSize(steamElement.m_fileSize));
 	m_oid = steamElement.m_oid;
 
 	switch(steamElement.m_status)
 	{
 	case "completed":
 	    m_control.setText("Rewind");
+	    m_controlString = "Rewind";
 	    break;
 	case "paused":
 	    m_control.setText("Resume");
+	    m_controlString = "Resume";
 	    break;
 	case "transferring":
 	    m_control.setText("Pause");
+	    m_controlString = "Pause";
 	    break;
 	default:
 	    break;
 	}
 
-	m_sent.setText("Total Sent: " + formatSize(steamElement.m_readOffset));
+	m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	m_status.setText("Status: " + steamElement.m_status);
 	m_view.setId(m_oid);
     }
