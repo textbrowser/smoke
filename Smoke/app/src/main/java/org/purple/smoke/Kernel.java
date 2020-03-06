@@ -72,6 +72,7 @@ public class Kernel
     private ScheduledExecutorService m_purgeScheduler = null;
     private ScheduledExecutorService m_requestMessagesScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private ScheduledExecutorService m_steamScheduler = null;
     private ScheduledExecutorService m_temporaryIdentityScheduler = null;
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
@@ -118,6 +119,7 @@ public class Kernel
 						       ** Should be less than
 						       ** Chat.STATUS_WINDOW.
 						       */
+    private final static long STEAM_INTERVAL = 7500; // 7.5 Seconds
     private final static long TEMPORARY_IDENTITY_INTERVAL = 5000; // 5 Seconds
     private final static long TEMPORARY_IDENTITY_LIFETIME =
 	60000; // 60 Seconds
@@ -336,7 +338,7 @@ public class Kernel
 			/*
 			** Allow the UI to respond to calling requests
 			** while the kernel attempts to generate
-			** ephemeral RSA keys.
+			** ephemeral keys.
 			*/
 
 			m_callQueueMutex.writeLock().lock();
@@ -929,8 +931,7 @@ public class Kernel
 
 	if(m_purgeScheduler == null)
 	{
-	    m_purgeScheduler = Executors.
-		newSingleThreadScheduledExecutor();
+	    m_purgeScheduler = Executors.newSingleThreadScheduledExecutor();
 	    m_purgeScheduler.scheduleAtFixedRate(new Runnable()
 	    {
 		@Override
@@ -1036,6 +1037,18 @@ public class Kernel
 		    }
 		}
 	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_steamScheduler == null)
+	{
+	    m_steamScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_steamScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		}
+	    }, 1500, STEAM_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_temporaryIdentityScheduler == null)

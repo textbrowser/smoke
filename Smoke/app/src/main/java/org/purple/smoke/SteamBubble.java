@@ -102,15 +102,6 @@ public class SteamBubble extends View
 	if(steamElement == null)
 	    return;
 
-	m_destination.setText("Destination: " + steamElement.m_destination);
-	m_digest.setText
-	    ("SHA-256: " +
-	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
-	m_fileName.setText("File: " + steamElement.m_fileName);
-	m_fileSize.setText
-	    ("Size: " + formatSize(steamElement.m_fileSize));
-	m_oid = steamElement.m_oid;
-
 	switch(steamElement.m_status)
 	{
 	case "completed":
@@ -129,6 +120,14 @@ public class SteamBubble extends View
 	    break;
 	}
 
+	m_destination.setText("Destination: " + steamElement.m_destination);
+	m_digest.setText
+	    ("SHA-256: " +
+	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
+	m_fileName.setText("File: " + steamElement.m_fileName);
+	m_fileSize.setText
+	    ("Size: " + formatSize(steamElement.m_fileSize));
+	m_oid = steamElement.m_oid;
 	m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	m_status.setText("Status: " + steamElement.m_status);
 	m_view.setId(m_oid);
