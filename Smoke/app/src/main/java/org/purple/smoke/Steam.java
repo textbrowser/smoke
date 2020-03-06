@@ -353,14 +353,29 @@ public class Steam extends AppCompatActivity
 		    switch(groupId)
 		    {
 		    case ContextMenuEnumerator.DELETE_ALL_STEAMS:
-			try
-			{
-			    m_databaseHelper.clearTable("steam_files");
-			    m_adapter.notifyDataSetChanged();
-			}
-			catch(Exception exception)
-			{
-			}
+			if(State.getInstance().
+			   getString("dialog_accepted").equals("true"))
+			    try
+			    {
+				m_databaseHelper.clearTable("steam_files");
+				m_adapter.notifyDataSetChanged();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+
+			break;
+		    case ContextMenuEnumerator.DELETE_STEAM:
+			if(State.getInstance().
+			   getString("dialog_accepted").equals("true"))
+			    try
+			    {
+				m_databaseHelper.deleteSteam(itemId);
+				m_adapter.notifyDataSetChanged();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
 
 			break;
 		    default:
@@ -375,7 +390,13 @@ public class Steam extends AppCompatActivity
 	    Miscellaneous.showPromptDialog
 		(Steam.this,
 		 listener,
-		 "Are you sure that you wish to delete all of the files?");
+		 "Are you sure that you wish to delete all of the Steams?");
+	    break;
+	case ContextMenuEnumerator.DELETE_STEAM:
+	    Miscellaneous.showPromptDialog
+		(Steam.this,
+		 listener,
+		 "Are you sure that you wish to delete the selected Steam?");
 	    break;
 	default:
 	    break;
