@@ -38,6 +38,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.Gravity;
@@ -530,6 +531,23 @@ public abstract class Miscellaneous
 	    View child = viewGroup.getChildAt(i);
 
 	    enableChildren(child, state);
+	}
+    }
+
+    public static void sendBroadcast(Intent intent)
+    {
+	if(intent == null)
+	    return;
+
+	try
+	{
+	    LocalBroadcastManager localBroadcastManager =
+		LocalBroadcastManager.getInstance(Smoke.getApplication());
+
+	    localBroadcastManager.sendBroadcast(intent);
+	}
+	catch(Exception exception)
+	{
 	}
     }
 

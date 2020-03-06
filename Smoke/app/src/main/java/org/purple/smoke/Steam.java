@@ -29,10 +29,11 @@ package org.purple.smoke;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,6 +69,9 @@ public class Steam extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
+		break;
+	    case "org.purple.smoke.steam_added":
+		m_adapter.notifyDataSetChanged();
 		break;
 	    default:
 		break;
@@ -213,13 +217,13 @@ public class Steam extends AppCompatActivity
     private void saveSteam()
     {
 	SteamElement steamElement = null;
-	String fileName = ((TextView) findViewById(R.id.filename)).
-	    getText().toString();
+	String fileName = m_fileName.getText().toString();
 
 	steamElement = new SteamElement(fileName);
 	steamElement.m_destination = m_participantsSpinner.getSelectedItem().
 	    toString();
 	m_databaseHelper.writeSteam(s_cryptography, steamElement);
+	m_fileName.setText("");
     }
 
     private void showChatActivity()
@@ -325,6 +329,58 @@ public class Steam extends AppCompatActivity
 	catch(Exception exception)
 	{
 	}
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem menuItem)
+    {
+	if(menuItem == null)
+	    return false;
+
+	final int groupId = menuItem.getGroupId();
+	final int itemId = menuItem.getItemId();
+
+	/*
+	** Prepare a listener.
+	*/
+
+	DialogInterface.OnCancelListener listener =
+	    new DialogInterface.OnCancelListener()
+	    {
+		public void onCancel(DialogInterface dialog)
+		{
+		    switch(groupId)
+		    {
+		    case ContextMenuEnumerator.DELETE_ALL_STEAMS:
+			try
+			{
+			    m_databaseHelper.clearTable("steam_files");
+			    m_adapter.notifyDataSetChanged();
+			}
+			catch(Exception exception)
+			{
+			}
+
+			break;
+		    default:
+			break;
+		    }
+		}
+	    };
+
+	switch(groupId)
+	{
+	case ContextMenuEnumerator.DELETE_ALL_STEAMS:
+	    Miscellaneous.showPromptDialog
+		(Steam.this,
+		 listener,
+		 "Are you sure that you wish to delete all of the files?");
+	    break;
+	default:
+	    break;
+	}
+
+	return true;
     }
 
     @Override
@@ -440,6 +496,7 @@ public class Steam extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.steam_added");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

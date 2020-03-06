@@ -35,7 +35,6 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.SparseArray;
 import java.net.InetAddress;
@@ -581,7 +580,7 @@ public class Kernel
 				intent.putExtra
 				    ("org.purple.smoke.sipHashId",
 				     messageElement.m_id);
-				sendBroadcast(intent);
+				Miscellaneous.sendBroadcast(intent);
 				break;
 			    case MessageElement.FIRE_MESSAGE_TYPE:
 				bytes = Messages.fireMessage
@@ -643,7 +642,7 @@ public class Kernel
 					 null,
 					 null,
 					 messageElement.m_timestamp);
-				    sendBroadcast
+				    Miscellaneous.sendBroadcast
 					(new Intent("org.purple.smoke." +
 						    "notify_data_set_" +
 						    "changed"));
@@ -666,7 +665,7 @@ public class Kernel
 					 null,
 					 null,
 					 messageElement.m_timestamp);
-				    sendBroadcast
+				    Miscellaneous.sendBroadcast
 					(new Intent("org.purple.smoke." +
 						    "notify_data_set_" +
 						    "changed"));
@@ -1135,23 +1134,6 @@ public class Kernel
 	}
     }
 
-    private void sendBroadcast(Intent intent)
-    {
-	if(intent == null)
-	    return;
-
-	try
-	{
-	    LocalBroadcastManager localBroadcastManager =
-		LocalBroadcastManager.getInstance(Smoke.getApplication());
-
-	    localBroadcastManager.sendBroadcast(intent);
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
     public ArrayList<NeighborElement> purgeDeletedNeighbors()
     {
 	ArrayList<NeighborElement> neighbors =
@@ -1273,7 +1255,7 @@ public class Kernel
 		 null,
 		 null,
 		 System.currentTimeMillis());
-	    sendBroadcast
+	    Miscellaneous.sendBroadcast
 		(new Intent("org.purple.smoke.notify_data_set_changed"));
 	    m_callQueue.put
 		(sipHashId,
@@ -1571,7 +1553,7 @@ public class Kernel
 					("org.purple.smoke.message",
 					 strings[3]);
 
-				sendBroadcast(intent);
+				Miscellaneous.sendBroadcast(intent);
 				return 2; // Echo Fire!
 			    }
 			}
@@ -1649,7 +1631,7 @@ public class Kernel
 			 StandardCharsets.UTF_8);
 
 		    intent.putExtra("org.purple.smoke.sipHashId", sipHashId);
-		    sendBroadcast(intent);
+		    Miscellaneous.sendBroadcast(intent);
 		    return 1;
 		}
 	    }
@@ -1719,7 +1701,7 @@ public class Kernel
 		    */
 
 		    State.getInstance().populateParticipants();
-		    sendBroadcast
+		    Miscellaneous.sendBroadcast
 			(new Intent("org.purple.smoke.populate_participants"));
 
 		    /*
@@ -2055,7 +2037,7 @@ public class Kernel
 			     null,
 			     null,
 			     System.currentTimeMillis());
-			sendBroadcast
+			Miscellaneous.sendBroadcast
 			    (new Intent("org.purple.smoke." +
 					"notify_data_set_changed"));
 		    }
@@ -2093,7 +2075,7 @@ public class Kernel
 				 null,
 				 System.currentTimeMillis());
 
-			sendBroadcast
+			Miscellaneous.sendBroadcast
 			    (new Intent("org.purple.smoke." +
 					"notify_data_set_changed"));
 		    }
@@ -2293,7 +2275,7 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.sequence", sequence);
 		    intent.putExtra("org.purple.smoke.sipHashId", strings[1]);
 		    intent.putExtra("org.purple.smoke.timestamp", timestamp);
-		    sendBroadcast(intent);
+		    Miscellaneous.sendBroadcast(intent);
 
 		    /*
 		    ** Prepare a read-proof message.
@@ -2518,7 +2500,7 @@ public class Kernel
 			    intent.putExtra("org.purple.smoke.name", array[0]);
 			    intent.putExtra
 				("org.purple.smoke.sipHashId", array[1]);
-			    sendBroadcast(intent);
+			    Miscellaneous.sendBroadcast(intent);
 			    return 1;
 			}
 		    }
@@ -2603,8 +2585,8 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.name", array[0]);
 		    intent.putExtra("org.purple.smoke.refresh", true);
 		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);
-		    sendBroadcast(intent);
-		    sendBroadcast
+		    Miscellaneous.sendBroadcast(intent);
+		    Miscellaneous.sendBroadcast
 			(new Intent("org.purple.smoke." +
 				    "notify_data_set_changed"));
 
@@ -2629,7 +2611,7 @@ public class Kernel
 		    ** Refresh the Settings activity's Participants table.
 		    */
 
-		    sendBroadcast
+		    Miscellaneous.sendBroadcast
 			(new Intent("org.purple.smoke.populate_participants"));
 		    return 1;
 		}
@@ -2997,7 +2979,8 @@ public class Kernel
 
     public void notifyOfDataSetChange()
     {
-	sendBroadcast(new Intent("org.purple.smoke.notify_data_set_changed"));
+	Miscellaneous.sendBroadcast
+	    (new Intent("org.purple.smoke.notify_data_set_changed"));
     }
 
     public void resendMessage(String sipHashId, int position)
