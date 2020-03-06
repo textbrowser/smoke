@@ -73,4 +73,5 @@
     <string name="key_derivation_function">Key Derivation Function</string>
     <string name="non_tls">Non-TLS</string>
     <string name="passthrough">Passthrough</string>
+    <string name="pause">Pause</string>
 </resources>

@@ -580,6 +580,21 @@ public abstract class Miscellaneous
 	}
     }
 
+    public static void sendBroadcast(String action)
+    {
+	try
+	{
+	    Intent intent = new Intent(action);
+	    LocalBroadcastManager localBroadcastManager =
+		LocalBroadcastManager.getInstance(Smoke.getApplication());
+
+	    localBroadcastManager.sendBroadcast(intent);
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     public static void showErrorDialog(Context context, String error)
     {
 	if(context == null ||

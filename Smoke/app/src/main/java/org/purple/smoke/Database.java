@@ -1601,12 +1601,13 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery
 		("SELECT absolute_filename, " + // 0
 		 "destination, " +              // 1
-		 "file_size, " +                // 2
-		 "is_download, " +              // 3
-		 "paused, " +                   // 4
-		 "read_offset, " +              // 5
-		 "sha_1_digest, " +             // 6
-		 "oid " +                       // 7
+		 "file_digest, " +              // 2
+		 "file_size, " +                // 3
+		 "is_download, " +              // 4
+		 "paused, " +                   // 5
+		 "read_offset, " +              // 6
+		 "status, " +                   // 7
+		 "oid " +                       // 8
 		 "FROM steam_files", null);
 
 	    if(cursor != null && cursor.moveToPosition(position))
@@ -1657,16 +1658,7 @@ public class Database extends SQLiteOpenHelper
 			break;
 		    case 2:
 			if(bytes != null)
-			{
-			    try
-			    {
-				steamElement.m_fileSize = Integer.parseInt
-				    (new String(bytes));
-			    }
-			    catch(Exception exception)
-			    {
-			    }
-			}
+			    steamElement.m_fileDigest = bytes;
 
 			break;
 		    case 3:
@@ -1674,7 +1666,7 @@ public class Database extends SQLiteOpenHelper
 			{
 			    try
 			    {
-				steamElement.m_direction = Integer.parseInt
+				steamElement.m_fileSize = Integer.parseInt
 				    (new String(bytes));
 			    }
 			    catch(Exception exception)
@@ -1688,6 +1680,20 @@ public class Database extends SQLiteOpenHelper
 			{
 			    try
 			    {
+				steamElement.m_direction = Integer.parseInt
+				    (new String(bytes));
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+			}
+
+			break;
+		    case 5:
+			if(bytes != null)
+			{
+			    try
+			    {
 				steamElement.m_paused = Integer.parseInt
 				    (new String(bytes)) == 1;
 			    }
@@ -1697,7 +1703,7 @@ public class Database extends SQLiteOpenHelper
 			}
 
 			break;
-		    case 5:
+		    case 6:
 			if(bytes != null)
 			{
 			    try
@@ -1711,9 +1717,11 @@ public class Database extends SQLiteOpenHelper
 			}
 
 			break;
-		    case 6:
+		    case 7:
 			if(bytes != null)
-			    steamElement.m_sha1Digest = bytes;
+			    steamElement.m_status = new String(bytes);
+			else
+			    steamElement.m_status = "error (" + oid + ")";
 
 			break;
 		    default:
@@ -4115,13 +4123,14 @@ public class Database extends SQLiteOpenHelper
 	str = "CREATE TABLE IF NOT EXISTS steam_files (" +
 	    "absolute_filename TEXT NOT NULL, " +
 	    "destination TEXT NOT NULL, " +
+	    "file_digest TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
 	    "paused TEXT NOT NULL, " +
 	    "random_bytes TEXT NOT NULL PRIMARY KEY, " +
 	    "read_offset TEXT NOT NULL, " +
-	    "sha_1_digest TEXT NOT NULL)";
+	    "status TEXT NOT NULL)";
 
 	try
 	{
@@ -4760,6 +4769,12 @@ public class Database extends SQLiteOpenHelper
 			     cryptography.
 			     etmBase64String(steamElement.m_destination));
 			values.put
+			    ("file_digest",
+			     cryptography.
+			     etmBase64String(Cryptography.
+					     sha256FileDigest(steamElement.
+							      m_fileName)));
+			values.put
 			    ("file_size",
 			     cryptography.
 			     etmBase64String(steamElement.m_fileSize));
@@ -4784,18 +4799,13 @@ public class Database extends SQLiteOpenHelper
 			     cryptography.
 			     etmBase64String(steamElement.m_readOffset));
 			values.put
-			    ("sha_1_digest",
+			    ("status",
 			     cryptography.
-			     etmBase64String(Cryptography.
-					     sha1FileDigest(steamElement.
-							    m_fileName)));
+			     etmBase64String(steamElement.m_status));
 			m_db.insertOrThrow("steam_files", null, values);
 			m_db.setTransactionSuccessful();
-
-			Intent intent = new Intent
+			Miscellaneous.sendBroadcast
 			    ("org.purple.smoke.steam_added");
-
-			Miscellaneous.sendBroadcast(intent);
 		    }
 		    catch(Exception exception)
 		    {

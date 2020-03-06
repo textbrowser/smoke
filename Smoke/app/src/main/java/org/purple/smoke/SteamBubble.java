@@ -31,11 +31,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import java.text.DecimalFormat;
 
 public class SteamBubble extends View
 {
+    private Button m_control = null;
     private Context m_context = null;
     private Steam m_steam = null;
     private TextView m_destination = null;
@@ -43,6 +45,7 @@ public class SteamBubble extends View
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
     private TextView m_sent = null;
+    private TextView m_status = null;
     private View m_view = null;
     private int m_oid = -1;
 
@@ -78,12 +81,14 @@ public class SteamBubble extends View
 	    (Context.LAYOUT_INFLATER_SERVICE);
 
 	m_view = inflater.inflate(R.layout.steam_bubble, viewGroup, false);
-	m_view.setId(-1);
+	m_control = (Button) m_view.findViewById(R.id.control);
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
 	m_sent = (TextView) m_view.findViewById(R.id.sent);
+	m_status = (TextView) m_view.findViewById(R.id.status);
+	m_view.setId(-1);
     }
 
     public View view()
@@ -96,14 +101,32 @@ public class SteamBubble extends View
 	if(steamElement == null)
 	    return;
 
-	m_destination.setText(steamElement.m_destination);
+	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText
-	    (Miscellaneous.byteArrayAsHexString(steamElement.m_sha1Digest));
-	m_fileName.setText(steamElement.m_fileName);
+	    ("SHA-256: " +
+	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
+	m_fileName.setText("File: " + steamElement.m_fileName);
 	m_fileSize.setText
 	    ("Total Size: " + formatSize(steamElement.m_fileSize));
 	m_oid = steamElement.m_oid;
+
+	switch(steamElement.m_status)
+	{
+	case "completed":
+	    m_control.setText("Rewind");
+	    break;
+	case "paused":
+	    m_control.setText("Resume");
+	    break;
+	case "transferring":
+	    m_control.setText("Pause");
+	    break;
+	default:
+	    break;
+	}
+
 	m_sent.setText("Total Sent: " + formatSize(steamElement.m_readOffset));
+	m_status.setText("Status: " + steamElement.m_status);
 	m_view.setId(m_oid);
     }
 }
