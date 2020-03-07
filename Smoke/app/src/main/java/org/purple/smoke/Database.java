@@ -1960,7 +1960,7 @@ public class Database extends SQLiteOpenHelper
     public String steamStatus(int oid)
     {
 	if(m_db == null)
-	    return null;
+	    return "";
 
 	Cursor cursor = null;
 	String status = "";
@@ -1968,7 +1968,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT status FROM steam_files WHERE OID = ?",
+		("SELECT status FROM steam_files WHERE oid = ?",
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())

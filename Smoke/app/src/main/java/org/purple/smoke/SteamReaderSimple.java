@@ -39,13 +39,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SteamReaderSimple
 {
     private AtomicBoolean m_completed = null;
-    private AtomicBoolean m_paused = null;
-    private AtomicBoolean m_read = null;
     private AtomicInteger m_offset = null;
     private AtomicInteger m_rate = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private int m_oid = -1;
+    private final static Database s_databaseHelper = Database.getInstance();
     private static int PACKET_SIZE = 4096;
     private static long READ_INTERVAL = 150; // 150 Milliseconds
 
@@ -63,8 +62,22 @@ public class SteamReaderSimple
 
 		    try
 		    {
-			if(m_completed.get() || m_paused.get())
+			switch(s_databaseHelper.
+			       steamStatus(m_oid).toLowerCase().trim())
+			{
+			case "":
+			    /*
+			    ** Deleted.
+			    */
+
 			    return;
+			case "completed":
+			    return;
+			case "paused":
+			    return;
+			default:
+			    break;
+			}
 
 			inputStream = Smoke.getApplication().
 			    getContentResolver().openInputStream
@@ -78,15 +91,20 @@ public class SteamReaderSimple
 			    read(bytes, m_offset.get(), bytes.length);
 
 			if(offset == -1)
-			    m_completed.set(true);
-			else
-			    m_offset.addAndGet(offset);
+			{
+			    /*
+			    ** Completed!
+			    */
+
+			    return;
+			}
 
 			/*
 			** Send raw bytes.
 			*/
 
-			Kernel.getInstance().sendSimpleSteam(bytes);
+			m_offset.addAndGet
+			    (Kernel.getInstance().sendSimpleSteam(bytes));
 		    }
 		    catch(Exception exception)
 		    {
@@ -109,19 +127,15 @@ public class SteamReaderSimple
 
     public SteamReaderSimple(String fileName, int oid)
     {
-	m_completed = new AtomicBoolean(false);
 	m_fileName = fileName;
 	m_offset = new AtomicInteger(0);
 	m_oid = oid;
-	m_paused = new AtomicBoolean(false);
 	m_rate = new AtomicInteger(0);
     }
 
     public void cancel()
     {
-	m_completed.set(true);
 	m_offset.set(0);
-	m_paused.set(true);
 	m_rate.set(0);
 
 	if(m_reader != null)
