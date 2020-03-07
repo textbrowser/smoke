@@ -109,7 +109,15 @@ public class TcpTlsNeighbor extends Neighbor
 
     protected boolean send(String message)
     {
-	if(!connected() || message == null)
+	if(!connected() || message == null || message.length() == 0)
+	    return false;
+	else
+	    return send(message.getBytes());
+    }
+
+    protected boolean send(byte bytes[])
+    {
+	if(bytes == null || bytes.length == 0 || !connected())
 	    return false;
 
 	try
@@ -117,12 +125,12 @@ public class TcpTlsNeighbor extends Neighbor
 	    if(m_socket == null || m_socket.getOutputStream() == null)
 		return false;
 
-	    Kernel.writeCongestionDigest(message);
+	    Kernel.writeCongestionDigest(bytes);
 
 	    OutputStream outputStream = m_socket.getOutputStream();
 
-	    outputStream.write(message.getBytes());
-	    m_bytesWritten.getAndAdd(message.length());
+	    outputStream.write(bytes);
+	    m_bytesWritten.getAndAdd(bytes.length);
 	}
 	catch(Exception exception)
 	{

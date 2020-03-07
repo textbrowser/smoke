@@ -2678,8 +2678,7 @@ public class Kernel
 
     public static void writeCongestionDigest(byte data[])
     {
-	s_databaseHelper.writeCongestionDigest
-	    (s_congestionSipHash.hmac(data));
+	s_databaseHelper.writeCongestionDigest(s_congestionSipHash.hmac(data));
     }
 
     public void clearMessagesToSend()
@@ -3040,6 +3039,14 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+    }
+
+    public int sendSimpleSteam(byte bytes[])
+    {
+	if(bytes == null || bytes.length == 0)
+	    return 0;
+
+	return 0;
     }
 
     public void setWakeLock(boolean state)

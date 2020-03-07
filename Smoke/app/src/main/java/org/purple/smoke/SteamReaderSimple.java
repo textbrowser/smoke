@@ -27,7 +27,8 @@
 
 package org.purple.smoke;
 
-import java.io.FileInputStream;
+import android.net.Uri;
+import java.io.InputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +46,7 @@ public class SteamReaderSimple
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private static int PACKET_SIZE = 4096;
-    private static long READ_INTERVAL = 250; // 250 Milliseconds
+    private static long READ_INTERVAL = 150; // 150 Milliseconds
 
     private void prepareReader()
     {
@@ -57,20 +58,22 @@ public class SteamReaderSimple
 		@Override
 		public void run()
 		{
-		    FileInputStream fileInputStream = null;
+		    InputStream inputStream = null;
 
 		    try
 		    {
 			if(m_completed.get() || m_paused.get())
 			    return;
 
-			fileInputStream = new FileInputStream(m_fileName);
+			inputStream = Smoke.getApplication().
+			    getContentResolver().openInputStream
+			    (Uri.parse(m_fileName));
 
-			if(fileInputStream == null)
+			if(inputStream == null)
 			    return;
 
 			byte bytes[] = new byte[PACKET_SIZE];
-			int offset = fileInputStream.
+			int offset = inputStream.
 			    read(bytes, m_offset.get(), bytes.length);
 
 			if(offset == -1)
@@ -81,6 +84,8 @@ public class SteamReaderSimple
 			/*
 			** Send raw bytes.
 			*/
+
+			Kernel.getInstance().sendSimpleSteam(bytes);
 		    }
 		    catch(Exception exception)
 		    {
@@ -89,8 +94,8 @@ public class SteamReaderSimple
 		    {
 			try
 			{
-			    if(fileInputStream != null)
-				fileInputStream.close();
+			    if(inputStream != null)
+				inputStream.close();
 			}
 			catch(Exception exception)
 			{

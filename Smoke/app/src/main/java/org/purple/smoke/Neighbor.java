@@ -486,6 +486,7 @@ public abstract class Neighbor
     protected abstract String getLocalIp();
     protected abstract boolean connected();
     protected abstract boolean send(String message);
+    protected abstract boolean send(byte bytes[]);
     protected abstract int getLocalPort();
     protected abstract void connect();
 

@@ -70,7 +70,7 @@ public class UdpNeighbor extends Neighbor
 
     protected boolean send(String message)
     {
-	if(!connected() || message == null)
+	if(!connected() || message == null || message.length() == 0)
 	    return false;
 
 	try
@@ -108,6 +108,38 @@ public class UdpNeighbor extends Neighbor
 	}
 
 	return false;
+    }
+
+    protected boolean send(byte bytes[])
+    {
+	if(bytes == null || bytes.length == 0 || !connected())
+	    return false;
+
+	try
+	{
+	    if(m_socket == null)
+		return false;
+
+	    if(m_aborted.get())
+		return false;
+
+	    m_socket.send
+		(new DatagramPacket(bytes,
+				    bytes.length,
+				    InetAddress.getByName(m_ipAddress),
+				    Integer.parseInt(m_ipPort)));
+	    Kernel.writeCongestionDigest(bytes);
+	    m_bytesWritten.getAndAdd(bytes.length);
+	    setError("");
+	}
+	catch(Exception exception)
+	{
+	    setError("A socket error occurred on send().");
+	    disconnect();
+	    return false;
+	}
+
+	return true;
     }
 
     protected int getLocalPort()

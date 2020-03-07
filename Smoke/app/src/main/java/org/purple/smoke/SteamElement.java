@@ -49,7 +49,7 @@ public class SteamElement
     public SteamElement(String fileName)
     {
 	m_direction = UPLOAD;
-	m_fileName = fileName.trim();
+	m_fileName = fileName;
 	m_fileSize = Miscellaneous.fileSize(fileName);
 	m_keyStream = Cryptography.randomBytes(96);
 	m_randomBytes = Cryptography.randomBytes(64);

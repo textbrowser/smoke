@@ -106,7 +106,7 @@ Completed Items
 - Logging class. See Database::writeLog().
 - Material icons.
 - Member status in Member Chat.
-- MemberChat attachment.
+- Member Chat attachment.
 - Messages from the past may trigger presence.
 - Messages may arrive while the Settings activity is the primary activity.
   Calls are not logged.
@@ -242,6 +242,7 @@ Remaining Items
   Neighbor Servers
   Ozone, Participants
   Password, Public Data
+- Simple Steam through UDP.
 - Steam. Also on Stack.
 - Stronger surreptitious forwarding. Larger RSA keys.
 - Translations.
