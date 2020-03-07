@@ -4861,4 +4861,31 @@ public class Database extends SQLiteOpenHelper
 	    }
 	}, 0, TimeUnit.MILLISECONDS);
     }
+
+    public void writeSteamStatus(String status, int oid)
+    {
+	if(m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("status", status);
+	    m_db.update("steam_files",
+			values,
+			"oid = ?",
+			new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
 }

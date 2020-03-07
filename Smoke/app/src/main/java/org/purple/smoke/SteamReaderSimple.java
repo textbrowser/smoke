@@ -96,6 +96,8 @@ public class SteamReaderSimple
 			    ** Completed!
 			    */
 
+			    s_databaseHelper.writeSteamStatus
+				("completed", m_oid);
 			    return;
 			}
 
@@ -137,6 +139,7 @@ public class SteamReaderSimple
     {
 	m_offset.set(0);
 	m_rate.set(0);
+	s_databaseHelper.writeSteamStatus("paused", m_oid);
 
 	if(m_reader != null)
 	{
