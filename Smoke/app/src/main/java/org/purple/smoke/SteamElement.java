@@ -32,6 +32,7 @@ public class SteamElement
     public String m_destination = "";
     public String m_fileName = "";
     public String m_status = "paused";
+    public String m_transferRate = "0 B / s";
     public byte m_fileDigest[] = null;
     public byte m_keyStream[] = null;
     public byte m_randomBytes[] = null;

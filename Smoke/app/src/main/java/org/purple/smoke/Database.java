@@ -1606,7 +1606,8 @@ public class Database extends SQLiteOpenHelper
 		 "is_download, " +              // 4
 		 "read_offset, " +              // 5
 		 "status, " +                   // 6
-		 "oid " +                       // 7
+		 "transfer_rate, " +            // 7
+		 "oid " +                       // 8
 		 "FROM steam_files", null);
 
 	    if(cursor != null && cursor.moveToPosition(position))
@@ -1705,6 +1706,14 @@ public class Database extends SQLiteOpenHelper
 			    {
 			    }
 			}
+
+			break;
+		    case 7:
+			if(bytes != null)
+			    steamElement.m_transferRate = new String(bytes);
+			else
+			    steamElement.m_transferRate =
+				"error (" + oid + ")";
 
 			break;
 		    default:
@@ -1946,6 +1955,35 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return "";
+    }
+
+    public String steamStatus(int oid)
+    {
+	if(m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	String status = "";
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT status FROM steam_files WHERE OID = ?",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		status = cursor.getString(0).trim();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return status;
     }
 
     public String writeParticipant(Cryptography cryptography,
@@ -4134,7 +4172,8 @@ public class Database extends SQLiteOpenHelper
 	    "keystream TEXT NOT NULL, " +
 	    "random_bytes TEXT NOT NULL PRIMARY KEY, " +
 	    "read_offset TEXT NOT NULL, " +
-	    "status TEXT NOT NULL)";
+	    "status TEXT NOT NULL, " +
+	    "transfer_rate TEXT NOT NULL)";
 
 	try
 	{
@@ -4799,6 +4838,10 @@ public class Database extends SQLiteOpenHelper
 			     cryptography.
 			     etmBase64String(steamElement.m_readOffset));
 			values.put("status", steamElement.m_status);
+			values.put
+			    ("transfer_rate",
+			     cryptography.
+			     etmBase64String(steamElement.m_transferRate));
 			m_db.insertOrThrow("steam_files", null, values);
 			m_db.setTransactionSuccessful();
 			Miscellaneous.sendBroadcast

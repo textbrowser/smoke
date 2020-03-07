@@ -45,6 +45,7 @@ public class SteamReaderSimple
     private AtomicInteger m_rate = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
+    private int m_oid = -1;
     private static int PACKET_SIZE = 4096;
     private static long READ_INTERVAL = 150; // 150 Milliseconds
 
@@ -106,11 +107,12 @@ public class SteamReaderSimple
 	}
     }
 
-    public SteamReaderSimple(String fileName)
+    public SteamReaderSimple(String fileName, int oid)
     {
 	m_completed = new AtomicBoolean(false);
 	m_fileName = fileName;
 	m_offset = new AtomicInteger(0);
+	m_oid = oid;
 	m_paused = new AtomicBoolean(false);
 	m_rate = new AtomicInteger(0);
     }
@@ -145,11 +147,5 @@ public class SteamReaderSimple
 		m_reader = null;
 	    }
 	}
-    }
-
-    public void setPaused(boolean state)
-    {
-	m_paused.set(state);
-	m_rate.set(0);
     }
 }

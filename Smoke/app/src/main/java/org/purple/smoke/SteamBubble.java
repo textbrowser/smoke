@@ -47,6 +47,7 @@ public class SteamBubble extends View
     private TextView m_fileSize = null;
     private TextView m_sent = null;
     private TextView m_status = null;
+    private TextView m_transferRate = null;
     private View m_view = null;
     private int m_oid = -1;
 
@@ -70,9 +71,7 @@ public class SteamBubble extends View
 	return stringBuilder.toString();
     }
 
-    public SteamBubble(Context context,
-		       Steam steam,
-		       ViewGroup viewGroup)
+    public SteamBubble(Context context, Steam steam, ViewGroup viewGroup)
     {
 	super(context);
 	m_context = context;
@@ -89,6 +88,7 @@ public class SteamBubble extends View
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
 	m_sent = (TextView) m_view.findViewById(R.id.sent);
 	m_status = (TextView) m_view.findViewById(R.id.status);
+	m_transferRate = (TextView) m_view.findViewById(R.id.transfer_rate);
 	m_view.setId(-1);
     }
 
@@ -130,6 +130,8 @@ public class SteamBubble extends View
 	m_oid = steamElement.m_oid;
 	m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	m_status.setText("Status: " + steamElement.m_status);
+	m_transferRate.setText
+	    ("Transfer Rate: " + steamElement.m_transferRate);
 	m_view.setId(m_oid);
     }
 }
