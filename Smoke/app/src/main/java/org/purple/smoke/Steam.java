@@ -325,9 +325,7 @@ public class Steam extends AppCompatActivity
 	    if(data != null &&
 	       requestCode == SELECT_FILE_REQUEST &&
 	       resultCode == RESULT_OK)
-	    {
 		m_fileName.setText(data.getData().toString());
-	    }
 	}
 	catch(Exception exception)
 	{
