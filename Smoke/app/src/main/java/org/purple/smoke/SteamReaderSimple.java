@@ -48,7 +48,7 @@ public class SteamReaderSimple
     private final static Database s_databaseHelper = Database.getInstance();
     private int m_oid = -1;
     private static int PACKET_SIZE = 4096;
-    private static long READ_INTERVAL = 150; // 150 Milliseconds
+    private static long READ_INTERVAL = 500; // 500 Milliseconds
 
     private void prepareReader()
     {
@@ -91,8 +91,8 @@ public class SteamReaderSimple
 			    return;
 
 			byte bytes[] = new byte[PACKET_SIZE];
-			int offset = inputStream.
-			    read(bytes, m_offset.get(), bytes.length);
+			int offset = inputStream.read
+			    (bytes, m_offset.get(), bytes.length);
 
 			if(offset == -1)
 			{
@@ -147,6 +147,7 @@ public class SteamReaderSimple
 	m_offset = new AtomicInteger(0);
 	m_oid = oid;
 	m_rate = new AtomicInteger(0);
+	prepareReader();
     }
 
     public void cancel()

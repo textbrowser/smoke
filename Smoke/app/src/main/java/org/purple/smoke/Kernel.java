@@ -90,6 +90,8 @@ public class Kernel
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock m_simpleSteamsMutex =
+	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final SparseArray<SteamReaderSimple> m_simpleSteams =
 	new SparseArray<> ();
@@ -1049,6 +1051,13 @@ public class Kernel
 		@Override
 		public void run()
 		{
+		    try
+		    {
+			prepareSimpleSteams();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
 		}
 	    }, 1500, STEAM_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -1089,6 +1098,62 @@ public class Kernel
 	}
     }
 
+    private void prepareSimpleSteams()
+    {
+	ArrayList<SteamElement> steams = purgeDeletedSimpleSteams();
+
+	if(steams == null)
+	    return;
+
+	for(SteamElement steamElement : steams)
+	{
+	    if(steamElement == null)
+		continue;
+	    else
+	    {
+		m_simpleSteamsMutex.readLock().lock();
+
+		try
+		{
+		    if(m_simpleSteams.get(steamElement.m_oid) != null)
+			continue;
+		}
+		catch(Exception exception)
+		{
+		}
+		finally
+		{
+		    m_simpleSteamsMutex.readLock().unlock();
+		}
+	    }
+
+	    SteamReaderSimple steam = null;
+
+	    if(steamElement.m_destination.equals("Other (Non-Smoke)"))
+		steam = new SteamReaderSimple
+		    (steamElement.m_fileName, steamElement.m_oid);
+
+	    if(steam == null)
+		continue;
+
+	    m_simpleSteamsMutex.writeLock().lock();
+
+	    try
+	    {
+		m_simpleSteams.append(steamElement.m_oid, steam);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_simpleSteamsMutex.writeLock().unlock();
+	    }
+	}
+
+	steams.clear();
+    }
+
     private void purge()
     {
 	/*
@@ -1117,6 +1182,33 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.writeLock().unlock();
+	}
+    }
+
+    private void purgeSimpleSteams()
+    {
+	m_simpleSteamsMutex.writeLock().lock();
+
+	try
+	{
+	    int size = m_simpleSteams.size();
+
+	    for(int i = 0; i < size; i++)
+	    {
+		int j = m_simpleSteams.keyAt(i);
+
+		if(m_simpleSteams.get(j) != null)
+		    m_simpleSteams.get(j).cancel();
+	    }
+
+	    m_simpleSteams.clear();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_simpleSteamsMutex.writeLock().unlock();
 	}
     }
 
@@ -1202,6 +1294,60 @@ public class Kernel
 	}
 
 	return neighbors;
+    }
+
+    public ArrayList<SteamElement> purgeDeletedSimpleSteams()
+    {
+	ArrayList<SteamElement> steams = s_databaseHelper.readSteams
+	    (s_cryptography);
+
+	if(steams == null || steams.isEmpty())
+	{
+	    purgeSimpleSteams();
+	    return steams;
+	}
+
+	m_simpleSteamsMutex.writeLock().lock();
+
+	try
+	{
+	    /*
+	    ** Remove steam objects which do not exist in the database.
+	    ** Also removed will be steams having deleted statuses.
+	    */
+
+	    for(int i = m_simpleSteams.size() - 1; i >= 0; i--)
+	    {
+		boolean found = false;
+		int oid = m_simpleSteams.keyAt(i);
+
+		for(SteamElement steam : steams)
+		    if(steam != null && steam.m_oid == oid)
+		    {
+			if(!steam.m_status.toLowerCase().equals("deleted"))
+			    found = true;
+
+			break;
+		    }
+
+		if(!found)
+		{
+		    if(m_simpleSteams.get(oid) != null)
+			m_simpleSteams.get(oid).cancel();
+
+		    m_simpleSteams.remove(oid);
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_simpleSteamsMutex.writeLock().unlock();
+	}
+
+	return steams;
     }
 
     public String fireIdentities()

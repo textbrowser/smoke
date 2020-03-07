@@ -638,90 +638,6 @@ public class Database extends SQLiteOpenHelper
 	return arrayList;
     }
 
-    public ArrayList<SipHashIdElement> readNonSharedSipHashIds
-	(Cryptography cryptography)
-    {
-	if(cryptography == null || m_db == null)
-	    return null;
-
-	ArrayList<SipHashIdElement> arrayList = null;
-	Cursor cursor = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery
-		("SELECT siphash_id, stream " +
-		 "FROM siphash_ids WHERE siphash_id_digest NOT IN " +
-		 "(SELECT siphash_id_digest FROM participants)", null);
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		arrayList = new ArrayList<> ();
-
-		while(!cursor.isAfterLast())
-		{
-		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
-		    boolean error = false;
-		    int count = cursor.getColumnCount();
-
-		    for(int i = 0; i < count; i++)
-		    {
-			byte bytes[] = cryptography.mtd
-			    (Base64.decode(cursor.getString(i).getBytes(),
-					   Base64.DEFAULT));
-
-			if(bytes == null)
-			{
-			    error = true;
-
-			    StringBuilder stringBuilder = new StringBuilder();
-
-			    stringBuilder.append
-				("Database::readNonSharedSipHashIds(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
-			    break;
-			}
-
-			switch(i)
-			{
-			case 0:
-			    sipHashIdElement.m_sipHashId = new String
-				(bytes, StandardCharsets.UTF_8);
-			    break;
-			case 1:
-			    sipHashIdElement.m_stream = bytes;
-			    break;
-			default:
-			    break;
-			}
-		    }
-
-		    if(!error)
-			arrayList.add(sipHashIdElement);
-
-		    cursor.moveToNext();
-		}
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(arrayList != null)
-		arrayList.clear();
-
-	    arrayList = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return arrayList;
-    }
-
     public ArrayList<ParticipantElement> readParticipants
 	(Cryptography cryptography, String sipHashId)
     {
@@ -841,6 +757,90 @@ public class Database extends SQLiteOpenHelper
 
 		if(arrayList.size() > 1)
 		    Collections.sort(arrayList, s_readParticipantsComparator);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
+    public ArrayList<SipHashIdElement> readNonSharedSipHashIds
+	(Cryptography cryptography)
+    {
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	ArrayList<SipHashIdElement> arrayList = null;
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT siphash_id, stream " +
+		 "FROM siphash_ids WHERE siphash_id_digest NOT IN " +
+		 "(SELECT siphash_id_digest FROM participants)", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    SipHashIdElement sipHashIdElement = new SipHashIdElement();
+		    boolean error = false;
+		    int count = cursor.getColumnCount();
+
+		    for(int i = 0; i < count; i++)
+		    {
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    error = true;
+
+			    StringBuilder stringBuilder = new StringBuilder();
+
+			    stringBuilder.append
+				("Database::readNonSharedSipHashIds(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append(cursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			    break;
+			}
+
+			switch(i)
+			{
+			case 0:
+			    sipHashIdElement.m_sipHashId = new String
+				(bytes, StandardCharsets.UTF_8);
+			    break;
+			case 1:
+			    sipHashIdElement.m_stream = bytes;
+			    break;
+			default:
+			    break;
+			}
+		    }
+
+		    if(!error)
+			arrayList.add(sipHashIdElement);
+
+		    cursor.moveToNext();
+		}
 	    }
 	}
 	catch(Exception exception)
@@ -1010,6 +1010,164 @@ public class Database extends SQLiteOpenHelper
 
 		if(arrayList.size() > 1)
 		    Collections.sort(arrayList, s_readSipHashIdsComparator);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
+    public ArrayList<SteamElement> readSteams(Cryptography cryptography)
+    {
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	ArrayList<SteamElement> arrayList = null;
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT absolute_filename, " + // 0
+		 "destination, " +              // 1
+		 "file_digest, " +              // 2
+		 "file_size, " +                // 3
+		 "is_download, " +              // 4
+		 "read_offset, " +              // 5
+		 "status, " +                   // 6
+		 "transfer_rate, " +            // 7
+		 "oid " +                       // 8
+		 "FROM steam_files", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    String status = cursor.getString(6).trim();
+
+		    if(status.equals("deleted"))
+			continue;
+
+		    SteamElement steamElement = new SteamElement();
+		    int count = cursor.getColumnCount();
+		    int oid = cursor.getInt(count - 1);
+
+		    for(int i = 0; i < count; i++)
+		    {
+			if(i == 6)
+			{
+			    steamElement.m_status = status;
+			    continue;
+			}
+			else if(i == count - 1)
+			{
+			    steamElement.m_oid = oid;
+			    continue;
+			}
+
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    StringBuilder stringBuilder = new StringBuilder();
+
+			    stringBuilder.append("Database::readSteams(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append(cursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			}
+
+			switch(i)
+		        {
+			case 0:
+			    if(bytes != null)
+				steamElement.m_fileName = new String(bytes);
+			    else
+				steamElement.m_fileName =
+				    "error (" + oid + ")";
+
+			    break;
+			case 1:
+			    if(bytes != null)
+				steamElement.m_destination = new String(bytes);
+			    else
+				steamElement.m_destination =
+				    "error (" + oid + ")";
+
+			    break;
+			case 2:
+			    if(bytes != null)
+				steamElement.m_fileDigest = bytes;
+
+			    break;
+			case 3:
+			    if(bytes != null)
+				try
+				{
+				    steamElement.m_fileSize = Integer.parseInt
+					(new String(bytes));
+				}
+				catch(Exception exception)
+				{
+				}
+
+			    break;
+			case 4:
+			    if(bytes != null)
+				try
+				{
+				    steamElement.m_direction = Integer.parseInt
+					(new String(bytes));
+				}
+				catch(Exception exception)
+				{
+				}
+
+			    break;
+			case 5:
+			    if(bytes != null)
+				try
+				{
+				    steamElement.m_readOffset =
+					Integer.parseInt(new String(bytes));
+				}
+				catch(Exception exception)
+				{
+				}
+
+			    break;
+			case 7:
+			    if(bytes != null)
+				steamElement.m_transferRate = new String(bytes);
+			    else
+				steamElement.m_transferRate =
+				    "error (" + oid + ")";
+
+			    break;
+			default:
+			    break;
+			}
+		    }
+
+		    arrayList.add(steamElement);
+		    cursor.moveToNext();
+		}
 	    }
 	}
 	catch(Exception exception)
@@ -1668,7 +1826,6 @@ public class Database extends SQLiteOpenHelper
 			break;
 		    case 3:
 			if(bytes != null)
-			{
 			    try
 			    {
 				steamElement.m_fileSize = Integer.parseInt
@@ -1677,12 +1834,10 @@ public class Database extends SQLiteOpenHelper
 			    catch(Exception exception)
 			    {
 			    }
-			}
 
 			break;
 		    case 4:
 			if(bytes != null)
-			{
 			    try
 			    {
 				steamElement.m_direction = Integer.parseInt
@@ -1691,12 +1846,10 @@ public class Database extends SQLiteOpenHelper
 			    catch(Exception exception)
 			    {
 			    }
-			}
 
 			break;
 		    case 5:
 			if(bytes != null)
-			{
 			    try
 			    {
 				steamElement.m_readOffset = Integer.parseInt
@@ -1705,7 +1858,6 @@ public class Database extends SQLiteOpenHelper
 			    catch(Exception exception)
 			    {
 			    }
-			}
 
 			break;
 		    case 7:
@@ -4867,6 +5019,10 @@ public class Database extends SQLiteOpenHelper
 	catch(Exception exception)
 	{
 	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
     }
 
     public void writeSteamStatus(String status, int oid)
@@ -4880,7 +5036,11 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
-	    values.put("status", status);
+	    if(status.isEmpty())
+		values.put("status", "deleted");
+	    else
+		values.put("status", status);
+
 	    m_db.update("steam_files",
 			values,
 			"oid = ?",

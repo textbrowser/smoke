@@ -1943,6 +1943,9 @@ public class Cryptography
 	    inputStream = Smoke.getApplication().getContentResolver().
 		openInputStream(Uri.parse(fileName));
 
+	    if(inputStream == null)
+		return null;
+
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 	    byte buffer[] = new byte[4096];
 	    int n = 0;
