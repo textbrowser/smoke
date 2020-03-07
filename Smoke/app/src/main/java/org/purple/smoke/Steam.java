@@ -370,8 +370,10 @@ public class Steam extends AppCompatActivity
 			   getString("dialog_accepted").equals("true"))
 			    try
 			    {
-				m_databaseHelper.deleteSteam(itemId);
-				m_adapter.notifyDataSetChanged();
+				if(m_databaseHelper.
+				   deleteEntry(String.valueOf(itemId),
+					       "steam_files"))
+				    m_adapter.notifyDataSetChanged();
 			    }
 			    catch(Exception exception)
 			    {
