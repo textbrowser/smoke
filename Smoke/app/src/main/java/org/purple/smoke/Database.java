@@ -4840,6 +4840,35 @@ public class Database extends SQLiteOpenHelper
 	}, 0, TimeUnit.MILLISECONDS);
     }
 
+    public void writeSteamStatus(Cryptography cryptography,
+				 String transferRate,
+				 int offset,
+				 int oid)
+    {
+	if(cryptography == null || m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("read_offset",cryptography.etmBase64String(offset));
+	    values.put
+		("transfer_rate", cryptography.etmBase64String(transferRate));
+	    m_db.update("steam_files",
+			values,
+			"oid = ?",
+			new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	    Miscellaneous.sendBroadcast("org.purple.smoke.steam_status");
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     public void writeSteamStatus(String status, int oid)
     {
 	if(m_db == null)
@@ -4857,6 +4886,7 @@ public class Database extends SQLiteOpenHelper
 			"oid = ?",
 			new String[] {String.valueOf(oid)});
 	    m_db.setTransactionSuccessful();
+	    Miscellaneous.sendBroadcast("org.purple.smoke.steam_status");
 	}
 	catch(Exception exception)
 	{

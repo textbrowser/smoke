@@ -88,41 +88,6 @@ public class TcpNeighbor extends Neighbor
 	return false;
     }
 
-    protected boolean send(String message)
-    {
-	if(!connected() || message == null || message.length() == 0)
-	    return false;
-	else
-	    return send(message.getBytes());
-    }
-
-    protected boolean send(byte bytes[])
-    {
-	if(bytes == null || bytes.length == 0 || !connected())
-	    return false;
-
-	try
-	{
-	    if(m_socket == null || m_socket.getOutputStream() == null)
-		return false;
-
-	    Kernel.writeCongestionDigest(bytes);
-
-	    OutputStream outputStream = m_socket.getOutputStream();
-
-	    outputStream.write(bytes);
-	    m_bytesWritten.getAndAdd(bytes.length);
-	}
-	catch(Exception exception)
-	{
-	    setError("A socket error occurred on send().");
-	    disconnect();
-	    return false;
-	}
-
-	return true;
-    }
-
     protected int getLocalPort()
     {
 	try
@@ -135,6 +100,43 @@ public class TcpNeighbor extends Neighbor
 	}
 
 	return 0;
+    }
+
+    protected int send(String message)
+    {
+	if(!connected() || message == null || message.length() == 0)
+	    return 0;
+	else
+	    return send(message.getBytes());
+    }
+
+    protected int send(byte bytes[])
+    {
+	if(bytes == null || bytes.length == 0 || !connected())
+	    return 0;
+
+	int sent = 0;
+
+	try
+	{
+	    if(m_socket == null || m_socket.getOutputStream() == null)
+		return sent;
+
+	    Kernel.writeCongestionDigest(bytes);
+
+	    OutputStream outputStream = m_socket.getOutputStream();
+
+	    outputStream.write(bytes);
+	    m_bytesWritten.getAndAdd(bytes.length);
+	    sent += bytes.length;
+	}
+	catch(Exception exception)
+	{
+	    setError("A socket error occurred on send().");
+	    disconnect();
+	}
+
+	return sent;
     }
 
     protected void abort()

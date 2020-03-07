@@ -91,6 +91,8 @@ public class Kernel
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
+    private final SparseArray<SteamReaderSimple> m_simpleSteams =
+	new SparseArray<> ();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -3046,7 +3048,32 @@ public class Kernel
 	if(bytes == null || bytes.length == 0)
 	    return 0;
 
-	return 0;
+	int sent = 0;
+
+	m_neighborsMutex.readLock().lock();
+
+	try
+	{
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null &&
+		   m_neighbors.get(j).passthrough())
+		    sent = Math.max(m_neighbors.get(j).send(bytes), sent);
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
+	}
+
+	return sent;
     }
 
     public void setWakeLock(boolean state)

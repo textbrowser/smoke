@@ -310,7 +310,8 @@ public abstract class Neighbor
 			if(!m_passthrough.get())
 			{
 			    if(!m_capabilitiesSent.get())
-				m_capabilitiesSent.set(send(getCapabilities()));
+				m_capabilitiesSent.set
+				    (send(getCapabilities()) > 0);
 
 			    send(getIdentities());
 			}
@@ -374,7 +375,7 @@ public abstract class Neighbor
 			if(array[0].isEmpty())
 			    m_databaseHelper.deleteEntry
 				(array[2], "outbound_queue");
-			else if(send(array[0]))
+			else if(send(array[0]) > 0)
 			{
 			    m_databaseHelper.deleteEntry
 				(array[2], "outbound_queue");
@@ -485,9 +486,9 @@ public abstract class Neighbor
 
     protected abstract String getLocalIp();
     protected abstract boolean connected();
-    protected abstract boolean send(String message);
-    protected abstract boolean send(byte bytes[]);
     protected abstract int getLocalPort();
+    protected abstract int send(String message);
+    protected abstract int send(byte bytes[]);
     protected abstract void connect();
 
     protected boolean isNetworkConnected()

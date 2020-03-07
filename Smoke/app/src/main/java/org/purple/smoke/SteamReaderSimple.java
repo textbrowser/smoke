@@ -43,8 +43,10 @@ public class SteamReaderSimple
     private AtomicInteger m_rate = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
-    private int m_oid = -1;
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
+    private int m_oid = -1;
     private static int PACKET_SIZE = 4096;
     private static long READ_INTERVAL = 150; // 150 Milliseconds
 
@@ -107,8 +109,18 @@ public class SteamReaderSimple
 			** Send raw bytes.
 			*/
 
-			m_offset.addAndGet
-			    (Kernel.getInstance().sendSimpleSteam(bytes));
+			String transferRate = "0 B / s";
+			int sent = Kernel.getInstance().sendSimpleSteam(bytes);
+
+			if(sent > 0)
+			{
+			    m_offset.addAndGet(sent);
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography,
+				 transferRate,
+				 m_offset.get(),
+				 m_oid);
+			}
 		    }
 		    catch(Exception exception)
 		    {

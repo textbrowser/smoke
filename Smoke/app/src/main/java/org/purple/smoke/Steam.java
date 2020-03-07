@@ -71,6 +71,7 @@ public class Steam extends AppCompatActivity
 		invalidateOptionsMenu();
 		break;
 	    case "org.purple.smoke.steam_added":
+	    case "org.purple.smoke.steam_status":
 		m_adapter.notifyDataSetChanged();
 		break;
 	    default:
@@ -122,6 +123,7 @@ public class Steam extends AppCompatActivity
     {
 	public final static int DELETE_ALL_STEAMS = 0;
 	public final static int DELETE_STEAM = 1;
+	public final static int REWIND_STEAM = 2;
     }
 
     private void populateParticipants()
@@ -521,6 +523,7 @@ public class Steam extends AppCompatActivity
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.steam_added");
+	    intentFilter.addAction("org.purple.smoke.steam_status");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

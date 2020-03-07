@@ -49,6 +49,9 @@ public class SteamBubble extends View
     private TextView m_status = null;
     private TextView m_transferRate = null;
     private View m_view = null;
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
+    private final static Database s_databaseHelper = Database.getInstance();
     private int m_oid = -1;
 
     private String formatSize(long size)
@@ -82,6 +85,24 @@ public class SteamBubble extends View
 
 	m_view = inflater.inflate(R.layout.steam_bubble, viewGroup, false);
 	m_control = (Button) m_view.findViewById(R.id.control);
+	m_control.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		switch(m_controlString)
+		{
+		case "pause":
+		    s_databaseHelper.writeSteamStatus("paused", m_oid);
+		    break;
+		case "resume":
+		    s_databaseHelper.writeSteamStatus("transferring", m_oid);
+		    break;
+		case "rewind":
+		    s_databaseHelper.writeSteamStatus("paused", m_oid);
+		    break;
+		}
+	    }
+        });
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
@@ -106,15 +127,15 @@ public class SteamBubble extends View
 	{
 	case "completed":
 	    m_control.setText("Rewind");
-	    m_controlString = "Rewind";
+	    m_controlString = "rewind";
 	    break;
 	case "paused":
 	    m_control.setText("Resume");
-	    m_controlString = "Resume";
+	    m_controlString = "resume";
 	    break;
 	case "transferring":
 	    m_control.setText("Pause");
-	    m_controlString = "Pause";
+	    m_controlString = "pause";
 	    break;
 	default:
 	    break;

@@ -68,80 +68,6 @@ public class UdpNeighbor extends Neighbor
 	}
     }
 
-    protected boolean send(String message)
-    {
-	if(!connected() || message == null || message.length() == 0)
-	    return false;
-
-	try
-	{
-	    if(m_socket == null)
-		return false;
-
-	    StringBuilder stringBuilder = new StringBuilder(message);
-
-	    while(stringBuilder.length() > 0)
-	    {
-		if(m_aborted.get())
-		    return false;
-
-		byte bytes[] = stringBuilder.substring
-		    (0, Math.min(576, stringBuilder.length())).getBytes();
-
-		m_socket.send
-		    (new DatagramPacket(bytes,
-					bytes.length,
-					InetAddress.getByName(m_ipAddress),
-					Integer.parseInt(m_ipPort)));
-		stringBuilder.delete(0, bytes.length);
-	    }
-
-	    Kernel.writeCongestionDigest(message);
-	    m_bytesWritten.getAndAdd(message.length());
-	    setError("");
-	}
-	catch(Exception exception)
-	{
-	    setError("A socket error occurred on send().");
-	    disconnect();
-	    return false;
-	}
-
-	return false;
-    }
-
-    protected boolean send(byte bytes[])
-    {
-	if(bytes == null || bytes.length == 0 || !connected())
-	    return false;
-
-	try
-	{
-	    if(m_socket == null)
-		return false;
-
-	    if(m_aborted.get())
-		return false;
-
-	    m_socket.send
-		(new DatagramPacket(bytes,
-				    bytes.length,
-				    InetAddress.getByName(m_ipAddress),
-				    Integer.parseInt(m_ipPort)));
-	    Kernel.writeCongestionDigest(bytes);
-	    m_bytesWritten.getAndAdd(bytes.length);
-	    setError("");
-	}
-	catch(Exception exception)
-	{
-	    setError("A socket error occurred on send().");
-	    disconnect();
-	    return false;
-	}
-
-	return true;
-    }
-
     protected int getLocalPort()
     {
 	try
@@ -154,6 +80,81 @@ public class UdpNeighbor extends Neighbor
 	}
 
 	return 0;
+    }
+
+    protected int send(String message)
+    {
+	if(!connected() || message == null || message.length() == 0)
+	    return 0;
+
+	int sent = 0;
+
+	try
+	{
+	    if(m_socket == null)
+		return sent;
+
+	    StringBuilder stringBuilder = new StringBuilder(message);
+
+	    while(stringBuilder.length() > 0)
+	    {
+		if(m_aborted.get())
+		    return sent;
+
+		byte bytes[] = stringBuilder.substring
+		    (0, Math.min(576, stringBuilder.length())).getBytes();
+
+		m_socket.send
+		    (new DatagramPacket(bytes,
+					bytes.length,
+					InetAddress.getByName(m_ipAddress),
+					Integer.parseInt(m_ipPort)));
+		sent += bytes.length;
+		stringBuilder.delete(0, bytes.length);
+	    }
+
+	    Kernel.writeCongestionDigest(message);
+	    m_bytesWritten.getAndAdd(message.length());
+	    setError("");
+	}
+	catch(Exception exception)
+	{
+	    setError("A socket error occurred on send().");
+	    disconnect();
+	}
+
+	return sent;
+    }
+
+    protected int send(byte bytes[])
+    {
+	if(bytes == null || bytes.length == 0 || !connected())
+	    return 0;
+
+	int sent = 0;
+
+	try
+	{
+	    if(m_socket == null)
+		return sent;
+
+	    m_socket.send
+		(new DatagramPacket(bytes,
+				    bytes.length,
+				    InetAddress.getByName(m_ipAddress),
+				    Integer.parseInt(m_ipPort)));
+	    Kernel.writeCongestionDigest(bytes);
+	    m_bytesWritten.getAndAdd(bytes.length);
+	    sent += bytes.length;
+	    setError("");
+	}
+	catch(Exception exception)
+	{
+	    setError("A socket error occurred on send().");
+	    disconnect();
+	}
+
+	return sent;
     }
 
     protected void abort()
