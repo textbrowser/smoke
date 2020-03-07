@@ -73,6 +73,8 @@ public class SteamReaderSimple
 			    return;
 			case "completed":
 			    return;
+			case "deleted":
+			    return;
 			case "paused":
 			    return;
 			default:
@@ -139,7 +141,7 @@ public class SteamReaderSimple
     {
 	m_offset.set(0);
 	m_rate.set(0);
-	s_databaseHelper.writeSteamStatus("paused", m_oid);
+	s_databaseHelper.writeSteamStatus("deleted", m_oid);
 
 	if(m_reader != null)
 	{
