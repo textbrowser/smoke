@@ -130,7 +130,8 @@ public class SteamReaderSimple
 
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography,
-				 "completed", "0 B / s",
+				 "completed",
+				 "0 B / s",
 				 m_oid,
 				 m_offset.get());
 			    return;
