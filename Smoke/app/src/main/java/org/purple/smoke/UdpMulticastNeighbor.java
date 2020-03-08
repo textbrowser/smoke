@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -73,46 +74,10 @@ public class UdpMulticastNeighbor extends Neighbor
 
     protected int send(String message)
     {
-	int sent = 0;
-
 	if(!connected() || message == null || message.length() == 0)
-	    return sent;
-
-	try
-	{
-	    if(m_socket == null)
-		return sent;
-
-	    StringBuilder stringBuilder = new StringBuilder(message);
-
-	    while(stringBuilder.length() > 0)
-	    {
-		if(m_aborted.get())
-		    return sent;
-
-		byte bytes[] = stringBuilder.substring
-		    (0, Math.min(576, stringBuilder.length())).getBytes();
-
-		m_socket.send
-		    (new DatagramPacket(bytes,
-					bytes.length,
-					InetAddress.getByName(m_ipAddress),
-					Integer.parseInt(m_ipPort)));
-		sent += bytes.length;
-		stringBuilder.delete(0, bytes.length);
-	    }
-
-	    Kernel.writeCongestionDigest(message);
-	    m_bytesWritten.getAndAdd(message.length());
-	    setError("");
-	}
-	catch(Exception exception)
-	{
-	    setError("A socket error occurred on send().");
-	    disconnect();
-	}
-
-	return sent;
+	    return 0;
+	else
+	    return send(message.getBytes());
     }
 
     protected int send(byte bytes[])
@@ -127,14 +92,28 @@ public class UdpMulticastNeighbor extends Neighbor
 	    if(m_socket == null)
 		return sent;
 
-	    m_socket.send
-		(new DatagramPacket(bytes,
-				    bytes.length,
-				    InetAddress.getByName(m_ipAddress),
-				    Integer.parseInt(m_ipPort)));
+	    ByteArrayInputStream byteArrayInputStream = new
+		ByteArrayInputStream(bytes);
+
+	    while(byteArrayInputStream.available() > 0)
+	    {
+		if(m_aborted.get())
+		    break;
+
+		byte b[] = new byte
+		    [Math.min(576, byteArrayInputStream.available())];
+
+		byteArrayInputStream.read(b);
+		m_socket.send
+		    (new DatagramPacket(b,
+					b.length,
+					InetAddress.getByName(m_ipAddress),
+					Integer.parseInt(m_ipPort)));
+		sent += b.length;
+	    }
+
 	    Kernel.writeCongestionDigest(bytes);
-	    m_bytesWritten.getAndAdd(bytes.length);
-	    sent += bytes.length;
+	    m_bytesWritten.getAndAdd(sent);
 	    setError("");
 	}
 	catch(Exception exception)
