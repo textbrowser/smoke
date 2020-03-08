@@ -39,8 +39,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SteamReaderSimple
 {
     private AtomicBoolean m_completed = null;
-    private AtomicInteger m_offset = null;
     private AtomicInteger m_rate = null;
+    private AtomicLong m_offset = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private final static Cryptography s_cryptography =
@@ -124,8 +124,8 @@ public class SteamReaderSimple
 				(s_cryptography,
 				 "",
 				 transferRate,
-				 m_offset.get(),
-				 m_oid);
+				 m_oid,
+				 m_offset.get());
 			}
 		    }
 		    catch(Exception exception)
@@ -147,10 +147,10 @@ public class SteamReaderSimple
 	}
     }
 
-    public SteamReaderSimple(String fileName, int oid)
+    public SteamReaderSimple(String fileName, int oid, long offset)
     {
 	m_fileName = fileName;
-	m_offset = new AtomicInteger(0);
+	m_offset = new AtomicLong(offset);
 	m_oid = oid;
 	m_rate = new AtomicInteger(0);
 	prepareReader();

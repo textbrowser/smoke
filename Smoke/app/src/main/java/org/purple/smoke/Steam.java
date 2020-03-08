@@ -481,10 +481,6 @@ public class Steam extends AppCompatActivity
 			    }
 
 			break;
-		    case ContextMenuEnumerator.REWIND_STEAM:
-			m_databaseHelper.writeSteamStatus
-			    (s_cryptography, "paused", "0 B / s", 0, itemId);
-			break;
 		    default:
 			break;
 		    }
@@ -504,6 +500,11 @@ public class Steam extends AppCompatActivity
 		(Steam.this,
 		 listener,
 		 "Are you sure that you wish to delete the selected Steam?");
+	    break;
+	case ContextMenuEnumerator.REWIND_STEAM:
+	    m_databaseHelper.writeSteamStatus
+		(s_cryptography, "rewind", "0 B / s", itemId, 0);
+	    m_adapter.notifyDataSetChanged();
 	    break;
 	default:
 	    break;

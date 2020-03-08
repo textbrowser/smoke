@@ -101,7 +101,7 @@ public class SteamBubble extends View
 		    break;
 		case "rewind":
 		    s_databaseHelper.writeSteamStatus
-			(s_cryptography, "rewind", "0 B / s", 0, m_oid);
+			(s_cryptography, "rewind", "0 B / s", m_oid, 0);
 		    break;
 		}
 	    }

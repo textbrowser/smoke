@@ -4995,8 +4995,8 @@ public class Database extends SQLiteOpenHelper
     public void writeSteamStatus(Cryptography cryptography,
 				 String status,
 				 String transferRate,
-				 int offset,
-				 int oid)
+				 int oid,
+				 long offset)
     {
 	if(cryptography == null || m_db == null)
 	    return;
