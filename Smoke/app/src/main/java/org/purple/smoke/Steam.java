@@ -142,8 +142,10 @@ public class Steam extends AppCompatActivity
 	if(m_participantsSpinner == null)
 	    return;
 
-	ArrayList<ParticipantElement> arrayList = State.getInstance().
-	    participants();
+	ArrayList<ParticipantElement> arrayList = null;
+
+	if(arrayList != null)
+	    arrayList = State.getInstance().participants();
 
 	if(arrayList == null || arrayList.isEmpty())
 	{
@@ -175,27 +177,29 @@ public class Steam extends AppCompatActivity
 
     private void prepareListeners()
     {
-	m_attachmentButton.setOnClickListener(new View.OnClickListener()
-	{
-	    public void onClick(View view)
+	if(m_attachmentButton != null)
+	    m_attachmentButton.setOnClickListener(new View.OnClickListener()
 	    {
-		if(Steam.this.isFinishing())
-		    return;
+		public void onClick(View view)
+		{
+		    if(Steam.this.isFinishing())
+			return;
 
-		showFileActivity();
-	    }
-	});
+		    showFileActivity();
+		}
+	    });
 
-	m_sendButton.setOnClickListener(new View.OnClickListener()
-	{
-	    public void onClick(View view)
+	if(m_sendButton != null)
+	    m_sendButton.setOnClickListener(new View.OnClickListener()
 	    {
-		if(Steam.this.isFinishing())
-		    return;
+		public void onClick(View view)
+		{
+		    if(Steam.this.isFinishing())
+			return;
 
-		saveSteam();
-	    }
-	});
+		    saveSteam();
+		}
+	    });
     }
 
     private void prepareSchedulers()
@@ -229,7 +233,7 @@ public class Steam extends AppCompatActivity
 
     private void prepareWidgets()
     {
-	if(m_adapter == null)
+	if(m_adapter == null && m_recyclerView != null)
 	{
 	    m_adapter = new SteamAdapter(this);
 	    m_adapter.registerAdapterDataObserver
