@@ -4995,6 +4995,40 @@ public class Database extends SQLiteOpenHelper
     public void writeSteamStatus(Cryptography cryptography,
 				 String status,
 				 String transferRate,
+				 int oid)
+    {
+	if(cryptography == null || m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    if(!status.isEmpty())
+		values.put("status", status);
+
+	    values.put
+		("transfer_rate", cryptography.etmBase64String(transferRate));
+	    m_db.update("steam_files",
+			values,
+			"oid = ?",
+			new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
+    public void writeSteamStatus(Cryptography cryptography,
+				 String status,
+				 String transferRate,
 				 int oid,
 				 long offset)
     {

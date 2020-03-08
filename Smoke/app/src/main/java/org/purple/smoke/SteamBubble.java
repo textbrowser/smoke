@@ -34,7 +34,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import java.text.DecimalFormat;
 
 public class SteamBubble extends View
 {
@@ -58,22 +57,7 @@ public class SteamBubble extends View
 
     private String formatSize(long size)
     {
-	DecimalFormat decimalFormat = new DecimalFormat("#.00");
-	StringBuilder stringBuilder = new StringBuilder();
-
-	if(size >= 1073741824)
-	    stringBuilder.append
-		(decimalFormat.format(size / 1073741824.0)).append(" GiB");
-	else if(size >= 1048576)
-	    stringBuilder.append
-		(decimalFormat.format(size / 1048576.0)).append(" MiB");
-	else if(size >= 1024)
-	    stringBuilder.append
-		(decimalFormat.format(size / 1024.0)).append(" KiB");
-	else
-	    stringBuilder.append(size).append(" B");
-
-	return stringBuilder.toString();
+	return Miscellaneous.formattedDigitalInformation(String.valueOf(size));
     }
 
     public SteamBubble(Context context, Steam steam, ViewGroup viewGroup)
@@ -94,7 +78,8 @@ public class SteamBubble extends View
 		switch(m_controlString)
 		{
 		case "pause":
-		    s_databaseHelper.writeSteamStatus("paused", m_oid);
+		    s_databaseHelper.writeSteamStatus
+			(s_cryptography, "paused", "0 B / s", m_oid);
 		    break;
 		case "resume":
 		    s_databaseHelper.writeSteamStatus("transferring", m_oid);
