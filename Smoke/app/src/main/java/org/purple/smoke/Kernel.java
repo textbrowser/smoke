@@ -3208,11 +3208,15 @@ public class Kernel
 
 		if(m_neighbors.get(j) != null &&
 		   m_neighbors.get(j).passthrough())
+		{
 		    /*
 		    ** Increase the offset by the minimum number of bytes.
 		    */
 
-		    sent = Math.min(m_neighbors.get(j).send(bytes), sent);
+		    int rc = m_neighbors.get(j).send(bytes);
+
+		    sent = Math.max(0, Math.min(Integer.MAX_VALUE, rc));
+		}
 	    }
 	}
 	catch(Exception exception)

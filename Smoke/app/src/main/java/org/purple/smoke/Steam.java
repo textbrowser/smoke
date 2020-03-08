@@ -371,7 +371,6 @@ public class Steam extends AppCompatActivity
 	m_sendButton = (Button) findViewById(R.id.send);
 	populateParticipants();
 	prepareListeners();
-	prepareSchedulers();
 	prepareWidgets();
 
 	/*
@@ -481,6 +480,10 @@ public class Steam extends AppCompatActivity
 			    {
 			    }
 
+			break;
+		    case ContextMenuEnumerator.REWIND_STEAM:
+			m_databaseHelper.writeSteamStatus
+			    (s_cryptography, "paused", "0 B / s", 0, itemId);
 			break;
 		    default:
 			break;
@@ -640,5 +643,7 @@ public class Steam extends AppCompatActivity
 	catch(Exception exception)
 	{
 	}
+
+	prepareSchedulers();
     }
 }

@@ -156,6 +156,8 @@ public class SteamBubble extends View
 	m_fileSize.setText
 	    ("Size: " + formatSize(steamElement.m_fileSize));
 	m_oid = steamElement.m_oid;
+	m_progress.setMax((int) steamElement.m_fileSize);
+	m_progress.setProgress((int) steamElement.m_readOffset);
 	m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	m_status.setText("Status: " + steamElement.m_status);
 	m_transferRate.setText
