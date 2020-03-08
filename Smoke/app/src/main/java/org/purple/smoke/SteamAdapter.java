@@ -77,9 +77,13 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 		     view.getId(),
 		     1,
 		     "Delete Steam").setEnabled(view.getId() != -1);
+	    menu.add(Steam.ContextMenuEnumerator.REWIND_ALL_STEAMS,
+		     -1,
+		     2,
+		     "Rewind All Steams");
 	    menu.add(Steam.ContextMenuEnumerator.REWIND_STEAM,
 		     view.getId(),
-		     2,
+		     3,
 		     "Rewind Steam").setEnabled(view.getId() != -1);
 	}
 

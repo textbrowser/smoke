@@ -79,14 +79,14 @@ public class SteamBubble extends View
 		{
 		case "pause":
 		    s_databaseHelper.writeSteamStatus
-			(s_cryptography, "paused", "0 B / s", m_oid);
+			(s_cryptography, "paused", "", m_oid);
 		    break;
 		case "resume":
 		    s_databaseHelper.writeSteamStatus("transferring", m_oid);
 		    break;
 		case "rewind":
 		    s_databaseHelper.writeSteamStatus
-			(s_cryptography, "rewind", "0 B / s", m_oid, 0);
+			(s_cryptography, "rewind", "", m_oid, 0);
 		    break;
 		}
 	    }

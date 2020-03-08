@@ -103,7 +103,7 @@ public class SteamReaderSimple
 			case "rewind":
 			    m_offset.set(0);
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "paused", "0 B / s", m_oid, 0);
+				(s_cryptography, "paused", "", m_oid, 0);
 			    return;
 			default:
 			    break;
@@ -129,7 +129,7 @@ public class SteamReaderSimple
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography,
 				 "completed",
-				 "0 B / s",
+				 "",
 				 m_oid,
 				 m_offset.get());
 			    return;

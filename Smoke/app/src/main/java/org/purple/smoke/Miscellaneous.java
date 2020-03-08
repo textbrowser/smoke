@@ -64,6 +64,7 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class Miscellaneous
 {
+    public static final String RATE = "0.00 B / s";
     public static final int INTEGER_BYTES = 4;
     public static final int LONG_BYTES = 8;
     public static final long LONG_LONG_BYTES = 8;

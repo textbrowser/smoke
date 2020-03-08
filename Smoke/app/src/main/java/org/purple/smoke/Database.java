@@ -4503,6 +4503,30 @@ public class Database extends SQLiteOpenHelper
 	onCreate(m_db);
     }
 
+    public void rewindAllSteams()
+    {
+	if(m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("status", "rewind");
+	    m_db.update("steam_files", values, null, null);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void saveFireChannel(Cryptography cryptography,
 				String name,
 				byte encryptionKey[],
@@ -4967,10 +4991,18 @@ public class Database extends SQLiteOpenHelper
 			     cryptography.
 			     etmBase64String(steamElement.m_readOffset));
 			values.put("status", steamElement.m_status);
-			values.put
-			    ("transfer_rate",
-			     cryptography.
-			     etmBase64String(steamElement.m_transferRate));
+
+			if(steamElement.m_transferRate.isEmpty())
+			    values.put
+				("transfer_rate",
+				 cryptography.
+				 etmBase64String(Miscellaneous.RATE));
+			else
+			    values.put
+				("transfer_rate",
+				 cryptography.
+				 etmBase64String(steamElement.m_transferRate));
+
 			m_db.insertOrThrow("steam_files", null, values);
 			m_db.setTransactionSuccessful();
 			Miscellaneous.sendBroadcast
@@ -5008,8 +5040,15 @@ public class Database extends SQLiteOpenHelper
 	    if(!status.isEmpty())
 		values.put("status", status);
 
-	    values.put
-		("transfer_rate", cryptography.etmBase64String(transferRate));
+	    if(transferRate.isEmpty())
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(Miscellaneous.RATE));
+	    else
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(transferRate));
+
 	    m_db.update("steam_files",
 			values,
 			"oid = ?",
@@ -5045,8 +5084,15 @@ public class Database extends SQLiteOpenHelper
 	    if(!status.isEmpty())
 		values.put("status", status);
 
-	    values.put
-		("transfer_rate", cryptography.etmBase64String(transferRate));
+	    if(transferRate.isEmpty())
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(Miscellaneous.RATE));
+	    else
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(transferRate));
+
 	    m_db.update("steam_files",
 			values,
 			"oid = ?",

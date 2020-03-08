@@ -133,7 +133,8 @@ public class Steam extends AppCompatActivity
     {
 	public final static int DELETE_ALL_STEAMS = 0;
 	public final static int DELETE_STEAM = 1;
-	public final static int REWIND_STEAM = 2;
+	public final static int REWIND_ALL_STEAMS = 2;
+	public final static int REWIND_STEAM = 3;
     }
 
     private void populateParticipants()
@@ -500,9 +501,13 @@ public class Steam extends AppCompatActivity
 		 listener,
 		 "Are you sure that you wish to delete the selected Steam?");
 	    break;
+	case ContextMenuEnumerator.REWIND_ALL_STEAMS:
+	    m_databaseHelper.rewindAllSteams();
+	    m_adapter.notifyDataSetChanged();
+	    break;
 	case ContextMenuEnumerator.REWIND_STEAM:
 	    m_databaseHelper.writeSteamStatus
-		(s_cryptography, "rewind", "0 B / s", itemId, 0);
+		(s_cryptography, "rewind", "", itemId, 0);
 	    m_adapter.notifyDataSetChanged();
 	    break;
 	default:
