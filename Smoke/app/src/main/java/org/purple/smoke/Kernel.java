@@ -3191,10 +3191,10 @@ public class Kernel
 
     public int sendSimpleSteam(byte bytes[])
     {
-	if(bytes == null || bytes.length == 0)
-	    return 0;
-
 	int sent = 0;
+
+	if(bytes == null || bytes.length == 0)
+	    return sent;
 
 	m_neighborsMutex.readLock().lock();
 
@@ -3208,7 +3208,11 @@ public class Kernel
 
 		if(m_neighbors.get(j) != null &&
 		   m_neighbors.get(j).passthrough())
-		    sent = Math.max(m_neighbors.get(j).send(bytes), sent);
+		    /*
+		    ** Increase the offset by the minimum number of bytes.
+		    */
+
+		    sent = Math.min(m_neighbors.get(j).send(bytes), sent);
 	    }
 	}
 	catch(Exception exception)

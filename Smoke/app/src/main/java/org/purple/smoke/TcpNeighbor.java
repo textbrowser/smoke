@@ -112,21 +112,19 @@ public class TcpNeighbor extends Neighbor
 
     protected int send(byte bytes[])
     {
-	if(bytes == null || bytes.length == 0 || !connected())
-	    return 0;
-
 	int sent = 0;
+
+	if(bytes == null || bytes.length == 0 || !connected())
+	    return sent;
 
 	try
 	{
 	    if(m_socket == null || m_socket.getOutputStream() == null)
 		return sent;
+	    else
+		m_socket.getOutputStream().write(bytes);
 
 	    Kernel.writeCongestionDigest(bytes);
-
-	    OutputStream outputStream = m_socket.getOutputStream();
-
-	    outputStream.write(bytes);
 	    m_bytesWritten.getAndAdd(bytes.length);
 	    sent += bytes.length;
 	}

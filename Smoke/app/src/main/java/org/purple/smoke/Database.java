@@ -4993,6 +4993,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public void writeSteamStatus(Cryptography cryptography,
+				 String status,
 				 String transferRate,
 				 int offset,
 				 int oid)
@@ -5007,6 +5008,10 @@ public class Database extends SQLiteOpenHelper
 	    ContentValues values = new ContentValues();
 
 	    values.put("read_offset",cryptography.etmBase64String(offset));
+
+	    if(!status.isEmpty())
+		values.put("status", status);
+
 	    values.put
 		("transfer_rate", cryptography.etmBase64String(transferRate));
 	    m_db.update("steam_files",
@@ -5014,7 +5019,6 @@ public class Database extends SQLiteOpenHelper
 			"oid = ?",
 			new String[] {String.valueOf(oid)});
 	    m_db.setTransactionSuccessful();
-	    Miscellaneous.sendBroadcast("org.purple.smoke.steam_status");
 	}
 	catch(Exception exception)
 	{

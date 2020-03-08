@@ -27,8 +27,8 @@
 
 package org.purple.smoke;
 
-import android.net.Uri;
-import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +48,7 @@ public class SteamReaderSimple
     private final static Database s_databaseHelper = Database.getInstance();
     private int m_oid = -1;
     private static int PACKET_SIZE = 4096;
-    private static long READ_INTERVAL = 500; // 500 Milliseconds
+    private static long READ_INTERVAL = 250; // 250 Milliseconds
 
     private void prepareReader()
     {
@@ -60,7 +60,7 @@ public class SteamReaderSimple
 		@Override
 		public void run()
 		{
-		    InputStream inputStream = null;
+		    RandomAccessFile randomAccessFile = null;
 
 		    try
 		    {
@@ -79,20 +79,24 @@ public class SteamReaderSimple
 			    return;
 			case "paused":
 			    return;
+			case "rewind":
+			    m_offset.set(0);
+			    s_databaseHelper.writeSteamStatus("paused", m_oid);
+			    return;
 			default:
 			    break;
 			}
 
-			inputStream = Smoke.getApplication().
-			    getContentResolver().openInputStream
-			    (Uri.parse(m_fileName));
+			randomAccessFile = new RandomAccessFile
+			    (m_fileName, "r");
 
-			if(inputStream == null)
+			if(randomAccessFile == null)
 			    return;
+			else
+			    randomAccessFile.seek(m_offset.get());
 
 			byte bytes[] = new byte[PACKET_SIZE];
-			int offset = inputStream.read
-			    (bytes, m_offset.get(), bytes.length);
+			int offset = randomAccessFile.read(bytes);
 
 			if(offset == -1)
 			{
@@ -110,13 +114,15 @@ public class SteamReaderSimple
 			*/
 
 			String transferRate = "0 B / s";
-			int sent = Kernel.getInstance().sendSimpleSteam(bytes);
+			int sent = Kernel.getInstance().sendSimpleSteam
+			    (Arrays.copyOfRange(bytes, 0, offset));
 
 			if(sent > 0)
 			{
 			    m_offset.addAndGet(sent);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography,
+				 "",
 				 transferRate,
 				 m_offset.get(),
 				 m_oid);
@@ -129,8 +135,8 @@ public class SteamReaderSimple
 		    {
 			try
 			{
-			    if(inputStream != null)
-				inputStream.close();
+			    if(randomAccessFile != null)
+				randomAccessFile.close();
 			}
 			catch(Exception exception)
 			{

@@ -27,13 +27,18 @@
 
 package org.purple.smoke;
 
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.OpenableColumns;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,7 +50,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Steam extends AppCompatActivity
 {
@@ -110,6 +119,7 @@ public class Steam extends AppCompatActivity
     private Database m_databaseHelper = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter<?> m_adapter = null;
+    private ScheduledExecutorService m_statusScheduler = null;
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
     private SteamLinearLayoutManager m_layoutManager = null;
@@ -118,6 +128,7 @@ public class Steam extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_FILE_REQUEST = 0;
+    private final static int STATUS_INTERVAL = 1500; // 1.5 Seconds
 
     public abstract class ContextMenuEnumerator
     {
@@ -187,6 +198,35 @@ public class Steam extends AppCompatActivity
 	});
     }
 
+    private void prepareSchedulers()
+    {
+	if(m_statusScheduler == null)
+	{
+	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			Steam.this.runOnUiThread(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+				m_adapter.notifyDataSetChanged();
+			    }
+			});
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+    }
+
     private void prepareWidgets()
     {
 	if(m_adapter == null)
@@ -216,6 +256,33 @@ public class Steam extends AppCompatActivity
 	}
     }
 
+    private void releaseResources()
+    {
+	if(m_statusScheduler != null)
+	{
+	    try
+	    {
+		m_statusScheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_statusScheduler.awaitTermination(60, TimeUnit.SECONDS))
+		    m_statusScheduler.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_statusScheduler = null;
+	    }
+	}
+    }
+
     private void saveSteam()
     {
 	SteamElement steamElement = null;
@@ -240,7 +307,14 @@ public class Steam extends AppCompatActivity
     private void showFileActivity()
     {
 	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+	Uri uri = Uri.parse
+	    (Environment.
+	     getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).
+	     getAbsolutePath());
 
+	intent.addCategory(Intent.CATEGORY_OPENABLE);
+	intent.setDataAndType(uri, DocumentsContract.Document.MIME_TYPE_DIR);
+	intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 	intent.setType("*/*");
 	intent = Intent.createChooser(intent, "File Selection");
         startActivityForResult(intent, SELECT_FILE_REQUEST);
@@ -297,6 +371,7 @@ public class Steam extends AppCompatActivity
 	m_sendButton = (Button) findViewById(R.id.send);
 	populateParticipants();
 	prepareListeners();
+	prepareSchedulers();
 	prepareWidgets();
 
 	/*
@@ -325,7 +400,34 @@ public class Steam extends AppCompatActivity
 	    if(data != null &&
 	       requestCode == SELECT_FILE_REQUEST &&
 	       resultCode == RESULT_OK)
-		m_fileName.setText(data.getData().toString());
+	    {
+		Cursor cursor = null;
+		String projection[] = {OpenableColumns.DISPLAY_NAME};
+
+		try
+		{
+		    cursor = getContentResolver().query
+			(data.getData(), projection, null, null, null);
+		    cursor.moveToFirst();
+
+		    File file = new File
+			(Environment.
+			 getExternalStoragePublicDirectory(Environment.
+							   DIRECTORY_DOWNLOADS),
+			 cursor.
+			 getString(cursor.getColumnIndex(projection[0])));
+
+		    m_fileName.setText(file.getAbsolutePath());
+		}
+		catch(Exception exception)
+		{
+		}
+		finally
+		{
+		    if(cursor != null)
+			cursor.close();
+		}
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -506,6 +608,8 @@ public class Steam extends AppCompatActivity
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
+
+	releaseResources();
     }
 
     @Override

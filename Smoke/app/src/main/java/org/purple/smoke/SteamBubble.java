@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.text.DecimalFormat;
 
@@ -39,6 +40,7 @@ public class SteamBubble extends View
 {
     private Button m_control = null;
     private Context m_context = null;
+    private ProgressBar m_progress = null;
     private Steam m_steam = null;
     private String m_controlString = "";
     private TextView m_destination = null;
@@ -98,7 +100,8 @@ public class SteamBubble extends View
 		    s_databaseHelper.writeSteamStatus("transferring", m_oid);
 		    break;
 		case "rewind":
-		    s_databaseHelper.writeSteamStatus("paused", m_oid);
+		    s_databaseHelper.writeSteamStatus
+			(s_cryptography, "rewind", "0 B / s", 0, m_oid);
 		    break;
 		}
 	    }
@@ -107,6 +110,7 @@ public class SteamBubble extends View
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
+	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
 	m_sent = (TextView) m_view.findViewById(R.id.sent);
 	m_status = (TextView) m_view.findViewById(R.id.status);
 	m_transferRate = (TextView) m_view.findViewById(R.id.transfer_rate);
@@ -128,14 +132,17 @@ public class SteamBubble extends View
 	case "completed":
 	    m_control.setText("Rewind");
 	    m_controlString = "rewind";
+	    m_progress.setVisibility(View.GONE);
 	    break;
 	case "paused":
 	    m_control.setText("Resume");
 	    m_controlString = "resume";
+	    m_progress.setVisibility(View.GONE);
 	    break;
 	case "transferring":
 	    m_control.setText("Pause");
 	    m_controlString = "pause";
+	    m_progress.setVisibility(View.VISIBLE);
 	    break;
 	default:
 	    break;

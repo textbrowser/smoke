@@ -73,10 +73,10 @@ public class UdpMulticastNeighbor extends Neighbor
 
     protected int send(String message)
     {
-	if(!connected() || message == null || message.length() == 0)
-	    return 0;
-
 	int sent = 0;
+
+	if(!connected() || message == null || message.length() == 0)
+	    return sent;
 
 	try
 	{
@@ -117,10 +117,10 @@ public class UdpMulticastNeighbor extends Neighbor
 
     protected int send(byte bytes[])
     {
-	if(bytes == null || bytes.length == 0 || !connected())
-	    return 0;
-
 	int sent = 0;
+
+	if(bytes == null || bytes.length == 0 || !connected())
+	    return sent;
 
 	try
 	{
