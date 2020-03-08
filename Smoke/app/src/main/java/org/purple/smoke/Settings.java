@@ -81,7 +81,7 @@ import javax.crypto.SecretKey;
 
 public class Settings extends AppCompatActivity
 {
-    private abstract class ContextMenuEnumerator
+    private abstract static class ContextMenuEnumerator
     {
 	public final static int DELETE = 0;
 	public final static int DELETE_FIASCO_KEYS = 1;

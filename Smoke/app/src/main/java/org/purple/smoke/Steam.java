@@ -88,7 +88,7 @@ public class Steam extends AppCompatActivity
 	}
     }
 
-    private class SteamLinearLayoutManager extends LinearLayoutManager
+    private static class SteamLinearLayoutManager extends LinearLayoutManager
     {
 	SteamLinearLayoutManager(Context context)
 	{
@@ -129,7 +129,7 @@ public class Steam extends AppCompatActivity
     private final static int SELECT_FILE_REQUEST = 0;
     private final static int STATUS_INTERVAL = 1500; // 1.5 Seconds
 
-    public abstract class ContextMenuEnumerator
+    public abstract static class ContextMenuEnumerator
     {
 	public final static int DELETE_ALL_STEAMS = 0;
 	public final static int DELETE_STEAM = 1;

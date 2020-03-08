@@ -42,7 +42,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	Cryptography.getInstance();
     private final static Database s_database = Database.getInstance();
 
-    public class ViewHolder extends RecyclerView.ViewHolder
+    public static class ViewHolder extends RecyclerView.ViewHolder
 	implements OnCreateContextMenuListener
     {
 	SteamBubble m_steamBubble = null;

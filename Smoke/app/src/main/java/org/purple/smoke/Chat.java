@@ -70,7 +70,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
 {
-    private abstract class ContextMenuEnumerator
+    private abstract static class ContextMenuEnumerator
     {
 	public final static int CUSTOM_SESSION = 0;
 	public final static int NEW_WINDOW = 1;

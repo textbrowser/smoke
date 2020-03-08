@@ -210,7 +210,7 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
-    private class SmokeLinearLayoutManager extends LinearLayoutManager
+    private static class SmokeLinearLayoutManager extends LinearLayoutManager
     {
 	SmokeLinearLayoutManager(Context context)
 	{
@@ -254,7 +254,7 @@ public class MemberChat extends AppCompatActivity
     private final static int SELECT_IMAGE_REQUEST = 0;
     private int m_oid = -1;
 
-    public abstract class ContextMenuEnumerator
+    public abstract static class ContextMenuEnumerator
     {
 	public final static int CALL_VIA_MCELIECE = 0;
 	public final static int CALL_VIA_RSA = 1;

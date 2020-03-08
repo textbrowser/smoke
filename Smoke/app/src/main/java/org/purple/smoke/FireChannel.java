@@ -55,7 +55,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FireChannel extends View
 {
-    private class Participant
+    private static class Participant
     {
 	public String m_id = Miscellaneous.byteArrayAsHexString
 	    (Cryptography.randomBytes(128));
