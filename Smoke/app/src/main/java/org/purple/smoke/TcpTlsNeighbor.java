@@ -28,7 +28,6 @@
 package org.purple.smoke;
 
 import android.os.Build;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;

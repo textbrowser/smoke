@@ -27,20 +27,10 @@
 
 package org.purple.smoke;
 
-import android.os.Build;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
-import javax.net.ssl.HandshakeCompletedEvent;
-import javax.net.ssl.HandshakeCompletedListener;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class TcpNeighbor extends Neighbor
 {

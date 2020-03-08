@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.net.Uri;
 import android.util.Base64;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
