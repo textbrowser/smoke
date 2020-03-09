@@ -197,44 +197,54 @@ public abstract class Neighbor
 			}
 		    }
 
-		    /*
-		    ** Detect our end-of-message delimiter.
-		    */
-
-		    int indexOf = -1;
-
-		    while((indexOf = m_stringBuffer.indexOf(Messages.EOM)) >= 0)
+		    if(m_passthrough.get())
 		    {
-			if(m_aborted.get())
-			    break;
-
+			echo(m_stringBuffer.toString());
 			m_lastParsed.set(System.currentTimeMillis());
+			m_stringBuffer.delete(0, m_stringBuffer.length());
+		    }
+		    else
+		    {
+			/*
+			** Detect our end-of-message delimiter.
+			*/
 
-			String buffer = m_stringBuffer.
-			    substring(0, indexOf + Messages.EOM.length());
+			int indexOf = -1;
 
-			m_stringBuffer.delete(0, buffer.length());
-
-			if(buffer.contains("type=0097a&content="))
+			while((indexOf = m_stringBuffer.
+			                 indexOf(Messages.EOM)) >= 0)
 			{
-			    scheduleSend
-				(Messages.
-				 authenticateMessage(m_cryptography,
-						     Messages.
-						     stripMessage(buffer)));
-			    continue;
-			}
+			    if(m_aborted.get())
+				break;
 
-			switch(Kernel.getInstance().ourMessage(buffer))
-			{
-			case 0:
-			    echo(buffer);
-			    break;
-			case 2:
-			    echoForce(buffer);
-			    break;
-			default:
-			    break;
+			    m_lastParsed.set(System.currentTimeMillis());
+
+			    String buffer = m_stringBuffer.
+				substring(0, indexOf + Messages.EOM.length());
+
+			    m_stringBuffer.delete(0, buffer.length());
+
+			    if(buffer.contains("type=0097a&content="))
+			    {
+				scheduleSend
+				    (Messages.
+				     authenticateMessage(m_cryptography,
+							 Messages.
+							 stripMessage(buffer)));
+				continue;
+			    }
+
+			    switch(Kernel.getInstance().ourMessage(buffer))
+			    {
+			    case 0:
+				echo(buffer);
+				break;
+			    case 2:
+				echoForce(buffer);
+				break;
+			    default:
+				break;
+			    }
 			}
 		    }
 
