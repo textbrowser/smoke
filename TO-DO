@@ -37,6 +37,7 @@ Completed Items
 - Custom key streams via context menus.
 - Database method for retrieving neighbor OIDs.
 - Decide if the State class requires cryptographic data.
+- Define passthrough devices.
 - Deleting a connected neighbor and quickly re-adding it is problematic. If
   the current thread has been interrupted, exit run().
 - Deleting a neighbor does not cause an immediate disconnect.
@@ -236,10 +237,10 @@ Future Items
 Remaining Items
 
 - Bubbles are too narrow on wide devices.
-- Define passthrough devices.
 - Drawers.
 - Gallery integration. Zoom.
 - Highlight results of Juggernaut, if possible.
+- Increase public-key key sizes.
 - Separate Settings:
   Neighbor Servers
   Ozone, Participants
