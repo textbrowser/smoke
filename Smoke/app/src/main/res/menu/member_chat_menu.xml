@@ -24,7 +24,11 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_smokescreen"
+        android:orderInCategory="600"
+        android:title="@string/smokescreen" />
+    <item
         android:id="@+id/action_steam"
-        android:orderInCategory="500"
+        android:orderInCategory="700"
         android:title="@string/steam" />
 </menu>
