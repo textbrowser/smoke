@@ -348,6 +348,14 @@ public class Steam extends AppCompatActivity
 	finish();
     }
 
+    private void showSmokescreenActivity()
+    {
+	Intent intent = new Intent(Steam.this, Smokescreen.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -552,6 +560,9 @@ public class Steam extends AppCompatActivity
 	    case R.id.action_settings:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
+		return true;
+	    case R.id.action_smokescreen:
+		showSmokescreenActivity();
 		return true;
 	    default:
 		break;

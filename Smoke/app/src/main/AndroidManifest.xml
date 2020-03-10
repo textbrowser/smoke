@@ -38,6 +38,9 @@
             </intent-filter>
         </activity>
 	<activity
+            android:name=".Smokescreen"
+            android:noHistory="false" />
+	<activity
             android:name=".Steam"
             android:noHistory="false" />
 	<service android:enabled="true"

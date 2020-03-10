@@ -183,6 +183,25 @@ public class State
 	return false;
     }
 
+    public boolean isLocked()
+    {
+	m_bundleMutex.readLock().lock();
+
+	try
+	{
+	    return m_bundle.getChar("is_locked", '0') == '1';
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_bundleMutex.readLock().unlock();
+	}
+
+	return false;
+    }
+
     public boolean neighborsEcho()
     {
 	m_bundleMutex.readLock().lock();
@@ -578,6 +597,23 @@ public class State
 		    m_bundleMutex.writeLock().unlock();
 		}
 	    }
+	}
+    }
+
+    public void setLocked(boolean state)
+    {
+    	m_bundleMutex.writeLock().lock();
+
+	try
+	{
+	    m_bundle.putChar("is_locked", state ? '1' : '0');
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_bundleMutex.writeLock().unlock();
 	}
     }
 

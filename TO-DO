@@ -11,6 +11,7 @@ Completed Items
 - Allow sharing of participant pairs.
 - Append new messages in Member Chat.
 - Application icon.
+- Application lock: Smokescreen.
 - As the half-response does not produce a response, the automatic response's
   result is ignored.
 - Asynchronous database writes.
@@ -237,7 +238,6 @@ Future Items
 
 Remaining Items
 
-- Application lock.
 - Bubbles are too narrow on wide devices.
 - Determine path for any file in Steam.
 - Drawers.
