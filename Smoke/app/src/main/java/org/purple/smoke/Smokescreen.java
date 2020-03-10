@@ -39,22 +39,49 @@ import android.widget.TextView;
 
 public class Smokescreen extends AppCompatActivity
 {
+    private Button m_lock = null;
+    private Button m_unlock = null;
     private Database m_databaseHelper = null;
+    private TextView m_password = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
 
     private void prepareListeners()
     {
-        final Button button1 = (Button) findViewById(R.id.lock);
-
-        button1.setOnClickListener(new View.OnClickListener()
-	{
-	    public void onClick(View view)
+	if(m_lock != null)
+	    m_lock.setOnClickListener(new View.OnClickListener()
 	    {
-		if(Smokescreen.this.isFinishing())
-		    return;
-	    }
-	});
+		public void onClick(View view)
+		{
+		    if(Smokescreen.this.isFinishing())
+			return;
+
+		    State.getInstance().setLocked(true);
+		    prepareWidgets();
+		}
+	    });
+
+	if(m_unlock != null)
+	    m_unlock.setOnClickListener(new View.OnClickListener()
+	    {
+		public void onClick(View view)
+		{
+		    if(Smokescreen.this.isFinishing())
+			return;
+
+		    State.getInstance().setLocked(false);
+		    prepareWidgets();
+		}
+	    });
+    }
+
+    private void prepareWidgets()
+    {
+	boolean isLocked = State.getInstance().isLocked();
+
+	m_lock.setVisibility(isLocked ? View.GONE : View.VISIBLE);
+	m_password.setVisibility(isLocked ? View.VISIBLE : View.GONE);
+	m_unlock.setVisibility(isLocked ? View.VISIBLE : View.GONE);
     }
 
     private void showChatActivity()
@@ -111,12 +138,18 @@ public class Smokescreen extends AppCompatActivity
 	catch(Exception exception)
 	{
 	}
+
+	m_lock = (Button) findViewById(R.id.lock);
+	m_password = (TextView) findViewById(R.id.password);
+	m_unlock = (Button) findViewById(R.id.authenticate);
+	prepareListeners();
+	prepareWidgets();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.authenticate_menu, menu);
+        getMenuInflater().inflate(R.menu.smokescreen_menu, menu);
         return true;
     }
 
@@ -179,19 +212,32 @@ public class Smokescreen extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-	boolean isAuthenticated = State.getInstance().isAuthenticated();
+	boolean isLocked = State.getInstance().isLocked();
 
-	if(!m_databaseHelper.accountPrepared())
-	    /*
-	    ** The database may have been modified or removed.
-	    */
+	if(isLocked)
+	{
+	    menu.findItem(R.id.action_chat).setEnabled(false);
+	    menu.findItem(R.id.action_fire).setEnabled(false);
+	    menu.findItem(R.id.action_settings).setEnabled(false);
+	    menu.findItem(R.id.action_steam).setEnabled(false);
+	}
+	else
+	{
+	    boolean isAuthenticated = State.getInstance().isAuthenticated();
 
-	    isAuthenticated = true;
+	    if(!m_databaseHelper.accountPrepared())
+		/*
+		** The database may have been modified or removed.
+		*/
 
-	menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
-	menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
-	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
-	menu.findItem(R.id.action_steam).setEnabled(isAuthenticated);
+		isAuthenticated = true;
+
+	    menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
+	    menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
+	    menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
+	    menu.findItem(R.id.action_steam).setEnabled(isAuthenticated);
+	}
+
 	Miscellaneous.addMembersToMenu(menu, 4, 150);
 	return true;
     }
