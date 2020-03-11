@@ -2870,6 +2870,14 @@ public class Settings extends AppCompatActivity
 	finish();
     }
 
+    private void showSmokescreenActivity()
+    {
+	Intent intent = new Intent(Settings.this, Smokescreen.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showSteamActivity()
     {
 	Intent intent = new Intent(Settings.this, Steam.class);
@@ -3504,6 +3512,9 @@ public class Settings extends AppCompatActivity
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
 		return true;
+	    case R.id.action_smokescreen:
+		showSmokescreenActivity();
+		return true;
 	    case R.id.action_steam:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
 		showSteamActivity();
@@ -3653,6 +3664,12 @@ public class Settings extends AppCompatActivity
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
+	}
+
+	if(State.getInstance().isLocked())
+	{
+	    showSmokescreenActivity();
+	    return;
 	}
 
 	/*

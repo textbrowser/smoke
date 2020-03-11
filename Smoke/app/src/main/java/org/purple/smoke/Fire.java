@@ -561,6 +561,14 @@ public class Fire extends AppCompatActivity
 	finish();
     }
 
+    private void showSmokescreenActivity()
+    {
+	Intent intent = new Intent(Fire.this, Smokescreen.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showSteamActivity()
     {
 	Intent intent = new Intent(Fire.this, Steam.class);
@@ -673,6 +681,9 @@ public class Fire extends AppCompatActivity
 	    case R.id.action_settings:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
+		return true;
+	    case R.id.action_smokescreen:
+		showSmokescreenActivity();
 		return true;
 	    case R.id.action_steam:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");

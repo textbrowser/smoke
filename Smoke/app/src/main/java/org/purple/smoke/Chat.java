@@ -970,6 +970,14 @@ public class Chat extends AppCompatActivity
 	finish();
     }
 
+    private void showSmokescreenActivity()
+    {
+	Intent intent = new Intent(Chat.this, Smokescreen.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -1465,6 +1473,11 @@ public class Chat extends AppCompatActivity
 		finish();
 		return true;
 	    }
+	    case R.id.action_smokescreen:
+		saveState();
+		showSmokescreenActivity();
+		finish();
+		return true;
 	    case R.id.action_steam:
 	    {
 		saveState();
