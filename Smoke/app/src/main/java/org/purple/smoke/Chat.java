@@ -1529,7 +1529,7 @@ public class Chat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 5, 150);
+	Miscellaneous.addMembersToMenu(menu, 6, 150);
 	return true;
     }
 

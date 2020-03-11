@@ -32,16 +32,19 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import java.util.ArrayList;
 
 public class Smokescreen extends AppCompatActivity
 {
     private Button m_lock = null;
     private Button m_unlock = null;
     private Database m_databaseHelper = null;
+    private SubMenu m_membersSubMenu = null;
     private TextView m_password = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -78,6 +81,37 @@ public class Smokescreen extends AppCompatActivity
     private void prepareWidgets()
     {
 	boolean isLocked = State.getInstance().isLocked();
+
+	if(isLocked && m_membersSubMenu != null)
+	    m_membersSubMenu.clear();
+	else if(m_membersSubMenu != null)
+	{
+	    m_membersSubMenu.clear();
+
+	    ArrayList<ParticipantElement> arrayList = State.getInstance().
+		participants();
+
+	    /*
+	    ** Do not clear arrayList!
+	    */
+
+	    if(arrayList != null && arrayList.size() > 0)
+		for(ParticipantElement participantElement : arrayList)
+		{
+		    if(participantElement == null)
+			continue;
+
+		    m_membersSubMenu.add
+			(1,
+			 participantElement.m_oid,
+			 0,
+			 participantElement.m_name +
+			 " (" +
+			 Miscellaneous.
+			 prepareSipHashId(participantElement.m_sipHashId) +
+			 ")");
+		}
+	}
 
 	m_lock.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_password.setVisibility(isLocked ? View.VISIBLE : View.GONE);
@@ -232,13 +266,17 @@ public class Smokescreen extends AppCompatActivity
 
 		isAuthenticated = true;
 
+	    menu.findItem(R.id.action_authenticate).setEnabled
+		(!isAuthenticated);
 	    menu.findItem(R.id.action_chat).setEnabled(isAuthenticated);
 	    menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	    menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
 	    menu.findItem(R.id.action_steam).setEnabled(isAuthenticated);
 	}
 
-	Miscellaneous.addMembersToMenu(menu, 4, 150);
+	if(m_membersSubMenu == null)
+	    m_membersSubMenu = Miscellaneous.addMembersToMenu(menu, 6, 250);
+
 	return true;
     }
 }

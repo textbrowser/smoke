@@ -606,7 +606,7 @@ public class Steam extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 5, 250);
+	Miscellaneous.addMembersToMenu(menu, 6, 250);
 	return true;
     }
 

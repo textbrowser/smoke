@@ -3094,7 +3094,7 @@ public class Settings extends AppCompatActivity
         spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "5", "10", "25", "50", // Argon2id
+	    "5", "10", "15", "25", "50", // Argon2id
 	    "1000", "2500", "5000", "7500", "10000", "12500",
 	    "15000", "17500", "20000", "25000", "30000", "35000",
 	    "40000", "45000", "50000", "55000", "60000", "65000",
@@ -3565,7 +3565,11 @@ public class Settings extends AppCompatActivity
 	    (State.getInstance().isAuthenticated());
 	menu.findItem(R.id.action_fire).setEnabled
 	    (State.getInstance().isAuthenticated());
-	Miscellaneous.addMembersToMenu(menu, 5, 250);
+	menu.findItem(R.id.action_smokescreen).setEnabled
+	    (State.getInstance().isAuthenticated());
+	menu.findItem(R.id.action_steam).setEnabled
+	    (State.getInstance().isAuthenticated());
+	Miscellaneous.addMembersToMenu(menu, 6, 250);
 	return true;
     }
 

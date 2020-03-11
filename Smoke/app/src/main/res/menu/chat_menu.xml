@@ -16,8 +16,7 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="400"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="@string/action_settings" />
     <item
         android:id="@+id/action_smokescreen"
         android:orderInCategory="500"

@@ -565,6 +565,14 @@ public class MemberChat extends AppCompatActivity
 	finish();
     }
 
+    private void showSmokescreenActivity()
+    {
+	Intent intent = new Intent(MemberChat.this, Smokescreen.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showSteamActivity()
     {
 	saveState();
@@ -1328,6 +1336,9 @@ public class MemberChat extends AppCompatActivity
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
 		return true;
+	    case R.id.action_smokescreen:
+		showSmokescreenActivity();
+		return true;
 	    case R.id.action_steam:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
 		showSteamActivity();
@@ -1454,7 +1465,7 @@ public class MemberChat extends AppCompatActivity
 	    isAuthenticated = true;
 
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 6, 250);
+	Miscellaneous.addMembersToMenu(menu, 7, 250);
 	return true;
     }
 

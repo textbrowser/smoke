@@ -260,6 +260,57 @@ public abstract class Miscellaneous
 	     '-', 4).toUpperCase();
     }
 
+    public static SubMenu addMembersToMenu(Menu menu, int count, int position)
+    {
+	if(menu == null)
+	    return null;
+
+	ArrayList<ParticipantElement> arrayList = State.getInstance().
+	    participants();
+
+	/*
+	** Do not clear arrayList!
+	*/
+
+	if(arrayList != null && arrayList.size() > 0)
+	{
+	    SubMenu subMenu = null;
+
+	    if(count == menu.size())
+		subMenu = menu.addSubMenu
+		    (Menu.NONE,
+		     Menu.NONE,
+		     position,
+		     "Chat Messaging Window");
+	    else
+		subMenu = menu.getItem(menu.size() - 1).getSubMenu();
+
+	    if(subMenu == null)
+		return subMenu;
+
+	    subMenu.clear();
+
+	    for(ParticipantElement participantElement : arrayList)
+	    {
+		if(participantElement == null)
+		    continue;
+
+		subMenu.add
+		    (1,
+		     participantElement.m_oid,
+		     0,
+		     participantElement.m_name +
+		     " (" +
+		     prepareSipHashId(participantElement.m_sipHashId) +
+		     ")");
+	    }
+
+	    return subMenu;
+	}
+
+	return null;
+    }
+
     public static byte[] compressed(byte bytes[])
     {
 	if(bytes == null)
@@ -470,53 +521,6 @@ public abstract class Miscellaneous
 	}
 
 	return 0;
-    }
-
-    public static void addMembersToMenu(Menu menu, int count, int position)
-    {
-	if(menu == null)
-	    return;
-
-	ArrayList<ParticipantElement> arrayList = State.getInstance().
-	    participants();
-
-	/*
-	** Do not clear arrayList!
-	*/
-
-	if(arrayList != null && arrayList.size() > 0)
-	{
-	    SubMenu subMenu = null;
-
-	    if(count == menu.size())
-		subMenu = menu.addSubMenu
-		    (Menu.NONE,
-		     Menu.NONE,
-		     position,
-		     "Chat Messaging Window");
-	    else
-		subMenu = menu.getItem(menu.size() - 1).getSubMenu();
-
-	    if(subMenu == null)
-		return;
-
-	    subMenu.clear();
-
-	    for(ParticipantElement participantElement : arrayList)
-	    {
-		if(participantElement == null)
-		    continue;
-
-		subMenu.add
-		    (1,
-		     participantElement.m_oid,
-		     0,
-		     participantElement.m_name +
-		     " (" +
-		     prepareSipHashId(participantElement.m_sipHashId) +
-		     ")");
-	    }
-	}
     }
 
     public static void enableChildren(View view, boolean state)
