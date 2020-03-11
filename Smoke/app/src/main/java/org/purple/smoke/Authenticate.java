@@ -75,6 +75,7 @@ public class Authenticate extends AppCompatActivity
 		    Miscellaneous.showErrorDialog
 			(Authenticate.this,
 			 "The encryption salt value is zero. System failure.");
+		    textView1.setText("");
 		    textView1.requestFocus();
 		    return;
 		}
@@ -88,6 +89,7 @@ public class Authenticate extends AppCompatActivity
 		    Miscellaneous.showErrorDialog
 			(Authenticate.this,
 			 "The mac salt value is zero. System failure.");
+		    textView1.setText("");
 		    textView1.requestFocus();
 		    return;
 		}
@@ -102,6 +104,7 @@ public class Authenticate extends AppCompatActivity
 		    Miscellaneous.showErrorDialog
 			(Authenticate.this,
 			 "An error occurred with sha512(). System failure.");
+		    textView1.setText("");
 		    textView1.requestFocus();
 		    return;
 		}
@@ -124,6 +127,7 @@ public class Authenticate extends AppCompatActivity
 		    Miscellaneous.showErrorDialog
 			(Authenticate.this,
 			 "Invalid iteration count. System failure.");
+		    textView1.setText("");
 		    textView1.requestFocus();
 		    return;
 		}
@@ -142,7 +146,7 @@ public class Authenticate extends AppCompatActivity
 		}
 
 		if(!Cryptography.memcmp(m_databaseHelper.
-					readSetting(null,"saltedPassword").
+					readSetting(null, "saltedPassword").
 					getBytes(),
 					Base64.encode(saltedPassword,
 						      Base64.DEFAULT)))

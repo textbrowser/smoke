@@ -30,12 +30,12 @@ package org.purple.smoke;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.ArrayList;
 
@@ -49,6 +49,59 @@ public class Smokescreen extends AppCompatActivity
     private TextView m_password = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+
+    private void authenticate()
+    {
+	if(Smokescreen.this.isFinishing())
+	    return;
+
+	byte encryptionSalt[] = Base64.decode
+	    (m_databaseHelper.readSetting(null, "encryptionSalt").getBytes(),
+	     Base64.DEFAULT);
+
+	m_password.setSelectAllOnFocus(true);
+
+	if(encryptionSalt == null)
+	{
+	    m_password.setText("");
+	    m_password.requestFocus();
+	    return;
+	}
+
+	byte macSalt[] = Base64.decode
+	    (m_databaseHelper.readSetting(null, "macSalt").getBytes(),
+	     Base64.DEFAULT);
+
+	if(macSalt == null)
+	{
+	    m_password.setText("");
+	    m_password.requestFocus();
+	    return;
+	}
+
+	byte saltedPassword[] = Cryptography.sha512
+	    (m_password.getText().toString().getBytes(),
+	     encryptionSalt,
+	     macSalt);
+
+	if(saltedPassword == null)
+	{
+	    m_password.setText("");
+	    m_password.requestFocus();
+	    return;
+	}
+
+	if(!Cryptography.memcmp(m_databaseHelper.
+				readSetting(null, "saltedPassword").getBytes(),
+				Base64.encode(saltedPassword, Base64.DEFAULT)))
+	{
+	    m_password.setText("");
+	    m_password.requestFocus();
+	    return;
+	}
+
+	State.getInstance().setLocked(false);
+    }
 
     private void prepareListeners()
     {
@@ -73,7 +126,7 @@ public class Smokescreen extends AppCompatActivity
 		    if(Smokescreen.this.isFinishing())
 			return;
 
-		    State.getInstance().setLocked(false);
+		    authenticate();
 		    prepareWidgets();
 		}
 	    });
