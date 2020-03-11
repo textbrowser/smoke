@@ -45,6 +45,7 @@ public class Smokescreen extends AppCompatActivity
     private Button m_unlock = null;
     private Database m_databaseHelper = null;
     private SubMenu m_membersSubMenu = null;
+    private TextView m_label = null;
     private TextView m_password = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -74,6 +75,7 @@ public class Smokescreen extends AppCompatActivity
 
 		    State.getInstance().setLocked(false);
 		    prepareWidgets();
+		    m_password.requestFocus();
 		}
 	    });
     }
@@ -113,6 +115,7 @@ public class Smokescreen extends AppCompatActivity
 		}
 	}
 
+	m_label.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_lock.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_password.setVisibility(isLocked ? View.VISIBLE : View.GONE);
 	m_unlock.setVisibility(isLocked ? View.VISIBLE : View.GONE);
@@ -173,6 +176,7 @@ public class Smokescreen extends AppCompatActivity
 	{
 	}
 
+	m_label = (TextView) findViewById(R.id.label);
 	m_lock = (Button) findViewById(R.id.lock);
 	m_password = (TextView) findViewById(R.id.password);
 	m_unlock = (Button) findViewById(R.id.authenticate);
