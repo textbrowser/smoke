@@ -80,6 +80,7 @@ Completed Items
 - Foreground service, optional.
 - Generate and separate.
 - HTTP proxy.
+- Highlight results of Juggernaut, if possible.
 - Identity-sharing confirmation from SmokeStack.
 - If a SipHash ID is deleted, its corresponding participants entry should also
   be removed. Foreign key constraints.
@@ -242,7 +243,6 @@ Remaining Items
 - Determine path for any file in Steam.
 - Drawers.
 - Gallery integration. Zoom.
-- Highlight results of Juggernaut, if possible.
 - Increase public-key key sizes.
 - McEliece KobaraImai conversions.
 - Separate Settings:
