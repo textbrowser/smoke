@@ -146,6 +146,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    m_chatBubble.setFromeSmokeStack
 		(memberChatElement.m_fromSmokeStack.equals("true"));
 	    m_chatBubble.setImageAttachment(memberChatElement.m_attachment);
+	    m_chatBubble.setLocal(local);
 	    m_chatBubble.setMessageSelected
 		(m_memberChat.isMessageSelected(memberChatElement.m_oid));
 	    m_chatBubble.setMessageSelectionStateEnabled

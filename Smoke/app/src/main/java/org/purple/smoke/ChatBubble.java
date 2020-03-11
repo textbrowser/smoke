@@ -60,6 +60,7 @@ public class ChatBubble extends View
     private View m_view = null;
     private boolean m_error = false;
     private boolean m_fromSmokeStack = false;
+    private boolean m_local = false;
     private boolean m_messageRead = false;
     private boolean m_messageSent = false;
     private boolean m_selectionState = false;
@@ -173,6 +174,11 @@ public class ChatBubble extends View
 	    {
 	    }
 	}
+    }
+
+    public void setLocal(boolean state)
+    {
+	m_local = state;
     }
 
     public void setMessageSelected(boolean state)
@@ -390,6 +396,24 @@ public class ChatBubble extends View
 		 (int) (10 * density),                         // End
 		 (int) ((m_messageRead ||
 			 m_messageSent ? 20 : 10) * density)); // Bottom
+	}
+
+	if(m_local && text != null)
+	{
+	    if(text.trim().equals("The Juggernaut Protocol has been verified!"))
+	    {
+		((ImageView) m_view.findViewById(R.id.message_status)).
+		    setImageResource(R.drawable.verified);
+		m_view.findViewById(R.id.message_status).setVisibility
+		    (View.VISIBLE);
+	    }
+	    else if(text.trim().startsWith("Juggernaut Protocol failure"))
+	    {
+		((ImageView) m_view.findViewById(R.id.message_status)).
+		    setImageResource(R.drawable.warning);
+		m_view.findViewById(R.id.message_status).setVisibility
+		    (View.VISIBLE);
+	    }
 	}
     }
 }

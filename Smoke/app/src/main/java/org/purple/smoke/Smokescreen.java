@@ -75,7 +75,6 @@ public class Smokescreen extends AppCompatActivity
 
 		    State.getInstance().setLocked(false);
 		    prepareWidgets();
-		    m_password.requestFocus();
 		}
 	    });
     }
@@ -118,6 +117,17 @@ public class Smokescreen extends AppCompatActivity
 	m_label.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_lock.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_password.setVisibility(isLocked ? View.VISIBLE : View.GONE);
+
+	if(isLocked)
+	    m_password.post(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    m_password.requestFocus();
+		}
+	    });
+
 	m_unlock.setVisibility(isLocked ? View.VISIBLE : View.GONE);
     }
 
