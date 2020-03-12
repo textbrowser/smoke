@@ -400,14 +400,19 @@ public class ChatBubble extends View
 
 	if(m_local && text != null)
 	{
-	    if(text.trim().equals("The Juggernaut Protocol has been verified!"))
+	    String t = text.trim();
+
+	    if(t.equals("Received a half-and-half call-response.") ||
+	       t.equals("Received a half-and-half call. " +
+			"Dispatching a response. Please be patient.") ||
+	       t.equals("The Juggernaut Protocol has been verified!"))
 	    {
 		((ImageView) m_view.findViewById(R.id.message_status)).
 		    setImageResource(R.drawable.verified);
 		m_view.findViewById(R.id.message_status).setVisibility
 		    (View.VISIBLE);
 	    }
-	    else if(text.trim().startsWith("Juggernaut Protocol failure"))
+	    else if(t.startsWith("Juggernaut Protocol failure"))
 	    {
 		((ImageView) m_view.findViewById(R.id.message_status)).
 		    setImageResource(R.drawable.warning);

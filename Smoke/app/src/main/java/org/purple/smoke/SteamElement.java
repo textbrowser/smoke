@@ -37,7 +37,7 @@ public class SteamElement
     public byte m_keyStream[] = null;
     public byte m_randomBytes[] = null;
     public int m_direction = DOWNLOAD;
-    public int m_readInterval = 250;
+    public int m_readInterval = 4; // 4 reads / s
     public int m_oid = -1;
     public long m_fileSize = 0;
     public long m_readOffset = 0;
