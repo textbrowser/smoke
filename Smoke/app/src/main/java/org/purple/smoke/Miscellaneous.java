@@ -593,10 +593,8 @@ public abstract class Miscellaneous
 	    LocalBroadcastManager localBroadcastManager =
 		LocalBroadcastManager.getInstance(Smoke.getApplication());
 
-	    intent.putExtra
-		("org.purple.smoke." + action + ".extra1", extra1);
-	    intent.putExtra
-		("org.purple.smoke." + action + ".extra2", extra2);
+	    intent.putExtra("org.purple.smoke.extra1", extra1);
+	    intent.putExtra("org.purple.smoke.extra2", extra2);
 	    localBroadcastManager.sendBroadcast(intent);
 	}
 	catch(Exception exception)

@@ -218,6 +218,11 @@ public class SteamReaderSimple
 	prepareReader();
     }
 
+    public int getOid()
+    {
+	return m_oid;
+    }
+
     public void delete()
     {
 	m_canceled.set(true);

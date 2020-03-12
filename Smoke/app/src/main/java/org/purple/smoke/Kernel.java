@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager.WifiLock;
@@ -75,6 +76,54 @@ public class Kernel
 	    switch(intent.getAction())
 	    {
 	    case "org.purple.smoke.steam_read_interval_change":
+		int oid = -1;
+		int readInterval = 4;
+
+		try
+		{
+		    oid = intent.getIntExtra("org.purple.smoke.extra1", oid);
+		    readInterval = intent.getIntExtra
+			("org.purple.smoke.extra2", readInterval);
+		}
+		catch(Exception exception)
+		{
+		}
+
+		if(oid != -1)
+		{
+		    /*
+		    ** Discover the Steam reader and prepare its new read
+		    ** interval.
+		    */
+
+		    m_simpleSteamsMutex.readLock().lock();
+
+		    try
+		    {
+			int size = m_simpleSteams.size();
+
+			for(int i = 0; i < size; i++)
+			{
+			    int j = m_simpleSteams.keyAt(i);
+
+			    if(m_simpleSteams.get(j) != null &&
+			       m_simpleSteams.get(j).getOid() == oid)
+			    {
+				m_simpleSteams.get(j).setReadInterval
+				    (readInterval);
+				return;
+			    }
+			}
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		   {
+		       m_simpleSteamsMutex.readLock().unlock();
+		   }
+		}
+
 		break;
 	    default:
 		break;
@@ -158,8 +207,6 @@ public class Kernel
 
     private Kernel()
     {
-	LocalBroadcastManager.getInstance(Smoke.getApplication()).
-	    unregisterReceiver(m_receiver);
 	m_callQueue = new Hashtable<> ();
 	m_chatTemporaryIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
@@ -169,6 +216,22 @@ public class Kernel
 	m_shareSipHashIdIdentity = new AtomicLong(0);
 	m_shareSipHashIdIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
+
+	try
+	{
+	    LocalBroadcastManager.getInstance(Smoke.getApplication()).
+		unregisterReceiver(m_receiver);
+
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction
+		("org.purple.smoke.steam_read_interval_change");
+	    LocalBroadcastManager.getInstance(Smoke.getApplication()).
+		registerReceiver(m_receiver, intentFilter);
+	}
+	catch(Exception exception)
+	{
+	}
 
 	try
 	{
