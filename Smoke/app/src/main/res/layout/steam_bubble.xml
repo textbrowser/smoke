@@ -80,7 +80,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
@@ -90,6 +90,22 @@
                 android:layout_height="wrap_content"
                 android:text="@string/pause"
                 android:textAllCaps="false" />
+
+            <SeekBar
+                android:id="@+id/rate"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:max="3"
+                android:progress="0" />
+
+            <TextView
+                android:id="@+id/rate_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
         </LinearLayout>
 
     </LinearLayout>

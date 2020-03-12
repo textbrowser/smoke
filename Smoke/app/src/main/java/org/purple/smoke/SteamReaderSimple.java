@@ -32,14 +32,17 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SteamReaderSimple
 {
+    private AtomicBoolean m_canceled = null;
     private AtomicLong m_lastBytesSent = null;
     private AtomicLong m_lastTime = null;
     private AtomicLong m_offset = null;
     private AtomicLong m_rate = null;
+    private AtomicLong m_readInterval = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private final static Cryptography s_cryptography =
@@ -47,12 +50,38 @@ public class SteamReaderSimple
     private final static Database s_databaseHelper = Database.getInstance();
     private int m_oid = -1;
     private static int PACKET_SIZE = 4096;
-    private static long READ_INTERVAL = 250; // 250 Milliseconds
 
     private String prettyRate()
     {
 	return Miscellaneous.formattedDigitalInformation
 	    (String.valueOf(m_rate.get())) + " / s";
+    }
+
+    private void cancelReader()
+    {
+	if(m_reader != null)
+	{
+	    try
+	    {
+		m_reader.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_reader.awaitTermination(60, TimeUnit.SECONDS))
+		    m_reader.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_reader = null;
+	    }
+	}
     }
 
     private void computeRate(long bytesSent)
@@ -81,6 +110,9 @@ public class SteamReaderSimple
 		@Override
 		public void run()
 		{
+		    if(m_canceled.get())
+			return;
+
 		    RandomAccessFile randomAccessFile = null;
 
 		    try
@@ -166,51 +198,51 @@ public class SteamReaderSimple
 			}
 		    }
 		}
-	    }, 1500, READ_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500, m_readInterval.get(), TimeUnit.MILLISECONDS);
 	}
     }
 
     public SteamReaderSimple(String fileName, int oid, long offset)
     {
+	m_canceled = new AtomicBoolean(false);
 	m_fileName = fileName;
 	m_lastBytesSent = new AtomicLong(0);
 	m_lastTime = new AtomicLong(System.currentTimeMillis());
 	m_offset = new AtomicLong(offset);
 	m_oid = oid;
 	m_rate = new AtomicLong(0);
+	m_readInterval = new AtomicLong(1000 / 4);
 	prepareReader();
     }
 
-    public void cancel()
+    public void delete()
     {
+	m_canceled.set(true);
 	m_lastBytesSent.set(0);
 	m_lastTime.set(0);
 	m_offset.set(0);
 	m_rate.set(0);
+	cancelReader();
 	s_databaseHelper.writeSteamStatus("deleted", m_oid);
+    }
 
-	if(m_reader != null)
+    public void setReadInterval(int interval)
+    {
+	switch(interval)
 	{
-	    try
-	    {
-		m_reader.shutdown();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    try
-	    {
-		if(!m_reader.awaitTermination(60, TimeUnit.SECONDS))
-		    m_reader.shutdownNow();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	    finally
-	    {
-		m_reader = null;
-	    }
+	case 4:
+	case 10:
+	case 20:
+	case 50:
+	    m_readInterval.set(1000 / interval);
+	    break;
+	default:
+	    break;
 	}
+
+	m_canceled.set(true);
+	cancelReader();
+	m_canceled.set(false);
+	prepareReader();
     }
 }

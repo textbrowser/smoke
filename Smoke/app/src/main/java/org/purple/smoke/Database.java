@@ -4300,6 +4300,7 @@ public class Database extends SQLiteOpenHelper
 	    "is_download TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " +
 	    "random_bytes TEXT NOT NULL PRIMARY KEY, " +
+	    "read_interval TEXT NOT NULL, " +
 	    "read_offset TEXT NOT NULL, " +
 	    "status TEXT NOT NULL, " +
 	    "transfer_rate TEXT NOT NULL)";
@@ -4986,6 +4987,10 @@ public class Database extends SQLiteOpenHelper
 			    ("random_bytes",
 			     cryptography.
 			     etmBase64String(steamElement.m_randomBytes));
+			values.put
+			    ("read_interval",
+			     cryptography.
+			     etmBase64String(steamElement.m_readInterval));
 			values.put
 			    ("read_offset",
 			     cryptography.

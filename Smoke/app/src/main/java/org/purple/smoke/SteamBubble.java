@@ -33,6 +33,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class SteamBubble extends View
@@ -40,12 +42,14 @@ public class SteamBubble extends View
     private Button m_control = null;
     private Context m_context = null;
     private ProgressBar m_progress = null;
+    private SeekBar m_rate = null;
     private Steam m_steam = null;
     private String m_controlString = "";
     private TextView m_destination = null;
     private TextView m_digest = null;
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
+    private TextView m_rateLabel = null;
     private TextView m_sent = null;
     private TextView m_status = null;
     private TextView m_transferRate = null;
@@ -53,6 +57,10 @@ public class SteamBubble extends View
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
+    private final static String READ_INTERVALS[] = {"50 reads / s",
+						    "20 reads / s",
+						    "10 reads / s",
+						    "4 reads / s"};
     private int m_oid = -1;
 
     private String formatSize(long size)
@@ -80,13 +88,19 @@ public class SteamBubble extends View
 		case "pause":
 		    s_databaseHelper.writeSteamStatus
 			(s_cryptography, "paused", "", m_oid);
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.steam_status");
 		    break;
 		case "resume":
 		    s_databaseHelper.writeSteamStatus("transferring", m_oid);
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.steam_status");
 		    break;
 		case "rewind":
 		    s_databaseHelper.writeSteamStatus
 			(s_cryptography, "rewind", "", m_oid, 0);
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.steam_status");
 		    break;
 		}
 	    }
@@ -96,6 +110,53 @@ public class SteamBubble extends View
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
+	m_rate = (SeekBar) m_view.findViewById(R.id.rate);
+	m_rate.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+	{
+	    @Override
+	    public void onProgressChanged(SeekBar seekBar,
+					  int progress,
+					  boolean fromUser)
+	    {
+		switch(progress)
+		{
+		case 0:
+		    m_rateLabel.setText("4 reads / s");
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.steam_rate_change", m_oid, 4);
+		    break;
+		case 1:
+		    m_rateLabel.setText("10 reads / s");
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.steam_rate_change", m_oid, 10);
+		    break;
+		case 2:
+		    m_rateLabel.setText("20 reads / s");
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.steam_rate_change", m_oid, 20);
+		    break;
+		case 3:
+		    m_rateLabel.setText("50 reads / s");
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.steam_rate_change", m_oid, 50);
+		    break;
+		default:
+		    break;
+		}
+	    }
+
+	    @Override
+	    public void onStartTrackingTouch(SeekBar seekBar)
+	    {
+	    }
+
+	    @Override
+	    public void onStopTrackingTouch(SeekBar seekBar)
+	    {
+	    }
+	});
+	m_rateLabel = (TextView) m_view.findViewById(R.id.rate_label);
+	m_rateLabel.setText("4 reads / s");
 	m_sent = (TextView) m_view.findViewById(R.id.sent);
 	m_status = (TextView) m_view.findViewById(R.id.status);
 	m_transferRate = (TextView) m_view.findViewById(R.id.transfer_rate);

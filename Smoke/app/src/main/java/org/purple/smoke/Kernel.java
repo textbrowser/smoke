@@ -1199,7 +1199,7 @@ public class Kernel
 		int j = m_simpleSteams.keyAt(i);
 
 		if(m_simpleSteams.get(j) != null)
-		    m_simpleSteams.get(j).cancel();
+		    m_simpleSteams.get(j).delete();
 	    }
 
 	    m_simpleSteams.clear();
@@ -1334,7 +1334,7 @@ public class Kernel
 		if(!found)
 		{
 		    if(m_simpleSteams.get(oid) != null)
-			m_simpleSteams.get(oid).cancel();
+			m_simpleSteams.get(oid).delete();
 
 		    m_simpleSteams.remove(oid);
 		}
