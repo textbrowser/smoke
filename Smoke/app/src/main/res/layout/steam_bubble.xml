@@ -58,6 +58,12 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/eta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="clip_vertical" />
+
+                <TextView
                     android:id="@+id/sent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

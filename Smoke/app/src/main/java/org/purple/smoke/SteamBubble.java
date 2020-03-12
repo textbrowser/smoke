@@ -36,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import java.text.DecimalFormat;
 
 public class SteamBubble extends View
 {
@@ -47,6 +48,7 @@ public class SteamBubble extends View
     private String m_controlString = "";
     private TextView m_destination = null;
     private TextView m_digest = null;
+    private TextView m_eta = null;
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
     private TextView m_readIntervalLabel = null;
@@ -57,11 +59,45 @@ public class SteamBubble extends View
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
+    private final static DecimalFormat s_decimalFormat =
+	new DecimalFormat("0.00");
     private int m_oid = -1;
 
     private String formatSize(long size)
     {
 	return Miscellaneous.formattedDigitalInformation(String.valueOf(size));
+    }
+
+    private String prettyEta(String transferRate,
+			     long fileSize,
+			     long readOffset)
+    {
+	if(fileSize == readOffset)
+	    return "ETA: completed";
+
+	try
+	{
+	    double rate = Double.parseDouble
+		(transferRate.substring(0, transferRate.indexOf(' ')));
+
+	    if(transferRate.contains("GiB"))
+		rate *= 1073741824.0;
+	    else if(transferRate.contains("KiB"))
+		rate *= 1024.0;
+	    else if(transferRate.contains("MiB"))
+		rate *= 1048576.0;
+
+	    if(rate > 0.0)
+		return "ETA: " +
+		    s_decimalFormat.format(((fileSize - readOffset) / rate) /
+					   60.0) +
+		    " minutes";
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "ETA: stalled";
     }
 
     public SteamBubble(Context context, Steam steam, ViewGroup viewGroup)
@@ -82,6 +118,7 @@ public class SteamBubble extends View
 		switch(m_controlString)
 		{
 		case "pause":
+		    m_eta.setText("ETA: stalled");
 		    s_databaseHelper.writeSteamStatus
 			(s_cryptography, "paused", "", m_oid);
 		    Miscellaneous.sendBroadcast
@@ -103,6 +140,7 @@ public class SteamBubble extends View
         });
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
+	m_eta = (TextView) m_view.findViewById(R.id.eta);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
@@ -211,6 +249,9 @@ public class SteamBubble extends View
 	m_digest.setText
 	    ("SHA-256: " +
 	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
+	m_eta.setText(prettyEta(steamElement.m_transferRate,
+				steamElement.m_fileSize,
+				steamElement.m_readOffset));
 	m_fileName.setText("File: " + steamElement.m_fileName);
 	m_fileSize.setText
 	    ("Size: " + formatSize(steamElement.m_fileSize));
