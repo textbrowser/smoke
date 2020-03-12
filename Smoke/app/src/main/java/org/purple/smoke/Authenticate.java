@@ -528,6 +528,14 @@ public class Authenticate extends AppCompatActivity
 	finish();
     }
 
+    private void showSmokescreenActivity()
+    {
+	Intent intent = new Intent(Authenticate.this, Smokescreen.class);
+
+	startActivity(intent);
+	finish();
+    }
+
     private void showSteamActivity()
     {
 	Intent intent = new Intent(Authenticate.this, Steam.class);
@@ -603,6 +611,9 @@ public class Authenticate extends AppCompatActivity
 	    case R.id.action_settings:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
+		return true;
+	    case R.id.action_smokescreen:
+		showSmokescreenActivity();
 		return true;
 	    case R.id.action_steam:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
