@@ -1120,7 +1120,7 @@ public class Database extends SQLiteOpenHelper
 			    if(bytes != null)
 				try
 				{
-				    steamElement.m_fileSize = Integer.parseInt
+				    steamElement.m_fileSize = Long.parseLong
 					(new String(bytes));
 				}
 				catch(Exception exception)
@@ -1145,7 +1145,7 @@ public class Database extends SQLiteOpenHelper
 				try
 				{
 				    steamElement.m_readInterval =
-					Integer.parseInt(new String(bytes));
+					Long.parseLong(new String(bytes));
 				}
 				catch(Exception exception)
 				{
@@ -1157,7 +1157,7 @@ public class Database extends SQLiteOpenHelper
 				try
 				{
 				    steamElement.m_readOffset =
-					Integer.parseInt(new String(bytes));
+					Long.parseLong(new String(bytes));
 				}
 				catch(Exception exception)
 				{
@@ -1841,7 +1841,7 @@ public class Database extends SQLiteOpenHelper
 			if(bytes != null)
 			    try
 			    {
-				steamElement.m_fileSize = Integer.parseInt
+				steamElement.m_fileSize = Long.parseLong
 				    (new String(bytes));
 			    }
 			    catch(Exception exception)
@@ -1865,7 +1865,7 @@ public class Database extends SQLiteOpenHelper
 			if(bytes != null)
 			    try
 			    {
-				steamElement.m_readInterval = Integer.parseInt
+				steamElement.m_readInterval = Long.parseLong
 				    (new String(bytes));
 			    }
 			    catch(Exception exception)
@@ -1877,7 +1877,7 @@ public class Database extends SQLiteOpenHelper
 			if(bytes != null)
 			    try
 			    {
-				steamElement.m_readOffset = Integer.parseInt
+				steamElement.m_readOffset = Long.parseLong
 				    (new String(bytes));
 			    }
 			    catch(Exception exception)

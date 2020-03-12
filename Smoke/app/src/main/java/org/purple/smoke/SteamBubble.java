@@ -218,7 +218,7 @@ public class SteamBubble extends View
 	m_progress.setMax((int) steamElement.m_fileSize);
 	m_progress.setProgress((int) steamElement.m_readOffset);
 
-	switch(steamElement.m_readInterval)
+	switch((int) steamElement.m_readInterval)
 	{
 	case 4:
 	    m_readInterval.setProgress(0);

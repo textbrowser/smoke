@@ -40,9 +40,9 @@ public class SteamReaderSimple
     private AtomicBoolean m_canceled = null;
     private AtomicLong m_lastBytesSent = null;
     private AtomicLong m_lastTime = null;
-    private AtomicLong m_offset = null;
     private AtomicLong m_rate = null;
     private AtomicLong m_readInterval = null;
+    private AtomicLong m_readOffset = null;
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private final static Cryptography s_cryptography =
@@ -133,7 +133,7 @@ public class SteamReaderSimple
 			case "paused":
 			    return;
 			case "rewind":
-			    m_offset.set(0);
+			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "paused", "", m_oid, 0);
 			    return;
@@ -147,7 +147,7 @@ public class SteamReaderSimple
 			if(randomAccessFile == null)
 			    return;
 			else
-			    randomAccessFile.seek(m_offset.get());
+			    randomAccessFile.seek(m_readOffset.get());
 
 			byte bytes[] = new byte[PACKET_SIZE];
 			int offset = randomAccessFile.read(bytes);
@@ -163,7 +163,7 @@ public class SteamReaderSimple
 				 "completed",
 				 "",
 				 m_oid,
-				 m_offset.get());
+				 m_readOffset.get());
 			    return;
 			}
 
@@ -175,13 +175,13 @@ public class SteamReaderSimple
 			    (Arrays.copyOfRange(bytes, 0, offset));
 
 			computeRate(sent);
-			m_offset.addAndGet(sent);
+			m_readOffset.addAndGet(sent);
 			s_databaseHelper.writeSteamStatus
 			    (s_cryptography,
 			     "",
 			     prettyRate(),
 			     m_oid,
-			     m_offset.get());
+			     m_readOffset.get());
 		    }
 		    catch(Exception exception)
 		    {
@@ -202,16 +202,19 @@ public class SteamReaderSimple
 	}
     }
 
-    public SteamReaderSimple(String fileName, int oid, long offset)
+    public SteamReaderSimple(String fileName,
+			     int oid,
+			     long readInterval,
+			     long readOffset)
     {
 	m_canceled = new AtomicBoolean(false);
 	m_fileName = fileName;
 	m_lastBytesSent = new AtomicLong(0);
 	m_lastTime = new AtomicLong(System.currentTimeMillis());
-	m_offset = new AtomicLong(offset);
 	m_oid = oid;
 	m_rate = new AtomicLong(0);
-	m_readInterval = new AtomicLong(1000 / 4);
+	m_readInterval = new AtomicLong(1000 / Math.max(4, readInterval));
+	m_readOffset = new AtomicLong(readOffset);
 	prepareReader();
     }
 
@@ -220,14 +223,17 @@ public class SteamReaderSimple
 	m_canceled.set(true);
 	m_lastBytesSent.set(0);
 	m_lastTime.set(0);
-	m_offset.set(0);
 	m_rate.set(0);
+	m_readOffset.set(0);
 	cancelReader();
 	s_databaseHelper.writeSteamStatus("deleted", m_oid);
     }
 
     public void setReadInterval(int interval)
     {
+	if(1000 / interval == m_readInterval.get())
+	    return;
+
 	switch(interval)
 	{
 	case 4:
@@ -237,6 +243,7 @@ public class SteamReaderSimple
 	    m_readInterval.set(1000 / interval);
 	    break;
 	default:
+	    m_readInterval.set(250);
 	    break;
 	}
 
