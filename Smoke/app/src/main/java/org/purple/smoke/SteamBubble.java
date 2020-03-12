@@ -146,7 +146,7 @@ public class SteamBubble extends View
 			s_databaseHelper.writeSteamStatus
 			    (s_cryptography, m_oid, readInterval);
 			Miscellaneous.sendBroadcast
-			    ("org.purple.smoke.steam_rate_change",
+			    ("org.purple.smoke.steam_read_interval_change",
 			     m_oid,
 			     readInterval);
 		    }

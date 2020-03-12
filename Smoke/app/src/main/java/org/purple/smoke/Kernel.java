@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -58,6 +59,28 @@ import org.bouncycastle.crypto.agreement.jpake.JPAKEParticipant;
 
 public class Kernel
 {
+    private class KernelBroadcastReceiver extends BroadcastReceiver
+    {
+	public KernelBroadcastReceiver()
+	{
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent)
+	{
+	    if(intent == null || intent.getAction() == null)
+		return;
+
+	    switch(intent.getAction())
+	    {
+	    case "org.purple.smoke.steam_read_interval_change":
+		break;
+	    default:
+		break;
+	    }
+	}
+    }
+
     private ArrayList<MessageElement> m_messagesToSend = null;
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private AtomicLong m_shareSipHashIdIdentity = null;
@@ -77,6 +100,8 @@ public class Kernel
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
+    private final KernelBroadcastReceiver m_receiver =
+	new KernelBroadcastReceiver();
     private final Object m_callSchedulerObject = new Object();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
