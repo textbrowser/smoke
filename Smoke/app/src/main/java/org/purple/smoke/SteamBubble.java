@@ -133,7 +133,7 @@ public class SteamBubble extends View
 			readInterval = 20;
 			text = "20 reads / s";
 			break;
-		    default:
+		    case 3:
 			readInterval = 50;
 			text = "50 reads / s";
 			break;

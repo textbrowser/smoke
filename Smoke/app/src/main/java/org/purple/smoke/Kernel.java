@@ -32,10 +32,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
-import android.os.PowerManager;
+import android.net.wifi.WifiManager;
 import android.os.PowerManager.WakeLock;
+import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.SparseArray;
 import java.net.InetAddress;
@@ -157,6 +158,8 @@ public class Kernel
 
     private Kernel()
     {
+	LocalBroadcastManager.getInstance(Smoke.getApplication()).
+	    unregisterReceiver(m_receiver);
 	m_callQueue = new Hashtable<> ();
 	m_chatTemporaryIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
