@@ -92,7 +92,7 @@
                 android:textAllCaps="false" />
 
             <SeekBar
-                android:id="@+id/rate"
+                android:id="@+id/read_interval"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                 android:progress="0" />
 
             <TextView
-                android:id="@+id/rate_label"
+                android:id="@+id/read_interval_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />

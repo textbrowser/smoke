@@ -1774,10 +1774,11 @@ public class Database extends SQLiteOpenHelper
 		 "file_digest, " +              // 2
 		 "file_size, " +                // 3
 		 "is_download, " +              // 4
-		 "read_offset, " +              // 5
-		 "status, " +                   // 6
-		 "transfer_rate, " +            // 7
-		 "oid " +                       // 8
+		 "read_interval, " +            // 5
+		 "read_offset, " +              // 6
+		 "status, " +                   // 7
+		 "transfer_rate, " +            // 8
+		 "oid " +                       // 9
 		 "FROM steam_files", null);
 
 	    if(cursor != null && cursor.moveToPosition(position))
@@ -1789,7 +1790,7 @@ public class Database extends SQLiteOpenHelper
 
 		for(int i = 0; i < count; i++)
 		{
-		    if(i == 6)
+		    if(i == 7)
 		    {
 			steamElement.m_status = cursor.getString(i).trim();
 			continue;
@@ -1864,6 +1865,18 @@ public class Database extends SQLiteOpenHelper
 			if(bytes != null)
 			    try
 			    {
+				steamElement.m_readInterval = Integer.parseInt
+				    (new String(bytes));
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+
+			break;
+		    case 6:
+			if(bytes != null)
+			    try
+			    {
 				steamElement.m_readOffset = Integer.parseInt
 				    (new String(bytes));
 			    }
@@ -1872,7 +1885,7 @@ public class Database extends SQLiteOpenHelper
 			    }
 
 			break;
-		    case 7:
+		    case 8:
 			if(bytes != null)
 			    steamElement.m_transferRate = new String(bytes);
 			else
@@ -5111,6 +5124,36 @@ public class Database extends SQLiteOpenHelper
 		    ("transfer_rate",
 		     cryptography.etmBase64String(transferRate));
 
+	    m_db.update("steam_files",
+			values,
+			"oid = ?",
+			new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
+    public void writeSteamStatus(Cryptography cryptography,
+				 int oid,
+				 int readInterval)
+    {
+	if(cryptography == null || m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("read_interval", cryptography.etmBase64String(readInterval));
 	    m_db.update("steam_files",
 			values,
 			"oid = ?",

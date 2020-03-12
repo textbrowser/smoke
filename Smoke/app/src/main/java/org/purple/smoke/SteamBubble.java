@@ -42,14 +42,14 @@ public class SteamBubble extends View
     private Button m_control = null;
     private Context m_context = null;
     private ProgressBar m_progress = null;
-    private SeekBar m_rate = null;
+    private SeekBar m_readInterval = null;
     private Steam m_steam = null;
     private String m_controlString = "";
     private TextView m_destination = null;
     private TextView m_digest = null;
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
-    private TextView m_rateLabel = null;
+    private TextView m_readIntervalLabel = null;
     private TextView m_sent = null;
     private TextView m_status = null;
     private TextView m_transferRate = null;
@@ -57,10 +57,6 @@ public class SteamBubble extends View
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
-    private final static String READ_INTERVALS[] = {"50 reads / s",
-						    "20 reads / s",
-						    "10 reads / s",
-						    "4 reads / s"};
     private int m_oid = -1;
 
     private String formatSize(long size)
@@ -110,8 +106,8 @@ public class SteamBubble extends View
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
-	m_rate = (SeekBar) m_view.findViewById(R.id.rate);
-	m_rate.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+	m_readInterval = (SeekBar) m_view.findViewById(R.id.read_interval);
+	m_readInterval.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 	{
 	    @Override
 	    public void onProgressChanged(SeekBar seekBar,
@@ -121,24 +117,40 @@ public class SteamBubble extends View
 		switch(progress)
 		{
 		case 0:
-		    m_rateLabel.setText("4 reads / s");
-		    Miscellaneous.sendBroadcast
-			("org.purple.smoke.steam_rate_change", m_oid, 4);
-		    break;
 		case 1:
-		    m_rateLabel.setText("10 reads / s");
-		    Miscellaneous.sendBroadcast
-			("org.purple.smoke.steam_rate_change", m_oid, 10);
-		    break;
 		case 2:
-		    m_rateLabel.setText("20 reads / s");
-		    Miscellaneous.sendBroadcast
-			("org.purple.smoke.steam_rate_change", m_oid, 20);
-		    break;
 		case 3:
-		    m_rateLabel.setText("50 reads / s");
-		    Miscellaneous.sendBroadcast
-			("org.purple.smoke.steam_rate_change", m_oid, 50);
+		    String text = "4 reads / s";
+		    int readInterval = 4;
+
+		    switch(progress)
+		    {
+		    case 1:
+			readInterval = 10;
+			text = "10 reads / s";
+			break;
+		    case 2:
+			readInterval = 20;
+			text = "20 reads / s";
+			break;
+		    default:
+			readInterval = 50;
+			text = "50 reads / s";
+			break;
+		    }
+
+		    m_readIntervalLabel.setText(text);
+
+		    if(fromUser)
+		    {
+			s_databaseHelper.writeSteamStatus
+			    (s_cryptography, m_oid, readInterval);
+			Miscellaneous.sendBroadcast
+			    ("org.purple.smoke.steam_rate_change",
+			     m_oid,
+			     readInterval);
+		    }
+
 		    break;
 		default:
 		    break;
@@ -155,8 +167,9 @@ public class SteamBubble extends View
 	    {
 	    }
 	});
-	m_rateLabel = (TextView) m_view.findViewById(R.id.rate_label);
-	m_rateLabel.setText("4 reads / s");
+	m_readIntervalLabel = (TextView) m_view.findViewById
+	    (R.id.read_interval_label);
+	m_readIntervalLabel.setText("4 reads / s");
 	m_sent = (TextView) m_view.findViewById(R.id.sent);
 	m_status = (TextView) m_view.findViewById(R.id.status);
 	m_transferRate = (TextView) m_view.findViewById(R.id.transfer_rate);
@@ -204,6 +217,25 @@ public class SteamBubble extends View
 	m_oid = steamElement.m_oid;
 	m_progress.setMax((int) steamElement.m_fileSize);
 	m_progress.setProgress((int) steamElement.m_readOffset);
+
+	switch(steamElement.m_readInterval)
+	{
+	case 4:
+	    m_readInterval.setProgress(0);
+	    break;
+	case 10:
+	    m_readInterval.setProgress(1);
+	    break;
+	case 20:
+	    m_readInterval.setProgress(2);
+	    break;
+	case 50:
+	    m_readInterval.setProgress(3);
+	    break;
+	default:
+	    break;
+	}
+
 	m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	m_status.setText("Status: " + steamElement.m_status);
 	m_transferRate.setText
