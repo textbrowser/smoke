@@ -189,6 +189,7 @@ Completed Items
 - SipHash (https://en.wikipedia.org/wiki/SipHash).
 - SipHash description bubble.
 - Smoke echo? Expensive. Optional.
+- Smokescreen, remove sub-menus on lock.
 - Sort table contents.
 - Spinner objects in the neighbors table bleed. The table will expand as
   necessary.
@@ -223,33 +224,18 @@ Completed Items
 Future Items
 
 - (130 / 16 + 1) * 16 + 8 <= 154.
-- Automatic SipHash hyphens.
-- Bluetooth
-  (http://www.oracle.com/technetwork/articles/javame/index-156193.html).
 - Disable Chat:Send if there is at least one selected participant without a
   session.
-- Introduce real-time typing status.
 - NTRU via BouncyCastle.
 - Names or PINs alongside SipHashes. The extra bits will increase the
   possibilities.
 - Optional cryptographic discovery.
-- Replace Chat member view with a recycler view.
 - Resolve DNS through a proxy if a proxy is defined.
-- Themes, of course.
 
 Remaining Items
 
 - Bubbles are too narrow on wide devices.
 - Determine path for any file in Steam.
-- Drawers.
-- Gallery integration. Zoom.
 - Increase public-key key sizes.
 - McEliece KobaraImai conversions.
-- Separate Settings:
-  Neighbor Servers
-  Ozone, Participants
-  Password, Public Data
-- Smokescreen, remove sub-menus on lock.
-- Steam. Also on Stack.
 - Stronger surreptitious forwarding. Larger RSA keys.
-- Translations.

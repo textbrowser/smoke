@@ -44,7 +44,6 @@ public class Smokescreen extends AppCompatActivity
     private Button m_lock = null;
     private Button m_unlock = null;
     private Database m_databaseHelper = null;
-    private SubMenu m_membersSubMenu = null;
     private TextView m_label = null;
     private TextView m_password = null;
     private final static Cryptography s_cryptography =
@@ -136,37 +135,6 @@ public class Smokescreen extends AppCompatActivity
     {
 	boolean isLocked = State.getInstance().isLocked();
 
-	if(isLocked && m_membersSubMenu != null)
-	    m_membersSubMenu.clear();
-	else if(m_membersSubMenu != null)
-	{
-	    m_membersSubMenu.clear();
-
-	    ArrayList<ParticipantElement> arrayList = State.getInstance().
-		participants();
-
-	    /*
-	    ** Do not clear arrayList!
-	    */
-
-	    if(arrayList != null && arrayList.size() > 0)
-		for(ParticipantElement participantElement : arrayList)
-		{
-		    if(participantElement == null)
-			continue;
-
-		    m_membersSubMenu.add
-			(1,
-			 participantElement.m_oid,
-			 0,
-			 participantElement.m_name +
-			 " (" +
-			 Miscellaneous.
-			 prepareSipHashId(participantElement.m_sipHashId) +
-			 ")");
-		}
-	}
-
 	m_label.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_lock.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_password.setVisibility(isLocked ? View.VISIBLE : View.GONE);
@@ -250,7 +218,6 @@ public class Smokescreen extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.smokescreen_menu, menu);
         return true;
     }
 
@@ -313,10 +280,14 @@ public class Smokescreen extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
+	menu.clear();
+	getMenuInflater().inflate(R.menu.smokescreen_menu, menu);
+
 	boolean isLocked = State.getInstance().isLocked();
 
 	if(isLocked)
 	{
+	    menu.findItem(R.id.action_authenticate).setEnabled(false);
 	    menu.findItem(R.id.action_chat).setEnabled(false);
 	    menu.findItem(R.id.action_fire).setEnabled(false);
 	    menu.findItem(R.id.action_settings).setEnabled(false);
@@ -339,10 +310,8 @@ public class Smokescreen extends AppCompatActivity
 	    menu.findItem(R.id.action_fire).setEnabled(isAuthenticated);
 	    menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
 	    menu.findItem(R.id.action_steam).setEnabled(isAuthenticated);
+	    Miscellaneous.addMembersToMenu(menu, 6, 250);
 	}
-
-	if(m_membersSubMenu == null)
-	    m_membersSubMenu = Miscellaneous.addMembersToMenu(menu, 6, 250);
 
 	return true;
     }
