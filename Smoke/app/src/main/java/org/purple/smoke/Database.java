@@ -5121,57 +5121,39 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || m_db == null)
 	    return;
 
-	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()
+	m_db.beginTransactionNonExclusive();
+
+	try
 	{
-	    @Override
-	    public void run()
-	    {
-		try
-		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
+	    ContentValues values = new ContentValues();
 
-		    m_db.beginTransactionNonExclusive();
+	    values.put("read_offset", cryptography.etmBase64String(offset));
 
-		    try
-		    {
-			ContentValues values = new ContentValues();
+	    if(!status.isEmpty())
+		values.put("status", status);
 
-			values.put("read_offset",
-				   cryptography.etmBase64String(offset));
+	    if(transferRate.isEmpty())
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(Miscellaneous.RATE));
+	    else
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(transferRate));
 
-			if(!status.isEmpty())
-			    values.put("status", status);
-
-			if(transferRate.isEmpty())
-			    values.put
-				("transfer_rate",
-				 cryptography.
-				 etmBase64String(Miscellaneous.RATE));
-			else
-			    values.put
-				("transfer_rate",
-				 cryptography.etmBase64String(transferRate));
-
-			m_db.update("steam_files",
-				    values,
-				    "oid = ?",
-				    new String[] {String.valueOf(oid)});
-			m_db.setTransactionSuccessful();
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		    finally
-		    {
-			m_db.endTransaction();
-		    }
-		}
-		catch(Exception exception)
-		{
-		}
-	    }
-	}, 0, TimeUnit.MILLISECONDS);
+	    m_db.update("steam_files",
+			values,
+			"oid = ?",
+			new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
     }
 
     public void writeSteamStatus(final Cryptography cryptography,
