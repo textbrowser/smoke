@@ -5054,150 +5054,219 @@ public class Database extends SQLiteOpenHelper
 	}, 0, TimeUnit.MILLISECONDS);
     }
 
-    public void writeSteamStatus(Cryptography cryptography,
-				 String status,
-				 String transferRate,
-				 int oid)
+    public void writeSteamStatus(final Cryptography cryptography,
+				 final String status,
+				 final String transferRate,
+				 final int oid)
     {
 	if(cryptography == null || m_db == null)
 	    return;
 
-	m_db.beginTransactionNonExclusive();
-
-	try
+	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()
 	{
-	    ContentValues values = new ContentValues();
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
 
-	    if(!status.isEmpty())
-		values.put("status", status);
+		    m_db.beginTransactionNonExclusive();
 
-	    if(transferRate.isEmpty())
-		values.put
-		    ("transfer_rate",
-		     cryptography.etmBase64String(Miscellaneous.RATE));
-	    else
-		values.put
-		    ("transfer_rate",
-		     cryptography.etmBase64String(transferRate));
+		    try
+		    {
+			ContentValues values = new ContentValues();
 
-	    m_db.update("steam_files",
-			values,
-			"oid = ?",
-			new String[] {String.valueOf(oid)});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
+			if(!status.isEmpty())
+			    values.put("status", status);
+
+			if(transferRate.isEmpty())
+			    values.put
+				("transfer_rate",
+				 cryptography.
+				 etmBase64String(Miscellaneous.RATE));
+			else
+			    values.put
+				("transfer_rate",
+				 cryptography.etmBase64String(transferRate));
+
+			m_db.update("steam_files",
+				    values,
+				    "oid = ?",
+				    new String[] {String.valueOf(oid)});
+			m_db.setTransactionSuccessful();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_db.endTransaction();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, TimeUnit.MILLISECONDS);
     }
 
-    public void writeSteamStatus(Cryptography cryptography,
-				 String status,
-				 String transferRate,
-				 int oid,
-				 long offset)
+    public void writeSteamStatus(final Cryptography cryptography,
+				 final String status,
+				 final String transferRate,
+				 final int oid,
+				 final long offset)
     {
 	if(cryptography == null || m_db == null)
 	    return;
 
-	m_db.beginTransactionNonExclusive();
-
-	try
+	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()
 	{
-	    ContentValues values = new ContentValues();
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
 
-	    values.put("read_offset",cryptography.etmBase64String(offset));
+		    m_db.beginTransactionNonExclusive();
 
-	    if(!status.isEmpty())
-		values.put("status", status);
+		    try
+		    {
+			ContentValues values = new ContentValues();
 
-	    if(transferRate.isEmpty())
-		values.put
-		    ("transfer_rate",
-		     cryptography.etmBase64String(Miscellaneous.RATE));
-	    else
-		values.put
-		    ("transfer_rate",
-		     cryptography.etmBase64String(transferRate));
+			values.put("read_offset",
+				   cryptography.etmBase64String(offset));
 
-	    m_db.update("steam_files",
-			values,
-			"oid = ?",
-			new String[] {String.valueOf(oid)});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
+			if(!status.isEmpty())
+			    values.put("status", status);
+
+			if(transferRate.isEmpty())
+			    values.put
+				("transfer_rate",
+				 cryptography.
+				 etmBase64String(Miscellaneous.RATE));
+			else
+			    values.put
+				("transfer_rate",
+				 cryptography.etmBase64String(transferRate));
+
+			m_db.update("steam_files",
+				    values,
+				    "oid = ?",
+				    new String[] {String.valueOf(oid)});
+			m_db.setTransactionSuccessful();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_db.endTransaction();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, TimeUnit.MILLISECONDS);
     }
 
-    public void writeSteamStatus(Cryptography cryptography,
-				 int oid,
-				 int readInterval)
+    public void writeSteamStatus(final Cryptography cryptography,
+				 final int oid,
+				 final int readInterval)
     {
 	if(cryptography == null || m_db == null)
 	    return;
 
-	m_db.beginTransactionNonExclusive();
+	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
 
-	try
-	{
-	    ContentValues values = new ContentValues();
+		    m_db.beginTransactionNonExclusive();
 
-	    values.put
-		("read_interval", cryptography.etmBase64String(readInterval));
-	    m_db.update("steam_files",
-			values,
-			"oid = ?",
-			new String[] {String.valueOf(oid)});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
+		    try
+		    {
+			ContentValues values = new ContentValues();
+
+			values.put
+			    ("read_interval",
+			     cryptography.etmBase64String(readInterval));
+			m_db.update("steam_files",
+				    values,
+				    "oid = ?",
+				    new String[] {String.valueOf(oid)});
+			m_db.setTransactionSuccessful();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_db.endTransaction();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, TimeUnit.MILLISECONDS);
     }
 
-    public void writeSteamStatus(String status, int oid)
+    public void writeSteamStatus(final String status, final int oid)
     {
 	if(m_db == null)
 	    return;
 
-	m_db.beginTransactionNonExclusive();
-
-	try
+	Executors.newSingleThreadScheduledExecutor().schedule(new Runnable()
 	{
-	    ContentValues values = new ContentValues();
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    if(Thread.currentThread().isInterrupted())
+			return;
 
-	    if(status.isEmpty())
-		values.put("status", "deleted");
-	    else
-		values.put("status", status);
+		    m_db.beginTransactionNonExclusive();
 
-	    m_db.update("steam_files",
-			values,
-			"oid = ?",
-			new String[] {String.valueOf(oid)});
-	    m_db.setTransactionSuccessful();
-	    Miscellaneous.sendBroadcast("org.purple.smoke.steam_status");
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
+		    try
+		    {
+			ContentValues values = new ContentValues();
+
+			if(status.isEmpty())
+			    values.put("status", "deleted");
+			else
+			    values.put("status", status);
+
+			m_db.update("steam_files",
+				    values,
+				    "oid = ?",
+				    new String[] {String.valueOf(oid)});
+			m_db.setTransactionSuccessful();
+			Miscellaneous.sendBroadcast
+			    ("org.purple.smoke.steam_status");
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_db.endTransaction();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0, TimeUnit.MILLISECONDS);
     }
 }
