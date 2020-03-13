@@ -3787,6 +3787,33 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void cleanDanglingSteams()
+    {
+	if(m_db == null)
+	    return;
+
+	Cursor cursor = null;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("DELETE FROM steam_files WHERE status = 'deleted'", null);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+
+	    m_db.endTransaction();
+	}
+    }
+
     public void cleanNeighborStatistics(Cryptography cryptography)
     {
 	ArrayList<NeighborElement> arrayList = readNeighborOids(cryptography);

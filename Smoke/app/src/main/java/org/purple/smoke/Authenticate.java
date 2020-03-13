@@ -202,6 +202,7 @@ public class Authenticate extends AppCompatActivity
 			{
 			    m_databaseHelper.cleanDanglingOutboundQueued();
 			    m_databaseHelper.cleanDanglingParticipants();
+			    m_databaseHelper.cleanDanglingSteams();
 			    encryptionKey = Cryptography.generateEncryptionKey
 				(m_encryptionSalt,
 				 m_password.toCharArray(),
