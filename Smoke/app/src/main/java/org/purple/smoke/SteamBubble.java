@@ -120,7 +120,7 @@ public class SteamBubble extends View
 		case "pause":
 		    m_eta.setText("ETA: stalled");
 		    s_databaseHelper.writeSteamStatus
-			(s_cryptography, "paused", "", m_oid);
+			(s_cryptography, "paused", Miscellaneous.RATE, m_oid);
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.steam_status");
 		    break;
@@ -131,7 +131,11 @@ public class SteamBubble extends View
 		    break;
 		case "rewind":
 		    s_databaseHelper.writeSteamStatus
-			(s_cryptography, "rewind", "", m_oid, 0);
+			(s_cryptography,
+			 "rewind",
+			 Miscellaneous.RATE,
+			 m_oid,
+			 0);
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.steam_status");
 		    break;

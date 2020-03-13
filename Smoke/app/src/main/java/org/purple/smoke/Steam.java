@@ -519,7 +519,7 @@ public class Steam extends AppCompatActivity
 	    break;
 	case ContextMenuEnumerator.REWIND_STEAM:
 	    m_databaseHelper.writeSteamStatus
-		(s_cryptography, "rewind", "", itemId, 0);
+		(s_cryptography, "rewind", Miscellaneous.RATE, itemId, 0);
 	    m_adapter.notifyDataSetChanged();
 	    break;
 	default:

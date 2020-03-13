@@ -131,6 +131,8 @@ public class SteamReaderSimple
 			case "deleted":
 			    return;
 			case "paused":
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography, "", Miscellaneous.RATE, m_oid);
 			    return;
 			case "rewind":
 			    m_readOffset.set(0);
