@@ -1342,7 +1342,7 @@ public class Database extends SQLiteOpenHelper
 	    /*
 	    ** We want to preserve the order of the time values.
 	    ** That is, if t_a < t_b, then E(t_a) < E(t_b) must
-	    ** also be true. Or, H(t_a) < H(t_b).
+	    ** also be true. Or, H(t_a) < H(t_b). A comment, purely.
 	    */
 
 	    values.put("timestamp", timestamp);
