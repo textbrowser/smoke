@@ -365,7 +365,8 @@ public class Steam extends AppCompatActivity
         setContentView(R.layout.activity_steam);
 	m_layoutManager = new SteamLinearLayoutManager(Steam.this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-	m_layoutManager.setStackFromEnd(false);
+	m_layoutManager.setReverseLayout(true);
+	m_layoutManager.setStackFromEnd(true);
 
 	try
 	{

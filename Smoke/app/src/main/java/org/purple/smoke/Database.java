@@ -1048,7 +1048,7 @@ public class Database extends SQLiteOpenHelper
 		 "status, " +                   // 7
 		 "transfer_rate, " +            // 8
 		 "oid " +                       // 9
-		 "FROM steam_files", null);
+		 "FROM steam_files ORDER BY someoid", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -1779,7 +1779,7 @@ public class Database extends SQLiteOpenHelper
 		 "status, " +                   // 7
 		 "transfer_rate, " +            // 8
 		 "oid " +                       // 9
-		 "FROM steam_files", null);
+		 "FROM steam_files ORDER BY someoid", null);
 
 	    if(cursor != null && cursor.moveToPosition(position))
 	    {
