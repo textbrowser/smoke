@@ -35,7 +35,6 @@ public class SteamElement
     public String m_transferRate = "";
     public byte m_fileDigest[] = null;
     public byte m_keyStream[] = null;
-    public byte m_randomBytes[] = null;
     public int m_direction = DOWNLOAD;
     public int m_oid = -1;
     public long m_fileSize = 0;
@@ -54,6 +53,5 @@ public class SteamElement
 	m_fileName = fileName;
 	m_fileSize = Miscellaneous.fileSize(fileName);
 	m_keyStream = Cryptography.randomBytes(96);
-	m_randomBytes = Cryptography.randomBytes(64);
     }
 }
