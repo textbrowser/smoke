@@ -37,6 +37,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class SteamBubble extends View
 {
@@ -61,11 +62,18 @@ public class SteamBubble extends View
     private final static Database s_databaseHelper = Database.getInstance();
     private final static DecimalFormat s_decimalFormat =
 	new DecimalFormat("0.00");
+    private final static NumberFormat s_numberFormat =
+	NumberFormat.getInstance();
     private int m_oid = -1;
 
     private String formatSize(long size)
     {
 	return Miscellaneous.formattedDigitalInformation(String.valueOf(size));
+    }
+
+    private String niceBytes(long size)
+    {
+	return s_numberFormat.format(size);
     }
 
     private String prettyEta(String transferRate,
@@ -216,6 +224,7 @@ public class SteamBubble extends View
 	m_status = (TextView) m_view.findViewById(R.id.status);
 	m_transferRate = (TextView) m_view.findViewById(R.id.transfer_rate);
 	m_view.setId(-1);
+	s_numberFormat.setGroupingUsed(true);
     }
 
     public View view()
@@ -258,7 +267,11 @@ public class SteamBubble extends View
 				steamElement.m_readOffset));
 	m_fileName.setText("File: " + steamElement.m_fileName);
 	m_fileSize.setText
-	    ("Size: " + formatSize(steamElement.m_fileSize));
+	    ("Size: " +
+	     formatSize(steamElement.m_fileSize) +
+	     " (" +
+	     niceBytes(steamElement.m_fileSize) +
+	     ")");
 	m_oid = steamElement.m_oid;
 	m_progress.setMax((int) steamElement.m_fileSize);
 	m_progress.setProgress((int) steamElement.m_readOffset);
