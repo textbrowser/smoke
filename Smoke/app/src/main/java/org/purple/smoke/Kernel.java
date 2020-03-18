@@ -119,9 +119,9 @@ public class Kernel
 		    {
 		    }
 		    finally
-		   {
-		       m_simpleSteamsMutex.readLock().unlock();
-		   }
+		    {
+			m_simpleSteamsMutex.readLock().unlock();
+		    }
 		}
 
 		break;
@@ -1405,8 +1405,8 @@ public class Kernel
 	try
 	{
 	    /*
-	    ** Remove steam objects which do not exist in the database.
-	    ** Also removed will be steams having deleted statuses.
+	    ** Remove Steam objects which do not exist in the database.
+	    ** Also removed will be Steams having deleted statuses.
 	    */
 
 	    for(int i = m_simpleSteams.size() - 1; i >= 0; i--)
@@ -1673,6 +1673,38 @@ public class Kernel
 	}
 
 	return null;
+    }
+
+    public int nextSimpleSteamOid()
+    {
+	/*
+	** Discover the oldest, incomplete Simple Steam.
+	*/
+
+	m_simpleSteamsMutex.readLock().lock();
+
+	try
+	{
+	    int size = m_simpleSteams.size();
+
+	    for(int i = 0; i < size; i++)
+	    {
+		int j = m_simpleSteams.keyAt(i);
+
+		if(m_simpleSteams.get(j) != null &&
+		   m_simpleSteams.get(j).completed() == false)
+		    return m_simpleSteams.get(j).getOid();
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_simpleSteamsMutex.readLock().unlock();
+	}
+
+	return 0;
     }
 
     public int ourMessage(String buffer)

@@ -38,6 +38,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SteamReaderSimple
 {
     private AtomicBoolean m_canceled = null;
+    private AtomicBoolean m_completed = null;
     private AtomicLong m_lastBytesSent = null;
     private AtomicLong m_lastTime = null;
     private AtomicLong m_rate = null;
@@ -110,9 +111,6 @@ public class SteamReaderSimple
 		@Override
 		public void run()
 		{
-		    if(m_canceled.get())
-			return;
-
 		    RandomAccessFile randomAccessFile = null;
 
 		    try
@@ -127,6 +125,7 @@ public class SteamReaderSimple
 
 			    return;
 			case "completed":
+			    m_completed.set(true);
 			    return;
 			case "deleted":
 			    return;
@@ -135,6 +134,7 @@ public class SteamReaderSimple
 				(s_cryptography, "", Miscellaneous.RATE, m_oid);
 			    return;
 			case "rewind":
+			    m_completed.set(false);
 			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "paused", "", m_oid, 0);
@@ -142,6 +142,10 @@ public class SteamReaderSimple
 			default:
 			    break;
 			}
+
+			if(Kernel.getInstance().nextSimpleSteamOid() != m_oid ||
+			   m_canceled.get())
+			    return;
 
 			randomAccessFile = new RandomAccessFile
 			    (m_fileName, "r");
@@ -160,6 +164,7 @@ public class SteamReaderSimple
 			    ** Completed!
 			    */
 
+			    m_completed.set(true);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography,
 				 "completed",
@@ -210,6 +215,7 @@ public class SteamReaderSimple
 			     long readOffset)
     {
 	m_canceled = new AtomicBoolean(false);
+	m_completed = new AtomicBoolean(false);
 	m_fileName = fileName;
 	m_lastBytesSent = new AtomicLong(0);
 	m_lastTime = new AtomicLong(System.currentTimeMillis());
@@ -220,6 +226,11 @@ public class SteamReaderSimple
 	prepareReader();
     }
 
+    public boolean completed()
+    {
+	return m_completed.get();
+    }
+
     public int getOid()
     {
 	return m_oid;
@@ -228,6 +239,7 @@ public class SteamReaderSimple
     public void delete()
     {
 	m_canceled.set(true);
+	m_completed.set(false);
 	m_lastBytesSent.set(0);
 	m_lastTime.set(0);
 	m_rate.set(0);
