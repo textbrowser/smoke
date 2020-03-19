@@ -129,6 +129,7 @@ Completed Items
 - Notify the Chat activity of new participants.
 - Optimize loops.
 - Optional per-participant signatures.
+- Orderly delivery of chaotic Steams. First-in-first-Steam.
 - Organic half-and-half: resolve collisions. As Smoke is not ordered, order is
   impossible to predict.
 - Outbound database table.
@@ -238,5 +239,4 @@ Remaining Items
 - Determine path for any file in Steam.
 - Increase public-key key sizes.
 - McEliece KobaraImai conversions.
-- Orderly delivery of chaotic Steams.
 - Stronger surreptitious forwarding. Larger RSA keys.
