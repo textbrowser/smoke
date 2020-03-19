@@ -4581,6 +4581,30 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void rewindAndResumeAllSteams()
+    {
+	if(m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("status", "rewind & resume");
+	    m_db.update("steam_files", values, null, null);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void saveFireChannel(Cryptography cryptography,
 				String name,
 				byte encryptionKey[],

@@ -139,6 +139,12 @@ public class SteamReaderSimple
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "paused", "", m_oid, 0);
 			    return;
+			case "rewind & resume":
+			    m_completed.set(false);
+			    m_readOffset.set(0);
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography, "transferring", "", m_oid, 0);
+			    break;
 			default:
 			    break;
 			}

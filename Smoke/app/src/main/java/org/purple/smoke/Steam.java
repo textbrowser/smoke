@@ -133,8 +133,10 @@ public class Steam extends AppCompatActivity
     {
 	public final static int DELETE_ALL_STEAMS = 0;
 	public final static int DELETE_STEAM = 1;
-	public final static int REWIND_ALL_STEAMS = 2;
-	public final static int REWIND_STEAM = 3;
+	public final static int PAUSE_ALL_STEAMS = 2;
+	public final static int REWIND_ALL_STEAMS = 3;
+	public final static int REWIND_AND_RESUME_ALL_STEAMS = 4;
+	public final static int REWIND_STEAM = 5;
     }
 
     private void populateParticipants()
@@ -514,6 +516,10 @@ public class Steam extends AppCompatActivity
 	    break;
 	case ContextMenuEnumerator.REWIND_ALL_STEAMS:
 	    m_databaseHelper.rewindAllSteams();
+	    m_adapter.notifyDataSetChanged();
+	    break;
+	case ContextMenuEnumerator.REWIND_AND_RESUME_ALL_STEAMS:
+	    m_databaseHelper.rewindAndResumeAllSteams();
 	    m_adapter.notifyDataSetChanged();
 	    break;
 	case ContextMenuEnumerator.REWIND_STEAM:
