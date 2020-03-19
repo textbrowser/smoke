@@ -514,6 +514,10 @@ public class Steam extends AppCompatActivity
 		 listener,
 		 "Are you sure that you wish to delete the selected Steam?");
 	    break;
+	case ContextMenuEnumerator.PAUSE_ALL_STEAMS:
+	    m_databaseHelper.pauseAllSteams();
+	    m_adapter.notifyDataSetChanged();
+	    break;
 	case ContextMenuEnumerator.REWIND_ALL_STEAMS:
 	    m_databaseHelper.rewindAllSteams();
 	    m_adapter.notifyDataSetChanged();
