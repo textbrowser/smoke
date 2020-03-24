@@ -1221,12 +1221,20 @@ public class Cryptography
 						       int keySize1,
 						       int keySize2)
     {
-	if(algorithm.startsWith("McEliece-Fujisaki"))
+	if(algorithm.startsWith("McEliece-Fujisaki") ||
+	   algorithm.startsWith("McEliece-Pointcheval"))
 	{
 	    try
 	    {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.
-		    getInstance("McElieceFujisaki");
+		KeyPairGenerator keyPairGenerator = null;
+
+		if(algorithm.startsWith("McEliece-Fujisaki"))
+		    keyPairGenerator = KeyPairGenerator.
+			getInstance("McElieceFujisaki");
+		else
+		    keyPairGenerator = KeyPairGenerator.
+			getInstance("McEliecePointcheval");
+
 		McElieceCCA2KeyGenParameterSpec parameters = null;
 
 		if(keySize2 == 0 || keySize2 == 1)
@@ -1278,7 +1286,8 @@ public class Cryptography
 
 	try
 	{
-	    if(algorithm.startsWith("McEliece-Fujisaki"))
+	    if(algorithm.startsWith("McEliece-Fujisaki") ||
+	       algorithm.startsWith("McEliece-Pointcheval"))
 	    {
 		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		    (privateBytes);

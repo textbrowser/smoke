@@ -238,5 +238,6 @@ Remaining Items
 - Bubbles are too narrow on wide devices.
 - Determine path for any file in Steam.
 - Increase public-key key sizes.
-- McEliece KobaraImai conversions.
+- McEliece KobaraImai conversion. The algorithm is incomplete in BC.
+- McEliece Pointcheval conversion.
 - Stronger surreptitious forwarding. Larger RSA keys.

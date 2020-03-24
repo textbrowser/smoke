@@ -1536,7 +1536,7 @@ public class Settings extends AppCompatActivity
 			    Settings.this.enableWidgets(true);
 			    Settings.this.showWidgets();
 			    State.getInstance().setAuthenticated(true);
-			    spinner3.setSelection(2); // RSA
+			    spinner3.setSelection(3); // RSA
 			    spinner4.setSelection(1); // RSA
 			    textView1.requestFocus();
 			    textView1.setText("");
@@ -2442,7 +2442,7 @@ public class Settings extends AppCompatActivity
 			{
 			    Settings.this.enableWidgets(true);
 			    Settings.this.showWidgets();
-			    spinner1.setSelection(1); // RSA
+			    spinner1.setSelection(3); // RSA
 			    spinner2.setSelection(1); // RSA
 			    populateFancyKeyData();
 			    populateOzone();
@@ -3127,7 +3127,10 @@ public class Settings extends AppCompatActivity
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "McEliece-Fujisaki (11, 50)", "McEliece-Fujisaki (12, 68)", "RSA"
+	    "McEliece-Fujisaki (11, 50)",    // 0
+	    "McEliece-Fujisaki (12, 68)",    // 1
+	    "McEliece-Pointcheval (11, 50)", // 2
+	    "RSA"                            // 3
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
@@ -3255,7 +3258,7 @@ public class Settings extends AppCompatActivity
 	    spinner1.setSelection(1); // PBKDF2
 
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
-	spinner1.setSelection(2); // RSA
+	spinner1.setSelection(3); // RSA
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
 
 	if(spinner1.getAdapter().getCount() > 1)
