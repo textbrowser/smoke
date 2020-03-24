@@ -1410,7 +1410,7 @@ public class MemberChat extends AppCompatActivity
 	menu.add(ContextMenuEnumerator.CALL_VIA_MCELIECE,
 		 -1,
 		 0,
-		 "Call via McEliece").setEnabled(state);
+		 "Call via McEliece (Fujisaki)").setEnabled(state);
 	menu.add(ContextMenuEnumerator.CALL_VIA_RSA,
 		 -1,
 		 0,
