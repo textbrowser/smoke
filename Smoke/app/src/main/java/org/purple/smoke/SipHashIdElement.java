@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 public class SipHashIdElement
 {
+    public String m_encryptionAlgorithm = "";
     public String m_name = "";
     public String m_sipHashId = "";
     public boolean m_epksCompleted = false;

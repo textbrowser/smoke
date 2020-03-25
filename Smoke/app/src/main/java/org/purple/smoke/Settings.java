@@ -2599,9 +2599,10 @@ public class Settings extends AppCompatActivity
 		else
 		{
 		    byte bytes[] = Messages.epksMessage
-			(sipHashIdElement.m_encryptionPublicKey,
-			 sipHashIdElement.m_signaturePublicKey,
+			(sipHashIdElement.m_encryptionAlgorithm,
 			 sipHashIdElement.m_sipHashId,
+			 sipHashIdElement.m_encryptionPublicKey,
+			 sipHashIdElement.m_signaturePublicKey,
 			 sipHashIdElement.m_stream,
 			 Messages.CHAT_KEY_TYPE);
 
@@ -2706,25 +2707,32 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		m_sipHashId = m_databaseHelper.readSipHashIdString
-		    (s_cryptography, m_oid);
-
 		/*
 		** Retrieve everything that requires the SipHash.
 		*/
 
-		m_name = m_databaseHelper.nameFromSipHashId
-		    (s_cryptography, m_sipHashId).trim();
+		SipHashIdElement sipHashIdElement = m_databaseHelper.
+		    readSipHashId(s_cryptography, m_oid);
+
+		m_sipHashId = sipHashIdElement == null ?
+		    "" : sipHashIdElement.m_sipHashId;
+
+		String chatEncryptionPublicKeyAlgorithm =
+		    sipHashIdElement == null ?
+		    "" : sipHashIdElement.m_encryptionAlgorithm;
+
+		m_name = sipHashIdElement == null ?
+		    "" : sipHashIdElement.m_name;
 		m_string1 = Cryptography.fancyKeyInformationOutput
 		    (m_databaseHelper.
 		     publicEncryptionKeyForSipHashId(s_cryptography,
 						     m_sipHashId),
-		     "").trim();
+		     chatEncryptionPublicKeyAlgorithm).trim();
 		m_string2 = Cryptography.fancyKeyInformationOutput
 		    (m_databaseHelper.
 		     publicSignatureKeyForSipHashId(s_cryptography,
 						    m_sipHashId),
-		     "").trim();
+		     chatEncryptionPublicKeyAlgorithm).trim();
 		m_strings = m_databaseHelper.
 		    keysSigned(s_cryptography, m_sipHashId);
 

@@ -52,6 +52,9 @@ public class Messages
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
     public final static byte JUGGERNAUT_TYPE[] = new byte[] {0x03};
+    public final static byte MCELIECE_FUJISAKI_11_50 = 0x01;
+    public final static byte MCELIECE_FUJISAKI_12_68 = 0x02;
+    public final static byte MCELIECE_POINTCHEVAL = 0x03;
     public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
     public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
@@ -840,7 +843,18 @@ public class Messages
 		    return null;
 	    }
 	    else
+	    {
 		bytes = new byte[1];
+
+		if(cryptography.chatEncryptionPublicKeyAlgorithm().
+		   startsWith("McEliece-Fujisaki (11"))
+		    bytes[0] = MCELIECE_FUJISAKI_11_50;
+		else if(cryptography.chatEncryptionPublicKeyAlgorithm().
+			startsWith("McEliece-Fujisaki (12"))
+		    bytes[0] = MCELIECE_FUJISAKI_12_68;
+		else
+		    bytes[0] = MCELIECE_POINTCHEVAL;
+	    }
 
 	    stringBuilder.
 		append(Base64.encodeToString(encryptionKey.getEncoded(),
@@ -907,9 +921,10 @@ public class Messages
 	return null;
     }
 
-    public static byte[] epksMessage(byte encryptionPublicKey[],
-				     byte signaturePublicKey[],
+    public static byte[] epksMessage(String encryptionAlgorithm,
 				     String sipHashId,
+				     byte encryptionPublicKey[],
+				     byte signaturePublicKey[],
 				     byte keyStream[],
 				     byte keyType[])
     {
@@ -962,7 +977,16 @@ public class Messages
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
-	    byte bytes[] = {0}; // Artificial signatures.
+	    byte bytes[] = new byte[1]; // Artificial signatures.
+
+	    if(encryptionAlgorithm.startsWith("McEliece-Fujisaki (11"))
+		bytes[0] = MCELIECE_FUJISAKI_11_50;
+	    else if(encryptionAlgorithm.startsWith("McEliece-Fujisaki (12"))
+		bytes[0] = MCELIECE_FUJISAKI_12_68;
+	    else if(encryptionAlgorithm.startsWith("McEliece-Pointcheval"))
+		bytes[0] = MCELIECE_POINTCHEVAL;
+	    else
+		bytes[0] = 0;
 
 	    /*
 	    ** [ Encryption Public Key ]
@@ -978,6 +1002,7 @@ public class Messages
 	    ** [ Signature Public Key ]
 	    */
 
+	    bytes[0] = 0; // Artificial signatures.
 	    stringBuilder.append
 		(Base64.encodeToString(signaturePublicKey, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
