@@ -108,6 +108,7 @@ Completed Items
 - Local congestion control.
 - Logging class. See Database::writeLog().
 - Material icons.
+- McEliece Pointcheval conversion.
 - Member status in Member Chat.
 - Member Chat attachment.
 - Messages from the past may trigger presence.
@@ -239,5 +240,4 @@ Remaining Items
 - Determine path for any file in Steam.
 - Increase public-key key sizes.
 - McEliece KobaraImai conversion. The algorithm is incomplete in BC.
-- McEliece Pointcheval conversion.
 - Stronger surreptitious forwarding. Larger RSA keys.

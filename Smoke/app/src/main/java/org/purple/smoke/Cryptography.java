@@ -55,6 +55,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
@@ -223,10 +225,8 @@ public class Cryptography
 
 	try
 	{
-	    if(m_chatEncryptionPublicKeyPair != null)
-		return m_chatEncryptionPublicKeyPair.getPublic().getAlgorithm();
-	    else
-		return "";
+	    return publicKeyAlgorithm
+		(m_chatEncryptionPublicKeyPair.getPublic());
 	}
 	catch(Exception exception)
 	{
@@ -268,90 +268,6 @@ public class Cryptography
     {
 	return Base64.encodeToString
 	    (etm(String.valueOf(value).getBytes()), Base64.DEFAULT);
-    }
-
-    public String fancyKeyInformationOutput(KeyPair keyPair)
-    {
-	if(keyPair == null)
-	    return "";
-	else
-	    return fancyKeyInformationOutput(keyPair.getPublic());
-    }
-
-    public String fancyKeyInformationOutput(PublicKey publicKey)
-    {
-	if(publicKey == null)
-	    return "";
-
-	try
-	{
-	    String algorithm = publicKey.getAlgorithm();
-	    StringBuilder stringBuilder = new StringBuilder();
-
-	    stringBuilder.append("Algorithm: ");
-	    stringBuilder.append(algorithm);
-	    stringBuilder.append("\n");
-	    stringBuilder.append("Disk Size: ");
-	    stringBuilder.append(publicKey.getEncoded().length);
-	    stringBuilder.append(" Bytes\n");
-	    stringBuilder.append("Fingerprint: ");
-	    stringBuilder.append(publicKeyFingerPrint(publicKey));
-	    stringBuilder.append("\n");
-	    stringBuilder.append("Format: ");
-	    stringBuilder.append(publicKey.getFormat());
-
-	    if(algorithm.equals("EC") ||
-	       algorithm.equals("McEliece-CCA2") ||
-	       algorithm.equals("RSA"))
-		try
-		{
-		    switch(algorithm)
-		    {
-		    case "EC":
-			ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
-
-			if(ecPublicKey != null)
-			    stringBuilder.append("\n").append("Size: ").
-				append(ecPublicKey.getW().getAffineX().
-				       bitLength());
-
-			break;
-		    case "McEliece-CCA2":
-			BCMcElieceCCA2PublicKey mcEliecePublicKey =
-			    (BCMcElieceCCA2PublicKey) publicKey;
-
-			if(mcEliecePublicKey != null)
-			    stringBuilder.append("\n").append("m = ").
-				append((int) (Math.log(mcEliecePublicKey.
-						       getN()) /
-					      Math.log(2))).
-				append(", t = ").
-				append(mcEliecePublicKey.getT());
-
-			break;
-		    case "RSA":
-			RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
-
-			if(rsaPublicKey != null)
-			    stringBuilder.append("\n").append("Size: ").
-				append(rsaPublicKey.getModulus().bitLength());
-
-			break;
-		    default:
-			break;
-		    }
-		}
-		catch(Exception exception)
-		{
-		}
-
-	    return stringBuilder.toString();
-	}
-	catch(Exception exception)
-	{
-	}
-
-	return "";
     }
 
     public String sipHashId()
@@ -1507,6 +1423,92 @@ public class Cryptography
 	return null;
     }
 
+    public static String fancyKeyInformationOutput(KeyPair keyPair)
+    {
+	if(keyPair == null)
+	    return "";
+	else
+	    return fancyKeyInformationOutput(keyPair.getPublic());
+    }
+
+    public static String fancyKeyInformationOutput(PublicKey publicKey)
+    {
+	if(publicKey == null)
+	    return "";
+
+	try
+	{
+	    String algorithm = publicKeyAlgorithm(publicKey);
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append("Algorithm: ");
+	    stringBuilder.append(algorithm);
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Disk Size: ");
+	    stringBuilder.append(publicKey.getEncoded().length);
+	    stringBuilder.append(" Bytes\n");
+	    stringBuilder.append("Fingerprint: ");
+	    stringBuilder.append(publicKeyFingerPrint(publicKey));
+	    stringBuilder.append("\n");
+	    stringBuilder.append("Format: ");
+	    stringBuilder.append(publicKey.getFormat());
+
+	    if(algorithm.equals("EC") ||
+	       algorithm.equals("RSA") ||
+	       algorithm.startsWith("McEliece"))
+		try
+		{
+		    switch(algorithm)
+		    {
+		    case "EC":
+			ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
+
+			if(ecPublicKey != null)
+			    stringBuilder.append("\n").append("Size: ").
+				append(ecPublicKey.getW().getAffineX().
+				       bitLength());
+
+			break;
+		    case "McEliece-CCA2":
+		    case "McEliece-Fujisaki":
+		    case "McEliece-Pointcheval":
+			BCMcElieceCCA2PublicKey mcEliecePublicKey =
+			    (BCMcElieceCCA2PublicKey) publicKey;
+
+			if(mcEliecePublicKey != null)
+			    stringBuilder.append("\n").append("m = ").
+				append((int) (Math.log(mcEliecePublicKey.
+						       getN()) /
+					      Math.log(2))).
+				append(", t = ").
+				append(mcEliecePublicKey.getT());
+
+			break;
+		    case "RSA":
+			RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
+
+			if(rsaPublicKey != null)
+			    stringBuilder.append("\n").append("Size: ").
+				append(rsaPublicKey.getModulus().bitLength());
+
+			break;
+		    default:
+			break;
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+
+	    return stringBuilder.toString();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
+    }
+
     public static String fingerPrint(byte bytes[])
     {
 	String fingerprint =
@@ -1539,6 +1541,38 @@ public class Cryptography
 	}
 
 	return stringBuilder.toString();
+    }
+
+    public static String publicKeyAlgorithm(PublicKey publicKey)
+    {
+	if(publicKey == null)
+	    return "";
+
+	try
+	{
+	    ASN1ObjectIdentifier asn1ObjectIdentifier = null;
+	    SubjectPublicKeyInfo subjectPublicKeyInfo =
+		SubjectPublicKeyInfo.getInstance(publicKey.getEncoded());
+
+	    asn1ObjectIdentifier = subjectPublicKeyInfo.getAlgorithm().
+		getAlgorithm();
+
+	    if(asn1ObjectIdentifier.equals(PQCObjectIdentifiers.mcElieceCca2))
+		return "McEliece-CCA2";
+	    else if(asn1ObjectIdentifier.
+	       equals(PQCObjectIdentifiers.mcElieceFujisaki))
+		return "McEliece-Fujisaki";
+	    else if(asn1ObjectIdentifier.
+		    equals(PQCObjectIdentifiers.mcEliecePointcheval))
+		return "McEliece-Pointcheval";
+	    else
+		return "RSA";
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "";
     }
 
     public static String publicKeyFingerPrint(PublicKey publicKey)

@@ -2033,7 +2033,7 @@ public class Kernel
 	    int mceliece_output_size = 0;
 
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
-	       equals("McEliece-CCA2"))
+	       startsWith("McEliece"))
 	    {
 		int e = 0;
 		int s = 0;
@@ -2104,7 +2104,7 @@ public class Kernel
 		byte aes256[] = null;
 
 		if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
-		   equals("McEliece-CCA2"))
+		   startsWith("McEliece"))
 		    aes256 = Cryptography.decrypt
 			(Arrays.
 			 copyOfRange(bytes,
@@ -2597,7 +2597,7 @@ public class Kernel
 		byte aes256[] = null;
 
 		if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
-		   equals("McEliece-CCA2"))
+		   startsWith("McEliece"))
 		    aes256 = Cryptography.decrypt
 			(Arrays.
 			 copyOfRange(bytes,

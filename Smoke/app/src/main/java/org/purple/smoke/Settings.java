@@ -708,7 +708,7 @@ public class Settings extends AppCompatActivity
 	    stringBuilder = new StringBuilder();
 	    stringBuilder.append("Chat Encryption Key\n");
 	    stringBuilder.append
-		(s_cryptography.
+		(Cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
 					   chatEncryptionKeyPair()));
 	    textView1.setText(stringBuilder);
@@ -729,7 +729,7 @@ public class Settings extends AppCompatActivity
 
 	    stringBuilder.append("Chat Signature Key\n");
 	    stringBuilder.append
-		(s_cryptography.
+		(Cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
 					   chatSignatureKeyPair()));
 	    textView1.setText(stringBuilder);
@@ -2711,11 +2711,11 @@ public class Settings extends AppCompatActivity
 
 		m_name = m_databaseHelper.nameFromSipHashId
 		    (s_cryptography, m_sipHashId).trim();
-		m_string1 = s_cryptography.fancyKeyInformationOutput
+		m_string1 = Cryptography.fancyKeyInformationOutput
 		    (m_databaseHelper.
 		     publicEncryptionKeyForSipHashId(s_cryptography,
 						     m_sipHashId)).trim();
-		m_string2 = s_cryptography.fancyKeyInformationOutput
+		m_string2 = Cryptography.fancyKeyInformationOutput
 		    (m_databaseHelper.
 		     publicSignatureKeyForSipHashId(s_cryptography,
 						    m_sipHashId)).trim();
