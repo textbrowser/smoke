@@ -1992,6 +1992,49 @@ public class Database extends SQLiteOpenHelper
 	return name;
     }
 
+    public String publicKeyEncryptionAlgorithm(Cryptography cryptography,
+					       String sipHashId)
+    {
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT " +
+		 "encryption_public_key_algorithm " +
+		 "FROM participants WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString
+			       (cryptography.
+				hmac(sipHashId.toUpperCase().trim().
+				     getBytes(StandardCharsets.UTF_8)),
+				Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
+
+		if(bytes != null)
+		    return new String(bytes);
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return "";
+    }
+
     public String readNeighborStatusControl(Cryptography cryptography, int oid)
     {
 	if(cryptography == null || m_db == null)

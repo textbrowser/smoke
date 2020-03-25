@@ -2885,7 +2885,9 @@ public class Kernel
 			bytes = Messages.callMessage
 			    (s_cryptography,
 			     array[1],
-			     Cryptography.pkiEncrypt(publicKey, keyStream),
+			     Cryptography.pkiEncrypt(publicKey,
+						     "McEliece-Fujisaki",
+						     keyStream),
 			     ephemeralPublicKeyType[0],
 			     Messages.CALL_HALF_AND_HALF_TAGS[1]);
 

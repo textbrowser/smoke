@@ -275,7 +275,9 @@ public class Messages
 		return null;
 
 	    byte pk[] = Cryptography.pkiEncrypt
-		(publicKey, Miscellaneous.joinByteArrays(aesKey, shaKey));
+		(publicKey,
+		 "McEliece-Fujisaki",
+		 Miscellaneous.joinByteArrays(aesKey, shaKey));
 
 	    if(pk == null)
 		return null;
@@ -427,7 +429,10 @@ public class Messages
 	    */
 
 	    byte pk[] = Cryptography.pkiEncrypt
-		(publicKey, cryptography.chatEncryptionPublicKeyDigest());
+		(publicKey,
+		 Database.getInstance().
+		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
+		 cryptography.chatEncryptionPublicKeyDigest());
 
 	    if(pk == null)
 		return null;
@@ -675,7 +680,10 @@ public class Messages
 	    */
 
 	    byte pk[] = Cryptography.pkiEncrypt
-		(publicKey, cryptography.chatEncryptionPublicKeyDigest());
+		(publicKey,
+		 Database.getInstance().
+		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
+		 cryptography.chatEncryptionPublicKeyDigest());
 
 	    if(pk == null)
 		return null;
@@ -1280,7 +1288,10 @@ public class Messages
 	    */
 
 	    byte pk[] = Cryptography.pkiEncrypt
-		(publicKey, cryptography.chatEncryptionPublicKeyDigest());
+		(publicKey,
+		 Database.getInstance().
+		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
+		 cryptography.chatEncryptionPublicKeyDigest());
 
 	    if(pk == null)
 		return null;
@@ -1399,7 +1410,10 @@ public class Messages
 	    */
 
 	    byte pk[] = Cryptography.pkiEncrypt
-		(publicKey, cryptography.chatEncryptionPublicKeyDigest());
+		(publicKey,
+		 Database.getInstance().
+		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
+		 cryptography.chatEncryptionPublicKeyDigest());
 
 	    if(pk == null)
 		return null;

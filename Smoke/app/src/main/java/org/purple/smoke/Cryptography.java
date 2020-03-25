@@ -1918,7 +1918,9 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] pkiEncrypt(PublicKey publicKey, byte data[])
+    public static byte[] pkiEncrypt(PublicKey publicKey,
+				    String algorithm,
+				    byte data[])
     {
 	if(data == null || publicKey == null)
 	    return null;
@@ -1933,7 +1935,11 @@ public class Cryptography
 
 	    if(publicKey.getAlgorithm().equals("McEliece-CCA2"))
 	    {
-		cipher = Cipher.getInstance("McElieceFujisaki");
+		if(algorithm.startsWith("McEliece-Fujisaki"))
+		    cipher = Cipher.getInstance("McElieceFujisaki");
+		else
+		    cipher = Cipher.getInstance("McEliecePointcheval");
+
 		cipher.init
 		    (Cipher.ENCRYPT_MODE,
 		     publicKey,

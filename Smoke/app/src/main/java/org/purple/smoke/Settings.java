@@ -2732,7 +2732,7 @@ public class Settings extends AppCompatActivity
 		    (m_databaseHelper.
 		     publicSignatureKeyForSipHashId(s_cryptography,
 						    m_sipHashId),
-		     chatEncryptionPublicKeyAlgorithm).trim();
+		     "").trim();
 		m_strings = m_databaseHelper.
 		    keysSigned(s_cryptography, m_sipHashId);
 
