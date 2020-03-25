@@ -76,6 +76,7 @@ public class Cryptography
     private KeyPair m_chatSignaturePublicKeyPair = null;
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
+    private String m_chatEncryptionPublicKeyAlgorithm = "";
     private String m_sipHashId = "0000-0000-0000-0000";
     private byte m_identity[] = null;
     private byte m_ozoneEncryptionKey[] = null;
@@ -966,7 +967,12 @@ public class Cryptography
 		if(m_chatEncryptionPublicKeyPair.getPrivate().getAlgorithm().
 		   equals("McEliece-CCA2"))
 		{
-		    cipher = Cipher.getInstance("McElieceFujisaki");
+		    if(m_chatEncryptionPublicKeyAlgorithm.
+		       startsWith("McEliece-Fujisaki"))
+			cipher = Cipher.getInstance("McElieceFujisaki");
+		    else
+			cipher = Cipher.getInstance("McEliecePointcheval");
+
 		    cipher.init
 			(Cipher.DECRYPT_MODE,
 			 m_chatEncryptionPublicKeyPair.getPrivate(),
@@ -2426,6 +2432,11 @@ public class Cryptography
 	{
 	    m_sipHashMacKeyMutex.writeLock().unlock();
 	}
+    }
+
+    public void setChatEncryptionPublicKeyAlgorithm(String algorithm)
+    {
+	m_chatEncryptionPublicKeyAlgorithm = algorithm;
     }
 
     public void setChatEncryptionPublicKeyPair(KeyPair keyPair)

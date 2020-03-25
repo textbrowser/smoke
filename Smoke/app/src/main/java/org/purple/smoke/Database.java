@@ -4247,6 +4247,7 @@ public class Database extends SQLiteOpenHelper
 
 	str = "CREATE TABLE IF NOT EXISTS participants (" +
 	    "encryption_public_key TEXT NOT NULL, " +
+	    "encryption_public_key_algorithm TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
 	    "encryption_public_key_signed TEXT NOT NULL, " +
 	    "identity TEXT NOT NULL, " +

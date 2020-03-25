@@ -1402,6 +1402,8 @@ public class Settings extends AppCompatActivity
 		    ** Prepare the Cryptography object's data.
 		    */
 
+		    s_cryptography.setChatEncryptionPublicKeyAlgorithm
+			(m_encryptionAlgorithm);
 		    s_cryptography.setChatEncryptionPublicKeyPair
 			(chatEncryptionKeyPair);
 		    s_cryptography.setChatSignaturePublicKeyPair
