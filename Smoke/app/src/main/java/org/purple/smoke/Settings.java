@@ -710,7 +710,9 @@ public class Settings extends AppCompatActivity
 	    stringBuilder.append
 		(Cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
-					   chatEncryptionKeyPair()));
+					   chatEncryptionKeyPair(),
+					   s_cryptography.
+					   chatEncryptionPublicKeyAlgorithm()));
 	    textView1.setText(stringBuilder);
 	    textView1.setVisibility(View.VISIBLE);
 	}
@@ -731,7 +733,7 @@ public class Settings extends AppCompatActivity
 	    stringBuilder.append
 		(Cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
-					   chatSignatureKeyPair()));
+					   chatSignatureKeyPair(), ""));
 	    textView1.setText(stringBuilder);
 	    textView1.setVisibility(View.VISIBLE);
 	}
@@ -2716,11 +2718,13 @@ public class Settings extends AppCompatActivity
 		m_string1 = Cryptography.fancyKeyInformationOutput
 		    (m_databaseHelper.
 		     publicEncryptionKeyForSipHashId(s_cryptography,
-						     m_sipHashId)).trim();
+						     m_sipHashId),
+		     "").trim();
 		m_string2 = Cryptography.fancyKeyInformationOutput
 		    (m_databaseHelper.
 		     publicSignatureKeyForSipHashId(s_cryptography,
-						    m_sipHashId)).trim();
+						    m_sipHashId),
+		     "").trim();
 		m_strings = m_databaseHelper.
 		    keysSigned(s_cryptography, m_sipHashId);
 

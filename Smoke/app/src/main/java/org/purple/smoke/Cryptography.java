@@ -222,22 +222,7 @@ public class Cryptography
 
     public String chatEncryptionPublicKeyAlgorithm()
     {
-	m_chatEncryptionPublicKeyPairMutex.readLock().lock();
-
-	try
-	{
-	    return publicKeyAlgorithm
-		(m_chatEncryptionPublicKeyPair.getPublic());
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_chatEncryptionPublicKeyPairMutex.readLock().unlock();
-	}
-
-	return "";
+	return m_chatEncryptionPublicKeyAlgorithm;
     }
 
     public String etmBase64String(String string)
@@ -1429,15 +1414,18 @@ public class Cryptography
 	return null;
     }
 
-    public static String fancyKeyInformationOutput(KeyPair keyPair)
+    public static String fancyKeyInformationOutput(KeyPair keyPair,
+						   String algorithmIdentifier)
     {
 	if(keyPair == null)
 	    return "";
 	else
-	    return fancyKeyInformationOutput(keyPair.getPublic());
+	    return fancyKeyInformationOutput
+		(keyPair.getPublic(), algorithmIdentifier);
     }
 
-    public static String fancyKeyInformationOutput(PublicKey publicKey)
+    public static String fancyKeyInformationOutput(PublicKey publicKey,
+						   String algorithmIdentifier)
     {
 	if(publicKey == null)
 	    return "";
@@ -1449,6 +1437,14 @@ public class Cryptography
 
 	    stringBuilder.append("Algorithm: ");
 	    stringBuilder.append(algorithm);
+
+	    if(!algorithmIdentifier.isEmpty())
+	    {
+		stringBuilder.append(" (");
+		stringBuilder.append(algorithmIdentifier);
+		stringBuilder.append(")");
+	    }
+
 	    stringBuilder.append("\n");
 	    stringBuilder.append("Disk Size: ");
 	    stringBuilder.append(publicKey.getEncoded().length);
