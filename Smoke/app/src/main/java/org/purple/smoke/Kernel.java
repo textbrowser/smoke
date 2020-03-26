@@ -2035,8 +2035,8 @@ public class Kernel
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
 	       startsWith("McEliece"))
 	    {
-		int e = 0;
-		int s = 0;
+		int e = 0; // End.
+		int s = 0; // Start.
 		int t = s_cryptography.chatEncryptionPublicKeyT();
 
 		if(t == 50)
