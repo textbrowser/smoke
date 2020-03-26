@@ -1348,7 +1348,7 @@ public class Settings extends AppCompatActivity
 
 		    if(chatEncryptionKeyPair == null)
 		    {
-			m_error = "encryption " +
+			m_error = "encryption-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.reset();
 			return;
@@ -1367,7 +1367,7 @@ public class Settings extends AppCompatActivity
 
 		    if(chatSignatureKeyPair == null)
 		    {
-			m_error = "signature " +
+			m_error = "signature-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.reset();
 			return;
@@ -1503,7 +1503,7 @@ public class Settings extends AppCompatActivity
 			else if(!e2)
 			    m_error = "prepareSipHashKeys() failure";
 			else
-			    m_error = "sha512() failure";
+			    m_error = "generateOzone() failure";
 
 			s_cryptography.reset();
 		    }
@@ -2311,7 +2311,7 @@ public class Settings extends AppCompatActivity
 
 		    if(chatEncryptionKeyPair == null)
 		    {
-			m_error = "encryption " +
+			m_error = "encryption-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.resetPKI();
 			return;
@@ -2330,7 +2330,7 @@ public class Settings extends AppCompatActivity
 
 		    if(chatSignatureKeyPair == null)
 		    {
-			m_error = "signature " +
+			m_error = "signature-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.resetPKI();
 			return;
@@ -2413,7 +2413,7 @@ public class Settings extends AppCompatActivity
 			else if(!e2)
 			    m_error = "prepareSipHashKeys() failure";
 			else
-			    m_error = "sha512() failure";
+			    m_error = "generateOzone() failure";
 
 			s_cryptography.resetPKI();
 		    }
@@ -2693,7 +2693,6 @@ public class Settings extends AppCompatActivity
 
 	class SingleShot implements Runnable
 	{
-	    private String m_error = "";
 	    private String m_name = "";
 	    private String m_oid = "";
 	    private String m_sipHashId = "";
