@@ -182,6 +182,7 @@ public class Kernel
     private final static int MCELIECE_OUTPUT_SIZES[] = {320,
 							352,
 							507,
+							539,
 							576,
 							608};
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
@@ -2044,11 +2045,11 @@ public class Kernel
 		int t = s_cryptography.chatEncryptionPublicKeyT();
 
 		if(t == 50)
-		    e = 3;
+		    e = 4;
 		else
 		{
-		    e = 5;
-		    s = 3;
+		    e = 6;
+		    s = 4;
 		}
 
 		for(int i = s; i < e; i++)

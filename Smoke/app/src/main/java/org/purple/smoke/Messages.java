@@ -276,7 +276,8 @@ public class Messages
 
 	    byte pk[] = Cryptography.pkiEncrypt
 		(publicKey,
-		 "McEliece-Fujisaki",
+		 Database.getInstance().
+		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
 		 Miscellaneous.joinByteArrays(aesKey, shaKey));
 
 	    if(pk == null)
