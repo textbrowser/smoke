@@ -32,10 +32,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.support.v4.content.LocalBroadcastManager;
@@ -126,13 +124,6 @@ public class Steam extends AppCompatActivity
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
-    private final static String DIRECTORIES[] =
-        {Environment.DIRECTORY_DCIM,
-	 Environment.DIRECTORY_DOCUMENTS,
-	 Environment.DIRECTORY_DOWNLOADS,
-	 Environment.DIRECTORY_MOVIES,
-	 Environment.DIRECTORY_MUSIC,
-	 Environment.DIRECTORY_PICTURES};
     private final static int SELECT_FILE_REQUEST = 0;
     private final static int STATUS_INTERVAL = 2500; // 2.5 Seconds
 
@@ -319,7 +310,7 @@ public class Steam extends AppCompatActivity
 
     private void showFileActivity()
     {
-	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+	Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 
 	intent.setType("*/*");
         startActivityForResult(intent, SELECT_FILE_REQUEST);
@@ -411,44 +402,7 @@ public class Steam extends AppCompatActivity
 	    if(data != null &&
 	       requestCode == SELECT_FILE_REQUEST &&
 	       resultCode == RESULT_OK)
-	    {
-		Cursor cursor = null;
-		String projection[] = {OpenableColumns.DISPLAY_NAME};
-
-		try
-		{
-		    cursor = getContentResolver().query
-			(data.getData(), projection, null, null, null);
-		    cursor.moveToFirst();
-
-		    File file = null;
-
-		    for(String string : DIRECTORIES)
-		    {
-			file = new File
-			    (Environment.
-			     getExternalStoragePublicDirectory(string),
-			     cursor.
-			     getString(cursor.getColumnIndex(projection[0])));
-
-			if(file.exists())
-			    break;
-		    }
-
-		    if(file != null)
-			m_fileName.setText(file.getAbsolutePath());
-		    else
-			m_fileName.setText("");
-		}
-		catch(Exception exception)
-		{
-		}
-		finally
-		{
-		    if(cursor != null)
-			cursor.close();
-		}
-	    }
+		m_fileName.setText(data.getData().toString());
 	}
 	catch(Exception exception)
 	{

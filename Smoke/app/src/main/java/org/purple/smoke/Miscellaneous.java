@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -54,7 +55,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -512,12 +512,29 @@ public abstract class Miscellaneous
 
     public static long fileSize(String fileName)
     {
+	AssetFileDescriptor assetFileDescriptor = null;
+
 	try
 	{
-	    return new File(fileName).length();
+	    Uri uri = Uri.parse(fileName);
+
+	    assetFileDescriptor = Smoke.getApplication().getContentResolver().
+		openAssetFileDescriptor(uri, "r");
+	    return assetFileDescriptor.getParcelFileDescriptor().getStatSize();
 	}
 	catch(Exception exception)
 	{
+	}
+	finally
+	{
+	    try
+	    {
+		if(assetFileDescriptor != null)
+		    assetFileDescriptor.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
 
 	return 0;

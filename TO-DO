@@ -49,6 +49,7 @@ Completed Items
 - Detect removal of neighbors.
 - Detect removal of participants.
 - Determine gradle's version in the make files.
+- Determine path for any file in Steam.
 - Digest of PEM(certificate).
 - Disable Delete Fiasco Keys, Delete Public Keys on Participants context menu
   if information is not available. Not necessary.
@@ -237,6 +238,6 @@ Future Items
 Remaining Items
 
 - Bubbles are too narrow on wide devices.
-- Determine path for any file in Steam.
+- Complex Steams, reliable Echo.
 - Increase public-key key sizes.
 - Stronger surreptitious forwarding. Larger RSA keys.

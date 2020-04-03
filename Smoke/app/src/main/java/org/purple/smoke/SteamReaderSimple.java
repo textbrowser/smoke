@@ -27,7 +27,9 @@
 
 package org.purple.smoke;
 
-import java.io.RandomAccessFile;
+import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,6 +39,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SteamReaderSimple
 {
+    private AssetFileDescriptor m_assetFileDescriptor = null;
     private AtomicBoolean m_canceled = null;
     private AtomicBoolean m_completed = null;
     private AtomicLong m_lastBytesSent = null;
@@ -44,8 +47,8 @@ public class SteamReaderSimple
     private AtomicLong m_rate = null;
     private AtomicLong m_readInterval = null;
     private AtomicLong m_readOffset = null;
+    private FileInputStream m_fileInputStream = null;
     private ScheduledExecutorService m_reader = null;
-    private String m_fileName = "";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -111,8 +114,6 @@ public class SteamReaderSimple
 		@Override
 		public void run()
 		{
-		    RandomAccessFile randomAccessFile = null;
-
 		    try
 		    {
 			switch(s_databaseHelper.
@@ -135,12 +136,14 @@ public class SteamReaderSimple
 			    return;
 			case "rewind":
 			    m_completed.set(false);
+			    m_fileInputStream.skip(0);
 			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "paused", "", m_oid, 0);
 			    return;
 			case "rewind & resume":
 			    m_completed.set(false);
+			    m_fileInputStream.skip(0);
 			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "transferring", "", m_oid, 0);
@@ -153,16 +156,8 @@ public class SteamReaderSimple
 			   m_canceled.get())
 			    return;
 
-			randomAccessFile = new RandomAccessFile
-			    (m_fileName, "r");
-
-			if(randomAccessFile == null)
-			    return;
-			else
-			    randomAccessFile.seek(m_readOffset.get());
-
 			byte bytes[] = new byte[PACKET_SIZE];
-			int offset = randomAccessFile.read(bytes);
+			int offset = m_fileInputStream.read(bytes);
 
 			if(offset == -1)
 			{
@@ -201,14 +196,6 @@ public class SteamReaderSimple
 		    }
 		    finally
 		    {
-			try
-			{
-			    if(randomAccessFile != null)
-				randomAccessFile.close();
-			}
-			catch(Exception exception)
-			{
-			}
 		    }
 		}
 	    }, 1500, m_readInterval.get(), TimeUnit.MILLISECONDS);
@@ -220,9 +207,22 @@ public class SteamReaderSimple
 			     long readInterval,
 			     long readOffset)
     {
+	try
+	{
+	    Uri uri = Uri.parse(fileName);
+
+	    m_assetFileDescriptor = Smoke.getApplication().
+		getContentResolver().openAssetFileDescriptor(uri, "r");
+	    m_fileInputStream = m_assetFileDescriptor.createInputStream();
+	    m_fileInputStream.skip(readOffset);
+	}
+	catch(Exception exception)
+	{
+	    m_assetFileDescriptor = null;
+	}
+
 	m_canceled = new AtomicBoolean(false);
 	m_completed = new AtomicBoolean(false);
-	m_fileName = fileName;
 	m_lastBytesSent = new AtomicLong(0);
 	m_lastTime = new AtomicLong(System.currentTimeMillis());
 	m_oid = oid;

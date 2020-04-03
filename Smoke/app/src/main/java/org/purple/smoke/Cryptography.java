@@ -27,6 +27,8 @@
 
 package org.purple.smoke;
 
+import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
 import android.util.Base64;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
@@ -1986,15 +1988,17 @@ public class Cryptography
 
     public static byte[] sha256FileDigest(String fileName)
     {
-	FileInputStream fileInputStream = null;
+	AssetFileDescriptor assetFileDescriptor = null;
 
 	try
 	{
-	    fileInputStream = new FileInputStream(fileName);
+	    Uri uri = Uri.parse(fileName);
 
-	    if(fileInputStream == null)
-		return null;
+	    assetFileDescriptor = Smoke.getApplication().getContentResolver().
+		openAssetFileDescriptor(uri, "r");
 
+	    FileInputStream fileInputStream = assetFileDescriptor.
+		createInputStream();
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 	    byte buffer[] = new byte[4096];
 	    int n = 0;
@@ -2019,8 +2023,8 @@ public class Cryptography
 	{
 	    try
 	    {
-		if(fileInputStream != null)
-		    fileInputStream.close();
+		if(assetFileDescriptor != null)
+		    assetFileDescriptor.close();
 	    }
 	    catch(Exception exception)
 	    {
