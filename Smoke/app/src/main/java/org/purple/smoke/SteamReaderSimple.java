@@ -244,6 +244,19 @@ public class SteamReaderSimple
 
     public void delete()
     {
+	try
+	{
+	    if(m_assetFileDescriptor != null)
+		m_assetFileDescriptor.close();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_assetFileDescriptor = null;
+	}
+
 	m_canceled.set(true);
 	m_completed.set(false);
 	m_lastBytesSent.set(0);
