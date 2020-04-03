@@ -136,14 +136,14 @@ public class SteamReaderSimple
 			    return;
 			case "rewind":
 			    m_completed.set(false);
-			    m_fileInputStream.skip(0);
+			    m_fileInputStream.getChannel().position(0);
 			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "paused", "", m_oid, 0);
 			    return;
 			case "rewind & resume":
 			    m_completed.set(false);
-			    m_fileInputStream.skip(0);
+			    m_fileInputStream.getChannel().position(0);
 			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "transferring", "", m_oid, 0);
