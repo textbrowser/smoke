@@ -53,7 +53,7 @@ public class SteamReaderSimple
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
     private int m_oid = -1;
-    private static int PACKET_SIZE = 4096;
+    private static int PACKET_SIZE = 8192;
 
     private String prettyRate()
     {
@@ -265,6 +265,7 @@ public class SteamReaderSimple
 	case 10:
 	case 20:
 	case 50:
+	case 100:
 	    m_readInterval.set(1000 / interval);
 	    break;
 	default:

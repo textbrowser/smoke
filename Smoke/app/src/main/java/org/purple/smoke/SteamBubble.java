@@ -170,6 +170,7 @@ public class SteamBubble extends View
 		case 1:
 		case 2:
 		case 3:
+		case 4:
 		    String text = "4 reads / s";
 		    int readInterval = 4;
 
@@ -186,6 +187,10 @@ public class SteamBubble extends View
 		    case 3:
 			readInterval = 50;
 			text = "50 reads / s";
+			break;
+		    case 4:
+			readInterval = 100;
+			text = "100 reads / s";
 			break;
 		    }
 
@@ -258,6 +263,9 @@ public class SteamBubble extends View
 	    break;
 	}
 
+	int oid = Kernel.getInstance().nextSimpleSteamOid();
+
+	m_control.setEnabled(m_oid == oid || oid == 0);
 	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText
 	    ("SHA-256: " +
