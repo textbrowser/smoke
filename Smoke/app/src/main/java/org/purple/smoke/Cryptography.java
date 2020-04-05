@@ -413,7 +413,8 @@ public class Cryptography
 
 		try
 		{
-		    m_sipHashEncryptionKey = Arrays.copyOfRange(bytes, 0, 32);
+		    m_sipHashEncryptionKey = Arrays.copyOfRange
+			(bytes, 0, CIPHER_KEY_LENGTH);
 		}
 		finally
 		{
@@ -424,7 +425,10 @@ public class Cryptography
 
 		try
 		{
-		    m_sipHashMacKey = Arrays.copyOfRange(bytes, 32, 96);
+		    m_sipHashMacKey = Arrays.copyOfRange
+			(bytes,
+			 CIPHER_KEY_LENGTH,
+			 CIPHER_KEY_LENGTH + HASH_KEY_LENGTH);
 		}
 		finally
 		{
@@ -732,7 +736,7 @@ public class Cryptography
 		 2304);
 
 	    if(key != null)
-		key = Arrays.copyOfRange(key, 0, 32);
+		key = Arrays.copyOfRange(key, 0, CIPHER_KEY_LENGTH);
 	}
 	catch(Exception exception)
 	{
@@ -1315,7 +1319,7 @@ public class Cryptography
 		    (Argon2Parameters.ARGON2_id).
 		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
 		    withIterations(iterations).
-		    withMemoryAsKB(32).
+		    withMemoryAsKB(CIPHER_KEY_LENGTH).
 		    withParallelism(4). /*
 					** Should depend upon the
 					** number of CPU cores.
@@ -1326,7 +1330,7 @@ public class Cryptography
 		    withSecret(new String(password).
 			       getBytes(StandardCharsets.UTF_8)).
 		    withSalt(salt);
-		byte bytes[] = new byte[32];
+		byte bytes[] = new byte[CIPHER_KEY_LENGTH];
 
 		generator.init(builder.build());
 		generator.generateBytes(password, bytes);
@@ -2189,7 +2193,7 @@ public class Cryptography
 
 	try
 	{
-	    byte bytes[] = new byte[32];
+	    byte bytes[] = new byte[CIPHER_KEY_LENGTH];
 
 	    Arrays.fill(bytes, (byte) 0);
 	    m_encryptionKey = new SecretKeySpec(bytes, SYMMETRIC_ALGORITHM);
@@ -2579,7 +2583,7 @@ public class Cryptography
 
 	try
 	{
-	    if(bytes != null && bytes.length == 32)
+	    if(bytes != null && bytes.length == CIPHER_KEY_LENGTH)
 		m_ozoneEncryptionKey = bytes;
 	    else
 	    {
