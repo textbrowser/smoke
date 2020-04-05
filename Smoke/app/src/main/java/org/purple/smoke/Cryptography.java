@@ -2154,6 +2154,11 @@ public class Cryptography
 	return true;
     }
 
+    public void exit()
+    {
+	reset();
+    }
+
     public void reset()
     {
 	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
@@ -2182,7 +2187,10 @@ public class Cryptography
 
 	try
 	{
-	    m_encryptionKey = null;
+	    byte bytes[] = new byte[32];
+
+	    Arrays.fill(bytes, (byte) 0);
+	    m_encryptionKey = new SecretKeySpec(bytes, SYMMETRIC_ALGORITHM);
 	}
 	finally
 	{
@@ -2204,7 +2212,10 @@ public class Cryptography
 
 	try
 	{
-	    m_macKey = null;
+	    byte bytes[] = new byte[64];
+
+	    Arrays.fill(bytes, (byte) 0);
+	    m_encryptionKey = new SecretKeySpec(bytes, HASH_ALGORITHM);
 	}
 	finally
 	{

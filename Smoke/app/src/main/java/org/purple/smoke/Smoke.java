@@ -46,6 +46,7 @@ public class Smoke extends Application
 
     public static synchronized void exit(Context context)
     {
+	Cryptography.getInstance().exit();
 	SmokeService.stopForegroundTask(getApplication());
 
 	if(context != null && context instanceof Activity)
