@@ -528,7 +528,9 @@ public class Messages
 		(Miscellaneous.
 		 joinByteArrays(CHAT_MESSAGE_TYPE,
 				stringBuilder.toString().getBytes()),
-		 Arrays.copyOfRange(keyStream, 0, 32));
+		 Arrays.copyOfRange(keyStream,
+				    0,
+				    Cryptography.CIPHER_KEY_LENGTH));
 
 	    stringBuilder.delete(0, stringBuilder.length());
 
@@ -541,7 +543,9 @@ public class Messages
 
 	    byte sha512[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pk, aes256),
-		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+		 Arrays.copyOfRange(keyStream,
+				    Cryptography.CIPHER_KEY_LENGTH,
+				    keyStream.length));
 
 	    if(sha512 == null)
 		return null;
@@ -738,7 +742,9 @@ public class Messages
 
 	    byte aes256[] = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
-		 Arrays.copyOfRange(keyStream, 0, 32));
+		 Arrays.copyOfRange(keyStream,
+				    0,
+				    Cryptography.CIPHER_KEY_LENGTH));
 
 	    if(aes256 == null)
 		return null;
@@ -749,7 +755,9 @@ public class Messages
 
 	    byte sha512[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pk, aes256),
-		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+		 Arrays.copyOfRange(keyStream,
+				    Cryptography.CIPHER_KEY_LENGTH,
+				    keyStream.length));
 
 	    if(sha512 == null)
 		return null;
@@ -895,7 +903,9 @@ public class Messages
 
 	    byte aes256[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
-		 Arrays.copyOfRange(keyStream, 0, 32));
+		 Arrays.copyOfRange(keyStream,
+				    0,
+				    Cryptography.CIPHER_KEY_LENGTH));
 
 	    stringBuilder.delete(0, stringBuilder.length());
 
@@ -908,7 +918,9 @@ public class Messages
 
 	    byte sha512[] = Cryptography.hmac
 		(aes256,
-		 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+		 Arrays.copyOfRange(keyStream,
+				    Cryptography.CIPHER_KEY_LENGTH,
+				    keyStream.length));
 
 	    if(sha512 == null)
 		return null;
@@ -1020,7 +1032,9 @@ public class Messages
 
 	    byte aes256[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
-		 Arrays.copyOfRange(keyStream, 0, 32));
+		 Arrays.copyOfRange(keyStream,
+				    0,
+				    Cryptography.CIPHER_KEY_LENGTH));
 
 	    stringBuilder.delete(0, stringBuilder.length());
 
