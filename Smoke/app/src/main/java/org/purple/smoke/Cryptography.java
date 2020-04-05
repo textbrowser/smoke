@@ -129,6 +129,8 @@ public class Cryptography
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
     private final static int FIRE_STREAM_CREATION_ITERATION_COUNT = 10000;
+    private final static int CIPHER_KEY_LENGTH = 32;
+    private final static int HASH_KEY_LENGTH = 64;
     private final static int MCELIECE_M[] = {11, 12};
     private final static int MCELIECE_T[] = {50, 68};
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
@@ -329,15 +331,15 @@ public class Cryptography
 	byte bytes1[] = ozoneEncryptionKey();
 	byte bytes2[] = ozoneMacKey();
 
-	return !(bytes1 == null || bytes1.length != 32 ||
-		 bytes2 == null || bytes2.length != 64);
+	return !(bytes1 == null || bytes1.length != CIPHER_KEY_LENGTH ||
+		 bytes2 == null || bytes2.length != HASH_KEY_LENGTH);
     }
 
     public boolean hasValidOzoneMacKey()
     {
 	byte bytes[] = ozoneMacKey();
 
-	return !(bytes == null || bytes.length != 64);
+	return !(bytes == null || bytes.length != HASH_KEY_LENGTH);
     }
 
     public boolean isValidSipHashMac(byte data[], byte mac[])
@@ -403,7 +405,7 @@ public class Cryptography
 		     Base64.encodeToString(temporary,
 					   Base64.NO_WRAP).toCharArray(),
 		     1,
-		     768); // 8 * (32 + 64) bits.
+		     8 * (CIPHER_KEY_LENGTH + HASH_KEY_LENGTH)); // Bits.
 
 	    if(bytes != null)
 	    {
@@ -1372,7 +1374,7 @@ public class Cryptography
 		    (Argon2Parameters.ARGON2_id).
 		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
 		    withIterations(iterations).
-		    withMemoryAsKB(64).
+		    withMemoryAsKB(HASH_KEY_LENGTH).
 		    withParallelism(4). /*
 					** Should depend upon the
 					** number of CPU cores.
@@ -1385,7 +1387,7 @@ public class Cryptography
 		    withSecret(new String(password).
 			       getBytes(StandardCharsets.UTF_8)).
 		    withSalt(salt);
-		byte bytes[] = new byte[64];
+		byte bytes[] = new byte[HASH_KEY_LENGTH];
 
 		generator.init(builder.build());
 		generator.generateBytes(password, bytes);
@@ -2212,7 +2214,7 @@ public class Cryptography
 
 	try
 	{
-	    byte bytes[] = new byte[64];
+	    byte bytes[] = new byte[HASH_KEY_LENGTH];
 
 	    Arrays.fill(bytes, (byte) 0);
 	    m_encryptionKey = new SecretKeySpec(bytes, HASH_ALGORITHM);
@@ -2602,7 +2604,7 @@ public class Cryptography
 
 	try
 	{
-	    if(bytes != null && bytes.length == 64)
+	    if(bytes != null && bytes.length == HASH_KEY_LENGTH)
 		m_ozoneMacKey = bytes;
 	    else
 	    {
