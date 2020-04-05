@@ -3697,8 +3697,13 @@ public class Database extends SQLiteOpenHelper
 			continue;
 
 		    byte sha512[] = Cryptography.hmac
-			(Arrays.copyOfRange(bytes, 0, bytes.length - 128),
-			 Arrays.copyOfRange(keyStream, 32, keyStream.length));
+			(Arrays.copyOfRange(bytes,
+					    0,
+					    bytes.length -
+					    2 * Cryptography.HASH_KEY_LENGTH),
+			 Arrays.copyOfRange(keyStream,
+					    Cryptography.CIPHER_KEY_LENGTH,
+					    keyStream.length));
 
 		    if(Cryptography.memcmp(array, sha512))
 			break;

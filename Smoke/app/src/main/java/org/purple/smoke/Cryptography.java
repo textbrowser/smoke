@@ -134,6 +134,7 @@ public class Cryptography
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
+    public final static int CIPHER_IV_LENGTH = 16;
     public final static int CIPHER_KEY_LENGTH = 32;
     public final static int HASH_KEY_LENGTH = 64;
     public final static int SIPHASH_ID_LENGTH = 19; // 0000-0000-0000-0000
@@ -513,14 +514,14 @@ public class Cryptography
 		Cipher cipher = null;
 		SecretKey secretKey = new SecretKeySpec
 		    (m_sipHashEncryptionKey, SYMMETRIC_ALGORITHM);
-		byte iv[] = Arrays.copyOf(data, 16);
+		byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE,
 			    secretKey,
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal
-		    (Arrays.copyOfRange(data, 16, data.length));
+		    (Arrays.copyOfRange(data, CIPHER_IV_LENGTH, data.length));
 	    }
 	    catch(Exception exception)
 	    {
@@ -844,7 +845,7 @@ public class Cryptography
 	    byte digest2[] = null; // Computed digest.
 
 	    digest1 = Arrays.copyOfRange
-		(data, data.length - 512 / 8, data.length);
+		(data, data.length - HASH_KEY_LENGTH, data.length);
 	    m_macKeyMutex.readLock().lock();
 
 	    try
@@ -857,7 +858,7 @@ public class Cryptography
 		mac = Mac.getInstance(HMAC_ALGORITHM);
 		mac.init(m_macKey);
 		digest2 = mac.doFinal
-		    (Arrays.copyOf(data, data.length - 512 / 8));
+		    (Arrays.copyOf(data, data.length - HASH_KEY_LENGTH));
 	    }
 	    catch(Exception exception)
 	    {
@@ -888,14 +889,16 @@ public class Cryptography
 		    return null;
 
 		Cipher cipher = null;
-		byte iv[] = Arrays.copyOf(data, 16);
+		byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE,
 			    m_encryptionKey,
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal
-		    (Arrays.copyOfRange(data, 16, data.length - 512 / 8));
+		    (Arrays.copyOfRange(data,
+					CIPHER_IV_LENGTH,
+					data.length - HASH_KEY_LENGTH));
 	    }
 	    catch(Exception exception)
 	    {
@@ -1699,14 +1702,14 @@ public class Cryptography
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, SYMMETRIC_ALGORITHM);
-	    byte iv[] = Arrays.copyOf(data, 16);
+	    byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    cipher.init(Cipher.DECRYPT_MODE,
 			secretKey,
 			new IvParameterSpec(iv));
 	    bytes = cipher.doFinal
-		(Arrays.copyOfRange(data, 16, data.length));
+		(Arrays.copyOfRange(data, CIPHER_IV_LENGTH, data.length));
 	}
 	catch(Exception exception)
 	{
@@ -1728,14 +1731,14 @@ public class Cryptography
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, FIRE_SYMMETRIC_ALGORITHM);
-	    byte iv[] = Arrays.copyOf(data, 16);
+	    byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
 	    cipher = Cipher.getInstance(FIRE_SYMMETRIC_CIPHER_TRANSFORMATION);
 	    cipher.init(Cipher.DECRYPT_MODE,
 			secretKey,
 			new IvParameterSpec(iv));
 	    bytes = cipher.doFinal
-		(Arrays.copyOfRange(data, 16, data.length));
+		(Arrays.copyOfRange(data, CIPHER_IV_LENGTH, data.length));
 	}
 	catch(Exception exception)
 	{
