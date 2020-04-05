@@ -367,7 +367,9 @@ public abstract class Neighbor
 
 				    (Arrays.copyOfRange(bytes,
 							0,
-							bytes.length - 19),
+							bytes.length -
+							Cryptography.
+							SIPHASH_ID_LENGTH),
 				     Cryptography.
 				     hmac(Miscellaneous.
 					  joinByteArrays(bytes, timestamp),
