@@ -1330,8 +1330,10 @@ public class Settings extends AppCompatActivity
 		byte encryptionSalt[] = null;
 		byte macSalt[] = null;
 
-		encryptionSalt = Cryptography.randomBytes(32);
-		macSalt = Cryptography.randomBytes(64);
+		encryptionSalt = Cryptography.randomBytes
+		    (Cryptography.CIPHER_KEY_LENGTH);
+		macSalt = Cryptography.randomBytes
+		    (Cryptography.HASH_KEY_LENGTH);
 		m_databaseHelper.reset();
 
 		try

@@ -78,7 +78,8 @@ public class Messages
 
 	try
 	{
-	    byte random[] = Cryptography.randomBytes(64);
+	    byte random[] = Cryptography.randomBytes
+		(Cryptography.HASH_KEY_LENGTH);
 	    byte signature[] = null;
 
 	    signature = cryptography.signViaChatSignature
