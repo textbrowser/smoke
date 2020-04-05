@@ -135,7 +135,11 @@ public class Smokescreen extends AppCompatActivity
     {
 	boolean isLocked = State.getInstance().isLocked();
 
-	m_label.setVisibility(isLocked ? View.GONE : View.VISIBLE);
+	m_label.setText
+	    (isLocked ?
+	     "Smoke is locked. To unlock, please provide the correct " +
+	     "password and click the below button." :
+	     "Smoke is unlocked. To lock, please click on the below button.");
 	m_lock.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_password.setVisibility(isLocked ? View.VISIBLE : View.GONE);
 

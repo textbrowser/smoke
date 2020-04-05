@@ -91,6 +91,7 @@ Completed Items
 - Inadvertent calling may sever an established session.
 - Inbound database table.
 - Include network information in neighbors pertaining to errors.
+- Include status in Smokescreen activity.
 - Increase network buffer sizes for large attachments.
 - Individual member pages.
 - Inspect destination tags.
@@ -240,5 +241,4 @@ Remaining Items
 - Bubbles are too narrow on wide devices.
 - Complex Steams, reliable Echo.
 - Increase public-key key sizes.
-- Smokescreen activity should include status.
 - Stronger surreptitious forwarding. Larger RSA keys.
