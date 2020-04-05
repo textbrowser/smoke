@@ -100,6 +100,7 @@ public class Smokescreen extends AppCompatActivity
 	}
 
 	State.getInstance().setLocked(false);
+	m_password.setText("");
     }
 
     private void prepareListeners()
@@ -139,7 +140,7 @@ public class Smokescreen extends AppCompatActivity
 	    (isLocked ?
 	     "Smoke is locked. To unlock, please provide the correct " +
 	     "password and click the below button." :
-	     "Smoke is unlocked. To lock, please click on the below button.");
+	     "Smoke is unlocked. To lock, please click the below button.");
 	m_lock.setVisibility(isLocked ? View.GONE : View.VISIBLE);
 	m_password.setVisibility(isLocked ? View.VISIBLE : View.GONE);
 
