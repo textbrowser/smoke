@@ -909,7 +909,7 @@ public abstract class Miscellaneous
 		     {
 			 String string = editText.getText().toString();
 
-			 if(string.length() <= 64)
+			 if(string.length() <= Cryptography.HASH_KEY_LENGTH)
 			     string = Base64.encodeToString
 				 (Cryptography.
 				  sha512(string.
@@ -923,7 +923,7 @@ public abstract class Miscellaneous
 		     {
 			 String string = editText.getText().toString();
 
-			 if(string.length() <= 64)
+			 if(string.length() <= Cryptography.HASH_KEY_LENGTH)
 			     string = Base64.encodeToString
 				 (Cryptography.
 				  sha512(string.
