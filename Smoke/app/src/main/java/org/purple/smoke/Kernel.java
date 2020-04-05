@@ -2422,11 +2422,16 @@ public class Kernel
 		    if(!Cryptography.
 		       verifySignature
 		       (signatureKey,
-			Arrays.copyOfRange(aes256, 65, aes256.length),
+			Arrays.copyOfRange(aes256,
+					   Cryptography.HASH_KEY_LENGTH + 1,
+					   aes256.length),
 			Miscellaneous.
 			joinByteArrays(pk,
 				       Arrays.
-				       copyOfRange(aes256, 0, 65),
+				       copyOfRange(aes256,
+						   0,
+						   Cryptography.
+						   HASH_KEY_LENGTH + 1),
 				       s_cryptography.
 				       chatEncryptionPublicKeyDigest())))
 			return 1;
@@ -2438,9 +2443,13 @@ public class Kernel
 			return 1;
 
 		    if(s_databaseHelper.
-		       writeMessageStatus(s_cryptography,
-					  array[1],
-					  Arrays.copyOfRange(aes256, 1, 65)))
+		       writeMessageStatus
+		       (s_cryptography,
+			array[1],
+			Arrays.copyOfRange(aes256,
+					   1,
+					   Cryptography.
+					   HASH_KEY_LENGTH + 1)))
 			notifyOfDataSetChange();
 
 		    return 1;
@@ -2627,7 +2636,10 @@ public class Kernel
 		*/
 
 		byte sha512[] = Cryptography.hmac
-		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
+		    (Arrays.copyOfRange(bytes,
+					0,
+					bytes.length -
+					2 * Cryptography.HASH_KEY_LENGTH),
 		     Arrays.copyOfRange(pk,
 					Cryptography.CIPHER_KEY_LENGTH,
 					pk.length));
@@ -2643,7 +2655,8 @@ public class Kernel
 			(Arrays.
 			 copyOfRange(bytes,
 				     mceliece_output_size,
-				     bytes.length - 128),
+				     bytes.length -
+				     2 * Cryptography.HASH_KEY_LENGTH),
 			 Arrays.copyOfRange(pk,
 					    0,
 					    Cryptography.CIPHER_KEY_LENGTH));
@@ -2652,7 +2665,8 @@ public class Kernel
 			(Arrays.
 			 copyOfRange(bytes,
 				     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
-				     bytes.length - 128),
+				     bytes.length -
+				     2 * Cryptography.HASH_KEY_LENGTH),
 			 Arrays.copyOfRange(pk,
 					    0,
 					    Cryptography.CIPHER_KEY_LENGTH));
