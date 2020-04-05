@@ -50,7 +50,7 @@ public class About
 	    // Must agree with Smoke/app/build.gradle.
 
 	    s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    s_about = "Version 2020.04.04 Sapphire Steam " +
+	    s_about = "Version 2020.05.05 Mayhem May " +
 		(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		"\nBuild Date " +
 		s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +

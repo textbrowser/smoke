@@ -1663,7 +1663,8 @@ public class Kernel
 	{
 	    if(m_chatMessageRetrievalIdentity == null)
 	    {
-		m_chatMessageRetrievalIdentity = Cryptography.randomBytes(64);
+		m_chatMessageRetrievalIdentity =
+		    Cryptography.randomBytes(Cryptography.HASH_KEY_LENGTH);
 		m_chatTemporaryIdentityLastTick.set(System.currentTimeMillis());
 	    }
 
@@ -1876,7 +1877,8 @@ public class Kernel
 		byte array1[] = Arrays.copyOfRange
 		    (bytes, 0, bytes.length - 128);
 		byte array2[] = Arrays.copyOfRange
-		    (bytes, bytes.length - 128, bytes.length - 64);
+		    (bytes, bytes.length - 128,
+		     bytes.length - Cryptography.HASH_KEY_LENGTH);
 
 		if(Cryptography.
 		   memcmp(array2,
@@ -1936,9 +1938,12 @@ public class Kernel
 	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
 		(bytes, 0, bytes.length - 128);
 	    byte array2[] = Arrays.copyOfRange // Second to the last block.
-		(bytes, bytes.length - 128, bytes.length - 64);
+		(bytes, bytes.length - 128,
+		 bytes.length - Cryptography.HASH_KEY_LENGTH);
 	    byte array3[] = Arrays.copyOfRange // The last block (destination).
-		(bytes, bytes.length - 64, bytes.length);
+		(bytes,
+		 bytes.length - Cryptography.HASH_KEY_LENGTH,
+		 bytes.length);
 
 	    m_chatMessageRetrievalIdentityMutex.readLock().lock();
 
@@ -1949,7 +1954,9 @@ public class Kernel
 		       memcmp(Cryptography.hmac(Arrays.
 						copyOfRange(bytes,
 							    0,
-							    bytes.length - 64),
+							    bytes.length -
+							    Cryptography.
+							    HASH_KEY_LENGTH),
 						m_chatMessageRetrievalIdentity),
 			      array3))
 		    {
@@ -1970,7 +1977,9 @@ public class Kernel
 		if(!s_cryptography.
 		   iAmTheDestination(Arrays.copyOfRange(bytes,
 							0,
-							bytes.length - 64),
+							bytes.length -
+							Cryptography.
+							HASH_KEY_LENGTH),
 				     array3))
 		    return 0;
 
@@ -2015,7 +2024,9 @@ public class Kernel
 							 Base64.NO_WRAP).
 				   toCharArray(),
 				   1,
-				   768); // 8 * (32 + 64) bits.
+				   // Bits.
+				   8 * (Cryptography.CIPHER_KEY_LENGTH +
+					Cryptography.HASH_KEY_LENGTH));
 		    else
 			bytes = null;
 
@@ -2076,7 +2087,7 @@ public class Kernel
 	    if(pk == null)
 		return 1;
 
-	    if(pk.length == 64)
+	    if(pk.length == Cryptography.HASH_KEY_LENGTH)
 	    {
 		/*
 		** Chat, Chat Status, Juggernaut, Message-Read Proof
@@ -3083,7 +3094,8 @@ public class Kernel
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = message;
-	    messageElement.m_messageIdentity = Cryptography.randomBytes(64);
+	    messageElement.m_messageIdentity = Cryptography.randomBytes
+		(Cryptography.HASH_KEY_LENGTH);
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
@@ -3284,7 +3296,8 @@ public class Kernel
 	    MessageElement messageElement = new MessageElement();
 
 	    messageElement.m_id = sipHashId;
-	    messageElement.m_messageIdentity = Cryptography.randomBytes(64);
+	    messageElement.m_messageIdentity = Cryptography.randomBytes
+		(Cryptography.HASH_KEY_LENGTH);
 	    messageElement.m_messageType =
 		MessageElement.RESEND_CHAT_MESSAGE_TYPE;
 	    messageElement.m_position = position;

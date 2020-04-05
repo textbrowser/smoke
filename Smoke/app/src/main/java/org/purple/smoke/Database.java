@@ -3450,7 +3450,9 @@ public class Database extends SQLiteOpenHelper
 							  Base64.NO_WRAP).
 				    toCharArray(),
 				    1,
-				    768)); // 8 * (32 + 64) Bits
+				    // Bits.
+				    8 * (Cryptography.CIPHER_KEY_LENGTH +
+					 Cryptography.HASH_KEY_LENGTH)));
 
 		    break;
 		}
