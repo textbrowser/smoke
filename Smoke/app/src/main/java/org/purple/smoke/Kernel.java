@@ -1764,7 +1764,8 @@ public class Kernel
 				      hmacFire(aes256,
 					       Arrays.
 					       copyOfRange(entry.getValue(),
-							   32,
+							   Cryptography.
+							   CIPHER_KEY_LENGTH,
 							   80)),
 				      sha384))
 			    {
@@ -1772,7 +1773,8 @@ public class Kernel
 				    (aes256,
 				     Arrays.copyOfRange(entry.getValue(),
 							0,
-							32));
+							Cryptography.
+							CIPHER_KEY_LENGTH));
 
 				if(aes256 == null)
 				    return 1;
@@ -2101,7 +2103,9 @@ public class Kernel
 
 		byte sha512[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
-		     Arrays.copyOfRange(keyStream, 32, keyStream.length));
+		     Arrays.copyOfRange(keyStream,
+					Cryptography.CIPHER_KEY_LENGTH,
+					keyStream.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
 		{
@@ -2126,14 +2130,18 @@ public class Kernel
 			 copyOfRange(bytes,
 				     mceliece_output_size,
 				     bytes.length - 128),
-			 Arrays.copyOfRange(keyStream, 0, 32));
+			 Arrays.copyOfRange(keyStream,
+					    0,
+					    Cryptography.CIPHER_KEY_LENGTH));
 		else
 		    aes256 = Cryptography.decrypt
 			(Arrays.
 			 copyOfRange(bytes,
 				     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
 				     bytes.length - 128),
-			 Arrays.copyOfRange(keyStream, 0, 32));
+			 Arrays.copyOfRange(keyStream,
+					    0,
+					    Cryptography.CIPHER_KEY_LENGTH));
 
 		if(aes256 == null)
 		    return 1;
@@ -2605,7 +2613,9 @@ public class Kernel
 
 		byte sha512[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
-		     Arrays.copyOfRange(pk, 32, pk.length));
+		     Arrays.copyOfRange(pk,
+					Cryptography.CIPHER_KEY_LENGTH,
+					pk.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
 		    return 1;
@@ -2619,14 +2629,18 @@ public class Kernel
 			 copyOfRange(bytes,
 				     mceliece_output_size,
 				     bytes.length - 128),
-			 Arrays.copyOfRange(pk, 0, 32));
+			 Arrays.copyOfRange(pk,
+					    0,
+					    Cryptography.CIPHER_KEY_LENGTH));
 		else
 		    aes256 = Cryptography.decrypt
 			(Arrays.
 			 copyOfRange(bytes,
 				     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
 				     bytes.length - 128),
-			 Arrays.copyOfRange(pk, 0, 32));
+			 Arrays.copyOfRange(pk,
+					    0,
+					    Cryptography.CIPHER_KEY_LENGTH));
 
 		if(aes256 == null)
 		    return 1;

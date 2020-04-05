@@ -278,10 +278,12 @@ public class Authenticate extends AppCompatActivity
 				    s_cryptography.setOzoneEncryptionKey
 					(Arrays.copyOfRange(ozoneKeyStream,
 							    0,
-							    32));
+							    Cryptography.
+							    CIPHER_KEY_LENGTH));
 				    s_cryptography.setOzoneMacKey
 					(Arrays.copyOfRange(ozoneKeyStream,
-							    32,
+							    Cryptography.
+							    CIPHER_KEY_LENGTH,
 							    ozoneKeyStream.
 							    length));
 				}
