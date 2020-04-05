@@ -136,6 +136,7 @@ public class Cryptography
     private static SecureRandom s_secureRandom = null;
     public final static int CIPHER_IV_LENGTH = 16;
     public final static int CIPHER_KEY_LENGTH = 32;
+    public final static int FIRE_HASH_KEY_LENGTH = 48;
     public final static int HASH_KEY_LENGTH = 64;
     public final static int SIPHASH_ID_LENGTH = 19; // 0000-0000-0000-0000
 

@@ -1146,7 +1146,8 @@ public class Messages
 	    byte sha384[] = Cryptography.hmacFire
 		(aes256, Arrays.copyOfRange(keyStream,
 					    Cryptography.CIPHER_KEY_LENGTH,
-					    80));
+					    Cryptography.CIPHER_KEY_LENGTH +
+					    Cryptography.FIRE_HASH_KEY_LENGTH));
 
 	    if(sha384 == null)
 		return null;
@@ -1158,7 +1159,10 @@ public class Messages
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(aes256, sha384),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
-							80,
+							Cryptography.
+							CIPHER_KEY_LENGTH +
+							Cryptography.
+							FIRE_HASH_KEY_LENGTH,
 							keyStream.length)));
 
 	    stringBuilder.delete(0, stringBuilder.length());
@@ -1249,7 +1253,8 @@ public class Messages
 	    byte sha384[] = Cryptography.hmacFire
 		(aes256, Arrays.copyOfRange(keyStream,
 					    Cryptography.CIPHER_KEY_LENGTH,
-					    80));
+					    Cryptography.CIPHER_KEY_LENGTH +
+					    Cryptography.FIRE_HASH_KEY_LENGTH));
 
 	    if(sha384 == null)
 		return null;
@@ -1261,7 +1266,10 @@ public class Messages
 	    byte destination[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(aes256, sha384),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
-							80,
+							Cryptography.
+							CIPHER_KEY_LENGTH +
+							Cryptography.
+							FIRE_HASH_KEY_LENGTH,
 							keyStream.length)));
 
 	    stringBuilder.delete(0, stringBuilder.length());
