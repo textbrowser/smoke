@@ -7,8 +7,8 @@ android {
         buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 20200101
-        versionName "2020.10.01"
+        versionCode 20200405
+        versionName "2020.04.05"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
