@@ -1466,12 +1466,15 @@ public class Kernel
 
 		    stringBuilder.append
 			(Messages.
-			 identityMessage(Cryptography.
-					 sha512(Arrays.
-						copyOfRange(entry.getValue(),
-							    80,
-							    entry.getValue().
-							    length))));
+			 identityMessage
+			 (Cryptography.
+			  sha512(Arrays.
+				 copyOfRange(entry.getValue(),
+					     Cryptography.
+					     CIPHER_KEY_LENGTH +
+					     Cryptography.
+					     FIRE_HASH_KEY_LENGTH,
+					     entry.getValue().length))));
 		}
 
 		return stringBuilder.toString();
@@ -1760,14 +1763,18 @@ public class Kernel
 				continue;
 
 			    if(Cryptography.
-			       memcmp(Cryptography.
-				      hmacFire(aes256,
-					       Arrays.
-					       copyOfRange(entry.getValue(),
-							   Cryptography.
-							   CIPHER_KEY_LENGTH,
-							   80)),
-				      sha384))
+			       memcmp
+			       (Cryptography.
+				hmacFire(aes256,
+					 Arrays.
+					 copyOfRange(entry.getValue(),
+						     Cryptography.
+						     CIPHER_KEY_LENGTH,
+						     Cryptography.
+						     CIPHER_KEY_LENGTH +
+						     Cryptography.
+						     FIRE_HASH_KEY_LENGTH)),
+				sha384))
 			    {
 				aes256 = Cryptography.decryptFire
 				    (aes256,
@@ -1877,9 +1884,12 @@ public class Kernel
 	       s_cryptography.ozoneMacKey() != null)
 	    {
 		byte array1[] = Arrays.copyOfRange
-		    (bytes, 0, bytes.length - 128);
+		    (bytes,
+		     0,
+		     bytes.length - 2 * Cryptography.HASH_KEY_LENGTH);
 		byte array2[] = Arrays.copyOfRange
-		    (bytes, bytes.length - 128,
+		    (bytes,
+		     bytes.length - 2 * Cryptography.HASH_KEY_LENGTH,
 		     bytes.length - Cryptography.HASH_KEY_LENGTH);
 
 		if(Cryptography.
@@ -1938,9 +1948,10 @@ public class Kernel
 								** SmokeStack?
 								*/
 	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
-		(bytes, 0, bytes.length - 128);
+		(bytes, 0, bytes.length - 2 * Cryptography.HASH_KEY_LENGTH);
 	    byte array2[] = Arrays.copyOfRange // Second to the last block.
-		(bytes, bytes.length - 128,
+		(bytes,
+		 bytes.length - 2 * Cryptography.HASH_KEY_LENGTH,
 		 bytes.length - Cryptography.HASH_KEY_LENGTH);
 	    byte array3[] = Arrays.copyOfRange // The last block (destination).
 		(bytes,
@@ -2102,7 +2113,10 @@ public class Kernel
 		    return 1;
 
 		byte sha512[] = Cryptography.hmac
-		    (Arrays.copyOfRange(bytes, 0, bytes.length - 128),
+		    (Arrays.copyOfRange(bytes,
+					0,
+					bytes.length -
+					2 * Cryptography.HASH_KEY_LENGTH),
 		     Arrays.copyOfRange(keyStream,
 					Cryptography.CIPHER_KEY_LENGTH,
 					keyStream.length));
@@ -2138,7 +2152,8 @@ public class Kernel
 			(Arrays.
 			 copyOfRange(bytes,
 				     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
-				     bytes.length - 128),
+				     bytes.length -
+				     2 * Cryptography.HASH_KEY_LENGTH),
 			 Arrays.copyOfRange(keyStream,
 					    0,
 					    Cryptography.CIPHER_KEY_LENGTH));
