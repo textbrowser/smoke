@@ -155,6 +155,9 @@ public class SteamReaderSimple
 			if(Kernel.getInstance().nextSimpleSteamOid() != m_oid ||
 			   m_canceled.get())
 			    return;
+			else
+			    m_fileInputStream.getChannel().position
+				(m_readOffset.get());
 
 			byte bytes[] = new byte[PACKET_SIZE];
 			int offset = m_fileInputStream.read(bytes);

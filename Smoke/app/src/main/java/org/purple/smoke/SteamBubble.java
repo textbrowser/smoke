@@ -307,8 +307,7 @@ public class SteamBubble extends View
 
 	m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	m_status.setText("Status: " + steamElement.m_status);
-	m_transferRate.setText
-	    ("Transfer Rate: " + steamElement.m_transferRate);
+	m_transferRate.setText("Transfer Rate: " + steamElement.m_transferRate);
 	m_view.setId(m_oid);
     }
 }
