@@ -298,6 +298,9 @@ public class SteamBubble extends View
 	case 50:
 	    m_readInterval.setProgress(3);
 	    break;
+	case 100:
+	    m_readInterval.setProgress(4);
+	    break;
 	default:
 	    break;
 	}
