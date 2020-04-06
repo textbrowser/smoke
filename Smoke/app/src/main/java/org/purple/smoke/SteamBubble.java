@@ -265,7 +265,7 @@ public class SteamBubble extends View
 
 	int oid = Kernel.getInstance().nextSimpleSteamOid();
 
-	m_control.setEnabled(m_oid == oid || oid == 0);
+	m_control.setEnabled(m_oid == oid || oid == -1);
 	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText
 	    ("SHA-256: " +

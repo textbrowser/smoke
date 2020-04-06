@@ -1713,7 +1713,7 @@ public class Kernel
 	    m_simpleSteamsMutex.readLock().unlock();
 	}
 
-	return 0;
+	return -1;
     }
 
     public int ourMessage(String buffer)
