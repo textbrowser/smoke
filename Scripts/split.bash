@@ -16,5 +16,6 @@ for i in ${sizes[@]}
 do
     j=$(expr $j + 1)
     dd bs=1 count=$i if=output of=file$j skip=$total status='progress'
+    echo "SHA-256: " $(sha256sum file$j 2> /dev/null)
     total=$(expr $i + $total)
 done
