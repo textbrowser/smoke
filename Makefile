@@ -15,6 +15,9 @@ clean:
 clear-smoke:
 	$(MAKE) -f $(MAKEFILE) clear-smoke
 
+copy-apk:
+	$(MAKE) -f $(MAKEFILE) copy-apk
+
 debug-with-source:
 	$(MAKE) -f $(MAKEFILE) debug-with-source
 
