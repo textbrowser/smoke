@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class SteamReader
+public class SteamReaderFull
 {
     private AtomicBoolean m_completed = null;
     private AtomicBoolean m_paused = null;
@@ -115,7 +115,7 @@ public class SteamReader
 	}
     }
 
-    public SteamReader(String fileName, String sipHashId)
+    public SteamReaderFull(String fileName, String sipHashId)
     {
 	m_acknowledgedOffset = new AtomicInteger(0);
 	m_completed = new AtomicBoolean(false);
