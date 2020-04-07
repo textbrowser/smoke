@@ -142,10 +142,8 @@ public class Steam extends AppCompatActivity
 	if(m_participantsSpinner == null)
 	    return;
 
-	ArrayList<ParticipantElement> arrayList = null;
-
-	if(arrayList != null)
-	    arrayList = State.getInstance().participants();
+	ArrayList<ParticipantElement> arrayList = State.getInstance().
+	    participants();
 
 	if(arrayList == null || arrayList.isEmpty())
 	{

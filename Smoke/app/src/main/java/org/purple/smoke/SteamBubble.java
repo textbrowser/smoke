@@ -263,9 +263,19 @@ public class SteamBubble extends View
 	    break;
 	}
 
-	int oid = Kernel.getInstance().nextSimpleSteamOid();
+	if(steamElement.m_keyStream == null)
+	{
+	    /*
+	    ** Simple Steams.
+	    */
 
-	m_control.setEnabled(m_oid == oid || oid == -1);
+	    int oid = Kernel.getInstance().nextSimpleSteamOid();
+
+	    m_control.setEnabled(m_oid == oid || oid == -1);
+	}
+	else
+	    m_control.setEnabled(true);
+
 	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText
 	    ("SHA-256: " +

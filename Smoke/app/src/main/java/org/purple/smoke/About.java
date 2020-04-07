@@ -47,10 +47,10 @@ public class About
     {
 	if(s_about.isEmpty())
 	{
-	    // Must agree with Smoke/app/build.gradle.
+	    // The version must agree with Smoke/app/build.gradle.
 
 	    s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    s_about = "Version 2020.04.07 April Art " +
+	    s_about = "Version 2020.05.05 Mayhem May " +
 		(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		"\nBuild Date " +
 		s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +
