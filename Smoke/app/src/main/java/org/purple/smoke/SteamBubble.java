@@ -245,8 +245,14 @@ public class SteamBubble extends View
 	switch(steamElement.m_status)
 	{
 	case "completed":
-	    m_control.setText("Rewind");
-	    m_controlString = "rewind";
+	    if(steamElement.m_direction == SteamElement.DOWNLOAD)
+		m_controlString = "";
+	    else
+	    {
+		m_control.setText("Rewind");
+		m_controlString = "rewind";
+	    }
+
 	    m_progress.setVisibility(View.GONE);
 	    break;
 	case "paused":
@@ -263,7 +269,9 @@ public class SteamBubble extends View
 	    break;
 	}
 
-	if(steamElement.m_keyStream == null)
+	if(steamElement.m_direction == SteamElement.DOWNLOAD)
+	    m_control.setEnabled(!m_controlString.isEmpty());
+	else
 	{
 	    /*
 	    ** Simple Steams.
@@ -273,8 +281,6 @@ public class SteamBubble extends View
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
 	}
-	else
-	    m_control.setEnabled(true);
 
 	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText

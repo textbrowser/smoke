@@ -165,7 +165,7 @@ public class Steam extends AppCompatActivity
 	for(ParticipantElement participant : arrayList)
 	    if(participant != null)
 		list.add
-		    (participant.m_name + "(" + participant.m_sipHashId + ")");
+		    (participant.m_name + " (" + participant.m_sipHashId + ")");
 
 	ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
 	    (Steam.this, android.R.layout.simple_spinner_item, list);
