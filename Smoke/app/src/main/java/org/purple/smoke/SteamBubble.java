@@ -270,7 +270,11 @@ public class SteamBubble extends View
 	}
 
 	if(steamElement.m_direction == SteamElement.DOWNLOAD)
+	{
 	    m_control.setEnabled(!m_controlString.isEmpty());
+	    m_readInterval.setVisibility(View.GONE);
+	    m_readIntervalLabel.setVisibility(View.GONE);
+	}
 	else
 	{
 	    /*
@@ -280,6 +284,8 @@ public class SteamBubble extends View
 	    int oid = Kernel.getInstance().nextSimpleSteamOid();
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_readInterval.setVisibility(View.VISIBLE);
+	    m_readIntervalLabel.setVisibility(View.VISIBLE);
 	}
 
 	m_destination.setText("Destination: " + steamElement.m_destination);
