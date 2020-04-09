@@ -1641,7 +1641,7 @@ public class Cryptography
 	int size = java.lang.Math.max(a.length, b.length);
 
 	for(int i = 0; i < size; i++)
-	    rc |= (i < a.length ? a[i] : 0) ^ (i < b.length ? b[i] : 0);
+	    rc |= (a.length > i ? a[i] : 0) ^ (b.length > i ? b[i] : 0);
 
 	return rc == 0;
     }
