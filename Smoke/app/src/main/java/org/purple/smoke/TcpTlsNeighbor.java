@@ -467,12 +467,15 @@ public class TcpTlsNeighbor extends Neighbor
 			}
 			catch(Exception exception)
 			{
+
 			    m_databaseHelper.neighborControlStatus
 				(m_cryptography,
 				 "disconnect",
 				 String.valueOf(m_oid.get()));
 			    m_isValidCertificate.set(false);
-			    setError("The server's certificate has expired.");
+			    setError("A certificate error (" +
+				     exception.getMessage() +
+				     ") occurred.");
 			}
 		    }
 
