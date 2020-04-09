@@ -47,7 +47,7 @@ public class SteamReaderFull
     private ScheduledExecutorService m_reader = null;
     private String m_fileName = "";
     private String m_sipHashId = "";
-    private static int PACKET_SIZE = 4096;
+    private static int PACKET_SIZE = 16384;
     private static long READ_INTERVAL = 250; // 250 Milliseconds
     private static long RESPONSE_WINDOW = 15000; // 15 Seconds
 

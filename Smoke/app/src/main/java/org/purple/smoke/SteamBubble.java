@@ -147,6 +147,8 @@ public class SteamBubble extends View
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.steam_status");
 		    break;
+		default:
+		    break;
 		}
 	    }
         });
@@ -246,7 +248,10 @@ public class SteamBubble extends View
 	{
 	case "completed":
 	    if(steamElement.m_direction == SteamElement.DOWNLOAD)
+	    {
+		m_control.setText("Pause");
 		m_controlString = "";
+	    }
 	    else
 	    {
 		m_control.setText("Rewind");
@@ -269,13 +274,7 @@ public class SteamBubble extends View
 	    break;
 	}
 
-	if(steamElement.m_direction == SteamElement.DOWNLOAD)
-	{
-	    m_control.setEnabled(!m_controlString.isEmpty());
-	    m_readInterval.setVisibility(View.GONE);
-	    m_readIntervalLabel.setVisibility(View.GONE);
-	}
-	else
+	if(steamElement.m_destination.equals("Other (Non-Smoke)"))
 	{
 	    /*
 	    ** Simple Steams.
@@ -287,6 +286,14 @@ public class SteamBubble extends View
 	    m_readInterval.setVisibility(View.VISIBLE);
 	    m_readIntervalLabel.setVisibility(View.VISIBLE);
 	}
+	else if(steamElement.m_direction == SteamElement.DOWNLOAD)
+	{
+	    m_control.setEnabled(!m_controlString.isEmpty());
+	    m_readInterval.setVisibility(View.GONE);
+	    m_readIntervalLabel.setVisibility(View.GONE);
+	}
+	else
+	    m_readInterval.setVisibility(View.GONE);
 
 	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText
