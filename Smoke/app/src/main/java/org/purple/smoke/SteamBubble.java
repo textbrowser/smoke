@@ -293,7 +293,16 @@ public class SteamBubble extends View
 	    m_readIntervalLabel.setVisibility(View.GONE);
 	}
 	else
+	{
+	    /*
+	    ** Full Steams.
+	    */
+
+	    int oid = -1;
+
+	    m_control.setEnabled(m_oid == oid || oid == -1);
 	    m_readInterval.setVisibility(View.GONE);
+	}
 
 	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText
