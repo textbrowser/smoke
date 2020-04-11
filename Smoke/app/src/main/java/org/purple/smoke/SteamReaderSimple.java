@@ -27,66 +27,18 @@
 
 package org.purple.smoke;
 
-import android.content.res.AssetFileDescriptor;
-import android.net.Uri;
-import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class SteamReaderSimple
+public class SteamReaderSimple extends SteamReader
 {
-    private AssetFileDescriptor m_assetFileDescriptor = null;
-    private AtomicBoolean m_canceled = null;
-    private AtomicBoolean m_completed = null;
     private AtomicLong m_lastBytesSent = null;
     private AtomicLong m_lastTime = null;
-    private AtomicLong m_rate = null;
     private AtomicLong m_readInterval = null;
-    private AtomicLong m_readOffset = null;
-    private FileInputStream m_fileInputStream = null;
-    private ScheduledExecutorService m_reader = null;
-    private final static Cryptography s_cryptography =
-	Cryptography.getInstance();
-    private final static Database s_databaseHelper = Database.getInstance();
-    private int m_oid = -1;
     private static int PACKET_SIZE = 8192;
-
-    private String prettyRate()
-    {
-	return Miscellaneous.formattedDigitalInformation
-	    (String.valueOf(m_rate.get())) + " / s";
-    }
-
-    private void cancelReader()
-    {
-	if(m_reader != null)
-	{
-	    try
-	    {
-		m_reader.shutdown();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    try
-	    {
-		if(!m_reader.awaitTermination(60, TimeUnit.SECONDS))
-		    m_reader.shutdownNow();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	    finally
-	    {
-		m_reader = null;
-	    }
-	}
-    }
 
     private void computeRate(long bytesSent)
     {
@@ -136,14 +88,20 @@ public class SteamReaderSimple
 			    return;
 			case "rewind":
 			    m_completed.set(false);
-			    m_fileInputStream.getChannel().position(0);
+
+			    if(m_fileInputStream != null)
+				m_fileInputStream.getChannel().position(0);
+
 			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "paused", "", m_oid, 0);
 			    return;
 			case "rewind & resume":
 			    m_completed.set(false);
-			    m_fileInputStream.getChannel().position(0);
+
+			    if(m_fileInputStream != null)
+				m_fileInputStream.getChannel().position(0);
+
 			    m_readOffset.set(0);
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "transferring", "", m_oid, 0);
@@ -153,7 +111,8 @@ public class SteamReaderSimple
 			}
 
 			if(Kernel.getInstance().nextSimpleSteamOid() != m_oid ||
-			   m_canceled.get())
+			   m_canceled.get() ||
+			   m_fileInputStream == null)
 			    return;
 			else
 			    m_fileInputStream.getChannel().position
@@ -210,64 +169,18 @@ public class SteamReaderSimple
 			     long readInterval,
 			     long readOffset)
     {
-	try
-	{
-	    Uri uri = Uri.parse(fileName);
-
-	    m_assetFileDescriptor = Smoke.getApplication().
-		getContentResolver().openAssetFileDescriptor(uri, "r");
-	    m_fileInputStream = m_assetFileDescriptor.createInputStream();
-	    m_fileInputStream.skip(readOffset);
-	}
-	catch(Exception exception)
-	{
-	    m_assetFileDescriptor = null;
-	}
-
-	m_canceled = new AtomicBoolean(false);
-	m_completed = new AtomicBoolean(false);
+	super(fileName, oid, readOffset);
 	m_lastBytesSent = new AtomicLong(0);
 	m_lastTime = new AtomicLong(System.currentTimeMillis());
-	m_oid = oid;
-	m_rate = new AtomicLong(0);
 	m_readInterval = new AtomicLong(1000 / Math.max(4, readInterval));
-	m_readOffset = new AtomicLong(readOffset);
 	prepareReader();
-    }
-
-    public boolean completed()
-    {
-	return m_completed.get();
-    }
-
-    public int getOid()
-    {
-	return m_oid;
     }
 
     public void delete()
     {
-	try
-	{
-	    if(m_assetFileDescriptor != null)
-		m_assetFileDescriptor.close();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_assetFileDescriptor = null;
-	}
-
-	m_canceled.set(true);
-	m_completed.set(false);
+	super.delete();
 	m_lastBytesSent.set(0);
 	m_lastTime.set(0);
-	m_rate.set(0);
-	m_readOffset.set(0);
-	cancelReader();
-	s_databaseHelper.writeSteamStatus("deleted", m_oid);
     }
 
     public void setReadInterval(int interval)
