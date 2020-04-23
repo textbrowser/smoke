@@ -119,6 +119,8 @@ public abstract class SteamReader
 	m_readOffset = new AtomicLong(readOffset);
     }
 
+    public abstract void setReadInterval(int readInterval);
+
     public boolean completed()
     {
 	return m_completed.get();

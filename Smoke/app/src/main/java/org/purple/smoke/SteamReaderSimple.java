@@ -145,7 +145,7 @@ public class SteamReaderSimple extends SteamReader
 			    (Arrays.copyOfRange(bytes, 0, offset));
 
 			computeRate(sent);
-			m_readOffset.addAndGet(sent);
+			m_readOffset.addAndGet((long) sent);
 			s_databaseHelper.writeSteamStatus
 			    (s_cryptography,
 			     "",

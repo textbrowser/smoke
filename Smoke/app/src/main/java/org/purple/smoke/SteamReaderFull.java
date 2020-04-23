@@ -38,6 +38,7 @@ public class SteamReaderFull extends SteamReader
     private AtomicBoolean m_read = null;
     private AtomicLong m_acknowledgedOffset = null;
     private AtomicLong m_lastResponse = null;
+    private static byte m_keyStream[] = null;
     private static int PACKET_SIZE = 16384;
     private static long READ_INTERVAL = 250; // 250 Milliseconds
     private static long RESPONSE_WINDOW = 15000; // 15 Seconds
@@ -77,7 +78,7 @@ public class SteamReaderFull extends SteamReader
 			if(offset == -1)
 			    m_completed.set(true);
 			else
-			    m_readOffset.addAndGet(offset);
+			    m_readOffset.addAndGet((long) offset);
 
 			m_read.set(false);
 
@@ -93,10 +94,14 @@ public class SteamReaderFull extends SteamReader
 	}
     }
 
-    public SteamReaderFull(String fileName, int oid, long readOffset)
+    public SteamReaderFull(String fileName,
+			   byte keyStream[],
+			   int oid,
+			   long readOffset)
     {
 	super(fileName, oid, readOffset);
 	m_acknowledgedOffset = new AtomicLong(0);
+	m_keyStream = keyStream;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_read = new AtomicBoolean(true);
 	prepareReader();
@@ -110,7 +115,7 @@ public class SteamReaderFull extends SteamReader
 	m_read.set(false);
     }
 
-    public void setAcknowledgedOffset(int readOffset)
+    public void setAcknowledgedOffset(long readOffset)
     {
 	if(m_acknowledgedOffset.get() == readOffset)
 	{
@@ -118,5 +123,9 @@ public class SteamReaderFull extends SteamReader
 	    m_lastResponse.set(System.currentTimeMillis());
 	    m_read.set(true);
 	}
+    }
+
+    public void setReadInterval(int readInterval)
+    {
     }
 }

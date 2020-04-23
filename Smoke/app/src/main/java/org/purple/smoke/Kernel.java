@@ -96,21 +96,20 @@ public class Kernel
 		    ** interval.
 		    */
 
-		    m_simpleSteamsMutex.readLock().lock();
+		    m_steamsMutex.readLock().lock();
 
 		    try
 		    {
-			int size = m_simpleSteams.size();
+			int size = m_steams.size();
 
 			for(int i = 0; i < size; i++)
 			{
-			    int j = m_simpleSteams.keyAt(i);
+			    int j = m_steams.keyAt(i);
 
-			    if(m_simpleSteams.get(j) != null &&
-			       m_simpleSteams.get(j).getOid() == oid)
+			    if(m_steams.get(j) != null &&
+			       m_steams.get(j).getOid() == oid)
 			    {
-				m_simpleSteams.get(j).setReadInterval
-				    (readInterval);
+				m_steams.get(j).setReadInterval(readInterval);
 				return;
 			    }
 			}
@@ -120,7 +119,7 @@ public class Kernel
 		    }
 		    finally
 		    {
-			m_simpleSteamsMutex.readLock().unlock();
+			m_steamsMutex.readLock().unlock();
 		    }
 		}
 
@@ -165,11 +164,10 @@ public class Kernel
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_neighborsMutex =
 	new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock m_simpleSteamsMutex =
+    private final ReentrantReadWriteLock m_steamsMutex =
 	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
-    private final SparseArray<SteamReaderSimple> m_simpleSteams =
-	new SparseArray<> ();
+    private final SparseArray<SteamReader> m_steams = new SparseArray<> ();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -1149,7 +1147,7 @@ public class Kernel
 		{
 		    try
 		    {
-			prepareSimpleSteams();
+			prepareSteams();
 		    }
 		    catch(Exception exception)
 		    {
@@ -1194,9 +1192,9 @@ public class Kernel
 	}
     }
 
-    private void prepareSimpleSteams()
+    private void prepareSteams()
     {
-	ArrayList<SteamElement> steams = purgeDeletedSimpleSteams();
+	ArrayList<SteamElement> steams = purgeDeletedSteams();
 
 	if(steams == null)
 	    return;
@@ -1207,11 +1205,11 @@ public class Kernel
 		continue;
 	    else
 	    {
-		m_simpleSteamsMutex.readLock().lock();
+		m_steamsMutex.readLock().lock();
 
 		try
 		{
-		    if(m_simpleSteams.get(steamElement.m_oid) != null)
+		    if(m_steams.get(steamElement.m_oid) != null)
 			continue;
 		}
 		catch(Exception exception)
@@ -1219,33 +1217,38 @@ public class Kernel
 		}
 		finally
 		{
-		    m_simpleSteamsMutex.readLock().unlock();
+		    m_steamsMutex.readLock().unlock();
 		}
 	    }
 
-	    SteamReaderSimple steam = null;
+	    SteamReader steam = null;
 
 	    if(steamElement.m_destination.equals("Other (Non-Smoke)"))
 		steam = new SteamReaderSimple(steamElement.m_fileName,
 					      steamElement.m_oid,
 					      steamElement.m_readInterval,
 					      steamElement.m_readOffset);
+	    else
+		steam = new SteamReaderFull(steamElement.m_fileName,
+					    steamElement.m_keyStream,
+					    steamElement.m_oid,
+					    steamElement.m_readOffset);
 
 	    if(steam == null)
 		continue;
 
-	    m_simpleSteamsMutex.writeLock().lock();
+	    m_steamsMutex.writeLock().lock();
 
 	    try
 	    {
-		m_simpleSteams.append(steamElement.m_oid, steam);
+		m_steams.append(steamElement.m_oid, steam);
 	    }
 	    catch(Exception exception)
 	    {
 	    }
 	    finally
 	    {
-		m_simpleSteamsMutex.writeLock().unlock();
+		m_steamsMutex.writeLock().unlock();
 	    }
 	}
 
@@ -1283,30 +1286,30 @@ public class Kernel
 	}
     }
 
-    private void purgeSimpleSteams()
+    private void purgeSteams()
     {
-	m_simpleSteamsMutex.writeLock().lock();
+	m_steamsMutex.writeLock().lock();
 
 	try
 	{
-	    int size = m_simpleSteams.size();
+	    int size = m_steams.size();
 
 	    for(int i = 0; i < size; i++)
 	    {
-		int j = m_simpleSteams.keyAt(i);
+		int j = m_steams.keyAt(i);
 
-		if(m_simpleSteams.get(j) != null)
-		    m_simpleSteams.get(j).delete();
+		if(m_steams.get(j) != null)
+		    m_steams.get(j).delete();
 	    }
 
-	    m_simpleSteams.clear();
+	    m_steams.clear();
 	}
 	catch(Exception exception)
 	{
 	}
 	finally
 	{
-	    m_simpleSteamsMutex.writeLock().unlock();
+	    m_steamsMutex.writeLock().unlock();
 	}
     }
 
@@ -1394,18 +1397,18 @@ public class Kernel
 	return neighbors;
     }
 
-    public ArrayList<SteamElement> purgeDeletedSimpleSteams()
+    public ArrayList<SteamElement> purgeDeletedSteams()
     {
 	ArrayList<SteamElement> steams = s_databaseHelper.readSteams
 	    (s_cryptography);
 
 	if(steams == null || steams.isEmpty())
 	{
-	    purgeSimpleSteams();
+	    purgeSteams();
 	    return steams;
 	}
 
-	m_simpleSteamsMutex.writeLock().lock();
+	m_steamsMutex.writeLock().lock();
 
 	try
 	{
@@ -1414,10 +1417,10 @@ public class Kernel
 	    ** Also removed will be Steams having deleted statuses.
 	    */
 
-	    for(int i = m_simpleSteams.size() - 1; i >= 0; i--)
+	    for(int i = m_steams.size() - 1; i >= 0; i--)
 	    {
 		boolean found = false;
-		int oid = m_simpleSteams.keyAt(i);
+		int oid = m_steams.keyAt(i);
 
 		for(SteamElement steam : steams)
 		    if(steam != null && steam.m_oid == oid)
@@ -1430,10 +1433,10 @@ public class Kernel
 
 		if(!found)
 		{
-		    if(m_simpleSteams.get(oid) != null)
-			m_simpleSteams.get(oid).delete();
+		    if(m_steams.get(oid) != null)
+			m_steams.get(oid).delete();
 
-		    m_simpleSteams.remove(oid);
+		    m_steams.remove(oid);
 		}
 	    }
 	}
@@ -1442,7 +1445,7 @@ public class Kernel
 	}
 	finally
 	{
-	    m_simpleSteamsMutex.writeLock().unlock();
+	    m_steamsMutex.writeLock().unlock();
 	}
 
 	return steams;
@@ -1690,19 +1693,19 @@ public class Kernel
 	** Discover the oldest, incomplete Simple Steam.
 	*/
 
-	m_simpleSteamsMutex.readLock().lock();
+	m_steamsMutex.readLock().lock();
 
 	try
 	{
-	    int size = m_simpleSteams.size();
+	    int size = m_steams.size();
 
 	    for(int i = 0; i < size; i++)
 	    {
-		int j = m_simpleSteams.keyAt(i);
+		int j = m_steams.keyAt(i);
 
-		if(m_simpleSteams.get(j) != null &&
-		   m_simpleSteams.get(j).completed() == false)
-		    return m_simpleSteams.get(j).getOid();
+		if(m_steams.get(j) instanceof SteamReaderSimple &&
+		   m_steams.get(j).completed() == false)
+		    return m_steams.get(j).getOid();
 	    }
 	}
 	catch(Exception exception)
@@ -1710,7 +1713,7 @@ public class Kernel
 	}
 	finally
 	{
-	    m_simpleSteamsMutex.readLock().unlock();
+	    m_steamsMutex.readLock().unlock();
 	}
 
 	return -1;
