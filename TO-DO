@@ -233,12 +233,13 @@ Future Items
 - NTRU via BouncyCastle.
 - Names or PINs alongside SipHashes. The extra bits will increase the
   possibilities.
+- Notify operator of incorrect time.
 - Optional cryptographic discovery.
 - Resolve DNS through a proxy if a proxy is defined.
 
 Remaining Items
 
 - Bubbles are too narrow on wide devices.
-- Complex Steams, reliable Echo.
+- Full Steams, reliable Echo.
 - Java does not include methods for destroying private containers.
 - Stronger surreptitious forwarding. Larger RSA keys.
