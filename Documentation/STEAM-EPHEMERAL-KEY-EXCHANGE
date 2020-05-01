@@ -1,0 +1,15 @@
+Full Steam Ephemeral Key Exchange
+
+1. Generate ephemeral key pair. A key pair is generated per file.
+   Do not generate a key pair if one already exists or if
+   private keys (4) have been recorded.
+2. Locally record ephemeral key pair.
+3. Transfer ephemeral public key to destination participant.
+4. Destination receives ephemeral public key and generates private keys.
+   Do not generate private keys if private keys already exist.
+5. Locally record private keys.
+6. Destination encrypts private keys via the ephemeral public key and
+   submits the results to the origin.
+7. Origin receives bundle and deciphers the private keys via the
+   ephemeral key.
+8. Origin records private keys.
