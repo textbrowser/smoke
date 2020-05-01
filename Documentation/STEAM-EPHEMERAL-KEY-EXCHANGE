@@ -14,8 +14,9 @@ after a response is received from the destination participant.
    Do not generate private keys if private keys already exist.
 5. Locally record private keys, unless private keys exist.
 6. Destination encrypts private keys via the ephemeral public key and
-   submits the results to the origin.
-7. Origin receives bundle and deciphers the private keys via the
-   ephemeral private key.
-8. Origin records private keys.
-9. Origin delete ephemeral public-key pair from local SQLite database.
+   submits the results to the source participant.
+7. Source participant receives bundle and deciphers the private keys
+   via the ephemeral private key.
+8. Source participant records private keys (4).
+9. Source participant deletes ephemeral public-key pair from the local
+   SQLite database.
