@@ -58,6 +58,7 @@ public class Messages
     public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
     public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
+    public final static byte STEAM_KEY_EXCHANGE[] = new byte[] {0x04, 0x05};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
 							      ** byte is not
