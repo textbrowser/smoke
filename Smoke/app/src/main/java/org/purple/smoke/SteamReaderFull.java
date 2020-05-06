@@ -40,8 +40,8 @@ public class SteamReaderFull extends SteamReader
     private AtomicLong m_lastResponse = null;
     private static byte m_keyStream[] = null;
     private static int PACKET_SIZE = 16384;
-    private static long READ_INTERVAL = 250; // 250 Milliseconds
-    private static long RESPONSE_WINDOW = 15000; // 15 Seconds
+    private static long READ_INTERVAL = 250; // 250 milliseconds.
+    private static long RESPONSE_WINDOW = 15000; // 15 seconds.
 
     private void prepareReader()
     {

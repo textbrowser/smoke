@@ -175,38 +175,38 @@ public class Kernel
 	new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
-    private final static int CONGESTION_LIFETIME = 60; // Seconds
-    private final static int FIRE_TIME_DELTA = 30000; // 30 Seconds
-    private final static int MCELIECE_OUTPUT_SIZES[] = {320,
-							352,
-							507,
-							539,
-							576,
-							608};
+    private final static int CONGESTION_LIFETIME = 60; // 60 seconds.
+    private final static int FIRE_TIME_DELTA = 30000; // 30 seconds.
+    private final static int MCELIECE_OUTPUT_SIZES[] = {320,  // 64 bytes.
+							352,  // 96 bytes.
+							507,  // 64 bytes.
+							539,  // 96 bytes.
+							576,  // 64 bytes.
+							608}; // 96 bytes.
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
 	864000; // Seconds in ten days.
-    private final static long CALL_INTERVAL = 250; // 0.250 Seconds
-    private final static long CALL_LIFETIME = 30000; // 30 Seconds
-    private final static long JUGGERNAUT_LIFETIME = 15000; // 15 Seconds
-    private final static long JUGGERNAUT_WINDOW = 10000; // 10 Seconds
+    private final static long CALL_INTERVAL = 250; // 0.250 seconds.
+    private final static long CALL_LIFETIME = 30000; // 30 seconds.
+    private final static long JUGGERNAUT_LIFETIME = 15000; // 15 seconds.
+    private final static long JUGGERNAUT_WINDOW = 10000; // 10 seconds.
     private final static long MESSAGES_TO_SEND_INTERVAL =
-	100; // 100 Milliseconds
-    private final static long NEIGHBORS_INTERVAL = 5000; // 5 Seconds
-    private final static long PUBLISH_KEYS_INTERVAL = 45000; // 45 Seconds
-    private final static long PURGE_INTERVAL = 30000; // 30 Seconds
-    private final static long REQUEST_MESSAGES_INTERVAL = 60000; // 60 Seconds
+	100; // 100 milliseconds.
+    private final static long NEIGHBORS_INTERVAL = 5000; // 5 seconds.
+    private final static long PUBLISH_KEYS_INTERVAL = 45000; // 45 seconds.
+    private final static long PURGE_INTERVAL = 30000; // 30 seconds.
+    private final static long REQUEST_MESSAGES_INTERVAL = 60000; // 60 seconds.
     private final static long SHARE_SIPHASH_ID_CONFIRMATION_WINDOW =
-	15000; // 15 Seconds
+	15000; // 15 seconds.
     private final static long STATUS_INTERVAL = 15000; /*
 						       ** Should be less than
 						       ** Chat.STATUS_WINDOW.
 						       */
-    private final static long STEAM_INTERVAL = 7500; // 7.5 Seconds
-    private final static long TEMPORARY_IDENTITY_INTERVAL = 5000; // 5 Seconds
+    private final static long STEAM_INTERVAL = 7500; // 7.5 seconds.
+    private final static long TEMPORARY_IDENTITY_INTERVAL = 5000; // 5 seconds.
     private final static long TEMPORARY_IDENTITY_LIFETIME =
-	60000; // 60 Seconds
+	60000; // 60 seconds.
     private static Kernel s_instance = null;
-    public final static long JUGGERNAUT_DELAY = 7500; // 7.5 Seconds
+    public final static long JUGGERNAUT_DELAY = 7500; // 7.5 seconds.
 
     private Kernel()
     {

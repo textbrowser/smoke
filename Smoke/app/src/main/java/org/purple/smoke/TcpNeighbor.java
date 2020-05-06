@@ -38,7 +38,7 @@ public class TcpNeighbor extends Neighbor
     private Socket m_socket = null;
     private String m_proxyIpAddress = "";
     private String m_proxyType = "";
-    private final static int CONNECTION_TIMEOUT = 10000; // 10 Seconds
+    private final static int CONNECTION_TIMEOUT = 10000; // 10 seconds.
     private int m_proxyPort = -1;
 
     protected String getLocalIp()

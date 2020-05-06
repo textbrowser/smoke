@@ -801,7 +801,7 @@ public abstract class Miscellaneous
 	    {
 		popupWindow.dismiss();
 	    }
-	}, 10000); // 10 Seconds
+	}, 10000); // 10 seconds.
     }
 
     public static void showPromptDialog

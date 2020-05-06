@@ -57,13 +57,13 @@ public abstract class Neighbor
 	Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService m_sendOutboundScheduler =
 	Executors.newSingleThreadScheduledExecutor();
-    private final static int LANE_WIDTH = 8 * 1024 * 1024; // 8 MiB
-    private final static long DATA_LIFETIME = 15000; // 15 Seconds
-    private final static long PARSING_INTERVAL = 100; // Milliseconds
+    private final static int LANE_WIDTH = 8 * 1024 * 1024; // 8 MiB.
+    private final static long DATA_LIFETIME = 15000; // 15 seconds.
+    private final static long PARSING_INTERVAL = 100; // 100 milliseconds.
     private final static long SEND_OUTBOUND_TIMER_INTERVAL =
-	200; // Milliseconds
-    private final static long SILENCE = 90000; // 90 Seconds
-    private final static long TIMER_INTERVAL = 2500; // 2.5 Seconds
+	200; // 200 milliseconds.
+    private final static long SILENCE = 90000; // 90 seconds.
+    private final static long TIMER_INTERVAL = 2500; // 2.5 seconds.
     protected AtomicBoolean m_aborted = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
@@ -82,10 +82,10 @@ public abstract class Neighbor
     protected final Object m_parsingSchedulerObject = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
-    protected final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB
+    protected final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB.
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
-    protected final static int SO_TIMEOUT = 0; // 0 Seconds
-    protected final static long READ_SOCKET_INTERVAL = 100; // 100 Milliseconds
+    protected final static int SO_TIMEOUT = 0; // 0 seconds.
+    protected final static long READ_SOCKET_INTERVAL = 100; // 100 milliseconds.
     public final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
 
     private void saveStatistics()
