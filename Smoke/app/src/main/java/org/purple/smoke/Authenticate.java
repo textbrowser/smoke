@@ -220,11 +220,6 @@ public class Authenticate extends AppCompatActivity
 				s_cryptography.setMacKey(macKey);
 
 				String algorithm = "";
-				byte identity[] = Base64.decode
-				    (m_databaseHelper.
-				     readSetting(s_cryptography,
-						 "identity").
-				     getBytes(), Base64.DEFAULT);
 				byte ozoneKeyStream[] = Base64.decode
 				    (m_databaseHelper.
 				     readSetting(s_cryptography,
@@ -252,7 +247,6 @@ public class Authenticate extends AppCompatActivity
 				    (algorithm);
 				s_cryptography.setChatEncryptionPublicKeyPair
 				    (algorithm, privateBytes, publicBytes);
-				s_cryptography.setIdentity(identity);
 				privateBytes = Base64.decode
 				    (m_databaseHelper.
 				     readSetting(s_cryptography,
@@ -304,8 +298,7 @@ public class Authenticate extends AppCompatActivity
 				   s_cryptography.
 				   chatEncryptionKeyPair() == null ||
 				   s_cryptography.
-				   chatSignatureKeyPair() == null ||
-				   s_cryptography.identity() == null)
+				   chatSignatureKeyPair() == null)
 				{
 				    if(!e1)
 					m_error +=

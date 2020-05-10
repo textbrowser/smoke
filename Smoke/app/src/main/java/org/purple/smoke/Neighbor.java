@@ -365,11 +365,12 @@ public abstract class Neighbor
 				    ** Remove the embedded SipHash.
 				    */
 
-				    (Arrays.copyOfRange(bytes,
-							0,
-							bytes.length -
-							Cryptography.
-							SIPHASH_ID_LENGTH),
+				    (Arrays.
+				     copyOfRange(bytes,
+						 0,
+						 bytes.length -
+						 Cryptography.
+						 SIPHASH_IDENTITY_LENGTH),
 				     Cryptography.
 				     hmac(Miscellaneous.
 					  joinByteArrays(bytes, timestamp),

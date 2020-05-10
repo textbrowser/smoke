@@ -391,7 +391,7 @@ public class Settings extends AppCompatActivity
 				  replace("@", "").trim()));
 	    string = stringBuilder.toString().trim();
 
-	    if(string.length() != Cryptography.SIPHASH_ID_LENGTH)
+	    if(string.length() != Cryptography.SIPHASH_IDENTITY_LENGTH)
 	    {
 		Miscellaneous.showErrorDialog
 		    (Settings.this,
@@ -1432,11 +1432,6 @@ public class Settings extends AppCompatActivity
 			 Base64.encodeToString(encryptionSalt,
 					       Base64.DEFAULT));
 		    m_databaseHelper.writeSetting
-			(s_cryptography,
-			 "identity",
-			 Base64.encodeToString(s_cryptography.identity(),
-					       Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
 			(null,
 			 "iterationCount",
 			 String.valueOf(m_iterationCount));
@@ -2361,11 +2356,6 @@ public class Settings extends AppCompatActivity
 
 		    m_databaseHelper.writeSetting
 			(s_cryptography,
-			 "identity",
-			 Base64.encodeToString(s_cryptography.identity(),
-					       Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
-			(s_cryptography,
 			 "pki_chat_encryption_algorithm",
 			 m_encryptionAlgorithm);
 		    m_databaseHelper.writeSetting
@@ -3003,6 +2993,8 @@ public class Settings extends AppCompatActivity
 	{
 	}
 
+	prepareListeners();
+
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
         Button button1 = (Button) findViewById(R.id.add_neighbor);
 
@@ -3260,7 +3252,6 @@ public class Settings extends AppCompatActivity
 	textView1 = (TextView) findViewById(R.id.proxy_port);
 	textView1.setEnabled(isAuthenticated);
 	textView1.setFilters(new InputFilter[] {s_portFilter});
-	prepareListeners();
 
 	/*
 	** Restore some settings.

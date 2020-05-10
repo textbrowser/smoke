@@ -2308,7 +2308,8 @@ public class Database extends SQLiteOpenHelper
 			 StandardCharsets.UTF_8);
 
 		    if(sipHashId == null ||
-		       sipHashId.length() != Cryptography.SIPHASH_ID_LENGTH)
+		       sipHashId.length() !=
+		       Cryptography.SIPHASH_IDENTITY_LENGTH)
 			return "";
 		    else
 			sipHashIdBytes = sipHashId.getBytes
@@ -4361,7 +4362,7 @@ public class Database extends SQLiteOpenHelper
 	    "encryption_public_key_algorithm TEXT NOT NULL, " +
 	    "encryption_public_key_digest TEXT NOT NULL, " +
 	    "encryption_public_key_signed TEXT NOT NULL, " +
-	    "identity TEXT NOT NULL, " +
+	    "identity TEXT NOT NULL, " + // Not recorded.
 	    "keystream TEXT NOT NULL, " +
 	    "last_status_timestamp TEXT NOT NULL, " +
 	    "options TEXT NOT NULL, " +

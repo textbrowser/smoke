@@ -776,8 +776,10 @@ public class Kernel
 				SHARE_SIPHASH_ID_MESSAGE_TYPE:
 				m_shareSipHashIdIdentity.set
 				    (Miscellaneous.
-				     byteArrayToLong(Cryptography.
-						     randomBytes(8)));
+				     byteArrayToLong
+				     (Cryptography.
+				      randomBytes(Cryptography.
+						  IDENTITY_SIZE)));
 				m_shareSipHashIdIdentityLastTick.set
 				    (System.currentTimeMillis());
 
@@ -1925,7 +1927,9 @@ public class Kernel
 		    */
 
 		    long identity = Miscellaneous.byteArrayToLong
-			(Arrays.copyOfRange(aes256, 28, 28 + 8));
+			(Arrays.copyOfRange(aes256,
+					    28,
+					    28 + Cryptography.IDENTITY_SIZE));
 
 		    if(identity != m_shareSipHashIdIdentity.get())
 			return 1;
@@ -1935,7 +1939,10 @@ public class Kernel
 		    Intent intent = new Intent
 			("org.purple.smoke.siphash_share_confirmation");
 		    String sipHashId = new String
-			(Arrays.copyOfRange(aes256, 9, 9 + 19),
+			(Arrays.
+			 copyOfRange(aes256,
+				     9,
+				     9 + Cryptography.SIPHASH_IDENTITY_LENGTH),
 			 StandardCharsets.UTF_8);
 
 		    intent.putExtra("org.purple.smoke.sipHashId", sipHashId);

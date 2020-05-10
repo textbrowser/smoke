@@ -740,7 +740,7 @@ public abstract class Miscellaneous
 	    else
 		sipHashId = sipHashId.toUpperCase();
 
-	    if(Cryptography.SIPHASH_ID_LENGTH == sipHashId.length())
+	    if(Cryptography.SIPHASH_IDENTITY_LENGTH == sipHashId.length())
 		message = "A SmokeStack has received the Smoke Identity " +
 		    sipHashId + ".";
 	    else

@@ -80,7 +80,7 @@ public class Cryptography
     private SecretKey m_macKey = null;
     private String m_chatEncryptionPublicKeyAlgorithm = "";
     private String m_sipHashId = "0000-0000-0000-0000";
-    private byte m_identity[] = null;
+    private byte m_identity[] = null; // Random identity.
     private byte m_ozoneEncryptionKey[] = null;
     private byte m_ozoneMacKey[] = null;
     private byte m_sipHashEncryptionKey[] = null;
@@ -138,7 +138,8 @@ public class Cryptography
     public final static int CIPHER_KEY_LENGTH = 32;
     public final static int FIRE_HASH_KEY_LENGTH = 48;
     public final static int HASH_KEY_LENGTH = 64;
-    public final static int SIPHASH_ID_LENGTH = 19; // 0000-0000-0000-0000
+    public final static int IDENTITY_SIZE = 8; // Size of a long.
+    public final static int SIPHASH_IDENTITY_LENGTH = 19; // 0000-0000-0000-0000
 
     private Cryptography()
     {
@@ -791,7 +792,7 @@ public class Cryptography
 	{
 	    if(m_identity == null)
 	    {
-		m_identity = new byte[8];
+		m_identity = new byte[IDENTITY_SIZE];
 		s_secureRandom.nextBytes(m_identity);
 	    }
 
@@ -2547,23 +2548,6 @@ public class Cryptography
 	finally
 	{
 	    m_encryptionKeyMutex.writeLock().unlock();
-	}
-    }
-
-    public void setIdentity(byte identity[])
-    {
-	m_identityMutex.writeLock().lock();
-
-	try
-	{
-	    m_identity = identity;
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_identityMutex.writeLock().unlock();
 	}
     }
 
