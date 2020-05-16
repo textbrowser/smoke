@@ -1247,6 +1247,48 @@ public class Cryptography
 	return null;
     }
 
+    public static PrivateKey privateKeyFromBytes(byte privateBytes[])
+    {
+	if(privateBytes == null)
+	    return null;
+
+	try
+	{
+	    EncodedKeySpec privateKeySpec = new X509EncodedKeySpec
+		(privateBytes);
+
+	    for(int i = 0; i < 3; i++)
+		try
+		{
+		    KeyFactory generator = null;
+
+		    switch(i)
+		    {
+		    case 0:
+			generator = KeyFactory.getInstance("EC");
+			break;
+		    case 1:
+			generator = KeyFactory.getInstance
+			    (PQCObjectIdentifiers.mcElieceCca2.getId());
+			break;
+		    default:
+			generator = KeyFactory.getInstance("RSA");
+			break;
+		    }
+
+		    return generator.generatePrivate(privateKeySpec);
+		}
+		catch(Exception exception)
+		{
+		}
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
     public static PublicKey publicKeyFromBytes(byte publicBytes[])
     {
 	if(publicBytes == null)
