@@ -1622,6 +1622,8 @@ public class Cryptography
 	    else if(asn1ObjectIdentifier.
 		    equals(PQCObjectIdentifiers.mcEliecePointcheval))
 		return "McEliece-Pointcheval";
+	    else if(publicKey.getAlgorithm().equals("EC"))
+		return "ECDSA";
 	    else
 		return "RSA";
 	}
