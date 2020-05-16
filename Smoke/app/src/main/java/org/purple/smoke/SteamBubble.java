@@ -56,6 +56,7 @@ public class SteamBubble extends View
     private TextView m_sent = null;
     private TextView m_status = null;
     private TextView m_transferRate = null;
+    private View m_direction = null;
     private View m_view = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -154,6 +155,7 @@ public class SteamBubble extends View
         });
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
+	m_direction = m_view.findViewById(R.id.direction);
 	m_eta = (TextView) m_view.findViewById(R.id.eta);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
@@ -251,11 +253,13 @@ public class SteamBubble extends View
 	    {
 		m_control.setText("Pause");
 		m_controlString = "";
+		m_direction.setBackgroundResource(R.drawable.download);
 	    }
 	    else
 	    {
 		m_control.setText("Rewind");
 		m_controlString = "rewind";
+		m_direction.setBackgroundResource(R.drawable.upload);
 	    }
 
 	    m_progress.setVisibility(View.GONE);
