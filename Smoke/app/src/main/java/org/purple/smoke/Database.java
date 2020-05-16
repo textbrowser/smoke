@@ -535,9 +535,7 @@ public class Database extends SQLiteOpenHelper
 
 			    break;
 			case 13:
-			    if(bytes != null)
-				neighborElement.m_remoteCertificate = bytes;
-
+			    neighborElement.m_remoteCertificate = bytes;
 			    break;
 			case 14:
 			    if(bytes != null)
@@ -726,9 +724,7 @@ public class Database extends SQLiteOpenHelper
 
 			    break;
 			case 1:
-			    if(bytes != null)
-				participantElement.m_keyStream = bytes;
-
+			    participantElement.m_keyStream = bytes;
 			    break;
 			case 2:
 			    if(bytes != null)
@@ -1020,9 +1016,7 @@ public class Database extends SQLiteOpenHelper
 
 			    break;
 			case 7:
-			    if(bytes != null)
-				sipHashIdElement.m_stream = bytes;
-
+			    sipHashIdElement.m_stream = bytes;
 			    break;
 			default:
 			    break;
@@ -1138,9 +1132,7 @@ public class Database extends SQLiteOpenHelper
 
 			    break;
 			case 2:
-			    if(bytes != null)
-				steamElement.m_fileDigest = bytes;
-
+			    steamElement.m_fileDigest = bytes;
 			    break;
 			case 3:
 			    if(bytes != null)
@@ -1489,9 +1481,7 @@ public class Database extends SQLiteOpenHelper
 			switch(i)
 			{
 			case 0:
-			    if(bytes != null)
-				memberChatElement.m_attachment = bytes;
-
+			    memberChatElement.m_attachment = bytes;
 			    break;
 			case 1:
 			    if(bytes != null)
@@ -1809,14 +1799,16 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery
 		("SELECT absolute_filename, " + // 0
 		 "destination, " +              // 1
-		 "file_digest, " +              // 2
-		 "file_size, " +                // 3
-		 "is_download, " +              // 4
-		 "read_interval, " +            // 5
-		 "read_offset, " +              // 6
-		 "status, " +                   // 7
-		 "transfer_rate, " +            // 8
-		 "oid " +                       // 9
+		 "ephemeral_private_key, " +    // 2
+		 "ephemeral_public_key, " +     // 3
+		 "file_digest, " +              // 4
+		 "file_size, " +                // 5
+		 "is_download, " +              // 6
+		 "read_interval, " +            // 7
+		 "read_offset, " +              // 8
+		 "status, " +                   // 9
+		 "transfer_rate, " +            // 10
+		 "oid " +                       // 11
 		 "FROM steam_files ORDER BY someoid", null);
 
 	    if(cursor != null && cursor.moveToPosition(position))
@@ -1828,7 +1820,7 @@ public class Database extends SQLiteOpenHelper
 
 		for(int i = 0; i < count; i++)
 		{
-		    if(i == 7)
+		    if(i == 9)
 		    {
 			steamElement.m_status = cursor.getString(i).trim();
 			continue;
@@ -1871,11 +1863,15 @@ public class Database extends SQLiteOpenHelper
 
 			break;
 		    case 2:
-			if(bytes != null)
-			    steamElement.m_fileDigest = bytes;
-
+			steamElement.m_ephemeralPrivateKey = bytes;
 			break;
 		    case 3:
+			steamElement.m_ephemeralPublicKey = bytes;
+			break;
+		    case 4:
+			steamElement.m_fileDigest = bytes;
+			break;
+		    case 5:
 			if(bytes != null)
 			    try
 			    {
@@ -1887,7 +1883,7 @@ public class Database extends SQLiteOpenHelper
 			    }
 
 			break;
-		    case 4:
+		    case 6:
 			if(bytes != null)
 			    try
 			    {
@@ -1899,7 +1895,7 @@ public class Database extends SQLiteOpenHelper
 			    }
 
 			break;
-		    case 5:
+		    case 7:
 			if(bytes != null)
 			    try
 			    {
@@ -1911,7 +1907,7 @@ public class Database extends SQLiteOpenHelper
 			    }
 
 			break;
-		    case 6:
+		    case 8:
 			if(bytes != null)
 			    try
 			    {
@@ -1923,7 +1919,7 @@ public class Database extends SQLiteOpenHelper
 			    }
 
 			break;
-		    case 8:
+		    case 10:
 			if(bytes != null)
 			    steamElement.m_transferRate = new String(bytes);
 			else
@@ -4363,7 +4359,10 @@ public class Database extends SQLiteOpenHelper
 	    "encryption_public_key_digest TEXT NOT NULL, " +
 	    "encryption_public_key_signed TEXT NOT NULL, " +
 	    "identity TEXT NOT NULL, " + // Not recorded.
-	    "keystream TEXT NOT NULL, " +
+	    "keystream TEXT NOT NULL, " + /*
+					  ** Authentication and encryption
+					  ** keys.
+					  */
 	    "last_status_timestamp TEXT NOT NULL, " +
 	    "options TEXT NOT NULL, " +
 	    "signature_public_key TEXT NOT NULL, " +
@@ -4396,7 +4395,10 @@ public class Database extends SQLiteOpenHelper
 	*/
 
 	str = "CREATE TABLE IF NOT EXISTS participants_keys (" +
-	    "keystream TEXT NOT NULL, " +
+	    "keystream TEXT NOT NULL, " + /*
+					  ** Authentication and encryption
+					  ** keys.
+					  */
 	    "keystream_digest TEXT NOT NULL PRIMARY KEY, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
@@ -4461,10 +4463,15 @@ public class Database extends SQLiteOpenHelper
 	str = "CREATE TABLE IF NOT EXISTS steam_files (" +
 	    "absolute_filename TEXT NOT NULL, " +
 	    "destination TEXT NOT NULL, " +
+	    "ephemeral_private_key TEXT NOT NULL, " +
+	    "ephemeral_public_key TEXT NOT NULL, " +
 	    "file_digest TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
-	    "keystream TEXT NOT NULL, " +
+	    "keystream TEXT NOT NULL, " + /*
+					  ** Authentication and encryption
+					  ** keys.
+					  */
 	    "read_interval TEXT NOT NULL, " +
 	    "read_offset TEXT NOT NULL, " +
 	    "someoid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
@@ -5179,6 +5186,16 @@ public class Database extends SQLiteOpenHelper
 			    ("destination",
 			     cryptography.
 			     etmBase64String(steamElement.m_destination));
+			values.put
+			    ("ephemeral_private_key",
+			     cryptography.
+			     etmBase64String(steamElement.
+					     m_ephemeralPrivateKey));
+			values.put
+			    ("ephemeral_public_key",
+			     cryptography.
+			     etmBase64String(steamElement.
+					     m_ephemeralPublicKey));
 			values.put
 			    ("file_digest",
 			     cryptography.

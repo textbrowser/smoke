@@ -33,6 +33,8 @@ public class SteamElement
     public String m_fileName = "";
     public String m_status = "paused";
     public String m_transferRate = "";
+    public byte m_ephemeralPrivateKey[] = null;
+    public byte m_ephemeralPublicKey[] = null;
     public byte m_fileDigest[] = null;
     public byte m_keyStream[] = null;
     public int m_direction = DOWNLOAD;
