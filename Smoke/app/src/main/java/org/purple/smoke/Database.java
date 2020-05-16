@@ -1919,6 +1919,8 @@ public class Database extends SQLiteOpenHelper
 			    }
 
 			break;
+		    case 9:
+			break;
 		    case 10:
 			if(bytes != null)
 			    steamElement.m_transferRate = new String(bytes);
