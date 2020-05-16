@@ -1,7 +1,7 @@
 Full Steam Ephemeral Key Exchange
 
-Please note that this is a partial forward secrecy key exchange as
-the generator of the ephemeral public-key pair records the pair in
+Please note that this protocol is a partial forward secrecy key exchange as
+the generator of the ephemeral public-key pair temporarily records the pair in
 an SQLite database. The ephemeral key-pair is removed from the database
 after a response is received from the destination participant.
 

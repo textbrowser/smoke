@@ -83,7 +83,7 @@ public class SteamReaderFull extends SteamReader
 			m_read.set(false);
 
 			/*
-			** Send bytes, filename, m_acknowledgedOffset.
+			** Send a Steam packet.
 			*/
 		    }
 		    catch(Exception exception)
