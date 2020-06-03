@@ -158,6 +158,10 @@ public class MemberChat extends AppCompatActivity
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		break;
+	    case "org.purple.smoke.time":
+		Miscellaneous.showNotification
+		    (MemberChat.this, intent, findViewById(R.id.main_layout));
+		break;
 	    default:
 		break;
 	    }
@@ -1483,6 +1487,7 @@ public class MemberChat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.notify_data_set_changed");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.time");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

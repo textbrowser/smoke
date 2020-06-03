@@ -80,6 +80,10 @@ public class Steam extends AppCompatActivity
 	    case "org.purple.smoke.steam_status":
 		m_adapter.notifyDataSetChanged();
 		break;
+	    case "org.purple.smoke.time":
+		Miscellaneous.showNotification
+		    (Steam.this, intent, findViewById(R.id.main_layout));
+		break;
 	    default:
 		break;
 	    }
@@ -619,6 +623,7 @@ public class Steam extends AppCompatActivity
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.steam_added");
 	    intentFilter.addAction("org.purple.smoke.steam_status");
+	    intentFilter.addAction("org.purple.smoke.time");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

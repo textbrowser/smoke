@@ -602,6 +602,22 @@ public abstract class Miscellaneous
 	}
     }
 
+    public static void sendBroadcast(String action, String extra1)
+    {
+	try
+	{
+	    Intent intent = new Intent(action);
+	    LocalBroadcastManager localBroadcastManager =
+		LocalBroadcastManager.getInstance(Smoke.getApplication());
+
+	    intent.putExtra("org.purple.smoke.extra1", extra1);
+	    localBroadcastManager.sendBroadcast(intent);
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     public static void sendBroadcast(String action, int extra1, int extra2)
     {
 	try
@@ -745,6 +761,15 @@ public abstract class Miscellaneous
 		    sipHashId + ".";
 	    else
 		message = "A SmokeStack has received the Smoke Identity.";
+
+	    break;
+	case "org.purple.smoke.time":
+	    String string = intent.getStringExtra("org.purple.smoke.extra1");
+
+	    if(string == null)
+		return;
+	    else
+		message = string;
 
 	    break;
 	default:

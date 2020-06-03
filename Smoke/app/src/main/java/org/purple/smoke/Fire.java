@@ -110,6 +110,10 @@ public class Fire extends AppCompatActivity
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		break;
+	    case "org.purple.smoke.time":
+		Miscellaneous.showNotification
+		    (Fire.this, intent, findViewById(R.id.main_layout));
+		break;
 	    default:
 		break;
 	    }
@@ -761,6 +765,7 @@ public class Fire extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.fire_message");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.time");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

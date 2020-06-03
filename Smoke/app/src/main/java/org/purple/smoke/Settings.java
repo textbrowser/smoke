@@ -137,6 +137,10 @@ public class Settings extends AppCompatActivity
 		Miscellaneous.showNotification
 		    (Settings.this, intent, findViewById(R.id.main_layout));
 		break;
+	    case "org.purple.smoke.time":
+		Miscellaneous.showNotification
+		    (Settings.this, intent, findViewById(R.id.main_layout));
+		break;
 	    default:
 		break;
 	    }
@@ -3682,6 +3686,7 @@ public class Settings extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.populate_participants");
 	    intentFilter.addAction
 		("org.purple.smoke.siphash_share_confirmation");
+	    intentFilter.addAction("org.purple.smoke.time");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

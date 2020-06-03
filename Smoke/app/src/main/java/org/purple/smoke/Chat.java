@@ -127,6 +127,10 @@ public class Chat extends AppCompatActivity
 		invalidateOptionsMenu();
 		populateParticipants();
 		break;
+	    case "org.purple.smoke.time":
+		Miscellaneous.showNotification
+		    (Chat.this, intent, findViewById(R.id.main_layout));
+		break;
 	    default:
 		break;
 	    }
@@ -1563,6 +1567,7 @@ public class Chat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.time");
 	    LocalBroadcastManager.getInstance(this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;

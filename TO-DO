@@ -103,8 +103,10 @@ Completed Items
 - Key-sharing messages should be written to smoke.db.
 - JuggerKnot (credentials from protocol).
 - Juggernaut.
-  (https://en.wikipedia.org/wiki/Password_Authenticated_Key_Exchange_by_Juggling)
-  (https://www.borelly.net/cb/docs/javaBC-1.4.8/prov/org/bouncycastle/crypto/agreement/jpake/JPAKEParticipant.html)
+  (https://en.wikipedia.org/wiki/\
+	   Password_Authenticated_Key_Exchange_by_Juggling)
+  (https://www.borelly.net/cb/docs/javaBC-1.4.8/prov/org/\
+	   bouncycastle/crypto/agreement/jpake/JPAKEParticipant.html)
 - Last activity and Member Chat. Restore.
 - Less populateParticipants() in the Chat activity.
 - Local congestion control.
@@ -122,13 +124,14 @@ Completed Items
 - Neighbor details should be optional.
 - Neighbors periodic refresh.
 - Network status in Member Chat.
-- New date format: YYYY-MM-DD. ISO 8601.
+- New date format: YYYY-MM-DD. ISO-8601.
 - New messages should be at the top of the view; Member Chat.
 - Next (Tab) order; Settings.
 - Non-TLS connections.
 - Non-exclusive database transactions.
 - Notification causes abnormal exit on Android 7.
 - Notify of other member messages in Member Chat.
+- Notify operator of incorrect time.
 - Notify the Chat activity of new participants.
 - Optimize loops.
 - Optional per-participant signatures.
@@ -243,4 +246,4 @@ Remaining Items
 
 - Depict successful Steam key exchanges.
 - Full Steams, reliable Echo.
-- Notify operator of incorrect time.
+- Long constants.
