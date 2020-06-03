@@ -157,7 +157,7 @@ public class FireChannel extends View
 				    if(participant == null ||
 				       Math.abs(current -
 						participant.m_timestamp) >=
-				       2 * STATUS_INTERVAL)
+				       2L * STATUS_INTERVAL)
 				    {
 					try
 					{

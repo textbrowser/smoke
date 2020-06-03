@@ -2279,7 +2279,7 @@ public class Database extends SQLiteOpenHelper
 		    long timestamp = Miscellaneous.byteArrayToLong
 			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
-		    if(current - timestamp < 0)
+		    if(current - timestamp < 0L)
 		    {
 			if(timestamp - current > WRITE_PARTICIPANT_TIME_DELTA)
 			    return "";

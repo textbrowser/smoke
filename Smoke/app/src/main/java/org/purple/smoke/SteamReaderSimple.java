@@ -43,7 +43,7 @@ public class SteamReaderSimple extends SteamReader
     private void computeRate(long bytesSent)
     {
 	long seconds = Math.abs
-	    (System.currentTimeMillis() - m_lastTime.get()) / 1000;
+	    (System.currentTimeMillis() - m_lastTime.get()) / 1000L;
 
 	m_lastBytesSent.getAndAdd(bytesSent);
 
@@ -172,7 +172,7 @@ public class SteamReaderSimple extends SteamReader
 	super(fileName, oid, readOffset);
 	m_lastBytesSent = new AtomicLong(0);
 	m_lastTime = new AtomicLong(System.currentTimeMillis());
-	m_readInterval = new AtomicLong(1000 / Math.max(4, readInterval));
+	m_readInterval = new AtomicLong(1000L / Math.max(4L, readInterval));
 	prepareReader();
     }
 

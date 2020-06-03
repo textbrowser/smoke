@@ -138,7 +138,7 @@ public abstract class Neighbor
 	if(m_passthrough.get())
 	    return;
 
-	if((System.nanoTime() - m_lastTimeRead.get()) / 1000000 > SILENCE)
+	if((System.nanoTime() - m_lastTimeRead.get()) / 1000000L > SILENCE)
 	    disconnect();
     }
 

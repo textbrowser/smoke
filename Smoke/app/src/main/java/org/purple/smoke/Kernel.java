@@ -465,7 +465,7 @@ public class Kernel
 				}
 
 				if((System.nanoTime() - entry.getValue().
-				    m_startTime) / 1000000 > CALL_LIFETIME)
+				    m_startTime) / 1000000L > CALL_LIFETIME)
 				    it.remove();
 			    }
 
@@ -1912,7 +1912,7 @@ public class Kernel
 		    long timestamp = Miscellaneous.byteArrayToLong
 			(Arrays.copyOfRange(aes256, 1, 1 + 8));
 
-		    if(current - timestamp < 0)
+		    if(current - timestamp < 0L)
 		    {
 			if(timestamp - current >
 			   SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
@@ -2191,7 +2191,7 @@ public class Kernel
 			long timestamp = Miscellaneous.byteArrayToLong
 			    (Arrays.copyOfRange(aes256, 1, 1 + 8));
 
-			if(current - timestamp < 0)
+			if(current - timestamp < 0L)
 			{
 			    if(timestamp - current > Chat.STATUS_WINDOW)
 				return 1;
@@ -2243,7 +2243,7 @@ public class Kernel
 				(Base64.
 				 decode(string.getBytes(), Base64.NO_WRAP));
 
-			    if(current - timestamp < 0)
+			    if(current - timestamp < 0L)
 			    {
 				if(timestamp - current > JUGGERNAUT_WINDOW)
 				    return 1;
@@ -2490,7 +2490,7 @@ public class Kernel
 
 			long current = System.currentTimeMillis();
 
-			if(current - timestamp < 0)
+			if(current - timestamp < 0L)
 			{
 			    if(timestamp - current > Chat.CHAT_WINDOW)
 				updateTimeStamp = false;
@@ -2713,7 +2713,7 @@ public class Kernel
 			timestamp = Miscellaneous.byteArrayToLong
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
-			if(current - timestamp < 0)
+			if(current - timestamp < 0L)
 			{
 			    if(timestamp - current > CALL_LIFETIME)
 				return 1;
@@ -2990,9 +2990,9 @@ public class Kernel
 	{
 	    if(m_callQueue.containsKey(sipHashId))
 		return Math.abs
-		    (CALL_LIFETIME / 1000 - (System.nanoTime() -
-					     m_callQueue.get(sipHashId).
-					     m_startTime) / 1000000000);
+		    (CALL_LIFETIME / 1000L - (System.nanoTime() -
+					      m_callQueue.get(sipHashId).
+					      m_startTime) / 1000000000L);
 	}
 	catch(Exception exception)
 	{
