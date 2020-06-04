@@ -1658,7 +1658,7 @@ public class Cryptography
 		SipHash sipHash = new SipHash();
 		long value = sipHash.hmac(bytes, key);
 
-		if(value == 0)
+		if(value == 0L)
 		    return "";
 
 		bytes = Miscellaneous.longToByteArray(value);
@@ -2157,7 +2157,7 @@ public class Cryptography
 		SipHash sipHash = new SipHash();
 		long value = sipHash.hmac(bytes, key);
 
-		if(value == 0)
+		if(value == 0L)
 		    return false;
 
 		bytes = Miscellaneous.longToByteArray(value);

@@ -149,12 +149,12 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CHECKBOX_TEXT_SIZE = 13;
-    private final static long STATUS_INTERVAL = 30000; // 30 seconds.
+    private final static long STATUS_INTERVAL = 30000L; // 30 seconds.
     public final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     public final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
-    public final static long CHAT_WINDOW = 60000; // 1 Minute
-    public final static long CONNECTION_STATUS_INTERVAL = 3500; // 3.5 seconds.
-    public final static long STATUS_WINDOW = 30000; // 30 seconds.
+    public final static long CHAT_WINDOW = 60000L; // 1 Minute
+    public final static long CONNECTION_STATUS_INTERVAL = 3500L; // 3.5 seconds.
+    public final static long STATUS_WINDOW = 30000L; // 30 seconds.
 
     private String nameFromCheckBoxText(String text)
     {
@@ -866,7 +866,7 @@ public class Chat extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_scheduler1.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_scheduler1.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_scheduler1.shutdownNow();
 	    }
 	    catch(Exception exception)
@@ -890,7 +890,7 @@ public class Chat extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_scheduler2.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_scheduler2.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_scheduler2.shutdownNow();
 	    }
 	    catch(Exception exception)

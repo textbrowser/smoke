@@ -39,9 +39,9 @@ public class SteamElement
     public byte m_keyStream[] = null;
     public int m_direction = DOWNLOAD;
     public int m_oid = -1;
-    public long m_fileSize = 0;
-    public long m_readInterval = 4; // 4 reads / s
-    public long m_readOffset = 0;
+    public long m_fileSize = 0L;
+    public long m_readInterval = 4L; // 4 reads / s
+    public long m_readOffset = 0L;
     public static int DOWNLOAD = 0;
     public static int UPLOAD = 1;
 

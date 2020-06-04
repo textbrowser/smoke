@@ -51,7 +51,7 @@ public class Juggernaut
     private final static JPAKEPrimeOrderGroup s_group =
 	JPAKEPrimeOrderGroups.NIST_3072;
     private final static int ITERATION_COUNT = 4096;
-    private long m_lastEventTime = 0;
+    private long m_lastEventTime = 0L;
 
     Juggernaut(String participantId, String secret, boolean isJuggerKnot)
     {

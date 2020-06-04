@@ -186,28 +186,28 @@ public class Kernel
 							608}; // 96 bytes.
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
 	864000; // Seconds in ten days.
-    private final static long CALL_INTERVAL = 250; // 0.250 seconds.
-    private final static long CALL_LIFETIME = 30000; // 30 seconds.
-    private final static long JUGGERNAUT_LIFETIME = 15000; // 15 seconds.
-    private final static long JUGGERNAUT_WINDOW = 10000; // 10 seconds.
+    private final static long CALL_INTERVAL = 250L; // 0.250 seconds.
+    private final static long CALL_LIFETIME = 30000L; // 30 seconds.
+    private final static long JUGGERNAUT_LIFETIME = 15000L; // 15 seconds.
+    private final static long JUGGERNAUT_WINDOW = 10000L; // 10 seconds.
     private final static long MESSAGES_TO_SEND_INTERVAL =
-	100; // 100 milliseconds.
-    private final static long NEIGHBORS_INTERVAL = 5000; // 5 seconds.
-    private final static long PUBLISH_KEYS_INTERVAL = 45000; // 45 seconds.
-    private final static long PURGE_INTERVAL = 30000; // 30 seconds.
-    private final static long REQUEST_MESSAGES_INTERVAL = 60000; // 60 seconds.
+	100L; // 100 milliseconds.
+    private final static long NEIGHBORS_INTERVAL = 5000L; // 5 seconds.
+    private final static long PUBLISH_KEYS_INTERVAL = 45000L; // 45 seconds.
+    private final static long PURGE_INTERVAL = 30000L; // 30 seconds.
+    private final static long REQUEST_MESSAGES_INTERVAL = 60000L; // 60 seconds.
     private final static long SHARE_SIPHASH_ID_CONFIRMATION_WINDOW =
-	15000; // 15 seconds.
-    private final static long STATUS_INTERVAL = 15000; /*
-						       ** Should be less than
-						       ** Chat.STATUS_WINDOW.
-						       */
-    private final static long STEAM_INTERVAL = 7500; // 7.5 seconds.
-    private final static long TEMPORARY_IDENTITY_INTERVAL = 5000; // 5 seconds.
+	15000L; // 15 seconds.
+    private final static long STATUS_INTERVAL = 15000L; /*
+							** Should be less than
+							** Chat.STATUS_WINDOW.
+							*/
+    private final static long STEAM_INTERVAL = 7500L; // 7.5 seconds.
+    private final static long TEMPORARY_IDENTITY_INTERVAL = 5000L; // 5 seconds.
     private final static long TEMPORARY_IDENTITY_LIFETIME =
-	60000; // 60 seconds.
+	60000L; // 60 seconds.
     private static Kernel s_instance = null;
-    public final static long JUGGERNAUT_DELAY = 7500; // 7.5 seconds.
+    public final static long JUGGERNAUT_DELAY = 7500L; // 7.5 seconds.
 
     private Kernel()
     {
@@ -217,7 +217,7 @@ public class Kernel
 	m_fireStreams = new Hashtable<> ();
 	m_juggernauts = new Hashtable<> ();
 	m_messagesToSend = new ArrayList<> ();
-	m_shareSipHashIdIdentity = new AtomicLong(0);
+	m_shareSipHashIdIdentity = new AtomicLong(0L);
 	m_shareSipHashIdIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
 	m_time = new Time();
@@ -558,7 +558,7 @@ public class Kernel
 		    {
 		    }
 		}
-	    }, 1500, CALL_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, CALL_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_messagesToSendScheduler == null)
@@ -915,7 +915,7 @@ public class Kernel
 		    {
 		    }
 		}
-	    }, 1500, MESSAGES_TO_SEND_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, MESSAGES_TO_SEND_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_neighborsScheduler == null)
@@ -934,7 +934,7 @@ public class Kernel
 		    {
 		    }
 		}
-	    }, 1500, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_publishKeysScheduler == null)
@@ -1028,7 +1028,7 @@ public class Kernel
 		    {
 		    }
 		}
-	    }, 1500, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, PUBLISH_KEYS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_purgeScheduler == null)
@@ -1081,7 +1081,7 @@ public class Kernel
 		    {
 		    }
 		}
-	    }, 1500, PURGE_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, PURGE_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_requestMessagesScheduler == null)
@@ -1096,7 +1096,7 @@ public class Kernel
 		    if(isConnected() && s_cryptography.ozoneMacKey() != null)
 			retrieveChatMessages("");
 		}
-	    }, 10000, REQUEST_MESSAGES_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 10000L, REQUEST_MESSAGES_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_statusScheduler == null)
@@ -1138,7 +1138,7 @@ public class Kernel
 		    {
 		    }
 		}
-	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_steamScheduler == null)
@@ -1157,7 +1157,7 @@ public class Kernel
 		    {
 		    }
 		}
-	    }, 1500, STEAM_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, STEAM_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_temporaryIdentityScheduler == null)
@@ -1192,7 +1192,7 @@ public class Kernel
 		       TEMPORARY_IDENTITY_LIFETIME)
 			m_shareSipHashIdIdentity.set(0);
 		}
-	    }, 1500, TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
@@ -3004,7 +3004,7 @@ public class Kernel
 	    m_callQueueMutex.readLock().unlock();
 	}
 
-	return 0;
+	return 0L;
     }
 
     public static synchronized Kernel getInstance()

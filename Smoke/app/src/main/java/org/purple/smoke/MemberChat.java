@@ -481,7 +481,7 @@ public class MemberChat extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 0, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0L, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
@@ -499,7 +499,7 @@ public class MemberChat extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_statusScheduler.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_statusScheduler.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_statusScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)

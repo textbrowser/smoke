@@ -229,7 +229,7 @@ public class Steam extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0L, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
@@ -276,7 +276,7 @@ public class Steam extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_statusScheduler.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_statusScheduler.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_statusScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)

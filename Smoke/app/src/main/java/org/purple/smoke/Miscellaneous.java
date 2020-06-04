@@ -67,7 +67,7 @@ public abstract class Miscellaneous
     public static final String RATE = "0.00 B / s";
     public static final int INTEGER_BYTES = 4;
     public static final int LONG_BYTES = 8;
-    public static final long LONG_LONG_BYTES = 8;
+    public static final long LONG_LONG_BYTES = 8L;
 
     public static String byteArrayAsHexString(byte bytes[])
     {
@@ -167,17 +167,17 @@ public abstract class Miscellaneous
 	    StringBuilder stringBuilder = new StringBuilder();
 	    long v = Integer.decode(bytes).longValue();
 
-	    if(v < 1024)
+	    if(v < 1024L)
 	    {
 		stringBuilder.append(decimalFormat.format(v));
 		stringBuilder.append(" B");
 	    }
-	    else if(v < 1048576)
+	    else if(v < 1048576L)
 	    {
 		stringBuilder.append(decimalFormat.format(v / (1024.0)));
 		stringBuilder.append(" KiB");
 	    }
-	    else if(v < 1073741824)
+	    else if(v < 1073741824L)
 	    {
 		stringBuilder.append
 		    (decimalFormat.format(v / (1048576.0)));
@@ -506,7 +506,7 @@ public abstract class Miscellaneous
 	}
 	catch(Exception exception)
 	{
-	    return 0;
+	    return 0L;
 	}
     }
 
@@ -537,7 +537,7 @@ public abstract class Miscellaneous
 	    }
 	}
 
-	return 0;
+	return 0L;
     }
 
     public static void enableChildren(View view, boolean state)
@@ -703,9 +703,9 @@ public abstract class Miscellaneous
 	    boolean purple = intent.getBooleanExtra
 		("org.purple.smoke.purple", false);
 	    long sequence = intent.getLongExtra
-		("org.purple.smoke.sequence", 1);
+		("org.purple.smoke.sequence", 1L);
 	    long timestamp = intent.getLongExtra
-		("org.purple.smoke.timestamp", 0);
+		("org.purple.smoke.timestamp", 0L);
 
 	    State.getInstance().logChatMessage
 		(message, name, sipHashId, purple, sequence, timestamp);

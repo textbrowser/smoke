@@ -204,7 +204,7 @@ public class Settings extends AppCompatActivity
     private final static int TEXTVIEW_WIDTH = 500;
     private final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 3072}; // ECDSA, RSA
-    private final static long TIMER_INTERVAL = 2500; // 2.5 seconds.
+    private final static long TIMER_INTERVAL = 2500L; // 2.5 seconds.
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {3072}; // RSA
 
     private boolean generateOzone(String string)
@@ -2481,7 +2481,7 @@ public class Settings extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_scheduler.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_scheduler.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_scheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
@@ -2949,7 +2949,7 @@ public class Settings extends AppCompatActivity
 		    {
 		    }
 		}
-	    }, 1500, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -2967,7 +2967,7 @@ public class Settings extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_scheduler.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_scheduler.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_scheduler.shutdownNow();
 	    }
 	    catch(Exception exception)

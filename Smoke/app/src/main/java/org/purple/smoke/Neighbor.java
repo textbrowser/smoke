@@ -58,12 +58,12 @@ public abstract class Neighbor
     private final ScheduledExecutorService m_sendOutboundScheduler =
 	Executors.newSingleThreadScheduledExecutor();
     private final static int LANE_WIDTH = 8 * 1024 * 1024; // 8 MiB.
-    private final static long DATA_LIFETIME = 15000; // 15 seconds.
-    private final static long PARSING_INTERVAL = 100; // 100 milliseconds.
+    private final static long DATA_LIFETIME = 15000L; // 15 seconds.
+    private final static long PARSING_INTERVAL = 100L; // 100 milliseconds.
     private final static long SEND_OUTBOUND_TIMER_INTERVAL =
-	200; // 200 milliseconds.
-    private final static long SILENCE = 90000; // 90 seconds.
-    private final static long TIMER_INTERVAL = 2500; // 2.5 seconds.
+	200L; // 200 milliseconds.
+    private final static long SILENCE = 90000L; // 90 seconds.
+    private final static long TIMER_INTERVAL = 2500L; // 2.5 seconds.
     protected AtomicBoolean m_aborted = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
@@ -85,7 +85,8 @@ public abstract class Neighbor
     protected final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB.
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
     protected final static int SO_TIMEOUT = 0; // 0 seconds.
-    protected final static long READ_SOCKET_INTERVAL = 100; // 100 milliseconds.
+    protected final static long READ_SOCKET_INTERVAL =
+	100L; // 100 milliseconds.
     public final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
 
     private void saveStatistics()
@@ -151,8 +152,8 @@ public abstract class Neighbor
 		       int oid)
     {
 	m_aborted = new AtomicBoolean(false);
-	m_bytesRead = new AtomicLong(0);
-	m_bytesWritten = new AtomicLong(0);
+	m_bytesRead = new AtomicLong(0L);
+	m_bytesWritten = new AtomicLong(0L);
 	m_capabilitiesSent = new AtomicBoolean(false);
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
@@ -259,7 +260,7 @@ public abstract class Neighbor
 		{
 		}
 	    }
-	}, 0, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
+	}, 0L, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
 	m_scheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    @Override
@@ -295,7 +296,7 @@ public abstract class Neighbor
 		{
 		}
 	    }
-	}, 0, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+	}, 0L, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    private boolean m_messageSent = false;
@@ -423,7 +424,7 @@ public abstract class Neighbor
 		{
 		}
 	    }
-	}, 0, SEND_OUTBOUND_TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+	}, 0L, SEND_OUTBOUND_TIMER_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     protected String getCapabilities()
@@ -548,7 +549,7 @@ public abstract class Neighbor
 	{
 	    try
 	    {
-		if(!m_parsingScheduler.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_parsingScheduler.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_parsingScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
@@ -568,7 +569,7 @@ public abstract class Neighbor
 
 	    try
 	    {
-		if(!m_scheduler.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_scheduler.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_scheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
@@ -589,7 +590,7 @@ public abstract class Neighbor
 	    try
 	    {
 		if(!m_sendOutboundScheduler.
-		   awaitTermination(60, TimeUnit.SECONDS))
+		   awaitTermination(60L, TimeUnit.SECONDS))
 		    m_sendOutboundScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)

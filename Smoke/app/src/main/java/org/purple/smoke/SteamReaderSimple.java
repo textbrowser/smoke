@@ -47,11 +47,11 @@ public class SteamReaderSimple extends SteamReader
 
 	m_lastBytesSent.getAndAdd(bytesSent);
 
-	if(seconds >= 1)
+	if(seconds >= 1L)
 	{
 	    m_rate.set
 		((long) ((double) (m_lastBytesSent.get()) / (double) seconds));
-	    m_lastBytesSent.set(0);
+	    m_lastBytesSent.set(0L);
 	    m_lastTime.set(System.currentTimeMillis());
 	}
     }
@@ -160,7 +160,7 @@ public class SteamReaderSimple extends SteamReader
 		    {
 		    }
 		}
-	    }, 1500, m_readInterval.get(), TimeUnit.MILLISECONDS);
+	    }, 1500L, m_readInterval.get(), TimeUnit.MILLISECONDS);
 	}
     }
 
@@ -170,7 +170,7 @@ public class SteamReaderSimple extends SteamReader
 			     long readOffset)
     {
 	super(fileName, oid, readOffset);
-	m_lastBytesSent = new AtomicLong(0);
+	m_lastBytesSent = new AtomicLong(0L);
 	m_lastTime = new AtomicLong(System.currentTimeMillis());
 	m_readInterval = new AtomicLong(1000L / Math.max(4L, readInterval));
 	prepareReader();

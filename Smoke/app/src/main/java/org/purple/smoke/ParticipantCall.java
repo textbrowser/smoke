@@ -35,7 +35,7 @@ public class ParticipantCall
     public KeyPair m_keyPair = null;
     public String m_sipHashId = "";
     public int m_participantOid = -1;
-    public long m_startTime = -1; // Calls expire.
+    public long m_startTime = -1L; // Calls expire.
     public enum Algorithms {MCELIECE, RSA}
 
     public ParticipantCall(Algorithms algorithm,

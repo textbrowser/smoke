@@ -375,16 +375,16 @@ public class TcpTlsNeighbor extends Neighbor
 			m_error = true;
 		    }
 
-		    long bytesRead = i;
+		    long bytesRead = (long) i;
 
-		    if(bytesRead < 0 || m_error)
+		    if(bytesRead < 0L || m_error)
 		    {
 			m_error = true;
 			setError("A socket read() error occurred.");
 			disconnect();
 			return;
 		    }
-		    else if(bytesRead == 0)
+		    else if(bytesRead == 0L)
 			return;
 
 		    m_bytesRead.getAndAdd(bytesRead);

@@ -265,7 +265,7 @@ public class State
 
 	try
 	{
-	    return m_bundle.getLong("chat_sequence" + sipHashId, 1);
+	    return m_bundle.getLong("chat_sequence" + sipHashId, 1L);
 	}
 	catch(Exception exception)
 	{
@@ -275,7 +275,7 @@ public class State
 	    m_bundleMutex.readLock().unlock();
 	}
 
-	return 0;
+	return 0L;
     }
 
     public static synchronized State getInstance()
@@ -344,7 +344,7 @@ public class State
 
 	try
 	{
-	    m_bundle.putLong("chat_sequence" + sipHashId, sequence + 1);
+	    m_bundle.putLong("chat_sequence" + sipHashId, sequence + 1L);
 	}
 	catch(Exception exception)
 	{
@@ -428,7 +428,7 @@ public class State
 		{
 		}
 	    }
-	}, 0, TimeUnit.MILLISECONDS);
+	}, 0L, TimeUnit.MILLISECONDS);
     }
 
     public void removeChatCheckBoxOid(int oid)

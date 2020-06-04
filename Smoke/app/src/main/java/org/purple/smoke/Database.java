@@ -155,7 +155,7 @@ public class Database extends SQLiteOpenHelper
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
     private final static long WRITE_PARTICIPANT_TIME_DELTA =
-	60000; // 60 seconds.
+	60000L; // 60 seconds.
     private static Database s_instance = null;
     public enum ExceptionLevels
     {
@@ -3762,10 +3762,10 @@ public class Database extends SQLiteOpenHelper
     public long countOfMessages(Cryptography cryptography, String sipHashId)
     {
 	if(cryptography == null || m_db == null)
-	    return -1;
+	    return -1L;
 
 	Cursor cursor = null;
-	long count = 0;
+	long count = 0L;
 
 	try
 	{
@@ -3787,7 +3787,7 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
-	    count = -1;
+	    count = -1L;
 	}
 	finally
 	{
@@ -3801,10 +3801,10 @@ public class Database extends SQLiteOpenHelper
     public long countOfSteams()
     {
 	if(m_db == null)
-	    return -1;
+	    return -1L;
 
 	Cursor cursor = null;
-	long count = 0;
+	long count = 0L;
 
 	try
 	{
@@ -3815,7 +3815,7 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
 	{
-	    count = -1;
+	    count = -1L;
 	}
 	finally
 	{
@@ -4590,7 +4590,7 @@ public class Database extends SQLiteOpenHelper
 		{
 		}
 	    }
-	}, 0, TimeUnit.MILLISECONDS);
+	}, 0L, TimeUnit.MILLISECONDS);
     }
 
     public void purgeParticipantsKeyStreams(int lifetime)
@@ -5254,7 +5254,7 @@ public class Database extends SQLiteOpenHelper
 		{
 		}
 	    }
-	}, 0, TimeUnit.MILLISECONDS);
+	}, 0L, TimeUnit.MILLISECONDS);
     }
 
     public void writeSteamStatus(final Cryptography cryptography,

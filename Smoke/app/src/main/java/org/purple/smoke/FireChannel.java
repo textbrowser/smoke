@@ -60,7 +60,7 @@ public class FireChannel extends View
 	public String m_id = Miscellaneous.byteArrayAsHexString
 	    (Cryptography.randomBytes(128));
 	public String m_name = "unknown";
-	public long m_timestamp = -1;
+	public long m_timestamp = -1L;
     }
 
     private final static Comparator<Participant>
@@ -85,7 +85,7 @@ public class FireChannel extends View
 	new Hashtable<> ();
     private final SimpleDateFormat m_simpleDateFormat =
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-    private final static long STATUS_INTERVAL = 30000;
+    private final static long STATUS_INTERVAL = 30000L;
 
     private void createSchedulers()
     {
@@ -212,7 +212,7 @@ public class FireChannel extends View
 		    {
 		    }
 		}
-	    }, 1500, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
@@ -305,7 +305,7 @@ public class FireChannel extends View
 		    try
 		    {
 			if(!m_connectionStatusScheduler.
-			   awaitTermination(60, TimeUnit.SECONDS))
+			   awaitTermination(60L, TimeUnit.SECONDS))
 			    m_connectionStatusScheduler.shutdownNow();
 		    }
 		    catch(Exception exception)
@@ -330,7 +330,7 @@ public class FireChannel extends View
 		    try
 		    {
 			if(!m_statusScheduler.
-			   awaitTermination(60, TimeUnit.SECONDS))
+			   awaitTermination(60L, TimeUnit.SECONDS))
 			    m_statusScheduler.shutdownNow();
 		    }
 		    catch(Exception exception)
@@ -496,7 +496,7 @@ public class FireChannel extends View
 		    {
 		    }
 		}
-	    }, 0, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 0L, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 
 	    prepareListeners();
 

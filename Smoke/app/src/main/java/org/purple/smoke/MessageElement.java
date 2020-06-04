@@ -45,9 +45,9 @@ public class MessageElement
     public final static int SHARE_SIPHASH_ID_MESSAGE_TYPE = 6;
     public int m_messageType = -1;
     public int m_position = -1;
-    public long m_delay = -1;
-    public long m_sequence = -1;
-    public long m_timestamp = -1;
+    public long m_delay = -1L;
+    public long m_sequence = -1L;
+    public long m_timestamp = -1L;
 
     public MessageElement()
     {

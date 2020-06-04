@@ -143,7 +143,7 @@ public class UdpMulticastNeighbor extends Neighbor
 	    try
 	    {
 		if(!m_readSocketScheduler.
-		   awaitTermination(60, TimeUnit.SECONDS))
+		   awaitTermination(60L, TimeUnit.SECONDS))
 		    m_readSocketScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
@@ -305,6 +305,6 @@ public class UdpMulticastNeighbor extends Neighbor
 		    }
 		}
 	    }
-	}, 0, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);
+	}, 0L, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);
     }
 }

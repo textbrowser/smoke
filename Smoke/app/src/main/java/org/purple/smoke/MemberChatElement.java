@@ -35,7 +35,7 @@ public class MemberChatElement
     public boolean m_messageSent = false;
     public byte m_attachment[] = null;
     public int m_oid = -1;
-    public long m_timestamp = -1;
+    public long m_timestamp = -1L;
 
     public MemberChatElement()
     {

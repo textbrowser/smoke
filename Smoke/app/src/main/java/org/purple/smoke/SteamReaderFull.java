@@ -40,8 +40,8 @@ public class SteamReaderFull extends SteamReader
     private AtomicLong m_lastResponse = null;
     private static byte m_keyStream[] = null;
     private static int PACKET_SIZE = 16384;
-    private static long READ_INTERVAL = 250; // 250 milliseconds.
-    private static long RESPONSE_WINDOW = 15000; // 15 seconds.
+    private static long READ_INTERVAL = 250L; // 250 milliseconds.
+    private static long RESPONSE_WINDOW = 15000L; // 15 seconds.
 
     private void prepareReader()
     {
@@ -90,7 +90,7 @@ public class SteamReaderFull extends SteamReader
 		    {
 		    }
 		}
-	    }, 1500, READ_INTERVAL, TimeUnit.MILLISECONDS);
+	    }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
 	}
     }
 
@@ -100,7 +100,7 @@ public class SteamReaderFull extends SteamReader
 			   long readOffset)
     {
 	super(fileName, oid, readOffset);
-	m_acknowledgedOffset = new AtomicLong(0);
+	m_acknowledgedOffset = new AtomicLong(0L);
 	m_keyStream = keyStream;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_read = new AtomicBoolean(true);

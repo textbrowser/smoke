@@ -71,7 +71,7 @@ public abstract class SteamReader
 
 	    try
 	    {
-		if(!m_reader.awaitTermination(60, TimeUnit.SECONDS))
+		if(!m_reader.awaitTermination(60L, TimeUnit.SECONDS))
 		    m_reader.shutdownNow();
 	    }
 	    catch(Exception exception)
@@ -115,7 +115,7 @@ public abstract class SteamReader
 	m_canceled = new AtomicBoolean(false);
 	m_completed = new AtomicBoolean(false);
 	m_oid = oid;
-	m_rate = new AtomicLong(0);
+	m_rate = new AtomicLong(0L);
 	m_readOffset = new AtomicLong(readOffset);
     }
 
