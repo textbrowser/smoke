@@ -85,6 +85,8 @@ public class Time
 
 			    break;
 			}
+
+		    httpURLConnection.disconnect();
 		}
 		catch(Exception exception)
 		{
