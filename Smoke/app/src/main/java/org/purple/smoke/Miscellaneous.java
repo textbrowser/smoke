@@ -893,6 +893,7 @@ public abstract class Miscellaneous
 	(Context context,
 	 DialogInterface.OnCancelListener cancelListener,
 	 String prompt,
+	 String text,
 	 String title)
     {
 	if(context == null ||
@@ -973,6 +974,7 @@ public abstract class Miscellaneous
 							 */
 	alertDialog.setTitle(title);
 	editText.setInputType(InputType.TYPE_CLASS_TEXT);
+	editText.setText(text);
 	alertDialog.setView(editText);
 	alertDialog.show();
     }

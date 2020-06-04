@@ -3477,13 +3477,14 @@ public class Settings extends AppCompatActivity
 		 replace("Delete Public Keys (", "").replace(")", "") + "?");
 	    break;
 	case ContextMenuEnumerator.NEW_NAME:
+	    String string = menuItem.getTitle().toString().
+		replace("New Name (", "").replace(")", "");
+
 	    Miscellaneous.showTextInputDialog
 		(Settings.this,
 		 listener,
-		 "Please provide a new name for " +
-		 menuItem.getTitle().toString().
-		 replace("New Name (", "").
-		 replace(")", "") + ".",
+		 "Please provide a new name for " + string + ".",
+		 string,
 		 "Name");
 	    break;
 	case ContextMenuEnumerator.REQUEST_KEYS_VIA_OZONE:

@@ -1084,6 +1084,7 @@ public class MemberChat extends AppCompatActivity
 		(MemberChat.this,
 		 listener,
 		 "Please provide a secret.",
+		 "",
 		 "Secret");
 	    break;
 	case ContextMenuEnumerator.DELETE_ALL_MESSAGES:
@@ -1119,6 +1120,7 @@ public class MemberChat extends AppCompatActivity
 		     " seconds) after this dialog is confirmed. If the " +
 		     "protocol completes correctly, new session credentials " +
 		     "will be generated.",
+		     "",
 		     "Juggernaut Secret");
 	    else
 		Miscellaneous.showTextInputDialog
@@ -1128,6 +1130,7 @@ public class MemberChat extends AppCompatActivity
 		     "will be initiated shortly (" +
 		     Kernel.JUGGERNAUT_DELAY / 1000.0 +
 		     " seconds) after this dialog is confirmed.",
+		     "",
 		     "Juggernaut Secret");
 
 	    break;
