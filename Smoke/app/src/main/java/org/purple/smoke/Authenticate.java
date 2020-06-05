@@ -267,7 +267,8 @@ public class Authenticate extends AppCompatActivity
 				    (algorithm, privateBytes, publicBytes);
 
 				if(ozoneKeyStream != null &&
-				   ozoneKeyStream.length == 96)
+				   ozoneKeyStream.length == Cryptography.
+				   CIPHER_HASH_KEYS_LENGTH)
 				{
 				    s_cryptography.setOzoneEncryptionKey
 					(Arrays.copyOfRange(ozoneKeyStream,

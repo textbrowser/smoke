@@ -475,7 +475,8 @@ public class Chat extends AppCompatActivity
 	    if(showIcons)
 	    {
 		if(participantElement.m_keyStream == null ||
-		   participantElement.m_keyStream.length != 96)
+		   participantElement.m_keyStream.length !=
+		   Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_faulty_session, 0, 0, 0);
 		else if(!state ||
@@ -552,13 +553,15 @@ public class Chat extends AppCompatActivity
 		    stringBuilder.append("Session Closed");
 		else if(participantElement.m_keyStream.length == 48)
 		    stringBuilder.append("Session Incomplete");
-		else if(participantElement.m_keyStream.length == 96)
+		else if(participantElement.m_keyStream.length ==
+			Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		    stringBuilder.append("Session Ready");
 		else
 		    stringBuilder.append("Session Faulty");
 
 		if(participantElement.m_keyStream != null &&
-		   participantElement.m_keyStream.length == 96)
+		   participantElement.m_keyStream.length ==
+		   Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		{
 		    stringBuilder.append("\n");
 
@@ -808,13 +811,15 @@ public class Chat extends AppCompatActivity
 		stringBuilder.append("Session Closed");
 	    else if(participantElement.m_keyStream.length == 48)
 		stringBuilder.append("Session Incomplete");
-	    else if(participantElement.m_keyStream.length == 96)
+	    else if(participantElement.m_keyStream.length ==
+		    Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		stringBuilder.append("Session Ready");
 	    else
 		stringBuilder.append("Session Faulty");
 
 	    if(participantElement.m_keyStream != null &&
-	       participantElement.m_keyStream.length == 96)
+	       participantElement.m_keyStream.length ==
+	       Cryptography.CIPHER_HASH_KEYS_LENGTH)
 	    {
 		stringBuilder.append("\n");
 
@@ -833,7 +838,8 @@ public class Chat extends AppCompatActivity
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
 	{
 	    if(participantElement.m_keyStream == null ||
-	       participantElement.m_keyStream.length != 96)
+	       participantElement.m_keyStream.length !=
+	       Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		checkBox1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_faulty_session, 0, 0, 0);
 	    else if(!Kernel.getInstance().isConnected() ||
@@ -1098,7 +1104,8 @@ public class Chat extends AppCompatActivity
 		    byte keyStream[] = m_databaseHelper.participantKeyStream
 			(s_cryptography, sipHashId);
 
-		    if(keyStream == null || keyStream.length != 96)
+		    if(keyStream == null ||
+		       keyStream.length != Cryptography.CIPHER_HASH_KEYS_LENGTH)
 			continue;
 
 		    Kernel.getInstance().enqueueChatMessage
@@ -1205,7 +1212,8 @@ public class Chat extends AppCompatActivity
 							    Base64.NO_WRAP).
 					     toCharArray(),
 					     1,
-					     96 * 8); // AES-256, SHA-512
+					     Cryptography.
+					     CIPHER_HASH_KEYS_LENGTH * 8);
 
 				    if(m_databaseHelper.
 				       setParticipantKeyStream(s_cryptography,

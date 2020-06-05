@@ -164,6 +164,7 @@ Completed Items
 - Remote storage of messages. SmokeStack.
 - Remove UI-related references in Settings::prepareListeners()::...::run().
 - Remove expired private keystreams.
+- Replace 96 with Cryptographic.CIPHER_HASH_KEYS_LENGTH.
 - Replace Date object with AtomicLong objects.
 - Replace INTEGER_BYTES with Integer.BYTES and LONG_BYTES with Long.BYTES.
 - Replace the (final) iterations variable in
@@ -247,4 +248,3 @@ Future Items
 Remaining Items
 
 - Full Steams, reliable Echo.
-- Replace 96 with Cryptographic.CIPHER_HASH_KEYS_LENGTH.

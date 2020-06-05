@@ -54,6 +54,5 @@ public class SteamElement
 	m_direction = UPLOAD;
 	m_fileName = fileName;
 	m_fileSize = Miscellaneous.fileSize(fileName);
-	m_keyStream = Cryptography.randomBytes(96);
     }
 }

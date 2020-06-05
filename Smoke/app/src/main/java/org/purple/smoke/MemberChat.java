@@ -289,7 +289,8 @@ public class MemberChat extends AppCompatActivity
 
 	return participantElement != null &&
 	    participantElement.m_keyStream != null &&
-	    participantElement.m_keyStream.length == 96;
+	    participantElement.m_keyStream.length ==
+	    Cryptography.CIPHER_HASH_KEYS_LENGTH;
     }
 
     private int getBytesPerPixel(Config config)
@@ -377,7 +378,8 @@ public class MemberChat extends AppCompatActivity
 		byte keyStream[] = m_databaseHelper.participantKeyStream
 		    (s_cryptography, m_sipHashId);
 
-		if(keyStream == null || keyStream.length != 96)
+		if(keyStream == null ||
+		   keyStream.length != Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		    return;
 
 		Kernel.getInstance().enqueueChatMessage
@@ -924,7 +926,8 @@ public class MemberChat extends AppCompatActivity
 					 encodeToString(bytes, Base64.NO_WRAP).
 					 toCharArray(),
 					 1,
-					 96 * 8); // AES-256, SHA-512
+					 Cryptography.CIPHER_HASH_KEYS_LENGTH *
+					 8);
 
 				m_databaseHelper.setParticipantKeyStream
 				    (s_cryptography, bytes, oid);
@@ -1013,7 +1016,8 @@ public class MemberChat extends AppCompatActivity
 				    (s_cryptography, m_sipHashId);
 
 				if(!(keyStream == null ||
-				     keyStream.length != 96))
+				     keyStream.length !=
+				     Cryptography.CIPHER_HASH_KEYS_LENGTH))
 				    Kernel.getInstance().enqueueJuggernaut
 					(string,
 					 m_sipHashId,

@@ -2641,7 +2641,7 @@ public class Kernel
 
 		return 1;
 	    }
-	    else if(pk.length == 96)
+	    else if(pk.length == Cryptography.CIPHER_HASH_KEYS_LENGTH)
 	    {
 		/*
 		** Organic Half-And-Half

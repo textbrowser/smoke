@@ -408,7 +408,7 @@ public class Juggernaut
 			 sha512(string.getBytes(StandardCharsets.UTF_8)),
 			 string.toCharArray(),
 			 1,
-			 96 * 8); // AES-256, SHA-512
+			 Cryptography.CIPHER_HASH_KEYS_LENGTH * 8);
 
 		return bytes;
 	    }
