@@ -45,12 +45,26 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <View
-                android:id="@+id/direction"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/upload" />
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/direction"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/upload" />
+
+                <View
+                    android:id="@+id/key_exchange_status"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/unlock" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

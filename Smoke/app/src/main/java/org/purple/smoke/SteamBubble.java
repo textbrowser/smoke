@@ -57,6 +57,7 @@ public class SteamBubble extends View
     private TextView m_status = null;
     private TextView m_transferRate = null;
     private View m_direction = null;
+    private View m_keyExchangeStatus = null;
     private View m_view = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -159,6 +160,7 @@ public class SteamBubble extends View
 	m_eta = (TextView) m_view.findViewById(R.id.eta);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
+	m_keyExchangeStatus = m_view.findViewById(R.id.key_exchange_status);
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
 	m_readInterval = (SeekBar) m_view.findViewById(R.id.read_interval);
 	m_readInterval.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
@@ -287,12 +289,19 @@ public class SteamBubble extends View
 	    int oid = Kernel.getInstance().nextSimpleSteamOid();
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_keyExchangeStatus.setVisibility(View.GONE);
 	    m_readInterval.setVisibility(View.VISIBLE);
 	    m_readIntervalLabel.setVisibility(View.VISIBLE);
 	}
 	else if(steamElement.m_direction == SteamElement.DOWNLOAD)
 	{
 	    m_control.setEnabled(!m_controlString.isEmpty());
+	    m_keyExchangeStatus.setBackgroundResource
+		(steamElement.m_keyStream != null &&
+		 steamElement.m_keyStream.length ==
+		 Cryptography.CIPHER_HASH_KEYS_LENGTH ?
+		 R.drawable.lock : R.drawable.unlock);
+	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
 	    m_readInterval.setVisibility(View.GONE);
 	    m_readIntervalLabel.setVisibility(View.GONE);
 	}
@@ -305,6 +314,12 @@ public class SteamBubble extends View
 	    int oid = -1;
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_keyExchangeStatus.setBackgroundResource
+		(steamElement.m_keyStream != null &&
+		 steamElement.m_keyStream.length ==
+		 Cryptography.CIPHER_HASH_KEYS_LENGTH ?
+		 R.drawable.lock : R.drawable.unlock);
+	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
 	    m_readInterval.setVisibility(View.GONE);
 	}
 
