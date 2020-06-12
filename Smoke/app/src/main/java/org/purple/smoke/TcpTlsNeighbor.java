@@ -394,9 +394,9 @@ public class TcpTlsNeighbor extends Neighbor
 			m_stringBuffer.append
 			    (new String(bytes, 0, (int) bytesRead));
 
-		    synchronized(m_parsingSchedulerObject)
+		    synchronized(m_parsingSchedulerMutex)
 		    {
-			m_parsingSchedulerObject.notify();
+			m_parsingSchedulerMutex.notify();
 		    }
 		}
 		catch(java.net.SocketException exception)

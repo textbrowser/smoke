@@ -285,9 +285,9 @@ public class UdpMulticastNeighbor extends Neighbor
 			m_stringBuffer.append
 			    (new String(byteArrayOutputStream.toByteArray()));
 
-		    synchronized(m_parsingSchedulerObject)
+		    synchronized(m_parsingSchedulerMutex)
 		    {
-			m_parsingSchedulerObject.notify();
+			m_parsingSchedulerMutex.notify();
 		    }
 		}
 		catch(Exception exception)

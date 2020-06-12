@@ -79,7 +79,7 @@ public abstract class Neighbor
     protected String m_ipPort = "";
     protected String m_version = "";
     protected final Object m_errorMutex = new Object();
-    protected final Object m_parsingSchedulerObject = new Object();
+    protected final Object m_parsingSchedulerMutex = new Object();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
     protected final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB.
@@ -187,11 +187,11 @@ public abstract class Neighbor
 		    ** Await new data.
 		    */
 
-		    synchronized(m_parsingSchedulerObject)
+		    synchronized(m_parsingSchedulerMutex)
 		    {
 			try
 			{
-			    m_parsingSchedulerObject.wait();
+			    m_parsingSchedulerMutex.wait();
 			}
 			catch(Exception exception)
 			{
@@ -540,9 +540,9 @@ public abstract class Neighbor
 	    }
 	}
 
-	synchronized(m_parsingSchedulerObject)
+	synchronized(m_parsingSchedulerMutex)
 	{
-	    m_parsingSchedulerObject.notify();
+	    m_parsingSchedulerMutex.notify();
 	}
 
 	synchronized(m_parsingScheduler)
@@ -608,9 +608,9 @@ public abstract class Neighbor
 	    m_echoQueue.clear();
 	}
 
-	synchronized(m_parsingSchedulerObject)
+	synchronized(m_parsingSchedulerMutex)
 	{
-	    m_parsingSchedulerObject.notify();
+	    m_parsingSchedulerMutex.notify();
 	}
 
 	synchronized(m_queueMutex)

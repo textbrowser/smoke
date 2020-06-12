@@ -45,6 +45,7 @@ public abstract class SteamReader
     protected AtomicLong m_rate = null;
     protected AtomicLong m_readOffset = null;
     protected FileInputStream m_fileInputStream = null;
+    protected Object m_fileInputStreamMutex = new Object();
     protected ScheduledExecutorService m_reader = null;
     protected final static Cryptography s_cryptography =
 	Cryptography.getInstance();

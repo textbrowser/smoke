@@ -87,22 +87,12 @@ public class SteamReaderSimple extends SteamReader
 				(s_cryptography, "", Miscellaneous.RATE, m_oid);
 			    return;
 			case "rewind":
-			    m_completed.set(false);
-
-			    if(m_fileInputStream != null)
-				m_fileInputStream.getChannel().position(0);
-
-			    m_readOffset.set(0);
+			    rewind();
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "paused", "", m_oid, 0);
 			    return;
 			case "rewind & resume":
-			    m_completed.set(false);
-
-			    if(m_fileInputStream != null)
-				m_fileInputStream.getChannel().position(0);
-
-			    m_readOffset.set(0);
+			    rewind();
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "transferring", "", m_oid, 0);
 			    break;
@@ -111,15 +101,25 @@ public class SteamReaderSimple extends SteamReader
 			}
 
 			if(Kernel.getInstance().nextSimpleSteamOid() != m_oid ||
-			   m_canceled.get() ||
-			   m_fileInputStream == null)
+			   m_canceled.get())
 			    return;
-			else
+
+			synchronized(m_fileInputStreamMutex)
+			{
+			    if(m_fileInputStream == null)
+				return;
+
 			    m_fileInputStream.getChannel().position
 				(m_readOffset.get());
+			}
 
 			byte bytes[] = new byte[PACKET_SIZE];
-			int offset = m_fileInputStream.read(bytes);
+			int offset = -1;
+
+			synchronized(m_fileInputStreamMutex)
+			{
+			    offset = m_fileInputStream.read(bytes);
+			}
 
 			if(offset == -1)
 			{
@@ -162,6 +162,26 @@ public class SteamReaderSimple extends SteamReader
 		}
 	    }, 1500L, m_readInterval.get(), TimeUnit.MILLISECONDS);
 	}
+    }
+
+    private void rewind()
+    {
+	m_completed.set(false);
+
+	try
+	{
+	    synchronized(m_fileInputStreamMutex)
+	    {
+		if(m_fileInputStream != null)
+		    m_fileInputStream.getChannel().position(0);
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+
+	m_lastBytesSent.set(0L);
+	m_readOffset.set(0L);
     }
 
     public SteamReaderSimple(String fileName,

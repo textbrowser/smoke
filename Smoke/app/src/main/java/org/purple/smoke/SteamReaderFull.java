@@ -55,6 +55,38 @@ public class SteamReaderFull extends SteamReader
 		{
 		    try
 		    {
+			switch(s_databaseHelper.
+			       steamStatus(m_oid).toLowerCase().trim())
+			{
+			case "":
+			    /*
+			    ** Deleted.
+			    */
+
+			    return;
+			case "completed":
+			    m_completed.set(true);
+			    return;
+			case "deleted":
+			    return;
+			case "paused":
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography, "", Miscellaneous.RATE, m_oid);
+			    return;
+			case "rewind":
+			    rewind();
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography, "paused", "", m_oid, 0);
+			    return;
+			case "rewind & resume":
+			    rewind();
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography, "transferring", "", m_oid, 0);
+			    break;
+			default:
+			    break;
+			}
+
 			if(m_completed.get() || !m_read.get())
 			{
 			    if(m_completed.get())
@@ -92,6 +124,27 @@ public class SteamReaderFull extends SteamReader
 		}
 	    }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
 	}
+    }
+
+    private void rewind()
+    {
+	m_acknowledgedOffset.set(0L);
+	m_completed.set(false);
+
+	try
+	{
+	    synchronized(m_fileInputStreamMutex)
+	    {
+		if(m_fileInputStream != null)
+		    m_fileInputStream.getChannel().position(0);
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+
+	m_lastResponse.set(0L);
+	m_readOffset.set(0L);
     }
 
     public SteamReaderFull(String fileName,

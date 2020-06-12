@@ -152,7 +152,7 @@ public class Kernel
     private byte m_chatMessageRetrievalIdentity[] = null;
     private final KernelBroadcastReceiver m_receiver =
 	new KernelBroadcastReceiver();
-    private final Object m_callSchedulerObject = new Object();
+    private final Object m_callSchedulerMutex = new Object();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
@@ -421,11 +421,11 @@ public class Kernel
 			}
 
 			if(empty)
-			    synchronized(m_callSchedulerObject)
+			    synchronized(m_callSchedulerMutex)
 			    {
 				try
 				{
-				    m_callSchedulerObject.wait();
+				    m_callSchedulerMutex.wait();
 				}
 				catch(Exception exception)
 				{
@@ -1538,9 +1538,9 @@ public class Kernel
 	    m_callQueueMutex.writeLock().unlock();
 	}
 
-	synchronized(m_callSchedulerObject)
+	synchronized(m_callSchedulerMutex)
 	{
-	    m_callSchedulerObject.notify();
+	    m_callSchedulerMutex.notify();
 	}
 
 	return true;
