@@ -1658,4 +1658,171 @@ public class Messages
 
 	return null;
     }
+
+    public static byte[] steamCall(Cryptography cryptography,
+				   String fileName,
+				   String sipHashId,
+				   byte fileIdentity[],
+				   byte keyStream[],
+				   byte publicKeyType,
+				   byte tag)
+    {
+	if(cryptography == null ||
+	   fileIdentity == null ||
+	   fileIdentity.length == 0 ||
+	   fileName.isEmpty() ||
+	   keyStream == null ||
+	   keyStream.length == 0)
+	    return null;
+
+	try
+	{
+	    /*
+	    ** [ Public Key Encryption ]
+	    */
+
+	    byte aesKey[] = Cryptography.aes256KeyBytes();
+
+	    if(aesKey == null)
+		return null;
+
+	    byte shaKey[] = Cryptography.sha512KeyBytes();
+
+	    if(shaKey == null)
+		return null;
+
+	    PublicKey publicKey = Database.getInstance().
+		publicEncryptionKeyForSipHashId(cryptography, sipHashId);
+
+	    if(publicKey == null)
+		return null;
+
+	    byte pk[] = Cryptography.pkiEncrypt
+		(publicKey,
+		 Database.getInstance().
+		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
+		 Miscellaneous.joinByteArrays(aesKey, shaKey));
+
+	    if(pk == null)
+		return null;
+
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    /*
+	    ** [ A Timestamp ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(Miscellaneous.
+				       longToByteArray(System.
+						       currentTimeMillis()),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Ephemeral Public Key ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(keyStream, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Ephemeral Public Key Type ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(new byte[] {publicKeyType},
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ File Identity ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(fileIdentity, Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ File Name ]
+	    */
+
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(fileName.getBytes(StandardCharsets.UTF_8),
+				Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Encryption Public Key Digest ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(cryptography.
+				       chatEncryptionPublicKeyDigest(),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Public Key Signature ]
+	    */
+
+	    byte signature[] = cryptography.signViaChatSignature
+		(Miscellaneous.
+		 joinByteArrays(aesKey,
+				shaKey,
+				new byte[] {tag},
+				stringBuilder.toString().getBytes(),
+				Cryptography.sha512(publicKey.getEncoded())));
+
+	    if(signature == null)
+		return null;
+
+	    stringBuilder.append
+		(Base64.encodeToString(signature, Base64.NO_WRAP));
+
+	    /*
+	    ** [ AES-256 ]
+	    */
+
+	    byte aes256[] = Cryptography.encrypt
+		(Miscellaneous.
+		 joinByteArrays(new byte[] {tag},
+				stringBuilder.toString().getBytes()),
+		 aesKey);
+
+	    if(aes256 == null)
+		return null;
+
+	    stringBuilder.delete(0, stringBuilder.length());
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, aes256), shaKey);
+
+	    if(sha512 == null)
+		return null;
+
+	    /*
+	    ** [ Destination ]
+	    */
+
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		 Cryptography.
+		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
+
+	    return Miscellaneous.joinByteArrays
+		(pk, aes256, sha512, destination);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
 }
