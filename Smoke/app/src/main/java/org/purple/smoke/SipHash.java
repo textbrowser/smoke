@@ -82,18 +82,18 @@ public class SipHash
     private void round()
     {
 	m_v0 += m_v1;
-	m_v1 = rotl(m_v1, 13);
+	m_v1 = rotl(m_v1, 13L);
 	m_v1 ^= m_v0;
-	m_v0 = rotl(m_v0, 32);
+	m_v0 = rotl(m_v0, 32L);
 	m_v2 += m_v3;
-	m_v3 = rotl(m_v3, 16);
+	m_v3 = rotl(m_v3, 16L);
 	m_v3 ^= m_v2;
 	m_v2 += m_v1;
-	m_v1 = rotl(m_v1, 17);
+	m_v1 = rotl(m_v1, 17L);
 	m_v1 ^= m_v2;
-	m_v2 = rotl(m_v2, 32);
+	m_v2 = rotl(m_v2, 32L);
 	m_v0 += m_v3;
-	m_v3 = rotl(m_v3, 21);
+	m_v3 = rotl(m_v3, 21L);
 	m_v3 ^= m_v0;
     }
 
