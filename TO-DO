@@ -247,6 +247,8 @@ Future Items
 
 Remaining Items
 
+- Automatically set the Fire name if the Alias is changed, unless
+  the name is not empty.
 - Brands (profiles).
 - Depict location of the Downloads folder in the Steam activity.
 - Full Steams, reliable Echo.
