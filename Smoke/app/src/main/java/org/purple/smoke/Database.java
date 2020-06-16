@@ -3774,8 +3774,8 @@ public class Database extends SQLiteOpenHelper
 	    stringBuilder.append("SELECT COUNT(*) FROM participants ");
 	    stringBuilder.append("WHERE LENGTH(keystream) >= ");
 	    stringBuilder.append
-		(2 * (Cryptography.CIPHER_HASH_KEYS_LENGTH +
-		      Cryptography.CIPHER_IV_LENGTH));
+		(4 * (Math.ceil(Cryptography.CIPHER_HASH_KEYS_LENGTH +
+				Cryptography.CIPHER_IV_LENGTH) / 3.0));
 	    cursor = m_db.rawQuery(stringBuilder.toString(), null);
 
 	    if(cursor != null && cursor.moveToFirst())
