@@ -182,6 +182,11 @@ public class Chat extends AppCompatActivity
 	}
     }
 
+    private boolean isParticipantPaired(int oid)
+    {
+	return m_databaseHelper.participantWithSessionKeys(oid);
+    }
+
     private void appendMessage(String message,
 			       String name,
 			       String sipHashId,
@@ -479,10 +484,10 @@ public class Chat extends AppCompatActivity
 		   Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_faulty_session, 0, 0, 0);
-		else if(!state ||
-			Math.abs(System.currentTimeMillis() -
+		else if(Math.abs(System.currentTimeMillis() -
 				 participantElement.m_lastStatusTimestamp) >
-			STATUS_WINDOW)
+			STATUS_WINDOW ||
+			!state)
 		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_offline, 0, 0, 0);
 		else
@@ -505,18 +510,19 @@ public class Chat extends AppCompatActivity
 			State.getInstance().setChatCheckBoxSelected
 			    (buttonView.getId(), isChecked);
 
-			int count1 = State.getInstance().
+			boolean isPaired = isParticipantPaired(oid);
+			int count = State.getInstance().
 			    chatCheckedParticipants();
-			int count2 = m_databaseHelper.
-			    participantsWithSessionKeys(s_cryptography);
 
-			if(count1 > 0)
+			if(count > 0)
 			    button1.setEnabled
 				(Kernel.getInstance().isConnected());
 			else
 			    button1.setEnabled(false);
 
-			if(count1 > 0 && count2 > 0)
+			if(Kernel.getInstance().availableNeighbors() > 0 &&
+			   count > 0 &&
+			   isPaired)
 			{
 			    button2.setBackgroundResource(R.drawable.send);
 			    button2.setEnabled(true);
@@ -529,6 +535,9 @@ public class Chat extends AppCompatActivity
 			}
 		    }
 		});
+
+	    if(checkBox1.isChecked())
+		button1.setEnabled(true);
 
 	    checkBox1.setId(participantElement.m_oid);
 	    checkBox1.setLayoutParams
@@ -714,10 +723,6 @@ public class Chat extends AppCompatActivity
 				button1.setEnabled(isEnabled && state);
 				button1 = (Button) findViewById
 				    (R.id.send_chat_message);
-				isEnabled = isEnabled &&
-				    m_databaseHelper.
-				    participantsWithSessionKeys
-				    (s_cryptography) > 0;
 
 				if(isEnabled)
 				{

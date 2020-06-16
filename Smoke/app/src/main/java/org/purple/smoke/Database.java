@@ -2892,6 +2892,43 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public boolean participantWithSessionKeys(int oid)
+    {
+	if(m_db == null)
+	    return false;
+
+	Cursor cursor = null;
+
+	try
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    stringBuilder.append("SELECT EXISTS(SELECT 1 FROM participants ");
+	    stringBuilder.append("WHERE LENGTH(keystream) >= ");
+	    stringBuilder.append
+		(4 * (Math.ceil(Cryptography.CIPHER_HASH_KEYS_LENGTH +
+				Cryptography.CIPHER_IV_LENGTH) / 3.0));
+	    stringBuilder.append("AND oid = ");
+	    stringBuilder.append(oid);
+	    stringBuilder.append(")");
+	    cursor = m_db.rawQuery(stringBuilder.toString(), null);
+
+	    if(cursor != null && cursor.moveToFirst())
+		return cursor.getInt(0) == 1;
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return false;
+    }
+
     public boolean setParticipantKeyStream(Cryptography cryptography,
 					   byte keyStream[],
 					   int oid)
@@ -3757,41 +3794,6 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return oid;
-    }
-
-    public int participantsWithSessionKeys(Cryptography cryptography)
-    {
-	if(cryptography == null || m_db == null)
-	    return -1;
-
-	Cursor cursor = null;
-	int count = 0;
-
-	try
-	{
-	    StringBuilder stringBuilder = new StringBuilder();
-
-	    stringBuilder.append("SELECT COUNT(*) FROM participants ");
-	    stringBuilder.append("WHERE LENGTH(keystream) >= ");
-	    stringBuilder.append
-		(4 * (Math.ceil(Cryptography.CIPHER_HASH_KEYS_LENGTH +
-				Cryptography.CIPHER_IV_LENGTH) / 3.0));
-	    cursor = m_db.rawQuery(stringBuilder.toString(), null);
-
-	    if(cursor != null && cursor.moveToFirst())
-		count = cursor.getInt(0);
-	}
-	catch(Exception exception)
-	{
-	    count = -1;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return count;
     }
 
     public long countOfMessages(Cryptography cryptography, String sipHashId)
