@@ -1691,6 +1691,25 @@ public class Kernel
 	return null;
     }
 
+    public int availableNeighbors()
+    {
+	m_neighborsMutex.readLock().lock();
+
+	try
+	{
+	    return m_neighbors.size();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
+	}
+
+	return 0;
+    }
+
     public int nextSimpleSteamOid()
     {
 	/*
