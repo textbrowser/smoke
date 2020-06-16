@@ -52,6 +52,8 @@ Completed Items
 - Determine gradle's version in the make files.
 - Determine path for any file in Steam.
 - Digest of PEM(certificate).
+- Disable Chat:Send if there is at least one selected participant without a
+  session key pair.
 - Disable Delete Fiasco Keys, Delete Public Keys on Participants context menu
   if information is not available. Not necessary.
 - Disable echo on low memory. Cannot. Instead, clear queues.
@@ -235,8 +237,6 @@ Future Items
 
 - (130 / 16 + 1) * 16 + 8 <= 154.
 - Bubbles are too narrow on wide devices.
-- Disable Chat:Send if there is at least one selected participant without a
-  session.
 - Java does not include methods for destroying private containers.
 - NTRU via BouncyCastle.
 - Names or PINs alongside SipHashes. The extra bits will increase the
@@ -247,4 +247,5 @@ Future Items
 
 Remaining Items
 
+- Brands (profiles).
 - Full Steams, reliable Echo.

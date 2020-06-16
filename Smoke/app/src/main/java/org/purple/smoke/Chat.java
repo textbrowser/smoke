@@ -440,10 +440,10 @@ public class Chat extends AppCompatActivity
     {
 	ArrayList<ParticipantElement> arrayList = State.getInstance().
 	    participants();
-	Button button1 = (Button) findViewById(R.id.call);
-	Button button2 = (Button) findViewById(R.id.send_chat_message);
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
+	final Button button1 = (Button) findViewById(R.id.call);
+	final Button button2 = (Button) findViewById(R.id.send_chat_message);
 
 	button1.setEnabled(false);
 	button2.setEnabled(false);
@@ -505,32 +505,30 @@ public class Chat extends AppCompatActivity
 			State.getInstance().setChatCheckBoxSelected
 			    (buttonView.getId(), isChecked);
 
-			Button button1 = (Button) findViewById(R.id.call);
-			Button button2 = (Button) findViewById
-			    (R.id.send_chat_message);
+			int count1 = State.getInstance().
+			    chatCheckedParticipants();
+			int count2 = m_databaseHelper.
+			    participantsWithSessionKeys(s_cryptography);
 
-			if(State.getInstance().chatCheckedParticipants() > 0)
-			{
+			if(count1 > 0)
 			    button1.setEnabled
 				(Kernel.getInstance().isConnected());
+			else
+			    button1.setEnabled(false);
+
+			if(count1 > 0 && count2 > 0)
+			{
 			    button2.setBackgroundResource(R.drawable.send);
 			    button2.setEnabled(true);
 			}
 			else
 			{
-			    button1.setEnabled(false);
 			    button2.setBackgroundResource
 				(R.drawable.send_disabled);
 			    button2.setEnabled(false);
 			}
 		    }
 		});
-
-	    if(checkBox1.isChecked())
-	    {
-		button1.setEnabled(true);
-		button2.setEnabled(true);
-	    }
 
 	    checkBox1.setId(participantElement.m_oid);
 	    checkBox1.setLayoutParams
@@ -716,13 +714,23 @@ public class Chat extends AppCompatActivity
 				button1.setEnabled(isEnabled && state);
 				button1 = (Button) findViewById
 				    (R.id.send_chat_message);
+				isEnabled = isEnabled &&
+				    m_databaseHelper.
+				    participantsWithSessionKeys
+				    (s_cryptography) > 0;
 
-				if(isEnabled && state)
+				if(isEnabled)
+				{
 				    button1.setBackgroundResource
 					(R.drawable.send);
+				    button1.setEnabled(true);
+				}
 				else
+				{
 				    button1.setBackgroundResource
 					(R.drawable.send_disabled);
+				    button1.setEnabled(false);
+				}
 			    }
 			});
 		    }
