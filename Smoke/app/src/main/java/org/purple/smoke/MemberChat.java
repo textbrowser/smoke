@@ -435,7 +435,10 @@ public class MemberChat extends AppCompatActivity
 			    null : arrayList.get(0);
 			final boolean isPaired = isParticipantPaired(arrayList);
 			final boolean state = Kernel.getInstance().
-			    isConnected();
+			    isConnected() && participantElement != null &&
+			    participantElement.m_keyStream != null &&
+			    participantElement.m_keyStream.length ==
+			    Cryptography.CIPHER_HASH_KEYS_LENGTH;
 
 			try
 			{
