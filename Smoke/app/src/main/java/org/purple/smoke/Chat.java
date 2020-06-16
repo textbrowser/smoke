@@ -153,7 +153,7 @@ public class Chat extends AppCompatActivity
     public final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     public final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     public final static long CHAT_WINDOW = 60000L; // 1 Minute
-    public final static long CONNECTION_STATUS_INTERVAL = 3500L; // 3.5 seconds.
+    public final static long CONNECTION_STATUS_INTERVAL = 2500L; // 2.5 seconds.
     public final static long STATUS_WINDOW = 30000L; // 30 seconds.
 
     private String nameFromCheckBoxText(String text)
@@ -180,11 +180,6 @@ public class Chat extends AppCompatActivity
 	{
 	    return "unknown";
 	}
-    }
-
-    private boolean isParticipantPaired(int oid)
-    {
-	return m_databaseHelper.participantWithSessionKeys(oid);
     }
 
     private void appendMessage(String message,
@@ -447,11 +442,6 @@ public class Chat extends AppCompatActivity
 	    participants();
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
-	final Button button1 = (Button) findViewById(R.id.call);
-	final Button button2 = (Button) findViewById(R.id.send_chat_message);
-
-	button1.setEnabled(false);
-	button2.setEnabled(false);
 
 	if(arrayList == null || arrayList.isEmpty())
 	{
@@ -500,6 +490,11 @@ public class Chat extends AppCompatActivity
 	    registerForContextMenu(checkBox1);
 	    checkBox1.setChecked
 		(State.getInstance().chatCheckBoxIsSelected(oid));
+	    checkBox1.setId(participantElement.m_oid);
+	    checkBox1.setLayoutParams
+		(new TableRow.LayoutParams(0,
+					   LayoutParams.WRAP_CONTENT,
+					   1));
 	    checkBox1.setOnCheckedChangeListener
 		(new CompoundButton.OnCheckedChangeListener()
 		{
@@ -509,41 +504,8 @@ public class Chat extends AppCompatActivity
 		    {
 			State.getInstance().setChatCheckBoxSelected
 			    (buttonView.getId(), isChecked);
-
-			boolean isPaired = isParticipantPaired(oid);
-			int count = State.getInstance().
-			    chatCheckedParticipants();
-
-			if(count > 0)
-			    button1.setEnabled
-				(Kernel.getInstance().isConnected());
-			else
-			    button1.setEnabled(false);
-
-			if(Kernel.getInstance().availableNeighbors() > 0 &&
-			   count > 0 &&
-			   isPaired)
-			{
-			    button2.setBackgroundResource(R.drawable.send);
-			    button2.setEnabled(true);
-			}
-			else
-			{
-			    button2.setBackgroundResource
-				(R.drawable.send_disabled);
-			    button2.setEnabled(false);
-			}
 		    }
 		});
-
-	    if(checkBox1.isChecked())
-		button1.setEnabled(true);
-
-	    checkBox1.setId(participantElement.m_oid);
-	    checkBox1.setLayoutParams
-		(new TableRow.LayoutParams(0,
-					   LayoutParams.WRAP_CONTENT,
-					   1));
 	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append(participantElement.m_name.trim());
 
@@ -707,6 +669,8 @@ public class Chat extends AppCompatActivity
 			if(Thread.currentThread().isInterrupted())
 			    return;
 
+			final boolean isEnabled = State.getInstance().
+			    chatCheckedParticipants() > 0;
 			final boolean state = Kernel.getInstance().
 			    isConnected();
 
@@ -717,14 +681,16 @@ public class Chat extends AppCompatActivity
 			    {
 				Button button1 = (Button) findViewById
 				    (R.id.call);
-				boolean isEnabled = State.getInstance().
-				    chatCheckedParticipants() > 0;
 
 				button1.setEnabled(isEnabled && state);
 				button1 = (Button) findViewById
 				    (R.id.send_chat_message);
 
-				if(isEnabled)
+				if(Kernel.getInstance().
+				   availableNeighbors() > 0 &&
+				   isEnabled &&
+				   m_databaseHelper.
+				   participantsWithSessionKeys(-1) > 0)
 				{
 				    button1.setBackgroundResource
 					(R.drawable.send);
@@ -1427,13 +1393,16 @@ public class Chat extends AppCompatActivity
 		 readParticipantOptions(s_cryptography, view.getTag().
 					toString()).
 		 contains("optional_signatures = true"));
-	    menu.add
+	    menuItem = menu.add
 		(ContextMenuEnumerator.PURGE_SESSION,
 		 view.getId(),
 		 0,
 		 "Purge Session (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")");
+	    menuItem.setEnabled
+		(m_databaseHelper.
+		 participantsWithSessionKeys(view.getId()) > 0);
 	}
 
 	menu.add(ContextMenuEnumerator.REFRESH_PARTICIPANTS_TABLE,
