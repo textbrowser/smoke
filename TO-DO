@@ -152,6 +152,7 @@ Completed Items
 - Per request, include the source in the application bundle.
 - Periodic key publishing requires more intelligence.
 - Populate Chat member list without accessing the database.
+- Populate Settings neighbors during new installation. Start timers.
 - Potential database locking problem with repeated replacement of neighbor
   objects. Replaced replace() with intelligent insert().
 - Prepare for Chat, E-Mail, etc. public key pairs.
@@ -253,4 +254,3 @@ Remaining Items
 - Chat:Send states.
 - Depict location of the Downloads folder in the Steam activity.
 - Full Steams, reliable Echo.
-- Populate Settings neighbors during new installation.

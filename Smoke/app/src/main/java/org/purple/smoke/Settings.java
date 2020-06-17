@@ -3035,8 +3035,8 @@ public class Settings extends AppCompatActivity
 
 	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 
-	if(m_databaseHelper.readSetting(null, "automatic_neighbors_refresh").
-	   isEmpty())
+	if(m_databaseHelper.
+	   readSetting(null, "automatic_neighbors_refresh").isEmpty())
 	{
 	    checkBox1.setChecked(true);
 	    m_databaseHelper.writeSetting
@@ -3047,6 +3047,9 @@ public class Settings extends AppCompatActivity
 	    checkBox1.setChecked(true);
 	else
 	    checkBox1.setChecked(false);
+
+	if(checkBox1.isChecked())
+	    startTimers();
 
 	checkBox1 = (CheckBox) findViewById(R.id.echo);
 
