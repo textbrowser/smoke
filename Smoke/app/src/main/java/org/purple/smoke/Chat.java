@@ -673,6 +673,10 @@ public class Chat extends AppCompatActivity
 			    chatCheckedParticipants() > 0;
 			final boolean state = Kernel.getInstance().
 			    isConnected();
+			final int availableNeighbors = Kernel.getInstance().
+			    availableNeighbors();
+			final int participantsWithSessionKeys =
+			    m_databaseHelper.participantsWithSessionKeys(-1);
 
 			Chat.this.runOnUiThread(new Runnable()
 			{
@@ -686,11 +690,9 @@ public class Chat extends AppCompatActivity
 				button1 = (Button) findViewById
 				    (R.id.send_chat_message);
 
-				if(Kernel.getInstance().
-				   availableNeighbors() > 0 &&
+				if(availableNeighbors > 0 &&
 				   isEnabled &&
-				   m_databaseHelper.
-				   participantsWithSessionKeys(-1) > 0)
+				   participantsWithSessionKeys > 0)
 				{
 				    button1.setBackgroundResource
 					(R.drawable.send);

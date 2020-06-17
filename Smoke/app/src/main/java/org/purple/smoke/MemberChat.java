@@ -436,6 +436,8 @@ public class MemberChat extends AppCompatActivity
 			final boolean isPaired = isParticipantPaired(arrayList);
 			final boolean state = Kernel.getInstance().
 			    isConnected();
+			final int availableNeighbors = Kernel.getInstance().
+			    availableNeighbors();
 
 			try
 			{
@@ -447,9 +449,7 @@ public class MemberChat extends AppCompatActivity
 				    Button button = (Button) findViewById
 					(R.id.send_chat_message);
 
-				    if(Kernel.getInstance().
-				       availableNeighbors() > 0 &&
-				       isPaired)
+				    if(availableNeighbors > 0 && isPaired)
 				    {
 					button.setBackgroundResource
 					    (R.drawable.send);
