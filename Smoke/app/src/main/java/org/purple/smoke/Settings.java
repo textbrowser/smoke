@@ -1872,6 +1872,12 @@ public class Settings extends AppCompatActivity
 		}
 		else
 		{
+		    if(m_databaseHelper.
+		       readSetting(s_cryptography, "fire_user_name").trim().
+		       isEmpty())
+			m_databaseHelper.writeSetting
+			    (s_cryptography, "fire_user_name", alias);
+
 		    m_databaseHelper.writeSetting
 			(s_cryptography, "alias", alias);
 		    s_cryptography.prepareSipHashIds(alias);
