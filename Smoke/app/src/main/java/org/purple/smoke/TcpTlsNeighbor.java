@@ -308,7 +308,8 @@ public class TcpTlsNeighbor extends Neighbor
 	else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 	    m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
 	else
-	    m_protocols = new String[] {"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
+	    m_protocols = new String[]
+		{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
 
 	m_proxyIpAddress = proxyIpAddress;
 

@@ -299,7 +299,6 @@ public abstract class Neighbor
 	}, 0L, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
-	    private boolean m_messageSent = false;
 	    private long m_accumulatedTime = System.nanoTime();
 
 	    @Override
