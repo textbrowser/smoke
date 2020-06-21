@@ -244,6 +244,7 @@ public class TcpTlsNeighbor extends Neighbor
 			(HandshakeCompletedEvent event)
 		    {
 			m_handshakeCompleted.set(true);
+			send(getIdentities()); // Awaken the socket.
 			scheduleSend(getCapabilities());
 			scheduleSend(getIdentities());
 		    }
