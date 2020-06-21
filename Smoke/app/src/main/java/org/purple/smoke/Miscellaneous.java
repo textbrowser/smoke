@@ -55,10 +55,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.zip.Deflater;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -320,15 +322,13 @@ public abstract class Miscellaneous
 	{
 	    ByteArrayOutputStream byteArrayOutputStream =
 		new ByteArrayOutputStream(bytes.length);
+	    OutputStream outputStream = null;
 
 	    try
 	    {
-		try(GZIPOutputStream gzipOutputStream =
-		    new GZIPOutputStream(byteArrayOutputStream))
-		{
-		    gzipOutputStream.write(bytes);
-		}
-
+		outputStream = new GZIPOutputStream(byteArrayOutputStream)
+		    {{def.setLevel(Deflater.BEST_COMPRESSION);}};
+		outputStream.write(bytes);
 		return byteArrayOutputStream.toByteArray();
 	    }
 	    catch(Exception exception)
@@ -339,6 +339,15 @@ public abstract class Miscellaneous
 		try
 		{
 		    byteArrayOutputStream.close();
+		}
+		catch(Exception exception)
+		{
+		}
+
+		try
+		{
+		    if(outputStream != null)
+			outputStream.close();
 		}
 		catch(Exception exception)
 		{
