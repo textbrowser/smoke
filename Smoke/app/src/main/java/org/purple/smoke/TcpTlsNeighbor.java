@@ -44,6 +44,7 @@ import javax.net.ssl.X509TrustManager;
 
 public class TcpTlsNeighbor extends Neighbor
 {
+    private AtomicBoolean m_handshakeCompleted = null;
     private AtomicBoolean m_isValidCertificate = null;
     private InetSocketAddress m_proxyInetSocketAddress = null;
     private SSLSocket m_socket = null;
@@ -93,11 +94,10 @@ public class TcpTlsNeighbor extends Neighbor
 	try
 	{
 	    return isNetworkConnected() &&
+		m_handshakeCompleted.get() &&
 		m_isValidCertificate.get() &&
 		m_socket != null &&
-		!m_socket.isClosed() &&
-		m_socket.getSession() != null &&
-		m_socket.getSession().isValid();
+		!m_socket.isClosed();
 	}
 	catch(Exception exception)
 	{
@@ -159,6 +159,7 @@ public class TcpTlsNeighbor extends Neighbor
     {
 	disconnect();
 	super.abort();
+	m_handshakeCompleted.set(false);
 	m_isValidCertificate.set(false);
 
 	synchronized(m_readSocketScheduler)
@@ -197,6 +198,7 @@ public class TcpTlsNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
+	    m_handshakeCompleted.set(false);
 	    m_lastParsed.set(System.currentTimeMillis());
 	    m_lastTimeRead.set(System.nanoTime());
 
@@ -241,6 +243,7 @@ public class TcpTlsNeighbor extends Neighbor
 		    public void handshakeCompleted
 			(HandshakeCompletedEvent event)
 		    {
+			m_handshakeCompleted.set(true);
 			scheduleSend(getCapabilities());
 			scheduleSend(getIdentities());
 		    }
@@ -277,6 +280,7 @@ public class TcpTlsNeighbor extends Neighbor
 	{
 	    m_bytesRead.set(0);
 	    m_bytesWritten.set(0);
+	    m_handshakeCompleted.set(false);
 	    m_isValidCertificate.set(false);
 	    m_lastParsed.set(0);
 	    m_socket = null;
@@ -295,6 +299,7 @@ public class TcpTlsNeighbor extends Neighbor
 			  int oid)
     {
 	super(passthrough, ipAddress, ipPort, scopeId, "TCP", version, oid);
+	m_handshakeCompleted = new AtomicBoolean(false);
 	m_isValidCertificate = new AtomicBoolean(false);
 
 	if(Build.VERSION.RELEASE.startsWith("10"))
