@@ -515,8 +515,7 @@ public abstract class Neighbor
 	    NetworkInfo networkInfo = connectivityManager.
 		getActiveNetworkInfo();
 
-	    return networkInfo.getState() ==
-		android.net.NetworkInfo.State.CONNECTED;
+	    return networkInfo != null && networkInfo.isConnected();
 	}
 	catch(Exception exception)
 	{
