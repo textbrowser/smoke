@@ -139,6 +139,7 @@ public class Kernel
     private Hashtable<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
+    private ScheduledExecutorService m_networkStatusScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
     private ScheduledExecutorService m_publishKeysScheduler = null;
     private ScheduledExecutorService m_purgeScheduler = null;
@@ -193,6 +194,7 @@ public class Kernel
     private final static long MESSAGES_TO_SEND_INTERVAL =
 	100L; // 100 milliseconds.
     private final static long NEIGHBORS_INTERVAL = 5000L; // 5 seconds.
+    private final static long NETWORK_STATUS_INTERVAL = 500L; // 0.5 seconds.
     private final static long PUBLISH_KEYS_INTERVAL = 45000L; // 45 seconds.
     private final static long PURGE_INTERVAL = 30000L; // 30 seconds.
     private final static long REQUEST_MESSAGES_INTERVAL = 60000L; // 60 seconds.
@@ -745,9 +747,8 @@ public class Kernel
 					 null,
 					 messageElement.m_timestamp);
 				    Miscellaneous.sendBroadcast
-					(new Intent("org.purple.smoke." +
-						    "notify_data_set_" +
-						    "changed"));
+					("org.purple.smoke." +
+					 "notify_data_set_changed");
 				}
 
 				break;
@@ -768,9 +769,8 @@ public class Kernel
 					 null,
 					 messageElement.m_timestamp);
 				    Miscellaneous.sendBroadcast
-					(new Intent("org.purple.smoke." +
-						    "notify_data_set_" +
-						    "changed"));
+					("org.purple.smoke." +
+					 "notify_data_set_changed");
 				}
 
 				break;
@@ -935,6 +935,31 @@ public class Kernel
 		    }
 		}
 	    }, 1500L, NEIGHBORS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+
+	if(m_networkStatusScheduler == null)
+	{
+	    m_networkStatusScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+	    m_networkStatusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			if(isConnected())
+			    Miscellaneous.sendBroadcast
+				("org.purple.smoke.network_connected");
+			else
+			    Miscellaneous.sendBroadcast
+				("org.purple.smoke.network_disconnected");
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 1500L, NETWORK_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_publishKeysScheduler == null)
@@ -1525,7 +1550,7 @@ public class Kernel
 		 null,
 		 System.currentTimeMillis());
 	    Miscellaneous.sendBroadcast
-		(new Intent("org.purple.smoke.notify_data_set_changed"));
+		("org.purple.smoke.notify_data_set_changed");
 	    m_callQueue.put
 		(sipHashId,
 		 new ParticipantCall(algorithm, sipHashId, participantOid));
@@ -1604,21 +1629,8 @@ public class Kernel
 
     public boolean isConnected()
     {
-	try
-	{
-	    ConnectivityManager connectivityManager = (ConnectivityManager)
-		Smoke.getApplication().getApplicationContext().
-		getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = connectivityManager.
-		getActiveNetworkInfo();
-
-	    if(networkInfo.getState() !=
-	       android.net.NetworkInfo.State.CONNECTED)
-		return false;
-	}
-	catch(Exception exception)
-	{
-	}
+	if(!isNetworkConnected())
+	    return false;
 
 	m_neighborsMutex.readLock().lock();
 
@@ -1644,6 +1656,25 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
+	}
+
+	return false;
+    }
+
+    public boolean isNetworkConnected()
+    {
+	try
+	{
+	    ConnectivityManager connectivityManager = (ConnectivityManager)
+		Smoke.getApplication().getApplicationContext().
+		getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connectivityManager.
+		getActiveNetworkInfo();
+
+	    return networkInfo != null && networkInfo.isConnected();
+	}
+	catch(Exception exception)
+	{
 	}
 
 	return false;
@@ -2046,7 +2077,7 @@ public class Kernel
 
 		    State.getInstance().populateParticipants();
 		    Miscellaneous.sendBroadcast
-			(new Intent("org.purple.smoke.populate_participants"));
+			("org.purple.smoke.populate_participants");
 
 		    /*
 		    ** Response-share.
@@ -2394,8 +2425,7 @@ public class Kernel
 			     null,
 			     System.currentTimeMillis());
 			Miscellaneous.sendBroadcast
-			    (new Intent("org.purple.smoke." +
-					"notify_data_set_changed"));
+			    ("org.purple.smoke.notify_data_set_changed");
 		    }
 		    else
 		    {
@@ -2432,8 +2462,7 @@ public class Kernel
 				 System.currentTimeMillis());
 
 			Miscellaneous.sendBroadcast
-			    (new Intent("org.purple.smoke." +
-					"notify_data_set_changed"));
+			    ("org.purple.smoke.notify_data_set_changed");
 		    }
 
 		    return 1;
@@ -2963,8 +2992,7 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);
 		    Miscellaneous.sendBroadcast(intent);
 		    Miscellaneous.sendBroadcast
-			(new Intent("org.purple.smoke." +
-				    "notify_data_set_changed"));
+			("org.purple.smoke.notify_data_set_changed");
 
 		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
@@ -2990,7 +3018,8 @@ public class Kernel
 		    */
 
 		    Miscellaneous.sendBroadcast
-			(new Intent("org.purple.smoke.populate_participants"));
+			("org.purple.smoke.populate_participants");
+		    State.getInstance().populateParticipants();
 		    return 1;
 		}
 	    }
@@ -3357,8 +3386,7 @@ public class Kernel
 
     public void notifyOfDataSetChange()
     {
-	Miscellaneous.sendBroadcast
-	    (new Intent("org.purple.smoke.notify_data_set_changed"));
+	Miscellaneous.sendBroadcast("org.purple.smoke.notify_data_set_changed");
     }
 
     public void resendMessage(String sipHashId, int position)

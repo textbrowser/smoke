@@ -64,9 +64,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
 {
@@ -120,9 +117,56 @@ public class Chat extends AppCompatActivity
 		    (intent.getStringExtra("org.purple.smoke.name"),
 		     intent.getStringExtra("org.purple.smoke.sipHashId"),
 		     intent.getBooleanExtra("org.purple.smoke.initial", false),
-		     intent.getBooleanExtra("org.purple.smoke.refresh", false),
+		     intent.getBooleanExtra("org.purple.smoke.refresh", true),
 		     intent.getCharExtra("org.purple.smoke.keyType", 'R'));
 		break;
+	    case "org.purple.smoke.network_connected":
+	    {
+		Button button1 = (Button) findViewById(R.id.call);
+		Button button2 = (Button) findViewById(R.id.send_chat_message);
+		int chatCheckedParticipants = State.getInstance().
+		    chatCheckedParticipants();
+
+		if(chatCheckedParticipants > 0)
+		{
+		    button1.setEnabled(true);
+		    button2.setBackgroundResource(R.drawable.send);
+		    button2.setEnabled(true);
+		}
+		else
+		{
+		    button1.setEnabled(false);
+		    button2.setBackgroundResource(R.drawable.warning);
+		    button2.setEnabled(false);
+		}
+
+		break;
+	    }
+	    case "org.purple.smoke.network_disconnected":
+	    {
+		Button button1 = (Button) findViewById(R.id.call);
+		Button button2 = (Button) findViewById(R.id.send_chat_message);
+		int chatCheckedParticipants = State.getInstance().
+		    chatCheckedParticipants();
+
+		button1.setEnabled(false);
+
+		if(Kernel.getInstance().availableNeighbors() > 0 &&
+		   chatCheckedParticipants > 0)
+		{
+		    button2.setBackgroundResource(R.drawable.send);
+		    button2.setEnabled(false);
+		}
+		else
+		{
+		    button1.setEnabled(false);
+		    button2.setBackgroundResource(R.drawable.warning);
+		    button2.setEnabled(false);
+		}
+
+		break;
+	    }
+	    case "org.purple.smoke.populate_participants":
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		populateParticipants();
@@ -138,8 +182,6 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
-    private ScheduledExecutorService m_scheduler1 = null;
-    private ScheduledExecutorService m_scheduler2 = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -654,108 +696,6 @@ public class Chat extends AppCompatActivity
         });
     }
 
-    private void prepareTimers()
-    {
-	if(m_scheduler1 == null)
-	{
-	    m_scheduler1 = Executors.newSingleThreadScheduledExecutor();
-	    m_scheduler1.scheduleAtFixedRate(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    try
-		    {
-			if(Thread.currentThread().isInterrupted())
-			    return;
-
-			final boolean isEnabled = State.getInstance().
-			    chatCheckedParticipants() > 0;
-			final boolean state = Kernel.getInstance().
-			    isConnected();
-			final int availableNeighbors = Kernel.getInstance().
-			    availableNeighbors();
-			final int participantsWithSessionKeys =
-			    m_databaseHelper.participantsWithSessionKeys(-1);
-
-			Chat.this.runOnUiThread(new Runnable()
-			{
-			    @Override
-			    public void run()
-			    {
-				Button button1 = (Button) findViewById
-				    (R.id.call);
-
-				button1.setEnabled(isEnabled && state);
-				button1 = (Button) findViewById
-				    (R.id.send_chat_message);
-
-				if(availableNeighbors > 0 &&
-				   isEnabled &&
-				   participantsWithSessionKeys > 0)
-				{
-				    button1.setBackgroundResource
-					(R.drawable.send);
-				    button1.setEnabled(true);
-				}
-				else
-				{
-				    button1.setBackgroundResource
-					(R.drawable.send_disabled);
-				    button1.setEnabled(false);
-				}
-			    }
-			});
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		}
-	    }, 0, CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
-	}
-
-	if(m_scheduler2 == null)
-	{
-	    m_scheduler2 = Executors.newSingleThreadScheduledExecutor();
-	    m_scheduler2.scheduleAtFixedRate(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    try
-		    {
-			if(Thread.currentThread().isInterrupted() ||
-			   !m_databaseHelper.
-			   readSetting(null, "show_chat_icons").equals("true"))
-			    return;
-
-			ArrayList<String> arrayList =
-			    m_databaseHelper.readSipHashIdStrings
-			    (s_cryptography);
-
-			if(arrayList == null || arrayList.isEmpty())
-			    return;
-
-			for(final String string : arrayList)
-			    Chat.this.runOnUiThread(new Runnable()
-			    {
-				@Override
-				public void run()
-				{
-				    refreshCheckBox(string);
-				}
-			    });
-
-			arrayList.clear();
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		}
-	    }, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
-	}
-    }
-
     private void refreshCheckBox(String sipHashId)
     {
 	CheckBox checkBox1 = (CheckBox)
@@ -837,57 +777,6 @@ public class Chat extends AppCompatActivity
 	}
 
 	arrayList.clear();
-    }
-
-    private void releaseResources()
-    {
-	if(m_scheduler1 != null)
-	{
-	    try
-	    {
-		m_scheduler1.shutdown();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    try
-	    {
-		if(!m_scheduler1.awaitTermination(60L, TimeUnit.SECONDS))
-		    m_scheduler1.shutdownNow();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	    finally
-	    {
-		m_scheduler1 = null;
-	    }
-	}
-
-	if(m_scheduler2 != null)
-	{
-	    try
-	    {
-		m_scheduler2.shutdown();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    try
-	    {
-		if(!m_scheduler2.awaitTermination(60L, TimeUnit.SECONDS))
-		    m_scheduler2.shutdownNow();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	    finally
-	    {
-		m_scheduler2 = null;
-	    }
-	}
     }
 
     private void requestMessages()
@@ -1318,6 +1207,7 @@ public class Chat extends AppCompatActivity
 	    switch(groupId)
 	    {
 	    case ContextMenuEnumerator.REFRESH_PARTICIPANTS_TABLE:
+		State.getInstance().populateParticipants();
 		populateParticipants();
 		break;
 	    case ContextMenuEnumerator.RETRIEVE_MESSAGES:
@@ -1542,7 +1432,6 @@ public class Chat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
-	releaseResources();
 	saveState();
     }
 
@@ -1558,6 +1447,9 @@ public class Chat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.busy_call");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
+	    intentFilter.addAction("org.purple.smoke.populate_participants");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.time");
@@ -1567,7 +1459,6 @@ public class Chat extends AppCompatActivity
 	}
 
 	populateChat();
-	prepareTimers();
     }
 
     @Override
