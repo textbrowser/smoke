@@ -60,10 +60,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public abstract class Miscellaneous
 {
@@ -321,19 +319,17 @@ public abstract class Miscellaneous
 
 	try
 	{
-	    ByteArrayOutputStream byteArrayOutputStream = null;
-	    Deflater deflater = null;
-	    DeflaterOutputStream deflaterOutputStream = null;
+	    ByteArrayOutputStream byteArrayOutputStream =
+		new ByteArrayOutputStream(bytes.length);
 
 	    try
 	    {
-		byteArrayOutputStream = new ByteArrayOutputStream();
-		deflater = new Deflater();
-		deflater.setLevel(Deflater.BEST_COMPRESSION);
-		deflaterOutputStream = new DeflaterOutputStream
-		    (byteArrayOutputStream, deflater);
-		deflaterOutputStream.write(bytes);
-		deflaterOutputStream.finish();
+		try(GZIPOutputStream gzipOutputStream =
+		    new GZIPOutputStream(byteArrayOutputStream))
+		{
+		    gzipOutputStream.write(bytes);
+		}
+
 		return byteArrayOutputStream.toByteArray();
 	    }
 	    catch(Exception exception)
@@ -343,17 +339,7 @@ public abstract class Miscellaneous
 	    {
 		try
 		{
-		    if(byteArrayOutputStream != null)
-			byteArrayOutputStream.close();
-		}
-		catch(Exception exception)
-		{
-		}
-
-		try
-		{
-		    if(deflaterOutputStream != null)
-			deflaterOutputStream.close();
+		    byteArrayOutputStream.close();
 		}
 		catch(Exception exception)
 		{
@@ -374,18 +360,24 @@ public abstract class Miscellaneous
 
 	try
 	{
+	    ByteArrayInputStream byteArrayInputStream = null;
 	    ByteArrayOutputStream byteArrayOutputStream = null;
-	    Inflater inflater = null;
-	    InflaterOutputStream inflaterOutputStream = null;
 
 	    try
 	    {
-		byteArrayOutputStream =  new ByteArrayOutputStream();
-		inflater = new Inflater();
-		inflater.setInput(bytes);
-		inflaterOutputStream = new InflaterOutputStream
-		    (byteArrayOutputStream, inflater);
-		inflaterOutputStream.flush();
+		byteArrayInputStream = new ByteArrayInputStream(bytes);
+		byteArrayOutputStream = new ByteArrayOutputStream(); 
+
+		try(GZIPInputStream gzipInputStream =
+		    new GZIPInputStream(byteArrayInputStream))
+		{
+		    byte buffer[] = new byte[4096];
+		    int rc = 0;
+
+		    while((rc = gzipInputStream.read(buffer)) > 0)
+			byteArrayOutputStream.write(buffer, 0, rc);
+		}
+
 		return byteArrayOutputStream.toByteArray();
 	    }
 	    catch(Exception exception)
@@ -395,8 +387,8 @@ public abstract class Miscellaneous
 	    {
 		try
 		{
-		    if(byteArrayOutputStream != null)
-			byteArrayOutputStream.close();
+		    if(byteArrayInputStream != null)
+			byteArrayInputStream.close();
 		}
 		catch(Exception exception)
 		{
@@ -404,8 +396,8 @@ public abstract class Miscellaneous
 
 		try
 		{
-		    if(inflaterOutputStream != null)
-			inflaterOutputStream.close();
+		    if(byteArrayOutputStream != null)
+			byteArrayOutputStream.close();
 		}
 		catch(Exception exception)
 		{
