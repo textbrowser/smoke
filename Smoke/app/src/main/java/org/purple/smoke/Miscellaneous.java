@@ -366,7 +366,7 @@ public abstract class Miscellaneous
 	    try
 	    {
 		byteArrayInputStream = new ByteArrayInputStream(bytes);
-		byteArrayOutputStream = new ByteArrayOutputStream(); 
+		byteArrayOutputStream = new ByteArrayOutputStream();
 
 		try(GZIPInputStream gzipInputStream =
 		    new GZIPInputStream(byteArrayInputStream))
