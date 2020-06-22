@@ -2242,8 +2242,7 @@ public class Database extends SQLiteOpenHelper
 	return status;
     }
 
-    public String writeParticipant(Cryptography cryptography,
-				   byte data[])
+    public String writeParticipant(Cryptography cryptography, byte data[])
     {
 	if(cryptography == null || data == null || m_db == null)
 	    return "";

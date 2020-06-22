@@ -378,7 +378,7 @@ public abstract class Miscellaneous
 		try(GZIPInputStream gzipInputStream =
 		    new GZIPInputStream(byteArrayInputStream))
 		{
-		    byte buffer[] = new byte[1024];
+		    byte buffer[] = new byte[4096];
 		    int rc = 0;
 
 		    while((rc = gzipInputStream.read(buffer)) > 0)
