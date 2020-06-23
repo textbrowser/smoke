@@ -55,14 +55,6 @@ import java.util.concurrent.TimeUnit;
 
 public class FireChannel extends View
 {
-    private static class Participant
-    {
-	public String m_id = Miscellaneous.byteArrayAsHexString
-	    (Cryptography.randomBytes(128));
-	public String m_name = "unknown";
-	public long m_timestamp = -1L;
-    }
-
     private final static Comparator<Participant>
 	s_participantComparator = new Comparator<Participant> ()
 	{
@@ -72,6 +64,14 @@ public class FireChannel extends View
 		return p1.m_name.compareTo(p2.m_name);
 	    }
 	};
+
+    private static class Participant
+    {
+	public String m_id = Miscellaneous.byteArrayAsHexString
+	    (Cryptography.randomBytes(128));
+	public String m_name = "unknown";
+	public long m_timestamp = -1L;
+    }
 
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
