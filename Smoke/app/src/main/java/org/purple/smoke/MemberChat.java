@@ -70,9 +70,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MemberChat extends AppCompatActivity
@@ -138,6 +135,11 @@ public class MemberChat extends AppCompatActivity
 			 intent,
 			 findViewById(R.id.main_layout));
 
+		break;
+	    case "org.purple.smoke.half_and_half_call":
+	    case "org.purple.smoke.network_connected":
+	    case "org.purple.smoke.network_disconnected":
+		prepareStatus();
 		break;
 	    case "org.purple.smoke.notify_data_set_changed":
 		try
@@ -243,7 +245,6 @@ public class MemberChat extends AppCompatActivity
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter<?> m_adapter = null;
-    private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_name = "0000-0000-0000-0000";
     private String m_sipHashId = m_name;
@@ -412,114 +413,47 @@ public class MemberChat extends AppCompatActivity
 	});
     }
 
-    private void prepareSchedulers()
+    private void prepareStatus()
     {
-	if(m_statusScheduler == null)
+	try
 	{
-	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
-	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    ArrayList<ParticipantElement> arrayList =
+		m_databaseHelper.readParticipants(s_cryptography, m_sipHashId);
+	    Button button = (Button) findViewById(R.id.send_chat_message);
+	    ParticipantElement participantElement =
+		arrayList == null || arrayList.isEmpty() ?
+		null : arrayList.get(0);
+	    boolean isPaired = isParticipantPaired(arrayList);
+	    boolean state = Kernel.getInstance().isConnected();
+	    int availableNeighbors = Kernel.getInstance().availableNeighbors();
+
+	    if(availableNeighbors > 0 && isPaired)
 	    {
-		@Override
-		public void run()
-		{
-		    try
-		    {
-			if(Thread.currentThread().isInterrupted())
-			    return;
+		button.setBackgroundResource(R.drawable.send);
+		button.setEnabled(true);
+	    }
+	    else
+	    {
+		button.setBackgroundResource(R.drawable.warning);
+		button.setEnabled(false);
+	    }
 
-			ArrayList<ParticipantElement> arrayList =
-			    m_databaseHelper.readParticipants
-			    (s_cryptography, m_sipHashId);
-			final ParticipantElement participantElement =
-			    arrayList == null || arrayList.isEmpty() ?
-			    null : arrayList.get(0);
-			final boolean isPaired = isParticipantPaired(arrayList);
-			final boolean state = Kernel.getInstance().
-			    isConnected();
-			final int availableNeighbors = Kernel.getInstance().
-			    availableNeighbors();
+	    button = (Button) findViewById(R.id.status);
 
-			try
-			{
-			    MemberChat.this.runOnUiThread(new Runnable()
-			    {
-				@Override
-				public void run()
-				{
-				    Button button = (Button) findViewById
-					(R.id.send_chat_message);
+	    if(!isPaired)
+		button.setBackgroundResource(R.drawable.chat_faulty_session);
+	    else if(Math.abs(System.currentTimeMillis() -
+			     participantElement.m_lastStatusTimestamp) >
+		    Chat.STATUS_WINDOW || !state)
+		button.setBackgroundResource(R.drawable.chat_status_offline);
+	    else
+		button.setBackgroundResource(R.drawable.chat_status_online);
 
-				    if(availableNeighbors > 0 && isPaired)
-				    {
-					button.setBackgroundResource
-					    (R.drawable.send);
-					button.setEnabled(true);
-				    }
-				    else
-				    {
-					button.setBackgroundResource
-					    (R.drawable.send_disabled);
-					button.setEnabled(false);
-				    }
-
-				    button = (Button) findViewById
-					(R.id.status);
-
-				    if(!isPaired)
-					button.setBackgroundResource
-					    (R.drawable.chat_faulty_session);
-				    else if(Math.abs(System.
-						     currentTimeMillis() -
-						     participantElement.
-						     m_lastStatusTimestamp) >
-					    Chat.STATUS_WINDOW || !state)
-					button.setBackgroundResource
-					    (R.drawable.chat_status_offline);
-				    else
-					button.setBackgroundResource
-					    (R.drawable.chat_status_online);
-				}
-			    });
-			}
-			catch(Exception exception)
-			{
-			}
-
-			if(arrayList != null)
-			    arrayList.clear();
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		}
-	    }, 0L, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	    if(arrayList != null)
+		arrayList.clear();
 	}
-    }
-
-    private void releaseResources()
-    {
-	if(m_statusScheduler != null)
+	catch(Exception exception)
 	{
-	    try
-	    {
-		m_statusScheduler.shutdown();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    try
-	    {
-		if(!m_statusScheduler.awaitTermination(60L, TimeUnit.SECONDS))
-		    m_statusScheduler.shutdownNow();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	    finally
-	    {
-		m_statusScheduler = null;
-	    }
 	}
     }
 
@@ -1468,7 +1402,6 @@ public class MemberChat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
-	releaseResources();
 	saveState();
     }
 
@@ -1500,6 +1433,9 @@ public class MemberChat extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_local_message");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction("org.purple.smoke.notify_data_set_changed");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
@@ -1508,8 +1444,6 @@ public class MemberChat extends AppCompatActivity
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
-
-	prepareSchedulers();
 
 	try
 	{
