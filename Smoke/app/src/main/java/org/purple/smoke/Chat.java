@@ -545,6 +545,24 @@ public class Chat extends AppCompatActivity
 		    {
 			State.getInstance().setChatCheckBoxSelected
 			    (buttonView.getId(), isChecked);
+
+			Button button1 = (Button) findViewById(R.id.call);
+			Button button2 = (Button) findViewById
+			    (R.id.send_chat_message);
+
+			if(State.getInstance().chatCheckedParticipants() > 0)
+			{
+			    button1.setEnabled
+				(Kernel.getInstance().isConnected());
+			    button2.setBackgroundResource(R.drawable.send);
+			    button2.setEnabled(true);
+			}
+			else
+			{
+			    button1.setEnabled(false);
+			    button2.setBackgroundResource(R.drawable.warning);
+			    button2.setEnabled(false);
+			}
 		    }
 		});
 	    stringBuilder.delete(0, stringBuilder.length());
