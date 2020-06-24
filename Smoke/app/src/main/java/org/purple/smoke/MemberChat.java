@@ -138,8 +138,10 @@ public class MemberChat extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.half_and_half_call":
 	    case "org.purple.smoke.network_connected":
+		prepareStatus(true);
+		break;
 	    case "org.purple.smoke.network_disconnected":
-		prepareStatus();
+		prepareStatus(false);
 		break;
 	    case "org.purple.smoke.notify_data_set_changed":
 		try
@@ -413,7 +415,7 @@ public class MemberChat extends AppCompatActivity
 	});
     }
 
-    private void prepareStatus()
+    private void prepareStatus(boolean state)
     {
 	try
 	{
@@ -424,7 +426,6 @@ public class MemberChat extends AppCompatActivity
 		arrayList == null || arrayList.isEmpty() ?
 		null : arrayList.get(0);
 	    boolean isPaired = isParticipantPaired(arrayList);
-	    boolean state = Kernel.getInstance().isConnected();
 	    int availableNeighbors = Kernel.getInstance().availableNeighbors();
 
 	    if(availableNeighbors > 0 && isPaired)

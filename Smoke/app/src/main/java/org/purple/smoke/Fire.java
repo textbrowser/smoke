@@ -108,7 +108,10 @@ public class Fire extends AppCompatActivity
 
 		break;
 	    case "org.purple.smoke.network_connected":
+		prepareFireChannelStatus(true);
+		break;
 	    case "org.purple.smoke.network_disconnected":
+		prepareFireChannelStatus(false);
 		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
@@ -301,6 +304,20 @@ public class Fire extends AppCompatActivity
 	    {
 	    }
         });
+    }
+
+    private void prepareFireChannelStatus(boolean connected)
+    {
+	Map<String, FireChannel> map = State.getInstance().fireChannels();
+
+	if(map != null)
+	    for(Map.Entry<String, FireChannel> entry : map.entrySet())
+	    {
+		if(entry.getValue() == null)
+		    continue;
+
+		entry.getValue().setConnectedStatus(connected);
+	    }
     }
 
     private void prepareListeners()

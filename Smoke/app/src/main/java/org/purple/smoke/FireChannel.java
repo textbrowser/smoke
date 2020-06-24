@@ -75,7 +75,6 @@ public class FireChannel extends View
 
     private Context m_context = null;
     private LayoutInflater m_inflater = null;
-    private ScheduledExecutorService m_connectionStatusScheduler = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_id = "";
     private String m_name = "";
@@ -292,31 +291,6 @@ public class FireChannel extends View
 	    {
 		Kernel.getInstance().extinguishFire(m_name);
 
-		if(m_connectionStatusScheduler != null)
-	        {
-		    try
-		    {
-			m_connectionStatusScheduler.shutdown();
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-
-		    try
-		    {
-			if(!m_connectionStatusScheduler.
-			   awaitTermination(60L, TimeUnit.SECONDS))
-			    m_connectionStatusScheduler.shutdownNow();
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		    finally
-		    {
-			m_connectionStatusScheduler = null;
-		    }
-		}
-
 		if(m_statusScheduler != null)
 	        {
 		    try
@@ -458,46 +432,6 @@ public class FireChannel extends View
 	if(m_view == null)
 	{
 	    m_view = m_inflater.inflate(R.layout.fire_channel, m_parent, false);
-	    m_connectionStatusScheduler = Executors.
-		newSingleThreadScheduledExecutor();
-	    m_connectionStatusScheduler.scheduleAtFixedRate(new Runnable()
-	    {
-		@Override
-		public void run()
-		{
-		    try
-		    {
-			if(Thread.currentThread().isInterrupted())
-			    return;
-
-			final boolean state = Kernel.getInstance().
-			    isConnected();
-
-			((Activity) m_context).runOnUiThread(new Runnable()
-			{
-			    @Override
-			    public void run()
-			    {
-				Button button1 = (Button) m_view.findViewById
-				    (R.id.send_chat_message);
-
-				button1.setEnabled(state);
-
-				if(state)
-				    button1.setBackgroundResource
-					(R.drawable.send);
-				else
-				    button1.setBackgroundResource
-					(R.drawable.send_disabled);
-			    }
-			});
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		}
-	    }, 0L, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
-
 	    prepareListeners();
 
 	    Participant participant = new Participant();
@@ -587,6 +521,18 @@ public class FireChannel extends View
 	stringBuilder.append("\n\n");
 	textView.append(stringBuilder);
 	scrollMessagesView();
+    }
+
+    public void setConnectedStatus(boolean state)
+    {
+	Button button1 = (Button) m_view.findViewById(R.id.send_chat_message);
+
+	button1.setEnabled(state);
+
+	if(state)
+	    button1.setBackgroundResource(R.drawable.send);
+	else
+	    button1.setBackgroundResource(R.drawable.warning);
     }
 
     public void setUserName(String name)

@@ -55,6 +55,7 @@ import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.bouncycastle.crypto.agreement.jpake.JPAKEParticipant;
@@ -943,17 +944,26 @@ public class Kernel
 		newSingleThreadScheduledExecutor();
 	    m_networkStatusScheduler.scheduleAtFixedRate(new Runnable()
 	    {
+		private AtomicBoolean m_connected = new AtomicBoolean(false);
+
 		@Override
 		public void run()
 		{
 		    try
 		    {
-			if(isConnected())
-			    Miscellaneous.sendBroadcast
-				("org.purple.smoke.network_connected");
-			else
-			    Miscellaneous.sendBroadcast
-				("org.purple.smoke.network_disconnected");
+			boolean isConnected = isConnected();
+
+			if(isConnected != m_connected.get())
+			{
+			    if(isConnected)
+				Miscellaneous.sendBroadcast
+				    ("org.purple.smoke.network_connected");
+			    else
+				Miscellaneous.sendBroadcast
+				    ("org.purple.smoke.network_disconnected");
+
+			    m_connected.set(isConnected);
+			}
 		    }
 		    catch(Exception exception)
 		    {
