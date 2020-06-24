@@ -107,6 +107,9 @@ public class Fire extends AppCompatActivity
 		}
 
 		break;
+	    case "org.purple.smoke.network_connected":
+	    case "org.purple.smoke.network_disconnected":
+		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		break;
@@ -763,6 +766,8 @@ public class Fire extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.fire_message");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.time");
