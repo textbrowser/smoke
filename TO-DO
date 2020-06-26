@@ -249,6 +249,7 @@ Future Items
 Remaining Items
 
 - Brands (profiles).
+- Connection mutex (notify all).
 - Depict location of the Downloads folder in the Steam activity.
 - Full Steams, reliable Echo.
 - New class for establishing Steam keys.
