@@ -34,6 +34,7 @@ Completed Items
 - Connect the state of the Call button to the number of selected participants
   (Chat).
 - Connecting status until in/out data has been received/transmitted.
+- Connection mutex (m_mutex).
 - Connection status text colors.
 - Context menu items in Member Chat: delete all, delete selected.
 - Copying of read-only values.
@@ -249,7 +250,7 @@ Future Items
 Remaining Items
 
 - Brands (profiles).
-- Connection mutex (notify all).
+- Clickable preview messages.
 - Depict location of the Downloads folder in the Steam activity.
 - Full Steams, reliable Echo.
 - New class for establishing Steam keys.
