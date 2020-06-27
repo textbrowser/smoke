@@ -175,6 +175,11 @@ public class UdpMulticastNeighbor extends Neighbor
 	    m_socket.setTimeToLive(TTL);
 	    m_startTime.set(System.nanoTime());
 	    setError("");
+
+	    synchronized(m_mutex)
+	    {
+		m_mutex.notifyAll();
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -227,6 +232,12 @@ public class UdpMulticastNeighbor extends Neighbor
 
 		try
 		{
+		    if(!connected() && !m_aborted.get())
+			synchronized(m_mutex)
+			{
+			    m_mutex.wait();
+			}
+
 		    if(!connected())
 			return;
 		    else if(m_error)
