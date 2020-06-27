@@ -197,6 +197,11 @@ public class TcpNeighbor extends Neighbor
 	    m_socket.setTcpNoDelay(true);
 	    m_startTime.set(System.nanoTime());
 	    setError("");
+
+	    synchronized(m_mutex)
+	    {
+		m_mutex.notifyAll();
+	    }
 	}
 	catch(Exception exception)
 	{
@@ -276,6 +281,12 @@ public class TcpNeighbor extends Neighbor
 	    {
 		try
 		{
+		    if(!connected() && !m_aborted.get())
+			synchronized(m_mutex)
+			{
+			    m_mutex.wait();
+			}
+
 		    if(!connected())
 			return;
 		    else if(m_error)

@@ -77,6 +77,7 @@ public abstract class Neighbor
     protected String m_ipPort = "";
     protected String m_version = "";
     protected final Object m_errorMutex = new Object();
+    protected final Object m_mutex = new Object();
     protected final Object m_parsingSchedulerMutex = new Object();
     protected final ScheduledExecutorService m_readSocketScheduler =
 	Executors.newSingleThreadScheduledExecutor();
@@ -180,6 +181,12 @@ public abstract class Neighbor
 	    {
 		try
 		{
+		    if(!connected() && !m_aborted.get())
+			synchronized(m_mutex)
+			{
+			    m_mutex.wait();
+			}
+
 		    if(!connected() || m_aborted.get())
 			return;
 
@@ -306,6 +313,12 @@ public abstract class Neighbor
 	    {
 		try
 		{
+		    if(!connected() && !m_aborted.get())
+			synchronized(m_mutex)
+			{
+			    m_mutex.wait();
+			}
+
 		    if(!connected() || m_aborted.get())
 			return;
 
@@ -527,6 +540,11 @@ public abstract class Neighbor
     {
 	m_aborted.set(true);
 
+	synchronized(m_mutex)
+	{
+	    m_mutex.notifyAll();
+	}
+
 	synchronized(m_parsingScheduler)
 	{
 	    try
@@ -604,6 +622,11 @@ public abstract class Neighbor
 	synchronized(m_echoQueueMutex)
 	{
 	    m_echoQueue.clear();
+	}
+
+	synchronized(m_mutex)
+	{
+	    m_mutex.notifyAll();
 	}
 
 	synchronized(m_parsingSchedulerMutex)
