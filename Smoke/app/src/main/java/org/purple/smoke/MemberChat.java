@@ -70,6 +70,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MemberChat extends AppCompatActivity
@@ -247,6 +250,7 @@ public class MemberChat extends AppCompatActivity
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter<?> m_adapter = null;
+    private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_name = "0000-0000-0000-0000";
     private String m_sipHashId = m_name;
@@ -415,6 +419,72 @@ public class MemberChat extends AppCompatActivity
 	});
     }
 
+    private void prepareSchedulers()
+    {
+	if(m_statusScheduler == null)
+	{
+	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			if(Thread.currentThread().isInterrupted())
+			    return;
+
+			ArrayList<ParticipantElement> arrayList =
+			    m_databaseHelper.readParticipants
+			    (s_cryptography, m_sipHashId);
+			final ParticipantElement participantElement =
+			    arrayList == null || arrayList.isEmpty() ?
+			    null : arrayList.get(0);
+			final boolean isPaired = isParticipantPaired(arrayList);
+			final boolean state = Kernel.getInstance().
+			    isConnected();
+
+			try
+			{
+			    MemberChat.this.runOnUiThread(new Runnable()
+			    {
+				@Override
+				public void run()
+				{
+				    Button button =
+					(Button) findViewById(R.id.status);
+
+				    if(!isPaired)
+					button.setBackgroundResource
+					    (R.drawable.chat_faulty_session);
+				    else if(Math.abs(System.
+						     currentTimeMillis() -
+						     participantElement.
+						     m_lastStatusTimestamp) >
+					    Chat.STATUS_WINDOW || !state)
+					button.setBackgroundResource
+					    (R.drawable.chat_status_offline);
+				    else
+					button.setBackgroundResource
+					    (R.drawable.chat_status_online);
+				}
+			    });
+			}
+			catch(Exception exception)
+			{
+			}
+
+			if(arrayList != null)
+			    arrayList.clear();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 0L, Chat.CONNECTION_STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+    }
+
     private void prepareStatus(boolean state)
     {
 	try
@@ -455,6 +525,33 @@ public class MemberChat extends AppCompatActivity
 	}
 	catch(Exception exception)
 	{
+	}
+    }
+
+    private void releaseResources()
+    {
+	if(m_statusScheduler != null)
+	{
+	    try
+	    {
+		m_statusScheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_statusScheduler.awaitTermination(60L, TimeUnit.SECONDS))
+		    m_statusScheduler.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_statusScheduler = null;
+	    }
 	}
     }
 
@@ -1403,6 +1500,7 @@ public class MemberChat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
+	releaseResources();
 	saveState();
     }
 
@@ -1445,6 +1543,8 @@ public class MemberChat extends AppCompatActivity
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
+
+	prepareSchedulers();
 
 	try
 	{
