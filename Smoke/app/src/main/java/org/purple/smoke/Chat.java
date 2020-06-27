@@ -64,6 +64,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Chat extends AppCompatActivity
 {
@@ -182,6 +185,7 @@ public class Chat extends AppCompatActivity
     }
 
     private ChatBroadcastReceiver m_receiver = null;
+    private ScheduledExecutorService m_scheduler = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -714,6 +718,50 @@ public class Chat extends AppCompatActivity
         });
     }
 
+    private void prepareSchedulers()
+    {
+	if(m_scheduler == null)
+	{
+	    m_scheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_scheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			if(Thread.currentThread().isInterrupted() ||
+			   !m_databaseHelper.
+			   readSetting(null, "show_chat_icons").equals("true"))
+			    return;
+
+			ArrayList<String> arrayList =
+			    m_databaseHelper.readSipHashIdStrings
+			    (s_cryptography);
+
+			if(arrayList == null || arrayList.isEmpty())
+			    return;
+
+			for(final String string : arrayList)
+			    Chat.this.runOnUiThread(new Runnable()
+			    {
+				@Override
+				public void run()
+				{
+				    refreshCheckBox(string);
+				}
+			    });
+
+			arrayList.clear();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 0, STATUS_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+    }
+
     private void refreshCheckBox(String sipHashId)
     {
 	CheckBox checkBox1 = (CheckBox)
@@ -795,6 +843,33 @@ public class Chat extends AppCompatActivity
 	}
 
 	arrayList.clear();
+    }
+
+    private void releaseResources()
+    {
+	if(m_scheduler != null)
+	{
+	    try
+	    {
+		m_scheduler.shutdown();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    try
+	    {
+		if(!m_scheduler.awaitTermination(60L, TimeUnit.SECONDS))
+		    m_scheduler.shutdownNow();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_scheduler = null;
+	    }
+	}
     }
 
     private void requestMessages()
@@ -1450,6 +1525,7 @@ public class Chat extends AppCompatActivity
 	    m_receiverRegistered = false;
 	}
 
+	releaseResources();
 	saveState();
     }
 
@@ -1477,6 +1553,7 @@ public class Chat extends AppCompatActivity
 	}
 
 	populateChat();
+	prepareSchedulers();
     }
 
     @Override
