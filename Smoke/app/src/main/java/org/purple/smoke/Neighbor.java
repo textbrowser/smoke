@@ -73,13 +73,13 @@ public abstract class Neighbor
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
-    protected final ScheduledExecutorService m_readSocketScheduler =
-	Executors.newSingleThreadScheduledExecutor();
     protected String m_ipAddress = "";
     protected String m_ipPort = "";
     protected String m_version = "";
     protected final Object m_errorMutex = new Object();
     protected final Object m_parsingSchedulerMutex = new Object();
+    protected final ScheduledExecutorService m_readSocketScheduler =
+	Executors.newSingleThreadScheduledExecutor();
     protected final StringBuffer m_stringBuffer = new StringBuffer();
     protected final StringBuilder m_error = new StringBuilder();
     protected final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB.
