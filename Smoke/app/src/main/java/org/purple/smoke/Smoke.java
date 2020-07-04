@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 
 public class Smoke extends Application
 {
@@ -44,15 +45,33 @@ public class Smoke extends Application
 	return s_instance;
     }
 
-    public static synchronized void exit(Context context)
+    public static synchronized void exit(final Context context)
     {
-	Cryptography.getInstance().exit();
-	SmokeService.stopForegroundTask(getApplication());
+	if(context != null)
+	{
+	    final DialogInterface.OnCancelListener listener =
+		new DialogInterface.OnCancelListener()
+	    {
+		public void onCancel(DialogInterface dialog)
+		{
+		    if(State.getInstance().getString("dialog_accepted").
+		       equals("true"))
+		    {
+			Cryptography.getInstance().exit();
+			SmokeService.stopForegroundTask(getApplication());
 
-	if(context != null && context instanceof Activity)
-	    ((Activity) context).finishAndRemoveTask();
+			if(context instanceof Activity)
+			    ((Activity) context).finishAndRemoveTask();
 
-	android.os.Process.killProcess(android.os.Process.myPid());
+			android.os.Process.killProcess
+			    (android.os.Process.myPid());
+		    }
+	        }
+	    };
+
+	    Miscellaneous.showPromptDialog
+		(context, listener, "Terminate Smoke?");
+	}
     }
 
     @Override

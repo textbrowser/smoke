@@ -31,6 +31,7 @@ Completed Items
 - Compare provided encryption and signature public keys.
 - Complete Cryptography.pkiEncrypt().
 - Compress IPv6 Scope ID field when hidden.
+- Confirm application termination.
 - Connect the state of the Call button to the number of selected participants
   (Chat).
 - Connecting status until in/out data has been received/transmitted.
@@ -251,7 +252,6 @@ Remaining Items
 
 - Brands (profiles).
 - Clickable preview messages.
-- Confirm application termination.
 - Depict location of the Downloads folder in the Steam activity.
 - Full Steams, reliable Echo.
 - New class for establishing Steam keys.
