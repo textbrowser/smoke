@@ -1693,15 +1693,16 @@ public class Database extends SQLiteOpenHelper
 	{
 	    cursor = m_db.rawQuery
 		("SELECT " +
-		 "(SELECT p.encryption_public_key FROM participants p " +
+		 "(SELECT p.encryption_public_key FROM participants p " + // 0
 		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS a, " +
-		 "(SELECT p.signature_public_key FROM participants p " +
+		 "(SELECT p.signature_public_key FROM participants p " +  // 1
 		 "WHERE p.siphash_id_digest = s.siphash_id_digest) AS b, " +
-		 "(SELECT p.encryption_public_key_algorithm FROM " +
+		 "(SELECT p.encryption_public_key_algorithm FROM " +      // 2
 		 "participants p WHERE p.siphash_id_digest = " +
 		 "s.siphash_id_digest) AS c, " +
-		 "s.siphash_id, " +
-		 "s.stream, " +
+		 "s.siphash_id, " +                                       // 3
+		 "s.name, " +                                             // 4
+		 "s.stream, " +                                           // 5
 		 "s.oid " +
 		 "FROM siphash_ids s WHERE s.oid = ? ORDER BY s.oid",
 		 new String[] {oid});
@@ -1762,6 +1763,10 @@ public class Database extends SQLiteOpenHelper
 			    (bytes, StandardCharsets.UTF_8);
 			break;
 		    case 4:
+			sipHashIdElement.m_name = new String
+			    (bytes, StandardCharsets.UTF_8);
+			break;
+		    case 5:
 			sipHashIdElement.m_stream = bytes;
 			break;
 		    default:
