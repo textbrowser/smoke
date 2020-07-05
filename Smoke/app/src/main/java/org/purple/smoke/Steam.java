@@ -41,8 +41,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -375,20 +373,12 @@ public class Steam extends AppCompatActivity
 
 	m_attachmentButton = (Button) findViewById(R.id.attachment);
 	m_downloads = (TextView) findViewById(R.id.downloads);
-
-	SpannableStringBuilder spannable = new SpannableStringBuilder
+	m_downloads.setText
 	    ("Downloads Directory: " +
 	     Environment.
 	     getExternalStoragePublicDirectory(Environment.
 					       DIRECTORY_DOWNLOADS).
 	     toString());
-
-	spannable.setSpan
-	    (new StyleSpan(android.graphics.Typeface.BOLD),
-	     0,
-	     "Downloads Directory: ".length(),
-	     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	m_downloads.setText(spannable);
 	m_fileName = (TextView) findViewById(R.id.filename);
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -404,8 +394,7 @@ public class Steam extends AppCompatActivity
 
 	try
 	{
-	    m_layoutManager.smoothScrollToPosition
-		(m_recyclerView, null, m_adapter.getItemCount() - 1);
+	    m_layoutManager.smoothScrollToPosition(m_recyclerView, null, 0);
 	}
 	catch(Exception exception)
 	{
@@ -652,8 +641,7 @@ public class Steam extends AppCompatActivity
 	try
 	{
 	    m_adapter.notifyDataSetChanged();
-	    m_layoutManager.smoothScrollToPosition
-		(m_recyclerView, null, m_adapter.getItemCount() - 1);
+	    m_layoutManager.smoothScrollToPosition(m_recyclerView, null, 0);
 	}
 	catch(Exception exception)
 	{
