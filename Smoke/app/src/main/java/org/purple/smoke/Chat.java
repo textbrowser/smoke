@@ -272,7 +272,7 @@ public class Chat extends AppCompatActivity
 	    stringBuilder.append(message.trim());
 	    stringBuilder.append("\n\n");
 
-	    Spannable spannable = new SpannableStringBuilder
+	    SpannableStringBuilder spannable = new SpannableStringBuilder
 		(stringBuilder.toString());
 
 	    spannable.setSpan
@@ -292,7 +292,8 @@ public class Chat extends AppCompatActivity
 
 	    textView1.append("] ");
 
-	    Spannable spannable = new SpannableStringBuilder(name.trim());
+	    SpannableStringBuilder spannable = new SpannableStringBuilder
+		(name.trim());
 
 	    spannable.setSpan
 		(new StyleSpan(android.graphics.Typeface.BOLD),
@@ -885,7 +886,7 @@ public class Chat extends AppCompatActivity
 	stringBuilder.append("marked by the color ");
 	textView1.append(stringBuilder);
 
-	Spannable spannable = new SpannableStringBuilder("purple");
+	SpannableStringBuilder spannable = new SpannableStringBuilder("purple");
 
 	spannable.setSpan
 	    (new ForegroundColorSpan(Color.rgb(74, 20, 140)),
@@ -1012,7 +1013,8 @@ public class Chat extends AppCompatActivity
 		textView2.append("] ");
 
 		{
-		    Spannable spannable = new SpannableStringBuilder("me");
+		    SpannableStringBuilder spannable =
+			new SpannableStringBuilder("me");
 
 		    spannable.setSpan
 			(new StyleSpan(android.graphics.Typeface.BOLD),

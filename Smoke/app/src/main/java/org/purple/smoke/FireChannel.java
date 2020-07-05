@@ -180,7 +180,7 @@ public class FireChannel extends View
 					stringBuilder.append(m_name);
 					stringBuilder.append(".\n\n");
 
-					Spannable spannable =
+					SpannableStringBuilder spannable =
 					    new SpannableStringBuilder
 					    (stringBuilder);
 
@@ -344,7 +344,8 @@ public class FireChannel extends View
 		textView2.append("] ");
 
 		{
-		    Spannable spannable = new SpannableStringBuilder("me");
+		    SpannableStringBuilder spannable =
+			new SpannableStringBuilder("me");
 
 		    spannable.setSpan
 			(new StyleSpan(android.graphics.Typeface.BOLD),
@@ -471,7 +472,7 @@ public class FireChannel extends View
 				     " Please close this channel.");
 		stringBuilder.append("\n\n");
 
-		Spannable spannable = new SpannableStringBuilder
+		SpannableStringBuilder spannable = new SpannableStringBuilder
 		    (stringBuilder.toString());
 
 		spannable.setSpan
@@ -508,7 +509,8 @@ public class FireChannel extends View
 	textView.append(m_simpleDateFormat.format(new Date()));
 	textView.append("] ");
 
-	Spannable spannable = new SpannableStringBuilder(name.trim());
+	SpannableStringBuilder spannable = new SpannableStringBuilder
+	    (name.trim());
 
 	spannable.setSpan
 	    (new StyleSpan(android.graphics.Typeface.BOLD),
@@ -568,8 +570,8 @@ public class FireChannel extends View
 		    textView.append(m_simpleDateFormat.format(new Date()));
 		    textView.append("] ");
 
-		    Spannable spannable = new SpannableStringBuilder
-			(stringBuilder);
+		    SpannableStringBuilder spannable =
+			new SpannableStringBuilder(stringBuilder);
 
 		    spannable.setSpan
 			(new StyleSpan(android.graphics.Typeface.ITALIC),
@@ -603,7 +605,8 @@ public class FireChannel extends View
 	stringBuilder.append(m_name);
 	stringBuilder.append(".\n\n");
 
-	Spannable spannable = new SpannableStringBuilder(stringBuilder);
+	SpannableStringBuilder spannable = new SpannableStringBuilder
+	    (stringBuilder);
 
 	spannable.setSpan
 	    (new StyleSpan(android.graphics.Typeface.ITALIC),

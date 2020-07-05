@@ -2801,7 +2801,8 @@ public class Settings extends AppCompatActivity
 			    stringBuilder.append("\nChat Encryption Key (");
 			    textView1.append(stringBuilder.toString());
 
-			    Spannable spannable = new SpannableStringBuilder
+			    SpannableStringBuilder spannable =
+				new SpannableStringBuilder
 				(m_strings[0].equals("true") ?
 				 "Signature Verified" :
 				 "Signature Not Verified");

@@ -34,12 +34,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -124,6 +128,7 @@ public class Steam extends AppCompatActivity
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
     private SteamLinearLayoutManager m_layoutManager = null;
+    private TextView m_downloads = null;
     private TextView m_fileName = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
@@ -369,6 +374,21 @@ public class Steam extends AppCompatActivity
 	}
 
 	m_attachmentButton = (Button) findViewById(R.id.attachment);
+	m_downloads = (TextView) findViewById(R.id.downloads);
+
+	SpannableStringBuilder spannable = new SpannableStringBuilder
+	    ("Downloads Directory: " +
+	     Environment.
+	     getExternalStoragePublicDirectory(Environment.
+					       DIRECTORY_DOWNLOADS).
+	     toString());
+
+	spannable.setSpan
+	    (new StyleSpan(android.graphics.Typeface.BOLD),
+	     0,
+	     "Downloads Directory: ".length(),
+	     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	m_downloads.setText(spannable);
 	m_fileName = (TextView) findViewById(R.id.filename);
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);

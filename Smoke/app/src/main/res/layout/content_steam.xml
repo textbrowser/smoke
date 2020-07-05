@@ -13,10 +13,24 @@
     tools:context="org.purple.smoke.Steam"
     tools:showIn="@layout/activity_steam">
 
+    <TextView
+        android:id="@+id/downloads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/downloads"
+        android:background="?android:attr/listDivider" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/linear_layout">
+        android:layout_above="@+id/linear_layout"
+        android:layout_below="@id/divider">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"

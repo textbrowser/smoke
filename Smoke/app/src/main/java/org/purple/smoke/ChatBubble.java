@@ -312,7 +312,7 @@ public class ChatBubble extends View
 	textView.setText("");
 
 	{
-	    Spannable spannable = new SpannableStringBuilder
+	    SpannableStringBuilder spannable = new SpannableStringBuilder
 		(text == null ? "" : text);
 
 	    if(spannable.length() > 0)
@@ -335,7 +335,7 @@ public class ChatBubble extends View
 	}
 
 	{
-	    Spannable spannable = new SpannableStringBuilder
+	    SpannableStringBuilder spannable = new SpannableStringBuilder
 		((m_fromSmokeStack ? "Ozone " : "") +
 		 m_simpleDateFormat.format(m_date));
 
