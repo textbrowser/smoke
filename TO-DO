@@ -48,6 +48,7 @@ Completed Items
 - Deleting a neighbor does not cause an immediate disconnect.
 - Depict Android version in About. New About.java file too.
 - Depict connection status in the Chat activity.
+- Depict location of the Downloads folder in the Steam activity.
 - Depict successful Steam key exchanges.
 - Deploy new user name to Fire channels.
 - Describe the Ozone feature.
@@ -252,6 +253,5 @@ Remaining Items
 
 - Brands (profiles).
 - Clickable preview messages.
-- Depict location of the Downloads folder in the Steam activity.
 - Full Steams, reliable Echo.
 - New class for establishing Steam keys.
