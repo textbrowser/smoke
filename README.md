@@ -1,5 +1,6 @@
-Neither snow nor rain nor heat nor gloom of night stays these violet couriers from the swift completion of their appointed rounds.
+A very brief summary of Smoke.
 
+<ul>
 <li>Aliases. Preserve your contacts.</li>
 <li>Almost zero-dependency software.</li>
 <li>Argon2id key-derivation function.</li>
@@ -21,3 +22,4 @@ Neither snow nor rain nor heat nor gloom of night stays these violet couriers fr
 <li>SSL/TLS through SmokeStack.</li>
 <li>Semi-compatible with <a href="https://github.com/textbrowser/spot-on">Spot-On</a> via Fire.</li>
 <li>Software congestion control.</li>
+</ul>
