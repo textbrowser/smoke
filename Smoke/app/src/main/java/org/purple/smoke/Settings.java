@@ -2023,7 +2023,7 @@ public class Settings extends AppCompatActivity
 			 "The tokens allow participants to exchange public " +
 			 "key pairs via the Echo Public Key Sharing (EPKS) " +
 			 "protocol. " +
-			 "An example Smoke Alias is textbrowser@gmail.com.");
+			 "An example Smoke Alias is account@e-mail.org.");
 		else
 		    textView1.setText
 			("A Smoke ID is an arrangement of digits and " +
