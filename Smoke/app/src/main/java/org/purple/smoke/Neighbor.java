@@ -184,7 +184,13 @@ public abstract class Neighbor
 		    if(!connected() && !m_aborted.get())
 			synchronized(m_mutex)
 			{
-			    m_mutex.wait();
+			    try
+			    {
+				m_mutex.wait();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
 			}
 
 		    if(!connected() || m_aborted.get())
@@ -316,7 +322,13 @@ public abstract class Neighbor
 		    if(!connected() && !m_aborted.get())
 			synchronized(m_mutex)
 			{
-			    m_mutex.wait();
+			    try
+			    {
+				m_mutex.wait();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
 			}
 
 		    if(!connected() || m_aborted.get())
