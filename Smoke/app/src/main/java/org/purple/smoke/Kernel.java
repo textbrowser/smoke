@@ -148,6 +148,7 @@ public class Kernel
     private ScheduledExecutorService m_statusScheduler = null;
     private ScheduledExecutorService m_steamScheduler = null;
     private ScheduledExecutorService m_temporaryIdentityScheduler = null;
+    private SteamKeyExchange m_steamKeyExchange = null;
     private Time m_time = null;
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
@@ -223,6 +224,7 @@ public class Kernel
 	m_shareSipHashIdIdentity = new AtomicLong(0L);
 	m_shareSipHashIdIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
+	m_steamKeyExchange = new SteamKeyExchange();
 	m_time = new Time();
 
 	try
