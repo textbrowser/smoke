@@ -4,8 +4,8 @@
 
 # Bouncy Castle
 
-bouncycastle1=bcprov-ext-jdk15on-165.jar
-bouncycastle2=bcprov-jdk15on-165.tar.gz
+bouncycastle1=bcprov-ext-jdk15on-166.jar
+bouncycastle2=bcprov-jdk15on-166.tar.gz
 
 rm -f $bouncycastle1
 rm -f $bouncycastle2
