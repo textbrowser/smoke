@@ -33,9 +33,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
 public class SmokeService extends Service
 {
+    private WakeLock m_wakeLock = null;
     private final static int NOTIFICATION_ID = 1936551787;
 
     @Override
@@ -63,11 +66,53 @@ public class SmokeService extends Service
 
     private void start()
     {
+	if(m_wakeLock == null)
+	    try
+	    {
+		PowerManager powerManager = (PowerManager)
+		    Smoke.getApplication().getApplicationContext().
+		    getSystemService(Context.POWER_SERVICE);
+
+		if(powerManager != null)
+		    m_wakeLock = powerManager.newWakeLock
+			(PowerManager.PARTIAL_WAKE_LOCK,
+			 "SmokeService:SmokeWakeLockTag");
+
+		if(m_wakeLock != null)
+		    m_wakeLock.setReferenceCounted(false);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	try
+	{
+	    if(m_wakeLock != null)
+	    {
+		if(m_wakeLock.isHeld())
+		    m_wakeLock.release();
+
+		m_wakeLock.acquire();
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+
 	prepareNotification();
     }
 
     private void stop()
     {
+	try
+	{
+	    if(m_wakeLock != null && m_wakeLock.isHeld())
+		m_wakeLock.release();
+	}
+	catch(Exception exception)
+	{
+	}
+
 	stopForeground(true);
 	stopSelf();
     }
