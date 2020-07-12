@@ -27,45 +27,43 @@
 
 package org.purple.smoke;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 
 public class SmokeService extends Service
 {
-    private WakeLock m_wakeLock = null;
+    private boolean m_isRunning = false;
+    private final static int NOTIFICATION_ID = 1936551787;
 
     private void start()
     {
-	try
-	{
-	    if(m_wakeLock != null)
-	    {
-		if(m_wakeLock.isHeld())
-		    m_wakeLock.release();
+	if(m_isRunning)
+	    return;
+	else
+	    m_isRunning = true;
 
-		m_wakeLock.acquire();
-	    }
-	}
-	catch(Exception exception)
-	{
-	}
+	Intent notificationIntent = new Intent(this, Settings.class);
+	Notification notification = null;
+	PendingIntent pendingIntent = PendingIntent.getActivity
+	    (this, 0, notificationIntent, 0);
+
+	notification = new Notification.Builder(this).
+	    setContentIntent(pendingIntent).
+	    setContentText("Smoke Activity").
+	    setContentTitle("Smoke Activity").
+	    setSmallIcon(R.drawable.smoke).
+	    setTicker("Smoke Activity").
+	    build();
+	startForeground(NOTIFICATION_ID, notification);
     }
 
     private void stop()
     {
-	try
-	{
-	    if(m_wakeLock != null && m_wakeLock.isHeld())
-		m_wakeLock.release();
-	}
-	catch(Exception exception)
-	{
-	}
-
+	m_isRunning = false;
 	stopForeground(true);
 	stopSelf();
     }
@@ -121,24 +119,13 @@ public class SmokeService extends Service
     public void onCreate()
     {
 	super.onCreate();
+	start();
+    }
 
-	if(m_wakeLock == null)
-	    try
-	    {
-		PowerManager powerManager = (PowerManager)
-		    Smoke.getApplication().getApplicationContext().
-		    getSystemService(Context.POWER_SERVICE);
-
-		if(powerManager != null)
-		    m_wakeLock = powerManager.newWakeLock
-			(PowerManager.PARTIAL_WAKE_LOCK,
-			 "SmokeService:SmokeWakeLockTag");
-
-		if(m_wakeLock != null)
-		    m_wakeLock.setReferenceCounted(false);
-	    }
-	    catch(Exception exception)
-	    {
-	    }
+    @Override
+    public void onDestroy()
+    {
+	m_isRunning = false;
+	super.onDestroy();
     }
 }
