@@ -125,48 +125,12 @@ public class Chat extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.network_connected":
 	    {
-		Button button1 = (Button) findViewById(R.id.call);
-		Button button2 = (Button) findViewById(R.id.send_chat_message);
-		int chatCheckedParticipants = State.getInstance().
-		    chatCheckedParticipants();
-
-		if(chatCheckedParticipants > 0)
-		{
-		    button1.setEnabled(true);
-		    button2.setBackgroundResource(R.drawable.send);
-		    button2.setEnabled(true);
-		}
-		else
-		{
-		    button1.setEnabled(false);
-		    button2.setBackgroundResource(R.drawable.warning);
-		    button2.setEnabled(false);
-		}
-
+		networkConnected();
 		break;
 	    }
 	    case "org.purple.smoke.network_disconnected":
 	    {
-		Button button1 = (Button) findViewById(R.id.call);
-		Button button2 = (Button) findViewById(R.id.send_chat_message);
-		int chatCheckedParticipants = State.getInstance().
-		    chatCheckedParticipants();
-
-		button1.setEnabled(false);
-
-		if(Kernel.getInstance().availableNeighbors() > 0 &&
-		   chatCheckedParticipants > 0)
-		{
-		    button2.setBackgroundResource(R.drawable.send);
-		    button2.setEnabled(false);
-		}
-		else
-		{
-		    button1.setEnabled(false);
-		    button2.setBackgroundResource(R.drawable.warning);
-		    button2.setEnabled(false);
-		}
-
+		networkDisconnected();
 		break;
 	    }
 	    case "org.purple.smoke.populate_participants":
@@ -456,6 +420,72 @@ public class Chat extends AppCompatActivity
 		textView2.requestFocus();
 	    }
 	});
+    }
+
+    private void networkConnected()
+    {
+	Button button1 = (Button) findViewById(R.id.call);
+	Button button2 = (Button) findViewById(R.id.send_chat_message);
+	int chatCheckedParticipants = State.getInstance().
+	    chatCheckedParticipants();
+
+	if(chatCheckedParticipants > 0)
+	{
+	    button1.setEnabled(true);
+	    button2.setBackgroundResource(R.drawable.send);
+	    button2.setEnabled(true);
+	}
+	else
+	{
+	    button1.setEnabled(false);
+	    button2.setBackgroundResource(R.drawable.warning);
+	    button2.setEnabled(false);
+	}
+    }
+
+    private void networkDisconnected()
+    {
+	Button button1 = (Button) findViewById(R.id.call);
+	Button button2 = (Button) findViewById(R.id.send_chat_message);
+	int chatCheckedParticipants = State.getInstance().
+	    chatCheckedParticipants();
+
+	button1.setEnabled(false);
+
+	if(Kernel.getInstance().availableNeighbors() > 0 &&
+	   chatCheckedParticipants > 0)
+	{
+	    button2.setBackgroundResource(R.drawable.send);
+	    button2.setEnabled(false);
+	}
+	else
+	{
+	    button2.setBackgroundResource(R.drawable.warning);
+	    button2.setEnabled(false);
+	}
+    }
+
+    private void networkUnknown()
+    {
+	Button button1 = (Button) findViewById(R.id.call);
+	Button button2 = (Button) findViewById(R.id.send_chat_message);
+	int chatCheckedParticipants = State.getInstance().
+	    chatCheckedParticipants();
+
+	if(Kernel.getInstance().availableNeighbors() > 0 &&
+	   Kernel.getInstance().isNetworkConnected() &&
+	   chatCheckedParticipants > 0)
+	{
+	    button1.setEnabled(true);
+	    button2.setBackgroundResource(R.drawable.send);
+	    button2.setEnabled(false);
+	}
+	else
+	{
+	    button1.setEnabled(false);
+	    button2.setBackgroundResource(R.drawable.warning);
+	    button2.setEnabled(false);
+	}
     }
 
     private void populateChat()
@@ -1093,15 +1123,6 @@ public class Chat extends AppCompatActivity
 
 	textView1.requestFocus();
 
-	if(State.getInstance().isAuthenticated())
-	    populateParticipants();
-
-	/*
-	** Preparse some event listeners.
-	*/
-
-	prepareListeners();
-
 	/*
 	** Restore some data.
 	*/
@@ -1121,6 +1142,11 @@ public class Chat extends AppCompatActivity
 	}
 
 	populateChat();
+
+	if(State.getInstance().isAuthenticated())
+	    populateParticipants();
+
+	prepareListeners();
     }
 
     @Override
@@ -1554,7 +1580,9 @@ public class Chat extends AppCompatActivity
 	    m_receiverRegistered = true;
 	}
 
+	networkUnknown();
 	populateChat();
+	populateParticipants();
 	prepareSchedulers();
     }
 
