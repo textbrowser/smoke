@@ -53,10 +53,10 @@ public class Time
 		    return;
 
 		BufferedReader bufferedReader = null;
+		HttpURLConnection httpURLConnection = null;
 
 		try
 		{
-		    HttpURLConnection httpURLConnection = null;
 		    String string = "";
 		    URL url = new URL
 			("https://worldtimeapi.org/api/timezone/Etc/UTC.txt");
@@ -81,7 +81,11 @@ public class Time
 				     "Please correct the device's time as " +
 				     "it is incorrect by at least " +
 				     DELTA +
-				     " seconds.");
+				     " seconds. Local Unix Time: " +
+				     current +
+				     ". Source Unix Time: " +
+				     string +
+				     ".");
 
 			    break;
 			}
@@ -97,6 +101,15 @@ public class Time
 		    {
 			if(bufferedReader != null)
 			    bufferedReader.close();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+
+		    try
+		    {
+			if(httpURLConnection != null)
+			    httpURLConnection.disconnect();
 		    }
 		    catch(Exception exception)
 		    {
