@@ -36,7 +36,6 @@ public class SteamKeyExchange
     private ScheduledExecutorService m_parseScheduler = null;
     private ScheduledExecutorService m_readScheduler = null;
     private final Object m_parseSchedulerMutex = new Object();
-    private final StringBuffer m_stringBuffer = new StringBuffer();
     private final static long READ_INTERVAL = 5000L;
     private final static long PARSE_INTERVAL = 500L;
 
@@ -50,17 +49,16 @@ public class SteamKeyExchange
 	    {
 		try
 		{
-		    if(m_stringBuffer.length() == 0)
-			synchronized(m_parseSchedulerMutex)
+		    synchronized(m_parseSchedulerMutex)
+		    {
+			try
 			{
-			    try
-			    {
-				m_parseSchedulerMutex.wait();
-			    }
-			    catch(Exception exception)
-			    {
-			    }
+			    m_parseSchedulerMutex.wait();
 			}
+			catch(Exception exception)
+			{
+			}
+		    }
 		}
 		catch(Exception exception)
 		{
@@ -87,15 +85,16 @@ public class SteamKeyExchange
         }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    public void append(byte bytes[])
+    public void appendStepA(byte aes[], byte sender[])
     {
-	if(bytes == null || bytes.length == 0)
+	if(aes == null ||
+	   aes.length == 0 ||
+	   sender == null ||
+	   sender.length == 0)
 	    return;
 
 	try
 	{
-	    m_stringBuffer.append(new String(bytes, 0, bytes.length));
-
 	    synchronized(m_parseSchedulerMutex)
 	    {
 		m_parseSchedulerMutex.notify();

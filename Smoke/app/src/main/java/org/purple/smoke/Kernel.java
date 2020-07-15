@@ -1789,7 +1789,7 @@ public class Kernel
     {
 	/*
 	** 0 - Echo
-	** 1 - Fine
+	** 1 - Fine (Do not Echo)
 	** 2 - Force Echo
 	*/
 
@@ -2177,7 +2177,11 @@ public class Kernel
 	    if(pk.length == Cryptography.HASH_KEY_LENGTH)
 	    {
 		/*
-		** Chat, Chat Status, Juggernaut, Message-Read Proof
+		** Chat
+		** Chat Status
+		** Juggernaut
+		** Message-Read Proof
+		** Steam Key Exchange A
 		*/
 
 		byte keyStream[] = s_databaseHelper.participantKeyStream
@@ -2526,6 +2530,10 @@ public class Kernel
 
 		    return 1;
 		}
+		else if(abyte[0] == Messages.STEAM_KEY_EXCHANGE[0])
+		{
+		    return 1;
+		}
 
 		aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
 
@@ -2705,6 +2713,7 @@ public class Kernel
 	    {
 		/*
 		** Organic Half-And-Half
+		** Steam Key Exchange B
 		*/
 
 		byte sha512[] = Cryptography.hmac
@@ -2749,8 +2758,13 @@ public class Kernel
 		byte tag = aes256[0];
 
 		if(!(tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
-		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1]))
+		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1] ||
+		     tag == Messages.STEAM_KEY_EXCHANGE[1]))
 		    return 1;
+		else if(tag == Messages.STEAM_KEY_EXCHANGE[1])
+		{
+		    return 1;
+		}
 
 		aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
 
