@@ -33,6 +33,20 @@ import java.util.concurrent.TimeUnit;
 
 public class SteamKeyExchange
 {
+    private class Tuple
+    {
+	private byte m_aes[] = null;
+	private byte m_pki[] = null;
+	private byte m_sender[] = null;
+
+	public Tuple(byte aes[], byte pki[], byte sender[])
+	{
+	    m_aes = aes;
+	    m_pki = pki;
+	    m_sender = sender;
+	}
+    };
+
     private ScheduledExecutorService m_parseScheduler = null;
     private ScheduledExecutorService m_readScheduler = null;
     private final Object m_parseSchedulerMutex = new Object();
