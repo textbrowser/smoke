@@ -27,26 +27,26 @@
 
 package org.purple.smoke;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class SteamKeyExchange
 {
-    private class Tuple
+    private class Pair
     {
 	private byte m_aes[] = null;
 	private byte m_pki[] = null;
-	private byte m_sender[] = null;
 
-	public Tuple(byte aes[], byte pki[], byte sender[])
+	public Pair(byte aes[], byte pki[])
 	{
 	    m_aes = aes;
 	    m_pki = pki;
-	    m_sender = sender;
 	}
     };
 
+    private ArrayList<Pair> m_pairs = null;
     private ScheduledExecutorService m_parseScheduler = null;
     private ScheduledExecutorService m_readScheduler = null;
     private final Object m_parseSchedulerMutex = new Object();
@@ -55,6 +55,7 @@ public class SteamKeyExchange
 
     public SteamKeyExchange()
     {
+	m_pairs = new ArrayList<> ();
 	m_parseScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_parseScheduler.scheduleAtFixedRate(new Runnable()
 	{
@@ -99,18 +100,16 @@ public class SteamKeyExchange
         }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    public void appendStepA(byte aes[], byte sender[])
+    public void appendStepA(byte aes[], byte pki[])
     {
-	if(aes == null ||
-	   aes.length == 0 ||
-	   sender == null ||
-	   sender.length == 0)
+	if(aes == null || aes.length == 0 || pki == null || pki.length == 0)
 	    return;
 
 	try
 	{
 	    synchronized(m_parseSchedulerMutex)
 	    {
+		m_pairs.add(new Pair(aes, pki));
 		m_parseSchedulerMutex.notify();
 	    }
 	}
