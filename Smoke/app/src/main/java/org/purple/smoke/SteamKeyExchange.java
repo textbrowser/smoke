@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamKeyExchange
 {
@@ -50,6 +51,8 @@ public class SteamKeyExchange
     private ScheduledExecutorService m_parseScheduler = null;
     private ScheduledExecutorService m_readScheduler = null;
     private final Object m_parseSchedulerMutex = new Object();
+    private final ReentrantReadWriteLock m_pairsMutex =
+	new ReentrantReadWriteLock();
     private final static long READ_INTERVAL = 5000L;
     private final static long PARSE_INTERVAL = 500L;
 
@@ -64,16 +67,33 @@ public class SteamKeyExchange
 	    {
 		try
 		{
-		    synchronized(m_parseSchedulerMutex)
+		    boolean empty = false;
+
+		    m_pairsMutex.readLock().lock();
+
+		    try
 		    {
-			try
-			{
-			    m_parseSchedulerMutex.wait();
-			}
-			catch(Exception exception)
-			{
-			}
+			empty = m_pairs.isEmpty();
 		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_pairsMutex.readLock().unlock();
+		    }
+
+		    if(empty)
+			synchronized(m_parseSchedulerMutex)
+			{
+			    try
+			    {
+				m_parseSchedulerMutex.wait();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+			}
 		}
 		catch(Exception exception)
 		{
@@ -107,9 +127,22 @@ public class SteamKeyExchange
 
 	try
 	{
-	    synchronized(m_parseSchedulerMutex)
+	    m_pairsMutex.writeLock().lock();
+
+	    try
 	    {
 		m_pairs.add(new Pair(aes, pki));
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_pairsMutex.writeLock().unlock();
+	    }
+
+	    synchronized(m_parseSchedulerMutex)
+	    {
 		m_parseSchedulerMutex.notify();
 	    }
 	}
