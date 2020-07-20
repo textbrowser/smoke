@@ -1457,7 +1457,7 @@ public class MemberChat extends AppCompatActivity
 	ArrayList<ParticipantElement> arrayList =
 	    m_databaseHelper.readParticipants
 	    (s_cryptography, m_sipHashId);
-	MenuItem item = null;
+	MenuItem menuItem = null;
 	boolean isParticipantPaired = isParticipantPaired(null);
 	boolean state = Kernel.getInstance().isConnected();
 
@@ -1482,12 +1482,15 @@ public class MemberChat extends AppCompatActivity
 		 -1,
 		 0,
 		 "Juggernaut").setEnabled(isParticipantPaired && state);
-	item = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
-			-1,
-			0,
-			"Optional Signatures");
-	item.setCheckable(true);
-	item.setChecked(true);
+	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
+			    -1,
+			    0,
+			    "Optional Signatures");
+	menuItem.setCheckable(true);
+	menuItem.setChecked
+	    (m_databaseHelper.
+	     readParticipantOptions(s_cryptography, m_sipHashId).toString().
+	     contains("optional_signatures = true"));
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
 		 0,
