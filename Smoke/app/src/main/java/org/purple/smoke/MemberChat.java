@@ -276,10 +276,11 @@ public class MemberChat extends AppCompatActivity
 	public final static int DELETE_SELECTED_MESSAGES = 6;
 	public final static int JUGGERKNOT = 7;
 	public final static int JUGGERNAUT = 8;
-	public final static int RESEND_MESSAGE = 9;
-	public final static int RETRIEVE_MESSAGES = 10;
-	public final static int SAVE_ATTACHMENT = 11;
-	public final static int SELECTION_STATE = 12;
+	public final static int OPTIONAL_SIGNATURES = 9;
+	public final static int RESEND_MESSAGE = 10;
+	public final static int RETRIEVE_MESSAGES = 11;
+	public final static int SAVE_ATTACHMENT = 12;
+	public final static int SELECTION_STATE = 13;
     }
 
     private boolean isParticipantPaired(ArrayList<ParticipantElement> arrayList)
@@ -1456,6 +1457,7 @@ public class MemberChat extends AppCompatActivity
 	ArrayList<ParticipantElement> arrayList =
 	    m_databaseHelper.readParticipants
 	    (s_cryptography, m_sipHashId);
+	MenuItem item = null;
 	boolean isParticipantPaired = isParticipantPaired(null);
 	boolean state = Kernel.getInstance().isConnected();
 
@@ -1480,6 +1482,12 @@ public class MemberChat extends AppCompatActivity
 		 -1,
 		 0,
 		 "Juggernaut").setEnabled(isParticipantPaired && state);
+	item = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
+			-1,
+			0,
+			"Optional Signatures");
+	item.setCheckable(true);
+	item.setChecked(true);
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
 		 0,
