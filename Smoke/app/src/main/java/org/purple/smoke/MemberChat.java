@@ -1180,6 +1180,54 @@ public class MemberChat extends AppCompatActivity
 		     "Juggernaut Secret");
 
 	    break;
+	case ContextMenuEnumerator.OPTIONAL_SIGNATURES:
+	    menuItem.setChecked(!menuItem.isChecked());
+
+	    String strings[] = null;
+	    StringBuilder stringBuilder = new StringBuilder
+		(m_databaseHelper.
+		 readParticipantOptions(s_cryptography, m_sipHashId));
+
+	    strings = stringBuilder.toString().split(";");
+
+	    if(strings == null || strings.length == 0)
+	    {
+		if(menuItem.isChecked())
+		    stringBuilder.append("optional_signatures = true");
+		else
+		    stringBuilder.append("optional_signatures = false");
+	    }
+	    else
+	    {
+		stringBuilder.delete(0, stringBuilder.length());
+
+		int i = 0;
+		int length = strings.length;
+
+		for(String string : strings)
+		{
+		    if(!(string.equals("optional_signatures = false") ||
+			 string.equals("optional_signatures = true")))
+		    {
+			stringBuilder.append(string);
+
+			if(i != length - 1)
+			    stringBuilder.append(";");
+		    }
+
+		    i += 1;
+		}
+
+		if(stringBuilder.length() > 0)
+		    stringBuilder.append(";");
+
+		stringBuilder.append("optional_signatures = ");
+		stringBuilder.append(menuItem.isChecked() ? "true" : "false");
+	    }
+
+	    m_databaseHelper.writeParticipantOptions
+		(s_cryptography, stringBuilder.toString(), m_sipHashId);
+	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:
 	    Kernel.getInstance().resendMessage(m_sipHashId, itemId);
 	    break;

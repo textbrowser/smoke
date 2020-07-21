@@ -50,6 +50,15 @@ public class Authenticate extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
 
+    private void prepareForegroundService()
+    {
+	if(m_databaseHelper.
+	   readSetting(null, "foreground_service").equals("false"))
+	    SmokeService.stopForegroundTask(getApplicationContext());
+	else
+	    SmokeService.startForegroundTask(getApplicationContext());
+    }
+
     private void prepareListeners()
     {
         final Button button1 = (Button) findViewById(R.id.authenticate);
@@ -548,7 +557,6 @@ public class Authenticate extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	SmokeService.stopForegroundTask(getApplicationContext());
 	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_authenticate);
 
@@ -563,6 +571,7 @@ public class Authenticate extends AppCompatActivity
 	State.getInstance().setNeighborsEcho
 	    (m_databaseHelper.readSetting(null,
 					  "neighbors_echo").equals("true"));
+	prepareForegroundService();
 	prepareListeners();
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
