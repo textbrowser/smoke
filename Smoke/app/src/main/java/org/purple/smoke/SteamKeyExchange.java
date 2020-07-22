@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamKeyExchange
@@ -48,6 +49,7 @@ public class SteamKeyExchange
     };
 
     private ArrayList<Pair> m_pairs = null;
+    private AtomicInteger m_lastReadSteamOid = null;
     private ScheduledExecutorService m_parseScheduler = null;
     private ScheduledExecutorService m_readScheduler = null;
     private final Object m_parseSchedulerMutex = new Object();
@@ -58,6 +60,7 @@ public class SteamKeyExchange
 
     public SteamKeyExchange()
     {
+	m_lastReadSteamOid = new AtomicInteger(-1);
 	m_pairs = new ArrayList<> ();
 	m_parseScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_parseScheduler.scheduleAtFixedRate(new Runnable()

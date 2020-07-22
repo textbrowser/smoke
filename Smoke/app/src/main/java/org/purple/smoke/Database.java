@@ -1791,7 +1791,8 @@ public class Database extends SQLiteOpenHelper
 	return sipHashIdElement;
     }
 
-    public SteamElement readSteam(Cryptography cryptography, int position)
+    public SteamElement readSteam
+	(Cryptography cryptography, int o, int position)
     {
 	if(cryptography == null || m_db == null)
 	    return null;
@@ -1801,142 +1802,166 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    cursor = m_db.rawQuery
-		("SELECT absolute_filename, " + // 0
-		 "destination, " +              // 1
-		 "ephemeral_private_key, " +    // 2
-		 "ephemeral_public_key, " +     // 3
-		 "file_digest, " +              // 4
-		 "file_size, " +                // 5
-		 "is_download, " +              // 6
-		 "read_interval, " +            // 7
-		 "read_offset, " +              // 8
-		 "status, " +                   // 9
-		 "transfer_rate, " +            // 10
-		 "oid " +                       // 11
-		 "FROM steam_files ORDER BY someoid", null);
-
-	    if(cursor != null && cursor.moveToPosition(position))
+	    if(o == -1)
 	    {
-		steamElement = new SteamElement();
+		cursor = m_db.rawQuery
+		    ("SELECT absolute_filename, " + // 0
+		     "destination, " +              // 1
+		     "ephemeral_private_key, " +    // 2
+		     "ephemeral_public_key, " +     // 3
+		     "file_digest, " +              // 4
+		     "file_size, " +                // 5
+		     "is_download, " +              // 6
+		     "read_interval, " +            // 7
+		     "read_offset, " +              // 8
+		     "status, " +                   // 9
+		     "transfer_rate, " +            // 10
+		     "oid " +                       // 11
+		     "FROM steam_files ORDER BY someoid", null);
 
-		int count = cursor.getColumnCount();
-		int oid = cursor.getInt(count - 1);
+		if(cursor == null || !cursor.moveToPosition(position))
+		    return null;
+	    }
+	    else
+	    {
+		cursor = m_db.rawQuery
+		    ("SELECT absolute_filename, " + // 0
+		     "destination, " +              // 1
+		     "ephemeral_private_key, " +    // 2
+		     "ephemeral_public_key, " +     // 3
+		     "file_digest, " +              // 4
+		     "file_size, " +                // 5
+		     "is_download, " +              // 6
+		     "read_interval, " +            // 7
+		     "read_offset, " +              // 8
+		     "status, " +                   // 9
+		     "transfer_rate, " +            // 10
+		     "oid " +                       // 11
+		     "FROM steam_files ORDER BY someoid WHERE oid > ?",
+		     new String[] {String.valueOf(o)});
 
-		for(int i = 0; i < count; i++)
+		if(cursor == null || !cursor.moveToFirst())
+		    return null;
+	    }
+
+	    steamElement = new SteamElement();
+
+	    int count = cursor.getColumnCount();
+	    int oid = cursor.getInt(count - 1);
+
+	    for(int i = 0; i < count; i++)
+	    {
+		if(i == 9)
 		{
-		    if(i == 9)
-		    {
-			steamElement.m_status = cursor.getString(i).trim();
-			continue;
-		    }
-		    else if(i == count - 1)
-		    {
-			steamElement.m_oid = oid;
-			continue;
-		    }
+		    steamElement.m_status = cursor.getString(i).trim();
+		    continue;
+		}
+		else if(i == count - 1)
+		{
+		    steamElement.m_oid = oid;
+		    continue;
+		}
 
-		    byte bytes[] = cryptography.mtd
-			(Base64.decode(cursor.getString(i).getBytes(),
-				       Base64.DEFAULT));
+		byte bytes[] = cryptography.mtd
+		    (Base64.decode(cursor.getString(i).getBytes(),
+				   Base64.DEFAULT));
 
-		    if(bytes == null)
-		    {
-			StringBuilder stringBuilder = new StringBuilder();
+		if(bytes == null)
+		{
+		    StringBuilder stringBuilder = new StringBuilder();
 
-			stringBuilder.append("Database::readSteam(): ");
-			stringBuilder.append("error on column ");
-			stringBuilder.append(cursor.getColumnName(i));
-			stringBuilder.append(".");
-			writeLog(stringBuilder.toString());
-		    }
+		    stringBuilder.append("Database::readSteam(): ");
+		    stringBuilder.append("error on column ");
+		    stringBuilder.append(cursor.getColumnName(i));
+		    stringBuilder.append(".");
+		    writeLog(stringBuilder.toString());
+		}
 
-		    switch(i)
-		    {
-		    case 0:
-			if(bytes != null)
-			    steamElement.m_fileName = new String(bytes);
-			else
-			    steamElement.m_fileName = "error (" + oid + ")";
+		switch(i)
+		{
+		case 0:
+		    if(bytes != null)
+			steamElement.m_fileName = new String(bytes);
+		    else
+			steamElement.m_fileName = "error (" + oid + ")";
 
-			break;
-		    case 1:
-			if(bytes != null)
-			    steamElement.m_destination = new String(bytes);
-			else
-			    steamElement.m_destination = "error (" + oid + ")";
+		    break;
+		case 1:
+		    if(bytes != null)
+			steamElement.m_destination = new String(bytes);
+		    else
+			steamElement.m_destination = "error (" + oid + ")";
 
-			break;
-		    case 2:
-			steamElement.m_ephemeralPrivateKey = bytes;
-			break;
-		    case 3:
-			steamElement.m_ephemeralPublicKey = bytes;
-			break;
-		    case 4:
-			steamElement.m_fileDigest = bytes;
-			break;
-		    case 5:
-			if(bytes != null)
-			    try
-			    {
-				steamElement.m_fileSize = Long.parseLong
-				    (new String(bytes));
-			    }
-			    catch(Exception exception)
-			    {
-			    }
+		    break;
+		case 2:
+		    steamElement.m_ephemeralPrivateKey = bytes;
+		    break;
+		case 3:
+		    steamElement.m_ephemeralPublicKey = bytes;
+		    break;
+		case 4:
+		    steamElement.m_fileDigest = bytes;
+		    break;
+		case 5:
+		    if(bytes != null)
+			try
+			{
+			    steamElement.m_fileSize = Long.parseLong
+				(new String(bytes));
+			}
+			catch(Exception exception)
+			{
+			}
 
-			break;
-		    case 6:
-			if(bytes != null)
-			    try
-			    {
-				steamElement.m_direction = Integer.parseInt
-				    (new String(bytes));
-			    }
-			    catch(Exception exception)
-			    {
-			    }
+		    break;
+		case 6:
+		    if(bytes != null)
+			try
+			{
+			    steamElement.m_direction = Integer.parseInt
+				(new String(bytes));
+			}
+			catch(Exception exception)
+			{
+			}
 
-			break;
-		    case 7:
-			if(bytes != null)
-			    try
-			    {
-				steamElement.m_readInterval = Long.parseLong
-				    (new String(bytes));
-			    }
-			    catch(Exception exception)
-			    {
-			    }
+		    break;
+		case 7:
+		    if(bytes != null)
+			try
+			{
+			    steamElement.m_readInterval = Long.parseLong
+				(new String(bytes));
+			}
+			catch(Exception exception)
+			{
+			}
 
-			break;
-		    case 8:
-			if(bytes != null)
-			    try
-			    {
-				steamElement.m_readOffset = Long.parseLong
-				    (new String(bytes));
-			    }
-			    catch(Exception exception)
-			    {
-			    }
+		    break;
+		case 8:
+		    if(bytes != null)
+			try
+			{
+			    steamElement.m_readOffset = Long.parseLong
+				(new String(bytes));
+			}
+			catch(Exception exception)
+			{
+			}
 
-			break;
-		    case 9:
-			break;
-		    case 10:
-			if(bytes != null)
-			    steamElement.m_transferRate = new String(bytes);
-			else
-			    steamElement.m_transferRate =
-				"error (" + oid + ")";
+		    break;
+		case 9:
+		    break;
+		case 10:
+		    if(bytes != null)
+			steamElement.m_transferRate = new String(bytes);
+		    else
+			steamElement.m_transferRate =
+			    "error (" + oid + ")";
 
-			break;
-		    default:
-			break;
-		    }
+		    break;
+		default:
+		    break;
 		}
 	    }
 	}
