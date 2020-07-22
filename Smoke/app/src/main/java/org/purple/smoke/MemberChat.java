@@ -1604,6 +1604,7 @@ public class MemberChat extends AppCompatActivity
 	}
 
 	prepareSchedulers();
+	prepareStatus(Kernel.getInstance().isConnected());
 
 	try
 	{
