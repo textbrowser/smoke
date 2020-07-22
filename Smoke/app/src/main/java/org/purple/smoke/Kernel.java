@@ -1648,9 +1648,6 @@ public class Kernel
 
 	try
 	{
-	    if(m_neighbors.size() == 0)
-		return false;
-
 	    int size = m_neighbors.size();
 
 	    for(int i = 0; i < size; i++)

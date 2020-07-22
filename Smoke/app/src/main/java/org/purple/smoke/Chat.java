@@ -586,7 +586,8 @@ public class Chat extends AppCompatActivity
 			Button button2 = (Button) findViewById
 			    (R.id.send_chat_message);
 
-			if(State.getInstance().chatCheckedParticipants() > 0)
+			if(Kernel.getInstance().availableNeighbors() > 0 &&
+			   State.getInstance().chatCheckedParticipants() > 0)
 			{
 			    button1.setEnabled
 				(Kernel.getInstance().isConnected());
