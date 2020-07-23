@@ -280,7 +280,7 @@ public class SteamBubble extends View
 	    break;
 	}
 
-	if(steamElement.m_destination.equals("Other (Non-Smoke)"))
+	if(steamElement.m_destination.equals(Steam.OTHER))
 	{
 	    /*
 	    ** Simple Steams.

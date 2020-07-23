@@ -1802,7 +1802,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    if(o == -1)
+	    if(position >= 0)
 	    {
 		cursor = m_db.rawQuery
 		    ("SELECT absolute_filename, " + // 0

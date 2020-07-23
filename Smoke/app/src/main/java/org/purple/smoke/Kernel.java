@@ -1264,7 +1264,7 @@ public class Kernel
 
 	    SteamReader steam = null;
 
-	    if(steamElement.m_destination.equals("Other (Non-Smoke)"))
+	    if(steamElement.m_destination.equals(Steam.OTHER))
 		steam = new SteamReaderSimple(steamElement.m_fileName,
 					      steamElement.m_oid,
 					      steamElement.m_readInterval,

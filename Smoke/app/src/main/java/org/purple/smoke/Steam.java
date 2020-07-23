@@ -133,6 +133,7 @@ public class Steam extends AppCompatActivity
 	Cryptography.getInstance();
     private final static int SELECT_FILE_REQUEST = 0;
     private final static int STATUS_INTERVAL = 2500; // 2.5 seconds.
+    public final static String OTHER = "Other (Non-Smoke)";
 
     public abstract static class ContextMenuEnumerator
     {
@@ -157,7 +158,7 @@ public class Steam extends AppCompatActivity
 	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
 		(Steam.this,
 		 android.R.layout.simple_spinner_item,
-		 new String[] {"Other (Non-Smoke)"});
+		 new String[] {OTHER});
 
 	    m_participantsSpinner.setAdapter(arrayAdapter);
 	    return;
@@ -167,7 +168,7 @@ public class Steam extends AppCompatActivity
 
 	ArrayList<String> list = new ArrayList<> ();
 
-	list.add("Other (Non-Smoke)");
+	list.add(OTHER);
 
 	for(ParticipantElement participant : arrayList)
 	    if(participant != null)

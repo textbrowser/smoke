@@ -55,6 +55,9 @@ public class SteamKeyExchange
     private final Object m_parseSchedulerMutex = new Object();
     private final ReentrantReadWriteLock m_pairsMutex =
 	new ReentrantReadWriteLock();
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
+    private final static Database s_databaseHelper = Database.getInstance();
     private final static long READ_INTERVAL = 5000L;
     private final static long PARSE_INTERVAL = 500L;
 
@@ -115,6 +118,22 @@ public class SteamKeyExchange
 		    ** Discover Steam instances which have not established
 		    ** key pairs.
 		    */
+
+		    SteamElement steamElement = s_databaseHelper.
+			readSteam(s_cryptography, m_lastReadSteamOid.get(), -1);
+
+		    if(steamElement == null ||
+		       steamElement.m_destination.equals(Steam.OTHER) ||
+		       steamElement.m_direction == SteamElement.DOWNLOAD)
+			return;
+
+		    if(steamElement.m_ephemeralPrivateKey == null ||
+		       steamElement.m_ephemeralPublicKey == null)
+		     {
+			 /*
+			 ** Create private-key pair.
+			 */
+		     }
 		}
 		catch(Exception exception)
 		{
