@@ -127,11 +127,22 @@ public class SteamKeyExchange
 		       steamElement.m_direction == SteamElement.DOWNLOAD)
 			return;
 
-		    if(steamElement.m_ephemeralPrivateKey == null ||
-		       steamElement.m_ephemeralPublicKey == null)
+		    if((steamElement.m_ephemeralPrivateKey == null ||
+			steamElement.m_ephemeralPublicKey == null) &&
+		       (steamElement.m_keyStream == null ||
+			steamElement.m_keyStream.length !=
+			Cryptography.CIPHER_HASH_KEYS_LENGTH))
 		     {
 			 /*
 			 ** Create private-key pair.
+			 */
+
+			 /*
+			 ** Record private-key pair.
+			 */
+
+			 /*
+			 ** Share the private-key pair.
 			 */
 		     }
 		}
