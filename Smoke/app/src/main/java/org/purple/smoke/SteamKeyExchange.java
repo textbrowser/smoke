@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -136,6 +137,12 @@ public class SteamKeyExchange
 			 /*
 			 ** Create private-key pair.
 			 */
+
+			 KeyPair keyPair = Cryptography.
+			     generatePrivatePublicKeyPair("RSA", 2048, 0);
+
+			 if(keyPair == null)
+			     return;
 
 			 /*
 			 ** Record private-key pair.
