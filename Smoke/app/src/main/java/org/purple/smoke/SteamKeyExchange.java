@@ -128,30 +128,49 @@ public class SteamKeyExchange
 		       steamElement.m_direction == SteamElement.DOWNLOAD)
 			return;
 
-		    if((steamElement.m_ephemeralPrivateKey == null ||
-			steamElement.m_ephemeralPublicKey == null) &&
-		       (steamElement.m_keyStream == null ||
-			steamElement.m_keyStream.length !=
-			Cryptography.CIPHER_HASH_KEYS_LENGTH))
+		    if(steamElement.m_keyStream != null &&
+		       steamElement.m_keyStream.length == Cryptography.
+		       CIPHER_HASH_KEYS_LENGTH)
+			/*
+			** Keys exchanged.
+			*/
+
+			return;
+
+		    KeyPair keyPair = null;
+
+		    if(steamElement.m_ephemeralPrivateKey == null ||
+		       steamElement.m_ephemeralPublicKey == null)
 		     {
 			 /*
-			 ** Create private-key pair.
+			 ** Create an RSA private-key pair.
 			 */
 
-			 KeyPair keyPair = Cryptography.
-			     generatePrivatePublicKeyPair("RSA", 2048, 0);
+			 keyPair = Cryptography.generatePrivatePublicKeyPair
+			     ("RSA", 2048, 0);
 
 			 if(keyPair == null)
 			     return;
 
 			 /*
-			 ** Record private-key pair.
-			 */
-
-			 /*
-			 ** Share the private-key pair.
+			 ** Record the private-key pair.
 			 */
 		     }
+		    else
+			keyPair = new KeyPair
+			    (Cryptography.
+			     publicKeyFromBytes(steamElement.
+						m_ephemeralPublicKey),
+			     Cryptography.
+			     privateKeyFromBytes(steamElement.
+						 m_ephemeralPrivateKey));
+
+		    if(keyPair == null)
+			return;
+
+		    /*
+		    ** Share the private-key pair.
+		    */
 		}
 		catch(Exception exception)
 		{
