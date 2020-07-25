@@ -318,6 +318,17 @@ public class Fire extends AppCompatActivity
 
 		entry.getValue().setConnectedStatus(connected);
 	    }
+
+	try
+	{
+	    if(Kernel.getInstance().isConnected())
+		getSupportActionBar().setSubtitle("Online");
+	    else
+		getSupportActionBar().setSubtitle("Offline");
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     private void prepareListeners()
@@ -776,6 +787,7 @@ public class Fire extends AppCompatActivity
     public void onResume()
     {
 	super.onResume();
+	prepareFireChannelStatus(Kernel.getInstance().isConnected());
 
 	if(!m_receiverRegistered)
 	{

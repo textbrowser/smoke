@@ -441,6 +441,14 @@ public class Chat extends AppCompatActivity
 	    button2.setBackgroundResource(R.drawable.warning);
 	    button2.setEnabled(false);
 	}
+
+	try
+	{
+	    getSupportActionBar().setSubtitle("Online");
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     private void networkDisconnected()
@@ -462,6 +470,14 @@ public class Chat extends AppCompatActivity
 	{
 	    button2.setBackgroundResource(R.drawable.warning);
 	    button2.setEnabled(false);
+	}
+
+	try
+	{
+	    getSupportActionBar().setSubtitle("Offline");
+	}
+	catch(Exception exception)
+	{
 	}
     }
 
@@ -485,6 +501,17 @@ public class Chat extends AppCompatActivity
 	    button1.setEnabled(false);
 	    button2.setBackgroundResource(R.drawable.warning);
 	    button2.setEnabled(false);
+	}
+
+	try
+	{
+	    if(Kernel.getInstance().isConnected())
+		getSupportActionBar().setSubtitle("Online");
+	    else
+		getSupportActionBar().setSubtitle("Offline");
+	}
+	catch(Exception exception)
+	{
 	}
     }
 
