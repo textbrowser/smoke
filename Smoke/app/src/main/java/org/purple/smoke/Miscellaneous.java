@@ -56,6 +56,7 @@ import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -784,7 +785,8 @@ public abstract class Miscellaneous
 	    return;
 
 	TextView textView1 = new TextView(context);
-	final PopupWindow popupWindow = new PopupWindow(context);
+	final WeakReference<PopupWindow> popupWindow =
+	    new WeakReference<PopupWindow> (new PopupWindow(context));
 
 	textView1.setBackgroundColor(Color.rgb(255, 236, 179));
 	textView1.setText(message);
@@ -797,16 +799,17 @@ public abstract class Miscellaneous
 	     (int) (10 * density),
 	     (int) (10 * density));
 	textView1.setTextSize(16);
-	popupWindow.setContentView(textView1);
-	popupWindow.setOutsideTouchable(true);
+	popupWindow.get().setContentView(textView1);
+	popupWindow.get().setOutsideTouchable(true);
 
 	if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 	{
-	    popupWindow.setHeight(300);
-	    popupWindow.setWidth(450);
+	    popupWindow.get().setHeight(300);
+	    popupWindow.get().setWidth(450);
 	}
 
-	popupWindow.showAtLocation(view, Gravity.START | Gravity.TOP, 75, 75);
+	popupWindow.get().showAtLocation
+	    (view, Gravity.START | Gravity.TOP, 75, 75);
 
 	try
 	{
@@ -828,9 +831,10 @@ public abstract class Miscellaneous
 	    @Override
 	    public void run()
 	    {
-		popupWindow.dismiss();
+		if(popupWindow.get() != null)
+		    popupWindow.get().dismiss();
 	    }
-	}, 10000); // 10 seconds.
+	}, 10000L); // 10 seconds.
     }
 
     public static void showPromptDialog
