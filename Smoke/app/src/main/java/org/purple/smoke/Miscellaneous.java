@@ -786,7 +786,7 @@ public abstract class Miscellaneous
 
 	TextView textView1 = new TextView(context);
 	final WeakReference<PopupWindow> popupWindow =
-	    new WeakReference<PopupWindow> (new PopupWindow(context));
+	    new WeakReference<> (new PopupWindow(context));
 
 	textView1.setBackgroundColor(Color.rgb(255, 236, 179));
 	textView1.setText(message);
