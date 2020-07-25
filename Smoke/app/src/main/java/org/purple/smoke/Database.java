@@ -2522,7 +2522,35 @@ public class Database extends SQLiteOpenHelper
 		    bytes = cryptography.etm("".getBytes());
 		    break;
 		case "keystream":
-		    bytes = cryptography.etm("".getBytes());
+		    /*
+		    ** Create an initial pairing.
+		    */
+
+		    try
+		    {
+			byte salt[] = null;
+
+			salt = Cryptography.xor
+			    (cryptography.chatEncryptionPublicKey().
+			     getEncoded(),
+			     cryptography.chatSignaturePublicKey().
+			     getEncoded(),
+			     encryptionKey.getEncoded(),
+			     signatureKey.getEncoded());
+			bytes = Cryptography.pbkdf2
+			    (salt,
+			     Miscellaneous.
+			     byteArrayAsHexString(Cryptography.sha512(salt)).
+			     toCharArray(),
+			     Cryptography.KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION,
+			     8 * Cryptography.CIPHER_HASH_KEYS_LENGTH);
+			bytes = cryptography.etm(bytes);
+		    }
+		    catch(Exception exception)
+		    {
+			bytes = cryptography.etm("".getBytes());
+		    }
+
 		    break;
 		case "last_status_timestamp":
 		    bytes = cryptography.etm("".getBytes());

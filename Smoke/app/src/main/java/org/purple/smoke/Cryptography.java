@@ -140,6 +140,7 @@ public class Cryptography
     public final static int FIRE_HASH_KEY_LENGTH = 48;
     public final static int HASH_KEY_LENGTH = 64;
     public final static int IDENTITY_SIZE = 8; // Size of a long.
+    public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
     public final static int SIPHASH_IDENTITY_LENGTH = 19; // 0000-0000-0000-0000
 
     private Cryptography()
@@ -2125,6 +2126,45 @@ public class Cryptography
 	{
 	    return null;
 	}
+    }
+
+    public static byte[] xor(byte[] ... data)
+    {
+	if(data == null)
+	    return null;
+
+	try
+	{
+	    int length = 0;
+
+	    for(byte b[] : data)
+		if(b != null)
+		{
+		    if(length == 0)
+			length = b.length;
+		    else
+			length = Math.min(b.length, length);
+		}
+
+	    if(length == 0)
+		return null;
+
+	    byte bytes[] = new byte[length];
+
+	    Arrays.fill(bytes, (byte) 0);
+
+	    for(byte b[] : data)
+		if(b != null)
+		    for(int i = 0; i < length; i++)
+			bytes[i] = (byte) (b[i] ^ bytes[i]);
+
+	    return bytes;
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public static synchronized Cryptography getInstance()
