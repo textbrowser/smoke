@@ -625,6 +625,7 @@ public class Fire extends AppCompatActivity
 
 	try
 	{
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	    getSupportActionBar().setTitle("Smoke | Fire");
 	}
 	catch(Exception exception)

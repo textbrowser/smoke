@@ -881,6 +881,8 @@ public class MemberChat extends AppCompatActivity
 
 	try
 	{
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
+
 	    if(string.isEmpty())
 		getSupportActionBar().setTitle("Smoke | Member Chat");
 	    else

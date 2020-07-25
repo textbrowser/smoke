@@ -75,6 +75,12 @@ public class Steam extends AppCompatActivity
 		Miscellaneous.showNotification
 		    (Steam.this, intent, findViewById(R.id.main_layout));
 		break;
+	    case "org.purple.smoke.network_connected":
+		networkStatusChanged();
+		break;
+	    case "org.purple.smoke.network_disconnected":
+		networkStatusChanged();
+		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		break;
@@ -143,6 +149,17 @@ public class Steam extends AppCompatActivity
 	public final static int REWIND_ALL_STEAMS = 3;
 	public final static int REWIND_AND_RESUME_ALL_STEAMS = 4;
 	public final static int REWIND_STEAM = 5;
+    }
+
+    private void networkStatusChanged()
+    {
+	try
+	{
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     private void populateParticipants()
@@ -366,6 +383,7 @@ public class Steam extends AppCompatActivity
 
 	try
 	{
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	    getSupportActionBar().setTitle("Smoke | Steam");
 	}
 	catch(Exception exception)
@@ -623,12 +641,15 @@ public class Steam extends AppCompatActivity
     public void onResume()
     {
 	super.onResume();
+	networkStatusChanged();
 
 	if(!m_receiverRegistered)
 	{
 	    IntentFilter intentFilter = new IntentFilter();
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.steam_added");
