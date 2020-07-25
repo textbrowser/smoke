@@ -675,6 +675,11 @@ public abstract class Neighbor
 	}
     }
 
+    public String address()
+    {
+	return m_ipAddress + ":" + m_ipPort;
+    }
+
     public boolean passthrough()
     {
 	return m_passthrough.get();

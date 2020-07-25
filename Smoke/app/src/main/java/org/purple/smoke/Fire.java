@@ -321,10 +321,12 @@ public class Fire extends AppCompatActivity
 
 	try
 	{
-	    if(Kernel.getInstance().isConnected())
-		getSupportActionBar().setSubtitle("Online");
-	    else
+	    String address = Kernel.getInstance().connectedNeighbor();
+
+	    if(address.isEmpty())
 		getSupportActionBar().setSubtitle("Offline");
+	    else
+		getSupportActionBar().setSubtitle("Online (" + address + ")");
 	}
 	catch(Exception exception)
 	{

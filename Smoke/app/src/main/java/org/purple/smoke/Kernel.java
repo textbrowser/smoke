@@ -1492,6 +1492,34 @@ public class Kernel
 	return steams;
     }
 
+    public String connectedNeighbor()
+    {
+	m_neighborsMutex.readLock().lock();
+
+	try
+	{
+	    int size = m_neighbors.size();
+
+	    for(int i = 0; i < size; i++)
+	    {
+		int j = m_neighbors.keyAt(i);
+
+		if(m_neighbors.get(j) != null)
+		    if(m_neighbors.get(j).connected())
+			return m_neighbors.get(j).address();
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_neighborsMutex.readLock().unlock();
+	}
+
+	return "";
+    }
+
     public String fireIdentities()
     {
 	m_fireStreamsMutex.readLock().lock();

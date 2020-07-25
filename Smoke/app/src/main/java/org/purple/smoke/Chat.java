@@ -444,7 +444,12 @@ public class Chat extends AppCompatActivity
 
 	try
 	{
-	    getSupportActionBar().setSubtitle("Online");
+	    String address = Kernel.getInstance().connectedNeighbor();
+
+	    if(address.isEmpty())
+		getSupportActionBar().setSubtitle("Offline");
+	    else
+		getSupportActionBar().setSubtitle("Online (" + address + ")");
 	}
 	catch(Exception exception)
 	{
@@ -505,10 +510,12 @@ public class Chat extends AppCompatActivity
 
 	try
 	{
-	    if(Kernel.getInstance().isConnected())
-		getSupportActionBar().setSubtitle("Online");
-	    else
+	    String address = Kernel.getInstance().connectedNeighbor();
+
+	    if(address.isEmpty())
 		getSupportActionBar().setSubtitle("Offline");
+	    else
+		getSupportActionBar().setSubtitle("Online (" + address + ")");
 	}
 	catch(Exception exception)
 	{
