@@ -65,6 +65,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:enabled="false"
+            android:hint="@string/please_select"
             android:inputType="textPersonName" />
 
         <Spinner
