@@ -533,9 +533,10 @@ public class MemberChat extends AppCompatActivity
 	    String address = Kernel.getInstance().connectedNeighbor();
 
 	    if(address.isEmpty())
-		getSupportActionBar().setSubtitle("Offline");
+		getSupportActionBar().setSubtitle("Disconnected");
 	    else
-		getSupportActionBar().setSubtitle("Online (" + address + ")");
+		getSupportActionBar().setSubtitle
+		    ("Connected (" + address + ")");
 	}
 	catch(Exception exception)
 	{
