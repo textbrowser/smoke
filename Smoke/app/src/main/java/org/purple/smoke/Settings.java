@@ -3684,7 +3684,6 @@ public class Settings extends AppCompatActivity
     public void onPause()
     {
 	super.onPause();
-	networkStatusChanged();
 
 	if(m_receiverRegistered)
 	{
@@ -3708,6 +3707,7 @@ public class Settings extends AppCompatActivity
     public void onResume()
     {
 	super.onResume();
+	networkStatusChanged();
 
 	if(!m_receiverRegistered)
 	{
