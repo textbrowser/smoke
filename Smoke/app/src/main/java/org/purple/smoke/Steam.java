@@ -611,7 +611,7 @@ public class Steam extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    LocalBroadcastManager.getInstance(this).
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
@@ -634,7 +634,7 @@ public class Steam extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.steam_added");
 	    intentFilter.addAction("org.purple.smoke.steam_status");
 	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(this).
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}

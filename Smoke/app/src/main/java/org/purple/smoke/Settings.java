@@ -3669,7 +3669,7 @@ public class Settings extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    LocalBroadcastManager.getInstance(this).
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
@@ -3699,7 +3699,7 @@ public class Settings extends AppCompatActivity
 	    intentFilter.addAction
 		("org.purple.smoke.siphash_share_confirmation");
 	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(this).
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}

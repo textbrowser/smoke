@@ -749,7 +749,7 @@ public class Fire extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    LocalBroadcastManager.getInstance(this).
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
@@ -788,7 +788,7 @@ public class Fire extends AppCompatActivity
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(this).
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}
