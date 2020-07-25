@@ -444,13 +444,7 @@ public class Chat extends AppCompatActivity
 
 	try
 	{
-	    String address = Kernel.getInstance().connectedNeighbor();
-
-	    if(address.isEmpty())
-		getSupportActionBar().setSubtitle("Disconnected");
-	    else
-		getSupportActionBar().setSubtitle
-		    ("Connected (" + address + ")");
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	}
 	catch(Exception exception)
 	{
@@ -511,13 +505,7 @@ public class Chat extends AppCompatActivity
 
 	try
 	{
-	    String address = Kernel.getInstance().connectedNeighbor();
-
-	    if(address.isEmpty())
-		getSupportActionBar().setSubtitle("Disconnected");
-	    else
-		getSupportActionBar().setSubtitle
-		    ("Connected (" + address + ")");
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	}
 	catch(Exception exception)
 	{
@@ -1030,6 +1018,7 @@ public class Chat extends AppCompatActivity
 
 	try
 	{
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	    getSupportActionBar().setTitle("Smoke | Chat");
 	}
 	catch(Exception exception)

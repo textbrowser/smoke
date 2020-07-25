@@ -36,6 +36,16 @@ public class Smoke extends Application
 {
     private static Smoke s_instance = null;
 
+    public static String networkStatusString()
+    {
+	String address = Kernel.getInstance().connectedNeighbor();
+
+	if(address.isEmpty())
+	    return "Disconnected";
+	else
+	    return "Connected (" + address + ")";
+    }
+
     public static synchronized Smoke getApplication()
     {
 	/*

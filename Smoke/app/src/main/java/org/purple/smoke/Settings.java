@@ -130,6 +130,12 @@ public class Settings extends AppCompatActivity
 		Miscellaneous.showNotification
 		    (Settings.this, intent, findViewById(R.id.main_layout));
 		break;
+	    case "org.purple.smoke.network_connected":
+		networkStatusChanged();
+		break;
+	    case "org.purple.smoke.network_disconnected":
+		networkStatusChanged();
+		break;
 	    case "org.purple.smoke.populate_participants":
 		populateParticipants();
 		break;
@@ -702,6 +708,17 @@ public class Settings extends AppCompatActivity
 	Thread thread = new Thread(new SingleShot());
 
 	thread.start();
+    }
+
+    private void networkStatusChanged()
+    {
+	try
+	{
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     private void populateFancyKeyData()
@@ -2999,6 +3016,7 @@ public class Settings extends AppCompatActivity
 
 	try
 	{
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	    getSupportActionBar().setTitle("Smoke | Settings");
 	}
 	catch(Exception exception)
@@ -3666,6 +3684,7 @@ public class Settings extends AppCompatActivity
     public void onPause()
     {
 	super.onPause();
+	networkStatusChanged();
 
 	if(m_receiverRegistered)
 	{
@@ -3695,6 +3714,8 @@ public class Settings extends AppCompatActivity
 	    IntentFilter intentFilter = new IntentFilter();
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction("org.purple.smoke.populate_participants");
 	    intentFilter.addAction
 		("org.purple.smoke.siphash_share_confirmation");
