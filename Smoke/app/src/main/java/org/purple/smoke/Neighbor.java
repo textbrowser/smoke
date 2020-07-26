@@ -112,12 +112,7 @@ public abstract class Neighbor
 	}
 
 	if(connected)
-	{
-	    if(m_passthrough.get())
-		status = "connected";
-	    else if(m_bytesRead.get() > 0 && m_bytesWritten.get() > 0)
-		status = "connected";
-	}
+	    status = "connected";
 	else
 	    status = "disconnected";
 
