@@ -47,7 +47,6 @@ public abstract class Neighbor
     private ArrayList<String> m_echoQueue = null;
     private ArrayList<String> m_queue = null;
     private AtomicBoolean m_capabilitiesSent = null;
-    private AtomicBoolean m_passthrough = null;
     private UUID m_uuid = null;
     private final Object m_echoQueueMutex = new Object();
     private final Object m_queueMutex = new Object();
@@ -65,6 +64,7 @@ public abstract class Neighbor
     private final static long SILENCE = 90000L; // 90 seconds.
     private final static long TIMER_INTERVAL = 2500L; // 2.5 seconds.
     protected AtomicBoolean m_aborted = null;
+    protected AtomicBoolean m_passthrough = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;

@@ -247,6 +247,8 @@ public class TcpTlsNeighbor extends Neighbor
 			send(getIdentities()); // Awaken the socket.
 			scheduleSend(getCapabilities());
 			scheduleSend(getIdentities());
+			Kernel.getInstance().retrieveChatMessages
+			    (m_cryptography.sipHashId());
 
 			synchronized(m_mutex)
 			{

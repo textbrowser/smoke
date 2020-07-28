@@ -198,6 +198,10 @@ public class TcpNeighbor extends Neighbor
 	    m_startTime.set(System.nanoTime());
 	    setError("");
 
+	    if(!m_passthrough.get())
+		Kernel.getInstance().retrieveChatMessages
+		    (m_cryptography.sipHashId());
+
 	    synchronized(m_mutex)
 	    {
 		m_mutex.notifyAll();
