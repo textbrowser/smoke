@@ -236,33 +236,75 @@ public class Cryptography
 
     public String etmBase64String(String string)
     {
-	return Base64.encodeToString(etm(string.getBytes()), Base64.DEFAULT);
+	try
+	{
+	    return Base64.encodeToString
+		(etm(string.getBytes()), Base64.DEFAULT);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public String etmBase64String(boolean state)
     {
-	return Base64.encodeToString
-	    (etm(String.valueOf(state).getBytes()), Base64.DEFAULT);
+	try
+	{
+	    return Base64.encodeToString
+		(etm(String.valueOf(state).getBytes()), Base64.DEFAULT);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public String etmBase64String(byte data[])
     {
-	if(data == null)
-	    return Base64.encodeToString(etm("".getBytes()), Base64.DEFAULT);
-	else
-	    return Base64.encodeToString(etm(data), Base64.DEFAULT);
+	try
+	{
+	    if(data == null)
+		return Base64.encodeToString
+		    (etm("".getBytes()), Base64.DEFAULT);
+	    else
+		return Base64.encodeToString(etm(data), Base64.DEFAULT);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public String etmBase64String(int value)
     {
-	return Base64.encodeToString
-	    (etm(String.valueOf(value).getBytes()), Base64.DEFAULT);
+	try
+	{
+	    return Base64.encodeToString
+		(etm(String.valueOf(value).getBytes()), Base64.DEFAULT);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public String etmBase64String(long value)
     {
-	return Base64.encodeToString
-	    (etm(String.valueOf(value).getBytes()), Base64.DEFAULT);
+	try
+	{
+	    return Base64.encodeToString
+		(etm(String.valueOf(value).getBytes()), Base64.DEFAULT);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
     }
 
     public String sipHashId()

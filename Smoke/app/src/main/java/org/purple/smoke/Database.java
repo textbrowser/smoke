@@ -49,6 +49,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
+import java.security.KeyPair;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -2973,8 +2974,11 @@ public class Database extends SQLiteOpenHelper
 		     Base64.encodeToString(cryptography.etm(keyStream),
 					   Base64.DEFAULT));
 
-	    m_db.update("participants", values, "oid = ?",
-			new String[] {String.valueOf(oid)});
+	    m_db.update
+		("participants",
+		 values,
+		 "oid = ?",
+		 new String[] {String.valueOf(oid)});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -3196,10 +3200,6 @@ public class Database extends SQLiteOpenHelper
 
 	if(!ok)
 	    return ok;
-
-	/*
-	** Content values should prevent SQL injections.
-	*/
 
 	try
 	{
@@ -3452,10 +3452,6 @@ public class Database extends SQLiteOpenHelper
 	if(!ok)
 	    return ok;
 
-	/*
-	** Content values should prevent SQL injections.
-	*/
-
 	try
 	{
 	    SparseArray<String> sparseArray = new SparseArray<> ();
@@ -3573,6 +3569,46 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	return ok;
+    }
+
+    public boolean writeSteamEphemeralKeyPair(Cryptography cryptography,
+					      KeyPair keyPair,
+					      int oid)
+    {
+	if(cryptography == null || keyPair == null || m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("ephemeral_private_key",
+		 cryptography.
+		 etmBase64String(keyPair.getPublic().getEncoded()));
+	    values.put
+		("ephemeral_public_key",
+		 cryptography.
+		 etmBase64String(keyPair.getPrivate().getEncoded()));
+	    m_db.update
+		("steam_files",
+		 values,
+		 "oid = ?",
+		 new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
     }
 
     public byte[] fireStream(Cryptography cryptography, String name)
@@ -4795,7 +4831,8 @@ public class Database extends SQLiteOpenHelper
 	     "DROP TABLE IF EXISTS participants_keys",
 	     "DROP TABLE IF EXISTS participants_messages",
 	     "DROP TABLE IF EXISTS settings",
-	     "DROP TABLE IF EXISTS siphash_ids"};
+	     "DROP TABLE IF EXISTS siphash_ids",
+	     "DROP TABLE IF EXISTS steam_files"};
 
 	for(String string : strings)
 	    try

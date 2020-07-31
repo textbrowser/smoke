@@ -141,21 +141,27 @@ public class SteamKeyExchange
 
 		    if(steamElement.m_ephemeralPrivateKey == null ||
 		       steamElement.m_ephemeralPublicKey == null)
-		     {
-			 /*
-			 ** Create an RSA private-key pair.
-			 */
+		    {
+			/*
+			** Create an RSA private-key pair.
+			*/
 
-			 keyPair = Cryptography.generatePrivatePublicKeyPair
-			     ("RSA", 2048, 0);
+			keyPair = Cryptography.generatePrivatePublicKeyPair
+			    ("RSA", 2048, 0);
 
-			 if(keyPair == null)
-			     return;
+			if(keyPair == null)
+			    return;
 
-			 /*
-			 ** Record the private-key pair.
-			 */
-		     }
+			/*
+			** Record the private-key pair.
+			*/
+
+			if(!s_databaseHelper.
+			   writeSteamEphemeralKeyPair(s_cryptography,
+						      keyPair,
+						      steamElement.m_oid))
+			    return;
+		    }
 		    else
 			keyPair = new KeyPair
 			    (Cryptography.
