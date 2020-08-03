@@ -38,7 +38,7 @@ public class Smoke extends Application
 
     public static String networkStatusString()
     {
-	String address = Kernel.getInstance().connectedNeighbor();
+	String address = Kernel.getInstance().connectedNeighborAddress();
 
 	if(address.isEmpty())
 	    return "Disconnected";

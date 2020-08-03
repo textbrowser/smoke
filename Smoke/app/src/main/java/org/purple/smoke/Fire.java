@@ -321,7 +321,7 @@ public class Fire extends AppCompatActivity
 
 	try
 	{
-	    String address = Kernel.getInstance().connectedNeighbor();
+	    String address = Kernel.getInstance().connectedNeighborAddress();
 
 	    if(address.isEmpty())
 		getSupportActionBar().setSubtitle("Disconnected");

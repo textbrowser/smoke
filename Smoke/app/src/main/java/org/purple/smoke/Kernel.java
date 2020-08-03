@@ -1492,8 +1492,16 @@ public class Kernel
 	return steams;
     }
 
-    public String connectedNeighbor()
+    public String connectedNeighborAddress()
     {
+	/*
+	** If a connected, non-passthrough neighbor is available, return its
+	** address. Otherwise, return the address of a connected, passthrough
+	** neighbor.
+	*/
+
+	String address = "";
+
 	m_neighborsMutex.readLock().lock();
 
 	try
@@ -1506,7 +1514,12 @@ public class Kernel
 
 		if(m_neighbors.get(j) != null)
 		    if(m_neighbors.get(j).connected())
-			return m_neighbors.get(j).address();
+		    {
+			if(m_neighbors.get(j).passthrough())
+			    address = m_neighbors.get(j).address();
+			else
+			    return m_neighbors.get(j).address();
+		    }
 	    }
 	}
 	catch(Exception exception)
@@ -1517,7 +1530,7 @@ public class Kernel
 	    m_neighborsMutex.readLock().unlock();
 	}
 
-	return "";
+	return address;
     }
 
     public String fireIdentities()

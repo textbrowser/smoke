@@ -126,16 +126,24 @@ public class SteamKeyExchange
 		    if(steamElement == null ||
 		       steamElement.m_destination.equals(Steam.OTHER) ||
 		       steamElement.m_direction == SteamElement.DOWNLOAD)
+		    {
+			if(steamElement != null)
+			    m_lastReadSteamOid.set(steamElement.m_oid);
+
 			return;
+		    }
 
 		    if(steamElement.m_keyStream != null &&
 		       steamElement.m_keyStream.length == Cryptography.
 		       CIPHER_HASH_KEYS_LENGTH)
+		    {
 			/*
 			** Keys exchanged.
 			*/
 
+			m_lastReadSteamOid.set(steamElement.m_oid);
 			return;
+		    }
 
 		    KeyPair keyPair = null;
 
@@ -177,6 +185,12 @@ public class SteamKeyExchange
 		    /*
 		    ** Share the private-key pair.
 		    */
+
+		    /*
+		    ** Next element!
+		    */
+
+		    m_lastReadSteamOid.set(steamElement.m_oid);
 		}
 		catch(Exception exception)
 		{
