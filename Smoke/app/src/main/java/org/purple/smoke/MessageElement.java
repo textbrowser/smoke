@@ -43,6 +43,7 @@ public class MessageElement
     public final static int RESEND_CHAT_MESSAGE_TYPE = 4;
     public final static int RETRIEVE_MESSAGES_MESSAGE_TYPE = 5;
     public final static int SHARE_SIPHASH_ID_MESSAGE_TYPE = 6;
+    public final static int STEAM_KEY_EXCHANGE_MESSAGE_TYPE = 7;
     public int m_messageType = -1;
     public int m_position = -1;
     public long m_delay = -1L;

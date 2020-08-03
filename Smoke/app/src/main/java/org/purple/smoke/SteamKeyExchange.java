@@ -59,7 +59,7 @@ public class SteamKeyExchange
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
-    private final static long READ_INTERVAL = 5000L;
+    private final static long READ_INTERVAL = 7500L;
     private final static long PARSE_INTERVAL = 500L;
 
     public SteamKeyExchange()
@@ -179,12 +179,12 @@ public class SteamKeyExchange
 			     privateKeyFromBytes(steamElement.
 						 m_ephemeralPrivateKey));
 
-		    if(keyPair == null)
-			return;
-
-		    /*
-		    ** Share the private-key pair.
-		    */
+		    if(keyPair != null)
+		    {
+			/*
+			** Share the private-key pair.
+			*/
+		    }
 
 		    /*
 		    ** Next element!

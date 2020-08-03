@@ -3431,6 +3431,29 @@ public class Kernel
 	}
     }
 
+    public void enqueueSteamKeyExchange(String message, String sipHashId)
+    {
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
+	    MessageElement messageElement = new MessageElement();
+
+	    messageElement.m_id = sipHashId;
+	    messageElement.m_message = message;
+	    messageElement.m_messageType =
+		MessageElement.STEAM_KEY_EXCHANGE_MESSAGE_TYPE;
+	    m_messagesToSend.add(messageElement);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_messagesToSendMutex.writeLock().unlock();
+	}
+    }
+
     public void extinguishFire(String name)
     {
 	m_fireStreamsMutex.writeLock().lock();
