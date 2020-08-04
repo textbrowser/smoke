@@ -184,6 +184,14 @@ public class SteamKeyExchange
 			/*
 			** Share the private-key pair.
 			*/
+
+			String message = "";
+
+			Kernel.getInstance().enqueueSteamKeyExchange
+			    (message,
+			     Miscellaneous.
+			     sipHashIdFromDestination(steamElement.
+						      m_destination));
 		    }
 
 		    /*

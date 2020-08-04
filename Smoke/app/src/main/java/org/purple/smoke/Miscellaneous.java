@@ -262,6 +262,17 @@ public abstract class Miscellaneous
 	     '-', 4).toUpperCase();
     }
 
+    public static String sipHashIdFromDestination(String string)
+    {
+	int index1 = string.indexOf('(');
+	int index2 = string.indexOf(')');
+
+	if(index1 < index2 && index1 > 0 && index2 > 0)
+	    return string.substring(index1 + 1, index2).trim();
+
+	return "";
+    }
+
     public static SubMenu addMembersToMenu(Menu menu, int count, int position)
     {
 	if(menu == null)
