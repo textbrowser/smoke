@@ -189,13 +189,12 @@ public class SteamKeyExchange
 			    sipHashIdFromDestination
 			    (steamElement.m_destination);
 			byte bytes[] = null;
-			byte fileIdentity[] = null;
 
 			bytes = Messages.steamCall
 			    (s_cryptography,
 			     steamElement.m_fileName,
 			     sipHashId,
-			     fileIdentity,
+			     steamElement.m_fileIdentity,
 			     keyPair.getPublic().getEncoded(),
 			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // RSA
 			     Messages.STEAM_KEY_EXCHANGE[0]);

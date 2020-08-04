@@ -4619,6 +4619,7 @@ public class Database extends SQLiteOpenHelper
 	    "ephemeral_private_key TEXT NOT NULL, " +
 	    "ephemeral_public_key TEXT NOT NULL, " +
 	    "file_digest TEXT NOT NULL, " +
+	    "file_identity TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " + /*

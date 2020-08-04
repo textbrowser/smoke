@@ -36,6 +36,7 @@ public class SteamElement
     public byte m_ephemeralPrivateKey[] = null;
     public byte m_ephemeralPublicKey[] = null;
     public byte m_fileDigest[] = null;
+    public byte m_fileIdentity[] = null;
     public byte m_keyStream[] = null;
     public int m_direction = DOWNLOAD;
     public int m_oid = -1;
