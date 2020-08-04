@@ -1793,7 +1793,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public SteamElement readSteam
-	(Cryptography cryptography, int o, int position)
+	(Cryptography cryptography, int position, int someOid)
     {
 	if(cryptography == null || m_db == null)
 	    return null;
@@ -1815,9 +1815,10 @@ public class Database extends SQLiteOpenHelper
 		     "is_download, " +              // 6
 		     "read_interval, " +            // 7
 		     "read_offset, " +              // 8
-		     "status, " +                   // 9
-		     "transfer_rate, " +            // 10
-		     "oid " +                       // 11
+		     "someoid, " +                  // 9
+		     "status, " +                   // 10
+		     "transfer_rate, " +            // 11
+		     "oid " +                       // 12
 		     "FROM steam_files ORDER BY someoid", null);
 
 		if(cursor == null || !cursor.moveToPosition(position))
@@ -1835,11 +1836,12 @@ public class Database extends SQLiteOpenHelper
 		     "is_download, " +              // 6
 		     "read_interval, " +            // 7
 		     "read_offset, " +              // 8
-		     "status, " +                   // 9
-		     "transfer_rate, " +            // 10
-		     "oid " +                       // 11
-		     "FROM steam_files WHERE oid > ? ORDER BY oid",
-		     new String[] {String.valueOf(o)});
+		     "someoid, " +                  // 9
+		     "status, " +                   // 10
+		     "transfer_rate, " +            // 11
+		     "oid " +                       // 12
+		     "FROM steam_files WHERE someoid > ? ORDER BY someoid",
+		     new String[] {String.valueOf(someOid)});
 
 		if(cursor == null || !cursor.moveToFirst())
 		    return null;
@@ -1853,6 +1855,11 @@ public class Database extends SQLiteOpenHelper
 	    for(int i = 0; i < count; i++)
 	    {
 		if(i == 9)
+		{
+		    steamElement.m_someOid = cursor.getInt(i);
+		    continue;
+		}
+		else if(i == 10)
 		{
 		    steamElement.m_status = cursor.getString(i).trim();
 		    continue;
@@ -1954,6 +1961,8 @@ public class Database extends SQLiteOpenHelper
 		case 9:
 		    break;
 		case 10:
+		    break;
+		case 11:
 		    if(bytes != null)
 			steamElement.m_transferRate = new String(bytes);
 		    else
@@ -4783,7 +4792,8 @@ public class Database extends SQLiteOpenHelper
 		 "participants_keys",
 		 "participants_messages",
 		 "settings",
-		 "siphash_ids"};
+		 "siphash_ids",
+		 "steam_files"};
 
 	    for(String string : tables)
 		try
