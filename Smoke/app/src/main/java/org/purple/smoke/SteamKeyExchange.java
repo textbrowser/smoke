@@ -185,13 +185,25 @@ public class SteamKeyExchange
 			** Share the private-key pair.
 			*/
 
-			String message = "";
+			String sipHashId = Miscellaneous.
+			    sipHashIdFromDestination
+			    (steamElement.m_destination);
+			byte bytes[] = null;
+			byte fileIdentity[] = null;
 
-			Kernel.getInstance().enqueueSteamKeyExchange
-			    (message,
-			     Miscellaneous.
-			     sipHashIdFromDestination(steamElement.
-						      m_destination));
+			bytes = Messages.steamCall
+			    (s_cryptography,
+			     steamElement.m_fileName,
+			     sipHashId,
+			     fileIdentity,
+			     keyPair.getPublic().getEncoded(),
+			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // RSA
+			     Messages.STEAM_KEY_EXCHANGE[0]);
+
+			if(bytes != null)
+			    Kernel.getInstance().enqueueSteamKeyExchange
+				(Messages.bytesToMessageString(bytes),
+				 sipHashId);
 		    }
 
 		    /*
