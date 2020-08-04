@@ -1062,13 +1062,14 @@ public class Database extends SQLiteOpenHelper
 		("SELECT absolute_filename, " + // 0
 		 "destination, " +              // 1
 		 "file_digest, " +              // 2
-		 "file_size, " +                // 3
-		 "is_download, " +              // 4
-		 "read_interval, " +            // 5
-		 "read_offset, " +              // 6
-		 "status, " +                   // 7
-		 "transfer_rate, " +            // 8
-		 "oid " +                       // 9
+		 "file_identity, " +            // 3
+		 "file_size, " +                // 4
+		 "is_download, " +              // 5
+		 "read_interval, " +            // 6
+		 "read_offset, " +              // 7
+		 "status, " +                   // 8
+		 "transfer_rate, " +            // 9
+		 "oid " +                       // 10
 		 "FROM steam_files ORDER BY someoid", null);
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -1077,7 +1078,7 @@ public class Database extends SQLiteOpenHelper
 
 		while(!cursor.isAfterLast())
 		{
-		    String status = cursor.getString(6).trim();
+		    String status = cursor.getString(8).trim();
 
 		    if(status.equals("deleted"))
 			continue;
@@ -1088,7 +1089,7 @@ public class Database extends SQLiteOpenHelper
 
 		    for(int i = 0; i < count; i++)
 		    {
-			if(i == 7)
+			if(i == 8)
 			{
 			    steamElement.m_status = status;
 			    continue;
@@ -1136,6 +1137,9 @@ public class Database extends SQLiteOpenHelper
 			    steamElement.m_fileDigest = bytes;
 			    break;
 			case 3:
+			    steamElement.m_fileIdentity = bytes;
+			    break;
+			case 4:
 			    if(bytes != null)
 				try
 				{
@@ -1147,7 +1151,7 @@ public class Database extends SQLiteOpenHelper
 				}
 
 			    break;
-			case 4:
+			case 5:
 			    if(bytes != null)
 				try
 				{
@@ -1159,7 +1163,7 @@ public class Database extends SQLiteOpenHelper
 				}
 
 			    break;
-			case 5:
+			case 6:
 			    if(bytes != null)
 				try
 				{
@@ -1171,7 +1175,7 @@ public class Database extends SQLiteOpenHelper
 				}
 
 			    break;
-			case 6:
+			case 7:
 			    if(bytes != null)
 				try
 				{
@@ -1184,6 +1188,8 @@ public class Database extends SQLiteOpenHelper
 
 			    break;
 			case 8:
+			    break;
+			case 9:
 			    if(bytes != null)
 				steamElement.m_transferRate = new String(bytes);
 			    else
@@ -1811,14 +1817,15 @@ public class Database extends SQLiteOpenHelper
 		     "ephemeral_private_key, " +    // 2
 		     "ephemeral_public_key, " +     // 3
 		     "file_digest, " +              // 4
-		     "file_size, " +                // 5
-		     "is_download, " +              // 6
-		     "read_interval, " +            // 7
-		     "read_offset, " +              // 8
-		     "someoid, " +                  // 9
-		     "status, " +                   // 10
-		     "transfer_rate, " +            // 11
-		     "oid " +                       // 12
+		     "file_identity, " +            // 5
+		     "file_size, " +                // 6
+		     "is_download, " +              // 7
+		     "read_interval, " +            // 8
+		     "read_offset, " +              // 9
+		     "someoid, " +                  // 10
+		     "status, " +                   // 11
+		     "transfer_rate, " +            // 12
+		     "oid " +                       // 13
 		     "FROM steam_files ORDER BY someoid", null);
 
 		if(cursor == null || !cursor.moveToPosition(position))
@@ -1832,14 +1839,15 @@ public class Database extends SQLiteOpenHelper
 		     "ephemeral_private_key, " +    // 2
 		     "ephemeral_public_key, " +     // 3
 		     "file_digest, " +              // 4
-		     "file_size, " +                // 5
-		     "is_download, " +              // 6
-		     "read_interval, " +            // 7
-		     "read_offset, " +              // 8
-		     "someoid, " +                  // 9
-		     "status, " +                   // 10
-		     "transfer_rate, " +            // 11
-		     "oid " +                       // 12
+		     "file_identity, " +            // 5
+		     "file_size, " +                // 6
+		     "is_download, " +              // 7
+		     "read_interval, " +            // 8
+		     "read_offset, " +              // 9
+		     "someoid, " +                  // 10
+		     "status, " +                   // 11
+		     "transfer_rate, " +            // 12
+		     "oid " +                       // 13
 		     "FROM steam_files WHERE someoid > ? ORDER BY someoid",
 		     new String[] {String.valueOf(someOid)});
 
@@ -1854,12 +1862,12 @@ public class Database extends SQLiteOpenHelper
 
 	    for(int i = 0; i < count; i++)
 	    {
-		if(i == 9)
+		if(i == 10)
 		{
 		    steamElement.m_someOid = cursor.getInt(i);
 		    continue;
 		}
-		else if(i == 10)
+		else if(i == 11)
 		{
 		    steamElement.m_status = cursor.getString(i).trim();
 		    continue;
@@ -1911,6 +1919,9 @@ public class Database extends SQLiteOpenHelper
 		    steamElement.m_fileDigest = bytes;
 		    break;
 		case 5:
+		    steamElement.m_fileIdentity = bytes;
+		    break;
+		case 6:
 		    if(bytes != null)
 			try
 			{
@@ -1922,7 +1933,7 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 6:
+		case 7:
 		    if(bytes != null)
 			try
 			{
@@ -1934,7 +1945,7 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 7:
+		case 8:
 		    if(bytes != null)
 			try
 			{
@@ -1946,7 +1957,7 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 8:
+		case 9:
 		    if(bytes != null)
 			try
 			{
@@ -1958,11 +1969,10 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 9:
-		    break;
 		case 10:
-		    break;
 		case 11:
+		    break;
+		case 12:
 		    if(bytes != null)
 			steamElement.m_transferRate = new String(bytes);
 		    else
