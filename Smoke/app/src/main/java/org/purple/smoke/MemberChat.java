@@ -530,13 +530,7 @@ public class MemberChat extends AppCompatActivity
 
 	try
 	{
-	    String address = Kernel.getInstance().connectedNeighborAddress();
-
-	    if(address.isEmpty())
-		getSupportActionBar().setSubtitle("Disconnected");
-	    else
-		getSupportActionBar().setSubtitle
-		    ("Connected (" + address + ")");
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	}
 	catch(Exception exception)
 	{

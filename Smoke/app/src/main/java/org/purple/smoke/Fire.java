@@ -312,22 +312,12 @@ public class Fire extends AppCompatActivity
 
 	if(map != null)
 	    for(Map.Entry<String, FireChannel> entry : map.entrySet())
-	    {
-		if(entry.getValue() == null)
-		    continue;
-
-		entry.getValue().setConnectedStatus(connected);
-	    }
+		if(entry.getValue() != null)
+		    entry.getValue().setConnectedStatus(connected);
 
 	try
 	{
-	    String address = Kernel.getInstance().connectedNeighborAddress();
-
-	    if(address.isEmpty())
-		getSupportActionBar().setSubtitle("Disconnected");
-	    else
-		getSupportActionBar().setSubtitle
-		    ("Connected (" + address + ")");
+	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
 	}
 	catch(Exception exception)
 	{
