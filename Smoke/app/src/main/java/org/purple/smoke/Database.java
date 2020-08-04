@@ -5369,6 +5369,10 @@ public class Database extends SQLiteOpenHelper
 					     sha256FileDigest(steamElement.
 							      m_fileName)));
 			values.put
+			    ("file_identity",
+			     cryptography.
+			     etmBase64String(Cryptography.randomBytes(64)));
+			values.put
 			    ("file_size",
 			     cryptography.
 			     etmBase64String(steamElement.m_fileSize));
