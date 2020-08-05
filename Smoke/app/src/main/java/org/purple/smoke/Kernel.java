@@ -755,8 +755,7 @@ public class Kernel
 				}
 
 				break;
-			    case MessageElement.
-				RETRIEVE_MESSAGES_MESSAGE_TYPE:
+			    case MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				bytes = Messages.chatMessageRetrieval
 				    (s_cryptography);
 
@@ -777,8 +776,7 @@ public class Kernel
 				}
 
 				break;
-			    case MessageElement.
-				SHARE_SIPHASH_ID_MESSAGE_TYPE:
+			    case MessageElement.SHARE_SIPHASH_ID_MESSAGE_TYPE:
 				m_shareSipHashIdIdentity.set
 				    (Miscellaneous.
 				     byteArrayToLong
@@ -807,6 +805,10 @@ public class Kernel
 				}
 
 				break;
+			    case MessageElement.
+				 STEAM_KEY_EXCHANGE_MESSAGE_TYPE:
+				bytes = new byte[1];
+				break;
 			    default:
 				break;
 			    }
@@ -823,8 +825,7 @@ public class Kernel
 				switch(messageElement.m_messageType)
 				{
 				case MessageElement.CHAT_MESSAGE_TYPE:
-				case MessageElement.
-				    RESEND_CHAT_MESSAGE_TYPE:
+				case MessageElement.RESEND_CHAT_MESSAGE_TYPE:
 				    enqueueMessage
 					(Messages.
 					 bytesToMessageString(bytes),
@@ -841,12 +842,10 @@ public class Kernel
 				case MessageElement.FIRE_MESSAGE_TYPE:
 				    enqueueMessage
 					(Messages.
-					 bytesToMessageStringNonBase64
-					 (bytes),
+					 bytesToMessageStringNonBase64(bytes),
 					 null);
 				    break;
-				case MessageElement.
-				    FIRE_STATUS_MESSAGE_TYPE:
+				case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
 				    scheduleSend
 					(Messages.
 					 bytesToMessageStringNonBase64
@@ -858,7 +857,7 @@ public class Kernel
 					 bytesToMessageString(bytes));
 				    break;
 				case MessageElement.
-				    RETRIEVE_MESSAGES_MESSAGE_TYPE:
+				     RETRIEVE_MESSAGES_MESSAGE_TYPE:
 				    scheduleSend
 					(Messages.
 					 identityMessage
@@ -868,11 +867,16 @@ public class Kernel
 					 bytesToMessageString(bytes));
 				    break;
 				case MessageElement.
-				    SHARE_SIPHASH_ID_MESSAGE_TYPE:
+				     SHARE_SIPHASH_ID_MESSAGE_TYPE:
 				    enqueueMessage
 					(Messages.
 					 bytesToMessageString(bytes),
 					 null);
+				    break;
+				case MessageElement.
+				     STEAM_KEY_EXCHANGE_MESSAGE_TYPE:
+				    enqueueMessage
+					(messageElement.m_message, null);
 				    break;
 				default:
 				    break;
