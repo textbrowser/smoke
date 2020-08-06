@@ -177,13 +177,24 @@ public class SteamKeyExchange
 						      steamElement.m_someOid))
 			    return;
 		    }
-		    else
+		    else if(Kernel.getInstance().isNetworkConnected())
+			/*
+			** Do not enqueue key information if the network
+			** is not available.
+			*/
+
 			keyPair = Cryptography.generatePrivatePublicKeyPair
 			    ("RSA",
 			     steamElement.m_ephemeralPrivateKey,
 			     steamElement.m_ephemeralPublicKey);
 
-		    if(keyPair != null)
+		    /*
+		    ** Do not enqueue key information if the network is not
+		    ** available.
+		    */
+
+		    if(Kernel.getInstance().isNetworkConnected() &&
+		       keyPair != null)
 		    {
 			/*
 			** Share the private-key pair.
