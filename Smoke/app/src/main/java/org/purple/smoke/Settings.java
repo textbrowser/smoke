@@ -130,6 +130,9 @@ public class Settings extends AppCompatActivity
 		Miscellaneous.showNotification
 		    (Settings.this, intent, findViewById(R.id.main_layout));
 		break;
+	    case "org.purple.smoke.neighbor_disconnected":
+		networkStatusChanged();
+		break;
 	    case "org.purple.smoke.network_connected":
 		networkStatusChanged();
 		break;
@@ -3714,6 +3717,7 @@ public class Settings extends AppCompatActivity
 	    IntentFilter intentFilter = new IntentFilter();
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
 	    intentFilter.addAction("org.purple.smoke.network_connected");
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction("org.purple.smoke.populate_participants");

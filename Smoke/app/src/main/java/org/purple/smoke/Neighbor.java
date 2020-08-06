@@ -621,7 +621,8 @@ public abstract class Neighbor
 	    }
 	}
 
-	Miscellaneous.sendBroadcast("org.smoke.neighbor_aborted", address());
+	Miscellaneous.sendBroadcast
+	    ("org.purple.smoke.neighbor_aborted", address());
     }
 
     protected void disconnect()
@@ -651,7 +652,7 @@ public abstract class Neighbor
 	m_stringBuffer.delete(0, m_stringBuffer.length());
 	m_stringBuffer.trimToSize();
 	Miscellaneous.sendBroadcast
-	    ("org.smoke.neighbor_disconnected", address());
+	    ("org.purple.smoke.neighbor_disconnected", address());
     }
 
     protected void echo(String message)
