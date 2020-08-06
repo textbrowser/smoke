@@ -115,6 +115,9 @@ public class SteamKeyExchange
 	    {
 		try
 		{
+		    if(!State.getInstance().isAuthenticated())
+			return;
+
 		    /*
 		    ** Discover Steam instances which have not established
 		    ** key pairs.
@@ -129,6 +132,8 @@ public class SteamKeyExchange
 		    {
 			if(steamElement != null)
 			    m_lastReadSteamOid.set(steamElement.m_someOid);
+			else
+			    m_lastReadSteamOid.set(-1);
 
 			return;
 		    }
@@ -148,7 +153,9 @@ public class SteamKeyExchange
 		    KeyPair keyPair = null;
 
 		    if(steamElement.m_ephemeralPrivateKey == null ||
-		       steamElement.m_ephemeralPublicKey == null)
+		       steamElement.m_ephemeralPrivateKey.length == 0 ||
+		       steamElement.m_ephemeralPublicKey == null ||
+		       steamElement.m_ephemeralPublicKey.length == 0)
 		    {
 			/*
 			** Create an RSA private-key pair.
@@ -171,13 +178,10 @@ public class SteamKeyExchange
 			    return;
 		    }
 		    else
-			keyPair = new KeyPair
-			    (Cryptography.
-			     publicKeyFromBytes(steamElement.
-						m_ephemeralPublicKey),
-			     Cryptography.
-			     privateKeyFromBytes(steamElement.
-						 m_ephemeralPrivateKey));
+			keyPair = Cryptography.generatePrivatePublicKeyPair
+			    ("RSA",
+			     steamElement.m_ephemeralPrivateKey,
+			     steamElement.m_ephemeralPublicKey);
 
 		    if(keyPair != null)
 		    {

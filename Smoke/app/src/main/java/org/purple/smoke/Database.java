@@ -1829,7 +1829,7 @@ public class Database extends SQLiteOpenHelper
 		     "FROM steam_files ORDER BY someoid", null);
 
 		if(cursor == null || !cursor.moveToPosition(position))
-		    return null;
+		    return steamElement;
 	    }
 	    else
 	    {
@@ -1852,7 +1852,7 @@ public class Database extends SQLiteOpenHelper
 		     new String[] {String.valueOf(someOid)});
 
 		if(cursor == null || !cursor.moveToFirst())
-		    return null;
+		    return steamElement;
 	    }
 
 	    steamElement = new SteamElement();
@@ -1976,8 +1976,7 @@ public class Database extends SQLiteOpenHelper
 		    if(bytes != null)
 			steamElement.m_transferRate = new String(bytes);
 		    else
-			steamElement.m_transferRate =
-			    "error (" + oid + ")";
+			steamElement.m_transferRate = "error (" + oid + ")";
 
 		    break;
 		default:
@@ -3606,11 +3605,11 @@ public class Database extends SQLiteOpenHelper
 	    values.put
 		("ephemeral_private_key",
 		 cryptography.
-		 etmBase64String(keyPair.getPublic().getEncoded()));
+		 etmBase64String(keyPair.getPrivate().getEncoded()));
 	    values.put
 		("ephemeral_public_key",
 		 cryptography.
-		 etmBase64String(keyPair.getPrivate().getEncoded()));
+		 etmBase64String(keyPair.getPublic().getEncoded()));
 	    m_db.update
 		("steam_files",
 		 values,

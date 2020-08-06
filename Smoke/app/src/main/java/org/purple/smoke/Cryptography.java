@@ -1245,7 +1245,10 @@ public class Cryptography
 						       byte privateBytes[],
 						       byte publicBytes[])
     {
-	if(privateBytes == null || publicBytes == null)
+	if(privateBytes == null ||
+	   privateBytes.length == 0 ||
+	   publicBytes == null ||
+	   publicBytes.length == 0)
 	    return null;
 
 	try
@@ -1293,7 +1296,7 @@ public class Cryptography
 
     public static PrivateKey privateKeyFromBytes(byte privateBytes[])
     {
-	if(privateBytes == null)
+	if(privateBytes == null || privateBytes.length == 0)
 	    return null;
 
 	try
@@ -1335,7 +1338,7 @@ public class Cryptography
 
     public static PublicKey publicKeyFromBytes(byte publicBytes[])
     {
-	if(publicBytes == null)
+	if(publicBytes == null || publicBytes.length == 0)
 	    return null;
 
 	try
