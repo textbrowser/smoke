@@ -2174,7 +2174,7 @@ public class Kernel
 		return 1;
 	    }
 
-	    byte pk[] = null;
+	    byte pki[] = null;
 	    int mceliece_output_size = 0;
 
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
@@ -2194,12 +2194,12 @@ public class Kernel
 
 		for(int i = s; i < e; i++)
 		{
-		    pk = s_cryptography.pkiDecrypt
+		    pki = s_cryptography.pkiDecrypt
 			(Arrays.copyOfRange(bytes,
 					    0,
 					    MCELIECE_OUTPUT_SIZES[i]));
 
-		    if(pk != null)
+		    if(pki != null)
 		    {
 			mceliece_output_size = MCELIECE_OUTPUT_SIZES[i];
 			break;
@@ -2207,16 +2207,16 @@ public class Kernel
 		}
 	    }
 	    else
-		pk = s_cryptography.pkiDecrypt
+		pki = s_cryptography.pkiDecrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 0,
 				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
 
-	    if(pk == null)
+	    if(pki == null)
 		return 1;
 
-	    if(pk.length == Cryptography.HASH_KEY_LENGTH)
+	    if(pki.length == Cryptography.HASH_KEY_LENGTH)
 	    {
 		/*
 		** Chat
@@ -2226,7 +2226,7 @@ public class Kernel
 		*/
 
 		byte keyStream[] = s_databaseHelper.participantKeyStream
-		    (s_cryptography, pk);
+		    (s_cryptography, pki);
 
 		if(keyStream == null)
 		    return 1;
@@ -2245,7 +2245,7 @@ public class Kernel
 		    if(ourMessageViaChatTemporaryIdentity)
 		    {
 			keyStream = s_databaseHelper.participantKeyStream
-			    (s_cryptography, pk, array2, bytes);
+			    (s_cryptography, pki, array2, bytes);
 
 			if(keyStream == null)
 			    return 1;
@@ -2285,7 +2285,7 @@ public class Kernel
 		if(abyte[0] == Messages.CHAT_STATUS_MESSAGE_TYPE[0])
 		{
 		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
-			(s_cryptography, pk);
+			(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
 			return 1;
@@ -2309,7 +2309,7 @@ public class Kernel
 			    return 1;
 
 			PublicKey signatureKey = s_databaseHelper.
-			    signatureKeyForDigest(s_cryptography, pk);
+			    signatureKeyForDigest(s_cryptography, pki);
 
 			if(signatureKey == null)
 			    return 1;
@@ -2321,7 +2321,7 @@ public class Kernel
 					       10,
 					       aes256.length),
 			    Miscellaneous.
-			    joinByteArrays(pk,
+			    joinByteArrays(pki,
 					   Arrays.
 					   copyOfRange(aes256,
 						       0,
@@ -2332,7 +2332,7 @@ public class Kernel
 		    }
 
 		    s_databaseHelper.updateParticipantLastTimestamp
-			(s_cryptography, pk);
+			(s_cryptography, pki);
 		    return 1;
 		}
 		else if(abyte[0] == Messages.JUGGERNAUT_TYPE[0])
@@ -2370,7 +2370,7 @@ public class Kernel
 			    break;
 			case 2:
 			    PublicKey signatureKey = s_databaseHelper.
-				signatureKeyForDigest(s_cryptography, pk);
+				signatureKeyForDigest(s_cryptography, pki);
 
 			    if(signatureKey == null)
 				return 1;
@@ -2383,7 +2383,7 @@ public class Kernel
 				publicKeySignature,
 				Miscellaneous.
 				joinByteArrays
-				(pk,
+				(pki,
 				 abyte,
 				 strings[0].getBytes(),
 				 "\n".getBytes(),
@@ -2399,7 +2399,7 @@ public class Kernel
 			}
 
 		    String array[] = s_databaseHelper.
-			nameSipHashIdFromDigest(s_cryptography, pk);
+			nameSipHashIdFromDigest(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
 			return 1;
@@ -2531,7 +2531,7 @@ public class Kernel
 		    */
 
 		    PublicKey signatureKey = s_databaseHelper.
-			signatureKeyForDigest(s_cryptography, pk);
+			signatureKeyForDigest(s_cryptography, pki);
 
 		    if(signatureKey == null)
 			return 1;
@@ -2543,7 +2543,7 @@ public class Kernel
 					   Cryptography.HASH_KEY_LENGTH + 1,
 					   aes256.length),
 			Miscellaneous.
-			joinByteArrays(pk,
+			joinByteArrays(pki,
 				       Arrays.
 				       copyOfRange(aes256,
 						   0,
@@ -2554,7 +2554,7 @@ public class Kernel
 			return 1;
 
 		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
-			(s_cryptography, pk);
+			(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
 			return 1;
@@ -2641,7 +2641,7 @@ public class Kernel
 			break;
 		    case 5:
 			String array[] = s_databaseHelper.
-			    nameSipHashIdFromDigest(s_cryptography, pk);
+			    nameSipHashIdFromDigest(s_cryptography, pki);
 
 			if(array == null || array.length != 2)
 			    return 1;
@@ -2654,7 +2654,7 @@ public class Kernel
 			   contains("optional_signatures = false"))
 			{
 			    PublicKey signatureKey = s_databaseHelper.
-				signatureKeyForDigest(s_cryptography, pk);
+				signatureKeyForDigest(s_cryptography, pki);
 
 			    if(signatureKey == null)
 				return 1;
@@ -2668,7 +2668,7 @@ public class Kernel
 				publicKeySignature,
 				Miscellaneous.
 				joinByteArrays
-				(pk,
+				(pki,
 				 abyte,
 				 strings[0].getBytes(),
 				 "\n".getBytes(),
@@ -2733,7 +2733,7 @@ public class Kernel
 		    */
 
 		    keyStream = s_databaseHelper.participantKeyStream
-			(s_cryptography, pk); // Current key stream.
+			(s_cryptography, pki); // Current key stream.
 		    enqueueMessage
 			(Messages.
 			 bytesToMessageString(Messages.
@@ -2746,7 +2746,7 @@ public class Kernel
 
 		return 1;
 	    }
-	    else if(pk.length == Cryptography.CIPHER_HASH_KEYS_LENGTH)
+	    else if(pki.length == Cryptography.CIPHER_HASH_KEYS_LENGTH)
 	    {
 		/*
 		** Organic Half-And-Half
@@ -2759,9 +2759,9 @@ public class Kernel
 					0,
 					bytes.length -
 					2 * Cryptography.HASH_KEY_LENGTH),
-		     Arrays.copyOfRange(pk,
+		     Arrays.copyOfRange(pki,
 					Cryptography.CIPHER_KEY_LENGTH,
-					pk.length));
+					pki.length));
 
 		if(!Cryptography.memcmp(array2, sha512))
 		    return 1;
@@ -2776,7 +2776,7 @@ public class Kernel
 				     mceliece_output_size,
 				     bytes.length -
 				     2 * Cryptography.HASH_KEY_LENGTH),
-			 Arrays.copyOfRange(pk,
+			 Arrays.copyOfRange(pki,
 					    0,
 					    Cryptography.CIPHER_KEY_LENGTH));
 		else
@@ -2786,7 +2786,7 @@ public class Kernel
 				     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
 				     bytes.length -
 				     2 * Cryptography.HASH_KEY_LENGTH),
-			 Arrays.copyOfRange(pk,
+			 Arrays.copyOfRange(pki,
 					    0,
 					    Cryptography.CIPHER_KEY_LENGTH));
 
@@ -2797,14 +2797,13 @@ public class Kernel
 
 		if(!(tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1] ||
+		     tag == Messages.STEAM_KEY_EXCHANGE[0] ||
 		     tag == Messages.STEAM_KEY_EXCHANGE[1]))
 		    return 1;
-		else if(tag == Messages.STEAM_KEY_EXCHANGE[0])
+		else if(tag == Messages.STEAM_KEY_EXCHANGE[0] ||
+			tag == Messages.STEAM_KEY_EXCHANGE[1])
 		{
-		    return 1;
-		}
-		else if(tag == Messages.STEAM_KEY_EXCHANGE[1])
-		{
+		    m_steamKeyExchange.append(aes256, pki);
 		    return 1;
 		}
 
@@ -2875,7 +2874,7 @@ public class Kernel
 					   publicKeySignature,
 					   Miscellaneous.
 					   joinByteArrays
-					   (pk,
+					   (pki,
 					    new byte[] {tag},
 					    strings[0].getBytes(),
 					    "\n".getBytes(),

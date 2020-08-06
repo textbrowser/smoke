@@ -60,7 +60,7 @@ public class SteamKeyExchange
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
     private final static long READ_INTERVAL = 7500L;
-    private final static long PARSE_INTERVAL = 500L;
+    private final static long PARSE_INTERVAL = 250;
 
     public SteamKeyExchange()
     {
@@ -143,7 +143,7 @@ public class SteamKeyExchange
 		       CIPHER_HASH_KEYS_LENGTH)
 		    {
 			/*
-			** Keys exchanged.
+			** Keys were exchanged.
 			*/
 
 			m_lastReadSteamOid.set(steamElement.m_someOid);
@@ -233,7 +233,7 @@ public class SteamKeyExchange
         }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    public void appendStepA(byte aes[], byte pki[])
+    public void append(byte aes[], byte pki[])
     {
 	if(aes == null || aes.length == 0 || pki == null || pki.length == 0)
 	    return;

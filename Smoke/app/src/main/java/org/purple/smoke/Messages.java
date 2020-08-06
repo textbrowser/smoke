@@ -278,13 +278,13 @@ public class Messages
 	    if(publicKey == null)
 		return null;
 
-	    byte pk[] = Cryptography.pkiEncrypt
+	    byte pki[] = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
 		 Miscellaneous.joinByteArrays(aesKey, shaKey));
 
-	    if(pk == null)
+	    if(pki == null)
 		return null;
 
 	    StringBuilder stringBuilder = new StringBuilder();
@@ -374,7 +374,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256), shaKey);
+		(Miscellaneous.joinByteArrays(pki, aes256), shaKey);
 
 	    if(sha512 == null)
 		return null;
@@ -384,12 +384,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pk, aes256, sha512, destination);
+		(pki, aes256, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -430,16 +430,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ PK ]
+	    ** [ PKI ]
 	    */
 
-	    byte pk[] = Cryptography.pkiEncrypt
+	    byte pki[] = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
 		 cryptography.chatEncryptionPublicKeyDigest());
 
-	    if(pk == null)
+	    if(pki == null)
 		return null;
 
 	    StringBuilder stringBuilder = new StringBuilder();
@@ -545,7 +545,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256),
+		(Miscellaneous.joinByteArrays(pki, aes256),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -560,11 +560,11 @@ public class Messages
 	    if(destinationKey != null)
 	    {
 		byte destination[] = Cryptography.hmac
-		    (Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		    (Miscellaneous.joinByteArrays(pki, aes256, sha512),
 		     destinationKey);
 
 		return Miscellaneous.joinByteArrays
-		    (pk, aes256, sha512, destination);
+		    (pki, aes256, sha512, destination);
 	    }
 	    else
 		return Miscellaneous.joinByteArrays
@@ -573,7 +573,7 @@ public class Messages
 		    ** before the message is created.
 		    */
 
-		    (pk,
+		    (pki,
 		     aes256,
 		     sha512,
 		     sipHashId.getBytes(StandardCharsets.UTF_8));
@@ -685,16 +685,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ PK ]
+	    ** [ PKI ]
 	    */
 
-	    byte pk[] = Cryptography.pkiEncrypt
+	    byte pki[] = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
 		 cryptography.chatEncryptionPublicKeyDigest());
 
-	    if(pk == null)
+	    if(pki == null)
 		return null;
 
 	    byte bytes[] = Miscellaneous.joinByteArrays
@@ -757,7 +757,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256),
+		(Miscellaneous.joinByteArrays(pki, aes256),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -770,12 +770,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pk, aes256, sha512, destination);
+		(pki, aes256, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1321,16 +1321,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ PK ]
+	    ** [ PKI ]
 	    */
 
-	    byte pk[] = Cryptography.pkiEncrypt
+	    byte pki[] = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
 		 cryptography.chatEncryptionPublicKeyDigest());
 
-	    if(pk == null)
+	    if(pki == null)
 		return null;
 
 	    StringBuilder stringBuilder = new StringBuilder();
@@ -1393,7 +1393,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256),
+		(Miscellaneous.joinByteArrays(pki, aes256),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -1406,12 +1406,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pk, aes256, sha512, destination);
+		(pki, aes256, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1447,16 +1447,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ PK ]
+	    ** [ PKI ]
 	    */
 
-	    byte pk[] = Cryptography.pkiEncrypt
+	    byte pki[] = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
 		 cryptography.chatEncryptionPublicKeyDigest());
 
-	    if(pk == null)
+	    if(pki == null)
 		return null;
 
 	    byte bytes[] = Miscellaneous.joinByteArrays
@@ -1505,7 +1505,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256),
+		(Miscellaneous.joinByteArrays(pki, aes256),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -1518,12 +1518,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pk, aes256, sha512, destination);
+		(pki, aes256, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1697,13 +1697,13 @@ public class Messages
 	    if(publicKey == null)
 		return null;
 
-	    byte pk[] = Cryptography.pkiEncrypt
+	    byte pki[] = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
 		 Miscellaneous.joinByteArrays(aesKey, shaKey));
 
-	    if(pk == null)
+	    if(pki == null)
 		return null;
 
 	    StringBuilder stringBuilder = new StringBuilder();
@@ -1802,7 +1802,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256), shaKey);
+		(Miscellaneous.joinByteArrays(pki, aes256), shaKey);
 
 	    if(sha512 == null)
 		return null;
@@ -1812,12 +1812,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pk, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pk, aes256, sha512, destination);
+		(pki, aes256, sha512, destination);
 	}
 	catch(Exception exception)
 	{
