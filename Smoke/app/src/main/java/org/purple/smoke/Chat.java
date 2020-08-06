@@ -123,16 +123,16 @@ public class Chat extends AppCompatActivity
 		     intent.getBooleanExtra("org.purple.smoke.refresh", true),
 		     intent.getCharExtra("org.purple.smoke.keyType", 'R'));
 		break;
+	    case "org.purple.smoke.neighbor_aborted":
+	    case "org.purple.smoke.neighbor_disconnected":
+		networkUnknown();
+		break;
 	    case "org.purple.smoke.network_connected":
-	    {
 		networkConnected();
 		break;
-	    }
 	    case "org.purple.smoke.network_disconnected":
-	    {
 		networkDisconnected();
 		break;
-	    }
 	    case "org.purple.smoke.populate_participants":
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
@@ -1595,6 +1595,8 @@ public class Chat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.busy_call");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
+	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
 	    intentFilter.addAction("org.purple.smoke.network_connected");
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction("org.purple.smoke.populate_participants");
