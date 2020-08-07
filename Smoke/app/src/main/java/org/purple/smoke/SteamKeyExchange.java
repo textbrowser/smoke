@@ -37,24 +37,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamKeyExchange
 {
-    private class Pair
-    {
-	private byte m_aes[] = null;
-	private byte m_pki[] = null;
-
-	public Pair(byte aes[], byte pki[])
-	{
-	    m_aes = aes;
-	    m_pki = pki;
-	}
-    };
-
-    private ArrayList<Pair> m_pairs = null;
+    private ArrayList<byte[]> m_array = null;
     private AtomicInteger m_lastReadSteamOid = null;
     private ScheduledExecutorService m_parseScheduler = null;
     private ScheduledExecutorService m_readScheduler = null;
     private final Object m_parseSchedulerMutex = new Object();
-    private final ReentrantReadWriteLock m_pairsMutex =
+    private final ReentrantReadWriteLock m_arrayMutex =
 	new ReentrantReadWriteLock();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -64,8 +52,8 @@ public class SteamKeyExchange
 
     public SteamKeyExchange()
     {
+	m_array = new ArrayList<> ();
 	m_lastReadSteamOid = new AtomicInteger(-1);
-	m_pairs = new ArrayList<> ();
 	m_parseScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_parseScheduler.scheduleAtFixedRate(new Runnable()
 	{
@@ -76,18 +64,18 @@ public class SteamKeyExchange
 		{
 		    boolean empty = false;
 
-		    m_pairsMutex.readLock().lock();
+		    m_arrayMutex.readLock().lock();
 
 		    try
 		    {
-			empty = m_pairs.isEmpty();
+			empty = m_array.isEmpty();
 		    }
 		    catch(Exception exception)
 		    {
 		    }
 		    finally
 		    {
-			m_pairsMutex.readLock().unlock();
+			m_arrayMutex.readLock().unlock();
 		    }
 
 		    if(empty)
@@ -233,25 +221,25 @@ public class SteamKeyExchange
         }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    public void append(byte aes[], byte pki[])
+    public void append(byte aes[])
     {
-	if(aes == null || aes.length == 0 || pki == null || pki.length == 0)
+	if(aes == null || aes.length == 0)
 	    return;
 
 	try
 	{
-	    m_pairsMutex.writeLock().lock();
+	    m_arrayMutex.writeLock().lock();
 
 	    try
 	    {
-		m_pairs.add(new Pair(aes, pki));
+		m_array.add(aes);
 	    }
 	    catch(Exception exception)
 	    {
 	    }
 	    finally
 	    {
-		m_pairsMutex.writeLock().unlock();
+		m_arrayMutex.writeLock().unlock();
 	    }
 
 	    synchronized(m_parseSchedulerMutex)
