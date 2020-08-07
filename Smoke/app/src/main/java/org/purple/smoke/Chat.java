@@ -1176,6 +1176,61 @@ public class Chat extends AppCompatActivity
     }
 
     @Override
+    protected void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+
+	releaseResources();
+	saveState();
+    }
+
+    @Override
+    protected void onResume()
+    {
+	super.onResume();
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.busy_call");
+	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
+	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
+	    intentFilter.addAction("org.purple.smoke.populate_participants");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.time");
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
+
+	networkUnknown();
+	populateChat();
+	populateParticipants();
+	prepareSchedulers();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState)
+    {
+	/*
+	** Do not issue a super.onSaveInstanceState().
+	*/
+    }
+
+    @Override
     public boolean onContextItemSelected(MenuItem menuItem)
     {
 	if(menuItem == null)
@@ -1565,60 +1620,5 @@ public class Chat extends AppCompatActivity
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	Miscellaneous.addMembersToMenu(menu, 6, 150);
 	return true;
-    }
-
-    @Override
-    public void onPause()
-    {
-	super.onPause();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-
-	releaseResources();
-	saveState();
-    }
-
-    @Override
-    public void onResume()
-    {
-	super.onResume();
-
-	if(!m_receiverRegistered)
-	{
-	    IntentFilter intentFilter = new IntentFilter();
-
-	    intentFilter.addAction("org.purple.smoke.busy_call");
-	    intentFilter.addAction("org.purple.smoke.chat_message");
-	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
-	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
-	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
-	    intentFilter.addAction("org.purple.smoke.network_connected");
-	    intentFilter.addAction("org.purple.smoke.network_disconnected");
-	    intentFilter.addAction("org.purple.smoke.populate_participants");
-	    intentFilter.addAction
-		("org.purple.smoke.state_participants_populated");
-	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		registerReceiver(m_receiver, intentFilter);
-	    m_receiverRegistered = true;
-	}
-
-	networkUnknown();
-	populateChat();
-	populateParticipants();
-	prepareSchedulers();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState)
-    {
-	/*
-	** Do not issue a super.onSaveInstanceState().
-	*/
     }
 }
