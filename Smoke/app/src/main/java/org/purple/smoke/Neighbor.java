@@ -426,7 +426,11 @@ public abstract class Neighbor
 		    synchronized(m_echoQueueMutex)
 		    {
 			if(!m_echoQueue.isEmpty())
-			    send(m_echoQueue.remove(0)); // Ignore the results.
+			    /*
+			    ** Results of send() are ignored.
+			    */
+
+			    send(m_echoQueue.remove(m_echoQueue.size() - 1));
 		    }
 
 		    /*
@@ -436,7 +440,11 @@ public abstract class Neighbor
 		    synchronized(m_queueMutex)
 		    {
 			if(!m_queue.isEmpty())
-			    send(m_queue.remove(0)); // Ignore the results.
+			    /*
+			    ** Results of send() are ignored.
+			    */
+
+			    send(m_queue.remove(m_queue.size() - 1));
 		    }
 		}
 		catch(Exception exception)
