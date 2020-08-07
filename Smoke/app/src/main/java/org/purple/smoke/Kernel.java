@@ -138,6 +138,7 @@ public class Kernel
     private Hashtable<String, Juggernaut> m_juggernauts = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private Hashtable<String, byte[]> m_fireStreams = null;
+    private Object m_messagesToSendSchedulerMutex = new Object();
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_networkStatusScheduler = null;
@@ -194,7 +195,7 @@ public class Kernel
     private final static long JUGGERNAUT_LIFETIME = 15000L; // 15 seconds.
     private final static long JUGGERNAUT_WINDOW = 10000L; // 10 seconds.
     private final static long MESSAGES_TO_SEND_INTERVAL =
-	100L; // 100 milliseconds.
+	50L; // 50 milliseconds.
     private final static long NEIGHBORS_INTERVAL = 5000L; // 5 seconds.
     private final static long NETWORK_STATUS_INTERVAL = 500L; // 0.5 seconds.
     private final static long PUBLISH_KEYS_INTERVAL = 45000L; // 45 seconds.
@@ -578,15 +579,17 @@ public class Kernel
 		    try
 		    {
 			MessageElement messageElement = null;
+			boolean empty = false;
 
 			m_messagesToSendMutex.writeLock().lock();
 
 			try
 			{
 			    if(!m_messagesToSend.isEmpty())
-				messageElement = m_messagesToSend.remove(0);
+				messageElement = m_messagesToSend.remove
+				    (m_messagesToSend.size() - 1);
 			    else
-				return;
+				empty = true;
 			}
 			catch(Exception exception)
 			{
@@ -595,6 +598,18 @@ public class Kernel
 			{
 			    m_messagesToSendMutex.writeLock().unlock();
 			}
+
+			if(empty)
+			    synchronized(m_messagesToSendSchedulerMutex)
+			    {
+				try
+				{
+				    m_messagesToSendSchedulerMutex.wait();
+				}
+				catch(Exception exception)
+				{
+				}
+			    }
 
 			if(messageElement == null)
 			    return;
@@ -1384,6 +1399,14 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
+	}
+    }
+
+    private void wakeMessagesToSendScheduler()
+    {
+	synchronized(m_messagesToSendSchedulerMutex)
+	{
+	    m_messagesToSendSchedulerMutex.notify();
 	}
     }
 
@@ -3276,6 +3299,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public void enqueueFireMessage(String message, String id, String name)
@@ -3319,6 +3344,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public void enqueueFireStatus(String id, String name)
@@ -3362,6 +3389,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public void enqueueJuggernaut(String secret,
@@ -3410,6 +3439,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public void enqueueShareSipHashIdMessage(int oid)
@@ -3432,6 +3463,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public void enqueueSteamKeyExchange(String message, String sipHashId)
@@ -3455,6 +3488,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public void extinguishFire(String name)
@@ -3502,6 +3537,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public void retrieveChatMessages(String sipHashId)
@@ -3524,6 +3561,8 @@ public class Kernel
 	{
 	    m_messagesToSendMutex.writeLock().unlock();
 	}
+
+	wakeMessagesToSendScheduler();
     }
 
     public int sendSimpleSteam(byte bytes[])
