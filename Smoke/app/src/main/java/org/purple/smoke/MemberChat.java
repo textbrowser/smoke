@@ -916,6 +916,66 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    @Override
+    protected void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+
+	releaseResources();
+	saveState();
+    }
+
+    @Override
+    protected void onResume()
+    {
+	super.onResume();
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.chat_local_message");
+	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
+	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
+	    intentFilter.addAction("org.purple.smoke.notify_data_set_changed");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.time");
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
+
+	prepareSchedulers();
+	prepareStatus(Kernel.getInstance().isConnected());
+
+	try
+	{
+	    m_adapter.notifyDataSetChanged();
+	    m_layoutManager.smoothScrollToPosition
+		(m_recyclerView, null, m_adapter.getItemCount() - 1);
+
+	    TextView textView1 = (TextView) findViewById(R.id.chat_message);
+
+	    textView1.setText
+		(State.getInstance().getCharSequence("member_chat.message"));
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     public boolean isMessageSelected(int oid)
     {
 	m_selectedMessagesMutex.readLock().lock();
@@ -1562,22 +1622,6 @@ public class MemberChat extends AppCompatActivity
     }
 
     @Override
-    public void onPause()
-    {
-	super.onPause();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-
-	releaseResources();
-	saveState();
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -1592,50 +1636,6 @@ public class MemberChat extends AppCompatActivity
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	Miscellaneous.addMembersToMenu(menu, 7, 250);
 	return true;
-    }
-
-    @Override
-    public void onResume()
-    {
-	super.onResume();
-
-	if(!m_receiverRegistered)
-	{
-	    IntentFilter intentFilter = new IntentFilter();
-
-	    intentFilter.addAction("org.purple.smoke.chat_local_message");
-	    intentFilter.addAction("org.purple.smoke.chat_message");
-	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
-	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
-	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
-	    intentFilter.addAction("org.purple.smoke.network_connected");
-	    intentFilter.addAction("org.purple.smoke.network_disconnected");
-	    intentFilter.addAction("org.purple.smoke.notify_data_set_changed");
-	    intentFilter.addAction
-		("org.purple.smoke.state_participants_populated");
-	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		registerReceiver(m_receiver, intentFilter);
-	    m_receiverRegistered = true;
-	}
-
-	prepareSchedulers();
-	prepareStatus(Kernel.getInstance().isConnected());
-
-	try
-	{
-	    m_adapter.notifyDataSetChanged();
-	    m_layoutManager.smoothScrollToPosition
-		(m_recyclerView, null, m_adapter.getItemCount() - 1);
-
-	    TextView textView1 = (TextView) findViewById(R.id.chat_message);
-
-	    textView1.setText
-		(State.getInstance().getCharSequence("member_chat.message"));
-	}
-	catch(Exception exception)
-	{
-	}
     }
 
     public void setMessageSelected(int oid, boolean isChecked)
