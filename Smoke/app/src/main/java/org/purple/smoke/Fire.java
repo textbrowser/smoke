@@ -688,6 +688,44 @@ public class Fire extends AppCompatActivity
     }
 
     @Override
+    protected void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+    }
+
+    @Override
+    protected void onResume()
+    {
+	super.onResume();
+	prepareFireChannelStatus(Kernel.getInstance().isConnected());
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.fire_message");
+	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.time");
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.fire_menu, menu);
@@ -752,19 +790,6 @@ public class Fire extends AppCompatActivity
     }
 
     @Override
-    public void onPause()
-    {
-	super.onPause();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
@@ -779,30 +804,5 @@ public class Fire extends AppCompatActivity
 	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
 	Miscellaneous.addMembersToMenu(menu, 6, 250);
 	return true;
-    }
-
-    @Override
-    public void onResume()
-    {
-	super.onResume();
-	prepareFireChannelStatus(Kernel.getInstance().isConnected());
-
-	if(!m_receiverRegistered)
-	{
-	    IntentFilter intentFilter = new IntentFilter();
-
-	    intentFilter.addAction("org.purple.smoke.chat_message");
-	    intentFilter.addAction("org.purple.smoke.fire_message");
-	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
-	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
-	    intentFilter.addAction("org.purple.smoke.network_connected");
-	    intentFilter.addAction("org.purple.smoke.network_disconnected");
-	    intentFilter.addAction
-		("org.purple.smoke.state_participants_populated");
-	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		registerReceiver(m_receiver, intentFilter);
-	    m_receiverRegistered = true;
-	}
     }
 }
