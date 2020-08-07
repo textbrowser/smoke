@@ -48,7 +48,7 @@ public class SteamKeyExchange
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
     private final static long READ_INTERVAL = 7500L;
-    private final static long PARSE_INTERVAL = 250;
+    private final static long PARSE_INTERVAL = 50L;
 
     public SteamKeyExchange()
     {
@@ -89,6 +89,27 @@ public class SteamKeyExchange
 			    {
 			    }
 			}
+
+		    byte bytes[] = null;
+
+		    m_arrayMutex.writeLock().lock();
+
+		    try
+		    {
+			if(!m_array.isEmpty())
+			    bytes = m_array.remove(m_array.size() - 1);
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_arrayMutex.writeLock().unlock();
+		    }
+
+		    if(bytes != null)
+		    {
+		    }
 		}
 		catch(Exception exception)
 		{
