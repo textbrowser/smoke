@@ -52,6 +52,7 @@ Completed Items
 - Depict successful Steam key exchanges.
 - Deploy new user name to Fire channels.
 - Describe the Ozone feature.
+- Detect network status changes across neighbors.
 - Detect removal of neighbors.
 - Detect removal of participants.
 - Determine gradle's version in the make files.
@@ -253,7 +254,6 @@ Remaining Items
 
 - Brands (profiles).
 - Clickable preview messages.
-- Detect network status changes across neighbors.
 - Document available tasks.
 - Full Steams, reliable Echo.
 - New class for establishing Steam keys.

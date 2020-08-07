@@ -143,6 +143,10 @@ public class MemberChat extends AppCompatActivity
 	    case "org.purple.smoke.network_connected":
 		prepareStatus(true);
 		break;
+	    case "org.purple.smoke.neighbor_aborted":
+	    case "org.purple.smoke.neighbor_disconnected":
+		prepareStatus(false);
+		break;
 	    case "org.purple.smoke.network_disconnected":
 		prepareStatus(false);
 		break;
@@ -1602,6 +1606,8 @@ public class MemberChat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.chat_local_message");
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
+	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
 	    intentFilter.addAction("org.purple.smoke.network_connected");
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction("org.purple.smoke.notify_data_set_changed");
