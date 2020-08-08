@@ -5355,6 +5355,10 @@ public class Database extends SQLiteOpenHelper
     public void writeSteam(final Cryptography cryptography,
 			   final SteamElement steamElement)
     {
+	/*
+	** Record received and transmitted Steams.
+	*/
+
 	if(cryptography == null ||
 	   m_db == null ||
 	   steamElement == null ||
@@ -5376,8 +5380,6 @@ public class Database extends SQLiteOpenHelper
 		    try
 		    {
 			ContentValues values = new ContentValues();
-			byte bytes[] = Cryptography.randomBytes
-			    (Cryptography.STEAM_FILE_IDENTITY_LENGTH);
 
 			values.put
 			    ("absolute_filename",
@@ -5397,19 +5399,47 @@ public class Database extends SQLiteOpenHelper
 			     cryptography.
 			     etmBase64String(steamElement.
 					     m_ephemeralPublicKey));
-			values.put
-			    ("file_digest",
-			     cryptography.
-			     etmBase64String(Cryptography.
-					     sha256FileDigest(steamElement.
-							      m_fileName)));
-			values.put
-			    ("file_identity",
-			     cryptography.etmBase64String(bytes));
-			values.put
-			    ("file_identity_digest",
-			     cryptography.
-			     etmBase64String(cryptography.hmac(bytes)));
+
+			if(steamElement.m_fileDigest == null)
+			    values.put
+				("file_digest",
+				 cryptography.
+				 etmBase64String(Cryptography.
+						 sha256FileDigest(steamElement.
+								  m_fileName)));
+			else
+			    values.put
+				("file_digest",
+				 cryptography.
+				 etmBase64String(steamElement.m_fileDigest));
+
+			if(steamElement.m_fileIdentity == null)
+			{
+			    byte bytes[] = Cryptography.randomBytes
+				(Cryptography.STEAM_FILE_IDENTITY_LENGTH);
+
+			    values.put
+				("file_identity",
+				 cryptography.etmBase64String(bytes));
+			    values.put
+				("file_identity_digest",
+				 cryptography.
+				 etmBase64String(cryptography.hmac(bytes)));
+			}
+			else
+			{
+			    values.put
+				("file_identity",
+				 cryptography.
+				 etmBase64String(steamElement.m_fileIdentity));
+			    values.put
+				("file_identity_digest",
+				 cryptography.
+				 etmBase64String(cryptography.
+						 hmac(steamElement.
+						      m_fileIdentity)));
+			}
+
 			values.put
 			    ("file_size",
 			     cryptography.
