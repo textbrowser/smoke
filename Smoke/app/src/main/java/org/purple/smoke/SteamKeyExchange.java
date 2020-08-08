@@ -174,7 +174,7 @@ public class SteamKeyExchange
 	    }
 
 	/*
-	** Is the file already registered? If so, return the generate keys.
+	** Is the file already registered? If so, return the generated keys.
 	*/
     }
 
