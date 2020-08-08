@@ -3387,6 +3387,88 @@ public class Settings extends AppCompatActivity
     }
 
     @Override
+    protected void onPause()
+    {
+	super.onPause();
+
+	if(m_receiverRegistered)
+	{
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+
+	releaseResources();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+	/*
+	** Empty.
+	*/
+    }
+
+    @Override
+    protected void onResume()
+    {
+	super.onResume();
+	networkStatusChanged();
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
+	    intentFilter.addAction("org.purple.smoke.populate_participants");
+	    intentFilter.addAction
+		("org.purple.smoke.siphash_share_confirmation");
+	    intentFilter.addAction("org.purple.smoke.time");
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
+
+	if(State.getInstance().isLocked())
+	{
+	    showSmokescreenActivity();
+	    return;
+	}
+
+	/*
+	** Resume the last activity, if necessary.
+	*/
+
+	String str = m_databaseHelper.readSetting(null, "lastActivity");
+
+	switch(str)
+	{
+	case "Chat":
+	    showChatActivity();
+	    break;
+	case "Fire":
+	    showFireActivity();
+	    break;
+	case "MemberChat":
+	    showMemberChatActivity();
+	    break;
+	case "Steam":
+	    showSteamActivity();
+	    break;
+	default:
+	    if(m_databaseHelper.
+	       readSetting(null, "automatic_neighbors_refresh").equals("true"))
+		startTimers();
+
+	    break;
+	}
+    }
+
+    @Override
     public boolean onContextItemSelected(MenuItem menuItem)
     {
 	if(menuItem == null)
@@ -3681,88 +3763,6 @@ public class Settings extends AppCompatActivity
 		     view.getId(),
 		     0,
 		     "View Details (" + tag1 + ")");
-	}
-    }
-
-    @Override
-    public void onPause()
-    {
-	super.onPause();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-
-	releaseResources();
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-	/*
-	** Empty.
-	*/
-    }
-
-    @Override
-    public void onResume()
-    {
-	super.onResume();
-	networkStatusChanged();
-
-	if(!m_receiverRegistered)
-	{
-	    IntentFilter intentFilter = new IntentFilter();
-
-	    intentFilter.addAction("org.purple.smoke.chat_message");
-	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
-	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
-	    intentFilter.addAction("org.purple.smoke.network_connected");
-	    intentFilter.addAction("org.purple.smoke.network_disconnected");
-	    intentFilter.addAction("org.purple.smoke.populate_participants");
-	    intentFilter.addAction
-		("org.purple.smoke.siphash_share_confirmation");
-	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		registerReceiver(m_receiver, intentFilter);
-	    m_receiverRegistered = true;
-	}
-
-	if(State.getInstance().isLocked())
-	{
-	    showSmokescreenActivity();
-	    return;
-	}
-
-	/*
-	** Resume the last activity, if necessary.
-	*/
-
-	String str = m_databaseHelper.readSetting(null, "lastActivity");
-
-	switch(str)
-	{
-	case "Chat":
-	    showChatActivity();
-	    break;
-	case "Fire":
-	    showFireActivity();
-	    break;
-	case "MemberChat":
-	    showMemberChatActivity();
-	    break;
-	case "Steam":
-	    showSteamActivity();
-	    break;
-	default:
-	    if(m_databaseHelper.
-	       readSetting(null, "automatic_neighbors_refresh").equals("true"))
-		startTimers();
-
-	    break;
 	}
     }
 }
