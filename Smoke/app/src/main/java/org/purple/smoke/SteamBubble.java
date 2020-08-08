@@ -50,6 +50,7 @@ public class SteamBubble extends View
     private TextView m_destination = null;
     private TextView m_digest = null;
     private TextView m_eta = null;
+    private TextView m_fileIdentity = null;
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
     private TextView m_readIntervalLabel = null;
@@ -158,6 +159,7 @@ public class SteamBubble extends View
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_direction = m_view.findViewById(R.id.direction);
 	m_eta = (TextView) m_view.findViewById(R.id.eta);
+	m_fileIdentity = (TextView) m_view.findViewById(R.id.file_identity);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
 	m_keyExchangeStatus = m_view.findViewById(R.id.key_exchange_status);
@@ -292,6 +294,7 @@ public class SteamBubble extends View
 	    m_keyExchangeStatus.setVisibility(View.GONE);
 	    m_readInterval.setVisibility(View.VISIBLE);
 	    m_readIntervalLabel.setVisibility(View.VISIBLE);
+	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	}
 	else if(steamElement.m_direction == SteamElement.DOWNLOAD)
 	{
@@ -306,6 +309,8 @@ public class SteamBubble extends View
 	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
 	    m_readInterval.setVisibility(View.GONE);
 	    m_readIntervalLabel.setVisibility(View.GONE);
+	    m_sent.setText
+		("Received: " + formatSize(steamElement.m_readOffset));
 	}
 	else
 	{
@@ -325,6 +330,7 @@ public class SteamBubble extends View
 		 R.drawable.lock : R.drawable.unlock);
 	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
 	    m_readInterval.setVisibility(View.GONE);
+	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	}
 
 	m_digest.setText
@@ -333,6 +339,9 @@ public class SteamBubble extends View
 	m_eta.setText(prettyEta(steamElement.m_transferRate,
 				steamElement.m_fileSize,
 				steamElement.m_readOffset));
+	m_fileIdentity.setText
+	    ("File Identity: " +
+	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileIdentity));
 	m_fileName.setText("File: " + steamElement.m_fileName);
 	m_fileSize.setText
 	    ("Size: " +
@@ -365,7 +374,6 @@ public class SteamBubble extends View
 	    break;
 	}
 
-	m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	m_status.setText("Status: " + steamElement.m_status);
 	m_transferRate.setText("Transfer Rate: " + steamElement.m_transferRate);
 	m_view.setId(m_oid);

@@ -127,6 +127,16 @@ public class SteamKeyExchange
 		break;
 	    case 4:
 		fileIdentity = Base64.decode(string.getBytes(), Base64.NO_WRAP);
+
+		/*
+		** Is the Steam already registered?
+		** If so, return the generated private key pair.
+		*/
+
+		if(s_databaseHelper.
+		   containsSteam(s_cryptography, fileIdentity))
+		    return;
+
 		ii += 1;
 		break;
 	    case 5:
@@ -189,7 +199,7 @@ public class SteamKeyExchange
 	    }
 
 	/*
-	** Is the file already registered? If so, return the generated keys.
+	** Record the new Steam.
 	*/
 
 	SteamElement steamElement = new SteamElement();

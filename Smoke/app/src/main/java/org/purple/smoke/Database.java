@@ -2884,6 +2884,39 @@ public class Database extends SQLiteOpenHelper
 	return contains;
     }
 
+    public boolean containsSteam(Cryptography cryptography, byte fileIdentity[])
+    {
+	if(cryptography == null || fileIdentity == null || m_db == null)
+	    return false;
+
+	Cursor cursor = null;
+	boolean contains = false;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT EXISTS(SELECT 1 " +
+		 "FROM steam_files WHERE " +
+		 "file_identity_digest = ?)",
+		 new String[] {Base64.
+			       encodeToString(cryptography.hmac(fileIdentity),
+					      Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		contains = cursor.getInt(0) == 1;
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return contains;
+    }
+
     public boolean deleteEntry(String oid, String table)
     {
 	if(m_db == null)
@@ -4629,6 +4662,7 @@ public class Database extends SQLiteOpenHelper
 	    "ephemeral_public_key TEXT NOT NULL, " +
 	    "file_digest TEXT NOT NULL, " +
 	    "file_identity TEXT NOT NULL, " +
+	    "file_identity_digest TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " + /*
@@ -5342,6 +5376,8 @@ public class Database extends SQLiteOpenHelper
 		    try
 		    {
 			ContentValues values = new ContentValues();
+			byte bytes[] = Cryptography.randomBytes
+			    (Cryptography.STEAM_FILE_IDENTITY_LENGTH);
 
 			values.put
 			    ("absolute_filename",
@@ -5369,9 +5405,11 @@ public class Database extends SQLiteOpenHelper
 							      m_fileName)));
 			values.put
 			    ("file_identity",
+			     cryptography.etmBase64String(bytes));
+			values.put
+			    ("file_identity_digest",
 			     cryptography.
-			     etmBase64String(Cryptography.
-			randomBytes(Cryptography.STEAM_FILE_IDENTITY_LENGTH)));
+			     etmBase64String(cryptography.hmac(bytes)));
 			values.put
 			    ("file_size",
 			     cryptography.
