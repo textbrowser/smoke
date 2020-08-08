@@ -63,19 +63,23 @@ public class SteamKeyExchange
 		try
 		{
 		    boolean empty = false;
+		    byte bytes[] = null;
 
-		    m_arrayMutex.readLock().lock();
+		    m_arrayMutex.writeLock().lock();
 
 		    try
 		    {
-			empty = m_array.isEmpty();
+			if(!m_array.isEmpty())
+			    bytes = m_array.remove(m_array.size() - 1);
+			else
+			    empty = true;
 		    }
 		    catch(Exception exception)
 		    {
 		    }
 		    finally
 		    {
-			m_arrayMutex.readLock().unlock();
+			m_arrayMutex.writeLock().unlock();
 		    }
 
 		    if(empty)
@@ -90,25 +94,14 @@ public class SteamKeyExchange
 			    }
 			}
 
-		    byte bytes[] = null;
-
-		    m_arrayMutex.writeLock().lock();
-
-		    try
-		    {
-			if(!m_array.isEmpty())
-			    bytes = m_array.remove(m_array.size() - 1);
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		    finally
-		    {
-			m_arrayMutex.writeLock().unlock();
-		    }
-
 		    if(bytes != null)
 		    {
+			if(bytes[0] == Messages.STEAM_KEY_EXCHANGE[0])
+			{
+			}
+			else if(bytes[0] == Messages.STEAM_KEY_EXCHANGE[1])
+			{
+			}
 		    }
 		}
 		catch(Exception exception)
@@ -167,7 +160,7 @@ public class SteamKeyExchange
 		       steamElement.m_ephemeralPublicKey.length == 0)
 		    {
 			/*
-			** Create an RSA private-key pair.
+			** Create an RSA key pair.
 			*/
 
 			keyPair = Cryptography.generatePrivatePublicKeyPair
@@ -177,7 +170,7 @@ public class SteamKeyExchange
 			    return;
 
 			/*
-			** Record the private-key pair.
+			** Record the key pair.
 			*/
 
 			if(!s_databaseHelper.
@@ -206,7 +199,7 @@ public class SteamKeyExchange
 		       keyPair != null)
 		    {
 			/*
-			** Share the private-key pair.
+			** Share the key pair.
 			*/
 
 			String sipHashId = Miscellaneous.
