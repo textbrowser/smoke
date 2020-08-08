@@ -72,6 +72,8 @@ public class Messages
 							      ** considered.
 							      */
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 7;
+    public final static int STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT =
+	7; // The first byte is not considered.
 
     public static String authenticateMessage(Cryptography cryptography,
 					     String string)

@@ -2826,7 +2826,7 @@ public class Kernel
 		else if(tag == Messages.STEAM_KEY_EXCHANGE[0] ||
 			tag == Messages.STEAM_KEY_EXCHANGE[1])
 		{
-		    m_steamKeyExchange.append(aes256);
+		    m_steamKeyExchange.append(aes256, pki);
 		    return 1;
 		}
 

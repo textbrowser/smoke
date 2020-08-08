@@ -27,8 +27,12 @@
 
 package org.purple.smoke;
 
+import android.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,23 +41,153 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamKeyExchange
 {
-    private ArrayList<byte[]> m_array = null;
+    private class Pair
+    {
+	public byte m_aes[] = null;
+	public byte m_pki[] = null;
+
+	public Pair(byte aes[], byte pki[])
+	{
+	    m_aes = aes;
+	    m_pki = pki;
+	}
+    }
+
+    private ArrayList<Pair> m_pairs = null;
     private AtomicInteger m_lastReadSteamOid = null;
     private ScheduledExecutorService m_parseScheduler = null;
     private ScheduledExecutorService m_readScheduler = null;
     private final Object m_parseSchedulerMutex = new Object();
-    private final ReentrantReadWriteLock m_arrayMutex =
+    private final ReentrantReadWriteLock m_pairsMutex =
 	new ReentrantReadWriteLock();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
-    private final static long READ_INTERVAL = 7500L;
+    private final static long KEY_EXCHANGE_LIFETIME = 30000L;
     private final static long PARSE_INTERVAL = 50L;
+    private final static long READ_INTERVAL = 7500L;
+
+    private void steamA(byte aes[], byte pki[])
+    {
+	if(aes == null || pki == null)
+	    return;
+
+	aes = Arrays.copyOfRange(aes, 1, aes.length);
+
+	String strings[] = new String(aes).split("\\n");
+
+	if(strings.length !=
+	   Messages.STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT)
+	    return;
+
+	String fileName = "";
+	byte ephemeralPublicKey[] = null;
+	byte ephemeralPublicKeyType[] = null;
+	byte fileIdentity[] = null;
+	byte publicKeySignature[] = null;
+	byte senderPublicEncryptionKeyDigest[] = null;
+	byte tag = Messages.STEAM_KEY_EXCHANGE[0];
+	int ii = 0;
+	long timestamp = 0;
+
+	for(String string : strings)
+	    switch(ii)
+	    {
+	    case 0:
+		long current = System.currentTimeMillis();
+
+		timestamp = Miscellaneous.byteArrayToLong
+		    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+
+		if(current - timestamp < 0L)
+		{
+		    if(timestamp - current > KEY_EXCHANGE_LIFETIME)
+			return;
+		}
+		else if(current - timestamp > KEY_EXCHANGE_LIFETIME)
+		    return;
+
+		ii += 1;
+		break;
+	    case 1:
+		ephemeralPublicKey = Base64.decode
+		    (string.getBytes(), Base64.NO_WRAP);
+		ii += 1;
+		break;
+	    case 2:
+		ephemeralPublicKeyType = Base64.decode
+		    (string.getBytes(), Base64.NO_WRAP);
+		ii += 1;
+		break;
+	    case 3:
+		fileIdentity = Base64.decode(string.getBytes(), Base64.NO_WRAP);
+		ii += 1;
+		break;
+	    case 4:
+		fileName = new String
+		    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
+		     StandardCharsets.UTF_8);
+		ii += 1;
+		break;
+	    case 5:
+		senderPublicEncryptionKeyDigest = Base64.decode
+		    (string.getBytes(), Base64.NO_WRAP);
+		ii += 1;
+		break;
+	    case 6:
+		PublicKey signatureKey = s_databaseHelper.signatureKeyForDigest
+		    (s_cryptography, senderPublicEncryptionKeyDigest);
+
+		if(signatureKey == null)
+		    return;
+
+		publicKeySignature = Base64.decode
+		    (string.getBytes(), Base64.NO_WRAP);
+
+		if(!Cryptography.
+		   verifySignature(signatureKey,
+				   publicKeySignature,
+				   Miscellaneous.
+				   joinByteArrays
+				   (pki,
+				    new byte[] {tag},
+				    strings[0].getBytes(), // T
+				    "\n".getBytes(),
+				    strings[1].getBytes(), // EPK
+				    "\n".getBytes(),
+				    strings[2].getBytes(), // EPKT
+				    "\n".getBytes(),
+				    strings[3].getBytes(), // FI
+				    "\n".getBytes(),
+				    strings[4].getBytes(), // FN
+				    "\n".getBytes(),
+				    strings[5].getBytes(), // SPEKSD
+				    "\n".getBytes(),
+				    s_cryptography.
+				    chatEncryptionPublicKeyDigest())))
+		    return;
+
+		ii += 1;
+		break;
+	    default:
+		break;
+	    }
+
+	/*
+	** Is the file already registered? If so, return the generate keys.
+	*/
+    }
+
+    private void steamB(byte bytes[])
+    {
+	if(bytes == null)
+	    return;
+    }
 
     public SteamKeyExchange()
     {
-	m_array = new ArrayList<> ();
 	m_lastReadSteamOid = new AtomicInteger(-1);
+	m_pairs = new ArrayList<> ();
 	m_parseScheduler = Executors.newSingleThreadScheduledExecutor();
 	m_parseScheduler.scheduleAtFixedRate(new Runnable()
 	{
@@ -62,15 +196,15 @@ public class SteamKeyExchange
 	    {
 		try
 		{
+		    Pair pair = null;
 		    boolean empty = false;
-		    byte bytes[] = null;
 
-		    m_arrayMutex.writeLock().lock();
+		    m_pairsMutex.writeLock().lock();
 
 		    try
 		    {
-			if(!m_array.isEmpty())
-			    bytes = m_array.remove(m_array.size() - 1);
+			if(!m_pairs.isEmpty())
+			    pair = m_pairs.remove(m_pairs.size() - 1);
 			else
 			    empty = true;
 		    }
@@ -79,7 +213,7 @@ public class SteamKeyExchange
 		    }
 		    finally
 		    {
-			m_arrayMutex.writeLock().unlock();
+			m_pairsMutex.writeLock().unlock();
 		    }
 
 		    if(empty)
@@ -94,15 +228,11 @@ public class SteamKeyExchange
 			    }
 			}
 
-		    if(bytes != null)
-		    {
-			if(bytes[0] == Messages.STEAM_KEY_EXCHANGE[0])
-			{
-			}
-			else if(bytes[0] == Messages.STEAM_KEY_EXCHANGE[1])
-			{
-			}
-		    }
+		    if(pair != null)
+			if(pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[0])
+			    steamA(pair.m_aes, pair.m_pki);
+			else if(pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[1])
+			    steamB(pair.m_aes);
 		}
 		catch(Exception exception)
 		{
@@ -235,25 +365,25 @@ public class SteamKeyExchange
         }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    public void append(byte aes[])
+    public void append(byte aes[], byte pki[])
     {
-	if(aes == null || aes.length == 0)
+	if(aes == null || aes.length == 0 || pki == null || pki.length == 0)
 	    return;
 
 	try
 	{
-	    m_arrayMutex.writeLock().lock();
+	    m_pairsMutex.writeLock().lock();
 
 	    try
 	    {
-		m_array.add(aes);
+		m_pairs.add(new Pair(aes, pki));
 	    }
 	    catch(Exception exception)
 	    {
 	    }
 	    finally
 	    {
-		m_arrayMutex.writeLock().unlock();
+		m_pairsMutex.writeLock().unlock();
 	    }
 
 	    synchronized(m_parseSchedulerMutex)
