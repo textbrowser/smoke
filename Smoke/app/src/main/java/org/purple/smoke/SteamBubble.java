@@ -255,13 +255,11 @@ public class SteamBubble extends View
 	    {
 		m_control.setText("Pause");
 		m_controlString = "";
-		m_direction.setBackgroundResource(R.drawable.download);
 	    }
 	    else
 	    {
 		m_control.setText("Rewind");
 		m_controlString = "rewind";
-		m_direction.setBackgroundResource(R.drawable.upload);
 	    }
 
 	    m_progress.setVisibility(View.GONE);
@@ -289,6 +287,8 @@ public class SteamBubble extends View
 	    int oid = Kernel.getInstance().nextSimpleSteamOid();
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_destination.setText("Destination: " + steamElement.m_destination);
+	    m_direction.setBackgroundResource(R.drawable.upload);
 	    m_keyExchangeStatus.setVisibility(View.GONE);
 	    m_readInterval.setVisibility(View.VISIBLE);
 	    m_readIntervalLabel.setVisibility(View.VISIBLE);
@@ -297,6 +297,7 @@ public class SteamBubble extends View
 	{
 	    m_control.setEnabled(!m_controlString.isEmpty());
 	    m_destination.setText("Origin: " + steamElement.m_destination);
+	    m_direction.setBackgroundResource(R.drawable.download);
 	    m_keyExchangeStatus.setBackgroundResource
 		(steamElement.m_keyStream != null &&
 		 steamElement.m_keyStream.length ==
@@ -316,6 +317,7 @@ public class SteamBubble extends View
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
 	    m_destination.setText("Destination: " + steamElement.m_destination);
+	    m_direction.setBackgroundResource(R.drawable.upload);
 	    m_keyExchangeStatus.setBackgroundResource
 		(steamElement.m_keyStream != null &&
 		 steamElement.m_keyStream.length ==

@@ -73,7 +73,7 @@ public class Messages
 							      */
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 7;
     public final static int STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT =
-	8; // The first byte is not considered.
+	9; // The first byte is not considered.
 
     public static String authenticateMessage(Cryptography cryptography,
 					     String string)
@@ -1668,7 +1668,8 @@ public class Messages
 				   byte fileIdentity[],
 				   byte keyStream[],
 				   byte publicKeyType,
-				   byte tag)
+				   byte tag,
+				   long fileSize)
     {
 	if(cryptography == null ||
 	   fileDigest == null ||
@@ -1764,6 +1765,16 @@ public class Messages
 	    stringBuilder.append
 		(Base64.
 		 encodeToString(fileName.getBytes(StandardCharsets.UTF_8),
+				Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ File Size ]
+	    */
+
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(Miscellaneous.longToByteArray(fileSize),
 				Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
