@@ -28,6 +28,7 @@ Completed Items
   retained as such states are expensive.
 - Chat messages will appear blue if they are assembled from the internal log
   and are beyond the specific time window.
+- Class access privileges.
 - Compare provided encryption and signature public keys.
 - Complete Cryptography.pkiEncrypt().
 - Compress IPv6 Scope ID field when hidden.
@@ -253,7 +254,6 @@ Future Items
 Remaining Items
 
 - Brands (profiles).
-- Class access privileges.
 - Clickable preview messages.
 - Document available tasks.
 - Full Steams, reliable Echo.

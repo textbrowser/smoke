@@ -372,6 +372,25 @@ public class Steam extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode,
+				    int resultCode,
+				    Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try
+	{
+	    if(data != null &&
+	       requestCode == SELECT_FILE_REQUEST &&
+	       resultCode == RESULT_OK)
+		m_fileName.setText(data.getData().toString());
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
@@ -421,22 +440,53 @@ public class Steam extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode,
-				    int resultCode,
-				    Intent data)
+    protected void onPause()
     {
-        super.onActivityResult(requestCode, resultCode, data);
+	super.onPause();
 
-        try
+	if(m_receiverRegistered)
 	{
-	    if(data != null &&
-	       requestCode == SELECT_FILE_REQUEST &&
-	       resultCode == RESULT_OK)
-		m_fileName.setText(data.getData().toString());
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		unregisterReceiver(m_receiver);
+	    m_receiverRegistered = false;
+	}
+
+	releaseResources();
+    }
+
+    @Override
+    protected void onResume()
+    {
+	super.onResume();
+	networkStatusChanged();
+
+	if(!m_receiverRegistered)
+	{
+	    IntentFilter intentFilter = new IntentFilter();
+
+	    intentFilter.addAction("org.purple.smoke.chat_message");
+	    intentFilter.addAction("org.purple.smoke.network_connected");
+	    intentFilter.addAction("org.purple.smoke.network_disconnected");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.steam_added");
+	    intentFilter.addAction("org.purple.smoke.steam_status");
+	    intentFilter.addAction("org.purple.smoke.time");
+	    LocalBroadcastManager.getInstance(getApplicationContext()).
+		registerReceiver(m_receiver, intentFilter);
+	    m_receiverRegistered = true;
+	}
+
+	try
+	{
+	    m_adapter.notifyDataSetChanged();
+	    m_layoutManager.smoothScrollToPosition(m_recyclerView, null, 0);
 	}
 	catch(Exception exception)
 	{
 	}
+
+	prepareSchedulers();
     }
 
     @Override
@@ -620,55 +670,5 @@ public class Steam extends AppCompatActivity
 	intent.putExtra("Result", "Done");
 	setResult(RESULT_OK, intent);
 	super.onBackPressed();
-    }
-
-    @Override
-    public void onPause()
-    {
-	super.onPause();
-
-	if(m_receiverRegistered)
-	{
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		unregisterReceiver(m_receiver);
-	    m_receiverRegistered = false;
-	}
-
-	releaseResources();
-    }
-
-    @Override
-    public void onResume()
-    {
-	super.onResume();
-	networkStatusChanged();
-
-	if(!m_receiverRegistered)
-	{
-	    IntentFilter intentFilter = new IntentFilter();
-
-	    intentFilter.addAction("org.purple.smoke.chat_message");
-	    intentFilter.addAction("org.purple.smoke.network_connected");
-	    intentFilter.addAction("org.purple.smoke.network_disconnected");
-	    intentFilter.addAction
-		("org.purple.smoke.state_participants_populated");
-	    intentFilter.addAction("org.purple.smoke.steam_added");
-	    intentFilter.addAction("org.purple.smoke.steam_status");
-	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
-		registerReceiver(m_receiver, intentFilter);
-	    m_receiverRegistered = true;
-	}
-
-	try
-	{
-	    m_adapter.notifyDataSetChanged();
-	    m_layoutManager.smoothScrollToPosition(m_recyclerView, null, 0);
-	}
-	catch(Exception exception)
-	{
-	}
-
-	prepareSchedulers();
     }
 }
