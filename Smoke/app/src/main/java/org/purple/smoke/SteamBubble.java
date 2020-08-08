@@ -296,6 +296,7 @@ public class SteamBubble extends View
 	else if(steamElement.m_direction == SteamElement.DOWNLOAD)
 	{
 	    m_control.setEnabled(!m_controlString.isEmpty());
+	    m_destination.setText("Origin: " + steamElement.m_destination);
 	    m_keyExchangeStatus.setBackgroundResource
 		(steamElement.m_keyStream != null &&
 		 steamElement.m_keyStream.length ==
@@ -314,6 +315,7 @@ public class SteamBubble extends View
 	    int oid = -1;
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_destination.setText("Destination: " + steamElement.m_destination);
 	    m_keyExchangeStatus.setBackgroundResource
 		(steamElement.m_keyStream != null &&
 		 steamElement.m_keyStream.length ==
@@ -323,7 +325,6 @@ public class SteamBubble extends View
 	    m_readInterval.setVisibility(View.GONE);
 	}
 
-	m_destination.setText("Destination: " + steamElement.m_destination);
 	m_digest.setText
 	    ("SHA-256: " +
 	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));

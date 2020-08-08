@@ -5370,7 +5370,8 @@ public class Database extends SQLiteOpenHelper
 			values.put
 			    ("file_identity",
 			     cryptography.
-			     etmBase64String(Cryptography.randomBytes(64)));
+			     etmBase64String(Cryptography.
+			randomBytes(Cryptography.STEAM_FILE_IDENTITY_LENGTH)));
 			values.put
 			    ("file_size",
 			     cryptography.

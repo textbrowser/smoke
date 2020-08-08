@@ -73,7 +73,7 @@ public class Messages
 							      */
     public final static int EPKS_GROUP_ONE_ELEMENT_COUNT = 7;
     public final static int STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT =
-	7; // The first byte is not considered.
+	8; // The first byte is not considered.
 
     public static String authenticateMessage(Cryptography cryptography,
 					     String string)
@@ -1664,12 +1664,15 @@ public class Messages
     public static byte[] steamCall(Cryptography cryptography,
 				   String fileName,
 				   String sipHashId,
+				   byte fileDigest[],
 				   byte fileIdentity[],
 				   byte keyStream[],
 				   byte publicKeyType,
 				   byte tag)
     {
 	if(cryptography == null ||
+	   fileDigest == null ||
+	   fileDigest.length == 0 ||
 	   fileIdentity == null ||
 	   fileIdentity.length == 0 ||
 	   fileName.isEmpty() ||
@@ -1736,6 +1739,14 @@ public class Messages
 	    stringBuilder.append
 		(Base64.encodeToString(new byte[] {publicKeyType},
 				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ File Digest ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(fileDigest, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
 	    /*

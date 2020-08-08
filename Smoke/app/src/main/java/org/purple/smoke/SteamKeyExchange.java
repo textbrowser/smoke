@@ -83,6 +83,7 @@ public class SteamKeyExchange
 	String fileName = "";
 	byte ephemeralPublicKey[] = null;
 	byte ephemeralPublicKeyType[] = null;
+	byte fileDigest[] = null;
 	byte fileIdentity[] = null;
 	byte publicKeySignature[] = null;
 	byte senderPublicEncryptionKeyDigest[] = null;
@@ -120,21 +121,24 @@ public class SteamKeyExchange
 		ii += 1;
 		break;
 	    case 3:
+		fileDigest = Base64.decode(string.getBytes(), Base64.NO_WRAP);
+		break;
+	    case 4:
 		fileIdentity = Base64.decode(string.getBytes(), Base64.NO_WRAP);
 		ii += 1;
 		break;
-	    case 4:
+	    case 5:
 		fileName = new String
 		    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
 		     StandardCharsets.UTF_8);
 		ii += 1;
 		break;
-	    case 5:
+	    case 6:
 		senderPublicEncryptionKeyDigest = Base64.decode
 		    (string.getBytes(), Base64.NO_WRAP);
 		ii += 1;
 		break;
-	    case 6:
+	    case 7:
 		PublicKey signatureKey = s_databaseHelper.signatureKeyForDigest
 		    (s_cryptography, senderPublicEncryptionKeyDigest);
 
@@ -157,11 +161,13 @@ public class SteamKeyExchange
 				    "\n".getBytes(),
 				    strings[2].getBytes(), // EPKT
 				    "\n".getBytes(),
-				    strings[3].getBytes(), // FI
+				    strings[3].getBytes(), // FD
 				    "\n".getBytes(),
-				    strings[4].getBytes(), // FN
+				    strings[4].getBytes(), // FI
 				    "\n".getBytes(),
-				    strings[5].getBytes(), // SPEKSD
+				    strings[5].getBytes(), // FN
+				    "\n".getBytes(),
+				    strings[6].getBytes(), // SPEKSD
 				    "\n".getBytes(),
 				    s_cryptography.
 				    chatEncryptionPublicKeyDigest())))
@@ -176,6 +182,22 @@ public class SteamKeyExchange
 	/*
 	** Is the file already registered? If so, return the generated keys.
 	*/
+
+	SteamElement steamElement = new SteamElement();
+	String array[] = s_databaseHelper.nameSipHashIdFromDigest
+	    (s_cryptography, senderPublicEncryptionKeyDigest);
+
+	if(array[1].isEmpty())
+	    steamElement.m_destination = array[0];
+	else
+	    steamElement.m_destination = array[0] + "(" + array[1] + ")";
+
+	steamElement.m_ephemeralPublicKey = ephemeralPublicKey;
+	steamElement.m_fileIdentity = fileIdentity;
+	steamElement.m_fileName = fileName;
+	steamElement.m_readInterval = 0L;
+	steamElement.m_status = "received ephemeral public key";
+	s_databaseHelper.writeSteam(s_cryptography, steamElement);
     }
 
     private void steamB(byte bytes[])
@@ -341,6 +363,7 @@ public class SteamKeyExchange
 			    (s_cryptography,
 			     steamElement.m_fileName,
 			     sipHashId,
+			     steamElement.m_fileDigest,
 			     steamElement.m_fileIdentity,
 			     keyPair.getPublic().getEncoded(),
 			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // RSA
