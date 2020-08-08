@@ -5423,8 +5423,8 @@ public class Database extends SQLiteOpenHelper
 				 cryptography.etmBase64String(bytes));
 			    values.put
 				("file_identity_digest",
-				 cryptography.
-				 etmBase64String(cryptography.hmac(bytes)));
+				 Base64.encodeToString(cryptography.hmac(bytes),
+						       Base64.DEFAULT));
 			}
 			else
 			{
@@ -5434,10 +5434,11 @@ public class Database extends SQLiteOpenHelper
 				 etmBase64String(steamElement.m_fileIdentity));
 			    values.put
 				("file_identity_digest",
-				 cryptography.
-				 etmBase64String(cryptography.
-						 hmac(steamElement.
-						      m_fileIdentity)));
+				 Base64.
+				 encodeToString(cryptography.
+						hmac(steamElement.
+						     m_fileIdentity),
+						Base64.DEFAULT));
 			}
 
 			values.put
