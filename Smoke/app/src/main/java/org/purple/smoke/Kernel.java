@@ -801,8 +801,7 @@ public class Kernel
 				    (Miscellaneous.
 				     byteArrayToLong
 				     (Cryptography.
-				      randomBytes(Cryptography.
-						  IDENTITY_SIZE)));
+				      randomBytes(Cryptography.IDENTITY_SIZE)));
 				m_shareSipHashIdIdentityLastTick.set
 				    (System.currentTimeMillis());
 
