@@ -3957,6 +3957,40 @@ public class Database extends SQLiteOpenHelper
 	return count;
     }
 
+    public int steamOidFromFileIdentity(Cryptography cryptography,
+					byte fileIdentity[])
+    {
+	if(cryptography == null || fileIdentity == null || m_db == null)
+	    return -1;
+
+	Cursor cursor = null;
+	int oid = 0;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT someoid FROM steam_files WHERE " +
+		 "file_identity_digest = ?",
+		 new String[] {Base64.encodeToString(cryptography.
+						     hmac(fileIdentity),
+						     Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		oid = cursor.getInt(0);
+	}
+	catch(Exception exception)
+	{
+	    oid = -1;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return oid;
+    }
+
     public long countOfMessages(Cryptography cryptography, String sipHashId)
     {
 	if(cryptography == null || m_db == null)

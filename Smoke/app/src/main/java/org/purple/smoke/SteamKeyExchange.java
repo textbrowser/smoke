@@ -133,9 +133,16 @@ public class SteamKeyExchange
 		** If so, return the generated private key pair.
 		*/
 
-		if(s_databaseHelper.
-		   containsSteam(s_cryptography, fileIdentity))
+		if(s_databaseHelper.containsSteam(s_cryptography, fileIdentity))
+		{
+		    SteamElement steamElement = null;
+		    int oid = s_databaseHelper.steamOidFromFileIdentity
+			(s_cryptography, fileIdentity);
+
+		    steamElement = s_databaseHelper.readSteam
+			(s_cryptography, -1, oid - 1);
 		    return;
+		}
 
 		ii += 1;
 		break;
