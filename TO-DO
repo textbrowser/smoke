@@ -19,6 +19,8 @@ Completed Items
   the Fire name is not empty.
 - Banner text may shadow member status in Member Chat.
 - Bind recipient and sender.
+- Brief pause after message-retrieval request. Origins are random. No.
+  Stack must pause after receiving a message-retrieval request.
 - Broadcast a reminder to the Settings activity if a Chat message has been
   received while the Settings activity is active.
 - Calling via multiple neighbors is chaotic.
@@ -255,7 +257,6 @@ Future Items
 Remaining Items
 
 - Brands (profiles).
-- Brief pause after message-retrieval request. Origins are random.
 - Clickable preview messages.
 - Document available tasks.
 - Full Steams, reliable Echo.
