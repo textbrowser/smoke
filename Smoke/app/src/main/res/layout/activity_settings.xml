@@ -74,6 +74,12 @@
                     android:checked="true"
                     android:text="@string/prefer_active_cpu" />
 
+                <CheckBox
+                    android:id="@+id/query_time_server"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/query_time_server" />
+
                 <Button
                     android:id="@+id/clear_log"
                     android:layout_width="wrap_content"

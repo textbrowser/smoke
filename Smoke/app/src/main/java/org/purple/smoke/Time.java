@@ -49,7 +49,9 @@ public class Time
 	    @Override
 	    public void run()
 	    {
-		if(!State.getInstance().isAuthenticated())
+		if(!Kernel.getInstance().isNetworkConnected() ||
+		   !State.getInstance().isAuthenticated() ||
+		   !State.getInstance().queryTimerServer())
 		    return;
 
 		BufferedReader bufferedReader = null;

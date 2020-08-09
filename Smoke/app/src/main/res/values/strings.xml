@@ -76,4 +76,5 @@
     <string name="pause">Pause</string>
     <string name="smokescreen">Smokescreen</string>
     <string name="please_select">Please Select</string>
+    <string name="query_time_server">Query Time Server</string>
 </resources>

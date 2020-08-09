@@ -2213,6 +2213,22 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
+	checkBox1 = (CheckBox) findViewById(R.id.query_time_server);
+	checkBox1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    State.getInstance().setQueryTimerServer(isChecked);
+		    m_databaseHelper.writeSetting
+			(null,
+			 "query_time_server",
+			 isChecked ? "true" : "false");
+		}
+	    });
+
 	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
 	checkBox1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
@@ -3103,6 +3119,15 @@ public class Settings extends AppCompatActivity
 	else
 	    checkBox1.setChecked(false);
 
+	checkBox1 = (CheckBox) findViewById(R.id.query_time_server);
+
+	if(m_databaseHelper.readSetting(null, "query_time_server").
+	   equals("true"))
+	    checkBox1.setChecked(true);
+	else
+	    checkBox1.setChecked(false);
+
+	State.getInstance().setQueryTimerServer(checkBox1.isChecked());
 	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
 
 	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())

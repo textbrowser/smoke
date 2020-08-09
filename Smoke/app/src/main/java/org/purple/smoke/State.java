@@ -37,12 +37,14 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class State
 {
     private ArrayList<MessageElement> m_chatMessages = null;
     private ArrayList<ParticipantElement> m_participants = null;
+    private AtomicBoolean m_queryTimerServer = null;
     private Bundle m_bundle = null;
     private Map<String, FireChannel> m_fireChannels = null;
     private ScheduledExecutorService m_participantsScheduler = null;
@@ -55,6 +57,7 @@ public class State
     private State()
     {
 	m_bundle = new Bundle();
+	m_queryTimerServer = new AtomicBoolean(false);
 	setAuthenticated(false);
     }
 
@@ -219,6 +222,11 @@ public class State
 	}
 
 	return false;
+    }
+
+    public boolean queryTimerServer()
+    {
+	return m_queryTimerServer.get();
     }
 
     public char getChar(String key)
@@ -632,6 +640,11 @@ public class State
 	{
 	    m_bundleMutex.writeLock().unlock();
 	}
+    }
+
+    public void setQueryTimerServer(boolean state)
+    {
+	m_queryTimerServer.set(state);
     }
 
     public void setString(String key, String value)
