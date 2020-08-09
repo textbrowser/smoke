@@ -216,6 +216,8 @@ public class SteamKeyExchange
 	steamElement.m_fileIdentity = fileIdentity;
 	steamElement.m_fileName = fileName;
 	steamElement.m_fileSize = fileSize;
+	steamElement.m_keyStream = Miscellaneous.joinByteArrays
+	    (Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
 	steamElement.m_readInterval = 0L;
 	steamElement.m_status = "received ephemeral public key";
 	s_databaseHelper.writeSteam(s_cryptography, steamElement);

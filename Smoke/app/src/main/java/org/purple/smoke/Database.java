@@ -1820,12 +1820,13 @@ public class Database extends SQLiteOpenHelper
 		     "file_identity, " +            // 5
 		     "file_size, " +                // 6
 		     "is_download, " +              // 7
-		     "read_interval, " +            // 8
-		     "read_offset, " +              // 9
-		     "someoid, " +                  // 10
-		     "status, " +                   // 11
-		     "transfer_rate, " +            // 12
-		     "oid " +                       // 13
+		     "keystream, " +                // 8
+		     "read_interval, " +            // 9
+		     "read_offset, " +              // 10
+		     "someoid, " +                  // 11
+		     "status, " +                   // 12
+		     "transfer_rate, " +            // 13
+		     "oid " +                       // 14
 		     "FROM steam_files ORDER BY someoid", null);
 
 		if(cursor == null || !cursor.moveToPosition(position))
@@ -1842,12 +1843,13 @@ public class Database extends SQLiteOpenHelper
 		     "file_identity, " +            // 5
 		     "file_size, " +                // 6
 		     "is_download, " +              // 7
-		     "read_interval, " +            // 8
-		     "read_offset, " +              // 9
-		     "someoid, " +                  // 10
-		     "status, " +                   // 11
-		     "transfer_rate, " +            // 12
-		     "oid " +                       // 13
+		     "keystream, " +                // 8
+		     "read_interval, " +            // 9
+		     "read_offset, " +              // 10
+		     "someoid, " +                  // 11
+		     "status, " +                   // 12
+		     "transfer_rate, " +            // 13
+		     "oid " +                       // 14
 		     "FROM steam_files WHERE someoid > ? ORDER BY someoid",
 		     new String[] {String.valueOf(someOid)});
 
@@ -1862,12 +1864,12 @@ public class Database extends SQLiteOpenHelper
 
 	    for(int i = 0; i < count; i++)
 	    {
-		if(i == 10)
+		if(i == 11)
 		{
 		    steamElement.m_someOid = cursor.getInt(i);
 		    continue;
 		}
-		else if(i == 11)
+		else if(i == 12)
 		{
 		    steamElement.m_status = cursor.getString(i).trim();
 		    continue;
@@ -1946,6 +1948,9 @@ public class Database extends SQLiteOpenHelper
 
 		    break;
 		case 8:
+		    steamElement.m_keyStream = bytes;
+		    break;
+		case 9:
 		    if(bytes != null)
 			try
 			{
@@ -1957,7 +1962,7 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 9:
+		case 10:
 		    if(bytes != null)
 			try
 			{
@@ -1969,10 +1974,10 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 10:
 		case 11:
-		    break;
 		case 12:
+		    break;
+		case 13:
 		    if(bytes != null)
 			steamElement.m_transferRate = new String(bytes);
 		    else
