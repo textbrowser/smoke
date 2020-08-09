@@ -255,6 +255,7 @@ Future Items
 Remaining Items
 
 - Brands (profiles).
+- Brief pause after message-retrieval request. Origins are random.
 - Clickable preview messages.
 - Document available tasks.
 - Full Steams, reliable Echo.
