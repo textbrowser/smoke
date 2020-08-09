@@ -412,10 +412,8 @@ public abstract class Neighbor
 			{
 			    m_databaseHelper.deleteEntry
 				(array[2], "outbound_queue");
-
-			    if(m_databaseHelper.
-			       writeMessageStatus(m_cryptography, array[1]))
-				Kernel.getInstance().notifyOfDataSetChange();
+			    m_databaseHelper.
+				writeMessageStatus(m_cryptography, array[1]);
 			}
 		    }
 

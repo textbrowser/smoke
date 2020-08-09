@@ -268,6 +268,11 @@ public class Kernel
 	s_fireSimpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
+    private void notifyOfDataSetChange()
+    {
+	Miscellaneous.sendBroadcast("org.purple.smoke.notify_data_set_changed");
+    }
+
     private void prepareNeighbors()
     {
 	ArrayList<NeighborElement> neighbors = purgeDeletedNeighbors();
@@ -3509,11 +3514,6 @@ public class Kernel
 	{
 	    m_fireStreamsMutex.writeLock().unlock();
 	}
-    }
-
-    public void notifyOfDataSetChange()
-    {
-	Miscellaneous.sendBroadcast("org.purple.smoke.notify_data_set_changed");
     }
 
     public void resendMessage(String sipHashId, int position)

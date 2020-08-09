@@ -4320,8 +4320,10 @@ public class Database extends SQLiteOpenHelper
 	    if(messageIdentity == null)
 		values.put
 		    ("message_identity_digest",
-		     Base64.encodeToString(Cryptography.randomBytes(64),
-					   Base64.DEFAULT));
+		     Base64.
+		     encodeToString(Cryptography.
+				    randomBytes(Cryptography.HASH_KEY_LENGTH),
+				    Base64.DEFAULT));
 	    else
 		values.put
 		    ("message_identity_digest",
