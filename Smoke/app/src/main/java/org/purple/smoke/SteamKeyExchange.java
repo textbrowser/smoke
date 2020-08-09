@@ -65,7 +65,13 @@ public class SteamKeyExchange
     private final static Database s_databaseHelper = Database.getInstance();
     private final static long KEY_EXCHANGE_LIFETIME = 30000L;
     private final static long PARSE_INTERVAL = 50L;
-    private final static long READ_INTERVAL = 3500L;
+    private final static long READ_INTERVAL = 500L;
+
+    private void shareB(SteamElement steamElement)
+    {
+	if(steamElement == null)
+	    return;
+    }
 
     private void steamA(byte aes[], byte pki[])
     {
@@ -135,12 +141,12 @@ public class SteamKeyExchange
 
 		if(s_databaseHelper.containsSteam(s_cryptography, fileIdentity))
 		{
-		    SteamElement steamElement = null;
 		    int oid = s_databaseHelper.steamOidFromFileIdentity
 			(s_cryptography, fileIdentity);
 
-		    steamElement = s_databaseHelper.readSteam
-			(s_cryptography, -1, oid - 1);
+		    shareB
+			(s_databaseHelper.
+			 readSteam(s_cryptography, -1, oid - 1));
 		    return;
 		}
 
@@ -226,8 +232,14 @@ public class SteamKeyExchange
 	steamElement.m_keyStream = Miscellaneous.joinByteArrays
 	    (Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
 	steamElement.m_readInterval = 0L;
-	steamElement.m_status = "received ephemeral public key";
+	steamElement.m_status = "created private-key pair";
 	s_databaseHelper.writeSteam(s_cryptography, steamElement);
+
+	/*
+	** Transfer the new credentials.
+	*/
+
+	shareB(steamElement);
     }
 
     private void steamB(byte bytes[])
