@@ -1748,7 +1748,9 @@ public class Kernel
 	    NetworkInfo networkInfo = connectivityManager.
 		getActiveNetworkInfo();
 
-	    return networkInfo != null && networkInfo.isConnected();
+	    return networkInfo != null &&
+		networkInfo.getType() == ConnectivityManager.TYPE_WIFI &&
+		networkInfo.isConnected();
 	}
 	catch(Exception exception)
 	{
