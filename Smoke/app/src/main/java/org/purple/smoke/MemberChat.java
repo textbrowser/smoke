@@ -436,9 +436,6 @@ public class MemberChat extends AppCompatActivity
 		{
 		    try
 		    {
-			if(Thread.currentThread().isInterrupted())
-			    return;
-
 			ArrayList<ParticipantElement> arrayList =
 			    m_databaseHelper.readParticipants
 			    (s_cryptography, m_sipHashId);

@@ -406,9 +406,6 @@ public class State
 	    {
 		try
 		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-
 		    m_participantsMutex.writeLock().lock();
 
 		    try

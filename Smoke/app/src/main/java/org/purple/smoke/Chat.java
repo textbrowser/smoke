@@ -786,8 +786,7 @@ public class Chat extends AppCompatActivity
 		{
 		    try
 		    {
-			if(Thread.currentThread().isInterrupted() ||
-			   !m_databaseHelper.
+			if(!m_databaseHelper.
 			   readSetting(null, "show_chat_icons").equals("true"))
 			    return;
 

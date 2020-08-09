@@ -4803,9 +4803,6 @@ public class Database extends SQLiteOpenHelper
 	    {
 		try
 		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-
 		    m_db.beginTransactionNonExclusive();
 
 		    try
@@ -5414,9 +5411,6 @@ public class Database extends SQLiteOpenHelper
 	    {
 		try
 		{
-		    if(Thread.currentThread().isInterrupted())
-			return;
-
 		    m_db.beginTransactionNonExclusive();
 
 		    try
