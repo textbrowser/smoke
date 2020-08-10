@@ -62,7 +62,7 @@ public abstract class Neighbor
     private final static long SEND_OUTBOUND_TIMER_INTERVAL =
 	200L; // 200 milliseconds.
     private final static long SILENCE = 90000L; // 90 seconds.
-    private final static long TIMER_INTERVAL = 2500L; // 2.5 seconds.
+    private final static long TIMER_INTERVAL = 3500L; // 3.5 seconds.
     protected AtomicBoolean m_aborted = null;
     protected AtomicBoolean m_passthrough = null;
     protected AtomicInteger m_oid = null;
