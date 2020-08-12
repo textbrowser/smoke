@@ -41,6 +41,7 @@ public class Messages
     private final static SimpleDateFormat s_fireSimpleDateFormat = new
 	SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
     public final static String EOM = "\r\n\r\n\r\n";
+    public final static String AUTHENTICATE_MESSAGE_TYPE = "0097b";
     public final static String FIRE_CHAT_MESSAGE_TYPE = "0040b";
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
@@ -103,7 +104,9 @@ public class Messages
 		("Content-Type: application/x-www-form-urlencoded\r\n");
 	    results.append("Content-Length: %1\r\n");
 	    results.append("\r\n");
-	    results.append("type=0097b&content=%2\r\n\r\n\r\n");
+	    results.append("type=");
+	    results.append(AUTHENTICATE_MESSAGE_TYPE);
+	    results.append("&content=%2\r\n\r\n\r\n");
 
 	    String base64 = Base64.encodeToString
 		(Miscellaneous.
@@ -113,7 +116,9 @@ public class Messages
 		 Base64.NO_WRAP);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() +
-		"type=0097b&content=\r\n\r\n\r\n".length();
+		("type=" +
+		 AUTHENTICATE_MESSAGE_TYPE +
+		 "&content=\r\n\r\n\r\n").length();
 
 	    results = results.replace
 		(indexOf, indexOf + 2, String.valueOf(length));

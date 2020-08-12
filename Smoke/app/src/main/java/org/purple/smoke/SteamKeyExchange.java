@@ -65,7 +65,7 @@ public class SteamKeyExchange
     private final static Database s_databaseHelper = Database.getInstance();
     private final static long KEY_EXCHANGE_LIFETIME = 30000L;
     private final static long PARSE_INTERVAL = 50L;
-    private final static long READ_INTERVAL = 500L;
+    private final static long READ_INTERVAL = 3500L;
 
     private void shareB(SteamElement steamElement)
     {
