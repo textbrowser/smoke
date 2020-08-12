@@ -44,6 +44,7 @@ public class Messages
     public final static String AUTHENTICATE_MESSAGE_TYPE = "0097b";
     public final static String FIRE_CHAT_MESSAGE_TYPE = "0040b";
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
+    public final static String IDENTITY_MESSAGE_TYPE = "0095a";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
     public final static byte CALL_KEY_TYPES[] = new byte[] {(byte) 'M',
@@ -217,12 +218,16 @@ public class Messages
 		("Content-Type: application/x-www-form-urlencoded\r\n");
 	    results.append("Content-Length: %1\r\n");
 	    results.append("\r\n");
-	    results.append("type=0095a&content=%2;sha-512\r\n\r\n\r\n");
+	    results.append("type=");
+	    results.append(IDENTITY_MESSAGE_TYPE);
+	    results.append("&content=%2;sha-512\r\n\r\n\r\n");
 
 	    String base64 = Base64.encodeToString(bytes, Base64.NO_WRAP);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() +
-		"type=0095a&content=;sha-512\r\n\r\n\r\n".length();
+		("type=" +
+		 IDENTITY_MESSAGE_TYPE +
+		 "&content=;sha-512\r\n\r\n\r\n").length();
 
 	    results = results.replace
 		(indexOf, indexOf + 2, String.valueOf(length));
