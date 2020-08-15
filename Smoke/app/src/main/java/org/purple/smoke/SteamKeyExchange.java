@@ -69,6 +69,10 @@ public class SteamKeyExchange
 
     private void shareB(SteamElement steamElement)
     {
+	/*
+	** Enqueue information even if the network is not available.
+	*/
+
 	if(steamElement == null)
 	    return;
 
