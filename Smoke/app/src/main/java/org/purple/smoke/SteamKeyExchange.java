@@ -70,7 +70,7 @@ public class SteamKeyExchange
     private void shareB(SteamElement steamElement)
     {
 	/*
-	** Enqueue information even if the network is not available.
+	** Enqueue information if the network is not available.
 	*/
 
 	if(steamElement == null)
@@ -93,7 +93,7 @@ public class SteamKeyExchange
 	     steamElement.m_fileDigest,
 	     steamElement.m_fileIdentity,
 	     Cryptography.pkiEncrypt(publicKey, "", steamElement.m_keyStream),
-	     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // Ignored.
+	     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // RSA, ignored.
 	     Messages.STEAM_KEY_EXCHANGE[1],
 	     steamElement.m_fileSize);
 
@@ -102,7 +102,7 @@ public class SteamKeyExchange
 		(Messages.bytesToMessageString(bytes), sipHashId);
     }
 
-    private void steamA(byte aes[], byte pki[])
+    private void steamAorB(byte aes[], byte pki[])
     {
 	if(aes == null || pki == null)
 	    return;
@@ -271,12 +271,6 @@ public class SteamKeyExchange
 	shareB(steamElement);
     }
 
-    private void steamB(byte bytes[])
-    {
-	if(bytes == null)
-	    return;
-    }
-
     public SteamKeyExchange()
     {
 	m_lastReadSteamOid = new AtomicInteger(-1);
@@ -322,10 +316,9 @@ public class SteamKeyExchange
 			}
 
 		    if(pair != null)
-			if(pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[0])
-			    steamA(pair.m_aes, pair.m_pki);
-			else if(pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[1])
-			    steamB(pair.m_aes);
+			if(pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[0] ||
+			   pair.m_aes[1] == Messages.STEAM_KEY_EXCHANGE[1])
+			    steamAorB(pair.m_aes, pair.m_pki);
 		}
 		catch(Exception exception)
 		{
