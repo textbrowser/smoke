@@ -72,13 +72,30 @@ public class SteamKeyExchange
 	if(steamElement == null)
 	    return;
 
-	/*
-	** Create the response.
-	*/
+	PublicKey publicKey = Cryptography.publicKeyFromBytes
+	    (steamElement.m_ephemeralPublicKey);
 
-	/*
-	** Write the response on the network.
-	*/
+	if(publicKey == null)
+	    return;
+
+	String sipHashId = Miscellaneous.sipHashIdFromDestination
+	    (steamElement.m_destination);
+	byte bytes[] = null;
+
+	bytes = Messages.steamCall
+	    (s_cryptography,
+	     steamElement.m_fileName,
+	     sipHashId,
+	     steamElement.m_fileDigest,
+	     steamElement.m_fileIdentity,
+	     Cryptography.pkiEncrypt(publicKey, "", steamElement.m_keyStream),
+	     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // Ignored.
+	     Messages.STEAM_KEY_EXCHANGE[1],
+	     steamElement.m_fileSize);
+
+	if(bytes != null)
+	    Kernel.getInstance().enqueueSteamKeyExchange
+		(Messages.bytesToMessageString(bytes), sipHashId);
     }
 
     private void steamA(byte aes[], byte pki[])
