@@ -168,15 +168,22 @@ public class SteamKeyExchange
 		** If so, return the generated private key pair.
 		*/
 
-		if(s_databaseHelper.containsSteam(s_cryptography, fileIdentity))
+		if(tag == Messages.STEAM_KEY_EXCHANGE[0]) // A
 		{
-		    int oid = s_databaseHelper.steamOidFromFileIdentity
-			(s_cryptography, fileIdentity);
+		    if(s_databaseHelper.
+		       containsSteam(s_cryptography, fileIdentity))
+		    {
+			int oid = s_databaseHelper.steamOidFromFileIdentity
+			    (s_cryptography, fileIdentity);
 
-		    shareB
-			(s_databaseHelper.
-			 readSteam(s_cryptography, -1, oid - 1));
-		    return;
+			shareB
+			    (s_databaseHelper.
+			     readSteam(s_cryptography, -1, oid - 1));
+			return;
+		    }
+		}
+		else
+		{
 		}
 
 		ii += 1;
@@ -244,31 +251,37 @@ public class SteamKeyExchange
 	** Record the new Steam.
 	*/
 
-	SteamElement steamElement = new SteamElement();
-	String array[] = s_databaseHelper.nameSipHashIdFromDigest
-	    (s_cryptography, senderPublicEncryptionKeyDigest);
+	if(tag == Messages.STEAM_KEY_EXCHANGE[0])
+	{
+	    SteamElement steamElement = new SteamElement();
+	    String array[] = s_databaseHelper.nameSipHashIdFromDigest
+		(s_cryptography, senderPublicEncryptionKeyDigest);
 
-	if(array[1].isEmpty())
-	    steamElement.m_destination = array[0];
+	    if(array[1].isEmpty())
+		steamElement.m_destination = array[0];
+	    else
+		steamElement.m_destination = array[0] + " (" + array[1] + ")";
+
+	    steamElement.m_ephemeralPublicKey = ephemeralPublicKey;
+	    steamElement.m_fileDigest = fileDigest;
+	    steamElement.m_fileIdentity = fileIdentity;
+	    steamElement.m_fileName = fileName;
+	    steamElement.m_fileSize = fileSize;
+	    steamElement.m_keyStream = Miscellaneous.joinByteArrays
+		(Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
+	    steamElement.m_readInterval = 0L;
+	    steamElement.m_status = "created private-key pair";
+	    s_databaseHelper.writeSteam(s_cryptography, steamElement);
+
+	    /*
+	    ** Transfer the new credentials.
+	    */
+
+	    shareB(steamElement);
+	}
 	else
-	    steamElement.m_destination = array[0] + " (" + array[1] + ")";
-
-	steamElement.m_ephemeralPublicKey = ephemeralPublicKey;
-	steamElement.m_fileDigest = fileDigest;
-	steamElement.m_fileIdentity = fileIdentity;
-	steamElement.m_fileName = fileName;
-	steamElement.m_fileSize = fileSize;
-	steamElement.m_keyStream = Miscellaneous.joinByteArrays
-	    (Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
-	steamElement.m_readInterval = 0L;
-	steamElement.m_status = "created private-key pair";
-	s_databaseHelper.writeSteam(s_cryptography, steamElement);
-
-	/*
-	** Transfer the new credentials.
-	*/
-
-	shareB(steamElement);
+	{
+	}
     }
 
     public SteamKeyExchange()
