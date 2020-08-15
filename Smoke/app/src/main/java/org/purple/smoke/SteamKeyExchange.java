@@ -71,6 +71,14 @@ public class SteamKeyExchange
     {
 	if(steamElement == null)
 	    return;
+
+	/*
+	** Create the response.
+	*/
+
+	/*
+	** Write the response on the network.
+	*/
     }
 
     private void steamA(byte aes[], byte pki[])
