@@ -30,6 +30,7 @@ package org.purple.smoke;
 import android.util.Base64;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -281,6 +282,25 @@ public class SteamKeyExchange
 	}
 	else
 	{
+	    SteamElement steamElement = null;
+	    int oid = s_databaseHelper.steamOidFromFileIdentity
+		(s_cryptography, fileIdentity);
+
+	    steamElement = s_databaseHelper.readSteam
+		(s_cryptography, -1, oid - 1);
+
+	    if(steamElement == null)
+		return;
+
+	    PrivateKey privateKey = Cryptography.privateKeyFromBytes
+		(steamElement.m_ephemeralPrivateKey);
+
+	    if(privateKey == null)
+		/*
+		** Something strange!
+		*/
+
+		return;
 	}
     }
 
