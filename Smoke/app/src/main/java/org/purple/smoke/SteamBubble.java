@@ -356,7 +356,9 @@ public class SteamBubble extends View
 	     niceBytes(steamElement.m_fileSize) +
 	     ")");
 
-	if(steamElement.m_keyStream == null)
+	if(steamElement.m_keyStream == null ||
+	   steamElement.m_keyStream.length !=
+	   Cryptography.CIPHER_HASH_KEYS_LENGTH)
 	    m_keyStreamDigest.setText("Key Stream SHA-256: N/A");
 	else
 	    m_keyStreamDigest.setText
