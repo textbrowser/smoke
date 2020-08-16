@@ -105,8 +105,10 @@ public class SteamKeyExchange
 
     private void steamAorB(byte aes[], byte pki[])
     {
-	if(aes == null || pki == null)
+	if(aes == null || aes.length == 0 || pki == null || pki.length == 0)
 	    return;
+
+	byte tag = aes[0];
 
 	aes = Arrays.copyOfRange(aes, 1, aes.length);
 
@@ -123,7 +125,6 @@ public class SteamKeyExchange
 	byte fileIdentity[] = null;
 	byte publicKeySignature[] = null;
 	byte senderPublicEncryptionKeyDigest[] = null;
-	byte tag = Messages.STEAM_KEY_EXCHANGE[0];
 	int ii = 0;
 	long fileSize = 0;
 	long timestamp = 0;
@@ -297,10 +298,21 @@ public class SteamKeyExchange
 
 	    if(privateKey == null)
 		/*
-		** Something strange!
+		** Something is strange!
 		*/
 
 		return;
+
+	    byte bytes[] = Cryptography.pkiDecrypt
+		(privateKey, ephemeralPublicKey);
+
+	    if(bytes == null)
+		return;
+
+	    s_databaseHelper.writeSteamKeys
+		(s_cryptography, bytes, null, null, oid);
+	    s_databaseHelper.writeSteamStatus
+		(s_cryptography, "received private-key pair", "", oid);
 	}
     }
 
@@ -350,7 +362,7 @@ public class SteamKeyExchange
 
 		    if(pair != null)
 			if(pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[0] ||
-			   pair.m_aes[1] == Messages.STEAM_KEY_EXCHANGE[1])
+			   pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[1])
 			    steamAorB(pair.m_aes, pair.m_pki);
 		}
 		catch(Exception exception)
@@ -423,9 +435,10 @@ public class SteamKeyExchange
 			*/
 
 			if(!s_databaseHelper.
-			   writeSteamEphemeralKeyPair(s_cryptography,
-						      keyPair,
-						      steamElement.m_someOid))
+			   writeSteamKeys(s_cryptography,
+					  keyPair,
+					  null,
+					  steamElement.m_someOid))
 			    return;
 		    }
 		    else if(Kernel.getInstance().isNetworkConnected())

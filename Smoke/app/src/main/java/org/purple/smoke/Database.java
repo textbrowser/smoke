@@ -3628,11 +3628,26 @@ public class Database extends SQLiteOpenHelper
 	return ok;
     }
 
-    public boolean writeSteamEphemeralKeyPair(Cryptography cryptography,
-					      KeyPair keyPair,
-					      int oid)
+    public boolean writeSteamKeys(Cryptography cryptography,
+				  KeyPair keyPair,
+				  byte keyStream[],
+				  int oid)
     {
-	if(cryptography == null || keyPair == null || m_db == null)
+	return writeSteamKeys
+	    (cryptography,
+	     keyStream,
+	     keyPair.getPrivate().getEncoded(),
+	     keyPair.getPublic().getEncoded(),
+	     oid);
+    }
+
+    public boolean writeSteamKeys(Cryptography cryptography,
+				  byte keyStream[],
+				  byte privateKey[],
+				  byte publicKey[],
+				  int oid)
+    {
+	if(cryptography == null)
 	    return false;
 
 	m_db.beginTransactionNonExclusive();
@@ -3643,12 +3658,11 @@ public class Database extends SQLiteOpenHelper
 
 	    values.put
 		("ephemeral_private_key",
-		 cryptography.
-		 etmBase64String(keyPair.getPrivate().getEncoded()));
+		 cryptography.etmBase64String(privateKey));
 	    values.put
 		("ephemeral_public_key",
-		 cryptography.
-		 etmBase64String(keyPair.getPublic().getEncoded()));
+		 cryptography.etmBase64String(publicKey));
+	    values.put("keystream", cryptography.etmBase64String(keyStream));
 	    m_db.update
 		("steam_files",
 		 values,

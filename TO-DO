@@ -135,6 +135,7 @@ Completed Items
 - Neighbor details should be optional.
 - Neighbors periodic refresh.
 - Network status in Member Chat.
+- New class for establishing Steam keys.
 - New date format: YYYY-MM-DD. ISO-8601.
 - New messages should be at the top of the view; Member Chat.
 - Next (Tab) order; Settings.
@@ -261,5 +262,4 @@ Remaining Items
 - Document available tasks.
 - Full Steams, reliable Echo.
 - Gently notify MemberChat of written messages.
-- New class for establishing Steam keys.
 - Record background Fire messages.

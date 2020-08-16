@@ -1302,7 +1302,7 @@ public class Cryptography
 
 	try
 	{
-	    EncodedKeySpec privateKeySpec = new X509EncodedKeySpec
+	    EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		(privateBytes);
 
 	    for(int i = 0; i < 3; i++)
