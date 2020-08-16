@@ -2089,6 +2089,28 @@ public class Cryptography
 	return bytes;
     }
 
+    public static byte[] sha256(byte[] ... data)
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+
+	    for(byte b[] : data)
+		if(b != null)
+		    messageDigest.update(b);
+
+	    bytes = messageDigest.digest();
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
+    }
+
     public static byte[] sha256FileDigest(String fileName)
     {
 	AssetFileDescriptor assetFileDescriptor = null;

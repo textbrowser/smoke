@@ -53,6 +53,7 @@ public class SteamBubble extends View
     private TextView m_fileIdentity = null;
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
+    private TextView m_keyStreamDigest = null;
     private TextView m_readIntervalLabel = null;
     private TextView m_sent = null;
     private TextView m_status = null;
@@ -163,6 +164,8 @@ public class SteamBubble extends View
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
 	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
 	m_keyExchangeStatus = m_view.findViewById(R.id.key_exchange_status);
+	m_keyStreamDigest = (TextView)
+	    m_view.findViewById(R.id.keystream_digest);
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
 	m_readInterval = (SeekBar) m_view.findViewById(R.id.read_interval);
 	m_readInterval.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
@@ -292,6 +295,7 @@ public class SteamBubble extends View
 	    m_destination.setText("Destination: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.upload);
 	    m_keyExchangeStatus.setVisibility(View.GONE);
+	    m_keyStreamDigest.setVisibility(View.GONE);
 	    m_readInterval.setVisibility(View.VISIBLE);
 	    m_readIntervalLabel.setVisibility(View.VISIBLE);
 	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
@@ -307,6 +311,7 @@ public class SteamBubble extends View
 		 Cryptography.CIPHER_HASH_KEYS_LENGTH ?
 		 R.drawable.lock : R.drawable.unlock);
 	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
+	    m_keyStreamDigest.setVisibility(View.VISIBLE);
 	    m_readInterval.setVisibility(View.GONE);
 	    m_readIntervalLabel.setVisibility(View.GONE);
 	    m_sent.setText
@@ -329,6 +334,7 @@ public class SteamBubble extends View
 		 Cryptography.CIPHER_HASH_KEYS_LENGTH ?
 		 R.drawable.lock : R.drawable.unlock);
 	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
+	    m_keyStreamDigest.setVisibility(View.VISIBLE);
 	    m_readInterval.setVisibility(View.GONE);
 	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	}
@@ -349,6 +355,16 @@ public class SteamBubble extends View
 	     " (" +
 	     niceBytes(steamElement.m_fileSize) +
 	     ")");
+
+	if(steamElement.m_keyStream == null)
+	    m_keyStreamDigest.setText("Key Stream SHA-256: N/A");
+	else
+	    m_keyStreamDigest.setText
+		("Key Stream SHA-256: " +
+		 Miscellaneous.
+		 byteArrayAsHexString(Cryptography.
+				      sha256(steamElement.m_keyStream)));
+
 	m_oid = steamElement.m_oid;
 	m_progress.setMax((int) steamElement.m_fileSize);
 	m_progress.setProgress((int) steamElement.m_readOffset);
