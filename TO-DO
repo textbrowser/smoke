@@ -261,5 +261,6 @@ Remaining Items
 - Clickable preview messages.
 - Document available tasks.
 - Full Steams, reliable Echo.
-- Gently notify MemberChat of written messages.
+- Gently notify MemberChat of written messages. Gentle notifications prevent
+  bouncy context menus.
 - Record background Fire messages.
