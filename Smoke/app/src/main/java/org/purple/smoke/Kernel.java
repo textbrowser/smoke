@@ -268,11 +268,6 @@ public class Kernel
 	s_fireSimpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
-    private void notifyOfDataSetChange()
-    {
-	Miscellaneous.sendBroadcast("org.purple.smoke.notify_data_set_changed");
-    }
-
     private void prepareNeighbors()
     {
 	ArrayList<NeighborElement> neighbors = purgeDeletedNeighbors();
@@ -2596,7 +2591,7 @@ public class Kernel
 					   1,
 					   Cryptography.
 					   HASH_KEY_LENGTH + 1)))
-			notifyOfDataSetChange();
+			notifyOfDataSetChange("-1");
 
 		    return 1;
 		}
@@ -3513,6 +3508,17 @@ public class Kernel
 	{
 	    m_fireStreamsMutex.writeLock().unlock();
 	}
+    }
+
+    public void notifyOfDataSetChange(String oid)
+    {
+	/*
+	** The oid parameter represents the oid of the database entry.
+	** The value of oid may be -1 or some other meaningless value.
+	*/
+
+	Miscellaneous.sendBroadcast
+	    ("org.purple.smoke.notify_data_set_changed", oid);
     }
 
     public void resendMessage(String sipHashId, int position)

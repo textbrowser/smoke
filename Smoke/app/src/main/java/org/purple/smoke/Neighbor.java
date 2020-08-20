@@ -355,6 +355,12 @@ public abstract class Neighbor
 			(m_oid.get());
 
 		    /*
+		    ** array[0]: Message
+		    ** array[1]: Message Identity Digest
+		    ** array[2]: OID
+		    */
+
+		    /*
 		    ** If the message is sent successfully, remove it
 		    ** from the database.
 		    */
@@ -412,8 +418,11 @@ public abstract class Neighbor
 			{
 			    m_databaseHelper.deleteEntry
 				(array[2], "outbound_queue");
-			    m_databaseHelper.
-				writeMessageStatus(m_cryptography, array[1]);
+
+			    if(m_databaseHelper.
+			       writeMessageStatus(m_cryptography, array[1]))
+				Kernel.getInstance().notifyOfDataSetChange
+				    (array[2]);
 			}
 		    }
 
