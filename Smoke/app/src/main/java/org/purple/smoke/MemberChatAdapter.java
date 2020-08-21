@@ -40,6 +40,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 {
     private MemberChat m_memberChat = null;
     private String m_sipHashId = "";
+    private boolean m_contextMenuShown = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_database = Database.getInstance();
@@ -69,6 +70,8 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	{
 	    if(menu == null || view == null)
 		return;
+
+	    m_contextMenuShown = true;
 
 	    /*
 	    ** Please update the first parameter if the context menu
@@ -197,6 +200,11 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	     m_sipHashId);
     }
 
+    public boolean contextMenuShown()
+    {
+	return m_contextMenuShown;
+    }
+
     @Override
     public int getItemCount()
     {
@@ -213,5 +221,10 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    (s_cryptography, m_sipHashId, position);
 
 	viewHolder.setData(memberChatElement, position);
+    }
+
+    public void setContextMenuClosed()
+    {
+	m_contextMenuShown = false;
     }
 }

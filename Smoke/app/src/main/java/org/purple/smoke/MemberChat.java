@@ -150,22 +150,6 @@ public class MemberChat extends AppCompatActivity
 	    case "org.purple.smoke.network_disconnected":
 		prepareStatus(false);
 		break;
-	    case "org.purple.smoke.notify_data_set_changed":
-		try
-		{
-		    m_adapter.notifyDataSetChanged(); /*
-						      ** Items are inserted
-						      ** into the database
-						      ** haphazardly.
-						      */
-		    m_adapter.notifyItemInserted
-			(m_adapter.getItemCount() - 1);
-		}
-		catch(Exception exception)
-		{
-		}
-
-		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
 		break;
@@ -251,9 +235,9 @@ public class MemberChat extends AppCompatActivity
     }
 
     private Hashtable<Integer, Boolean> m_selectedMessages = null;
+    private MemberChatAdapter m_adapter = null;
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
-    private RecyclerView.Adapter<?> m_adapter = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_name = "0000-0000-0000-0000";
@@ -469,6 +453,9 @@ public class MemberChat extends AppCompatActivity
 				    else
 					button.setBackgroundResource
 					    (R.drawable.chat_status_online);
+
+				    if(!m_adapter.contextMenuShown())
+					m_adapter.notifyDataSetChanged();
 				}
 			    });
 			}
@@ -945,7 +932,6 @@ public class MemberChat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
 	    intentFilter.addAction("org.purple.smoke.network_connected");
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");
-	    intentFilter.addAction("org.purple.smoke.notify_data_set_changed");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.time");
@@ -1561,6 +1547,13 @@ public class MemberChat extends AppCompatActivity
 	intent.putExtra("Result", "Done");
 	setResult(RESULT_OK, intent);
 	super.onBackPressed();
+    }
+
+    @Override
+    public void onContextMenuClosed(Menu menu)
+    {
+	m_adapter.setContextMenuClosed();
+	super.onContextMenuClosed(menu);
     }
 
     @Override

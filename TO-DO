@@ -90,6 +90,8 @@ Completed Items
 - Fire. ("AES/CTS/NoPadding")
 - Foreground service, optional.
 - Generate and separate.
+- Gently notify MemberChat of written messages. Gentle notifications prevent
+  bouncy context menus.
 - HTTP proxy.
 - Highlight results of Juggernaut, if possible.
 - Identity-sharing confirmation from SmokeStack.
@@ -261,6 +263,4 @@ Remaining Items
 - Clickable preview messages.
 - Document available tasks.
 - Full Steams, reliable Echo.
-- Gently notify MemberChat of written messages. Gentle notifications prevent
-  bouncy context menus.
 - Record background Fire messages.
