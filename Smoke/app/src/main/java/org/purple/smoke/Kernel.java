@@ -2766,6 +2766,14 @@ public class Kernel
 							  keyStream,
 							  messageIdentity)),
 			 null);
+
+		    if(ourMessageViaChatTemporaryIdentity)
+			enqueueMessage
+			    (Messages.
+			     bytesToMessageString(Messages.
+						  messageRead(s_cryptography,
+							      messageIdentity)),
+			     null);
 		}
 
 		return 1;
