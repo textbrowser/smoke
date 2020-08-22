@@ -57,6 +57,7 @@ public class Messages
     public final static byte MCELIECE_FUJISAKI_11_50 = 0x01;
     public final static byte MCELIECE_FUJISAKI_12_68 = 0x02;
     public final static byte MCELIECE_POINTCHEVAL = 0x03;
+    public final static byte MESSAGE_READ_SMOKESTACK[] = new byte[] {0x04};
     public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
     public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
@@ -1536,6 +1537,87 @@ public class Messages
 
 	    return Miscellaneous.joinByteArrays
 		(pki, aes256, sha512, destination);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public static byte[] messageRead(Cryptography cryptography,
+				     byte messageIdentity[])
+    {
+	if(cryptography == null ||
+	   messageIdentity == null ||
+	   messageIdentity.length == 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
+	*/
+
+	try
+	{
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(
+		 /*
+		 ** [ A Byte ]
+		 */
+
+		 MESSAGE_READ_SMOKESTACK,
+
+		 /*
+		 ** [ A Timestamp ]
+		 */
+
+		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
+
+		 /*
+		 ** [ Message Identity ]
+		 */
+
+		 messageIdentity,
+
+		 /*
+		 ** [ Encryption Public Key Digest ]
+		 */
+
+		 cryptography.chatEncryptionPublicKeyDigest());
+
+	    /*
+	    ** [ Public Key Signature ]
+	    */
+
+	    byte signature[] = cryptography.signViaChatSignature(bytes);
+
+	    if(signature == null)
+		return null;
+
+	    /*
+	    ** [ AES-256 ]
+	    */
+
+	    byte aes256[] = Cryptography.encrypt
+		(Miscellaneous.joinByteArrays(bytes, signature),
+		 cryptography.ozoneEncryptionKey());
+
+	    if(aes256 == null)
+		return null;
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(aes256, cryptography.ozoneMacKey());
+
+	    if(sha512 == null)
+		return null;
+
+	    return Miscellaneous.joinByteArrays(aes256, sha512);
 	}
 	catch(Exception exception)
 	{
