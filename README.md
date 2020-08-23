@@ -1,4 +1,4 @@
-A very brief summary of Smoke.
+Summary of Smoke
 
 <ul>
 <li>Aliases. Preserve your contacts.</li>
