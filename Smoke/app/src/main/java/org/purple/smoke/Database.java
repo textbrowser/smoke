@@ -1850,7 +1850,7 @@ public class Database extends SQLiteOpenHelper
 		     "status, " +                   // 12
 		     "transfer_rate, " +            // 13
 		     "oid " +                       // 14
-		     "FROM steam_files WHERE someoid > ? " +
+		     "FROM steam_files WHERE someoid > CAST(? AS INTEGER) " +
 		     "ORDER BY someoid LIMIT 1",
 		     new String[] {String.valueOf(someOid)});
 
