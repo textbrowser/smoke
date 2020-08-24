@@ -2097,6 +2097,11 @@ public class Kernel
 		(bytes,
 		 bytes.length - Cryptography.HASH_KEY_LENGTH,
 		 bytes.length);
+	    byte sha512OfMessage[] = Cryptography.sha512
+		(Arrays.
+		 copyOfRange(bytes,
+			     0,
+			     bytes.length - Cryptography.HASH_KEY_LENGTH));
 
 	    m_chatMessageRetrievalIdentityMutex.readLock().lock();
 
@@ -2772,7 +2777,7 @@ public class Kernel
 			    (Messages.
 			     bytesToMessageString(Messages.
 						  messageRead(s_cryptography,
-							      messageIdentity)),
+							      sha512OfMessage)),
 			     null);
 		}
 
