@@ -217,6 +217,7 @@ Completed Items
 - Sort table contents.
 - Spinner objects in the neighbors table bleed. The table will expand as
   necessary.
+- Stack message confirmations. New message type required.
 - Status messages.
 - Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
   the secret is brief.
@@ -264,4 +265,3 @@ Remaining Items
 - Document available tasks.
 - Full Steams, reliable Echo.
 - Record background Fire messages.
-- Stack message confirmations. New message type required.
