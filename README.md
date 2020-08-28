@@ -4,7 +4,7 @@ Summary of Smoke
 <li>Aliases. Preserve your contacts.</li>
 <li>Almost zero-dependency software.</li>
 <li>Argon2id key-derivation function.</li>
-<li>Automatic, oscillatory public-key exchange protocol, EPKS, via SipHash.</li>
+<li>Automatic, oscillatory public-key exchange protocol, via SipHash.</li>
 <li>BSD 3-clause license.</li>
 <li>Decentralized. TCP, and UDP multicast and unicast.</li>
 <li>Does not require Internet connectivity.</li>
@@ -19,6 +19,7 @@ Summary of Smoke
 <li>Post offices for messages of the past.</li>
 <li>Private servers.</li>
 <li>Public and private public-key servers.</li>
+<li>Reliable distribution of archived messages.</li>
 <li>SSL/TLS through SmokeStack.</li>
 <li>Semi-compatible with <a href="https://github.com/textbrowser/spot-on">Spot-On</a> via Fire.</li>
 <li>Share files with TCP utilities such as Netcat.</li>
