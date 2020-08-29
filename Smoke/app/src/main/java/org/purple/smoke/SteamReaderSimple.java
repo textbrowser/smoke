@@ -199,13 +199,13 @@ public class SteamReaderSimple extends SteamReader
     public void delete()
     {
 	super.delete();
-	m_lastBytesSent.set(0);
-	m_lastTime.set(0);
+	m_lastBytesSent.set(0L);
+	m_lastTime.set(0L);
     }
 
     public void setReadInterval(int interval)
     {
-	if(1000 / interval == m_readInterval.get())
+	if(1000L / (long) interval == m_readInterval.get())
 	    return;
 
 	switch(interval)
@@ -215,10 +215,10 @@ public class SteamReaderSimple extends SteamReader
 	case 20:
 	case 50:
 	case 100:
-	    m_readInterval.set(1000 / interval);
+	    m_readInterval.set(1000L / (long) interval);
 	    break;
 	default:
-	    m_readInterval.set(250);
+	    m_readInterval.set(250L);
 	    break;
 	}
 

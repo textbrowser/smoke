@@ -175,8 +175,8 @@ public class UdpNeighbor extends Neighbor
 
 	try
 	{
-	    m_bytesRead.set(0);
-	    m_bytesWritten.set(0);
+	    m_bytesRead.set(0L);
+	    m_bytesWritten.set(0L);
 	    m_lastParsed.set(System.currentTimeMillis());
 	    m_lastTimeRead.set(System.nanoTime());
 	    m_socket = new DatagramSocket();
@@ -212,9 +212,9 @@ public class UdpNeighbor extends Neighbor
 	}
 	finally
 	{
-	    m_bytesRead.set(0);
-	    m_bytesWritten.set(0);
-	    m_lastTimeRead.set(0);
+	    m_bytesRead.set(0L);
+	    m_bytesWritten.set(0L);
+	    m_lastTimeRead.set(0L);
 	    m_socket = null;
 	    m_startTime.set(System.nanoTime());
 	}

@@ -196,8 +196,8 @@ public class TcpTlsNeighbor extends Neighbor
 
 	try
 	{
-	    m_bytesRead.set(0);
-	    m_bytesWritten.set(0);
+	    m_bytesRead.set(0L);
+	    m_bytesWritten.set(0L);
 	    m_handshakeCompleted.set(false);
 	    m_lastParsed.set(System.currentTimeMillis());
 	    m_lastTimeRead.set(System.nanoTime());
@@ -291,11 +291,11 @@ public class TcpTlsNeighbor extends Neighbor
 	}
 	finally
 	{
-	    m_bytesRead.set(0);
-	    m_bytesWritten.set(0);
+	    m_bytesRead.set(0L);
+	    m_bytesWritten.set(0L);
 	    m_handshakeCompleted.set(false);
 	    m_isValidCertificate.set(false);
-	    m_lastParsed.set(0);
+	    m_lastParsed.set(0L);
 	    m_socket = null;
 	    m_startTime.set(System.nanoTime());
 	}

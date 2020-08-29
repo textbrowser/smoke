@@ -1245,7 +1245,7 @@ public class Kernel
 		    if(System.currentTimeMillis() -
 		       m_shareSipHashIdIdentityLastTick.get() >
 		       TEMPORARY_IDENTITY_LIFETIME)
-			m_shareSipHashIdIdentity.set(0);
+			m_shareSipHashIdIdentity.set(0L);
 		}
 	    }, 1500L, TEMPORARY_IDENTITY_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -2064,7 +2064,7 @@ public class Kernel
 		    if(identity != m_shareSipHashIdIdentity.get())
 			return 1;
 
-		    m_shareSipHashIdIdentity.set(0);
+		    m_shareSipHashIdIdentity.set(0L);
 
 		    Intent intent = new Intent
 			("org.purple.smoke.siphash_share_confirmation");
