@@ -156,15 +156,10 @@ public class Cryptography
 
 	try
 	{
-	    /*
-	    ** Thread-safe?
-	    */
-
-	    s_secureRandom = SecureRandom.getInstance("SHA1PRNG");
+	    s_secureRandom = new SecureRandom();
 	}
 	catch(Exception exception)
 	{
-	    s_secureRandom = new SecureRandom(); // Thread-safe?
 	}
     }
 
