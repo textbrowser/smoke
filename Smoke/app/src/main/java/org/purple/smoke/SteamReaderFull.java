@@ -163,8 +163,8 @@ public class SteamReaderFull extends SteamReader
     public void delete()
     {
 	super.delete();
-	m_acknowledgedOffset.set(0);
-	m_lastResponse.set(0);
+	m_acknowledgedOffset.set(0L);
+	m_lastResponse.set(0L);
 	m_read.set(false);
     }
 

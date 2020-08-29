@@ -149,8 +149,8 @@ public abstract class SteamReader
 
 	m_canceled.set(true);
 	m_completed.set(false);
-	m_rate.set(0);
-	m_readOffset.set(0);
+	m_rate.set(0L);
+	m_readOffset.set(0L);
 	cancelReader();
 	s_databaseHelper.writeSteamStatus("deleted", m_oid);
     }
