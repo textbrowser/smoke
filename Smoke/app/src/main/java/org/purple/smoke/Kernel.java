@@ -1289,7 +1289,6 @@ public class Kernel
 					      steamElement.m_readOffset);
 	    else
 		steam = new SteamReaderFull(steamElement.m_fileName,
-					    steamElement.m_keyStream,
 					    steamElement.m_oid,
 					    steamElement.m_readOffset);
 
@@ -1481,7 +1480,8 @@ public class Kernel
 	{
 	    /*
 	    ** Remove Steam objects which do not exist in the database.
-	    ** Also removed will be Steams having deleted statuses.
+	    ** Also removed will be Steams having completed or deleted
+	    ** statuses.
 	    */
 
 	    for(int i = m_steams.size() - 1; i >= 0; i--)
@@ -1492,7 +1492,8 @@ public class Kernel
 		for(SteamElement steam : steams)
 		    if(steam != null && steam.m_oid == oid)
 		    {
-			if(!steam.m_status.toLowerCase().equals("deleted"))
+			if(!steam.m_status.toLowerCase().equals("completed") &&
+			   !steam.m_status.toLowerCase().equals("deleted"))
 			    found = true;
 
 			break;

@@ -38,7 +38,6 @@ public class SteamReaderFull extends SteamReader
     private AtomicBoolean m_read = null;
     private AtomicLong m_acknowledgedOffset = null;
     private AtomicLong m_lastResponse = null;
-    private static byte m_keyStream[] = null;
     private static int PACKET_SIZE = 16384;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 15000L; // 15 seconds.
@@ -148,13 +147,11 @@ public class SteamReaderFull extends SteamReader
     }
 
     public SteamReaderFull(String fileName,
-			   byte keyStream[],
 			   int oid,
 			   long readOffset)
     {
 	super(fileName, oid, readOffset);
 	m_acknowledgedOffset = new AtomicLong(0L);
-	m_keyStream = keyStream;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_read = new AtomicBoolean(true);
 	prepareReader();
