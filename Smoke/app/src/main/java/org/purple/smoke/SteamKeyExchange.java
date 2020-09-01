@@ -184,9 +184,6 @@ public class SteamKeyExchange
 			return;
 		    }
 		}
-		else
-		{
-		}
 
 		ii += 1;
 		break;

@@ -52,6 +52,8 @@ public class SteamReaderFull extends SteamReader
 		@Override
 		public void run()
 		{
+		    byte m_keyStream[] = null;
+
 		    try
 		    {
 			switch(s_databaseHelper.
@@ -86,12 +88,25 @@ public class SteamReaderFull extends SteamReader
 			    break;
 			}
 
+			if(m_keyStream == null)
+			{
+			    m_keyStream = s_databaseHelper.readSteam
+				(s_cryptography, -1, m_oid - 1).m_keyStream;
+
+			    if(m_keyStream == null)
+				return;
+			}
+
 			if(m_completed.get() || !m_read.get())
 			{
 			    if(m_completed.get())
 				return;
 			    else if(System.currentTimeMillis() -
 				    m_lastResponse.get() <= RESPONSE_WINDOW)
+				/*
+				** A response has not been received.
+				*/
+
 				return;
 			    else
 				m_readOffset.set(m_acknowledgedOffset.get());
