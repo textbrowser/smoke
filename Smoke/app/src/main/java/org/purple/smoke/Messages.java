@@ -64,6 +64,7 @@ public class Messages
     public final static byte STEAM_KEY_EXCHANGE[] = new byte[] {0x04, 0x05};
     public final static byte STEAM_KEY_EXCHANGE_KEY_TYPES[] =
 	new byte[] {(byte) 'M', (byte) 'R'};
+    public final static byte STEAM_SHARE = new byte[] {0x06, 0x07};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
 							      ** byte is not
