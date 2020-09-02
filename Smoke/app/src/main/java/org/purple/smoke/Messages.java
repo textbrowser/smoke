@@ -64,7 +64,7 @@ public class Messages
     public final static byte STEAM_KEY_EXCHANGE[] = new byte[] {0x04, 0x05};
     public final static byte STEAM_KEY_EXCHANGE_KEY_TYPES[] =
 	new byte[] {(byte) 'M', (byte) 'R'};
-    public final static byte STEAM_SHARE = new byte[] {0x06, 0x07};
+    public final static byte STEAM_SHARE[] = new byte[] {0x06, 0x07};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
 							      ** byte is not
@@ -1920,6 +1920,131 @@ public class Messages
 
 	    byte sha512[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, aes256), shaKey);
+
+	    if(sha512 == null)
+		return null;
+
+	    /*
+	    ** [ Destination ]
+	    */
+
+	    byte destination[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		 Cryptography.
+		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
+
+	    return Miscellaneous.joinByteArrays
+		(pki, aes256, sha512, destination);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public static byte[] steamShare(Cryptography cryptography,
+				    String sipHashId,
+				    byte fileIdentity[],
+				    byte keyStream[],
+				    byte packet[],
+				    byte tag,
+				    long fileOffset)
+    {
+	if(cryptography == null ||
+	   fileIdentity == null ||
+	   fileIdentity.length == 0 ||
+	   keyStream == null ||
+	   keyStream.length == 0)
+	    return null;
+
+	/*
+	** keyStream
+	** [0 ... 31] - AES-256 Encryption Key
+	** [32 ... 95] - SHA-512 HMAC Key
+	*/
+
+	try
+	{
+	    /*
+	    ** [ Public Key Encryption ]
+	    */
+
+	    PublicKey publicKey = Database.getInstance().
+		publicEncryptionKeyForSipHashId(cryptography, sipHashId);
+
+	    if(publicKey == null)
+		return null;
+
+	    byte pki[] = Cryptography.pkiEncrypt
+		(publicKey,
+		 Database.getInstance().
+		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
+		 fileIdentity);
+
+	    if(pki == null)
+		return null;
+
+	    StringBuilder stringBuilder = new StringBuilder();
+
+	    /*
+	    ** [ A Timestamp ]
+	    */
+
+	    stringBuilder.append
+		(Base64.encodeToString(Miscellaneous.
+				       longToByteArray(System.
+						       currentTimeMillis()),
+				       Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ File Offset ]
+	    */
+
+	    stringBuilder.append
+		(Base64.
+		 encodeToString(Miscellaneous.longToByteArray(fileOffset),
+				Base64.NO_WRAP));
+	    stringBuilder.append("\n");
+
+	    /*
+	    ** [ Packet ]
+	    */
+
+	    if(packet != null)
+	    {
+		stringBuilder.append
+		    (Base64.encodeToString(packet, Base64.NO_WRAP));
+		stringBuilder.append("\n");
+	    }
+
+	    /*
+	    ** [ AES-256 ]
+	    */
+
+	    byte aes256[] = Cryptography.encrypt
+		(Miscellaneous.
+		 joinByteArrays(new byte[] {tag},
+				stringBuilder.toString().getBytes()),
+		 Arrays.copyOfRange(keyStream,
+				    0,
+				    Cryptography.CIPHER_KEY_LENGTH));
+
+	    if(aes256 == null)
+		return null;
+
+	    stringBuilder.delete(0, stringBuilder.length());
+
+	    /*
+	    ** [ SHA-512 HMAC ]
+	    */
+
+	    byte sha512[] = Cryptography.hmac
+		(Miscellaneous.joinByteArrays(pki, aes256),
+		 Arrays.copyOfRange(keyStream,
+				    Cryptography.CIPHER_KEY_LENGTH,
+				    keyStream.length));
 
 	    if(sha512 == null)
 		return null;
