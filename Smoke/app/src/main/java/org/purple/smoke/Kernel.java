@@ -3588,7 +3588,7 @@ public class Kernel
 	wakeMessagesToSendScheduler();
     }
 
-    public int sendSimpleSteam(byte bytes[])
+    public int sendSteam(boolean simple, byte bytes[])
     {
 	int sent = 0;
 
@@ -3605,16 +3605,30 @@ public class Kernel
 	    {
 		int j = m_neighbors.keyAt(i);
 
-		if(m_neighbors.get(j) != null &&
-		   m_neighbors.get(j).passthrough())
+		if(m_neighbors.get(j) != null)
 		{
 		    /*
 		    ** Increase the offset by the minimum number of bytes.
 		    */
 
-		    int rc = m_neighbors.get(j).send(bytes);
+		    if(simple)
+		    {
+			if(m_neighbors.get(j).passthrough())
+			{
+			    int rc = m_neighbors.get(j).send(bytes);
 
-		    sent = Math.max(0, Math.min(Integer.MAX_VALUE, rc));
+			    sent = Math.max(0, Math.min(Integer.MAX_VALUE, rc));
+			}
+		    }
+		    else
+		    {
+			if(!m_neighbors.get(j).passthrough())
+			{
+			    int rc = m_neighbors.get(j).send(bytes);
+
+			    sent = Math.max(0, Math.min(Integer.MAX_VALUE, rc));
+			}
+		    }
 		}
 	    }
 	}

@@ -141,8 +141,8 @@ public class SteamReaderSimple extends SteamReader
 			** Send raw bytes.
 			*/
 
-			int sent = Kernel.getInstance().sendSimpleSteam
-			    (Arrays.copyOfRange(bytes, 0, offset));
+			int sent = Kernel.getInstance().sendSteam
+			    (true, Arrays.copyOfRange(bytes, 0, offset));
 
 			computeRate(sent);
 			m_readOffset.addAndGet((long) sent);
