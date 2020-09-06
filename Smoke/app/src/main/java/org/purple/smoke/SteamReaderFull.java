@@ -170,6 +170,11 @@ public class SteamReaderFull extends SteamReader
 
 	m_lastResponse.set(0L);
 	m_readOffset.set(0L);
+	saveReadOffset();
+    }
+
+    private void saveReadOffset()
+    {
     }
 
     public SteamReaderFull(String destination,
@@ -202,6 +207,7 @@ public class SteamReaderFull extends SteamReader
 	    m_acknowledgedOffset.set(m_readOffset.get());
 	    m_lastResponse.set(System.currentTimeMillis());
 	    m_read.set(true);
+	    saveReadOffset();
 	}
     }
 
