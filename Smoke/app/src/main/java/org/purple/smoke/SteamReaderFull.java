@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SteamReaderFull extends SteamReader
 {
-    private AtomicBoolean m_read = null;
+    private AtomicBoolean m_read = null; // Perform another read.
     private AtomicLong m_acknowledgedOffset = null;
     private AtomicLong m_lastResponse = null;
     private String m_sipHashId = "";
@@ -169,6 +169,7 @@ public class SteamReaderFull extends SteamReader
 	}
 
 	m_lastResponse.set(0L);
+	m_read.set(true);
 	m_readOffset.set(0L);
 	saveReadOffset();
     }
