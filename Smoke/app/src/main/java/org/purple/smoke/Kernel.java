@@ -1288,7 +1288,9 @@ public class Kernel
 					      steamElement.m_readInterval,
 					      steamElement.m_readOffset);
 	    else
-		steam = new SteamReaderFull(steamElement.m_fileName,
+		steam = new SteamReaderFull(steamElement.m_destination,
+					    steamElement.m_fileName,
+					    steamElement.m_fileIdentity,
 					    steamElement.m_oid,
 					    steamElement.m_readOffset);
 

@@ -38,6 +38,8 @@ public class SteamReaderFull extends SteamReader
     private AtomicBoolean m_read = null;
     private AtomicLong m_acknowledgedOffset = null;
     private AtomicLong m_lastResponse = null;
+    private String m_sipHashId = "";
+    private byte m_fileIdentity[] = null;
     private static int PACKET_SIZE = 16384;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 15000L; // 15 seconds.
@@ -131,6 +133,15 @@ public class SteamReaderFull extends SteamReader
 			/*
 			** Send a Steam packet.
 			*/
+
+			bytes = Messages.steamShare
+			    (s_cryptography,
+			     m_sipHashId,
+			     m_fileIdentity,
+			     m_keyStream,
+			     bytes,
+			     Messages.STEAM_SHARE[0],
+			     m_readOffset.get());
 		    }
 		    catch(Exception exception)
 		    {
@@ -161,14 +172,18 @@ public class SteamReaderFull extends SteamReader
 	m_readOffset.set(0L);
     }
 
-    public SteamReaderFull(String fileName,
+    public SteamReaderFull(String destination,
+			   String fileName,
+			   byte fileIdentity[],
 			   int oid,
 			   long readOffset)
     {
 	super(fileName, oid, readOffset);
 	m_acknowledgedOffset = new AtomicLong(0L);
+	m_fileIdentity = fileIdentity;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_read = new AtomicBoolean(true);
+	m_sipHashId = Miscellaneous.sipHashIdFromDestination(destination);
 	prepareReader();
     }
 
