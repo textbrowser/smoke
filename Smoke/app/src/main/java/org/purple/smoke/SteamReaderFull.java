@@ -134,14 +134,15 @@ public class SteamReaderFull extends SteamReader
 			** Send a Steam packet.
 			*/
 
-			bytes = Messages.steamShare
-			    (s_cryptography,
-			     m_sipHashId,
-			     m_fileIdentity,
-			     m_keyStream,
-			     bytes,
-			     Messages.STEAM_SHARE[0],
-			     m_readOffset.get());
+			Kernel.getInstance().sendSteam
+			    (false,
+			     Messages.steamShare(s_cryptography,
+						 m_sipHashId,
+						 m_fileIdentity,
+						 m_keyStream,
+						 bytes,
+						 Messages.STEAM_SHARE[0],
+						 m_readOffset.get()));
 		    }
 		    catch(Exception exception)
 		    {
