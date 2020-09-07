@@ -90,14 +90,8 @@ public class SteamReaderFull extends SteamReader
 			    break;
 			}
 
-			if(m_keyStream == null)
-			{
-			    m_keyStream = s_databaseHelper.readSteam
-				(s_cryptography, -1, m_oid - 1).m_keyStream;
-
-			    if(m_keyStream == null)
-				return;
-			}
+			if(m_canceled.get() || m_fileInputStream == null)
+			    return;
 
 			if(m_completed.get() || !m_read.get())
 			{
@@ -114,11 +108,17 @@ public class SteamReaderFull extends SteamReader
 				m_readOffset.set(m_acknowledgedOffset.get());
 			}
 
-			if(m_canceled.get() || m_fileInputStream == null)
-			    return;
-			else
-			    m_fileInputStream.getChannel().position
-				(m_readOffset.get());
+			m_fileInputStream.getChannel().position
+			    (m_readOffset.get());
+
+			if(m_keyStream == null)
+			{
+			    m_keyStream = s_databaseHelper.readSteam
+				(s_cryptography, -1, m_oid - 1).m_keyStream;
+
+			    if(m_keyStream == null)
+				return;
+			}
 
 			byte bytes[] = new byte[PACKET_SIZE];
 			int offset = m_fileInputStream.read(bytes);

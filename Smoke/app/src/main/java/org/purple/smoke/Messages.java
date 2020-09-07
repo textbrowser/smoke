@@ -2009,7 +2009,7 @@ public class Messages
 	    stringBuilder.append("\n");
 
 	    /*
-	    ** [ Packet ]
+	    ** [ File Packet ]
 	    */
 
 	    if(packet != null)
