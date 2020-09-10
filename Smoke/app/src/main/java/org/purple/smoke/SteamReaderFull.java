@@ -109,9 +109,6 @@ public class SteamReaderFull extends SteamReader
 				m_readOffset.set(m_acknowledgedOffset.get());
 			}
 
-			m_fileInputStream.getChannel().position
-			    (m_readOffset.get());
-
 			if(m_keyStream == null)
 			{
 			    m_keyStream = s_databaseHelper.readSteam
@@ -120,6 +117,9 @@ public class SteamReaderFull extends SteamReader
 			    if(m_keyStream == null)
 				return;
 			}
+
+			m_fileInputStream.getChannel().position
+			    (m_readOffset.get());
 
 			byte bytes[] = new byte[PACKET_SIZE];
 			int offset = m_fileInputStream.read(bytes);
