@@ -40,6 +40,7 @@ public class SteamReaderFull extends SteamReader
     private AtomicLong m_lastResponse = null;
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
+    private long m_fileSize = 0L;
     private static int PACKET_SIZE = 16384;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 15000L; // 15 seconds.
@@ -124,7 +125,11 @@ public class SteamReaderFull extends SteamReader
 			int offset = m_fileInputStream.read(bytes);
 
 			if(offset == -1)
-			    m_completed.set(true);
+			{
+			    /*
+			    ** A response is required, do not set m_completed.
+			    */
+			}
 			else
 			    m_readOffset.addAndGet((long) offset);
 
@@ -183,11 +188,13 @@ public class SteamReaderFull extends SteamReader
 			   String fileName,
 			   byte fileIdentity[],
 			   int oid,
+			   long fileSize,
 			   long readOffset)
     {
 	super(fileName, oid, readOffset);
 	m_acknowledgedOffset = new AtomicLong(0L);
 	m_fileIdentity = fileIdentity;
+	m_fileSize = fileSize;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_read = new AtomicBoolean(true);
 	m_sipHashId = Miscellaneous.sipHashIdFromDestination(destination);
@@ -210,6 +217,12 @@ public class SteamReaderFull extends SteamReader
 	    m_lastResponse.set(System.currentTimeMillis());
 	    m_read.set(true);
 	    saveReadOffset();
+	}
+
+	if(m_acknowledgedOffset.get() == m_fileSize)
+	{
+	    m_completed.set(true);
+	    m_read.set(false);
 	}
     }
 

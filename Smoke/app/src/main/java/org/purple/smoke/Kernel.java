@@ -1292,6 +1292,7 @@ public class Kernel
 					    steamElement.m_fileName,
 					    steamElement.m_fileIdentity,
 					    steamElement.m_oid,
+					    steamElement.m_fileSize,
 					    steamElement.m_readOffset);
 
 	    if(steam == null)
