@@ -45,6 +45,16 @@ public class SteamReaderFull extends SteamReader
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 15000L; // 15 seconds.
 
+    private void computeRate(long bytesSent)
+    {
+	long seconds = Math.abs
+	    (System.currentTimeMillis() / 1000 - m_time0.get());
+
+	if(seconds >= 1)
+	{
+	}
+    }
+
     private void prepareReader()
     {
 	if(m_reader == null)

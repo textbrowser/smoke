@@ -35,15 +35,18 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SteamReaderSimple extends SteamReader
 {
+    /*
+    ** Anywhere transfers.
+    */
+
     private AtomicLong m_lastBytesSent = null;
-    private AtomicLong m_lastTime = null;
     private AtomicLong m_readInterval = null;
     private static int PACKET_SIZE = 8192;
 
     private void computeRate(long bytesSent)
     {
 	long seconds = Math.abs
-	    (System.currentTimeMillis() - m_lastTime.get()) / 1000L;
+	    (System.currentTimeMillis() - m_time0.get()) / 1000L;
 
 	m_lastBytesSent.getAndAdd(bytesSent);
 
@@ -52,7 +55,7 @@ public class SteamReaderSimple extends SteamReader
 	    m_rate.set
 		((long) ((double) (m_lastBytesSent.get()) / (double) seconds));
 	    m_lastBytesSent.set(0L);
-	    m_lastTime.set(System.currentTimeMillis());
+	    m_time0.set(System.currentTimeMillis());
 	}
     }
 
@@ -191,7 +194,6 @@ public class SteamReaderSimple extends SteamReader
     {
 	super(fileName, oid, readOffset);
 	m_lastBytesSent = new AtomicLong(0L);
-	m_lastTime = new AtomicLong(System.currentTimeMillis());
 	m_readInterval = new AtomicLong(1000L / Math.max(4L, readInterval));
 	prepareReader();
     }
@@ -200,7 +202,7 @@ public class SteamReaderSimple extends SteamReader
     {
 	super.delete();
 	m_lastBytesSent.set(0L);
-	m_lastTime.set(0L);
+	m_time0.set(0L);
     }
 
     public void setReadInterval(int interval)

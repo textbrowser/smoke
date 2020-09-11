@@ -44,6 +44,7 @@ public abstract class SteamReader
     protected AtomicBoolean m_completed = null;
     protected AtomicLong m_rate = null;
     protected AtomicLong m_readOffset = null;
+    protected AtomicLong m_time0 = null;
     protected FileInputStream m_fileInputStream = null;
     protected Object m_fileInputStreamMutex = new Object();
     protected ScheduledExecutorService m_reader = null;
@@ -118,6 +119,7 @@ public abstract class SteamReader
 	m_oid = oid;
 	m_rate = new AtomicLong(0L);
 	m_readOffset = new AtomicLong(readOffset);
+	m_time0 = new AtomicLong(System.currentTimeMillis());
     }
 
     public abstract void setReadInterval(int readInterval);
