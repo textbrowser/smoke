@@ -31,11 +31,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SteamReaderFull extends SteamReader
 {
     private AtomicBoolean m_read = null; // Perform another read.
+    private AtomicInteger m_stalled = null;
     private AtomicLong m_acknowledgedOffset = null;
     private AtomicLong m_lastResponse = null;
     private String m_sipHashId = "";
@@ -48,10 +50,18 @@ public class SteamReaderFull extends SteamReader
     private void computeRate(long bytesSent)
     {
 	long seconds = Math.abs
-	    (System.currentTimeMillis() / 1000 - m_time0.get());
+	    (System.currentTimeMillis() / 1000L - m_time0.get());
 
-	if(seconds >= 1)
+	if(seconds >= 1L)
 	{
+	    long rate = m_rate.get();
+
+	    if(m_rate.get() > 0)
+		m_stalled.set(0);
+	    else if(m_stalled.getAndIncrement() <= 5)
+		m_rate.set(rate);
+
+	    m_time0.set(System.currentTimeMillis() / 1000L);
 	}
     }
 
@@ -208,6 +218,7 @@ public class SteamReaderFull extends SteamReader
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_read = new AtomicBoolean(true);
 	m_sipHashId = Miscellaneous.sipHashIdFromDestination(destination);
+	m_stalled = new AtomicInteger(0);
 	prepareReader();
     }
 
