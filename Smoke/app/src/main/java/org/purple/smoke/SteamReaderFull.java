@@ -202,6 +202,8 @@ public class SteamReaderFull extends SteamReader
 
     private void saveReadOffset()
     {
+	s_databaseHelper.writeSteamStatus
+	    (s_cryptography, "", prettyRate(), m_oid, m_readOffset.get());
     }
 
     public SteamReaderFull(String destination,
