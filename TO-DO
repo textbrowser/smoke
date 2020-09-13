@@ -42,6 +42,7 @@ Completed Items
 - Connection status text colors.
 - Context menu items in Member Chat: delete all, delete selected.
 - Copying of read-only values.
+- Create random Steam name on initial write.
 - Custom key streams via context menus.
 - Database method for retrieving neighbor OIDs.
 - Decide if the State class requires cryptographic data.
@@ -262,7 +263,6 @@ Remaining Items
 
 - Brands (profiles).
 - Clickable preview messages.
-- Create random Steam name on initial write.
 - Document available tasks.
 - Full Steams, reliable Echo.
 - New images for Web page.

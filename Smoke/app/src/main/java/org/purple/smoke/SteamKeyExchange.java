@@ -246,12 +246,12 @@ public class SteamKeyExchange
 		break;
 	    }
 
-	/*
-	** Record the new Steam.
-	*/
-
 	if(tag == Messages.STEAM_KEY_EXCHANGE[0])
 	{
+	    /*
+	    ** Record the new Steam.
+	    */
+
 	    SteamElement steamElement = new SteamElement();
 	    String array[] = s_databaseHelper.nameSipHashIdFromDigest
 		(s_cryptography, senderPublicEncryptionKeyDigest);
@@ -264,7 +264,8 @@ public class SteamKeyExchange
 	    steamElement.m_ephemeralPublicKey = ephemeralPublicKey;
 	    steamElement.m_fileDigest = fileDigest;
 	    steamElement.m_fileIdentity = fileIdentity;
-	    steamElement.m_fileName = fileName;
+	    steamElement.m_fileName = "Smoke_Steam_" +
+		Miscellaneous.byteArrayAsHexString(Cryptography.randomBytes(8));
 	    steamElement.m_fileSize = fileSize;
 	    steamElement.m_keyStream = Miscellaneous.joinByteArrays
 		(Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
