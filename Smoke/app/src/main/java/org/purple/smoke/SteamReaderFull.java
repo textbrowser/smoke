@@ -111,15 +111,15 @@ public class SteamReaderFull extends SteamReader
 			    break;
 			}
 
-			if(m_canceled.get() || m_fileInputStream == null)
+			if(m_canceled.get() ||
+			   m_completed.get() ||
+			   m_fileInputStream == null)
 			    return;
 
-			if(m_completed.get() || !m_read.get())
+			if(!m_read.get())
 			{
-			    if(m_completed.get())
-				return;
-			    else if(System.currentTimeMillis() -
-				    m_lastResponse.get() <= RESPONSE_WINDOW)
+			    if(System.currentTimeMillis() -
+			       m_lastResponse.get() <= RESPONSE_WINDOW)
 				/*
 				** A response has not been received.
 				*/
@@ -149,6 +149,8 @@ public class SteamReaderFull extends SteamReader
 			    /*
 			    ** A response is required, do not set m_completed.
 			    */
+
+			    return;
 			}
 			else
 			    m_readOffset.addAndGet((long) offset);
