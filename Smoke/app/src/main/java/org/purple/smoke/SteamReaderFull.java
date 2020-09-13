@@ -145,13 +145,11 @@ public class SteamReaderFull extends SteamReader
 			int offset = m_fileInputStream.read(bytes);
 
 			if(offset == -1)
-			{
 			    /*
 			    ** A response is required, do not set m_completed.
 			    */
 
 			    return;
-			}
 			else
 			    m_readOffset.addAndGet((long) offset);
 
