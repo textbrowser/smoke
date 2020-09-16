@@ -57,11 +57,16 @@ public class SteamReaderFull extends SteamReader
 	{
 	    long rate = m_rate.get();
 
+	    m_rate.set
+		((long) ((double) (m_readOffset.get() -
+				   m_previousOffset.get()) / (double) seconds));
+
 	    if(m_rate.get() > 0)
 		m_stalled.set(0);
 	    else if(m_stalled.getAndIncrement() <= 5)
 		m_rate.set(rate);
 
+	    m_previousOffset.set(m_readOffset.get());
 	    m_time0.set(System.currentTimeMillis() / 1000L);
 	}
     }
