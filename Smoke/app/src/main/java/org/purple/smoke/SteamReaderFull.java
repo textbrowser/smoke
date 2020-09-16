@@ -40,6 +40,7 @@ public class SteamReaderFull extends SteamReader
     private AtomicInteger m_stalled = null;
     private AtomicLong m_acknowledgedOffset = null;
     private AtomicLong m_lastResponse = null;
+    private AtomicLong m_previousOffset = null;
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
     private long m_fileSize = 0L;
@@ -195,6 +196,7 @@ public class SteamReaderFull extends SteamReader
 	}
 
 	m_lastResponse.set(0L);
+	m_previousOffset.set(0L);
 	m_read.set(true);
 	m_readOffset.set(0L);
 	saveReadOffset();
@@ -218,6 +220,7 @@ public class SteamReaderFull extends SteamReader
 	m_fileIdentity = fileIdentity;
 	m_fileSize = fileSize;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
+	m_previousOffset = new AtomicLong(0L);
 	m_read = new AtomicBoolean(true);
 	m_sipHashId = Miscellaneous.sipHashIdFromDestination(destination);
 	m_stalled = new AtomicInteger(0);
@@ -229,6 +232,7 @@ public class SteamReaderFull extends SteamReader
 	super.delete();
 	m_acknowledgedOffset.set(0L);
 	m_lastResponse.set(0L);
+	m_previousOffset.set(0L);
 	m_read.set(false);
     }
 
