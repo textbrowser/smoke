@@ -132,7 +132,10 @@ public class SteamReaderFull extends SteamReader
 
 				return;
 			    else
+			    {
+				m_lastResponse.set(System.currentTimeMillis());
 				m_readOffset.set(m_acknowledgedOffset.get());
+			    }
 			}
 
 			if(m_keyStream == null)

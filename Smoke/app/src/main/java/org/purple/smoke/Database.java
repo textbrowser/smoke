@@ -3887,6 +3887,40 @@ public class Database extends SQLiteOpenHelper
 	return keyStream;
     }
 
+    public byte[] steamKeyStream(Cryptography cryptography,
+				 byte fileIdentity[])
+    {
+	if(cryptography == null || fileIdentity == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	byte keyStream[] = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT keystream FROM steam WHERE file_identity_digest = ?",
+		 new String[] {Base64.encodeToString(fileIdentity,
+						     Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		keyStream = cryptography.mtd
+		    (Base64.decode(cursor.getString(0).getBytes(),
+				   Base64.DEFAULT));
+	}
+	catch(Exception exception)
+	{
+	    keyStream = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return keyStream;
+    }
+
     public int participantOidFromSipHash(Cryptography cryptography,
 					 String sipHashId)
     {

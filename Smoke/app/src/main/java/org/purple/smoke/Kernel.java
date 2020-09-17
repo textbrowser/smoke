@@ -1253,6 +1253,9 @@ public class Kernel
 
     private void prepareSteams()
     {
+	if(!State.getInstance().isAuthenticated())
+	    return;
+
 	ArrayList<SteamElement> steams = purgeDeletedSteams();
 
 	if(steams == null)
@@ -3130,6 +3133,18 @@ public class Kernel
 		    State.getInstance().populateParticipants();
 		    return 1;
 		}
+	    }
+	    else if(pki.length == Cryptography.STEAM_FILE_IDENTITY_LENGTH)
+	    {
+		/*
+		** Discover the Steam having the presented identity.
+		*/
+
+		byte keyStream[] = s_databaseHelper.steamKeyStream
+		    (s_cryptography, pki);
+
+		if(keyStream == null)
+		    return 1;
 	    }
 	}
 	catch(Exception exception)
