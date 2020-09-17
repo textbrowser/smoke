@@ -130,10 +130,10 @@ public class TcpTlsNeighbor extends Neighbor
 
     protected int send(byte bytes[])
     {
-	int sent = 0;
-
 	if(bytes == null || bytes.length == 0 || !connected())
-	    return sent;
+	    return 0;
+
+	int sent = 0;
 
 	try
 	{
@@ -211,8 +211,7 @@ public class TcpTlsNeighbor extends Neighbor
 	    else
 		sslContext = SSLContext.getInstance("SSL");
 
-	    sslContext.init
-		(null, m_trustManagers, SecureRandom.getInstance("SHA1PRNG"));
+	    sslContext.init(null, m_trustManagers, new SecureRandom());
 
 	    if(m_proxyInetSocketAddress == null)
 	    {
@@ -244,7 +243,6 @@ public class TcpTlsNeighbor extends Neighbor
 			(HandshakeCompletedEvent event)
 		    {
 			m_handshakeCompleted.set(true);
-			send(getIdentities()); // Awaken the socket.
 			scheduleSend(getCapabilities());
 			scheduleSend(getIdentities());
 			Kernel.getInstance().retrieveChatMessages
