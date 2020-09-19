@@ -592,8 +592,34 @@ public class Kernel
 			try
 			{
 			    if(!m_messagesToSend.isEmpty())
-				messageElement = m_messagesToSend.remove
+			    {
+				messageElement = m_messagesToSend.get
 				    (m_messagesToSend.size() - 1);
+
+				if(messageElement == null)
+				{
+				    m_messagesToSend.remove
+					(m_messagesToSend.size() - 1);
+				    return;
+				}
+
+				long delay = messageElement.m_delay;
+
+				if(delay > 0)
+				{
+				    long delta = System.currentTimeMillis() -
+					messageElement.m_timestamp;
+
+				    if(delay > delta)
+					return;
+				    else
+					m_messagesToSend.remove
+					    (m_messagesToSend.size() - 1);
+				}
+				else
+				    m_messagesToSend.remove
+					(m_messagesToSend.size() - 1);
+			    }
 			    else
 				empty = true;
 			}
@@ -620,31 +646,8 @@ public class Kernel
 			if(messageElement == null)
 			    return;
 			else
-			{
-			    if(messageElement.m_delay > 0)
-			    {
-				m_messagesToSendMutex.writeLock().lock();
-
-				try
-				{
-				    messageElement.m_delay -=
-					MESSAGES_TO_SEND_INTERVAL;
-				    m_messagesToSend.add(messageElement);
-				}
-				catch(Exception exception)
-				{
-				}
-				finally
-				{
-				    m_messagesToSendMutex.writeLock().unlock();
-				}
-
-				return;
-			    }
-
 			    messageElement.m_timestamp =
 				System.currentTimeMillis();
-			}
 
 			byte bytes[] = null;
 
@@ -3487,6 +3490,7 @@ public class Kernel
 	    messageElement.m_message = secret;
 	    messageElement.m_messageType =
 		MessageElement.JUGGERNAUT_MESSAGE_TYPE;
+	    messageElement.m_timestamp = System.currentTimeMillis();
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
