@@ -50,7 +50,7 @@ public class About
 	    // The version must agree with Smoke/app/build.gradle.
 
 	    s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    s_about = "Version 2020.10.10 Solid Smoke " +
+	    s_about = "Version 2020.09.20 Solid Smoke " +
 		(BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		"\nBuild Date " +
 		s_simpleDateFormat.format(new Date(BuildConfig.BUILD_TIME)) +
