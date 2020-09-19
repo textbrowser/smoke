@@ -3899,7 +3899,8 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT keystream FROM steam WHERE file_identity_digest = ?",
+		("SELECT keystream FROM steam_files " +
+		 "WHERE file_identity_digest = ?",
 		 new String[] {Base64.encodeToString(fileIdentity,
 						     Base64.DEFAULT)});
 
