@@ -182,10 +182,13 @@ public class Kernel
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CONGESTION_LIFETIME = 60; // 60 seconds.
     private final static int FIRE_TIME_DELTA = 30000; // 30 seconds.
-    private final static int MCELIECE_OUTPUT_SIZES[] = {320,  // 64 bytes.
+    private final static int MCELIECE_OUTPUT_SIZES[] = {304,  // 48 bytes.
+							320,  // 64 bytes.
 							352,  // 96 bytes.
+							491,  // 48 bytes.
 							507,  // 64 bytes.
 							539,  // 96 bytes.
+							560,  // 48 bytes.
 							576,  // 64 bytes.
 							608}; // 96 bytes.
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
@@ -270,6 +273,9 @@ public class Kernel
 
     private void prepareNeighbors()
     {
+	if(!State.getInstance().isAuthenticated())
+	    return;
+
 	ArrayList<NeighborElement> neighbors = purgeDeletedNeighbors();
 
 	if(neighbors == null)
@@ -2216,16 +2222,29 @@ public class Kernel
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
 	       startsWith("McEliece"))
 	    {
-		int e = 0; // End.
-		int s = 0; // Start.
-		int t = s_cryptography.chatEncryptionPublicKeyT();
+		int e = 0;
+		int s = 0;
 
-		if(t == 50)
-		    e = 4;
+		if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
+		   startsWith("McEliece-Fujisaki"))
+		{
+		    int t = s_cryptography.chatEncryptionPublicKeyT();
+
+		    if(t == 50)
+		    {
+			e = 3;
+			s = 0;
+		    }
+		    else
+		    {
+			e = 9;
+			s = 6;
+		    }
+		}
 		else
 		{
 		    e = 6;
-		    s = 4;
+		    s = 3;
 		}
 
 		for(int i = s; i < e; i++)
@@ -3136,6 +3155,11 @@ public class Kernel
 	    }
 	    else if(pki.length == Cryptography.STEAM_FILE_IDENTITY_LENGTH)
 	    {
+		/*
+		** Steam A
+		** Steam B
+		*/
+
 		/*
 		** Discover the Steam having the presented identity.
 		*/
