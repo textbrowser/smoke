@@ -2220,7 +2220,7 @@ public class Kernel
 	    }
 
 	    byte pki[] = null;
-	    int mceliece_output_size = 0;
+	    int pki_output_size = 0;
 
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
 	       startsWith("McEliece"))
@@ -2259,17 +2259,20 @@ public class Kernel
 
 		    if(pki != null)
 		    {
-			mceliece_output_size = MCELIECE_OUTPUT_SIZES[i];
+			pki_output_size = MCELIECE_OUTPUT_SIZES[i];
 			break;
 		    }
 		}
 	    }
 	    else
+	    {
 		pki = s_cryptography.pkiDecrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 0,
 				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
+		pki_output_size = Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8;
+	    }
 
 	    if(pki == null)
 		return 1;
@@ -2312,28 +2315,15 @@ public class Kernel
 			return 1;
 		}
 
-		byte aes256[] = null;
-
-		if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
-		   startsWith("McEliece"))
-		    aes256 = Cryptography.decrypt
-			(Arrays.
-			 copyOfRange(bytes,
-				     mceliece_output_size,
-				     bytes.length - 128),
-			 Arrays.copyOfRange(keyStream,
-					    0,
-					    Cryptography.CIPHER_KEY_LENGTH));
-		else
-		    aes256 = Cryptography.decrypt
-			(Arrays.
-			 copyOfRange(bytes,
-				     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
-				     bytes.length -
-				     2 * Cryptography.HASH_KEY_LENGTH),
-			 Arrays.copyOfRange(keyStream,
-					    0,
-					    Cryptography.CIPHER_KEY_LENGTH));
+		byte aes256[] = Cryptography.decrypt
+		    (Arrays.
+		     copyOfRange(bytes,
+				 pki_output_size,
+				 bytes.length -
+				 2 * Cryptography.HASH_KEY_LENGTH),
+		     Arrays.copyOfRange(keyStream,
+					0,
+					Cryptography.CIPHER_KEY_LENGTH));
 
 		if(aes256 == null)
 		    return 1;
@@ -2832,29 +2822,15 @@ public class Kernel
 		if(!Cryptography.memcmp(array2, sha512))
 		    return 1;
 
-		byte aes256[] = null;
-
-		if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
-		   startsWith("McEliece"))
-		    aes256 = Cryptography.decrypt
-			(Arrays.
-			 copyOfRange(bytes,
-				     mceliece_output_size,
-				     bytes.length -
-				     2 * Cryptography.HASH_KEY_LENGTH),
-			 Arrays.copyOfRange(pki,
-					    0,
-					    Cryptography.CIPHER_KEY_LENGTH));
-		else
-		    aes256 = Cryptography.decrypt
-			(Arrays.
-			 copyOfRange(bytes,
-				     Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8,
-				     bytes.length -
-				     2 * Cryptography.HASH_KEY_LENGTH),
-			 Arrays.copyOfRange(pki,
-					    0,
-					    Cryptography.CIPHER_KEY_LENGTH));
+		byte aes256[] = Cryptography.decrypt
+		    (Arrays.
+		     copyOfRange(bytes,
+				 pki_output_size,
+				 bytes.length -
+				 2 * Cryptography.HASH_KEY_LENGTH),
+		     Arrays.copyOfRange(pki,
+					0,
+					Cryptography.CIPHER_KEY_LENGTH));
 
 		if(aes256 == null)
 		    return 1;
@@ -3172,6 +3148,37 @@ public class Kernel
 
 		if(keyStream == null)
 		    return 1;
+
+		byte sha512[] = Cryptography.hmac
+		    (Arrays.copyOfRange(bytes,
+					0,
+					bytes.length -
+					2 * Cryptography.HASH_KEY_LENGTH),
+		     Arrays.copyOfRange(keyStream,
+					Cryptography.CIPHER_KEY_LENGTH,
+					keyStream.length));
+
+		if(!Cryptography.memcmp(array2, sha512))
+		    return 1;
+
+		byte aes256[] = Cryptography.decrypt
+		    (Arrays.
+		     copyOfRange(bytes,
+				 pki_output_size,
+				 bytes.length -
+				 2 * Cryptography.HASH_KEY_LENGTH),
+		     Arrays.copyOfRange(keyStream,
+					0,
+					Cryptography.CIPHER_KEY_LENGTH));
+
+		if(aes256 == null)
+		    return 1;
+
+		byte abyte[] = new byte[] {aes256[0]};
+
+		if(abyte[0] == Messages.STEAM_SHARE[0])
+		{
+		}
 	    }
 	}
 	catch(Exception exception)
