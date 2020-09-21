@@ -2034,22 +2034,22 @@ public class Kernel
 	       s_cryptography.ozoneEncryptionKey() != null &&
 	       s_cryptography.ozoneMacKey() != null)
 	    {
-		byte array1[] = Arrays.copyOfRange
+		byte data[] = Arrays.copyOfRange
 		    (bytes,
 		     0,
 		     bytes.length - 2 * Cryptography.HASH_KEY_LENGTH);
-		byte array2[] = Arrays.copyOfRange
+		byte hmac[] = Arrays.copyOfRange
 		    (bytes,
 		     bytes.length - 2 * Cryptography.HASH_KEY_LENGTH,
 		     bytes.length - Cryptography.HASH_KEY_LENGTH);
 
 		if(Cryptography.
-		   memcmp(array2,
-			  Cryptography.hmac(array1,
+		   memcmp(hmac,
+			  Cryptography.hmac(data,
 					    s_cryptography.ozoneMacKey())))
 		{
 		    byte aes256[] = Cryptography.decrypt
-			(array1, s_cryptography.ozoneEncryptionKey());
+			(data, s_cryptography.ozoneEncryptionKey());
 
 		    if(aes256 == null)
 			return 1;
@@ -2103,16 +2103,16 @@ public class Kernel
 								** arrive from
 								** SmokeStack?
 								*/
-	    byte array1[] = Arrays.copyOfRange // Blocks #1, #2, etc.
+	    byte data[] = Arrays.copyOfRange // Blocks #1, #2, etc.
 		(bytes, 0, bytes.length - 2 * Cryptography.HASH_KEY_LENGTH);
-	    byte array2[] = Arrays.copyOfRange // Second to the last block.
-		(bytes,
-		 bytes.length - 2 * Cryptography.HASH_KEY_LENGTH,
-		 bytes.length - Cryptography.HASH_KEY_LENGTH);
-	    byte array3[] = Arrays.copyOfRange // The last block (destination).
+	    byte destination[] = Arrays.copyOfRange
 		(bytes,
 		 bytes.length - Cryptography.HASH_KEY_LENGTH,
 		 bytes.length);
+	    byte hmac[] = Arrays.copyOfRange
+		(bytes,
+		 bytes.length - 2 * Cryptography.HASH_KEY_LENGTH,
+		 bytes.length - Cryptography.HASH_KEY_LENGTH);
 	    byte sha512OfMessage[] = Cryptography.sha512
 		(Arrays.
 		 copyOfRange(bytes,
@@ -2132,7 +2132,7 @@ public class Kernel
 							    Cryptography.
 							    HASH_KEY_LENGTH),
 						m_chatMessageRetrievalIdentity),
-			      array3))
+			      destination))
 		    {
 			m_chatTemporaryIdentityLastTick.set
 			    (System.currentTimeMillis());
@@ -2158,19 +2158,19 @@ public class Kernel
 							bytes.length -
 							Cryptography.
 							HASH_KEY_LENGTH),
-				     array3))
+				     destination))
 		    return 0;
 
-	    if(s_cryptography.isValidSipHashMac(array1, array2))
+	    if(s_cryptography.isValidSipHashMac(data, hmac))
 	    {
 		/*
 		** EPKS
 		*/
 
-		array1 = s_cryptography.decryptWithSipHashKey(array1);
+		data = s_cryptography.decryptWithSipHashKey(data);
 
 		String sipHashId = s_databaseHelper.writeParticipant
-		    (s_cryptography, array1);
+		    (s_cryptography, data);
 
 		if(!sipHashId.isEmpty())
 		{
@@ -2305,12 +2305,12 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH,
 					keyStream.length));
 
-		if(!Cryptography.memcmp(array2, sha512))
+		if(!Cryptography.memcmp(hmac, sha512))
 		{
 		    if(ourMessageViaChatTemporaryIdentity)
 		    {
 			keyStream = s_databaseHelper.participantKeyStream
-			    (s_cryptography, pki, array2, bytes);
+			    (s_cryptography, pki, hmac, bytes);
 
 			if(keyStream == null)
 			    return 1;
@@ -2823,7 +2823,7 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH,
 					pki.length));
 
-		if(!Cryptography.memcmp(array2, sha512))
+		if(!Cryptography.memcmp(hmac, sha512))
 		    return 1;
 
 		byte aes256[] = Cryptography.decrypt
@@ -3162,7 +3162,7 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH,
 					keyStream.length));
 
-		if(!Cryptography.memcmp(array2, sha512))
+		if(!Cryptography.memcmp(hmac, sha512))
 		    return 1;
 
 		byte aes256[] = Cryptography.decrypt
