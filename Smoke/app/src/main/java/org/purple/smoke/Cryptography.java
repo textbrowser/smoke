@@ -141,6 +141,7 @@ public class Cryptography
     public final static int HASH_KEY_LENGTH = 64;
     public final static int IDENTITY_SIZE = 8; // Size of a long.
     public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
+    public final static int SHA_1_OUTPUT_SIZE_BITS = 160;
     public final static int SIPHASH_IDENTITY_LENGTH = 19; // 0000-0000-0000-0000
     public final static int STEAM_FILE_IDENTITY_LENGTH = 48;
 
@@ -435,7 +436,7 @@ public class Cryptography
 		temporary = pbkdf2(salt,
 				   m_sipHashId.toCharArray(),
 				   SIPHASH_STREAM_CREATION_ITERATION_COUNT,
-				   160); // SHA-1
+				   SHA_1_OUTPUT_SIZE_BITS); // SHA-1
 	    }
 	    finally
 	    {

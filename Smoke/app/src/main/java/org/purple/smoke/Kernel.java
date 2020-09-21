@@ -2147,6 +2147,10 @@ public class Kernel
 		m_chatMessageRetrievalIdentityMutex.readLock().unlock();
 	    }
 
+	    /*
+	    ** What's the destination?
+	    */
+
 	    if(!ourMessageViaChatTemporaryIdentity)
 		if(!s_cryptography.
 		   iAmTheDestination(Arrays.copyOfRange(bytes,
