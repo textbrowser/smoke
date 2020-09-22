@@ -134,6 +134,8 @@ Completed Items
   Calls are not logged.
 - Messages must be temporarily retained if the Chat activity loses focus.
 - Modify Settings so that TCP neighbors support SOCKS proxies.
+- Names or PINs alongside SipHashes. The extra bits will increase the
+  possibilities. SipHash-128.
 - Neighbor class.
 - Neighbor details should be optional.
 - Neighbors periodic refresh.
@@ -253,8 +255,6 @@ Future Items
 - Bubbles are too narrow on wide devices.
 - Java does not include methods for destroying private containers.
 - NTRU via BouncyCastle.
-- Names or PINs alongside SipHashes. The extra bits will increase the
-  possibilities.
 - Optional cryptographic discovery.
 - Resolve DNS through a proxy if a proxy is defined.
 - Stronger surreptitious forwarding. Larger RSA keys.
