@@ -240,7 +240,7 @@ public class MemberChat extends AppCompatActivity
     private RecyclerView m_recyclerView = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
-    private String m_name = "0000-0000-0000-0000";
+    private String m_name = Cryptography.DEFAULT_SIPHASH_ID;
     private String m_sipHashId = m_name;
     private boolean m_messageSelectionStateEnabled = false;
     private boolean m_receiverRegistered = false;
@@ -824,7 +824,7 @@ public class MemberChat extends AppCompatActivity
 	m_selectedMessages = new Hashtable<> ();
 
 	if(m_sipHashId.isEmpty())
-	    m_name = m_sipHashId = "0000-0000-0000-0000";
+	    m_name = m_sipHashId = Cryptography.DEFAULT_SIPHASH_ID;
 
 	/*
 	** Prepare various widgets.

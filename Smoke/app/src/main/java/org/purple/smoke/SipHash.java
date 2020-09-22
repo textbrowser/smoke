@@ -123,16 +123,16 @@ public class SipHash
 	m_key = key;
     }
 
-    public long hmac(byte data[])
+    public long[] hmac(byte data[], int outputLength)
     {
-	return hmac(data, m_key);
+	return hmac(data, m_key, outputLength);
     }
 
     @SuppressWarnings("fallthrough")
-    public synchronized long hmac(byte data[], byte key[])
+    public synchronized long[] hmac(byte data[], byte key[], int outputLength)
     {
 	if(data == null || key == null || key.length != KEY_LENGTH)
-	    return 0L;
+	    return new long[] {0L, 0L};
 
 	/*
 	** Initialization
@@ -145,6 +145,9 @@ public class SipHash
 	m_v1 = k1 ^ C1;
 	m_v2 = k0 ^ C2;
 	m_v3 = k1 ^ C3;
+
+	if(outputLength == 16)
+	    m_v1 ^= 0xeeL;
 
 	/*
 	** Compression
@@ -176,6 +179,7 @@ public class SipHash
 	    }
 
 	    m_v0 ^= m;
+	    m = 0L;
 	}
 
 	int offset = (data.length / 8) * 8;
@@ -228,7 +232,10 @@ public class SipHash
 	** Finalization
 	*/
 
-	m_v2 ^= 0xffL;
+	if(outputLength == 16)
+	    m_v2 ^= 0xeeL;
+	else
+	    m_v2 ^= 0xffL;
 
 	switch(D_ROUNDS[m_d_rounds_index])
 	{
@@ -252,7 +259,41 @@ public class SipHash
 	    break;
 	}
 
-	return m_v0 ^ m_v1 ^ m_v2 ^ m_v3;
+	long output[] = new long[] {m_v0 ^ m_v1 ^ m_v2 ^ m_v3, 0};
+
+	if(outputLength == 8)
+	{
+	    m_v0 = m_v1 = m_v2 = m_v3 = 0L;
+	    return output;
+	}
+
+	m_v1 ^= 0xddL;
+
+	switch(D_ROUNDS[m_d_rounds_index])
+	{
+	case 4:
+	    round();
+	    round();
+	    round();
+	    round();
+	    break;
+	case 8:
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    round();
+	    break;
+	default:
+	    break;
+	}
+
+	output[1] = m_v0 ^ m_v1 ^ m_v2 ^ m_v3;
+	m_v0 = m_v1 = m_v2 = m_v3 = 0L;
+	return output;
     }
 
     public static boolean test1()
@@ -271,12 +312,13 @@ public class SipHash
 	long result = Miscellaneous.byteArrayToLong
 	    (new byte[] {(byte) 0xa1, (byte) 0x29, (byte) 0xca, (byte) 0x61,
 			 (byte) 0x49, (byte) 0xbe, (byte) 0x45, (byte) 0xe5});
-	long value = s.hmac
+	long value[] = s.hmac
 	    (new byte[] {(byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03,
 			 (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07,
 			 (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,
-			 (byte) 0x0c, (byte) 0x0d, (byte) 0x0e});
+			 (byte) 0x0c, (byte) 0x0d, (byte) 0x0e},
+		Cryptography.SIPHASH_OUTPUT_LENGTH / 2);
 
-	return result == value;
+	return result == value[0];
     }
 }

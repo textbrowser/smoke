@@ -79,7 +79,7 @@ public class Cryptography
     private SecretKey m_encryptionKey = null;
     private SecretKey m_macKey = null;
     private String m_chatEncryptionPublicKeyAlgorithm = "";
-    private String m_sipHashId = "0000-0000-0000-0000";
+    private String m_sipHashId = "0000-0000-0000-0000-0000-0000-0000-0000";
     private byte m_identity[] = null; // Random identity.
     private byte m_ozoneEncryptionKey[] = null;
     private byte m_ozoneMacKey[] = null;
@@ -134,6 +134,8 @@ public class Cryptography
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
+    public final static String DEFAULT_SIPHASH_ID =
+	"0000-0000-0000-0000-0000-0000-0000-0000";
     public final static int CIPHER_HASH_KEYS_LENGTH = 96;
     public final static int CIPHER_IV_LENGTH = 16;
     public final static int CIPHER_KEY_LENGTH = 32;
@@ -142,7 +144,9 @@ public class Cryptography
     public final static int IDENTITY_SIZE = 8; // Size of a long.
     public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
     public final static int SHA_1_OUTPUT_SIZE_BITS = 160;
-    public final static int SIPHASH_IDENTITY_LENGTH = 19; // 0000-0000-0000-0000
+    public final static int SIPHASH_OUTPUT_LENGTH = 16;
+    public final static int SIPHASH_IDENTITY_LENGTH =
+	DEFAULT_SIPHASH_ID.length();
     public final static int STEAM_FILE_IDENTITY_LENGTH = 48;
 
     private Cryptography()
@@ -1700,12 +1704,12 @@ public class Cryptography
 		    return "";
 
 		SipHash sipHash = new SipHash();
-		long value = sipHash.hmac(bytes, key);
+		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
-		if(value == 0L)
+		if(value == new long[] {0L, 0L})
 		    return "";
 
-		bytes = Miscellaneous.longToByteArray(value);
+		bytes = Miscellaneous.longArrayToByteArray(value);
 
 		if(bytes == null)
 		    return "";
@@ -2260,12 +2264,12 @@ public class Cryptography
 		    return false;
 
 		SipHash sipHash = new SipHash();
-		long value = sipHash.hmac(bytes, key);
+		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
-		if(value == 0L)
+		if(value == new long[] {0L, 0L})
 		    return false;
 
-		bytes = Miscellaneous.longToByteArray(value);
+		bytes = Miscellaneous.longArrayToByteArray(value);
 
 		if(bytes == null)
 		    return false;
@@ -2454,7 +2458,7 @@ public class Cryptography
 
 	try
 	{
-	    m_sipHashId = "0000-0000-0000-0000";
+	    m_sipHashId = DEFAULT_SIPHASH_ID;
 	}
 	finally
 	{
@@ -2586,7 +2590,7 @@ public class Cryptography
 
 	try
 	{
-	    m_sipHashId = "0000-0000-0000-0000";
+	    m_sipHashId = DEFAULT_SIPHASH_ID;
 	}
 	finally
 	{

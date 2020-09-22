@@ -1878,15 +1878,16 @@ public class Kernel
 	if(buffer == null)
 	    return 1;
 
-	long value = s_congestionSipHash.hmac(buffer.getBytes());
-
-	if(s_databaseHelper.containsCongestionDigest(value))
-	    return 1;
-	else if(s_databaseHelper.writeCongestionDigest(value))
-	    return 1;
-
 	try
 	{
+	    long value[] = s_congestionSipHash.hmac
+		(buffer.getBytes(), Cryptography.SIPHASH_OUTPUT_LENGTH / 2);
+
+	    if(s_databaseHelper.containsCongestionDigest(value[0]))
+		return 1;
+	    else if(s_databaseHelper.writeCongestionDigest(value[0]))
+		return 1;
+
 	    /*
 	    ** Fire!
 	    */
@@ -1979,10 +1980,11 @@ public class Kernel
 				      entry.getKey() +
 				      strings[2] +
 				      strings[3] +
-				      timestamp).getBytes());
+				      timestamp).getBytes(),
+				     Cryptography.SIPHASH_OUTPUT_LENGTH / 2);
 
 				if(s_databaseHelper.
-				   writeCongestionDigest(value))
+				   writeCongestionDigest(value[0]))
 				    return 1;
 
 				Intent intent = new Intent
@@ -2751,9 +2753,10 @@ public class Kernel
 			(s_cryptography, strings[1]);
 
 		value = s_congestionSipHash.hmac
-		    (("chat" + message + strings[1] + timestamp).getBytes());
+		    (("chat" + message + strings[1] + timestamp).getBytes(),
+		     Cryptography.SIPHASH_OUTPUT_LENGTH);
 
-		if(s_databaseHelper.writeCongestionDigest(value))
+		if(s_databaseHelper.writeCongestionDigest(value[0]))
 		    return 1;
 
 		if(s_databaseHelper.
@@ -3227,13 +3230,29 @@ public class Kernel
     public static void writeCongestionDigest(String message)
     {
 	if(message != null)
-	    s_databaseHelper.writeCongestionDigest
-		(s_congestionSipHash.hmac(message.getBytes()));
+	    try
+	    {
+		s_databaseHelper.writeCongestionDigest
+		    (s_congestionSipHash.
+		     hmac(message.getBytes(),
+			  Cryptography.SIPHASH_OUTPUT_LENGTH / 2)[0]);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
     }
 
     public static void writeCongestionDigest(byte data[])
     {
-	s_databaseHelper.writeCongestionDigest(s_congestionSipHash.hmac(data));
+	try
+	{
+	    s_databaseHelper.writeCongestionDigest
+		(s_congestionSipHash.
+		 hmac(data, Cryptography.SIPHASH_OUTPUT_LENGTH / 2)[0]);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     public void clearMessagesToSend()

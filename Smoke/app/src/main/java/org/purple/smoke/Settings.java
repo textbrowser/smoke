@@ -1238,6 +1238,10 @@ public class Settings extends AppCompatActivity
 
 		    textView1.setCompoundDrawablePadding(5);
 		    textView1.setGravity(Gravity.CENTER_VERTICAL);
+		    textView1.setLayoutParams
+			(new TableRow.LayoutParams(0,
+						   LayoutParams.WRAP_CONTENT,
+						   1));
 		    textView1.setTag(R.id.participants, sipHashId);
 		    textView1.setText(sipHashId);
 		    break;
@@ -2052,8 +2056,7 @@ public class Settings extends AppCompatActivity
 			 "(public key pair). " +
 			 "The tokens allow participants to exchange public " +
 			 "key pairs via the Echo Public Key Sharing (EPKS) " +
-			 "protocol. " +
-			 "An example Smoke ID is ABAB-0101-CDCD-0202.");
+			 "protocol.");
 
 		textView1.setTextSize(16);
 		popupWindow.setContentView(textView1);

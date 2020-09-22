@@ -654,13 +654,15 @@ public class Chat extends AppCompatActivity
 		{
 		    stringBuilder.append("\n");
 
-		    long value = s_siphash.hmac(participantElement.m_keyStream);
+		    long value[] = s_siphash.
+			hmac(participantElement.m_keyStream,
+			     Cryptography.SIPHASH_OUTPUT_LENGTH);
 
 		    stringBuilder.append
 			(Miscellaneous.
-			 byteArrayAsHexStringDelimited(Miscellaneous.
-						       longToByteArray(value),
-						       '-', 4).toUpperCase());
+			 byteArrayAsHexStringDelimited
+			 (Miscellaneous.
+			  longArrayToByteArray(value), '-', 4).toUpperCase());
 		}
 	    }
 
@@ -865,12 +867,14 @@ public class Chat extends AppCompatActivity
 	    {
 		stringBuilder.append("\n");
 
-		long value = s_siphash.hmac(participantElement.m_keyStream);
+		long value[] = s_siphash.hmac
+		    (participantElement.m_keyStream,
+		     Cryptography.SIPHASH_OUTPUT_LENGTH);
 
 		stringBuilder.append
 		    (Miscellaneous.
 		     byteArrayAsHexStringDelimited(Miscellaneous.
-						   longToByteArray(value),
+						   longArrayToByteArray(value),
 						   '-', 4).toUpperCase());
 	    }
 
