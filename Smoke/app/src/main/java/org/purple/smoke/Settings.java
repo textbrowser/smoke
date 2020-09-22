@@ -1515,15 +1515,12 @@ public class Settings extends AppCompatActivity
 
 		    boolean e1 = s_cryptography.prepareSipHashIds(null);
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
-		    boolean e3 = generateOzone
-			(Miscellaneous.
-			 prepareSipHashId(s_cryptography.sipHashId()));
 		    byte saltedPassword[] = Cryptography.
 			sha512(m_password.getBytes(),
 			       encryptionSalt,
 			       macSalt);
 
-		    if(e1 && e2 && e3 && saltedPassword != null)
+		    if(e1 && e2 && saltedPassword != null)
 			m_databaseHelper.writeSetting
 			    (null,
 			     "saltedPassword",
@@ -1535,8 +1532,6 @@ public class Settings extends AppCompatActivity
 			    m_error = "prepareSipHashIds() failure";
 			else if(!e2)
 			    m_error = "prepareSipHashKeys() failure";
-			else
-			    m_error = "generateOzone() failure";
 
 			s_cryptography.reset();
 		    }
@@ -1845,7 +1840,7 @@ public class Settings extends AppCompatActivity
 		TextView textView2 = (TextView) findViewById
 		    (R.id.participant_siphash_id);
 
-		checkBox1.setChecked(false);
+		checkBox1.setChecked(true);
 		textView1.setText("");
 		textView2.setText("");
 		textView1.requestFocus();
@@ -2447,22 +2442,13 @@ public class Settings extends AppCompatActivity
 		    boolean e1 = s_cryptography.prepareSipHashIds
 			(m_databaseHelper.readSetting(s_cryptography, "alias"));
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
-		    boolean e3 = true;
 
-		    if(m_databaseHelper.
-		       readSetting(s_cryptography, "ozone_address").isEmpty())
-			e3 = generateOzone
-			    (Miscellaneous.
-			     prepareSipHashId(s_cryptography.sipHashId()));
-
-		    if(!e1 || !e2 || !e3)
+		    if(!e1 || !e2)
 		    {
 			if(!e1)
 			    m_error = "prepareSipHashIds() failure";
 			else if(!e2)
 			    m_error = "prepareSipHashKeys() failure";
-			else
-			    m_error = "generateOzone() failure";
 
 			s_cryptography.resetPKI();
 		    }
@@ -3081,6 +3067,8 @@ public class Settings extends AppCompatActivity
 
 	CheckBox checkBox1 = null;
 
+	checkBox1 = (CheckBox) findViewById(R.id.as_alias);
+	checkBox1.setChecked(true);
 	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
 
 	if(m_databaseHelper.
