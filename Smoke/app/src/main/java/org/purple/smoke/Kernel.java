@@ -1880,12 +1880,12 @@ public class Kernel
 
 	try
 	{
-	    long value[] = s_congestionSipHash.hmac
-		(buffer.getBytes(), Cryptography.SIPHASH_OUTPUT_LENGTH / 2);
+	    long value = s_congestionSipHash.hmac
+		(buffer.getBytes(), Cryptography.SIPHASH_OUTPUT_LENGTH / 2)[0];
 
-	    if(s_databaseHelper.containsCongestionDigest(value[0]))
+	    if(s_databaseHelper.containsCongestionDigest(value))
 		return 1;
-	    else if(s_databaseHelper.writeCongestionDigest(value[0]))
+	    else if(s_databaseHelper.writeCongestionDigest(value))
 		return 1;
 
 	    /*
@@ -1981,10 +1981,10 @@ public class Kernel
 				      strings[2] +
 				      strings[3] +
 				      timestamp).getBytes(),
-				     Cryptography.SIPHASH_OUTPUT_LENGTH / 2);
+				     Cryptography.SIPHASH_OUTPUT_LENGTH / 2)[0];
 
 				if(s_databaseHelper.
-				   writeCongestionDigest(value[0]))
+				   writeCongestionDigest(value))
 				    return 1;
 
 				Intent intent = new Intent
@@ -2754,9 +2754,9 @@ public class Kernel
 
 		value = s_congestionSipHash.hmac
 		    (("chat" + message + strings[1] + timestamp).getBytes(),
-		     Cryptography.SIPHASH_OUTPUT_LENGTH);
+		     Cryptography.SIPHASH_OUTPUT_LENGTH)[0];
 
-		if(s_databaseHelper.writeCongestionDigest(value[0]))
+		if(s_databaseHelper.writeCongestionDigest(value))
 		    return 1;
 
 		if(s_databaseHelper.
