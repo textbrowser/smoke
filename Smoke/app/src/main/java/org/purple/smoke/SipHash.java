@@ -263,7 +263,7 @@ public class SipHash
 
 	if(outputLength == 8)
 	{
-	    m_v0 = m_v1 = m_v2 = m_v3 = 0L;
+	    k0 = k1 = m_v0 = m_v1 = m_v2 = m_v3 = 0L;
 	    return output;
 	}
 
@@ -292,7 +292,7 @@ public class SipHash
 	}
 
 	output[1] = m_v0 ^ m_v1 ^ m_v2 ^ m_v3;
-	m_v0 = m_v1 = m_v2 = m_v3 = 0L;
+	k0 = k1 = m_v0 = m_v1 = m_v2 = m_v3 = 0L;
 	return output;
     }
 
