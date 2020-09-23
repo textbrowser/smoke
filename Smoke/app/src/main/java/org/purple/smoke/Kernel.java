@@ -2058,7 +2058,7 @@ public class Kernel
 
 		    long current = System.currentTimeMillis();
 		    long timestamp = Miscellaneous.byteArrayToLong
-			(Arrays.copyOfRange(aes256, 1, 1 + 8));
+			(Arrays.copyOfRange(aes256, 1, 9));
 
 		    if(current - timestamp < 0L)
 		    {
@@ -2075,9 +2075,12 @@ public class Kernel
 		    */
 
 		    long identity = Miscellaneous.byteArrayToLong
-			(Arrays.copyOfRange(aes256,
-					    28,
-					    28 + Cryptography.IDENTITY_SIZE));
+			(Arrays.
+			 copyOfRange(aes256,
+				     9 + Cryptography.SIPHASH_IDENTITY_LENGTH,
+				     9 +
+				     Cryptography.IDENTITY_SIZE +
+				     Cryptography.SIPHASH_IDENTITY_LENGTH));
 
 		    if(identity != m_shareSipHashIdIdentity.get())
 			return 1;
@@ -2352,7 +2355,7 @@ public class Kernel
 		    {
 			long current = System.currentTimeMillis();
 			long timestamp = Miscellaneous.byteArrayToLong
-			    (Arrays.copyOfRange(aes256, 1, 1 + 8));
+			    (Arrays.copyOfRange(aes256, 1, 9));
 
 			if(current - timestamp < 0L)
 			{
