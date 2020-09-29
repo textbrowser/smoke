@@ -17,6 +17,8 @@ Summary of Smoke
 <li>Message structures do not explicitly expose contents. Header-less protocols!</li>
 <li>Mobile servers via <a href="https://github.com/textbrowser/smokestack">SmokeStack</a>.</li>
 <li>Optional foreground services.</li>
+<li>Original implementation of SipHash.</li>
+<li>Ozone destinations: private and public repositories.</li>
 <li>Post offices for messages of the past.</li>
 <li>Private servers.</li>
 <li>Public and private public-key servers.</li>
@@ -24,5 +26,6 @@ Summary of Smoke
 <li>SSL/TLS through SmokeStack.</li>
 <li>Semi-compatible with <a href="https://github.com/textbrowser/spot-on">Spot-On</a> via Fire.</li>
 <li>Share files with TCP utilities such as Netcat.</li>
+<li>SipHash-128.</li>
 <li>Software congestion control.</li>
 </ul>
