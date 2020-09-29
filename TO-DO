@@ -261,6 +261,7 @@ Future Items
 
 Remaining Items
 
+- As Name option in Alias mode (set alias to name).
 - Authenticate activity and member menu: menu is empty if Smoke was
   recently initialized.
 - Brands (profiles).
