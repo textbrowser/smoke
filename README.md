@@ -17,6 +17,7 @@ Summary of Smoke
 <li>Message structures do not explicitly expose contents. Header-less protocols!</li>
 <li>Mobile servers via <a href="https://github.com/textbrowser/smokestack">SmokeStack</a>.</li>
 <li>Optional foreground services.</li>
+<li>Original implementation of SipHash.</li>
 <li>Ozone destinations: private and public repositories.</li>
 <li>Post offices for messages of the past.</li>
 <li>Private servers.</li>
