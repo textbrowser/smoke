@@ -673,7 +673,7 @@ public class Authenticate extends AppCompatActivity
 	menu.findItem(R.id.action_settings).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_smokescreen).setEnabled(isAuthenticated);
 	menu.findItem(R.id.action_steam).setEnabled(isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 4, 150);
+	Miscellaneous.addMembersToMenu(menu, 6, 150);
 	return true;
     }
 }

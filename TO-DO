@@ -15,6 +15,8 @@ Completed Items
 - As the half-response does not produce a response, the automatic response's
   result is ignored.
 - Asynchronous database writes.
+- Authenticate activity and member menu: menu is empty if Smoke was
+  recently initialized.
 - Automatically set the Fire name if the Alias is changed, unless
   the Fire name is not empty.
 - Banner text may shadow member status in Member Chat.
@@ -262,8 +264,6 @@ Future Items
 Remaining Items
 
 - As Name option in Alias mode (set alias to name).
-- Authenticate activity and member menu: menu is empty if Smoke was
-  recently initialized.
 - Brands (profiles).
 - Clickable preview messages.
 - Document available tasks.
