@@ -211,6 +211,7 @@ public class Kernel
 							** Chat.STATUS_WINDOW.
 							*/
     private final static long STEAM_INTERVAL = 7500L; // 7.5 seconds.
+    private final static long STEAM_SHARE_WINDOW = 15000L; // 15 seconds.
     private final static long TEMPORARY_IDENTITY_INTERVAL = 5000L; // 5 seconds.
     private final static long TEMPORARY_IDENTITY_LIFETIME =
 	60000L; // 60 seconds.
@@ -3184,8 +3185,17 @@ public class Kernel
 		if(aes256 == null)
 		    return 1;
 
-		byte abyte[] = new byte[] {aes256[0]};
+		long delta = 0;
+		long timestamp = Miscellaneous.byteArrayToLong
+		    (Arrays.copyOfRange(aes256, 1, 9));
 
+		delta = System.currentTimeMillis() - Math.abs(timestamp);
+
+		if(delta < 0L || delta > STEAM_SHARE_WINDOW)
+		    return 1;
+
+		byte abyte[] = new byte[] {aes256[0]};
+ 
 		if(abyte[0] == Messages.STEAM_SHARE[0])
 		{
 		}
