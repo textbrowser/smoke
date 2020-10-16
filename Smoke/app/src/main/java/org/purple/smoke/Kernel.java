@@ -3185,13 +3185,11 @@ public class Kernel
 		if(aes256 == null)
 		    return 1;
 
-		long delta = 0;
 		long timestamp = Miscellaneous.byteArrayToLong
 		    (Arrays.copyOfRange(aes256, 1, 9));
 
-		delta = System.currentTimeMillis() - Math.abs(timestamp);
-
-		if(delta < 0L || delta > STEAM_SHARE_WINDOW)
+		if(Math.abs(System.currentTimeMillis() - timestamp) >
+		   STEAM_SHARE_WINDOW)
 		    return 1;
 
 		byte abyte[] = new byte[] {aes256[0]};

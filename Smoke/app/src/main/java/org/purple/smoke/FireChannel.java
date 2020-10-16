@@ -148,10 +148,8 @@ public class FireChannel extends View
 					participant = null;
 				    }
 
-				    long current = System.currentTimeMillis();
-
 				    if(participant == null ||
-				       Math.abs(current -
+				       Math.abs(System.currentTimeMillis() -
 						participant.m_timestamp) >=
 				       2L * STATUS_INTERVAL)
 				    {

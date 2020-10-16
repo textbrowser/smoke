@@ -127,23 +127,16 @@ public class SteamKeyExchange
 	byte senderPublicEncryptionKeyDigest[] = null;
 	int ii = 0;
 	long fileSize = 0;
-	long timestamp = 0;
 
 	for(String string : strings)
 	    switch(ii)
 	    {
 	    case 0:
-		long current = System.currentTimeMillis();
-
-		timestamp = Miscellaneous.byteArrayToLong
+		long timestamp = Miscellaneous.byteArrayToLong
 		    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
-		if(current - timestamp < 0L)
-		{
-		    if(timestamp - current > KEY_EXCHANGE_LIFETIME)
-			return;
-		}
-		else if(current - timestamp > KEY_EXCHANGE_LIFETIME)
+		if(Math.abs(System.currentTimeMillis() - timestamp) >
+		   KEY_EXCHANGE_LIFETIME)
 		    return;
 
 		ii += 1;

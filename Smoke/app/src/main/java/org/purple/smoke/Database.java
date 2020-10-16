@@ -2329,16 +2329,11 @@ public class Database extends SQLiteOpenHelper
 		switch(ii)
 		{
 		case 0:
-		    long current = System.currentTimeMillis();
 		    long timestamp = Miscellaneous.byteArrayToLong
 			(Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
-		    if(current - timestamp < 0L)
-		    {
-			if(timestamp - current > WRITE_PARTICIPANT_TIME_DELTA)
-			    return "";
-		    }
-		    else if(current - timestamp > WRITE_PARTICIPANT_TIME_DELTA)
+		    if(Math.abs(System.currentTimeMillis() - timestamp) >
+		       WRITE_PARTICIPANT_TIME_DELTA)
 			return "";
 
 		    ii += 1;
