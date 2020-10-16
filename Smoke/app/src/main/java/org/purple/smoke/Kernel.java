@@ -2057,18 +2057,11 @@ public class Kernel
 		    if(aes256 == null)
 			return 1;
 
-		    long current = System.currentTimeMillis();
 		    long timestamp = Miscellaneous.byteArrayToLong
 			(Arrays.copyOfRange(aes256, 1, 9));
 
-		    if(current - timestamp < 0L)
-		    {
-			if(timestamp - current >
-			   SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
-			    return 1;
-		    }
-		    else if(current - timestamp >
-			    SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
+		    if(Math.abs(System.currentTimeMillis() - timestamp) >
+		       SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
 			return 1;
 
 		    /*
@@ -2354,16 +2347,11 @@ public class Kernel
 							       sipHashId).
 		       contains("optional_signatures = false"))
 		    {
-			long current = System.currentTimeMillis();
 			long timestamp = Miscellaneous.byteArrayToLong
 			    (Arrays.copyOfRange(aes256, 1, 9));
 
-			if(current - timestamp < 0L)
-			{
-			    if(timestamp - current > Chat.STATUS_WINDOW)
-				return 1;
-			}
-			else if(current - timestamp > Chat.STATUS_WINDOW)
+			if(Math.abs(System.currentTimeMillis() - timestamp) >
+			   Chat.STATUS_WINDOW)
 			    return 1;
 
 			PublicKey signatureKey = s_databaseHelper.
@@ -2405,17 +2393,12 @@ public class Kernel
 			switch(ii)
 			{
 			case 0:
-			    long current = System.currentTimeMillis();
 			    long timestamp = Miscellaneous.byteArrayToLong
 				(Base64.
 				 decode(string.getBytes(), Base64.NO_WRAP));
 
-			    if(current - timestamp < 0L)
-			    {
-				if(timestamp - current > JUGGERNAUT_WINDOW)
-				    return 1;
-			    }
-			    else if(current - timestamp > JUGGERNAUT_WINDOW)
+			    if(Math.abs(System.currentTimeMillis() -
+					timestamp) > JUGGERNAUT_WINDOW)
 				return 1;
 
 			    ii += 1;
@@ -2653,14 +2636,8 @@ public class Kernel
 			timestamp = Miscellaneous.byteArrayToLong
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
-			long current = System.currentTimeMillis();
-
-			if(current - timestamp < 0L)
-			{
-			    if(timestamp - current > Chat.CHAT_WINDOW)
-				updateTimeStamp = false;
-			}
-			else if(current - timestamp > Chat.CHAT_WINDOW)
+			if(Math.abs(System.currentTimeMillis() - timestamp) >
+			   Chat.CHAT_WINDOW)
 			    updateTimeStamp = false;
 
 			if(!updateTimeStamp)
@@ -2878,17 +2855,11 @@ public class Kernel
 		    switch(ii)
 		    {
 		    case 0:
-			long current = System.currentTimeMillis();
-
 			timestamp = Miscellaneous.byteArrayToLong
 			    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
-			if(current - timestamp < 0L)
-			{
-			    if(timestamp - current > CALL_LIFETIME)
-				return 1;
-			}
-			else if(current - timestamp > CALL_LIFETIME)
+			if(Math.abs(System.currentTimeMillis() - timestamp) >
+			   CALL_LIFETIME)
 			    return 1;
 
 			ii += 1;
