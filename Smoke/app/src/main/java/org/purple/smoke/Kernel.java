@@ -173,6 +173,7 @@ public class Kernel
 	new ReentrantReadWriteLock();
     private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final SparseArray<SteamReader> m_steams = new SparseArray<> ();
+    private final SteamWriter m_steamWriter = new SteamWriter();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -3163,10 +3164,20 @@ public class Kernel
 		   STEAM_SHARE_WINDOW)
 		    return 1;
 
+		long offset = Miscellaneous.byteArrayToLong
+		    (Arrays.copyOfRange(aes256, 10, 17));
+
+		if(offset < 0)
+		    return 1;
+
 		byte abyte[] = new byte[] {aes256[0]};
  
 		if(abyte[0] == Messages.STEAM_SHARE[0])
 		{
+		    m_steamWriter.write
+			(pki,
+			 Arrays.copyOfRange(aes256, 17, aes256.length),
+			 offset);
 		}
 	    }
 	}

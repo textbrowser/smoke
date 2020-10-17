@@ -31,40 +31,15 @@ import java.io.FileOutputStream;
 
 public class SteamWriter
 {
-    private String m_fileName = "";
-
-    public SteamWriter(String fileName)
+    public SteamWriter()
     {
-	m_fileName = fileName;
     }
 
-    public boolean write(byte bytes[])
+    public boolean write(byte fileIdentity[], byte packet[], long offset)
     {
-	if(bytes == null)
+	if(fileIdentity == null || offset < 0 || packet == null)
 	    return false;
 
-	FileOutputStream fileOutputStream = null;
-
-	try
-	{
-	    fileOutputStream = new FileOutputStream(m_fileName, true);
-	    fileOutputStream.write(bytes);
-	    return true;
-	}
-	catch(Exception exception)
-	{
-	    return false;
-	}
-	finally
-	{
-	    try
-	    {
-		if(fileOutputStream != null)
-		    fileOutputStream.close();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	}
+	return true;
     }
 }
