@@ -37,8 +37,14 @@ public class SteamWriter
 
     public boolean write(byte fileIdentity[], byte packet[], long offset)
     {
-	if(fileIdentity == null || offset < 0 || packet == null)
+	if(fileIdentity == null ||
+	   fileIdentity.length == 0 ||
+	   offset < 0 ||
+	   packet == null ||
+	   packet.length == 0)
 	    return false;
+
+	String fileName = Miscellaneous.byteArrayAsHexString(fileIdentity);
 
 	return true;
     }
