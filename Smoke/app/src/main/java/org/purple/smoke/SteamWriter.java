@@ -46,20 +46,39 @@ public class SteamWriter
 	   packet.length == 0)
 	    return false;
 
+	FileOutputStream fileOutputStream = null;
+
 	try
 	{
 	    File file = new File
 		(Environment.
 		 getExternalStoragePublicDirectory(Environment.
 						   DIRECTORY_DOWNLOADS),
-		 "smoke-" + Miscellaneous.byteArrayAsHexString(fileIdentity));
+		 "smoke-" +
+		 Miscellaneous.byteArrayAsHexString(fileIdentity).
+		 substring(0, 32));
 
 	    if(!file.exists())
 		file.createNewFile();
+
+	    fileOutputStream = new FileOutputStream(file);
+	    fileOutputStream.getChannel().position(offset);
+	    fileOutputStream.write(packet);
 	}
 	catch(Exception exception)
 	{
 	    return false;
+	}
+	finally
+	{
+	    try
+	    {
+		if(fileOutputStream != null)
+		    fileOutputStream.close();
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 	}
 
 	return true;
