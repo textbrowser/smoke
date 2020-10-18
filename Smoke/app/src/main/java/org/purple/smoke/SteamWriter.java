@@ -27,6 +27,8 @@
 
 package org.purple.smoke;
 
+import android.os.Environment;
+import java.io.File;
 import java.io.FileOutputStream;
 
 public class SteamWriter
@@ -44,7 +46,21 @@ public class SteamWriter
 	   packet.length == 0)
 	    return false;
 
-	String fileName = Miscellaneous.byteArrayAsHexString(fileIdentity);
+	try
+	{
+	    File file = new File
+		(Environment.
+		 getExternalStoragePublicDirectory(Environment.
+						   DIRECTORY_DOWNLOADS),
+		 "smoke-" + Miscellaneous.byteArrayAsHexString(fileIdentity));
+
+	    if(!file.exists())
+		file.createNewFile();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
 
 	return true;
     }
