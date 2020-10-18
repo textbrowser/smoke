@@ -3171,7 +3171,7 @@ public class Kernel
 		    return 1;
 
 		byte abyte[] = new byte[] {aes256[0]};
- 
+
 		if(abyte[0] == Messages.STEAM_SHARE[0])
 		{
 		    m_steamWriter.write
