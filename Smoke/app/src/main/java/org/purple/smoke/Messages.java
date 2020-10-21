@@ -1985,56 +1985,38 @@ public class Messages
 	    if(pki == null)
 		return null;
 
-	    StringBuilder stringBuilder = new StringBuilder();
+	    byte bytes[] = Miscellaneous.joinByteArrays
+		(
+		 /*
+		 ** [ A Timestamp ]
+		 */
 
-	    /*
-	    ** [ A Timestamp ]
-	    */
+		 Miscellaneous.longToByteArray(System.currentTimeMillis()),
 
-	    stringBuilder.append
-		(Base64.encodeToString(Miscellaneous.
-				       longToByteArray(System.
-						       currentTimeMillis()),
-				       Base64.NO_WRAP));
-	    stringBuilder.append("\n");
+		 /*
+		 ** [ File Offset ]
+		 */
 
-	    /*
-	    ** [ File Offset ]
-	    */
+		 Miscellaneous.longToByteArray(fileOffset),
 
-	    stringBuilder.append
-		(Base64.
-		 encodeToString(Miscellaneous.longToByteArray(fileOffset),
-				Base64.NO_WRAP));
-	    stringBuilder.append("\n");
+		 /*
+		 ** [ File Packet ]
+		 */
 
-	    /*
-	    ** [ File Packet ]
-	    */
-
-	    if(packet != null)
-	    {
-		stringBuilder.append
-		    (Base64.encodeToString(packet, Base64.NO_WRAP));
-		stringBuilder.append("\n");
-	    }
+		 packet != null ? packet : null);
 
 	    /*
 	    ** [ AES-256 ]
 	    */
 
 	    byte aes256[] = Cryptography.encrypt
-		(Miscellaneous.
-		 joinByteArrays(new byte[] {tag},
-				stringBuilder.toString().getBytes()),
+		(Miscellaneous.joinByteArrays(new byte[] {tag}, bytes),
 		 Arrays.copyOfRange(keyStream,
 				    0,
 				    Cryptography.CIPHER_KEY_LENGTH));
 
 	    if(aes256 == null)
 		return null;
-
-	    stringBuilder.delete(0, stringBuilder.length());
 
 	    /*
 	    ** [ SHA-512 HMAC ]
