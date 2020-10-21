@@ -3180,6 +3180,23 @@ public class Kernel
 							      aes256.length),
 					   offset))
 		    {
+			String sipHashId = s_databaseHelper.steamSipHashId
+			    (s_cryptography, pki);
+
+			bytes = Messages.steamShare
+			    (s_cryptography,
+			     sipHashId,
+			     pki,
+			     keyStream,
+			     null,
+			     Messages.STEAM_SHARE[1],
+			     offset);
+
+			if(bytes != null)
+			    sendSteam
+				(false,
+				 Messages.bytesToMessageString(bytes).
+				 getBytes());
 		    }
 		}
 	    }

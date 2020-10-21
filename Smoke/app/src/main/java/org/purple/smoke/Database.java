@@ -2268,6 +2268,15 @@ public class Database extends SQLiteOpenHelper
 	return "";
     }
 
+    public String steamSipHashId(Cryptography cryptography,
+				 byte fileIdentity[])
+    {
+	if(cryptography == null || fileIdentity == null || m_db == null)
+	    return "";
+
+	return "";
+    }
+
     public String steamStatus(int oid)
     {
 	if(m_db == null)
