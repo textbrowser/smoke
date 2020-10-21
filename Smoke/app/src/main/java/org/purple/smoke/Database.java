@@ -1127,7 +1127,8 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 1:
 			    if(bytes != null)
-				steamElement.m_destination = new String(bytes);
+				steamElement.m_destination = new String
+				    (bytes, StandardCharsets.UTF_8);
 			    else
 				steamElement.m_destination =
 				    "error (" + oid + ")";
@@ -1907,7 +1908,8 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case 1:
 		    if(bytes != null)
-			steamElement.m_destination = new String(bytes);
+			steamElement.m_destination = new String
+			    (bytes, StandardCharsets.UTF_8);
 		    else
 			steamElement.m_destination = "error (" + oid + ")";
 
@@ -2274,7 +2276,39 @@ public class Database extends SQLiteOpenHelper
 	if(cryptography == null || fileIdentity == null || m_db == null)
 	    return "";
 
-	return "";
+	Cursor cursor = null;
+	String sipHashId = "";
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT destination FROM steam_files " +
+		 "WHERE file_identity_digest = ?",
+		 new String[] {Base64.encodeToString(cryptography.
+						     hmac(fileIdentity),
+						     Base64.DEFAULT)});
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		sipHashId = new String
+		    (cryptography.
+		     mtd(Base64.decode(cursor.getString(0).getBytes(),
+				       Base64.DEFAULT)),
+		     StandardCharsets.UTF_8);
+		sipHashId = Miscellaneous.sipHashIdFromDestination(sipHashId);
+	    }
+	}
+	catch(Exception exception)
+	{
+	    sipHashId = "";
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return sipHashId;
     }
 
     public String steamStatus(int oid)
@@ -5478,7 +5512,8 @@ public class Database extends SQLiteOpenHelper
 			values.put
 			    ("destination",
 			     cryptography.
-			     etmBase64String(steamElement.m_destination));
+			     etmBase64String(steamElement.m_destination.
+					     getBytes(StandardCharsets.UTF_8)));
 			values.put
 			    ("ephemeral_private_key",
 			     cryptography.
