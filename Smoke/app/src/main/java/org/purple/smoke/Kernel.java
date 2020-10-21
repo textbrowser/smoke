@@ -3174,10 +3174,13 @@ public class Kernel
 
 		if(abyte[0] == Messages.STEAM_SHARE[0])
 		{
-		    m_steamWriter.write
-			(pki,
-			 Arrays.copyOfRange(aes256, 17, aes256.length),
-			 offset);
+		    if(m_steamWriter.write(pki,
+					   Arrays.copyOfRange(aes256,
+							      17,
+							      aes256.length),
+					   offset))
+		    {
+		    }
 		}
 	    }
 	}
