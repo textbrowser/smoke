@@ -31,6 +31,9 @@ import android.os.Environment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Hashtable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamWriter
@@ -48,15 +51,59 @@ public class SteamWriter
     }
 
     private Hashtable<Integer, FileInformation> m_files;
+    private ScheduledExecutorService m_scheduler = null;
+    private final Object m_schedulerMutex = new Object();
     private final ReentrantReadWriteLock m_filesMutex =
 	new ReentrantReadWriteLock();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
+    private final static long SCHEDULER_INTERVAL = 1500L;
 
     public SteamWriter()
     {
 	m_files = new Hashtable<> ();
+	m_scheduler = Executors.newSingleThreadScheduledExecutor();
+	m_scheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    boolean empty = false;
+
+		    m_filesMutex.writeLock().lock();
+
+		    try
+		    {
+			empty = m_files.isEmpty();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_filesMutex.writeLock().unlock();
+		    }
+
+		    if(empty)
+			synchronized(m_schedulerMutex)
+			{
+			    try
+			    {
+				m_schedulerMutex.wait();
+			    }
+			    catch(Exception exception)
+			    {
+			    }
+			}
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+        }, 1500L, SCHEDULER_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     public boolean write(byte fileIdentity[], byte packet[], long offset)
@@ -111,6 +158,11 @@ public class SteamWriter
 	    finally
 	    {
 		m_filesMutex.writeLock().unlock();
+	    }
+
+	    synchronized(m_schedulerMutex)
+	    {
+		m_schedulerMutex.notify();
 	    }
 	}
 	catch(Exception exception)
