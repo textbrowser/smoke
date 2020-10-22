@@ -33,6 +33,10 @@ import java.io.FileOutputStream;
 
 public class SteamWriter
 {
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
+    private final static Database s_databaseHelper = Database.getInstance();
+
     public SteamWriter()
     {
     }
