@@ -30,15 +30,31 @@ package org.purple.smoke;
 import android.os.Environment;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 public class SteamWriter
 {
+    private class Tuple
+    {
+	public byte m_fileIdentity[] = null;
+	public int m_oid = -1;
+	public long m_offset = 0;
+
+	public Tuple(byte fileIdentity[], long offset)
+	{
+	    m_fileIdentity = fileIdentity;
+	    m_offset = offset;
+	}
+    }
+
+    private ArrayList<Tuple> m_tuples = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
 
     public SteamWriter()
     {
+	m_tuples = new ArrayList<> ();
     }
 
     public boolean write(byte fileIdentity[], byte packet[], long offset)
