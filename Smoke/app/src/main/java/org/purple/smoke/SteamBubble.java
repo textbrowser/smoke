@@ -292,6 +292,7 @@ public class SteamBubble extends View
 	    int oid = Kernel.getInstance().nextSimpleSteamOid();
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_control.setVisibility(View.VISIBLE);
 	    m_destination.setText("Destination: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.upload);
 	    m_keyExchangeStatus.setVisibility(View.GONE);
@@ -302,7 +303,7 @@ public class SteamBubble extends View
 	}
 	else if(steamElement.m_direction == SteamElement.DOWNLOAD)
 	{
-	    m_control.setEnabled(!m_controlString.isEmpty());
+	    m_control.setVisibility(View.GONE);
 	    m_destination.setText("Origin: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.download);
 	    m_keyExchangeStatus.setBackgroundResource
@@ -326,6 +327,7 @@ public class SteamBubble extends View
 	    int oid = -1;
 
 	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_control.setVisibility(View.VISIBLE);
 	    m_destination.setText("Destination: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.upload);
 	    m_keyExchangeStatus.setBackgroundResource

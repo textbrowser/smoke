@@ -30,31 +30,33 @@ package org.purple.smoke;
 import android.os.Environment;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamWriter
 {
-    private class Tuple
+    private class FileInformation
     {
-	public byte m_fileIdentity[] = null;
 	public int m_oid = -1;
 	public long m_offset = 0;
 
-	public Tuple(byte fileIdentity[], long offset)
+	public FileInformation(int oid, long offset)
 	{
-	    m_fileIdentity = fileIdentity;
 	    m_offset = offset;
+	    m_oid = oid;
 	}
     }
 
-    private ArrayList<Tuple> m_tuples = null;
+    private Hashtable<Integer, FileInformation> m_files;
+    private final ReentrantReadWriteLock m_filesMutex =
+	new ReentrantReadWriteLock();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
 
     public SteamWriter()
     {
-	m_tuples = new ArrayList<> ();
+	m_files = new Hashtable<> ();
     }
 
     public boolean write(byte fileIdentity[], byte packet[], long offset)
@@ -64,6 +66,12 @@ public class SteamWriter
 	   offset < 0 ||
 	   packet == null ||
 	   packet.length == 0)
+	    return false;
+
+	int oid = s_databaseHelper.steamOidFromFileIdentity
+	    (s_cryptography, fileIdentity);
+
+	if(oid == -1)
 	    return false;
 
 	FileOutputStream fileOutputStream = null;
@@ -84,6 +92,26 @@ public class SteamWriter
 	    fileOutputStream = new FileOutputStream(file);
 	    fileOutputStream.getChannel().position(offset);
 	    fileOutputStream.write(packet);
+	    m_filesMutex.writeLock().lock();
+
+	    try
+	    {
+		FileInformation fileInformation = m_files.get(oid);
+
+		if(fileInformation == null)
+		    fileInformation = new FileInformation(oid, offset);
+		else
+		    fileInformation.m_offset = offset;
+
+		m_files.put(oid, fileInformation);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+	    finally
+	    {
+		m_filesMutex.writeLock().unlock();
+	    }
 	}
 	catch(Exception exception)
 	{
