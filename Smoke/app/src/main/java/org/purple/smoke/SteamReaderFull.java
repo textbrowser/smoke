@@ -263,6 +263,8 @@ public class SteamReaderFull extends SteamReader
 	{
 	    m_completed.set(true);
 	    m_read.set(false);
+	    s_databaseHelper.writeSteamStatus
+		(s_cryptography, "completed", "", m_oid, m_readOffset.get());
 	}
     }
 

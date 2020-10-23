@@ -31,6 +31,7 @@ import android.os.Environment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,13 +41,48 @@ public class SteamWriter
 {
     private class FileInformation
     {
+	public byte m_fileIdentity[] = null;
 	public int m_oid = -1;
-	public long m_offset = 0;
+	public int m_stalled = 0;
+	public long m_offset = 0L;
+	public long m_previousOffset = 0L;
+	public long m_rate = 0L;
+	public long m_time0 = 0L;
 
-	public FileInformation(int oid, long offset)
+	public FileInformation(byte fileIdentity[], int oid, long offset)
 	{
+	    m_fileIdentity = fileIdentity;
 	    m_offset = offset;
 	    m_oid = oid;
+	    m_time0 = System.currentTimeMillis();
+	}
+
+	public String prettyRate()
+	{
+	    return Miscellaneous.formattedDigitalInformation
+		(String.valueOf(m_rate) + " / s");
+	}
+
+	public void computeRate()
+	{
+	    long seconds = Math.abs
+		(System.currentTimeMillis() / 1000L - m_time0);
+
+	    if(seconds >= 1L)
+	    {
+		long rate = m_rate;
+
+		m_rate = (long) ((double) (m_offset - m_previousOffset) /
+				 (double) seconds);
+
+		if(m_rate > 0L)
+		    m_stalled = 0;
+		else if(m_stalled <= 5)
+		    m_rate = rate;
+
+		m_previousOffset = m_offset;
+		m_time0 = System.currentTimeMillis() / 1000L;
+	    }
 	}
     }
 
@@ -98,6 +134,50 @@ public class SteamWriter
 			    {
 			    }
 			}
+
+		    m_filesMutex.writeLock().lock();
+
+		    try
+		    {
+			Iterator<Hashtable.Entry<Integer, FileInformation> >
+			    it = m_files.entrySet().iterator();
+
+			while(it.hasNext())
+			{
+			    Hashtable.Entry<Integer, FileInformation> entry =
+				it.next();
+
+			    if(entry.getValue() == null)
+			     {
+				 it.remove();
+				 continue;
+			     }
+
+			    int oid = s_databaseHelper.steamOidFromFileIdentity
+				(s_cryptography,
+				 entry.getValue().m_fileIdentity);
+
+			    if(oid == -1)
+			    {
+				it.remove();
+				continue;
+			    }
+
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography,
+				 "receiving",
+				 entry.getValue().prettyRate(),
+				 entry.getValue().m_oid,
+				 entry.getValue().m_offset);
+			}
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_filesMutex.writeLock().unlock();
+		    }
 		}
 		catch(Exception exception)
 		{
@@ -146,9 +226,10 @@ public class SteamWriter
 		FileInformation fileInformation = m_files.get(oid);
 
 		if(fileInformation == null)
-		    fileInformation = new FileInformation(oid, offset);
+		    fileInformation = new FileInformation
+			(fileIdentity, oid, offset + packet.length);
 		else
-		    fileInformation.m_offset = offset;
+		    fileInformation.m_offset = offset + packet.length;
 
 		m_files.put(oid, fileInformation);
 	    }
