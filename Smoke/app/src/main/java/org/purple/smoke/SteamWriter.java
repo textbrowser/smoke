@@ -201,6 +201,12 @@ public class SteamWriter
 	if(oid == -1)
 	    return false;
 
+	SteamElement steamElement = s_databaseHelper.readSteam
+	    (s_cryptography, -1, oid - 1);
+
+	if(steamElement == null)
+	    return false;
+
 	FileOutputStream fileOutputStream = null;
 
 	try
@@ -212,6 +218,14 @@ public class SteamWriter
 		 "smoke-" +
 		 Miscellaneous.byteArrayAsHexString(fileIdentity).
 		 substring(0, 32));
+
+	    if(Miscellaneous.fileSize(file.getAbsolutePath()) ==
+	       steamElement.m_fileSize)
+	    {
+		s_databaseHelper.writeSteamStatus
+		    (s_cryptography, "completed", "", oid, file.length());
+		return false;
+	    }
 
 	    if(!file.exists())
 		file.createNewFile();
