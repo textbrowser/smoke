@@ -79,11 +79,11 @@ public class SteamReaderFull extends SteamReader
 	    m_reader = Executors.newSingleThreadScheduledExecutor();
 	    m_reader.scheduleAtFixedRate(new Runnable()
 	    {
+		private byte m_keyStream[] = null;
+
 		@Override
 		public void run()
 		{
-		    byte m_keyStream[] = null;
-
 		    try
 		    {
 			switch(s_databaseHelper.
