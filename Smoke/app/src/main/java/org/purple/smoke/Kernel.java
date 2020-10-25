@@ -3216,7 +3216,8 @@ public class Kernel
 				SteamReaderFull steamReaderFull =
 				    (SteamReaderFull) m_steams.get(j);
 
-				if(pki.equals(steamReaderFull.fileIdentity()))
+				if(Arrays.
+				   equals(pki, steamReaderFull.fileIdentity()))
 				{
 				    steamReaderFull.setAcknowledgedOffset
 					(offset);
