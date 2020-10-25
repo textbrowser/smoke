@@ -240,6 +240,11 @@ public class SteamReaderFull extends SteamReader
 	prepareReader();
     }
 
+    public byte[] fileIdentity()
+    {
+	return m_fileIdentity;
+    }
+
     public void delete()
     {
 	super.delete();

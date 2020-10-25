@@ -3199,6 +3199,40 @@ public class Kernel
 				 getBytes());
 		    }
 		}
+		else if(abyte[0] == Messages.STEAM_SHARE[1])
+		{
+		    m_steamsMutex.writeLock().lock();
+
+		    try
+		    {
+			int size = m_steams.size();
+
+			for(int i = 0; i < size; i++)
+			{
+			    int j = m_steams.keyAt(i);
+
+			    if(m_steams.get(j) instanceof SteamReaderFull)
+			    {
+				SteamReaderFull steamReaderFull =
+				    (SteamReaderFull) m_steams.get(j);
+
+				if(pki == steamReaderFull.fileIdentity())
+				{
+				    steamReaderFull.setAcknowledgedOffset
+					(offset);
+				    break;
+				}
+			    }
+			}
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_steamsMutex.writeLock().unlock();
+		    }
+		}
 	    }
 	}
 	catch(Exception exception)
