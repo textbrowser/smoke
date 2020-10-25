@@ -3165,7 +3165,7 @@ public class Kernel
 		    return 1;
 
 		long offset = Miscellaneous.byteArrayToLong
-		    (Arrays.copyOfRange(aes256, 10, 17));
+		    (Arrays.copyOfRange(aes256, 9, 17));
 
 		if(offset < 0)
 		    return 1;

@@ -38,14 +38,14 @@ public class SteamReaderFull extends SteamReader
 {
     private AtomicBoolean m_read = null; // Perform another read.
     private AtomicInteger m_stalled = null;
-    private AtomicLong m_acknowledgedReadOffset = null;
     private AtomicLong m_lastResponse = null;
     private AtomicLong m_previousOffset = null;
+    private AtomicLong m_rc = null;
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
     private long m_fileSize = 0L;
-    private static int PACKET_SIZE = 16384;
-    private static long READ_INTERVAL = 250L; // 250 milliseconds.
+    private static int PACKET_SIZE = 65536;
+    private static long READ_INTERVAL = 100L; // 100 milliseconds.
     private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 
     private void computeRate(long bytesSent)
@@ -132,11 +132,7 @@ public class SteamReaderFull extends SteamReader
 
 				return;
 			    else
-			    {
 				m_lastResponse.set(System.currentTimeMillis());
-				m_readOffset.set
-				    (m_acknowledgedReadOffset.get());
-			    }
 			}
 
 			if(m_keyStream == null)
@@ -161,7 +157,7 @@ public class SteamReaderFull extends SteamReader
 
 			    return;
 			else
-			    m_readOffset.addAndGet((long) offset);
+			    m_rc.set((long) offset);
 
 			m_read.set(false);
 
@@ -194,7 +190,6 @@ public class SteamReaderFull extends SteamReader
 
     private void rewind()
     {
-	m_acknowledgedReadOffset.set(0L);
 	m_completed.set(false);
 
 	try
@@ -211,6 +206,7 @@ public class SteamReaderFull extends SteamReader
 
 	m_lastResponse.set(0L);
 	m_previousOffset.set(0L);
+	m_rc.set(0L);
 	m_read.set(true);
 	m_readOffset.set(0L);
 	saveReadOffset();
@@ -230,11 +226,11 @@ public class SteamReaderFull extends SteamReader
 			   long readOffset)
     {
 	super(fileName, oid, readOffset);
-	m_acknowledgedReadOffset = new AtomicLong(readOffset);
 	m_fileIdentity = fileIdentity;
 	m_fileSize = fileSize;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_previousOffset = new AtomicLong(readOffset);
+	m_rc = new AtomicLong(0L);
 	m_read = new AtomicBoolean(true);
 	m_sipHashId = Miscellaneous.sipHashIdFromDestination(destination);
 	m_stalled = new AtomicInteger(0);
@@ -249,23 +245,23 @@ public class SteamReaderFull extends SteamReader
     public void delete()
     {
 	super.delete();
-	m_acknowledgedReadOffset.set(0L);
 	m_lastResponse.set(0L);
 	m_previousOffset.set(0L);
+	m_rc.set(0L);
 	m_read.set(false);
     }
 
     public void setAcknowledgedOffset(long readOffset)
     {
-	if(m_acknowledgedReadOffset.get() == readOffset)
+	if(m_readOffset.get() == readOffset)
 	{
-	    m_acknowledgedReadOffset.set(m_readOffset.get());
 	    m_lastResponse.set(System.currentTimeMillis());
+	    m_readOffset.addAndGet(m_rc.get());
 	    saveReadOffset(); // Order is important.
 	    m_read.set(true);
 	}
 
-	if(m_acknowledgedReadOffset.get() == m_fileSize)
+	if(m_fileSize == m_readOffset.get())
 	{
 	    m_completed.set(true);
 	    m_read.set(false);
