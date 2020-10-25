@@ -103,6 +103,10 @@ public class SteamReaderFull extends SteamReader
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography, "", Miscellaneous.RATE, m_oid);
 			    return;
+			case "received private-key pair":
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography, "transferring", "", m_oid, 0);
+			    break;
 			case "rewind":
 			    rewind();
 			    s_databaseHelper.writeSteamStatus
