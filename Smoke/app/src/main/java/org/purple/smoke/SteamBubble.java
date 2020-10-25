@@ -274,6 +274,9 @@ public class SteamBubble extends View
 	    m_controlString = "resume";
 	    m_progress.setVisibility(View.GONE);
 	    break;
+	case "receiving":
+	    m_progress.setVisibility(View.VISIBLE);
+	    break;
 	case "transferring":
 	    m_control.setText("Pause");
 	    m_controlString = "pause";

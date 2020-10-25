@@ -96,6 +96,23 @@ public class SteamWriter
     private final static Database s_databaseHelper = Database.getInstance();
     private final static long SCHEDULER_INTERVAL = 1500L;
 
+    private void removeFileInformation(int oid)
+    {
+	m_filesMutex.writeLock().lock();
+
+	try
+	{
+	    m_files.remove(oid);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_filesMutex.writeLock().unlock();
+	}
+    }
+
     public SteamWriter()
     {
 	m_files = new Hashtable<> ();
@@ -219,20 +236,21 @@ public class SteamWriter
 		 Miscellaneous.byteArrayAsHexString(fileIdentity).
 		 substring(0, 32));
 
-	    if(Miscellaneous.fileSize(file.getAbsolutePath()) ==
-	       steamElement.m_fileSize)
-	    {
-		s_databaseHelper.writeSteamStatus
-		    (s_cryptography, "completed", "", oid, file.length());
-		return false;
-	    }
-
 	    if(!file.exists())
 		file.createNewFile();
 
 	    fileOutputStream = new FileOutputStream(file);
 	    fileOutputStream.getChannel().position(offset);
 	    fileOutputStream.write(packet);
+
+	    if(file.length() == steamElement.m_fileSize)
+	    {
+		removeFileInformation(oid);
+		s_databaseHelper.writeSteamStatus
+		    (s_cryptography, "completed", "", oid, file.length());
+		return true;
+	    }
+
 	    m_filesMutex.writeLock().lock();
 
 	    try
