@@ -38,7 +38,7 @@ public class SteamReaderFull extends SteamReader
 {
     private AtomicBoolean m_read = null; // Perform another read.
     private AtomicInteger m_stalled = null;
-    private AtomicLong m_acknowledgedOffset = null;
+    private AtomicLong m_acknowledgedReadOffset = null;
     private AtomicLong m_lastResponse = null;
     private AtomicLong m_previousOffset = null;
     private String m_sipHashId = "";
@@ -134,7 +134,8 @@ public class SteamReaderFull extends SteamReader
 			    else
 			    {
 				m_lastResponse.set(System.currentTimeMillis());
-				m_readOffset.set(m_acknowledgedOffset.get());
+				m_readOffset.set
+				    (m_acknowledgedReadOffset.get());
 			    }
 			}
 
@@ -193,7 +194,7 @@ public class SteamReaderFull extends SteamReader
 
     private void rewind()
     {
-	m_acknowledgedOffset.set(0L);
+	m_acknowledgedReadOffset.set(0L);
 	m_completed.set(false);
 
 	try
@@ -229,11 +230,11 @@ public class SteamReaderFull extends SteamReader
 			   long readOffset)
     {
 	super(fileName, oid, readOffset);
-	m_acknowledgedOffset = new AtomicLong(0L);
+	m_acknowledgedReadOffset = new AtomicLong(readOffset);
 	m_fileIdentity = fileIdentity;
 	m_fileSize = fileSize;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
-	m_previousOffset = new AtomicLong(0L);
+	m_previousOffset = new AtomicLong(readOffset);
 	m_read = new AtomicBoolean(true);
 	m_sipHashId = Miscellaneous.sipHashIdFromDestination(destination);
 	m_stalled = new AtomicInteger(0);
@@ -248,7 +249,7 @@ public class SteamReaderFull extends SteamReader
     public void delete()
     {
 	super.delete();
-	m_acknowledgedOffset.set(0L);
+	m_acknowledgedReadOffset.set(0L);
 	m_lastResponse.set(0L);
 	m_previousOffset.set(0L);
 	m_read.set(false);
@@ -256,15 +257,15 @@ public class SteamReaderFull extends SteamReader
 
     public void setAcknowledgedOffset(long readOffset)
     {
-	if(m_acknowledgedOffset.get() == readOffset)
+	if(m_acknowledgedReadOffset.get() == readOffset)
 	{
-	    m_acknowledgedOffset.set(m_readOffset.get());
+	    m_acknowledgedReadOffset.set(m_readOffset.get());
 	    m_lastResponse.set(System.currentTimeMillis());
+	    saveReadOffset(); // Order is important.
 	    m_read.set(true);
-	    saveReadOffset();
 	}
 
-	if(m_acknowledgedOffset.get() == m_fileSize)
+	if(m_acknowledgedReadOffset.get() == m_fileSize)
 	{
 	    m_completed.set(true);
 	    m_read.set(false);
