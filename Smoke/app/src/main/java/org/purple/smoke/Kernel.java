@@ -3201,7 +3201,7 @@ public class Kernel
 		}
 		else if(abyte[0] == Messages.STEAM_SHARE[1])
 		{
-		    m_steamsMutex.writeLock().lock();
+		    m_steamsMutex.readLock().lock();
 
 		    try
 		    {
@@ -3216,7 +3216,7 @@ public class Kernel
 				SteamReaderFull steamReaderFull =
 				    (SteamReaderFull) m_steams.get(j);
 
-				if(pki == steamReaderFull.fileIdentity())
+				if(pki.equals(steamReaderFull.fileIdentity()))
 				{
 				    steamReaderFull.setAcknowledgedOffset
 					(offset);
@@ -3230,7 +3230,7 @@ public class Kernel
 		    }
 		    finally
 		    {
-			m_steamsMutex.writeLock().unlock();
+			m_steamsMutex.readLock().unlock();
 		    }
 		}
 	    }

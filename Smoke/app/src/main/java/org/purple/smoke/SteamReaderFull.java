@@ -46,7 +46,7 @@ public class SteamReaderFull extends SteamReader
     private long m_fileSize = 0L;
     private static int PACKET_SIZE = 16384;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
-    private static long RESPONSE_WINDOW = 15000L; // 15 seconds.
+    private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 
     private void computeRate(long bytesSent)
     {
