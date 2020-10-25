@@ -153,6 +153,5 @@ public abstract class SteamReader
 	m_rate.set(0L);
 	m_readOffset.set(0L);
 	cancelReader();
-	s_databaseHelper.writeSteamStatus("deleted", m_oid);
     }
 }

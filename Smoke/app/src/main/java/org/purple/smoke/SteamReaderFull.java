@@ -45,7 +45,7 @@ public class SteamReaderFull extends SteamReader
     private byte m_fileIdentity[] = null;
     private long m_fileSize = 0L;
     private static int PACKET_SIZE = 65536;
-    private static long READ_INTERVAL = 100L; // 100 milliseconds.
+    private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 
     private void computeRate(long bytesSent)
@@ -253,21 +253,25 @@ public class SteamReaderFull extends SteamReader
 
     public void setAcknowledgedOffset(long readOffset)
     {
+	boolean read = false;
+
 	if(m_readOffset.get() == readOffset)
 	{
 	    m_lastResponse.set(System.currentTimeMillis());
 	    m_readOffset.addAndGet(m_rc.get());
-	    saveReadOffset(); // Order is important.
-	    m_read.set(true);
+	    read = true;
+	    saveReadOffset();
 	}
 
 	if(m_fileSize == m_readOffset.get())
 	{
 	    m_completed.set(true);
-	    m_read.set(false);
+	    read = false;
 	    s_databaseHelper.writeSteamStatus
 		(s_cryptography, "completed", "", m_oid, m_readOffset.get());
 	}
+
+	m_read.set(read);
     }
 
     public void setReadInterval(int readInterval)
