@@ -232,9 +232,7 @@ public class SteamWriter
 		(Environment.
 		 getExternalStoragePublicDirectory(Environment.
 						   DIRECTORY_DOWNLOADS),
-		 "smoke-" +
-		 Miscellaneous.byteArrayAsHexString(fileIdentity).
-		 substring(0, 32));
+		 steamElement.m_fileName);
 
 	    if(!file.exists())
 		file.createNewFile();

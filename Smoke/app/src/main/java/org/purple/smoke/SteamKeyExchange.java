@@ -118,6 +118,7 @@ public class SteamKeyExchange
 	   Messages.STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT)
 	    return;
 
+	String fileExtension = "";
 	String fileName = "";
 	byte ephemeralPublicKey[] = null;
 	byte ephemeralPublicKeyType[] = null;
@@ -262,7 +263,8 @@ public class SteamKeyExchange
 	    steamElement.m_fileDigest = fileDigest;
 	    steamElement.m_fileIdentity = fileIdentity;
 	    steamElement.m_fileName = "Smoke_Steam_" +
-		Miscellaneous.byteArrayAsHexString(Cryptography.randomBytes(8));
+		Miscellaneous.byteArrayAsHexString(fileIdentity) +
+		fileExtension;
 	    steamElement.m_fileSize = fileSize;
 	    steamElement.m_keyStream = Miscellaneous.joinByteArrays
 		(Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
