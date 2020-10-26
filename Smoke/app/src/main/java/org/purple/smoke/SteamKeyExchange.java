@@ -185,6 +185,11 @@ public class SteamKeyExchange
 		fileName = new String
 		    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
 		     StandardCharsets.UTF_8);
+
+		if(fileName.lastIndexOf('.') > 0)
+		    fileExtension = fileName.substring
+			(fileName.lastIndexOf('.'));
+
 		ii += 1;
 		break;
 	    case 6:

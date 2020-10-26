@@ -55,6 +55,10 @@ public class SteamElement
     {
 	m_direction = UPLOAD;
 	m_fileName = fileName;
+
+	if(fileName.lastIndexOf('.') > 0)
+	    fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+
 	m_fileSize = Miscellaneous.fileSize(fileName);
     }
 }

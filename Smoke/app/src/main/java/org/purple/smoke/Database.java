@@ -5526,12 +5526,19 @@ public class Database extends SQLiteOpenHelper
 					     m_ephemeralPublicKey));
 
 			if(steamElement.m_fileDigest == null)
+			{
+			    String fileName = steamElement.m_fileName;
+
+			    if(fileName.lastIndexOf('.') > 0)
+				fileName = fileName.substring
+				    (0, fileName.lastIndexOf('.'));
+
 			    values.put
 				("file_digest",
 				 cryptography.
 				 etmBase64String(Cryptography.
-						 sha256FileDigest(steamElement.
-								  m_fileName)));
+						 sha256FileDigest(fileName)));
+			}
 			else
 			    values.put
 				("file_digest",

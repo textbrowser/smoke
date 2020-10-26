@@ -89,6 +89,9 @@ public abstract class SteamReader
     {
 	try
 	{
+	    if(fileName.lastIndexOf('.') > 0)
+		fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+
 	    Uri uri = Uri.parse(fileName);
 
 	    m_assetFileDescriptor = Smoke.getApplication().
