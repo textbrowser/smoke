@@ -239,8 +239,7 @@ public class SteamWriter
 	    if(!file.exists())
 		file.createNewFile();
 
-	    fileOutputStream = new FileOutputStream(file);
-	    fileOutputStream.getChannel().position(offset);
+	    fileOutputStream = new FileOutputStream(file, true);
 	    fileOutputStream.write(packet);
 
 	    if(file.length() == steamElement.m_fileSize)

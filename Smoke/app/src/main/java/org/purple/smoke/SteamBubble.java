@@ -319,7 +319,11 @@ public class SteamBubble extends View
 	    m_readInterval.setVisibility(View.GONE);
 	    m_readIntervalLabel.setVisibility(View.GONE);
 	    m_sent.setText
-		("Received: " + formatSize(steamElement.m_readOffset));
+		("Received: " +
+		 formatSize(steamElement.m_readOffset) +
+		 " (" +
+		 niceBytes(steamElement.m_readOffset) +
+		 ")");
 	}
 	else
 	{

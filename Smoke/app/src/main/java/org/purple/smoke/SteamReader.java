@@ -94,7 +94,7 @@ public abstract class SteamReader
 	    m_assetFileDescriptor = Smoke.getApplication().
 		getContentResolver().openAssetFileDescriptor(uri, "r");
 	    m_fileInputStream = m_assetFileDescriptor.createInputStream();
-	    m_fileInputStream.skip(readOffset);
+	    m_fileInputStream.getChannel().position(readOffset);
 	}
 	catch(Exception exception1)
 	{
