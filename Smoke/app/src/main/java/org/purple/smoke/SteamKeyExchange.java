@@ -189,6 +189,10 @@ public class SteamKeyExchange
 	    case 6:
 		fileSize = Miscellaneous.byteArrayToLong
 		    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
+
+		if(fileSize < 0)
+		    return;
+
 		ii += 1;
 		break;
 	    case 7:
