@@ -42,10 +42,11 @@ public class SteamReaderFull extends SteamReader
     private AtomicLong m_lastResponse = null;
     private AtomicLong m_previousOffset = null;
     private AtomicLong m_rc = null;
+    private Object m_waitMutex = new Object();
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
     private long m_fileSize = 0L;
-    private static int PACKET_SIZE = 131072;
+    private static int PACKET_SIZE = 65536; // 131072;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 
@@ -129,6 +130,11 @@ public class SteamReaderFull extends SteamReader
 			{
 			    if(m_fileInputStream == null)
 				return;
+			}
+
+			synchronized(m_waitMutex)
+			{
+			    m_waitMutex.wait(RESPONSE_WINDOW);
 			}
 
 			if(!m_read.get())
@@ -226,6 +232,11 @@ public class SteamReaderFull extends SteamReader
 	m_read.set(true);
 	m_readOffset.set(0L);
 	saveReadOffset();
+
+	synchronized(m_waitMutex)
+	{
+	    m_waitMutex.notify();
+	}
     }
 
     private void saveReadOffset()
@@ -265,6 +276,11 @@ public class SteamReaderFull extends SteamReader
 	m_previousOffset.set(0L);
 	m_rc.set(0L);
 	m_read.set(false);
+
+	synchronized(m_waitMutex)
+	{
+	    m_waitMutex.notify();
+	}
     }
 
     public void setAcknowledgedOffset(long readOffset)
@@ -288,6 +304,11 @@ public class SteamReaderFull extends SteamReader
 	}
 
 	m_read.set(read);
+
+	synchronized(m_waitMutex)
+	{
+	    m_waitMutex.notify();
+	}
     }
 
     public void setReadInterval(int readInterval)
