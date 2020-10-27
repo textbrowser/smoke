@@ -92,6 +92,7 @@ Completed Items
 - Fire through SmokeStack.
 - Fire. ("AES/CTS/NoPadding")
 - Foreground service, optional.
+- Full Steams, reliable Echo.
 - Generate and separate.
 - Gently notify MemberChat of written messages. Gentle notifications prevent
   bouncy context menus.
@@ -105,6 +106,7 @@ Completed Items
   password material. The length of the second stream varies per application.
 - Inadvertent calling may sever an established session.
 - Inbound database table.
+- Include file extensions in Steams.
 - Include network information in neighbors pertaining to errors.
 - Include status in Smokescreen activity.
 - Increase network buffer sizes for large attachments.
@@ -257,6 +259,7 @@ Future Items
 - Bubbles are too narrow on wide devices.
 - Java does not include methods for destroying private containers.
 - NTRU via BouncyCastle.
+- Option for computing Steam digest.
 - Optional cryptographic discovery.
 - Resolve DNS through a proxy if a proxy is defined.
 - Stronger surreptitious forwarding. Larger RSA keys.
@@ -267,10 +270,8 @@ Remaining Items
 - Brands (profiles).
 - Clickable preview messages.
 - Document available tasks.
-- Full Steams, reliable Echo.
-- Include file extensions in Steams.
 - New images for Web page.
-- Option for computing Steam digest.
 - Play Store.
 - Record background Fire messages.
 - Steam context menu items and Steam types.
+- Steam rates.
