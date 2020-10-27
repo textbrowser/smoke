@@ -46,7 +46,7 @@ public class SteamReaderFull extends SteamReader
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
     private long m_fileSize = 0L;
-    private static int PACKET_SIZE = 65536; // 131072;
+    private static int PACKET_SIZE = 16384;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 

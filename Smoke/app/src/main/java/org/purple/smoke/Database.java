@@ -5032,6 +5032,10 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
+	/*
+	** Ignore received Steams.
+	*/
+
 	m_db.beginTransactionNonExclusive();
 
 	try
@@ -5055,6 +5059,10 @@ public class Database extends SQLiteOpenHelper
     {
 	if(m_db == null)
 	    return;
+
+	/*
+	** Ignore received Steams.
+	*/
 
 	m_db.beginTransactionNonExclusive();
 
