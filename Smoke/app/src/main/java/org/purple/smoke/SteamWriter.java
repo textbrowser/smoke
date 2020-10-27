@@ -239,6 +239,7 @@ public class SteamWriter
 
 	    fileOutputStream = new FileOutputStream(file, true);
 	    fileOutputStream.write(packet);
+	    fileOutputStream.close();
 
 	    if(file.length() == steamElement.m_fileSize)
 	    {
