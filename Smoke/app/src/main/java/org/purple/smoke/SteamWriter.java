@@ -29,7 +29,7 @@ package org.purple.smoke;
 
 import android.os.Environment;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.concurrent.Executors;
@@ -224,7 +224,7 @@ public class SteamWriter
 	if(steamElement == null)
 	    return false;
 
-	FileOutputStream fileOutputStream = null;
+	RandomAccessFile randomAccessFile = null;
 
 	try
 	{
@@ -237,15 +237,19 @@ public class SteamWriter
 	    if(!file.exists())
 		file.createNewFile();
 
-	    fileOutputStream = new FileOutputStream(file, true);
-	    fileOutputStream.write(packet);
-	    fileOutputStream.close();
+	    randomAccessFile = new RandomAccessFile(file, "rwd");
+	    randomAccessFile.seek(offset);
+	    randomAccessFile.write(packet);
 
-	    if(file.length() == steamElement.m_fileSize)
+	    if(offset + packet.length == steamElement.m_fileSize)
 	    {
 		removeFileInformation(oid);
 		s_databaseHelper.writeSteamStatus
-		    (s_cryptography, "completed", "", oid, file.length());
+		    (s_cryptography,
+		     "completed",
+		     "",
+		     oid,
+		     offset + packet.length);
 		return true;
 	    }
 
@@ -284,8 +288,8 @@ public class SteamWriter
 	{
 	    try
 	    {
-		if(fileOutputStream != null)
-		    fileOutputStream.close();
+		if(randomAccessFile != null)
+		    randomAccessFile.close();
 	    }
 	    catch(Exception exception)
 	    {
