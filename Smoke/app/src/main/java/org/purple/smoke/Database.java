@@ -1100,9 +1100,14 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = cryptography.mtd
-			    (Base64.decode(cursor.getString(i).getBytes(),
-					   Base64.DEFAULT));
+			byte bytes[] = null;
+
+			if(i == 5) // is_download
+			    bytes = cursor.getString(i).getBytes();
+			else
+			    bytes = cryptography.mtd
+				(Base64.decode(cursor.getString(i).getBytes(),
+					       Base64.DEFAULT));
 
 			if(bytes == null)
 			{
@@ -1882,9 +1887,14 @@ public class Database extends SQLiteOpenHelper
 		    continue;
 		}
 
-		byte bytes[] = cryptography.mtd
-		    (Base64.decode(cursor.getString(i).getBytes(),
-				   Base64.DEFAULT));
+		byte bytes[] = null;
+
+		if(i == 7) // is_download
+		    bytes = cursor.getString(i).getBytes();
+		else
+		    bytes = cryptography.mtd
+			(Base64.decode(cursor.getString(i).getBytes(),
+				       Base64.DEFAULT));
 
 		if(bytes == null)
 		{
@@ -5587,8 +5597,7 @@ public class Database extends SQLiteOpenHelper
 			     etmBase64String(steamElement.m_fileSize));
 			values.put
 			    ("is_download",
-			     cryptography.
-			     etmBase64String(steamElement.m_direction));
+			     String.valueOf(steamElement.m_direction));
 			values.put
 			    ("keystream",
 			     cryptography.
