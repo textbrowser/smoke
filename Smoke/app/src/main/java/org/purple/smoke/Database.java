@@ -4848,7 +4848,11 @@ public class Database extends SQLiteOpenHelper
 	    ContentValues values = new ContentValues();
 
 	    values.put("status", "paused");
-	    m_db.update("steam_files", values, null, null);
+	    m_db.update
+		("steam_files",
+		 values,
+		 "is_download <> ?",
+		 new String[] {String.valueOf(SteamElement.DOWNLOAD)});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -5053,7 +5057,11 @@ public class Database extends SQLiteOpenHelper
 	    ContentValues values = new ContentValues();
 
 	    values.put("status", "rewind");
-	    m_db.update("steam_files", values, null, null);
+	    m_db.update
+		("steam_files",
+		 values,
+		 "is_download <> ?",
+		 new String[] {String.valueOf(SteamElement.DOWNLOAD)});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -5081,7 +5089,11 @@ public class Database extends SQLiteOpenHelper
 	    ContentValues values = new ContentValues();
 
 	    values.put("status", "rewind & resume");
-	    m_db.update("steam_files", values, null, null);
+	    m_db.update
+		("steam_files",
+		 values,
+		 "is_download <> ?",
+		 new String[] {String.valueOf(SteamElement.DOWNLOAD)});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
