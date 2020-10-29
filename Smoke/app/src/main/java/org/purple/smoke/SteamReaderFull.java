@@ -50,7 +50,7 @@ public class SteamReaderFull extends SteamReader
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 
-    private void computeRate(long bytesSent)
+    private void computeRate()
     {
 	long seconds = Math.abs
 	    (System.currentTimeMillis() / 1000L - m_time0.get());
@@ -122,6 +122,9 @@ public class SteamReaderFull extends SteamReader
 			default:
 			    break;
 			}
+
+			computeRate(0);
+			saveReadOffset();
 
 			if(m_canceled.get() || m_completed.get())
 			    return;
@@ -197,10 +200,11 @@ public class SteamReaderFull extends SteamReader
 			     m_readOffset.get());
 
 			if(bytes != null)
-			    Kernel.getInstance().sendSteam
-				(false,
-				 Messages.bytesToMessageString(bytes).
-				 getBytes());
+			    computeRate
+				(Kernel.getInstance().
+				 sendSteam(false,
+					   Messages.bytesToMessageString(bytes).
+					   getBytes()));
 		    }
 		    catch(Exception exception)
 		    {
