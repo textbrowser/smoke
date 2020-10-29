@@ -123,7 +123,7 @@ public class SteamReaderFull extends SteamReader
 			    break;
 			}
 
-			computeRate(0);
+			computeRate();
 			saveReadOffset();
 
 			if(m_canceled.get() || m_completed.get())
@@ -200,11 +200,10 @@ public class SteamReaderFull extends SteamReader
 			     m_readOffset.get());
 
 			if(bytes != null)
-			    computeRate
-				(Kernel.getInstance().
-				 sendSteam(false,
-					   Messages.bytesToMessageString(bytes).
-					   getBytes()));
+			    Kernel.getInstance().
+				sendSteam(false,
+					  Messages.bytesToMessageString(bytes).
+					  getBytes());
 		    }
 		    catch(Exception exception)
 		    {
