@@ -28,4 +28,5 @@ Summary of Smoke
 <li>Share files with TCP utilities such as Netcat.</li>
 <li>SipHash-128.</li>
 <li>Software congestion control.</li>
+<li>Steam, reliable file sharing. TCP over the Echo!</li>
 </ul>
