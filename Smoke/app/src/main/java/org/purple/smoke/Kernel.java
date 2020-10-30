@@ -1296,18 +1296,21 @@ public class Kernel
 
 	    SteamReader steam = null;
 
-	    if(steamElement.m_destination.equals(Steam.OTHER))
-		steam = new SteamReaderSimple(steamElement.m_fileName,
-					      steamElement.m_oid,
-					      steamElement.m_readInterval,
-					      steamElement.m_readOffset);
-	    else if(steamElement.m_direction == SteamElement.UPLOAD)
-		steam = new SteamReaderFull(steamElement.m_destination,
-					    steamElement.m_fileName,
-					    steamElement.m_fileIdentity,
-					    steamElement.m_oid,
-					    steamElement.m_fileSize,
-					    steamElement.m_readOffset);
+	    if(steamElement.m_direction == SteamElement.UPLOAD)
+	    {
+		if(steamElement.m_destination.equals(Steam.OTHER))
+		    steam = new SteamReaderSimple(steamElement.m_fileName,
+						  steamElement.m_oid,
+						  steamElement.m_readInterval,
+						  steamElement.m_readOffset);
+		else
+		    steam = new SteamReaderFull(steamElement.m_destination,
+						steamElement.m_fileName,
+						steamElement.m_fileIdentity,
+						steamElement.m_oid,
+						steamElement.m_fileSize,
+						steamElement.m_readOffset);
+	    }
 
 	    if(steam == null)
 		continue;
