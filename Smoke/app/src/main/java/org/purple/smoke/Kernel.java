@@ -1301,7 +1301,7 @@ public class Kernel
 					      steamElement.m_oid,
 					      steamElement.m_readInterval,
 					      steamElement.m_readOffset);
-	    else
+	    else if(steamElement.m_direction == SteamElement.UPLOAD)
 		steam = new SteamReaderFull(steamElement.m_destination,
 					    steamElement.m_fileName,
 					    steamElement.m_fileIdentity,
