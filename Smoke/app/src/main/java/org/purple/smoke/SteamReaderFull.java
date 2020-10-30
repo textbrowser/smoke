@@ -46,7 +46,7 @@ public class SteamReaderFull extends SteamReader
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
     private long m_fileSize = 0L;
-    private static int PACKET_SIZE = 16384;
+    private static int PACKET_SIZE = 32768;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 
@@ -87,6 +87,9 @@ public class SteamReaderFull extends SteamReader
 		{
 		    try
 		    {
+			computeRate();
+			saveReadOffset();
+
 			switch(s_databaseHelper.
 			       steamStatus(m_oid).toLowerCase().trim())
 			{
@@ -122,9 +125,6 @@ public class SteamReaderFull extends SteamReader
 			default:
 			    break;
 			}
-
-			computeRate();
-			saveReadOffset();
 
 			if(m_canceled.get() || m_completed.get())
 			    return;

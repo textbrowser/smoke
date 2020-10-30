@@ -1048,7 +1048,8 @@ public class Database extends SQLiteOpenHelper
 	return arrayList;
     }
 
-    public ArrayList<SteamElement> readSteams(Cryptography cryptography)
+    public ArrayList<SteamElement> readSteams
+	(Cryptography cryptography, int direction)
     {
 	if(cryptography == null || m_db == null)
 	    return null;
@@ -1070,7 +1071,9 @@ public class Database extends SQLiteOpenHelper
 		 "status, " +                   // 8
 		 "transfer_rate, " +            // 9
 		 "oid " +                       // 10
-		 "FROM steam_files ORDER BY someoid", null);
+		 "FROM steam_files WHERE is_download = ? " +
+		 "ORDER BY someoid",
+		 new String[] {String.valueOf(direction)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
