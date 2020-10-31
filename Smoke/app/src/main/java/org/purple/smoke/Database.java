@@ -3145,6 +3145,45 @@ public class Database extends SQLiteOpenHelper
 	return false;
     }
 
+    public boolean writeEphemeralSteamKeys(Cryptography cryptography,
+					   byte privateKey[],
+					   byte publicKey[],
+					   int oid)
+    {
+	if(cryptography == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("ephemeral_private_key",
+		 cryptography.etmBase64String(privateKey));
+	    values.put
+		("ephemeral_public_key",
+		 cryptography.etmBase64String(publicKey));
+	    m_db.update
+		("steam_files",
+		 values,
+		 "oid = ?",
+		 new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
+    }
+
     public boolean writeMessageStatus(Cryptography cryptography,
 				      String messageIdentityDigest)
     {

@@ -87,6 +87,7 @@ Completed Items
 - EPKS.
 - Elongate messages in Member Chat.
 - Enable Settings widgets after an initial password is accepted.
+- Erase ephemeral public key from Steam upon recording of first packet.
 - Exit menus.
 - Expand messages to multiples of 8 KiB.
 - Fire channels must be retained if the Fire activity is dismissed.
@@ -273,8 +274,7 @@ Remaining Items
 - Brands (profiles).
 - Clickable preview messages.
 - Document available tasks.
-- Erase ephemeral public key from Steam upon arrival of first packet.
-- Initialize rates of completed Steams.
+- Initialize database ETAs and rates of Steams.
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.

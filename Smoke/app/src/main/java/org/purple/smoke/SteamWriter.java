@@ -43,6 +43,7 @@ public class SteamWriter
     {
 	public byte m_fileIdentity[] = null;
 	public int m_oid = -1;
+	public long m_lastStatusTimestamp = 0L;
 	public long m_offset = 0L;
 	public long m_previousOffset = 0L;
 	public long m_rate = 0L;
@@ -52,6 +53,7 @@ public class SteamWriter
 	public FileInformation(byte fileIdentity[], int oid, long offset)
 	{
 	    m_fileIdentity = fileIdentity;
+	    m_lastStatusTimestamp = System.currentTimeMillis();
 	    m_offset = offset;
 	    m_oid = oid;
 	    m_time0 = System.currentTimeMillis();
@@ -176,7 +178,11 @@ public class SteamWriter
 				(s_cryptography,
 				 entry.getValue().m_fileIdentity);
 
-			    if(oid == -1)
+			    if(Math.
+			       abs(System.currentTimeMillis() -
+				   entry.getValue().m_lastStatusTimestamp) >
+			       FILE_INFORMATION_LIFETIME ||
+			       oid == -1)
 			    {
 				it.remove();
 				continue;
@@ -244,6 +250,14 @@ public class SteamWriter
 	    randomAccessFile.seek(offset);
 	    randomAccessFile.write(packet);
 
+	    if(offset == 0)
+		/*
+		** Erase the ephemeral key.
+		*/
+
+		s_databaseHelper.writeEphemeralSteamKeys
+		    (s_cryptography, null, null, oid);
+
 	    if(offset + packet.length == steamElement.m_fileSize)
 	    {
 		removeFileInformation(oid);
@@ -266,7 +280,11 @@ public class SteamWriter
 		    fileInformation = new FileInformation
 			(fileIdentity, oid, offset + packet.length);
 		else
+		{
+		    fileInformation.m_lastStatusTimestamp =
+			System.currentTimeMillis();
 		    fileInformation.m_offset = offset + packet.length;
+		}
 
 		m_files.put(oid, fileInformation);
 	    }

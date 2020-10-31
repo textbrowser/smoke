@@ -1963,9 +1963,9 @@ public class Kernel
 				    (strings[strings.length - 1]);
 				Timestamp timestamp = new Timestamp
 				    (date.getTime());
-				long current = System.currentTimeMillis();
 
-				if(Math.abs(current - timestamp.getTime()) >
+				if(Math.abs(System.currentTimeMillis() -
+					    timestamp.getTime()) >
 				   FIRE_TIME_DELTA)
 				    return 1;
 
