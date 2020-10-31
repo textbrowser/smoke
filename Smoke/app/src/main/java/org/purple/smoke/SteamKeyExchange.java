@@ -223,21 +223,31 @@ public class SteamKeyExchange
 				   joinByteArrays
 				   (pki,
 				    new byte[] {tag},
-				    strings[0].getBytes(), // T
+				    strings[0].getBytes(), // Timestamp
 				    "\n".getBytes(),
-				    strings[1].getBytes(), // EPK
+				    strings[1].getBytes(), /*
+							   ** Ephemeral
+							   ** Public Key
+							   */
 				    "\n".getBytes(),
-				    strings[2].getBytes(), // EPKT
+				    strings[2].getBytes(), /*
+							   ** Ephemeral
+							   ** Public Key Type
+							   */
 				    "\n".getBytes(),
-				    strings[3].getBytes(), // FD
+				    strings[3].getBytes(), // File Digest
 				    "\n".getBytes(),
-				    strings[4].getBytes(), // FI
+				    strings[4].getBytes(), // File Identity
 				    "\n".getBytes(),
-				    strings[5].getBytes(), // FN
+				    strings[5].getBytes(), // File Name
 				    "\n".getBytes(),
-				    strings[6].getBytes(), // FS
+				    strings[6].getBytes(), // File Size
 				    "\n".getBytes(),
-				    strings[7].getBytes(), // SPEKSD
+				    strings[7].getBytes(), /*
+							   ** Sender's Public
+							   ** Encryption Key
+							   ** Digest
+							   */
 				    "\n".getBytes(),
 				    s_cryptography.
 				    chatEncryptionPublicKeyDigest())))
@@ -299,17 +309,25 @@ public class SteamKeyExchange
 		(steamElement.m_ephemeralPrivateKey);
 
 	    if(privateKey == null)
+	    {
 		/*
 		** Something is strange!
 		*/
 
+		s_databaseHelper.writeSteamStatus
+		    (s_cryptography, "faulty private key", "", oid);
 		return;
+	    }
 
 	    byte bytes[] = Cryptography.pkiDecrypt
 		(privateKey, ephemeralPublicKey);
 
 	    if(bytes == null)
 		return;
+
+	    /*
+	    ** Erase the ephemeral keys.
+	    */
 
 	    s_databaseHelper.writeSteamKeys
 		(s_cryptography, bytes, null, null, oid);
