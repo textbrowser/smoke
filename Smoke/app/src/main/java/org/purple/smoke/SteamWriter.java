@@ -130,7 +130,7 @@ public class SteamWriter
 		{
 		    boolean empty = false;
 
-		    m_filesMutex.writeLock().lock();
+		    m_filesMutex.readLock().lock();
 
 		    try
 		    {
@@ -141,7 +141,7 @@ public class SteamWriter
 		    }
 		    finally
 		    {
-			m_filesMutex.writeLock().unlock();
+			m_filesMutex.readLock().unlock();
 		    }
 
 		    if(empty)
