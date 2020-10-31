@@ -3981,7 +3981,7 @@ public class Database extends SQLiteOpenHelper
 	    return -1;
 
 	Cursor cursor = null;
-	int oid = 0;
+	int oid = -1;
 
 	try
 	{
@@ -4066,7 +4066,7 @@ public class Database extends SQLiteOpenHelper
 	    return -1;
 
 	Cursor cursor = null;
-	int oid = 0;
+	int oid = -1;
 
 	try
 	{

@@ -273,7 +273,8 @@ Remaining Items
 - Brands (profiles).
 - Clickable preview messages.
 - Document available tasks.
-- Initialize downloaded Steam rates.
+- Erase ephemeral public key from Steam upon arrival of first packet.
+- Initialize rates of completed Steams.
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.

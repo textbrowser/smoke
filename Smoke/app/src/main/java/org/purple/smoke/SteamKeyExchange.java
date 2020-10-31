@@ -166,16 +166,19 @@ public class SteamKeyExchange
 
 		if(tag == Messages.STEAM_KEY_EXCHANGE[0]) // A
 		{
-		    if(s_databaseHelper.
-		       containsSteam(s_cryptography, fileIdentity))
-		    {
-			int oid = s_databaseHelper.steamOidFromFileIdentity
-			    (s_cryptography, fileIdentity);
+		    int oid = s_databaseHelper.steamOidFromFileIdentity
+			(s_cryptography, fileIdentity);
 
-			shareB
-			    (s_databaseHelper.
-			     readSteam(s_cryptography, -1, oid - 1));
-			return;
+		    if(oid > -1)
+		    {
+			SteamElement steamElement = s_databaseHelper.readSteam
+			    (s_cryptography, -1, oid - 1);
+
+			if(steamElement != null)
+			{
+			    shareB(steamElement);
+			    return;
+			}
 		    }
 		}
 

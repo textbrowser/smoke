@@ -87,9 +87,6 @@ public class SteamReaderFull extends SteamReader
 		{
 		    try
 		    {
-			computeRate();
-			saveReadOffset();
-
 			switch(s_databaseHelper.
 			       steamStatus(m_oid).toLowerCase().trim())
 			{
@@ -125,6 +122,9 @@ public class SteamReaderFull extends SteamReader
 			default:
 			    break;
 			}
+
+			computeRate();
+			saveReadOffset();
 
 			if(m_canceled.get() || m_completed.get())
 			    return;
