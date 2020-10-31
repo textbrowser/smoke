@@ -62,6 +62,7 @@ Completed Items
 - Detect removal of neighbors.
 - Detect removal of participants.
 - Determine gradle's version in the make files.
+- Determine if a remote Steam has been restarted.
 - Determine path for any file in Steam.
 - Digest of PEM(certificate).
 - Disable Delete Fiasco Keys, Delete Public Keys on Participants context menu
@@ -227,6 +228,7 @@ Completed Items
 - Stack message confirmations. New message type required.
 - Status messages.
 - Steam context menu items and Steam types.
+- Steam rates.
 - Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
   the secret is brief.
 - Synchronized methods or containers? Both.
@@ -270,9 +272,8 @@ Remaining Items
 - As Name option in Alias mode (set alias to name).
 - Brands (profiles).
 - Clickable preview messages.
-- Determine if a remote Steam has been restarted.
 - Document available tasks.
+- Initialize downloaded Steam rates.
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.
-- Steam rates.

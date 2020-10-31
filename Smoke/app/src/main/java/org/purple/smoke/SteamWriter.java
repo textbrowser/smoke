@@ -43,11 +43,11 @@ public class SteamWriter
     {
 	public byte m_fileIdentity[] = null;
 	public int m_oid = -1;
-	public int m_stalled = 0;
 	public long m_offset = 0L;
 	public long m_previousOffset = 0L;
 	public long m_rate = 0L;
 	public long m_time0 = 0L;
+	public short m_stalled = 0;
 
 	public FileInformation(byte fileIdentity[], int oid, long offset)
 	{
@@ -60,7 +60,7 @@ public class SteamWriter
 	public String prettyRate()
 	{
 	    return Miscellaneous.formattedDigitalInformation
-		(String.valueOf(m_rate) + " / s");
+		(String.valueOf(m_rate)) + " / s";
 	}
 
 	public void computeRate()
@@ -77,7 +77,7 @@ public class SteamWriter
 
 		if(m_rate > 0L)
 		    m_stalled = 0;
-		else if(m_stalled <= 5)
+		else if(m_stalled++ <= 5)
 		    m_rate = rate;
 
 		m_previousOffset = m_offset;
@@ -94,6 +94,8 @@ public class SteamWriter
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
+    private final static long FILE_INFORMATION_LIFETIME =
+	15000L; // 15 seconds.
     private final static long SCHEDULER_INTERVAL = 1500L;
 
     private void removeFileInformation(int oid)
@@ -145,7 +147,7 @@ public class SteamWriter
 			{
 			    try
 			    {
-				m_schedulerMutex.wait();
+				m_schedulerMutex.wait(SCHEDULER_INTERVAL);
 			    }
 			    catch(Exception exception)
 			    {
@@ -180,6 +182,7 @@ public class SteamWriter
 				continue;
 			    }
 
+			    entry.getValue().computeRate();
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography,
 				 "receiving",

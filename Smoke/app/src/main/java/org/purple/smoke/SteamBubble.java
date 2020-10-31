@@ -402,7 +402,14 @@ public class SteamBubble extends View
 	}
 
 	m_status.setText("Status: " + steamElement.m_status);
-	m_transferRate.setText("Transfer Rate: " + steamElement.m_transferRate);
+
+	if(steamElement.m_direction == SteamElement.DOWNLOAD)
+	    m_transferRate.setText
+		("Receive Rate: " + steamElement.m_transferRate);
+	else
+	    m_transferRate.setText
+		("Transfer Rate: " + steamElement.m_transferRate);
+
 	m_view.setId(m_oid);
     }
 }
