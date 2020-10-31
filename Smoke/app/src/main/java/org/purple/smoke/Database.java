@@ -2247,8 +2247,7 @@ public class Database extends SQLiteOpenHelper
 	return str;
     }
 
-    public String readSipHashIdString(Cryptography cryptography,
-				      String oid)
+    public String readSipHashIdString(Cryptography cryptography, String oid)
     {
 	if(cryptography == null || m_db == null)
 	    return null;
@@ -3150,7 +3149,7 @@ public class Database extends SQLiteOpenHelper
 					   byte publicKey[],
 					   int oid)
     {
-	if(cryptography == null)
+	if(cryptography == null || m_db == null)
 	    return false;
 
 	m_db.beginTransactionNonExclusive();
@@ -3737,7 +3736,7 @@ public class Database extends SQLiteOpenHelper
 				  byte publicKey[],
 				  int oid)
     {
-	if(cryptography == null)
+	if(cryptography == null || m_db == null)
 	    return false;
 
 	m_db.beginTransactionNonExclusive();
@@ -4352,6 +4351,32 @@ public class Database extends SQLiteOpenHelper
 	    }
     }
 
+    public void clearSteamRates(Cryptography cryptography)
+    {
+	if(cryptography == null || m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("transfer_rate",
+		 cryptography.etmBase64String(Miscellaneous.RATE));
+	    m_db.update("steam_files", values, null, null);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void deleteParticipantMessage(Cryptography cryptography,
 					 String sipHashId,
 					 int oid)
@@ -4552,6 +4577,9 @@ public class Database extends SQLiteOpenHelper
     @Override
     public void onConfigure(SQLiteDatabase db)
     {
+	if(db == null)
+	    return;
+
 	try
 	{
 	    db.enableWriteAheadLogging();
@@ -4588,6 +4616,9 @@ public class Database extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
+	if(db == null)
+	    return;
+
 	String str = "";
 
 	/*

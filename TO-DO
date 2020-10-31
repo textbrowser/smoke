@@ -113,6 +113,7 @@ Completed Items
 - Include status in Smokescreen activity.
 - Increase network buffer sizes for large attachments.
 - Individual member pages.
+- Initialize database ETAs and rates of Steams.
 - Inspect destination tags.
 - Inspect length in substring() usage.
 - Introduce termination logic on critical TCP read/write errors.
@@ -274,7 +275,6 @@ Remaining Items
 - Brands (profiles).
 - Clickable preview messages.
 - Document available tasks.
-- Initialize database ETAs and rates of Steams.
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.
