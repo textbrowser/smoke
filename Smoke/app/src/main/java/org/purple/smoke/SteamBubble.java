@@ -331,9 +331,10 @@ public class SteamBubble extends View
 	    ** Full Steams.
 	    */
 
-	    int oid = -1;
-
-	    m_control.setEnabled(m_oid == oid || oid == -1);
+	    m_control.setEnabled
+		(steamElement.m_keyStream != null &&
+		 steamElement.m_keyStream.length ==
+		 Cryptography.CIPHER_HASH_KEYS_LENGTH);
 	    m_control.setVisibility(View.VISIBLE);
 	    m_destination.setText("Destination: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.upload);

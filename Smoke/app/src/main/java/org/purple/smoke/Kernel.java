@@ -1506,11 +1506,13 @@ public class Kernel
 		boolean found = false;
 		int oid = m_steams.keyAt(i);
 
-		for(SteamElement steam : steams)
-		    if(steam != null && steam.m_oid == oid)
+		for(SteamElement steamElement : steams)
+		    if(steamElement != null && steamElement.m_oid == oid)
 		    {
-			if(!steam.m_status.toLowerCase().equals("completed") &&
-			   !steam.m_status.toLowerCase().equals("deleted"))
+			String status = steamElement.m_status.toLowerCase();
+
+			if(!status.equals("completed") &&
+			   !status.equals("deleted"))
 			    found = true;
 
 			break;
