@@ -24,4 +24,4 @@ else
     echo "Cannot read $bouncycastle2."
 fi
 
-echo "Please review Smoke/app/build.gradle!" 
+echo "Please review Smoke/app/build.gradle!"
