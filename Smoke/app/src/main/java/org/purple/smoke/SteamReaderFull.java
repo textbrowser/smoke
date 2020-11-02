@@ -39,13 +39,13 @@ public class SteamReaderFull extends SteamReader
 {
     private AtomicBoolean m_read = null; // Perform another read.
     private AtomicInteger m_stalled = null;
+    private AtomicLong m_fileSize = null;
     private AtomicLong m_lastResponse = null;
     private AtomicLong m_previousOffset = null;
     private AtomicLong m_rc = null;
     private Object m_waitMutex = new Object();
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
-    private long m_fileSize = 0L;
     private static int PACKET_SIZE = 32768;
     private static long READ_INTERVAL = 250L; // 250 milliseconds.
     private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
@@ -120,6 +120,17 @@ public class SteamReaderFull extends SteamReader
 				(s_cryptography, "transferring", "", m_oid, 0);
 			    break;
 			default:
+			    if(m_fileSize.get() == m_readOffset.get())
+			    {
+				m_completed.set(true);
+				s_databaseHelper.writeSteamStatus
+				    (s_cryptography,
+				     "completed",
+				     "",
+				     m_oid,
+				     m_readOffset.get());
+			    }
+
 			    break;
 			}
 
@@ -258,7 +269,7 @@ public class SteamReaderFull extends SteamReader
     {
 	super(fileName, oid, readOffset);
 	m_fileIdentity = fileIdentity;
-	m_fileSize = fileSize;
+	m_fileSize = new AtomicLong(fileSize);
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_previousOffset = new AtomicLong(readOffset);
 	m_rc = new AtomicLong(0L);
@@ -299,7 +310,7 @@ public class SteamReaderFull extends SteamReader
 	    saveReadOffset();
 	}
 
-	if(m_fileSize == m_readOffset.get())
+	if(m_fileSize.get() == m_readOffset.get())
 	{
 	    m_completed.set(true);
 	    read = false;

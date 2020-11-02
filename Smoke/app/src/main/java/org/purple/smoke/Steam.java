@@ -137,7 +137,7 @@ public class Steam extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_FILE_REQUEST = 0;
-    private final static long STATUS_INTERVAL = 3500L; // 3.5 seconds.
+    private final static long STATUS_INTERVAL = 1500L; // 1.5 seconds.
     public final static String OTHER = "Other (Non-Smoke)";
 
     public abstract static class ContextMenuEnumerator
