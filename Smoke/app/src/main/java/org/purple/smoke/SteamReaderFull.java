@@ -155,6 +155,7 @@ public class SteamReaderFull extends SteamReader
 			{
 			    if(System.currentTimeMillis() -
 			       m_lastResponse.get() <= RESPONSE_WINDOW ||
+			       m_canceled.get() ||
 			       m_completed.get())
 				/*
 				** Completed or missing response.

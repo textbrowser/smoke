@@ -414,7 +414,8 @@ public class SteamKeyExchange
 
 		    if(steamElement == null ||
 		       steamElement.m_destination.equals(Steam.OTHER) ||
-		       steamElement.m_direction == SteamElement.DOWNLOAD)
+		       steamElement.m_direction == SteamElement.DOWNLOAD ||
+		       steamElement.m_fileSize == 0)
 		    {
 			if(steamElement != null)
 			    m_lastReadSteamOid.set(steamElement.m_someOid);
