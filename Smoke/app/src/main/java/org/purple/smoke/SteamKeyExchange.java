@@ -312,15 +312,11 @@ public class SteamKeyExchange
 		(steamElement.m_ephemeralPrivateKey);
 
 	    if(privateKey == null)
-	    {
 		/*
 		** Something is strange!
 		*/
 
-		s_databaseHelper.writeSteamStatus
-		    (s_cryptography, "faulty private key", "", oid);
 		return;
-	    }
 
 	    byte bytes[] = Cryptography.pkiDecrypt
 		(privateKey, ephemeralPublicKey);
