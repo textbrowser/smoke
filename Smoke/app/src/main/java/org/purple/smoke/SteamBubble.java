@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
@@ -43,6 +44,7 @@ public class SteamBubble extends View
 {
     private Button m_control = null;
     private Context m_context = null;
+    private ImageButton m_menuButton = null;
     private ProgressBar m_progress = null;
     private SeekBar m_readInterval = null;
     private Steam m_steam = null;
@@ -166,6 +168,13 @@ public class SteamBubble extends View
 	m_keyExchangeStatus = m_view.findViewById(R.id.key_exchange_status);
 	m_keyStreamDigest = (TextView)
 	    m_view.findViewById(R.id.keystream_digest);
+	m_menuButton = (ImageButton) m_view.findViewById(R.id.menu);
+	m_menuButton.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+	    }
+        });
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
 	m_readInterval = (SeekBar) m_view.findViewById(R.id.read_interval);
 	m_readInterval.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
