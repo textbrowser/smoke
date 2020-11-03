@@ -237,7 +237,7 @@ public class UdpMulticastNeighbor extends Neighbor
 			{
 			    try
 			    {
-				m_mutex.wait();
+				m_mutex.wait(WAIT_TIMEOUT);
 			    }
 			    catch(Exception exception)
 			    {

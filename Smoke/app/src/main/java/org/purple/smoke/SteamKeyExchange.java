@@ -67,6 +67,7 @@ public class SteamKeyExchange
     private final static long KEY_EXCHANGE_LIFETIME = 30000L;
     private final static long PARSE_INTERVAL = 50L;
     private final static long READ_INTERVAL = 1500L;
+    private final static long WAIT_TIMEOUT = 10000L; // 10 seconds.
 
     private void shareB(SteamElement steamElement)
     {
@@ -348,7 +349,6 @@ public class SteamKeyExchange
 		try
 		{
 		    Pair pair = null;
-		    boolean empty = false;
 
 		    m_pairsMutex.writeLock().lock();
 
@@ -356,8 +356,6 @@ public class SteamKeyExchange
 		    {
 			if(!m_pairs.isEmpty())
 			    pair = m_pairs.remove(m_pairs.size() - 1);
-			else
-			    empty = true;
 		    }
 		    catch(Exception exception)
 		    {
@@ -367,12 +365,12 @@ public class SteamKeyExchange
 			m_pairsMutex.writeLock().unlock();
 		    }
 
-		    if(empty)
+		    if(pair == null)
 			synchronized(m_parseSchedulerMutex)
 			{
 			    try
 			    {
-				m_parseSchedulerMutex.wait();
+				m_parseSchedulerMutex.wait(WAIT_TIMEOUT);
 			    }
 			    catch(Exception exception)
 			    {

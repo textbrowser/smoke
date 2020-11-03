@@ -88,6 +88,7 @@ public abstract class Neighbor
     protected final static int SO_TIMEOUT = 0; // 0 seconds, block.
     protected final static long READ_SOCKET_INTERVAL =
 	100L; // 100 milliseconds.
+    protected final static long WAIT_TIMEOUT = 10000L; // 10 seconds.
     public final static int MAXIMUM_QUEUED_ECHO_PACKETS = 256;
 
     private void saveStatistics()
@@ -181,7 +182,7 @@ public abstract class Neighbor
 			{
 			    try
 			    {
-				m_mutex.wait();
+				m_mutex.wait(WAIT_TIMEOUT);
 			    }
 			    catch(Exception exception)
 			    {
@@ -199,7 +200,7 @@ public abstract class Neighbor
 		    {
 			try
 			{
-			    m_parsingSchedulerMutex.wait();
+			    m_parsingSchedulerMutex.wait(WAIT_TIMEOUT);
 			}
 			catch(Exception exception)
 			{
@@ -319,7 +320,7 @@ public abstract class Neighbor
 			{
 			    try
 			    {
-				m_mutex.wait();
+				m_mutex.wait(WAIT_TIMEOUT);
 			    }
 			    catch(Exception exception)
 			    {
