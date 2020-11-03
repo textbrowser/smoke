@@ -1249,8 +1249,8 @@ public class Kernel
 		    }
 		    finally
 		    {
-			m_chatMessageRetrievalIdentityMutex.writeLock().
-			    unlock();
+			m_chatMessageRetrievalIdentityMutex.
+			    writeLock().unlock();
 		    }
 
 		    if(System.currentTimeMillis() -
