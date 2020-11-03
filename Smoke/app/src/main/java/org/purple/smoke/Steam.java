@@ -679,4 +679,13 @@ public class Steam extends AppCompatActivity
 	setResult(RESULT_OK, intent);
 	super.onBackPressed();
     }
+
+    public void showContextMenu(View view)
+    {
+	if(view != null)
+	{
+	    registerForContextMenu(view);
+	    openContextMenu(view);
+	}
+    }
 }

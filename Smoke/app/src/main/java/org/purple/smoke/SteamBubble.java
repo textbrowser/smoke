@@ -173,6 +173,7 @@ public class SteamBubble extends View
 	{
 	    public void onClick(View view)
 	    {
+		m_steam.showContextMenu(view);
 	    }
         });
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
