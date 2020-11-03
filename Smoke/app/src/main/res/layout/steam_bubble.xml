@@ -51,6 +51,13 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical">
 
+                <ImageButton
+                    android:id="@+id/menu"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/menu" />
+
                 <View
                     android:id="@+id/direction"
                     android:layout_width="32dp"
