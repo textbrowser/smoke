@@ -230,6 +230,7 @@ Completed Items
 - Stack message confirmations. New message type required.
 - Status messages.
 - Steam context menu items and Steam types.
+- Steam context menu.
 - Steam rates.
 - Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
   the secret is brief.
@@ -279,4 +280,3 @@ Remaining Items
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.
-- Steam context menu.
