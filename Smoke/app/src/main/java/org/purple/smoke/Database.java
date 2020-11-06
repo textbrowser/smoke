@@ -1049,7 +1049,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public ArrayList<SteamElement> readSteams
-	(Cryptography cryptography, int direction)
+	(Cryptography cryptography, short direction)
     {
 	if(cryptography == null || m_db == null)
 	    return null;
@@ -1164,7 +1164,7 @@ public class Database extends SQLiteOpenHelper
 			    if(bytes != null)
 				try
 				{
-				    steamElement.m_direction = Integer.parseInt
+				    steamElement.m_direction = Short.parseShort
 					(new String(bytes));
 				}
 				catch(Exception exception)
@@ -1955,7 +1955,7 @@ public class Database extends SQLiteOpenHelper
 		    if(bytes != null)
 			try
 			{
-			    steamElement.m_direction = Integer.parseInt
+			    steamElement.m_direction = Short.parseShort
 				(new String(bytes));
 			}
 			catch(Exception exception)
