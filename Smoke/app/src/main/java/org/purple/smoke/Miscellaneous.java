@@ -529,7 +529,7 @@ public abstract class Miscellaneous
     public static long byteArrayToLong(byte bytes[])
     {
 	if(bytes == null || bytes.length != LONG_BYTES)
-	    return 0;
+	    return 0L;
 
 	try
 	{
