@@ -177,6 +177,8 @@ public class TcpNeighbor extends Neighbor
 	    if(m_proxyInetSocketAddress == null)
 	    {
 		m_socket = new Socket();
+		m_socket.setReceiveBufferSize(SO_RCVBUF);
+		m_socket.setSendBufferSize(SO_RCVBUF);
 		m_socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 	    }
 	    else
@@ -190,6 +192,8 @@ public class TcpNeighbor extends Neighbor
 		    m_socket = new Socket
 			(new Proxy(Proxy.Type.SOCKS, m_proxyInetSocketAddress));
 
+		m_socket.setReceiveBufferSize(SO_RCVBUF);
+		m_socket.setSendBufferSize(SO_SNDBUF);
 		m_socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 	    }
 

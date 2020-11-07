@@ -85,6 +85,8 @@ public abstract class Neighbor
     protected final StringBuilder m_error = new StringBuilder();
     protected final static int BYTES_PER_READ = 1024 * 1024; // 1 MiB.
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
+    protected final static int SO_RCVBUF = 65536;
+    protected final static int SO_SNDBUF = 65536;
     protected final static int SO_TIMEOUT = 0; // 0 seconds, block.
     protected final static long READ_SOCKET_INTERVAL =
 	100L; // 100 milliseconds.
