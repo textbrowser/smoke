@@ -3729,7 +3729,7 @@ public class Kernel
 	    {
 		int j = m_neighbors.keyAt(i);
 
-		if(m_neighbors.get(j) != null)
+		if(m_neighbors.get(j) != null && m_neighbors.get(j).connected())
 		{
 		    /*
 		    ** Increase the offset by the minimum number of bytes.
