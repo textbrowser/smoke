@@ -102,7 +102,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 		 true : steamElement.m_direction == SteamElement.UPLOAD);
 	}
 
-	public void setData(SteamElement steamElement, int position)
+	public void setData(SteamElement steamElement, int count, int position)
 	{
 	    if(m_steamBubble == null)
 		return;
@@ -113,7 +113,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	    }
 
 	    m_position = position;
-	    m_steamBubble.setData(steamElement);
+	    m_steamBubble.setData(steamElement, count, position);
 	}
     }
 
@@ -145,6 +145,6 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	SteamElement steamElement = s_database.readSteam
 	    (s_cryptography, Math.max(0, position), -1);
 
-	viewHolder.setData(steamElement, position);
+	viewHolder.setData(steamElement, getItemCount(), position);
     }
 }

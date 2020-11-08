@@ -62,6 +62,7 @@ public class SteamBubble extends View
     private TextView m_transferRate = null;
     private View m_direction = null;
     private View m_keyExchangeStatus = null;
+    private View m_separator = null;
     private View m_view = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -247,6 +248,7 @@ public class SteamBubble extends View
 	    (R.id.read_interval_label);
 	m_readIntervalLabel.setText("4 reads / s");
 	m_sent = (TextView) m_view.findViewById(R.id.sent);
+	m_separator = m_view.findViewById(R.id.separator);
 	m_status = (TextView) m_view.findViewById(R.id.status);
 	m_transferRate = (TextView) m_view.findViewById(R.id.transfer_rate);
 	m_view.setId(-1);
@@ -258,7 +260,7 @@ public class SteamBubble extends View
 	return m_view;
     }
 
-    public void setData(SteamElement steamElement)
+    public void setData(SteamElement steamElement, int count, int position)
     {
 	if(steamElement == null)
 	    return;
@@ -412,6 +414,8 @@ public class SteamBubble extends View
 	    break;
 	}
 
+	m_separator.setVisibility
+	    (count - 1 == position ? View.GONE : View.VISIBLE);
 	m_status.setText("Status: " + steamElement.m_status);
 
 	if(steamElement.m_direction == SteamElement.DOWNLOAD)

@@ -233,6 +233,7 @@ Completed Items
 - Steam context menu items and Steam types.
 - Steam context menu.
 - Steam rates.
+- Steam separators.
 - Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
   the secret is brief.
 - Synchronized methods or containers? Both.
@@ -280,4 +281,3 @@ Remaining Items
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.
-- Steam separators.
