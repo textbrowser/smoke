@@ -1988,6 +1988,12 @@ public class Messages
 	    byte bytes[] = Miscellaneous.joinByteArrays
 		(
 		 /*
+		 ** [ A Tag ]
+		 */
+
+		 new byte[] {tag},
+
+		 /*
 		 ** [ A Timestamp ]
 		 */
 
@@ -2010,7 +2016,7 @@ public class Messages
 	    */
 
 	    byte aes256[] = Cryptography.encrypt
-		(Miscellaneous.joinByteArrays(new byte[] {tag}, bytes),
+		(bytes,
 		 Arrays.copyOfRange(keyStream,
 				    0,
 				    Cryptography.CIPHER_KEY_LENGTH));
