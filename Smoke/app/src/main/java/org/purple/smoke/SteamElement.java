@@ -44,8 +44,8 @@ public class SteamElement
     public long m_readInterval = 4L; // 4 reads / s
     public long m_readOffset = 0L;
     public short m_direction = DOWNLOAD;
-    public static short DOWNLOAD = 0;
-    public static short UPLOAD = 1;
+    public final static short DOWNLOAD = 0;
+    public final static short UPLOAD = 1;
 
     public SteamElement()
     {

@@ -38,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 public class Time
 {
     private ScheduledExecutorService m_scheduler = null;
-    private static long DELTA = 5L;
-    private static long QUERY_INTERVAL = 30L;
+    private final static long DELTA = 5L;
+    private final static long QUERY_INTERVAL = 30L;
 
     public Time()
     {

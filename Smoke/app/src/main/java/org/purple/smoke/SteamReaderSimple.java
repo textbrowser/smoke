@@ -41,7 +41,7 @@ public class SteamReaderSimple extends SteamReader
 
     private AtomicLong m_lastBytesSent = null;
     private AtomicLong m_readInterval = null;
-    private static int PACKET_SIZE = 8192;
+    private final static int PACKET_SIZE = 8192;
 
     private void computeRate(long bytesSent)
     {

@@ -46,9 +46,9 @@ public class SteamReaderFull extends SteamReader
     private Object m_waitMutex = new Object();
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
-    private static int PACKET_SIZE = 32768;
-    private static long READ_INTERVAL = 250L; // 250 milliseconds.
-    private static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
+    private final static int PACKET_SIZE = 32768;
+    private final static long READ_INTERVAL = 250L; // 250 milliseconds.
+    private final static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
 
     private void computeRate()
     {
