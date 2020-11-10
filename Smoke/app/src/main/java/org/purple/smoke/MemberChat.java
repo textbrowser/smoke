@@ -141,14 +141,14 @@ public class MemberChat extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.half_and_half_call":
 	    case "org.purple.smoke.network_connected":
-		prepareStatus(true);
+		prepareStatus();
 		break;
 	    case "org.purple.smoke.neighbor_aborted":
 	    case "org.purple.smoke.neighbor_disconnected":
-		prepareStatus(false);
+		prepareStatus();
 		break;
 	    case "org.purple.smoke.network_disconnected":
-		prepareStatus(false);
+		prepareStatus();
 		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
@@ -474,7 +474,7 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
-    private void prepareStatus(boolean state)
+    private void prepareStatus()
     {
 	try
 	{
@@ -502,9 +502,10 @@ public class MemberChat extends AppCompatActivity
 
 	    if(!isPaired)
 		button.setBackgroundResource(R.drawable.chat_faulty_session);
-	    else if(Math.abs(System.currentTimeMillis() -
+	    else if(!Kernel.getInstance().isConnected() ||
+		    Math.abs(System.currentTimeMillis() -
 			     participantElement.m_lastStatusTimestamp) >
-		    Chat.STATUS_WINDOW || !state)
+		    Chat.STATUS_WINDOW)
 		button.setBackgroundResource(R.drawable.chat_status_offline);
 	    else
 		button.setBackgroundResource(R.drawable.chat_status_online);
@@ -941,7 +942,7 @@ public class MemberChat extends AppCompatActivity
 	}
 
 	prepareSchedulers();
-	prepareStatus(Kernel.getInstance().isConnected());
+	prepareStatus();
 
 	try
 	{

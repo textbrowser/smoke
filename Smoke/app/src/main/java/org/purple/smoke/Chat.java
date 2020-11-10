@@ -125,13 +125,13 @@ public class Chat extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.neighbor_aborted":
 	    case "org.purple.smoke.neighbor_disconnected":
-		networkUnknown();
+		networkStatusChanged();
 		break;
 	    case "org.purple.smoke.network_connected":
-		networkConnected();
+		networkStatusChanged();
 		break;
 	    case "org.purple.smoke.network_disconnected":
-		networkDisconnected();
+		networkStatusChanged();
 		break;
 	    case "org.purple.smoke.populate_participants":
 	    case "org.purple.smoke.state_participants_populated":
@@ -422,83 +422,26 @@ public class Chat extends AppCompatActivity
 	});
     }
 
-    private void networkConnected()
+    private void networkStatusChanged()
     {
 	Button button1 = (Button) findViewById(R.id.call);
 	Button button2 = (Button) findViewById(R.id.send_chat_message);
 	int chatCheckedParticipants = State.getInstance().
 	    chatCheckedParticipants();
 
-	if(chatCheckedParticipants > 0)
-	{
+	if(Kernel.getInstance().isConnected() && chatCheckedParticipants > 0)
 	    button1.setEnabled(true);
+	else
+	    button1.setEnabled(false);
+
+	if(Kernel.getInstance().availableNeighbors() > 0 &&
+	   chatCheckedParticipants > 0)
+	{
 	    button2.setBackgroundResource(R.drawable.send);
 	    button2.setEnabled(true);
 	}
 	else
 	{
-	    button1.setEnabled(false);
-	    button2.setBackgroundResource(R.drawable.warning);
-	    button2.setEnabled(false);
-	}
-
-	try
-	{
-	    getSupportActionBar().setSubtitle(Smoke.networkStatusString());
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
-    private void networkDisconnected()
-    {
-	Button button1 = (Button) findViewById(R.id.call);
-	Button button2 = (Button) findViewById(R.id.send_chat_message);
-	int chatCheckedParticipants = State.getInstance().
-	    chatCheckedParticipants();
-
-	button1.setEnabled(false);
-
-	if(Kernel.getInstance().availableNeighbors() > 0 &&
-	   chatCheckedParticipants > 0)
-	{
-	    button2.setBackgroundResource(R.drawable.send);
-	    button2.setEnabled(false);
-	}
-	else
-	{
-	    button2.setBackgroundResource(R.drawable.warning);
-	    button2.setEnabled(false);
-	}
-
-	try
-	{
-	    getSupportActionBar().setSubtitle("Disconnected");
-	}
-	catch(Exception exception)
-	{
-	}
-    }
-
-    private void networkUnknown()
-    {
-	Button button1 = (Button) findViewById(R.id.call);
-	Button button2 = (Button) findViewById(R.id.send_chat_message);
-	int chatCheckedParticipants = State.getInstance().
-	    chatCheckedParticipants();
-
-	if(Kernel.getInstance().availableNeighbors() > 0 &&
-	   Kernel.getInstance().isNetworkConnected() &&
-	   chatCheckedParticipants > 0)
-	{
-	    button1.setEnabled(true);
-	    button2.setBackgroundResource(R.drawable.send);
-	    button2.setEnabled(false);
-	}
-	else
-	{
-	    button1.setEnabled(false);
 	    button2.setBackgroundResource(R.drawable.warning);
 	    button2.setEnabled(false);
 	}
@@ -1219,7 +1162,7 @@ public class Chat extends AppCompatActivity
 	    m_receiverRegistered = true;
 	}
 
-	networkUnknown();
+	networkStatusChanged();
 	populateChat();
 	populateParticipants();
 	prepareSchedulers();
