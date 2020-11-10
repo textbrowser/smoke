@@ -125,11 +125,7 @@ public class Chat extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.neighbor_aborted":
 	    case "org.purple.smoke.neighbor_disconnected":
-		networkStatusChanged();
-		break;
 	    case "org.purple.smoke.network_connected":
-		networkStatusChanged();
-		break;
 	    case "org.purple.smoke.network_disconnected":
 		networkStatusChanged();
 		break;

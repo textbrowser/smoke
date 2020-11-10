@@ -15,11 +15,11 @@
         android:orderInCategory="400"
         android:title="@string/fire" />
     <item
-        android:id="@+id/action_smokescreen"
-        android:orderInCategory="500"
-        android:title="@string/smokescreen" />
-    <item
         android:id="@+id/action_settings"
-        android:orderInCategory="600"
+        android:orderInCategory="500"
         android:title="@string/action_settings" />
+    <item
+        android:id="@+id/action_smokescreen"
+        android:orderInCategory="600"
+        android:title="@string/smokescreen" />
 </menu>

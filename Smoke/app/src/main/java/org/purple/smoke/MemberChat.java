@@ -140,13 +140,9 @@ public class MemberChat extends AppCompatActivity
 
 		break;
 	    case "org.purple.smoke.half_and_half_call":
-	    case "org.purple.smoke.network_connected":
-		prepareStatus();
-		break;
 	    case "org.purple.smoke.neighbor_aborted":
 	    case "org.purple.smoke.neighbor_disconnected":
-		prepareStatus();
-		break;
+	    case "org.purple.smoke.network_connected":
 	    case "org.purple.smoke.network_disconnected":
 		prepareStatus();
 		break;
@@ -426,9 +422,9 @@ public class MemberChat extends AppCompatActivity
 			final ParticipantElement participantElement =
 			    arrayList == null || arrayList.isEmpty() ?
 			    null : arrayList.get(0);
-			final boolean isPaired = isParticipantPaired(arrayList);
-			final boolean state = Kernel.getInstance().
+			final boolean isConnected = Kernel.getInstance().
 			    isConnected();
+			final boolean isPaired = isParticipantPaired(arrayList);
 
 			try
 			{
@@ -447,7 +443,7 @@ public class MemberChat extends AppCompatActivity
 						     currentTimeMillis() -
 						     participantElement.
 						     m_lastStatusTimestamp) >
-					    Chat.STATUS_WINDOW || !state)
+					    Chat.STATUS_WINDOW || !isConnected)
 					button.setBackgroundResource
 					    (R.drawable.chat_status_offline);
 				    else
