@@ -201,7 +201,7 @@ public class Kernel
     private final static long MESSAGES_TO_SEND_INTERVAL =
 	50L; // 50 milliseconds.
     private final static long NEIGHBORS_INTERVAL = 5000L; // 5 seconds.
-    private final static long NETWORK_STATUS_INTERVAL = 500L; // 0.5 seconds.
+    private final static long NETWORK_STATUS_INTERVAL = 1500L; // 1.5 seconds.
     private final static long PUBLISH_KEYS_INTERVAL = 45000L; // 45 seconds.
     private final static long PURGE_INTERVAL = 30000L; // 30 seconds.
     private final static long REQUEST_MESSAGES_INTERVAL = 60000L; // 60 seconds.

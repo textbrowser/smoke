@@ -109,13 +109,9 @@ public class Fire extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.neighbor_aborted":
 	    case "org.purple.smoke.neighbor_disconnected":
-		prepareFireChannelStatus(false);
-		break;
 	    case "org.purple.smoke.network_connected":
-		prepareFireChannelStatus(true);
-		break;
 	    case "org.purple.smoke.network_disconnected":
-		prepareFireChannelStatus(false);
+		prepareFireChannelStatus();
 		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
@@ -310,14 +306,18 @@ public class Fire extends AppCompatActivity
         });
     }
 
-    private void prepareFireChannelStatus(boolean connected)
+    private void prepareFireChannelStatus()
     {
 	Map<String, FireChannel> map = State.getInstance().fireChannels();
 
 	if(map != null)
+	{
+	    boolean connected = Kernel.getInstance().isConnected();
+
 	    for(Map.Entry<String, FireChannel> entry : map.entrySet())
 		if(entry.getValue() != null)
 		    entry.getValue().setConnectedStatus(connected);
+	}
 
 	try
 	{
@@ -704,7 +704,7 @@ public class Fire extends AppCompatActivity
     protected void onResume()
     {
 	super.onResume();
-	prepareFireChannelStatus(Kernel.getInstance().isConnected());
+	prepareFireChannelStatus();
 
 	if(!m_receiverRegistered)
 	{
