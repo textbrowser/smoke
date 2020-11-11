@@ -52,6 +52,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -1546,7 +1547,7 @@ public class Kernel
 	** neighbor.
 	*/
 
-	String address = "";
+	TreeSet<String> addresses = new TreeSet<String> ();
 
 	m_neighborsMutex.readLock().lock();
 
@@ -1562,9 +1563,10 @@ public class Kernel
 		    if(m_neighbors.get(j).connected())
 		    {
 			if(m_neighbors.get(j).passthrough())
-			    address = m_neighbors.get(j).address();
+			    addresses.add
+				("|" + m_neighbors.get(j).address() + "|");
 			else
-			    return m_neighbors.get(j).address();
+			    addresses.add(m_neighbors.get(j).address());
 		    }
 	    }
 	}
@@ -1576,7 +1578,10 @@ public class Kernel
 	    m_neighborsMutex.readLock().unlock();
 	}
 
-	return address;
+	if(addresses.isEmpty())
+	    return "";
+	else
+	    return addresses.first().replace("|", "");
     }
 
     public String fireIdentities()
@@ -1742,7 +1747,8 @@ public class Kernel
 		int j = m_neighbors.keyAt(i);
 
 		if(m_neighbors.get(j) != null)
-		    if(m_neighbors.get(j).connected())
+		    if(m_neighbors.get(j).connected() &&
+		       !m_neighbors.get(j).passthrough())
 			return true;
 	    }
 	}

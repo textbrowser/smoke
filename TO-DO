@@ -148,6 +148,7 @@ Completed Items
 - Neighbor details should be optional.
 - Neighbors periodic refresh.
 - Network status in Member Chat.
+- Network status information is too complex.
 - New class for establishing Steam keys.
 - New date format: YYYY-MM-DD. ISO-8601.
 - New messages should be at the top of the view; Member Chat.
@@ -278,7 +279,6 @@ Remaining Items
 - Brands (profiles).
 - Clickable preview messages.
 - Document available tasks.
-- Network status information is too complex.
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.
