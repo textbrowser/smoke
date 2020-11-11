@@ -1330,7 +1330,7 @@ public class Kernel
 	steams.clear();
     }
 
-    private void purge()
+    private void purgeNeighbors()
     {
 	/*
 	** Disconnect all existing sockets.
@@ -1432,7 +1432,7 @@ public class Kernel
 
 	if(neighbors == null || neighbors.isEmpty())
 	{
-	    purge();
+	    purgeNeighbors();
 	    return neighbors;
 	}
 
