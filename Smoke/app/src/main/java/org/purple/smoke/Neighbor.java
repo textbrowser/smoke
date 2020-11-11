@@ -693,11 +693,6 @@ public abstract class Neighbor
 	}
     }
 
-    public String address()
-    {
-	return m_ipAddress + ":" + m_ipPort;
-    }
-
     public boolean passthrough()
     {
 	return m_passthrough.get();
@@ -706,6 +701,11 @@ public abstract class Neighbor
     public int getOid()
     {
 	return m_oid.get();
+    }
+
+    public synchronized String address()
+    {
+	return m_ipAddress + ":" + m_ipPort;
     }
 
     public void clearEchoQueue()
