@@ -90,7 +90,7 @@ public class SteamKeyExchange
 
 	bytes = Messages.steamCall
 	    (s_cryptography,
-	     steamElement.m_fileName,
+	     steamElement.m_displayFileName,
 	     sipHashId,
 	     steamElement.m_fileDigest,
 	     steamElement.m_fileIdentity,
@@ -119,8 +119,8 @@ public class SteamKeyExchange
 	   Messages.STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT)
 	    return;
 
+	String displayFileName = "";
 	String fileExtension = "";
-	String fileName = "";
 	byte ephemeralPublicKey[] = null;
 	byte ephemeralPublicKeyType[] = null;
 	byte fileDigest[] = null;
@@ -186,13 +186,13 @@ public class SteamKeyExchange
 		ii += 1;
 		break;
 	    case 5:
-		fileName = new String
+		displayFileName = new String
 		    (Base64.decode(string.getBytes(), Base64.NO_WRAP),
 		     StandardCharsets.UTF_8);
 
-		if(fileName.lastIndexOf('.') > 0)
-		    fileExtension = fileName.substring
-			(fileName.lastIndexOf('.'));
+		if(displayFileName.indexOf('.') == 0)
+		    fileExtension = displayFileName.substring
+			(displayFileName.indexOf('.'));
 
 		ii += 1;
 		break;
@@ -278,12 +278,18 @@ public class SteamKeyExchange
 	    else
 		steamElement.m_destination = array[0] + " (" + array[1] + ")";
 
+	    if(displayFileName.indexOf('.') == 0)
+		steamElement.m_displayFileName = "Smoke_Steam_" +
+		    Miscellaneous.byteArrayAsHexString(fileIdentity) +
+		    fileExtension;
+	    else
+		steamElement.m_displayFileName =
+		    "Smoke_Steam_" + displayFileName;
+
 	    steamElement.m_ephemeralPublicKey = ephemeralPublicKey;
 	    steamElement.m_fileDigest = fileDigest;
 	    steamElement.m_fileIdentity = fileIdentity;
-	    steamElement.m_fileName = "Smoke_Steam_" +
-		Miscellaneous.byteArrayAsHexString(fileIdentity) +
-		fileExtension;
+	    steamElement.m_fileName = steamElement.m_displayFileName;
 	    steamElement.m_fileSize = fileSize;
 	    steamElement.m_keyStream = Miscellaneous.joinByteArrays
 		(Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
@@ -489,7 +495,7 @@ public class SteamKeyExchange
 
 			bytes = Messages.steamCall
 			    (s_cryptography,
-			     steamElement.m_fileName,
+			     steamElement.m_displayFileName,
 			     sipHashId,
 			     steamElement.m_fileDigest,
 			     steamElement.m_fileIdentity,

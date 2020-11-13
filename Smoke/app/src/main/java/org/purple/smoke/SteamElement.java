@@ -30,6 +30,7 @@ package org.purple.smoke;
 public class SteamElement
 {
     public String m_destination = "";
+    public String m_displayFileName = "";
     public String m_fileName = "";
     public String m_status = "paused";
     public String m_transferRate = "";
@@ -51,9 +52,10 @@ public class SteamElement
     {
     }
 
-    public SteamElement(String fileName)
+    public SteamElement(String displayFileName, String fileName)
     {
 	m_direction = UPLOAD;
+	m_displayFileName = displayFileName;
 	m_fileName = fileName;
 
 	if(fileName.lastIndexOf('.') > 0)

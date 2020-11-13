@@ -370,7 +370,7 @@ public class SteamBubble extends View
 	m_fileIdentity.setText
 	    ("File Identity: " +
 	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileIdentity));
-	m_fileName.setText("File: " + steamElement.m_fileName);
+	m_fileName.setText("File: " + steamElement.m_displayFileName);
 	m_fileSize.setText
 	    ("Size: " +
 	     formatSize(steamElement.m_fileSize) +

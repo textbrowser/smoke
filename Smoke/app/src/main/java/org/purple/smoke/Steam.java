@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
@@ -131,8 +132,9 @@ public class Steam extends AppCompatActivity
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
     private SteamLinearLayoutManager m_layoutManager = null;
+    private String m_absoluteFileName = "";
+    private TextView m_displayFileName = null;
     private TextView m_downloads = null;
-    private TextView m_fileName = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -312,13 +314,14 @@ public class Steam extends AppCompatActivity
     private void saveSteam()
     {
 	SteamElement steamElement = null;
-	String fileName = m_fileName.getText().toString();
+	String displayFileName = m_displayFileName.getText().toString();
 
-	steamElement = new SteamElement(fileName);
+	steamElement = new SteamElement(displayFileName, m_absoluteFileName);
 	steamElement.m_destination =
 	    m_participantsSpinner.getSelectedItem().toString();
+	m_absoluteFileName = "";
 	m_databaseHelper.writeSteam(s_cryptography, steamElement);
-	m_fileName.setText("");
+	m_displayFileName.setText("");
 	m_participantsSpinner.setSelection(0); // Other (Non-Smoke)
     }
 
@@ -383,13 +386,37 @@ public class Steam extends AppCompatActivity
 	       requestCode == SELECT_FILE_REQUEST &&
 	       resultCode == RESULT_OK)
 	    {
+		Cursor cursor = null;
 		String type = getContentResolver().getType(data.getData());
 
 		if(type.lastIndexOf('/') > 0)
 		    type = type.substring(type.lastIndexOf('/') + 1);
 
-		m_fileName.setText
-		    (data.getData().toString() + "." + type);
+		m_absoluteFileName = data.getData().toString() + "." + type;
+
+		try
+		{
+		    cursor = getContentResolver().query
+			(data.getData(), null, null, null, null);
+
+		    if(cursor != null && cursor.moveToFirst())
+		    {
+			String string = cursor.getString
+			    (cursor.
+			     getColumnIndex(OpenableColumns.DISPLAY_NAME));
+
+			m_displayFileName.setText(string);
+		    }
+		}
+		catch(Exception exception)
+		{
+		    m_displayFileName.setText("." + type);
+		}
+		finally
+		{
+		    if(cursor != null)
+			cursor.close();
+		}
 	    }
 	}
 	catch(Exception exception)
@@ -418,6 +445,7 @@ public class Steam extends AppCompatActivity
 	}
 
 	m_attachmentButton = (Button) findViewById(R.id.attachment);
+	m_displayFileName = (TextView) findViewById(R.id.filename);
 	m_downloads = (TextView) findViewById(R.id.downloads);
 	m_downloads.setText
 	    ("Downloads Directory: " +
@@ -425,7 +453,6 @@ public class Steam extends AppCompatActivity
 	     getExternalStoragePublicDirectory(Environment.
 					       DIRECTORY_DOWNLOADS).
 	     toString());
-	m_fileName = (TextView) findViewById(R.id.filename);
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 	m_recyclerView.setHasFixedSize(true);
