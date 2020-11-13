@@ -405,11 +405,18 @@ public class Steam extends AppCompatActivity
 			    (cursor.
 			     getColumnIndex(OpenableColumns.DISPLAY_NAME));
 
-			m_displayFileName.setText(string);
+			if(string.isEmpty())
+			    m_displayFileName.setText("." + type);
+			else
+			    m_displayFileName.setText(string);
 		    }
 		}
 		catch(Exception exception)
 		{
+		    /*
+		    ** Special failure.
+		    */
+
 		    m_displayFileName.setText("." + type);
 		}
 		finally
