@@ -32,10 +32,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -45,10 +48,13 @@ public class SteamBubble extends View
     private Button m_control = null;
     private Context m_context = null;
     private ImageButton m_menuButton = null;
+    private LinearLayout m_layoutA = null;
+    private LinearLayout m_layoutB = null;
     private ProgressBar m_progress = null;
     private SeekBar m_readInterval = null;
     private Steam m_steam = null;
     private String m_controlString = "";
+    private Switch m_details = null;
     private TextView m_destination = null;
     private TextView m_digest = null;
     private TextView m_eta = null;
@@ -160,6 +166,26 @@ public class SteamBubble extends View
 	    }
         });
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
+	m_details = (Switch) m_view.findViewById(R.id.details);
+	m_details.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    if(isChecked)
+		    {
+			m_layoutA.setVisibility(LinearLayout.VISIBLE);
+			m_layoutB.setVisibility(LinearLayout.VISIBLE);
+		    }
+		    else
+		    {
+			m_layoutA.setVisibility(LinearLayout.GONE);
+			m_layoutB.setVisibility(LinearLayout.GONE);
+		    }
+		}
+	    });
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_direction = m_view.findViewById(R.id.direction);
 	m_eta = (TextView) m_view.findViewById(R.id.eta);
@@ -169,6 +195,10 @@ public class SteamBubble extends View
 	m_keyExchangeStatus = m_view.findViewById(R.id.key_exchange_status);
 	m_keyStreamDigest = (TextView)
 	    m_view.findViewById(R.id.keystream_digest);
+	m_layoutA = (LinearLayout) m_view.findViewById(R.id.layout_a);
+	m_layoutA.setVisibility(LinearLayout.GONE);
+	m_layoutB = (LinearLayout) m_view.findViewById(R.id.layout_b);
+	m_layoutB.setVisibility(LinearLayout.GONE);
 	m_menuButton = (ImageButton) m_view.findViewById(R.id.menu);
 	m_menuButton.setOnClickListener(new View.OnClickListener()
 	{
