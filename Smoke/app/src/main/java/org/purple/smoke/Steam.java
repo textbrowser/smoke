@@ -556,6 +556,7 @@ public class Steam extends AppCompatActivity
 			   getString("dialog_accepted").equals("true"))
 			    try
 			    {
+				State.getInstance().clearSteamDetailsStates();
 				m_databaseHelper.clearTable("steam_files");
 				m_adapter.notifyDataSetChanged();
 			    }
@@ -572,7 +573,11 @@ public class Steam extends AppCompatActivity
 				if(m_databaseHelper.
 				   deleteEntry(String.valueOf(itemId),
 					       "steam_files"))
+				{
+				    State.getInstance().removeSteamDetailsState
+					(itemId);
 				    m_adapter.notifyDataSetChanged();
+				}
 			    }
 			    catch(Exception exception)
 			    {

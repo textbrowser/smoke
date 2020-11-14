@@ -47,6 +47,7 @@ public class State
     private AtomicBoolean m_queryTimerServer = null;
     private Bundle m_bundle = null;
     private Map<String, FireChannel> m_fireChannels = null;
+    private Map<Integer, Boolean> m_steamDetailsStates = null;
     private ScheduledExecutorService m_participantsScheduler = null;
     private final ReentrantReadWriteLock m_bundleMutex = new
 	ReentrantReadWriteLock();
@@ -58,6 +59,7 @@ public class State
     {
 	m_bundle = new Bundle();
 	m_queryTimerServer = new AtomicBoolean(false);
+	m_steamDetailsStates = new TreeMap<> ();
 	setAuthenticated(false);
     }
 
@@ -299,12 +301,25 @@ public class State
 	return m_chatMessages;
     }
 
+    public synchronized boolean steamDetailsState(int oid)
+    {
+	if(m_steamDetailsStates.containsKey(oid))
+	    return m_steamDetailsStates.get(oid);
+	else
+	    return false;
+    }
+
     public synchronized void clearChatLog()
     {
 	if(m_chatMessages != null)
 	    m_chatMessages.clear();
 
 	m_chatMessages = null;
+    }
+
+    public synchronized void clearSteamDetailsStates()
+    {
+	m_steamDetailsStates.clear();
     }
 
     public synchronized void logChatMessage(String message,
@@ -329,6 +344,16 @@ public class State
 	messageElement.m_sequence = sequence;
 	messageElement.m_timestamp = timestamp;
 	m_chatMessages.add(messageElement);
+    }
+
+    public synchronized void removeSteamDetailsState(int oid)
+    {
+	m_steamDetailsStates.remove(oid);
+    }
+
+    public synchronized void setSteamDetailsState(boolean state, int oid)
+    {
+	m_steamDetailsStates.put(oid, state);
     }
 
     public void addFire(FireChannel fireChannel)

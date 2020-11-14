@@ -167,25 +167,6 @@ public class SteamBubble extends View
         });
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
 	m_details = (Switch) m_view.findViewById(R.id.details);
-	m_details.setOnCheckedChangeListener
-	    (new CompoundButton.OnCheckedChangeListener()
-	    {
-		@Override
-		public void onCheckedChanged
-		    (CompoundButton buttonView, boolean isChecked)
-		{
-		    if(isChecked)
-		    {
-			m_layoutA.setVisibility(LinearLayout.VISIBLE);
-			m_layoutB.setVisibility(LinearLayout.VISIBLE);
-		    }
-		    else
-		    {
-			m_layoutA.setVisibility(LinearLayout.GONE);
-			m_layoutB.setVisibility(LinearLayout.GONE);
-		    }
-		}
-	    });
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_direction = m_view.findViewById(R.id.direction);
 	m_eta = (TextView) m_view.findViewById(R.id.eta);
@@ -295,6 +276,8 @@ public class SteamBubble extends View
 	if(steamElement == null)
 	    return;
 
+	m_oid = steamElement.m_oid;
+
 	switch(steamElement.m_status)
 	{
 	case "completed":
@@ -391,6 +374,29 @@ public class SteamBubble extends View
 	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	}
 
+	m_details.setOnCheckedChangeListener(null);
+	m_details.setChecked(State.getInstance().steamDetailsState(m_oid));
+	m_details.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    State.getInstance().setSteamDetailsState(isChecked, m_oid);
+
+		    if(isChecked)
+		    {
+			m_layoutA.setVisibility(LinearLayout.VISIBLE);
+			m_layoutB.setVisibility(LinearLayout.VISIBLE);
+		    }
+		    else
+		    {
+			m_layoutA.setVisibility(LinearLayout.GONE);
+			m_layoutB.setVisibility(LinearLayout.GONE);
+		    }
+		}
+	    });
 	m_digest.setText
 	    ("SHA-256: " +
 	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
@@ -419,7 +425,6 @@ public class SteamBubble extends View
 		 byteArrayAsHexString(Cryptography.
 				      sha256(steamElement.m_keyStream)));
 
-	m_oid = steamElement.m_oid;
 	m_progress.setMax((int) steamElement.m_fileSize);
 	m_progress.setProgress((int) steamElement.m_readOffset);
 
