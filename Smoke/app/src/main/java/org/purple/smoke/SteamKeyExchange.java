@@ -500,7 +500,12 @@ public class SteamKeyExchange
 			     steamElement.m_fileDigest,
 			     steamElement.m_fileIdentity,
 			     keyPair.getPublic().getEncoded(),
-			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // RSA
+
+			     /*
+			     ** McEliece
+			     */
+
+			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[0],
 			     Messages.STEAM_KEY_EXCHANGE[0],
 			     steamElement.m_fileSize);
 
