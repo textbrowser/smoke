@@ -167,6 +167,27 @@ public class SteamBubble extends View
         });
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
 	m_details = (Switch) m_view.findViewById(R.id.details);
+	m_details.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    State.getInstance().setSteamDetailsState(isChecked, m_oid);
+
+		    if(isChecked)
+		    {
+			m_layoutA.setVisibility(LinearLayout.VISIBLE);
+			m_layoutB.setVisibility(LinearLayout.VISIBLE);
+		    }
+		    else
+		    {
+			m_layoutA.setVisibility(LinearLayout.GONE);
+			m_layoutB.setVisibility(LinearLayout.GONE);
+		    }
+		}
+	    });
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_direction = m_view.findViewById(R.id.direction);
 	m_eta = (TextView) m_view.findViewById(R.id.eta);
@@ -374,29 +395,7 @@ public class SteamBubble extends View
 	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	}
 
-	m_details.setOnCheckedChangeListener(null);
 	m_details.setChecked(State.getInstance().steamDetailsState(m_oid));
-	m_details.setOnCheckedChangeListener
-	    (new CompoundButton.OnCheckedChangeListener()
-	    {
-		@Override
-		public void onCheckedChanged
-		    (CompoundButton buttonView, boolean isChecked)
-		{
-		    State.getInstance().setSteamDetailsState(isChecked, m_oid);
-
-		    if(isChecked)
-		    {
-			m_layoutA.setVisibility(LinearLayout.VISIBLE);
-			m_layoutB.setVisibility(LinearLayout.VISIBLE);
-		    }
-		    else
-		    {
-			m_layoutA.setVisibility(LinearLayout.GONE);
-			m_layoutB.setVisibility(LinearLayout.GONE);
-		    }
-		}
-	    });
 	m_digest.setText
 	    ("SHA-256: " +
 	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
