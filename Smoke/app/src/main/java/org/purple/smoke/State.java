@@ -506,6 +506,7 @@ public class State
     public void reset()
     {
 	clearChatLog();
+	clearSteamDetailsStates();
 	m_bundleMutex.writeLock().lock();
 
 	try
