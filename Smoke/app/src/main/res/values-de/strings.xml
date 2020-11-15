@@ -27,7 +27,7 @@
     <string name="echo">Echo</string>
     <string name="encryption">Verschlüsselung</string>
     <string name="fiasco_keys">Fiasco Schlüssel</string>
-    <string name="fire">Feuer</string>
+    <string name="fire">Feuer (Gruppenchat)</string>
     <string name="fire_channels">Feuer Kanal</string>
     <string name="foreground_service">Vordergrund Service</string>
     <string name="generate">Generiere</string>
@@ -70,4 +70,12 @@
     <string name="smokeid">Smoke ID</string>
     <string name="your_name">Dein Name</string>
     <string name="exit">Beenden</string>
+    <string name="steam">Steam (Dateitransfer)</string>
+    <string name="key_derivation_function">Schlüssel-Ableitungs-Funktion</string>
+    <string name="pause">Pause</string>
+    <string name="smokescreen">Smokescreen</string>
+    <string name="please_select">Bitte wähle</string>
+    <string name="query_time_server">Frage Zeit-Server</string>
+    <string name="passthrough">Durchleiten</string>
+    <string name="non_tls">Non-TLS</string>
 </resources>
