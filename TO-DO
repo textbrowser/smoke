@@ -269,7 +269,6 @@ Future Items
 - Bubbles are too narrow on wide devices.
 - Java does not include methods for destroying private containers.
 - NTRU via BouncyCastle.
-- Option for computing Steam digest.
 - Optional cryptographic discovery.
 - Resolve DNS through a proxy if a proxy is defined.
 - Stronger surreptitious forwarding. Larger RSA keys.
@@ -280,6 +279,8 @@ Remaining Items
 - Brands (profiles).
 - Clickable preview messages.
 - New images for Web page.
+- Option for computing Steam digest.
 - Play Store.
 - Record background Fire messages.
 - SHA3 via BC.
+- Steam keys (McEliece, RSA, etc.).
