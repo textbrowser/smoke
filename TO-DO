@@ -79,6 +79,7 @@ Completed Items
 - Display remote server's certificate information. Public key fingerprint.
 - Do not enqueue messages in disconnected neighbors.
 - Do not save a key stream unless a response is received.
+- Document available tasks.
 - Duplicates Cryptography. Removed methods from State.
 - Dynamic DNS for home servers. Functional.
 - Dynamic textview objects trim text. Append an extra new line.
@@ -278,7 +279,6 @@ Remaining Items
 - As Name option in Alias mode (set alias to name).
 - Brands (profiles).
 - Clickable preview messages.
-- Document available tasks.
 - New images for Web page.
 - Play Store.
 - Record background Fire messages.
