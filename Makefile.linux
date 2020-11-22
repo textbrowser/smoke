@@ -32,9 +32,12 @@ debug-with-source: all
 	Documentation \
 	Makefile \
 	Makefile.linux \
+	README.md \
+	Scripts \
 	Smoke \
 	TO-DO \
 	adb.bash \
+	smoke-download-dependencies.bash \
 	-x *.git* -x *.gradle* -x *.idea* \
 	&& mv smoke.src.d.zip Smoke/app/src/main/assets/.
 	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
