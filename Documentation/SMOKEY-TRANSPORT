@@ -2,10 +2,21 @@ Let E be an encryption algorithm.
 Let H be a hash function.
 Let J be the Juggernaut protocol.
 Let Je and Jm be the encryption and hash keys, respectively.
+Let Jk be a key.
 Let Pi be a public key.
+
+CBC
 
 A <----- J -----> B
 A <----- E(M1 || P1, Je) || H(..., Jm) -----> B
 A <----- P1(e1 || h1) || E(M2 || P2, e1) || H(..., h1) -----> B
 ...
 A <----- Pi(ei || hi) || E(Mi || Pi, ei) || H(..., hi) -----> B
+
+GCM
+
+A <----- J -----> B
+A <----- E(M1 || P1, Jk) -----> B
+A <----- P1(k1) || E(M2 || P2, k1) -----> B
+...
+A <----- Pi(ki) || E(Mi || Pi, ki) -----> B
