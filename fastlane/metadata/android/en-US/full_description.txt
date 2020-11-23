@@ -1,0 +1,31 @@
+Summary of Smoke
+
+* Aliases. Preserve your contacts.
+* Almost zero-dependency software.
+* Argon2id key-derivation function.
+* Automatic, oscillatory public-key exchange protocol, via SipHash.
+* BSD 3-clause license.
+* Content is recorded via authenticated encryption.
+* Decentralized. TCP, and UDP multicast and unicast.
+* Does not require Internet connectivity.
+* Does not require registration. Telephone numbers are not required.
+* Fiasco forward secrecy.
+* Introduces Cryptographic Discovery. Cryptographic Discovery is a
+  practical protocol which creates coordinated data paths.
+* Juggling Juggernaut Protocol!
+* McEliece Fujisaka and Pointcheval.
+* Message structures do not explicitly expose contents. Header-less protocols!
+* Mobile servers via SmokeStack.
+* Optional foreground services.
+* Original implementation of SipHash.
+* Ozone destinations: private and public repositories.
+* Post offices for messages of the past.
+* Private servers.
+* Public and private public-key servers.
+* Reliable distribution of archived messages.
+* SSL/TLS through SmokeStack.
+* Semi-compatible with Spot-On via Fire.
+* Share files with TCP utilities such as Netcat.
+* SipHash-128.
+* Software congestion control.
+* Steam, reliable file sharing. TCP over the Echo!

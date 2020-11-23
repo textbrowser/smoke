@@ -1,0 +1,20 @@
+* Bouncy Castle 1.67.
+* Disable Chat:Send if there is at least one selected participant without a
+  session key pair.
+* Efficient ArrayList::remove(). Remove from the end of the array.
+* Full, reliable, Steam! File sharing.
+* Improved TLS handshake-completed state.
+* Issue Settings::prepareListeners() shortly after the Settings activity has
+  been instantiated.
+* Monitor connection activity; decreased polling.
+* Notify the user of incorrect device time via
+  https://worldtimeapi.org/api/timezone/Etc/UTC.txt. Optional.
+* Prepare initial private keys during a public-key exchange.
+* Provide message-read responses to SmokeStack instances.
+* Random identities need not be recorded to databases.
+* Removed SecureRandom.getInstance("SHA1PRNG").
+* Removed verbose threads and replaced with events.
+* Request Ozone messages shortly after a TCP connection has been established
+  or a TLS session has been established.
+* SipHash-128.
+* Write local identity immediately upon completion of TLS handshake.

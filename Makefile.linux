@@ -37,6 +37,7 @@ debug-with-source: all
 	Smoke \
 	TO-DO \
 	adb.bash \
+	fastlane \
 	smoke-download-dependencies.bash \
 	-x *.git* -x *.gradle* -x *.idea* \
 	&& mv smoke.src.d.zip Smoke/app/src/main/assets/.
