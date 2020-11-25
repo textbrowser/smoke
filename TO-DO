@@ -267,12 +267,8 @@ Completed Items
 Future Items
 
 - (130 / 16 + 1) * 16 + 8 <= 154.
-- Bubbles are too narrow on wide devices.
 - Java does not include methods for destroying private containers.
-- NTRU via BouncyCastle.
 - Optional cryptographic discovery.
-- Resolve DNS through a proxy if a proxy is defined.
-- Stronger surreptitious forwarding. Larger RSA keys.
 
 Remaining Items
 
@@ -282,5 +278,4 @@ Remaining Items
 - Play Store.
 - Record background Fire messages.
 - SHA3 via BC.
-- Steam everyone.
 - Steam keys (McEliece, RSA, etc.).
