@@ -39,11 +39,13 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -1625,6 +1627,7 @@ public class Settings extends AppCompatActivity
     {
 	Button button1 = null;
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
+	TextView textView1 = (TextView) findViewById(R.id.participant_name);
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
 	button1.setOnClickListener(new View.OnClickListener()
@@ -2079,22 +2082,25 @@ public class Settings extends AppCompatActivity
 		{
 		    TextView textView1 = (TextView) findViewById(R.id.at_sign);
 		    TextView textView2 = (TextView) findViewById
+			(R.id.participant_name);
+		    TextView textView3 = (TextView) findViewById
 			(R.id.participant_siphash_id);
 
 		    if(isChecked)
 		    {
 			textView1.setText("|");
-			textView2.setFilters(new InputFilter[] {});
-			textView2.setHint("Smoke Alias");
+			textView3.setFilters(new InputFilter[] {});
+			textView3.setHint("Smoke Alias");
+			textView3.setText(textView2.getText());
 		    }
 		    else
 		    {
 			textView1.setText("@");
-			textView2.setFilters
+			textView3.setFilters
 			    (new InputFilter[] {new InputFilter.AllCaps(),
 						s_sipHashInputFilter});
-			textView2.setHint("Smoke ID");
-			textView2.setText("");
+			textView3.setHint("Smoke ID");
+			textView3.setText("");
 		    }
 		}
 	    });
@@ -2299,6 +2305,44 @@ public class Settings extends AppCompatActivity
 
 		@Override
 		public void onNothingSelected(AdapterView<?> parent)
+		{
+		}
+	    });
+
+	textView1.addTextChangedListener
+	    (new TextWatcher()
+	    {
+		@Override
+		public void afterTextChanged(Editable s)
+		{
+		    if(s != null)
+		    {
+			CheckBox checkBox1 = (CheckBox) findViewById
+			    (R.id.as_alias);
+
+			if(checkBox1.isChecked())
+			{
+			    TextView textView1 = (TextView)
+				findViewById(R.id.participant_siphash_id);
+
+			    textView1.setText(s);
+			}
+		    }
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s,
+					      int start,
+					      int count,
+					      int after)
+		{
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s,
+					  int start,
+					  int before,
+					  int count)
 		{
 		}
 	    });

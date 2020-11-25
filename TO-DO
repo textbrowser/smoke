@@ -12,6 +12,7 @@ Completed Items
 - Append new messages in Member Chat.
 - Application icon.
 - Application lock: Smokescreen.
+- As Name option in Alias mode (set alias to name). Name as Alias.
 - As the half-response does not produce a response, the automatic response's
   result is ignored.
 - Asynchronous database writes.
@@ -275,7 +276,6 @@ Future Items
 
 Remaining Items
 
-- As Name option in Alias mode (set alias to name).
 - Brands (profiles).
 - Clickable preview messages.
 - Option for computing Steam digest.
