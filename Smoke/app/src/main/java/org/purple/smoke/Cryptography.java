@@ -139,6 +139,7 @@ public class Cryptography
     public final static int CIPHER_HASH_KEYS_LENGTH = 96;
     public final static int CIPHER_IV_LENGTH = 16;
     public final static int CIPHER_KEY_LENGTH = 32;
+    public final static int FIRE_CIPHER_IV_LENGTH = 16;
     public final static int FIRE_HASH_KEY_LENGTH = 48;
     public final static int HASH_KEY_LENGTH = 64;
     public final static int IDENTITY_SIZE = 8; // Size of a long.
@@ -632,7 +633,7 @@ public class Cryptography
 		    return null;
 
 		Cipher cipher = null;
-		byte iv[] = new byte[16];
+		byte iv[] = new byte[CIPHER_IV_LENGTH];
 
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		s_secureRandom.nextBytes(iv);
@@ -1825,14 +1826,14 @@ public class Cryptography
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, FIRE_SYMMETRIC_ALGORITHM);
-	    byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
+	    byte iv[] = Arrays.copyOf(data, FIRE_CIPHER_IV_LENGTH);
 
 	    cipher = Cipher.getInstance(FIRE_SYMMETRIC_CIPHER_TRANSFORMATION);
 	    cipher.init(Cipher.DECRYPT_MODE,
 			secretKey,
 			new IvParameterSpec(iv));
 	    bytes = cipher.doFinal
-		(Arrays.copyOfRange(data, CIPHER_IV_LENGTH, data.length));
+		(Arrays.copyOfRange(data, FIRE_CIPHER_IV_LENGTH, data.length));
 	}
 	catch(Exception exception)
 	{
@@ -1856,7 +1857,7 @@ public class Cryptography
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, SYMMETRIC_ALGORITHM);
-	    byte iv[] = new byte[16];
+	    byte iv[] = new byte[CIPHER_IV_LENGTH];
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
@@ -1888,7 +1889,7 @@ public class Cryptography
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, FIRE_SYMMETRIC_ALGORITHM);
-	    byte iv[] = new byte[16];
+	    byte iv[] = new byte[FIRE_CIPHER_IV_LENGTH];
 
 	    cipher = Cipher.getInstance(FIRE_SYMMETRIC_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
