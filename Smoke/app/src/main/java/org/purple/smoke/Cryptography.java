@@ -144,6 +144,7 @@ public class Cryptography
     public final static int HASH_KEY_LENGTH = 64;
     public final static int IDENTITY_SIZE = 8; // Size of a long.
     public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
+    public final static int PARTICIPANT_CALL_RSA_KEY_SIZE = 3072;
     public final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 4096}; // ECDSA, RSA
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {4096}; // RSA
@@ -152,6 +153,7 @@ public class Cryptography
     public final static int SIPHASH_IDENTITY_LENGTH =
 	DEFAULT_SIPHASH_ID.length();
     public final static int STEAM_FILE_IDENTITY_LENGTH = 48;
+    public final static int STEAM_KEY_EXCHANGE_RSA_KEY_SIZE = 3096;
 
     private Cryptography()
     {

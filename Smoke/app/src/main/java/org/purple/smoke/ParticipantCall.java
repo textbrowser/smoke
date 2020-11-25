@@ -60,7 +60,7 @@ public class ParticipantCall
 		break;
 	    case RSA:
 		m_keyPair = Cryptography.generatePrivatePublicKeyPair
-		    ("RSA", 2048, 0);
+		    ("RSA", Cryptography.PARTICIPANT_CALL_RSA_KEY_SIZE, 0);
 		break;
 	    default:
 		break;

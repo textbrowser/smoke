@@ -452,7 +452,9 @@ public class SteamKeyExchange
 			*/
 
 			keyPair = Cryptography.generatePrivatePublicKeyPair
-			    ("RSA", 2048, 0);
+			    ("RSA",
+			     Cryptography.STEAM_KEY_EXCHANGE_RSA_KEY_SIZE,
+			     0);
 
 			if(keyPair == null)
 			    return;
@@ -503,12 +505,7 @@ public class SteamKeyExchange
 			     steamElement.m_fileDigest,
 			     steamElement.m_fileIdentity,
 			     keyPair.getPublic().getEncoded(),
-
-			     /*
-			     ** McEliece
-			     */
-
-			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[0],
+			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1],
 			     Messages.STEAM_KEY_EXCHANGE[0],
 			     steamElement.m_fileSize);
 
