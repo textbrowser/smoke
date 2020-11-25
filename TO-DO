@@ -264,18 +264,13 @@ Completed Items
 - Zero ports are valid. If a system is allowing connections on port
   zero, Smoke will be able to connect to it.
 
-Future Items
-
-- (130 / 16 + 1) * 16 + 8 <= 154.
-- Java does not include methods for destroying private containers.
-- Optional cryptographic discovery.
-
 Remaining Items
 
 - Brands (profiles).
-- Clickable preview messages.
 - Future-proof Smoke (remove fixed cryptographic values).
+- Java does not include methods for destroying private containers.
 - Option for computing Steam digest.
+- Optional cryptographic discovery.
 - Play Store.
 - Record background Fire messages.
 - SHA3 via BC.
