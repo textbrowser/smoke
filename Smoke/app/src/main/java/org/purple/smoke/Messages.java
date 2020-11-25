@@ -369,16 +369,16 @@ public class Messages
 		(Base64.encodeToString(signature, Base64.NO_WRAP));
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(new byte[] {tag},
 				stringBuilder.toString().getBytes()),
 		 aesKey);
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    stringBuilder.delete(0, stringBuilder.length());
@@ -388,7 +388,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256), shaKey);
+		(Miscellaneous.joinByteArrays(pki, ciphertext), shaKey);
 
 	    if(sha512 == null)
 		return null;
@@ -398,12 +398,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, aes256, sha512, destination);
+		(pki, ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -538,10 +538,10 @@ public class Messages
 		(Base64.encodeToString(signature, Base64.NO_WRAP));
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(CHAT_MESSAGE_TYPE,
 				stringBuilder.toString().getBytes()),
@@ -551,7 +551,7 @@ public class Messages
 
 	    stringBuilder.delete(0, stringBuilder.length());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -559,7 +559,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256),
+		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -574,11 +574,11 @@ public class Messages
 	    if(destinationKey != null)
 	    {
 		byte destination[] = Cryptography.hmac
-		    (Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		    (Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
 		     destinationKey);
 
 		return Miscellaneous.joinByteArrays
-		    (pki, aes256, sha512, destination);
+		    (pki, ciphertext, sha512, destination);
 	    }
 	    else
 		return Miscellaneous.joinByteArrays
@@ -588,7 +588,7 @@ public class Messages
 		    */
 
 		    (pki,
-		     aes256,
+		     ciphertext,
 		     sha512,
 		     sipHashId.getBytes(StandardCharsets.UTF_8));
 	}
@@ -648,14 +648,14 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 cryptography.ozoneEncryptionKey());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -663,12 +663,12 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(aes256, cryptography.ozoneMacKey());
+		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(sha512 == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(aes256, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
 	}
 	catch(Exception exception)
 	{
@@ -754,16 +754,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 Arrays.copyOfRange(keyStream,
 				    0,
 				    Cryptography.CIPHER_KEY_LENGTH));
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -771,7 +771,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256),
+		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -784,12 +784,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, aes256, sha512, destination);
+		(pki, ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -918,7 +918,7 @@ public class Messages
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -926,7 +926,7 @@ public class Messages
 
 	    stringBuilder.delete(0, stringBuilder.length());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -934,7 +934,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(aes256,
+		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -947,11 +947,11 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(aes256, sha512),
+		(Miscellaneous.joinByteArrays(ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
-	    return Miscellaneous.joinByteArrays(aes256, sha512, destination);
+	    return Miscellaneous.joinByteArrays(ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1047,7 +1047,7 @@ public class Messages
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -1055,7 +1055,7 @@ public class Messages
 
 	    stringBuilder.delete(0, stringBuilder.length());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1063,7 +1063,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(aes256,
+		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -1076,11 +1076,11 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(aes256, sha512),
+		(Miscellaneous.joinByteArrays(ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
-	    return Miscellaneous.joinByteArrays(aes256, sha512, destination);
+	    return Miscellaneous.joinByteArrays(ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1147,13 +1147,13 @@ public class Messages
 				getBytes(StandardCharsets.ISO_8859_1),
 				Base64.NO_WRAP));
 
-	    byte aes256[] = Cryptography.encryptFire
+	    byte ciphertext[] = Cryptography.encryptFire
 		(stringBuilder.toString().getBytes(StandardCharsets.ISO_8859_1),
 		 Arrays.copyOfRange(keyStream,
 				    0,
 				    Cryptography.CIPHER_KEY_LENGTH));
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1161,10 +1161,11 @@ public class Messages
 	    */
 
 	    byte sha384[] = Cryptography.hmacFire
-		(aes256, Arrays.copyOfRange(keyStream,
-					    Cryptography.CIPHER_KEY_LENGTH,
-					    Cryptography.CIPHER_KEY_LENGTH +
-					    Cryptography.FIRE_HASH_KEY_LENGTH));
+		(ciphertext,
+		 Arrays.copyOfRange(keyStream,
+				    Cryptography.CIPHER_KEY_LENGTH,
+				    Cryptography.CIPHER_KEY_LENGTH +
+				    Cryptography.FIRE_HASH_KEY_LENGTH));
 
 	    if(sha384 == null)
 		return null;
@@ -1174,7 +1175,7 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(aes256, sha384),
+		(Miscellaneous.joinByteArrays(ciphertext, sha384),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							Cryptography.
 							CIPHER_KEY_LENGTH +
@@ -1184,7 +1185,7 @@ public class Messages
 
 	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append
-		(Base64.encodeToString(aes256, Base64.NO_WRAP));
+		(Base64.encodeToString(ciphertext, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(sha384, Base64.NO_WRAP));
@@ -1254,13 +1255,13 @@ public class Messages
 				getBytes(StandardCharsets.ISO_8859_1),
 				Base64.NO_WRAP));
 
-	    byte aes256[] = Cryptography.encryptFire
+	    byte ciphertext[] = Cryptography.encryptFire
 		(stringBuilder.toString().getBytes(StandardCharsets.ISO_8859_1),
 		 Arrays.copyOfRange(keyStream,
 				    0,
 				    Cryptography.CIPHER_KEY_LENGTH));
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1268,10 +1269,11 @@ public class Messages
 	    */
 
 	    byte sha384[] = Cryptography.hmacFire
-		(aes256, Arrays.copyOfRange(keyStream,
-					    Cryptography.CIPHER_KEY_LENGTH,
-					    Cryptography.CIPHER_KEY_LENGTH +
-					    Cryptography.FIRE_HASH_KEY_LENGTH));
+		(ciphertext,
+		 Arrays.copyOfRange(keyStream,
+				    Cryptography.CIPHER_KEY_LENGTH,
+				    Cryptography.CIPHER_KEY_LENGTH +
+				    Cryptography.FIRE_HASH_KEY_LENGTH));
 
 	    if(sha384 == null)
 		return null;
@@ -1281,7 +1283,7 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(aes256, sha384),
+		(Miscellaneous.joinByteArrays(ciphertext, sha384),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							Cryptography.
 							CIPHER_KEY_LENGTH +
@@ -1291,7 +1293,7 @@ public class Messages
 
 	    stringBuilder.delete(0, stringBuilder.length());
 	    stringBuilder.append
-		(Base64.encodeToString(aes256, Base64.NO_WRAP));
+		(Base64.encodeToString(ciphertext, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(sha384, Base64.NO_WRAP));
@@ -1386,10 +1388,10 @@ public class Messages
 		(Base64.encodeToString(signature, Base64.NO_WRAP));
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(JUGGERNAUT_TYPE,
 				stringBuilder.toString().getBytes()),
@@ -1399,7 +1401,7 @@ public class Messages
 
 	    stringBuilder.delete(0, stringBuilder.length());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1407,7 +1409,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256),
+		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -1420,12 +1422,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, aes256, sha512, destination);
+		(pki, ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1502,16 +1504,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 Arrays.copyOfRange(keyStream,
 				    0,
 				    Cryptography.CIPHER_KEY_LENGTH));
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1519,7 +1521,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256),
+		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -1532,12 +1534,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, aes256, sha512, destination);
+		(pki, ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1598,14 +1600,14 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 cryptography.ozoneEncryptionKey());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1613,12 +1615,12 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(aes256, cryptography.ozoneMacKey());
+		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(sha512 == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(aes256, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
 	}
 	catch(Exception exception)
 	{
@@ -1662,13 +1664,13 @@ public class Messages
 		 requestedSipHashId.getBytes(StandardCharsets.UTF_8));
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(bytes, cryptography.ozoneEncryptionKey());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1676,12 +1678,12 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(aes256, cryptography.ozoneMacKey());
+		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(sha512 == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(aes256, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
 	}
 	catch(Exception exception)
 	{
@@ -1726,13 +1728,13 @@ public class Messages
 		 Miscellaneous.longToByteArray(identity));
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(bytes, cryptography.ozoneEncryptionKey());
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -1740,12 +1742,12 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(aes256, cryptography.ozoneMacKey());
+		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(sha512 == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(aes256, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
 	}
 	catch(Exception exception)
 	{
@@ -1900,16 +1902,16 @@ public class Messages
 		(Base64.encodeToString(signature, Base64.NO_WRAP));
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(new byte[] {tag},
 				stringBuilder.toString().getBytes()),
 		 aesKey);
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    stringBuilder.delete(0, stringBuilder.length());
@@ -1919,7 +1921,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256), shaKey);
+		(Miscellaneous.joinByteArrays(pki, ciphertext), shaKey);
 
 	    if(sha512 == null)
 		return null;
@@ -1929,12 +1931,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, aes256, sha512, destination);
+		(pki, ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{
@@ -2012,16 +2014,16 @@ public class Messages
 		 packet != null ? packet : null);
 
 	    /*
-	    ** [ AES-256 ]
+	    ** [ Ciphertext ]
 	    */
 
-	    byte aes256[] = Cryptography.encrypt
+	    byte ciphertext[] = Cryptography.encrypt
 		(bytes,
 		 Arrays.copyOfRange(keyStream,
 				    0,
 				    Cryptography.CIPHER_KEY_LENGTH));
 
-	    if(aes256 == null)
+	    if(ciphertext == null)
 		return null;
 
 	    /*
@@ -2029,7 +2031,7 @@ public class Messages
 	    */
 
 	    byte sha512[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256),
+		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
@@ -2042,12 +2044,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, aes256, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, aes256, sha512, destination);
+		(pki, ciphertext, sha512, destination);
 	}
 	catch(Exception exception)
 	{

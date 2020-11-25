@@ -44,12 +44,12 @@ public class SteamKeyExchange
 {
     private class Pair
     {
-	public byte m_aes[] = null;
+	public byte m_ciphertext[] = null;
 	public byte m_pki[] = null;
 
-	public Pair(byte aes[], byte pki[])
+	public Pair(byte ciphertext[], byte pki[])
 	{
-	    m_aes = aes;
+	    m_ciphertext = ciphertext;
 	    m_pki = pki;
 	}
     }
@@ -104,16 +104,19 @@ public class SteamKeyExchange
 		(Messages.bytesToMessageString(bytes), sipHashId);
     }
 
-    private void steamAorB(byte aes[], byte pki[])
+    private void steamAorB(byte ciphertext[], byte pki[])
     {
-	if(aes == null || aes.length == 0 || pki == null || pki.length == 0)
+	if(ciphertext == null ||
+	   ciphertext.length == 0 ||
+	   pki == null ||
+	   pki.length == 0)
 	    return;
 
-	byte tag = aes[0];
+	byte tag = ciphertext[0];
 
-	aes = Arrays.copyOfRange(aes, 1, aes.length);
+	ciphertext = Arrays.copyOfRange(ciphertext, 1, ciphertext.length);
 
-	String strings[] = new String(aes).split("\\n");
+	String strings[] = new String(ciphertext).split("\\n");
 
 	if(strings.length !=
 	   Messages.STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT)
@@ -384,9 +387,9 @@ public class SteamKeyExchange
 			}
 
 		    if(pair != null)
-			if(pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[0] ||
-			   pair.m_aes[0] == Messages.STEAM_KEY_EXCHANGE[1])
-			    steamAorB(pair.m_aes, pair.m_pki);
+			if(pair.m_ciphertext[0] == Messages.STEAM_KEY_EXCHANGE[0] ||
+			   pair.m_ciphertext[0] == Messages.STEAM_KEY_EXCHANGE[1])
+			    steamAorB(pair.m_ciphertext, pair.m_pki);
 		}
 		catch(Exception exception)
 		{
@@ -528,9 +531,12 @@ public class SteamKeyExchange
         }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    public void append(byte aes[], byte pki[])
+    public void append(byte ciphertext[], byte pki[])
     {
-	if(aes == null || aes.length == 0 || pki == null || pki.length == 0)
+	if(ciphertext == null ||
+	   ciphertext.length == 0 ||
+	   pki == null ||
+	   pki.length == 0)
 	    return;
 
 	try
@@ -539,7 +545,7 @@ public class SteamKeyExchange
 
 	    try
 	    {
-		m_pairs.add(new Pair(aes, pki));
+		m_pairs.add(new Pair(ciphertext, pki));
 	    }
 	    catch(Exception exception)
 	    {

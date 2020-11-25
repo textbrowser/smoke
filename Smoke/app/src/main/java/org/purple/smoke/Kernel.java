@@ -1913,7 +1913,7 @@ public class Kernel
 
 		    if(strings != null && strings.length >= 2)
 		    {
-			byte aes256[] = Base64.decode
+			byte ciphertext[] = Base64.decode
 			    (strings[0], Base64.NO_WRAP);
 			byte sha384[] = Base64.decode
 			    (strings[1], Base64.NO_WRAP);
@@ -1927,7 +1927,7 @@ public class Kernel
 			    if(Cryptography.
 			       memcmp
 			       (Cryptography.
-				hmacFire(aes256,
+				hmacFire(ciphertext,
 					 Arrays.
 					 copyOfRange(entry.getValue(),
 						     Cryptography.
@@ -1938,25 +1938,25 @@ public class Kernel
 						     FIRE_HASH_KEY_LENGTH)),
 				sha384))
 			    {
-				aes256 = Cryptography.decryptFire
-				    (aes256,
+				ciphertext = Cryptography.decryptFire
+				    (ciphertext,
 				     Arrays.copyOfRange(entry.getValue(),
 							0,
 							Cryptography.
 							CIPHER_KEY_LENGTH));
 
-				if(aes256 == null)
+				if(ciphertext == null)
 				    return 1;
 
-				aes256 = Arrays.copyOfRange
+				ciphertext = Arrays.copyOfRange
 
 				    /*
 				    ** Remove the size information of the
 				    ** original data.
 				    */
 
-				    (aes256, 0, aes256.length - 4);
-				strings = new String(aes256).split("\\n");
+				    (ciphertext, 0, ciphertext.length - 4);
+				strings = new String(ciphertext).split("\\n");
 
 				if(!(strings.length == 4 ||
 				     strings.length == 5))
@@ -2060,14 +2060,14 @@ public class Kernel
 			  Cryptography.hmac(data,
 					    s_cryptography.ozoneMacKey())))
 		{
-		    byte aes256[] = Cryptography.decrypt
+		    byte ciphertext[] = Cryptography.decrypt
 			(data, s_cryptography.ozoneEncryptionKey());
 
-		    if(aes256 == null)
+		    if(ciphertext == null)
 			return 1;
 
 		    long timestamp = Miscellaneous.byteArrayToLong
-			(Arrays.copyOfRange(aes256, 1, 9));
+			(Arrays.copyOfRange(ciphertext, 1, 9));
 
 		    if(Math.abs(System.currentTimeMillis() - timestamp) >
 		       SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
@@ -2079,7 +2079,7 @@ public class Kernel
 
 		    long identity = Miscellaneous.byteArrayToLong
 			(Arrays.
-			 copyOfRange(aes256,
+			 copyOfRange(ciphertext,
 				     9 + Cryptography.SIPHASH_IDENTITY_LENGTH,
 				     9 +
 				     Cryptography.IDENTITY_SIZE +
@@ -2094,7 +2094,7 @@ public class Kernel
 			("org.purple.smoke.siphash_share_confirmation");
 		    String sipHashId = new String
 			(Arrays.
-			 copyOfRange(aes256,
+			 copyOfRange(ciphertext,
 				     9,
 				     9 + Cryptography.SIPHASH_IDENTITY_LENGTH),
 			 StandardCharsets.UTF_8);
@@ -2327,7 +2327,7 @@ public class Kernel
 			return 1;
 		}
 
-		byte aes256[] = Cryptography.decrypt
+		byte ciphertext[] = Cryptography.decrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 pki_output_size,
@@ -2337,10 +2337,10 @@ public class Kernel
 					0,
 					Cryptography.CIPHER_KEY_LENGTH));
 
-		if(aes256 == null)
+		if(ciphertext == null)
 		    return 1;
 
-		byte abyte[] = new byte[] {aes256[0]};
+		byte abyte[] = new byte[] {ciphertext[0]};
 
 		if(abyte[0] == Messages.CHAT_STATUS_MESSAGE_TYPE[0])
 		{
@@ -2357,7 +2357,7 @@ public class Kernel
 		       contains("optional_signatures = false"))
 		    {
 			long timestamp = Miscellaneous.byteArrayToLong
-			    (Arrays.copyOfRange(aes256, 1, 9));
+			    (Arrays.copyOfRange(ciphertext, 1, 9));
 
 			if(Math.abs(System.currentTimeMillis() - timestamp) >
 			   Chat.STATUS_WINDOW)
@@ -2372,13 +2372,13 @@ public class Kernel
 			if(!Cryptography.
 			   verifySignature
 			   (signatureKey,
-			    Arrays.copyOfRange(aes256,
+			    Arrays.copyOfRange(ciphertext,
 					       10,
-					       aes256.length),
+					       ciphertext.length),
 			    Miscellaneous.
 			    joinByteArrays(pki,
 					   Arrays.
-					   copyOfRange(aes256,
+					   copyOfRange(ciphertext,
 						       0,
 						       10),
 					   s_cryptography.
@@ -2392,10 +2392,11 @@ public class Kernel
 		}
 		else if(abyte[0] == Messages.JUGGERNAUT_TYPE[0])
 		{
-		    aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
+		    ciphertext = Arrays.copyOfRange
+			(ciphertext, 1, ciphertext.length);
 
 		    String payload = "";
-		    String strings[] = new String(aes256).split("\\n");
+		    String strings[] = new String(ciphertext).split("\\n");
 		    int ii = 0;
 
 		    for(String string : strings)
@@ -2589,13 +2590,13 @@ public class Kernel
 		    if(!Cryptography.
 		       verifySignature
 		       (signatureKey,
-			Arrays.copyOfRange(aes256,
+			Arrays.copyOfRange(ciphertext,
 					   Cryptography.HASH_KEY_LENGTH + 1,
-					   aes256.length),
+					   ciphertext.length),
 			Miscellaneous.
 			joinByteArrays(pki,
 				       Arrays.
-				       copyOfRange(aes256,
+				       copyOfRange(ciphertext,
 						   0,
 						   Cryptography.
 						   HASH_KEY_LENGTH + 1),
@@ -2613,7 +2614,7 @@ public class Kernel
 		       writeMessageStatus
 		       (s_cryptography,
 			array[1],
-			Arrays.copyOfRange(aes256,
+			Arrays.copyOfRange(ciphertext,
 					   1,
 					   Cryptography.
 					   HASH_KEY_LENGTH + 1)))
@@ -2622,9 +2623,10 @@ public class Kernel
 		    return 1;
 		}
 
-		aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
+		ciphertext = Arrays.copyOfRange
+		    (ciphertext, 1, ciphertext.length);
 
-		String strings[] = new String(aes256).split("\\n");
+		String strings[] = new String(ciphertext).split("\\n");
 
 		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
 		    return 1;
@@ -2819,7 +2821,7 @@ public class Kernel
 		if(!Cryptography.memcmp(hmac, sha512))
 		    return 1;
 
-		byte aes256[] = Cryptography.decrypt
+		byte ciphertext[] = Cryptography.decrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 pki_output_size,
@@ -2829,10 +2831,10 @@ public class Kernel
 					0,
 					Cryptography.CIPHER_KEY_LENGTH));
 
-		if(aes256 == null)
+		if(ciphertext == null)
 		    return 1;
 
-		byte tag = aes256[0];
+		byte tag = ciphertext[0];
 
 		if(!(tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1] ||
@@ -2842,13 +2844,14 @@ public class Kernel
 		else if(tag == Messages.STEAM_KEY_EXCHANGE[0] ||
 			tag == Messages.STEAM_KEY_EXCHANGE[1])
 		{
-		    m_steamKeyExchange.append(aes256, pki);
+		    m_steamKeyExchange.append(ciphertext, pki);
 		    return 1;
 		}
 
-		aes256 = Arrays.copyOfRange(aes256, 1, aes256.length);
+		ciphertext = Arrays.copyOfRange
+		    (ciphertext, 1, ciphertext.length);
 
-		String strings[] = new String(aes256).split("\\n");
+		String strings[] = new String(ciphertext).split("\\n");
 
 		if(strings.length != Messages.CALL_GROUP_TWO_ELEMENT_COUNT)
 		    return 1;
@@ -3152,7 +3155,7 @@ public class Kernel
 		if(!Cryptography.memcmp(hmac, sha512))
 		    return 1;
 
-		byte aes256[] = Cryptography.decrypt
+		byte ciphertext[] = Cryptography.decrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 pki_output_size,
@@ -3162,31 +3165,32 @@ public class Kernel
 					0,
 					Cryptography.CIPHER_KEY_LENGTH));
 
-		if(aes256 == null)
+		if(ciphertext == null)
 		    return 1;
 
 		long timestamp = Miscellaneous.byteArrayToLong
-		    (Arrays.copyOfRange(aes256, 1, 9));
+		    (Arrays.copyOfRange(ciphertext, 1, 9));
 
 		if(Math.abs(System.currentTimeMillis() - timestamp) >
 		   STEAM_SHARE_WINDOW)
 		    return 1;
 
 		long offset = Miscellaneous.byteArrayToLong
-		    (Arrays.copyOfRange(aes256, 9, 17));
+		    (Arrays.copyOfRange(ciphertext, 9, 17));
 
 		if(offset < 0)
 		    return 1;
 
-		byte abyte[] = new byte[] {aes256[0]};
+		byte abyte[] = new byte[] {ciphertext[0]};
 
 		if(abyte[0] == Messages.STEAM_SHARE[0])
 		{
-		    if(m_steamWriter.write(pki,
-					   Arrays.copyOfRange(aes256,
-							      17,
-							      aes256.length),
-					   offset))
+		    if(m_steamWriter.
+		       write(pki,
+			     Arrays.copyOfRange(ciphertext,
+						17,
+						ciphertext.length),
+			     offset))
 		    {
 			String sipHashId = s_databaseHelper.steamSipHashId
 			    (s_cryptography, pki);

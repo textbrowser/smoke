@@ -412,7 +412,8 @@ public class Settings extends AppCompatActivity
 	    {
 		Miscellaneous.showErrorDialog
 		    (Settings.this,
-		     "A Smoke ID must be of the form 0102-0304-0506-0708.");
+		     "A Smoke ID must be of the form " +
+		     "HHHH-HHHH-HHHH-HHHH-HHHH-HHHH-HHHH-HHHH.");
 		return;
 	    }
 	    else if(textView2.getText().toString().equals(string))
@@ -2049,8 +2050,8 @@ public class Settings extends AppCompatActivity
 			 "An example Smoke Alias is account@e-mail.org.");
 		else
 		    textView1.setText
-			("A Smoke ID is an arrangement of digits and " +
-			 "letters assigned to a specific subscriber " +
+			("A Smoke ID is an arrangement of hexadecimal " +
+			 "characters assigned to a specific subscriber " +
 			 "(public key pair). " +
 			 "The tokens allow participants to exchange public " +
 			 "key pairs via the Echo Public Key Sharing (EPKS) " +

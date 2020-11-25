@@ -3968,7 +3968,7 @@ public class Database extends SQLiteOpenHelper
 		    if(keyStream == null)
 			continue;
 
-		    byte sha512[] = Cryptography.hmac
+		    byte hmac[] = Cryptography.hmac
 			(Arrays.copyOfRange(bytes,
 					    0,
 					    bytes.length -
@@ -3977,7 +3977,7 @@ public class Database extends SQLiteOpenHelper
 					    Cryptography.CIPHER_KEY_LENGTH,
 					    keyStream.length));
 
-		    if(Cryptography.memcmp(array, sha512))
+		    if(Cryptography.memcmp(array, hmac))
 			break;
 
 		    cursor.moveToNext();

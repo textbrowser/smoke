@@ -724,11 +724,12 @@ public class Cryptography
 
     public byte[] generateFireEncryptionKey(String channel, String salt)
     {
-	byte aes256[] = null;
+	byte ciphertext[] = null;
 
 	try
 	{
-	    aes256 = "aes256".getBytes(StandardCharsets.ISO_8859_1); // Latin-1
+	    ciphertext = "aes256".getBytes
+		(StandardCharsets.ISO_8859_1); // Latin-1
 	}
 	catch(Exception exception)
 	{
@@ -779,7 +780,7 @@ public class Cryptography
 	    key = pbkdf2
 		(s,
 		 new String(new String(Miscellaneous.
-				       joinByteArrays(c, aes256, sha384)).
+				       joinByteArrays(c, ciphertext, sha384)).
 			    getBytes(StandardCharsets.UTF_8)).toCharArray(),
 		 FIRE_STREAM_CREATION_ITERATION_COUNT,
 		 2304);
