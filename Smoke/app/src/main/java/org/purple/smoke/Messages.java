@@ -384,13 +384,13 @@ public class Messages
 	    stringBuilder.delete(0, stringBuilder.length());
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext), shaKey);
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -398,12 +398,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, ciphertext, sha512, destination);
+		(pki, ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{
@@ -555,16 +555,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -574,11 +574,11 @@ public class Messages
 	    if(destinationKey != null)
 	    {
 		byte destination[] = Cryptography.hmac
-		    (Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
+		    (Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		     destinationKey);
 
 		return Miscellaneous.joinByteArrays
-		    (pki, ciphertext, sha512, destination);
+		    (pki, ciphertext, hmac, destination);
 	    }
 	    else
 		return Miscellaneous.joinByteArrays
@@ -589,7 +589,7 @@ public class Messages
 
 		    (pki,
 		     ciphertext,
-		     sha512,
+		     hmac,
 		     sipHashId.getBytes(StandardCharsets.UTF_8));
 	}
 	catch(Exception exception)
@@ -659,16 +659,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, hmac);
 	}
 	catch(Exception exception)
 	{
@@ -767,16 +767,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -784,12 +784,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, ciphertext, sha512, destination);
+		(pki, ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{
@@ -930,16 +930,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -947,11 +947,11 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
-	    return Miscellaneous.joinByteArrays(ciphertext, sha512, destination);
+	    return Miscellaneous.joinByteArrays(ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1059,16 +1059,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -1076,11 +1076,11 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
-	    return Miscellaneous.joinByteArrays(ciphertext, sha512, destination);
+	    return Miscellaneous.joinByteArrays(ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1157,17 +1157,17 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-384 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha384[] = Cryptography.hmacFire
+	    byte hmac[] = Cryptography.hmacFire
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    Cryptography.CIPHER_KEY_LENGTH +
 				    Cryptography.FIRE_HASH_KEY_LENGTH));
 
-	    if(sha384 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -1175,7 +1175,7 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(ciphertext, sha384),
+		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							Cryptography.
 							CIPHER_KEY_LENGTH +
@@ -1188,7 +1188,7 @@ public class Messages
 		(Base64.encodeToString(ciphertext, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(sha384, Base64.NO_WRAP));
+		(Base64.encodeToString(hmac, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(destination, Base64.NO_WRAP));
@@ -1265,17 +1265,17 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-384 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha384[] = Cryptography.hmacFire
+	    byte hmac[] = Cryptography.hmacFire
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    Cryptography.CIPHER_KEY_LENGTH +
 				    Cryptography.FIRE_HASH_KEY_LENGTH));
 
-	    if(sha384 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -1283,7 +1283,7 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(ciphertext, sha384),
+		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							Cryptography.
 							CIPHER_KEY_LENGTH +
@@ -1296,7 +1296,7 @@ public class Messages
 		(Base64.encodeToString(ciphertext, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
-		(Base64.encodeToString(sha384, Base64.NO_WRAP));
+		(Base64.encodeToString(hmac, Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 	    stringBuilder.append
 		(Base64.encodeToString(destination, Base64.NO_WRAP));
@@ -1405,16 +1405,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -1422,12 +1422,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, ciphertext, sha512, destination);
+		(pki, ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1517,16 +1517,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -1534,12 +1534,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, ciphertext, sha512, destination);
+		(pki, ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{
@@ -1611,16 +1611,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, hmac);
 	}
 	catch(Exception exception)
 	{
@@ -1674,16 +1674,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, hmac);
 	}
 	catch(Exception exception)
 	{
@@ -1738,16 +1738,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
-	    return Miscellaneous.joinByteArrays(ciphertext, sha512);
+	    return Miscellaneous.joinByteArrays(ciphertext, hmac);
 	}
 	catch(Exception exception)
 	{
@@ -1917,13 +1917,13 @@ public class Messages
 	    stringBuilder.delete(0, stringBuilder.length());
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext), shaKey);
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -1931,12 +1931,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, ciphertext, sha512, destination);
+		(pki, ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{
@@ -2027,16 +2027,16 @@ public class Messages
 		return null;
 
 	    /*
-	    ** [ SHA-512 HMAC ]
+	    ** [ HMAC ]
 	    */
 
-	    byte sha512[] = Cryptography.hmac
+	    byte hmac[] = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
 				    keyStream.length));
 
-	    if(sha512 == null)
+	    if(hmac == null)
 		return null;
 
 	    /*
@@ -2044,12 +2044,12 @@ public class Messages
 	    */
 
 	    byte destination[] = Cryptography.hmac
-		(Miscellaneous.joinByteArrays(pki, ciphertext, sha512),
+		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
 
 	    return Miscellaneous.joinByteArrays
-		(pki, ciphertext, sha512, destination);
+		(pki, ciphertext, hmac, destination);
 	}
 	catch(Exception exception)
 	{

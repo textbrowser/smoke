@@ -1915,7 +1915,7 @@ public class Kernel
 		    {
 			byte ciphertext[] = Base64.decode
 			    (strings[0], Base64.NO_WRAP);
-			byte sha384[] = Base64.decode
+			byte hmac[] = Base64.decode
 			    (strings[1], Base64.NO_WRAP);
 
 			for(Hashtable.Entry<String, byte[]> entry :
@@ -1936,7 +1936,7 @@ public class Kernel
 						     CIPHER_KEY_LENGTH +
 						     Cryptography.
 						     FIRE_HASH_KEY_LENGTH)),
-				sha384))
+				hmac))
 			    {
 				ciphertext = Cryptography.decryptFire
 				    (ciphertext,
@@ -2304,7 +2304,7 @@ public class Kernel
 		if(keyStream == null)
 		    return 1;
 
-		byte sha512[] = Cryptography.hmac
+		byte hmacc[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
 					0,
 					bytes.length -
@@ -2313,7 +2313,7 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH,
 					keyStream.length));
 
-		if(!Cryptography.memcmp(hmac, sha512))
+		if(!Cryptography.memcmp(hmac, hmacc))
 		{
 		    if(ourMessageViaChatTemporaryIdentity)
 		    {
@@ -2809,7 +2809,7 @@ public class Kernel
 		** Steam Key Exchange B
 		*/
 
-		byte sha512[] = Cryptography.hmac
+		byte hmacc[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
 					0,
 					bytes.length -
@@ -2818,7 +2818,7 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH,
 					pki.length));
 
-		if(!Cryptography.memcmp(hmac, sha512))
+		if(!Cryptography.memcmp(hmac, hmacc))
 		    return 1;
 
 		byte ciphertext[] = Cryptography.decrypt
@@ -3143,7 +3143,7 @@ public class Kernel
 		if(keyStream == null)
 		    return 1;
 
-		byte sha512[] = Cryptography.hmac
+		byte hmacc[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
 					0,
 					bytes.length -
@@ -3152,7 +3152,7 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH,
 					keyStream.length));
 
-		if(!Cryptography.memcmp(hmac, sha512))
+		if(!Cryptography.memcmp(hmac, hmacc))
 		    return 1;
 
 		byte ciphertext[] = Cryptography.decrypt
