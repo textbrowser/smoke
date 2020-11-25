@@ -144,6 +144,9 @@ public class Cryptography
     public final static int HASH_KEY_LENGTH = 64;
     public final static int IDENTITY_SIZE = 8; // Size of a long.
     public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
+    public final static int PKI_SIGNATURE_KEY_SIZES[] =
+        {384, 4096}; // ECDSA, RSA
+    public final static int PKI_ENCRYPTION_KEY_SIZES[] = {4096}; // RSA
     public final static int SHA_1_OUTPUT_SIZE_BITS = 160;
     public final static int SIPHASH_OUTPUT_LENGTH = 16; // Bytes (128 bits).
     public final static int SIPHASH_IDENTITY_LENGTH =

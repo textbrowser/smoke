@@ -214,10 +214,7 @@ public class Settings extends AppCompatActivity
     };
     private final static int OZONE_STREAM_CREATION_ITERATION_COUNT = 4096;
     private final static int TEXTVIEW_WIDTH = 500;
-    private final static int PKI_SIGNATURE_KEY_SIZES[] =
-        {384, 3072}; // ECDSA, RSA
     private final static long TIMER_INTERVAL = 2500L; // 2.5 seconds.
-    public final static int PKI_ENCRYPTION_KEY_SIZES[] = {3072}; // RSA
 
     private boolean generateOzone(String string)
     {
@@ -1384,7 +1381,7 @@ public class Settings extends AppCompatActivity
 		    chatEncryptionKeyPair = Cryptography.
 			generatePrivatePublicKeyPair
 			(m_encryptionAlgorithm,
-			 PKI_ENCRYPTION_KEY_SIZES[0],
+			 Cryptography.PKI_ENCRYPTION_KEY_SIZES[0],
 			 index);
 
 		    if(chatEncryptionKeyPair == null)
@@ -1398,12 +1395,12 @@ public class Settings extends AppCompatActivity
 		    if(m_signatureAlgorithm.equals("EC"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    ("EC", PKI_SIGNATURE_KEY_SIZES[0], 0);
+			    ("EC", Cryptography.PKI_SIGNATURE_KEY_SIZES[0], 0);
 		    else
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm,
-			     PKI_SIGNATURE_KEY_SIZES[1],
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[1],
 			     0);
 
 		    if(chatSignatureKeyPair == null)
@@ -2400,7 +2397,7 @@ public class Settings extends AppCompatActivity
 		    chatEncryptionKeyPair = Cryptography.
 			generatePrivatePublicKeyPair
 			(m_encryptionAlgorithm,
-			 PKI_ENCRYPTION_KEY_SIZES[0],
+			 Cryptography.PKI_ENCRYPTION_KEY_SIZES[0],
 			 index);
 
 		    if(chatEncryptionKeyPair == null)
@@ -2414,12 +2411,12 @@ public class Settings extends AppCompatActivity
 		    if(m_signatureAlgorithm.equals("EC"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    ("EC", PKI_SIGNATURE_KEY_SIZES[0], 0);
+			    ("EC", Cryptography.PKI_SIGNATURE_KEY_SIZES[0], 0);
 		    else
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm,
-			     PKI_SIGNATURE_KEY_SIZES[1],
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[1],
 			     0);
 
 		    if(chatSignatureKeyPair == null)

@@ -2282,8 +2282,8 @@ public class Kernel
 		    (Arrays.
 		     copyOfRange(bytes,
 				 0,
-				 Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
-		pki_output_size = Settings.PKI_ENCRYPTION_KEY_SIZES[0] / 8;
+				 Cryptography.PKI_ENCRYPTION_KEY_SIZES[0] / 8));
+		pki_output_size = Cryptography.PKI_ENCRYPTION_KEY_SIZES[0] / 8;
 	    }
 
 	    if(pki == null)
