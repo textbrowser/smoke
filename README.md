@@ -10,6 +10,7 @@ Summary of Smoke
 <li>Decentralized. TCP, and UDP multicast and unicast.</li>
 <li>Does not require Internet connectivity.</li>
 <li>Does not require registration. Telephone numbers are not required.</li>
+<li>F-Droid.</li>
 <li>Fiasco forward secrecy.</li>
 <li>Introduces Cryptographic Discovery. Cryptographic Discovery is a practical protocol which creates coordinated data paths.</li>
 <li>Juggling Juggernaut Protocol!</li>
