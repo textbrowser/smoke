@@ -136,6 +136,10 @@ public class Cryptography
     private static SecureRandom s_secureRandom = null;
     public final static String DEFAULT_SIPHASH_ID =
 	"0000-0000-0000-0000-0000-0000-0000-0000";
+    public final static String TLS_LEGACY_V2[] = new String[]
+	{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
+    public final static String TLS_V1_V2[] = new String[]
+	{"TLSv1", "TLSv1.1", "TLSv1.2"};
     public final static int CIPHER_HASH_KEYS_LENGTH = 96;
     public final static int CIPHER_IV_LENGTH = 16;
     public final static int CIPHER_KEY_LENGTH = 32;
