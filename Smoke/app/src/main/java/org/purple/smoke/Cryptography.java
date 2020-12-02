@@ -136,6 +136,8 @@ public class Cryptography
     private static SecureRandom s_secureRandom = null;
     public final static String DEFAULT_SIPHASH_ID =
 	"0000-0000-0000-0000-0000-0000-0000-0000";
+    public final static String PARTICIPANT_CALL_MCELIECE_KEY_SIZE =
+	"McEliece-Fujisaki (11, 50)";
     public final static String TLS_LEGACY_V12[] = new String[]
 	{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
     public final static String TLS_NEW[] = new String[]

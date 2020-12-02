@@ -56,7 +56,7 @@ public class ParticipantCall
 	    {
 	    case MCELIECE:
 		m_keyPair = Cryptography.generatePrivatePublicKeyPair
-		    ("McEliece-Fujisaki (11, 50)", 0, 0);
+		    (Cryptography.PARTICIPANT_CALL_MCELIECE_KEY_SIZE, 0, 0);
 		break;
 	    case RSA:
 		m_keyPair = Cryptography.generatePrivatePublicKeyPair
