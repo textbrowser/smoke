@@ -318,13 +318,11 @@ public class TcpTlsNeighbor extends Neighbor
 	m_isValidCertificate = new AtomicBoolean(false);
 
 	if(Build.VERSION.RELEASE.startsWith("10"))
-	    m_protocols = new String[]
-		{"TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"};
+	    m_protocols = Cryptography.TLS_NEW;
 	else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-	    m_protocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
+	    m_protocols = Cryptography.TLS_V1_V12;
 	else
-	    m_protocols = new String[]
-		{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
+	    m_protocols = Cryptography.TLS_LEGACY_V12;
 
 	m_proxyIpAddress = proxyIpAddress;
 
