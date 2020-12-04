@@ -144,6 +144,8 @@ public class Cryptography
 	{"TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"};
     public final static String TLS_V1_V12[] = new String[]
 	{"TLSv1", "TLSv1.1", "TLSv1.2"};
+    public final static byte MESSAGES_KEY_TYPES[] =
+	new byte[] {(byte) 'M', (byte) 'R'};
     public final static int CIPHER_HASH_KEYS_LENGTH = 96;
     public final static int CIPHER_IV_LENGTH = 16;
     public final static int CIPHER_KEY_LENGTH = 32;

@@ -546,11 +546,13 @@ public class Kernel
 
 			if(isConnected())
 			{
-			    byte publicKeyType = Messages.CALL_KEY_TYPES[0];
+			    byte publicKeyType = Cryptography.
+				MESSAGES_KEY_TYPES[0];
 
 			    if(participantCall.m_algorithm ==
 			       ParticipantCall.Algorithms.RSA)
-				publicKeyType = Messages.CALL_KEY_TYPES[1];
+				publicKeyType =
+				    Cryptography.MESSAGES_KEY_TYPES[1];
 
 			    /*
 			    ** Place a call request to all neighbors.
@@ -3089,7 +3091,7 @@ public class Kernel
 		    intent.putExtra
 			("org.purple.smoke.keyType",
 			 ephemeralPublicKeyType[0] ==
-			 Messages.CALL_KEY_TYPES[0] ? 'M' : 'R');
+			 Cryptography.MESSAGES_KEY_TYPES[0] ? 'M' : 'R');
 		    intent.putExtra("org.purple.smoke.name", array[0]);
 		    intent.putExtra("org.purple.smoke.refresh", true);
 		    intent.putExtra("org.purple.smoke.sipHashId", array[1]);

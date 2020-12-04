@@ -95,7 +95,7 @@ public class SteamKeyExchange
 	     steamElement.m_fileDigest,
 	     steamElement.m_fileIdentity,
 	     Cryptography.pkiEncrypt(publicKey, "", steamElement.m_keyStream),
-	     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1], // RSA, ignored.
+	     Cryptography.MESSAGES_KEY_TYPES[1], // RSA, ignored.
 	     Messages.STEAM_KEY_EXCHANGE[1],
 	     steamElement.m_fileSize);
 
@@ -505,7 +505,7 @@ public class SteamKeyExchange
 			     steamElement.m_fileDigest,
 			     steamElement.m_fileIdentity,
 			     keyPair.getPublic().getEncoded(),
-			     Messages.STEAM_KEY_EXCHANGE_KEY_TYPES[1],
+			     Cryptography.MESSAGES_KEY_TYPES[1],
 			     Messages.STEAM_KEY_EXCHANGE[0],
 			     steamElement.m_fileSize);
 

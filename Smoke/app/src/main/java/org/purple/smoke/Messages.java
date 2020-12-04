@@ -47,8 +47,6 @@ public class Messages
     public final static String IDENTITY_MESSAGE_TYPE = "0095a";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
 	new byte[] {0x00, 0x01};
-    public final static byte CALL_KEY_TYPES[] = new byte[] {(byte) 'M',
-							    (byte) 'R'};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
@@ -62,8 +60,6 @@ public class Messages
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
     public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
     public final static byte STEAM_KEY_EXCHANGE[] = new byte[] {0x04, 0x05};
-    public final static byte STEAM_KEY_EXCHANGE_KEY_TYPES[] =
-	new byte[] {(byte) 'M', (byte) 'R'};
     public final static byte STEAM_SHARE[] = new byte[] {0x06, 0x07};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
