@@ -12,6 +12,7 @@ Summary of Smoke
 <li>Does not require registration. Telephone numbers are not required.</li>
 <li>F-Droid.</li>
 <li>Fiasco forward secrecy.</li>
+<li>Future-proof software.</li>
 <li>Introduces Cryptographic Discovery. Cryptographic Discovery is a practical protocol which creates coordinated data paths.</li>
 <li>Juggling Juggernaut Protocol!</li>
 <li>McEliece Fujisaka and Pointcheval.</li>
