@@ -115,6 +115,8 @@ public class Cryptography
 	"AES/CTS/NoPadding";
     private final static String HASH_ALGORITHM = "SHA-512";
     private final static String HMAC_ALGORITHM = "HmacSHA512";
+    private final static String MCELIECE_HASH_ALGORITHM =
+	McElieceCCA2KeyGenParameterSpec.SHA256;
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
 	"SHA512withECDSA";
     private final static String PKI_RSA_ENCRYPTION_ALGORITHM =
@@ -129,8 +131,8 @@ public class Cryptography
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
     private final static int FIRE_STREAM_CREATION_ITERATION_COUNT = 10000;
-    private final static int MCELIECE_M[] = {11, 12};
-    private final static int MCELIECE_T[] = {50, 68};
+    private final static int MCELIECE_M[] = {11, 12, 13};
+    private final static int MCELIECE_T[] = {50, 68, 118};
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
@@ -138,6 +140,14 @@ public class Cryptography
 	"0000-0000-0000-0000-0000-0000-0000-0000";
     public final static String PARTICIPANT_CALL_MCELIECE_KEY_SIZE =
 	"McEliece-Fujisaki (11, 50)";
+    public final static String PUBLIC_KEY_TYPES[] = new String[]
+	{ // Please see Kernel.java.
+	 "McEliece-Fujisaki (11, 50)",    // 0
+	 "McEliece-Fujisaki (12, 68)",    // 1
+	 "McEliece-Fujisaki (13, 118)",   // 2
+	 "McEliece-Pointcheval (11, 50)", // 3
+	 "RSA"                            // 4
+	};
     public final static String TLS_LEGACY_V12[] = new String[]
 	{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
     public final static String TLS_NEW[] = new String[]
@@ -1219,16 +1229,14 @@ public class Cryptography
 
 		McElieceCCA2KeyGenParameterSpec parameters = null;
 
-		if(keySize2 == 0 || keySize2 == 1)
+		if(keySize2 == 0 || keySize2 == 1 || keySize2 == 2)
 		    parameters = new McElieceCCA2KeyGenParameterSpec
 			(MCELIECE_M[keySize2],
 			 MCELIECE_T[keySize2],
-			 McElieceCCA2KeyGenParameterSpec.SHA256);
+			 MCELIECE_HASH_ALGORITHM);
 		else
 		    parameters = new McElieceCCA2KeyGenParameterSpec
-			(MCELIECE_M[0],
-			 MCELIECE_T[0],
-			 McElieceCCA2KeyGenParameterSpec.SHA256);
+			(MCELIECE_M[0], MCELIECE_T[0], MCELIECE_HASH_ALGORITHM);
 
 		keyPairGenerator.initialize(parameters);
 		return keyPairGenerator.generateKeyPair();
@@ -1682,7 +1690,7 @@ public class Cryptography
 	    if(asn1ObjectIdentifier.equals(PQCObjectIdentifiers.mcElieceCca2))
 		return "McEliece-CCA2";
 	    else if(asn1ObjectIdentifier.
-	       equals(PQCObjectIdentifiers.mcElieceFujisaki))
+		    equals(PQCObjectIdentifiers.mcElieceFujisaki))
 		return "McEliece-Fujisaki";
 	    else if(asn1ObjectIdentifier.
 		    equals(PQCObjectIdentifiers.mcEliecePointcheval))

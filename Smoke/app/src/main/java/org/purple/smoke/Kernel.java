@@ -184,15 +184,18 @@ public class Kernel
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
     private final static int CONGESTION_LIFETIME = 60; // 60 seconds.
     private final static int FIRE_TIME_DELTA = 30000; // 30 seconds.
-    private final static int MCELIECE_OUTPUT_SIZES[] = {304,  // 48 bytes.
-							320,  // 64 bytes.
-							352,  // 96 bytes.
-							491,  // 48 bytes.
-							507,  // 64 bytes.
-							539,  // 96 bytes.
-							560,  // 48 bytes.
-							576,  // 64 bytes.
-							608}; // 96 bytes.
+    private final static int MCELIECE_OUTPUT_SIZES[] = {304,   // 48 bytes.
+							320,   // 64 bytes.
+							352,   // 96 bytes.
+							491,   // 48 bytes.
+							507,   // 64 bytes.
+							539,   // 96 bytes.
+							560,   // 48 bytes.
+							576,   // 64 bytes.
+							608,   // 96 bytes.
+							1072,  // 48 bytes.
+							1088,  // 64 bytes.
+							1120}; // 96 bytes.
     private final static int PARTICIPANTS_KEYSTREAMS_LIFETIME =
 	864000; // Seconds in ten days.
     private final static long CALL_INTERVAL = 250L; // 0.250 seconds.
@@ -2239,6 +2242,10 @@ public class Kernel
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
 	       startsWith("McEliece"))
 	    {
+		/*
+		** Please see Cryptography.java.
+		*/
+
 		int e = 0;
 		int s = 0;
 
@@ -2252,10 +2259,15 @@ public class Kernel
 			e = 3;
 			s = 0;
 		    }
-		    else
+		    else if(t == 68)
 		    {
 			e = 9;
 			s = 6;
+		    }
+		    else
+		    {
+			e = 12;
+			s = 9;
 		    }
 		}
 		else

@@ -2540,18 +2540,25 @@ public class Database extends SQLiteOpenHelper
 		    }
 		    else
 		    {
-			if(encryptionKeySignature[0] ==
-			   Messages.MCELIECE_FUJISAKI_11_50)
+			switch(encryptionKeySignature[0])
+			{
+			case Messages.MCELIECE_FUJISAKI_11_50:
 			    encryptionKeyAlgorithm =
 				"McEliece-Fujisaki (11, 50)";
-			else if(encryptionKeySignature[0] ==
-				Messages.MCELIECE_FUJISAKI_12_68)
+			    break;
+			case Messages.MCELIECE_FUJISAKI_12_68:
 			    encryptionKeyAlgorithm =
 				"McEliece-Fujisaki (12, 68)";
-			else if(encryptionKeySignature[0] ==
-				Messages.MCELIECE_POINTCHEVAL)
+			    break;
+			case Messages.MCELIECE_FUJISAKI_13_118:
+			    encryptionKeyAlgorithm =
+				"McEliece-Fujisaki (13, 118)";
+			    break;
+			case Messages.MCELIECE_POINTCHEVAL:
 			    encryptionKeyAlgorithm =
 				"McEliece-Pointcheval (11, 50)";
+			    break;
+			}
 		    }
 
 		    if(Cryptography.

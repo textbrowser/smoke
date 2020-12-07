@@ -1377,11 +1377,13 @@ public class Settings extends AppCompatActivity
 
 		    if(m_encryptionAlgorithm.contains("12, 68"))
 			index = 1;
+		    else if(m_encryptionAlgorithm.contains("13, 118"))
+			index = 2;
 
 		    chatEncryptionKeyPair = Cryptography.
 			generatePrivatePublicKeyPair
 			(m_encryptionAlgorithm,
-			 Cryptography.PKI_ENCRYPTION_KEY_SIZES[0],
+			 Cryptography.PKI_ENCRYPTION_KEY_SIZES[0], // RSA
 			 index);
 
 		    if(chatEncryptionKeyPair == null)
@@ -1568,7 +1570,7 @@ public class Settings extends AppCompatActivity
 			    Settings.this.enableWidgets(true);
 			    Settings.this.showWidgets();
 			    State.getInstance().setAuthenticated(true);
-			    spinner3.setSelection(3); // RSA
+			    spinner3.setSelection(4); // RSA
 			    spinner4.setSelection(1); // RSA
 			    textView1.requestFocus();
 			    textView1.setText("");
@@ -2393,11 +2395,13 @@ public class Settings extends AppCompatActivity
 
 		    if(m_encryptionAlgorithm.contains("12, 68"))
 			index = 1;
+		    else if(m_encryptionAlgorithm.contains("13, 118"))
+			index = 2;
 
 		    chatEncryptionKeyPair = Cryptography.
 			generatePrivatePublicKeyPair
 			(m_encryptionAlgorithm,
-			 Cryptography.PKI_ENCRYPTION_KEY_SIZES[0],
+			 Cryptography.PKI_ENCRYPTION_KEY_SIZES[0], // RSA
 			 index);
 
 		    if(chatEncryptionKeyPair == null)
@@ -2525,7 +2529,7 @@ public class Settings extends AppCompatActivity
 			{
 			    Settings.this.enableWidgets(true);
 			    Settings.this.showWidgets();
-			    spinner1.setSelection(3); // RSA
+			    spinner1.setSelection(4); // RSA
 			    spinner2.setSelection(1); // RSA
 			    populateFancyKeyData();
 			    populateOzone();
@@ -3205,10 +3209,26 @@ public class Settings extends AppCompatActivity
 	array = new String[]
 	{
 	    "5", "10", "15", "25", "50", // Argon2id
-	    "1000", "2500", "5000", "7500", "10000", "12500",
-	    "15000", "17500", "20000", "25000", "30000", "35000",
-	    "40000", "45000", "50000", "55000", "60000", "65000",
-	    "70000", "100000"
+	    "1000",
+	    "2500",
+	    "5000",
+	    "7500",
+	    "10000",
+	    "12500",
+	    "15000",
+	    "17500",
+	    "20000",
+	    "25000",
+	    "30000",
+	    "35000",
+	    "40000",
+	    "45000",
+	    "50000",
+	    "55000",
+	    "60000",
+	    "65000",
+	    "70000",
+	    "100000"
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
@@ -3235,13 +3255,7 @@ public class Settings extends AppCompatActivity
 
 	spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
 	spinner1.setAdapter(arrayAdapter);
-	array = new String[]
-	{
-	    "McEliece-Fujisaki (11, 50)",    // 0
-	    "McEliece-Fujisaki (12, 68)",    // 1
-	    "McEliece-Pointcheval (11, 50)", // 2
-	    "RSA"                            // 3
-	};
+	array = Cryptography.PUBLIC_KEY_TYPES;
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
@@ -3363,7 +3377,7 @@ public class Settings extends AppCompatActivity
 	    spinner1.setSelection(1); // PBKDF2
 
 	spinner1 = (Spinner) findViewById(R.id.pki_encryption_algorithm);
-	spinner1.setSelection(3); // RSA
+	spinner1.setSelection(4); // RSA
 	spinner1 = (Spinner) findViewById(R.id.pki_signature_algorithm);
 
 	if(spinner1.getAdapter().getCount() > 1)

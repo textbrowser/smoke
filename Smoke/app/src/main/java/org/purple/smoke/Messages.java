@@ -54,7 +54,8 @@ public class Messages
     public final static byte JUGGERNAUT_TYPE[] = new byte[] {0x03};
     public final static byte MCELIECE_FUJISAKI_11_50 = 0x01;
     public final static byte MCELIECE_FUJISAKI_12_68 = 0x02;
-    public final static byte MCELIECE_POINTCHEVAL = 0x03;
+    public final static byte MCELIECE_FUJISAKI_13_118 = 0x03;
+    public final static byte MCELIECE_POINTCHEVAL = 0x04;
     public final static byte MESSAGE_READ_SMOKESTACK[] = new byte[] {0x04};
     public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
@@ -883,6 +884,9 @@ public class Messages
 		else if(cryptography.chatEncryptionPublicKeyAlgorithm().
 			startsWith("McEliece-Fujisaki (12"))
 		    bytes[0] = MCELIECE_FUJISAKI_12_68;
+		else if(cryptography.chatEncryptionPublicKeyAlgorithm().
+			startsWith("McEliece-Fujisaki (13"))
+		    bytes[0] = MCELIECE_FUJISAKI_13_118;
 		else
 		    bytes[0] = MCELIECE_POINTCHEVAL;
 	    }
@@ -1018,6 +1022,8 @@ public class Messages
 		bytes[0] = MCELIECE_FUJISAKI_11_50;
 	    else if(encryptionAlgorithm.startsWith("McEliece-Fujisaki (12"))
 		bytes[0] = MCELIECE_FUJISAKI_12_68;
+	    else if(encryptionAlgorithm.startsWith("McEliece-Fujisaki (13"))
+		bytes[0] = MCELIECE_FUJISAKI_13_118;
 	    else if(encryptionAlgorithm.startsWith("McEliece-Pointcheval"))
 		bytes[0] = MCELIECE_POINTCHEVAL;
 	    else

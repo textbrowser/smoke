@@ -168,7 +168,7 @@ public class SteamKeyExchange
 		** If so, return the generated private key pair.
 		*/
 
-		if(tag == Messages.STEAM_KEY_EXCHANGE[0]) // A
+		if(tag == Messages.STEAM_KEY_EXCHANGE[0]) // Part A
 		{
 		    int oid = s_databaseHelper.steamOidFromFileIdentity
 			(s_cryptography, fileIdentity);
