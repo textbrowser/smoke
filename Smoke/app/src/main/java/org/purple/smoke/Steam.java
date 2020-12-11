@@ -335,10 +335,14 @@ public class Steam extends AppCompatActivity
 
     private void saveSteam()
     {
-	SteamElement steamElement = null;
 	String displayFileName = m_displayFileName.getText().toString();
 
-	steamElement = new SteamElement(displayFileName, m_absoluteFileName);
+	if(displayFileName.trim().isEmpty())
+	    return;
+
+	SteamElement steamElement = new SteamElement
+	    (displayFileName, m_absoluteFileName);
+
 	steamElement.m_destination =
 	    m_participantsSpinner.getSelectedItem().toString();
 	m_absoluteFileName = "";
