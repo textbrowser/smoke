@@ -45,6 +45,8 @@ import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -211,6 +213,25 @@ public class Steam extends AppCompatActivity
 			return;
 
 		    showFileActivity();
+		}
+	    });
+
+	m_participantsSpinner.setOnItemSelectedListener
+	    (new OnItemSelectedListener()
+	    {
+		@Override
+		public void onItemSelected(AdapterView<?> parent,
+					   View view,
+					   int position,
+					   long id)
+		{
+		    m_keysSpinner.setEnabled(position != 0);
+		    m_keysSpinner.setSelection(0); // McEliece
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent)
+		{
 		}
 	    });
 
