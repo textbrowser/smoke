@@ -29,7 +29,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/linear_layout"
+        android:layout_above="@+id/linear_layout_b"
         android:layout_below="@id/divider">
 
         <android.support.v7.widget.RecyclerView
@@ -43,11 +43,12 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/linear_layout"
+        android:id="@+id/linear_layout_a"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/linear_layout_b"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="false"
         android:orientation="horizontal">
 
         <Button
@@ -68,12 +69,29 @@
             android:hint="@string/please_select"
             android:inputType="textPersonName" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
         <Spinner
             android:id="@+id/participants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_weight="0.8" />
+
+        <Spinner
+            android:id="@+id/keys"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".2" />
 
         <Button
             android:id="@+id/send"

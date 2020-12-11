@@ -41,7 +41,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -3208,7 +3207,7 @@ public class Settings extends AppCompatActivity
         spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "5", "10", "15", "25", "50", // Argon2id
+	    "5", "10", "15", "25", "50", "100", // Argon2id
 	    "1000",
 	    "2500",
 	    "5000",
@@ -3228,7 +3227,11 @@ public class Settings extends AppCompatActivity
 	    "60000",
 	    "65000",
 	    "70000",
-	    "100000"
+	    "100000",
+	    "250000",
+	    "1000000",
+	    "2500000",
+	    "10000000"
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);

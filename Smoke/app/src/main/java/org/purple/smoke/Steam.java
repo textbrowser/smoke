@@ -129,6 +129,7 @@ public class Steam extends AppCompatActivity
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter<?> m_adapter = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private Spinner m_keysSpinner = null;
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
     private SteamLinearLayoutManager m_layoutManager = null;
@@ -460,6 +461,13 @@ public class Steam extends AppCompatActivity
 	     getExternalStoragePublicDirectory(Environment.
 					       DIRECTORY_DOWNLOADS).
 	     toString());
+	m_keysSpinner = (Spinner) findViewById(R.id.keys);
+	m_keysSpinner.setAdapter
+	    (new ArrayAdapter<>(Steam.this,
+				android.R.layout.simple_spinner_item,
+				new String[] {"McEliece", "RSA"}));
+	m_keysSpinner.setEnabled(false);
+	m_keysSpinner.setSelection(0); // McEliece
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 	m_recyclerView.setHasFixedSize(true);
