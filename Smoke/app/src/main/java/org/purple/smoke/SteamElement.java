@@ -32,6 +32,7 @@ public class SteamElement
     public String m_destination = "";
     public String m_displayFileName = "";
     public String m_fileName = "";
+    public String m_keyType = "McEliece";
     public String m_status = "paused";
     public String m_transferRate = "";
     public byte m_ephemeralPrivateKey[] = null;
@@ -52,7 +53,9 @@ public class SteamElement
     {
     }
 
-    public SteamElement(String displayFileName, String fileName)
+    public SteamElement(String displayFileName,
+			String fileName,
+			String keyType)
     {
 	m_direction = UPLOAD;
 	m_displayFileName = displayFileName;
@@ -62,5 +65,6 @@ public class SteamElement
 	    fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
 	m_fileSize = Miscellaneous.fileSize(fileName);
+	m_keyType = keyType;
     }
 }

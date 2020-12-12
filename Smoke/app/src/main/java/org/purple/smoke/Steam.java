@@ -341,7 +341,9 @@ public class Steam extends AppCompatActivity
 	    return;
 
 	SteamElement steamElement = new SteamElement
-	    (displayFileName, m_absoluteFileName);
+	    (displayFileName,
+	     m_absoluteFileName,
+	     m_keysSpinner.getSelectedItem().toString());
 
 	steamElement.m_destination =
 	    m_participantsSpinner.getSelectedItem().toString();

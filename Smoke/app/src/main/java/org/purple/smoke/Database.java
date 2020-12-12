@@ -1067,11 +1067,12 @@ public class Database extends SQLiteOpenHelper
 		 "file_identity, " +            // 4
 		 "file_size, " +                // 5
 		 "is_download, " +              // 6
-		 "read_interval, " +            // 7
-		 "read_offset, " +              // 8
-		 "status, " +                   // 9
-		 "transfer_rate, " +            // 10
-		 "oid " +                       // 11
+		 "key_type, " +                 // 7
+		 "read_interval, " +            // 8
+		 "read_offset, " +              // 9
+		 "status, " +                   // 10
+		 "transfer_rate, " +            // 11
+		 "oid " +                       // 12
 		 "FROM steam_files WHERE is_download = ? " +
 		 "ORDER BY someoid",
 		 new String[] {String.valueOf(direction)});
@@ -1093,7 +1094,7 @@ public class Database extends SQLiteOpenHelper
 
 		    for(int i = 0; i < count; i++)
 		    {
-			if(i == 9)
+			if(i == 10)
 			{
 			    steamElement.m_status = status;
 			    continue;
@@ -1184,6 +1185,13 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 7:
 			    if(bytes != null)
+				steamElement.m_keyType = new String(bytes);
+			    else
+				steamElement.m_keyType = "error (" + oid ")";
+
+			    break;
+			case 8:
+			    if(bytes != null)
 				try
 				{
 				    steamElement.m_readInterval =
@@ -1194,7 +1202,7 @@ public class Database extends SQLiteOpenHelper
 				}
 
 			    break;
-			case 8:
+			case 9:
 			    if(bytes != null)
 				try
 				{
@@ -1206,9 +1214,9 @@ public class Database extends SQLiteOpenHelper
 				}
 
 			    break;
-			case 9:
-			    break;
 			case 10:
+			    break;
+			case 11:
 			    if(bytes != null)
 				steamElement.m_transferRate = new String(bytes);
 			    else
@@ -4906,6 +4914,7 @@ public class Database extends SQLiteOpenHelper
 	    "file_identity_digest TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
+	    "key_type TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " + /*
 					  ** Authentication and encryption
 					  ** keys.
@@ -5717,6 +5726,10 @@ public class Database extends SQLiteOpenHelper
 			values.put
 			    ("is_download",
 			     String.valueOf(steamElement.m_direction));
+			values.put
+			    ("key_type",
+			     cryptography.
+			     etmBase64String(steamElement.m_keyType));
 			values.put
 			    ("keystream",
 			     cryptography.
