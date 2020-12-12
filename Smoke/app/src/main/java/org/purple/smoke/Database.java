@@ -1083,7 +1083,7 @@ public class Database extends SQLiteOpenHelper
 
 		while(!cursor.isAfterLast())
 		{
-		    String status = cursor.getString(8).trim();
+		    String status = cursor.getString(10).trim();
 
 		    if(status.equals("deleted"))
 			continue;
@@ -1185,9 +1185,10 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 7:
 			    if(bytes != null)
-				steamElement.m_keyType = new String(bytes);
+				steamElement.m_keyType = new String
+				    (bytes, StandardCharsets.UTF_8);
 			    else
-				steamElement.m_keyType = "error (" + oid ")";
+				steamElement.m_keyType = "error (" + oid + ")";
 
 			    break;
 			case 8:
@@ -1848,13 +1849,14 @@ public class Database extends SQLiteOpenHelper
 		     "file_identity, " +            // 6
 		     "file_size, " +                // 7
 		     "is_download, " +              // 8
-		     "keystream, " +                // 9
-		     "read_interval, " +            // 10
-		     "read_offset, " +              // 11
-		     "someoid, " +                  // 12
-		     "status, " +                   // 13
-		     "transfer_rate, " +            // 14
-		     "oid " +                       // 15
+		     "key_type, " +                 // 9
+		     "keystream, " +                // 10
+		     "read_interval, " +            // 11
+		     "read_offset, " +              // 12
+		     "someoid, " +                  // 13
+		     "status, " +                   // 14
+		     "transfer_rate, " +            // 15
+		     "oid " +                       // 16
 		     "FROM steam_files ORDER BY someoid", null);
 
 		if(cursor == null || !cursor.moveToPosition(position))
@@ -1872,13 +1874,14 @@ public class Database extends SQLiteOpenHelper
 		     "file_identity, " +            // 6
 		     "file_size, " +                // 7
 		     "is_download, " +              // 8
-		     "keystream, " +                // 9
-		     "read_interval, " +            // 10
-		     "read_offset, " +              // 11
-		     "someoid, " +                  // 12
-		     "status, " +                   // 13
-		     "transfer_rate, " +            // 14
-		     "oid " +                       // 15
+		     "key_type, " +                 // 9
+		     "keystream, " +                // 10
+		     "read_interval, " +            // 11
+		     "read_offset, " +              // 12
+		     "someoid, " +                  // 13
+		     "status, " +                   // 14
+		     "transfer_rate, " +            // 15
+		     "oid " +                       // 16
 		     "FROM steam_files WHERE someoid > CAST(? AS INTEGER) " +
 		     "ORDER BY someoid LIMIT 1",
 		     new String[] {String.valueOf(someOid)});
@@ -1894,12 +1897,12 @@ public class Database extends SQLiteOpenHelper
 
 	    for(int i = 0; i < count; i++)
 	    {
-		if(i == 12)
+		if(i == 13)
 		{
 		    steamElement.m_someOid = cursor.getInt(i);
 		    continue;
 		}
-		else if(i == 13)
+		else if(i == 14)
 		{
 		    steamElement.m_status = cursor.getString(i).trim();
 		    continue;
@@ -1992,9 +1995,17 @@ public class Database extends SQLiteOpenHelper
 
 		    break;
 		case 9:
-		    steamElement.m_keyStream = bytes;
+		    if(bytes != null)
+			steamElement.m_keyType = new String
+			    (bytes, StandardCharsets.UTF_8);
+		    else
+			steamElement.m_keyType = "error (" + oid + ")";
+
 		    break;
 		case 10:
+		    steamElement.m_keyStream = bytes;
+		    break;
+		case 11:
 		    if(bytes != null)
 			try
 			{
@@ -2006,7 +2017,7 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 11:
+		case 12:
 		    if(bytes != null)
 			try
 			{
@@ -2018,10 +2029,11 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 12:
 		case 13:
 		    break;
 		case 14:
+		    break;
+		case 15:
 		    if(bytes != null)
 			steamElement.m_transferRate = new String(bytes);
 		    else
