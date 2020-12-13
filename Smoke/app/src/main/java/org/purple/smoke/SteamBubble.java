@@ -57,6 +57,7 @@ public class SteamBubble extends View
     private Switch m_details = null;
     private TextView m_destination = null;
     private TextView m_digest = null;
+    private TextView m_ephemeralKeyType = null;
     private TextView m_eta = null;
     private TextView m_fileIdentity = null;
     private TextView m_fileName = null;
@@ -190,6 +191,8 @@ public class SteamBubble extends View
 	    });
 	m_digest = (TextView) m_view.findViewById(R.id.digest);
 	m_direction = m_view.findViewById(R.id.direction);
+	m_ephemeralKeyType = (TextView) m_view.findViewById
+	    (R.id.ephemeral_key_type);
 	m_eta = (TextView) m_view.findViewById(R.id.eta);
 	m_fileIdentity = (TextView) m_view.findViewById(R.id.file_identity);
 	m_fileName = (TextView) m_view.findViewById(R.id.filename);
@@ -399,6 +402,8 @@ public class SteamBubble extends View
 	m_digest.setText
 	    ("SHA-256: " +
 	     Miscellaneous.byteArrayAsHexString(steamElement.m_fileDigest));
+	m_ephemeralKeyType.setText
+	    ("Ephemeral Key Type: " + steamElement.m_keyType);
 	m_eta.setText(prettyEta(steamElement.m_transferRate,
 				steamElement.m_fileSize,
 				steamElement.m_readOffset));

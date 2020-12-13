@@ -98,6 +98,11 @@
                     android:layout_gravity="clip_vertical" />
 
                 <TextView
+                    android:id="@+id/ephemeral_key_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
                     android:id="@+id/file_identity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

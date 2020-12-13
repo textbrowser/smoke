@@ -66,7 +66,7 @@ public class SteamKeyExchange
     private final static Database s_databaseHelper = Database.getInstance();
     private final static long KEY_EXCHANGE_LIFETIME = 30000L;
     private final static long PARSE_INTERVAL = 50L;
-    private final static long READ_INTERVAL = 1500L;
+    private final static long READ_INTERVAL = 7500L;
     private final static long WAIT_TIMEOUT = 10000L; // 10 seconds.
 
     private void shareB(SteamElement steamElement)
@@ -94,7 +94,10 @@ public class SteamKeyExchange
 	     sipHashId,
 	     steamElement.m_fileDigest,
 	     steamElement.m_fileIdentity,
-	     Cryptography.pkiEncrypt(publicKey, "", steamElement.m_keyStream),
+	     Cryptography.
+	     pkiEncrypt(publicKey,
+			Cryptography.STEAM_KEY_EXCHANGE_MCELIECE_KEY_SIZE,
+			steamElement.m_keyStream),
 	     steamElement.m_keyType.equals("McEliece") ?
 	     Cryptography.MESSAGES_KEY_TYPES[0] :
 	     Cryptography.MESSAGES_KEY_TYPES[1],
@@ -493,8 +496,7 @@ public class SteamKeyExchange
 
 			if(steamElement.m_keyType.equals("McEliece"))
 			    keyPair = Cryptography.generatePrivatePublicKeyPair
-				(Cryptography.
-				 STEAM_KEY_EXCHANGE_MCELIECE_KEY_SIZE,
+				("McEliece",
 				 steamElement.m_ephemeralPrivateKey,
 				 steamElement.m_ephemeralPublicKey);
 			else

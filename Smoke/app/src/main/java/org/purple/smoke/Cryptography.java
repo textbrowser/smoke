@@ -1281,8 +1281,7 @@ public class Cryptography
 
 	try
 	{
-	    if(algorithm.startsWith("McEliece-Fujisaki") ||
-	       algorithm.startsWith("McEliece-Pointcheval"))
+	    if(algorithm.startsWith("McEliece"))
 	    {
 		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		    (privateBytes);
