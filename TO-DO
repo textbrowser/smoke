@@ -235,6 +235,7 @@ Completed Items
 - Status messages.
 - Steam context menu items and Steam types.
 - Steam context menu.
+- Steam keys (McEliece, RSA, etc.).
 - Steam rates.
 - Steam separators.
 - Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
@@ -277,4 +278,3 @@ Remaining Items
 - Play Store.
 - Record background Fire messages.
 - SHA3 via BC.
-- Steam keys (McEliece, RSA, etc.).

@@ -1185,8 +1185,7 @@ public class Database extends SQLiteOpenHelper
 			    break;
 			case 7:
 			    if(bytes != null)
-				steamElement.m_keyType = new String
-				    (bytes, StandardCharsets.UTF_8);
+				steamElement.m_keyType = new String(bytes);
 			    else
 				steamElement.m_keyType = "error (" + oid + ")";
 
@@ -1996,8 +1995,7 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case 9:
 		    if(bytes != null)
-			steamElement.m_keyType = new String
-			    (bytes, StandardCharsets.UTF_8);
+			steamElement.m_keyType = new String(bytes);
 		    else
 			steamElement.m_keyType = "error (" + oid + ")";
 

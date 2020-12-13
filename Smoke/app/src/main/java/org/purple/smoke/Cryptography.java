@@ -148,6 +148,8 @@ public class Cryptography
 	 "McEliece-Pointcheval (11, 50)", // 3
 	 "RSA"                            // 4
 	};
+    public final static String STEAM_KEY_EXCHANGE_MCELIECE_KEY_SIZE =
+	"McEliece-Fujisaki (11, 50)";
     public final static String TLS_LEGACY_V12[] = new String[]
 	{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
     public final static String TLS_NEW[] = new String[]

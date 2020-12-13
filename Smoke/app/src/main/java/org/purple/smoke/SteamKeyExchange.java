@@ -84,6 +84,7 @@ public class SteamKeyExchange
 	if(publicKey == null)
 	    return;
 
+	String keyType = steamElement.m_keyType;
 	String sipHashId = Miscellaneous.sipHashIdFromDestination
 	    (steamElement.m_destination);
 	byte bytes[] = null;
@@ -95,7 +96,9 @@ public class SteamKeyExchange
 	     steamElement.m_fileDigest,
 	     steamElement.m_fileIdentity,
 	     Cryptography.pkiEncrypt(publicKey, "", steamElement.m_keyStream),
-	     Cryptography.MESSAGES_KEY_TYPES[1], // RSA, ignored.
+	     keyType.equals("McEliece") ?
+	     Cryptography.MESSAGES_KEY_TYPES[0] :
+	     Cryptography.MESSAGES_KEY_TYPES[1],
 	     Messages.STEAM_KEY_EXCHANGE[1],
 	     steamElement.m_fileSize);
 
@@ -387,8 +390,10 @@ public class SteamKeyExchange
 			}
 
 		    if(pair != null)
-			if(pair.m_ciphertext[0] == Messages.STEAM_KEY_EXCHANGE[0] ||
-			   pair.m_ciphertext[0] == Messages.STEAM_KEY_EXCHANGE[1])
+			if(pair.m_ciphertext[0] ==
+			   Messages.STEAM_KEY_EXCHANGE[0] ||
+			   pair.m_ciphertext[0] ==
+			   Messages.STEAM_KEY_EXCHANGE[1])
 			    steamAorB(pair.m_ciphertext, pair.m_pki);
 		}
 		catch(Exception exception)
@@ -448,13 +453,20 @@ public class SteamKeyExchange
 		       steamElement.m_ephemeralPublicKey.length == 0)
 		    {
 			/*
-			** Create an RSA key pair.
+			** Create a key pair.
 			*/
 
-			keyPair = Cryptography.generatePrivatePublicKeyPair
-			    ("RSA",
-			     Cryptography.STEAM_KEY_EXCHANGE_RSA_KEY_SIZE,
-			     0);
+			if(steamElement.m_keyType.equals("McEliece"))
+			    keyPair = Cryptography.generatePrivatePublicKeyPair
+				(Cryptography.
+				 STEAM_KEY_EXCHANGE_MCELIECE_KEY_SIZE,
+				 0,
+				 0);
+			else
+			    keyPair = Cryptography.generatePrivatePublicKeyPair
+				("RSA",
+				 Cryptography.STEAM_KEY_EXCHANGE_RSA_KEY_SIZE,
+				 0);
 
 			if(keyPair == null)
 			    return;
@@ -471,15 +483,24 @@ public class SteamKeyExchange
 			    return;
 		    }
 		    else if(Kernel.getInstance().isNetworkConnected())
+		    {
 			/*
 			** Do not enqueue key information if the network
 			** is not available.
 			*/
 
-			keyPair = Cryptography.generatePrivatePublicKeyPair
-			    ("RSA",
-			     steamElement.m_ephemeralPrivateKey,
-			     steamElement.m_ephemeralPublicKey);
+			if(steamElement.m_keyType.equals("McEliece"))
+			    keyPair = Cryptography.generatePrivatePublicKeyPair
+				(Cryptography.
+				 STEAM_KEY_EXCHANGE_MCELIECE_KEY_SIZE,
+				 steamElement.m_ephemeralPrivateKey,
+				 steamElement.m_ephemeralPublicKey);
+			else
+			    keyPair = Cryptography.generatePrivatePublicKeyPair
+				("RSA",
+				 steamElement.m_ephemeralPrivateKey,
+				 steamElement.m_ephemeralPublicKey);
+		    }
 
 		    /*
 		    ** Do not enqueue key information if the network is not
