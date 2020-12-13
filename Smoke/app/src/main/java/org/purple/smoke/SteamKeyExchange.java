@@ -84,7 +84,6 @@ public class SteamKeyExchange
 	if(publicKey == null)
 	    return;
 
-	String keyType = steamElement.m_keyType;
 	String sipHashId = Miscellaneous.sipHashIdFromDestination
 	    (steamElement.m_destination);
 	byte bytes[] = null;
@@ -96,7 +95,7 @@ public class SteamKeyExchange
 	     steamElement.m_fileDigest,
 	     steamElement.m_fileIdentity,
 	     Cryptography.pkiEncrypt(publicKey, "", steamElement.m_keyStream),
-	     keyType.equals("McEliece") ?
+	     steamElement.m_keyType.equals("McEliece") ?
 	     Cryptography.MESSAGES_KEY_TYPES[0] :
 	     Cryptography.MESSAGES_KEY_TYPES[1],
 	     Messages.STEAM_KEY_EXCHANGE[1],
@@ -299,6 +298,9 @@ public class SteamKeyExchange
 	    steamElement.m_fileSize = fileSize;
 	    steamElement.m_keyStream = Miscellaneous.joinByteArrays
 		(Cryptography.aes256KeyBytes(), Cryptography.sha512KeyBytes());
+	    steamElement.m_keyType = ephemeralPublicKeyType[0] ==
+		Cryptography.MESSAGES_KEY_TYPES[0] ?
+		"McEliece" : "RSA";
 	    steamElement.m_readInterval = 0L;
 	    steamElement.m_status = "created private-key pair";
 	    s_databaseHelper.writeSteam(s_cryptography, steamElement);
@@ -526,6 +528,8 @@ public class SteamKeyExchange
 			     steamElement.m_fileDigest,
 			     steamElement.m_fileIdentity,
 			     keyPair.getPublic().getEncoded(),
+			     steamElement.m_keyType.equals("McEliece") ?
+			     Cryptography.MESSAGES_KEY_TYPES[0] :
 			     Cryptography.MESSAGES_KEY_TYPES[1],
 			     Messages.STEAM_KEY_EXCHANGE[0],
 			     steamElement.m_fileSize);
