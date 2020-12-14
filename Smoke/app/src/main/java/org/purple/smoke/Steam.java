@@ -226,7 +226,7 @@ public class Steam extends AppCompatActivity
 					   long id)
 		{
 		    m_keysSpinner.setEnabled(position != 0);
-		    m_keysSpinner.setSelection(0); // McEliece
+		    m_keysSpinner.setSelection(1); // RSA
 		}
 
 		@Override
@@ -494,7 +494,7 @@ public class Steam extends AppCompatActivity
 				android.R.layout.simple_spinner_item,
 				new String[] {"McEliece", "RSA"}));
 	m_keysSpinner.setEnabled(false);
-	m_keysSpinner.setSelection(0); // McEliece
+	m_keysSpinner.setSelection(1); // RSA
 	m_participantsSpinner = (Spinner) findViewById(R.id.participants);
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 	m_recyclerView.setHasFixedSize(true);
