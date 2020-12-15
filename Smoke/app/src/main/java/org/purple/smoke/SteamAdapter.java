@@ -99,7 +99,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 		     "Rewind Steam").setEnabled(view.getId() != -1).
 		setEnabled
 		(steamElement == null ?
-		 true : steamElement.m_direction == SteamElement.UPLOAD);
+		 true : (steamElement.m_direction == SteamElement.UPLOAD));
 	}
 
 	public void setData(SteamElement steamElement, int count, int position)

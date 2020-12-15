@@ -6,7 +6,7 @@ android {
         applicationId "org.purple.smoke"
         buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 20201215
         versionName "2020.12.15"
