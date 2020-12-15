@@ -56,6 +56,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
@@ -131,8 +132,8 @@ public class Fire extends AppCompatActivity
     private final Hashtable<String, Integer> m_fireHash = new Hashtable<> ();
     private final static String s_id = Miscellaneous.byteArrayAsHexString
 	(Cryptography.randomBytes(128));
-    private final static CharsetEncoder s_latin1Encoder = Charset.
-	forName("ISO-8859-1").newEncoder();
+    private final static CharsetEncoder s_latin1Encoder =
+	StandardCharsets.ISO_8859_1.newEncoder();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static InputFilter s_Latin1InputFilter = new InputFilter()

@@ -139,7 +139,6 @@ public class Kernel
     private Hashtable<String, Juggernaut> m_juggernauts = null;
     private Hashtable<String, ParticipantCall> m_callQueue = null;
     private Hashtable<String, byte[]> m_fireStreams = null;
-    private Object m_messagesToSendSchedulerMutex = new Object();
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_networkStatusScheduler = null;
@@ -158,6 +157,7 @@ public class Kernel
     private final KernelBroadcastReceiver m_receiver =
 	new KernelBroadcastReceiver();
     private final Object m_callSchedulerMutex = new Object();
+    private final Object m_messagesToSendSchedulerMutex = new Object();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
@@ -981,7 +981,8 @@ public class Kernel
 		newSingleThreadScheduledExecutor();
 	    m_networkStatusScheduler.scheduleAtFixedRate(new Runnable()
 	    {
-		private AtomicBoolean m_connected = new AtomicBoolean(false);
+		private final AtomicBoolean m_connected =
+		    new AtomicBoolean(false);
 
 		@Override
 		public void run()
