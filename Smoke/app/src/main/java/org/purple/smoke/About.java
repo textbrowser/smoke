@@ -55,7 +55,7 @@ public class About
 		s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		s_about = "Bouncy Castle Version " +
 		    new BouncyCastleProvider().getVersion() +
-		    "\nSmoke Version 2020.12.15 Solid Smoke (Final)" +
+		    "\nSmoke Version 2020.12.15 Solid Smoke (Final) " +
 		    (BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		    "\nBuild Date " +
 		    s_simpleDateFormat.
