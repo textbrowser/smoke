@@ -29,7 +29,6 @@ package org.purple.smoke;
 
 import java.util.Arrays;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -43,9 +42,9 @@ public class SteamReaderFull extends SteamReader
     private AtomicLong m_lastResponse = null;
     private AtomicLong m_previousOffset = null;
     private AtomicLong m_rc = null;
-    private Object m_waitMutex = new Object();
     private String m_sipHashId = "";
     private byte m_fileIdentity[] = null;
+    private final Object m_waitMutex = new Object();
     private final static int PACKET_SIZE = 32768;
     private final static long READ_INTERVAL = 250L; // 250 milliseconds.
     private final static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.

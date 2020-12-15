@@ -88,8 +88,8 @@ public class SteamWriter
 	}
     }
 
-    private Hashtable<Integer, FileInformation> m_files;
     private ScheduledExecutorService m_scheduler = null;
+    private final Hashtable<Integer, FileInformation> m_files;
     private final Object m_schedulerMutex = new Object();
     private final ReentrantReadWriteLock m_filesMutex =
 	new ReentrantReadWriteLock();

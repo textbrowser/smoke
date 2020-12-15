@@ -30,7 +30,6 @@ package org.purple.smoke;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import java.io.FileInputStream;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -45,8 +44,8 @@ public abstract class SteamReader
     protected AtomicLong m_readOffset = null;
     protected AtomicLong m_time0 = null;
     protected FileInputStream m_fileInputStream = null;
-    protected Object m_fileInputStreamMutex = new Object();
     protected ScheduledExecutorService m_reader = null;
+    protected final Object m_fileInputStreamMutex = new Object();
     protected final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     protected final static Database s_databaseHelper = Database.getInstance();
