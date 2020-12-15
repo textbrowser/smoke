@@ -1,0 +1,5 @@
+* Future-proofing cryptographic primitives.
+* New Steam database field. Please reinstall Smoke.
+* Permanent RSA keys are now 4096 bits.
+* Steam keys: McEliece, RSA.
+* Super McEliece (m = 13, t = 118).
