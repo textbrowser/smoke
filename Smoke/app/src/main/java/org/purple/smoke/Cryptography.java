@@ -117,6 +117,7 @@ public class Cryptography
     private final static String HMAC_ALGORITHM = "HmacSHA512";
     private final static String MCELIECE_HASH_ALGORITHM =
 	McElieceCCA2KeyGenParameterSpec.SHA256;
+    private final static String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
 	"SHA512withECDSA";
     private final static String PKI_RSA_ENCRYPTION_ALGORITHM =
@@ -133,6 +134,8 @@ public class Cryptography
     private final static int FIRE_STREAM_CREATION_ITERATION_COUNT = 10000;
     private final static int MCELIECE_M[] = {11, 12, 13};
     private final static int MCELIECE_T[] = {50, 68, 118};
+    private final static int NUMBER_OF_CORES = Math.max
+	(4, Runtime.getRuntime().availableProcessors());
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
@@ -1441,10 +1444,7 @@ public class Cryptography
 		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
 		    withIterations(iterations).
 		    withMemoryAsKB(CIPHER_KEY_LENGTH).
-		    withParallelism(4). /*
-					** Should depend upon the
-					** number of CPU cores.
-					*/
+		    withParallelism(NUMBER_OF_CORES).
 		    withAdditional
 		    (Hex.decode("010203040506070809000a0b0c0d0e0f" +
 				"010203040506070809000a0b0c0d0e0f")).
@@ -1470,7 +1470,7 @@ public class Cryptography
 		KeySpec keySpec = new PBEKeySpec
 		    (password, salt, iterations, length);
 		SecretKeyFactory secretKeyFactory = SecretKeyFactory.
-		    getInstance("PBKDF2WithHmacSHA1");
+		    getInstance(PBKDF2_ALGORITHM);
 
 		return secretKeyFactory.generateSecret(keySpec);
 	    }
@@ -1500,10 +1500,7 @@ public class Cryptography
 		    withVersion(Argon2Parameters.ARGON2_VERSION_13).
 		    withIterations(iterations).
 		    withMemoryAsKB(HASH_KEY_LENGTH).
-		    withParallelism(4). /*
-					** Should depend upon the
-					** number of CPU cores.
-					*/
+		    withParallelism(NUMBER_OF_CORES).
 		    withAdditional
 		    (Hex.decode("000908070605040302010f0e0d0c0b0a" +
 				"000908070605040302010f0e0d0c0b0a" +
@@ -1531,7 +1528,7 @@ public class Cryptography
 		KeySpec keySpec = new PBEKeySpec
 		    (password, salt, iterations, length);
 		SecretKeyFactory secretKeyFactory = SecretKeyFactory.
-		    getInstance("PBKDF2WithHmacSHA1");
+		    getInstance(PBKDF2_ALGORITHM);
 
 		return secretKeyFactory.generateSecret(keySpec);
 	    }
@@ -2015,7 +2012,7 @@ public class Cryptography
 	    KeySpec keySpec = new PBEKeySpec
 		(password, salt, iterations, length);
 	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance
-		("PBKDF2WithHmacSHA1");
+		(PBKDF2_ALGORITHM);
 
 	    return secretKeyFactory.generateSecret(keySpec).getEncoded();
 	}
