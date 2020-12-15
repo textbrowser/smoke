@@ -136,6 +136,7 @@ public class Cryptography
     private final static int MCELIECE_T[] = {50, 68, 118};
     private final static int NUMBER_OF_CORES = Math.max
 	(4, Runtime.getRuntime().availableProcessors());
+    private final static int SHA_1_OUTPUT_SIZE_BITS = 160;
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
     private static SecureRandom s_secureRandom = null;
@@ -173,7 +174,6 @@ public class Cryptography
     public final static int PKI_SIGNATURE_KEY_SIZES[] =
         {384, 4096}; // ECDSA, RSA
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {4096}; // RSA
-    public final static int SHA_1_OUTPUT_SIZE_BITS = 160;
     public final static int SIPHASH_OUTPUT_LENGTH = 16; // Bytes (128 bits).
     public final static int SIPHASH_IDENTITY_LENGTH =
 	DEFAULT_SIPHASH_ID.length();
