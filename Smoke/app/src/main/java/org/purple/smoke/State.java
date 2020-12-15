@@ -150,8 +150,7 @@ public class State
 
 	try
 	{
-	    return m_bundle.getChar
-		("chat_checkbox_" + String.valueOf(oid), '0') == '1';
+	    return m_bundle.getChar("chat_checkbox_" + oid, '0') == '1';
 	}
 	catch(Exception exception)
 	{
@@ -467,7 +466,7 @@ public class State
 
 	try
 	{
-	    m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+	    m_bundle.remove("chat_checkbox_" + oid);
 	}
 	catch(Exception exception)
 	{
@@ -559,8 +558,7 @@ public class State
 
 	try
 	{
-	    contains = m_bundle.containsKey
-		("chat_checkbox_" + String.valueOf(oid));
+	    contains = m_bundle.containsKey("chat_checkbox_" + oid);
 	}
 	catch(Exception exception)
 	{
@@ -576,7 +574,7 @@ public class State
 
 	    try
 	    {
-		m_bundle.putChar("chat_checkbox_" + String.valueOf(oid), '1');
+		m_bundle.putChar("chat_checkbox_" + oid, '1');
 
 		if(!contains)
 		    m_bundle.putInt
@@ -597,7 +595,7 @@ public class State
 
 	    try
 	    {
-		m_bundle.remove("chat_checkbox_" + String.valueOf(oid));
+		m_bundle.remove("chat_checkbox_" + oid);
 	    }
 	    catch(Exception exception)
 	    {
