@@ -1574,30 +1574,33 @@ public class Cryptography
 		stringBuilder.append(")");
 	    }
 
-	    stringBuilder.append("\n");
-	    stringBuilder.append("Disk Size: ");
+	    stringBuilder.append("\nDisk Size: ");
 	    stringBuilder.append(publicKey.getEncoded().length);
 	    stringBuilder.append(" Bytes\n");
 	    stringBuilder.append("Fingerprint: ");
 	    stringBuilder.append(publicKeyFingerPrint(publicKey));
-	    stringBuilder.append("\n");
-	    stringBuilder.append("Format: ");
+	    stringBuilder.append("\nFormat: ");
 	    stringBuilder.append(publicKey.getFormat());
+	    stringBuilder.append("\nKey Algorithm: ");
+	    stringBuilder.append(publicKey.getAlgorithm());
 
-	    if(algorithm.equals("EC") ||
-	       algorithm.equals("RSA") ||
+	    if(algorithm.equals("RSA") ||
+	       algorithm.startsWith("EC") ||
 	       algorithm.startsWith("McEliece"))
 		try
 		{
 		    switch(algorithm)
 		    {
 		    case "EC":
+		    case "ECDSA":
 			ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
 
 			if(ecPublicKey != null)
-			    stringBuilder.append("\n").append("Size: ").
-				append(ecPublicKey.getW().getAffineX().
-				       bitLength());
+			    stringBuilder.append("\n").append("Size: ").append
+				(Math.max(ecPublicKey.getW().getAffineX().
+					  bitLength(),
+					  ecPublicKey.getW().getAffineY().
+					  bitLength()));
 
 			break;
 		    case "McEliece-CCA2":
