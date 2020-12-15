@@ -1732,7 +1732,7 @@ public class Cryptography
 		SipHash sipHash = new SipHash();
 		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
-		if(value == new long[] {0L, 0L})
+		if(value.equals(new long[] {0L, 0L}))
 		    return "";
 
 		bytes = Miscellaneous.longArrayToByteArray(value);
@@ -2292,7 +2292,7 @@ public class Cryptography
 		SipHash sipHash = new SipHash();
 		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
-		if(value == new long[] {0L, 0L})
+		if(value.equals(new long[] {0L, 0L}))
 		    return false;
 
 		bytes = Miscellaneous.longArrayToByteArray(value);

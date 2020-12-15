@@ -1553,7 +1553,7 @@ public class Kernel
 	** neighbor.
 	*/
 
-	TreeSet<String> addresses = new TreeSet<String> ();
+	TreeSet<String> addresses = new TreeSet<> ();
 
 	m_neighborsMutex.readLock().lock();
 
@@ -3569,8 +3569,7 @@ public class Kernel
 
 	try
 	{
-	    if(m_juggernauts.containsKey(sipHashId))
-		m_juggernauts.remove(sipHashId);
+	    m_juggernauts.remove(sipHashId);
 
 	    Juggernaut juggernaut = new Juggernaut
 		(sipHashId, secret, isJuggerKnot);

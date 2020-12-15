@@ -3366,12 +3366,7 @@ public class Settings extends AppCompatActivity
 	*/
 
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
-
-	if(index1 >= 0)
-	    spinner1.setSelection(index1);
-	else
-	    spinner1.setSelection(0);
-
+	spinner1.setSelection(Math.max(0, index1));
 	spinner1 = (Spinner) findViewById(R.id.key_derivation_function);
 
 	if(index2 >= 0)

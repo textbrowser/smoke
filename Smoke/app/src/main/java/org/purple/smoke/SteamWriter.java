@@ -39,7 +39,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamWriter
 {
-    private class FileInformation
+    private static class FileInformation
     {
 	public byte m_fileIdentity[] = null;
 	public int m_oid = -1;

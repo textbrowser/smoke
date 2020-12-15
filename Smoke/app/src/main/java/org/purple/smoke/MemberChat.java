@@ -1598,7 +1598,7 @@ public class MemberChat extends AppCompatActivity
 	menuItem.setCheckable(true);
 	menuItem.setChecked
 	    (m_databaseHelper.
-	     readParticipantOptions(s_cryptography, m_sipHashId).toString().
+	     readParticipantOptions(s_cryptography, m_sipHashId).
 	     contains("optional_signatures = true"));
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,

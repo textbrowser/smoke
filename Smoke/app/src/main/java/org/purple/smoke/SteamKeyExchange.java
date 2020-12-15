@@ -42,7 +42,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamKeyExchange
 {
-    private class Pair
+    private static class Pair
     {
 	public byte m_ciphertext[] = null;
 	public byte m_pki[] = null;
