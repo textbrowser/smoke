@@ -55,10 +55,9 @@ public class SipHash
 
 	long value = 0L;
 
-	value |= (((long) bytes[offset]) & 0xffL) <<
-	    (0L);
+	value |= (((long) bytes[offset]) & 0xffL) << 0L;
 	value |= (((long) bytes[1 + offset]) & 0xffL) <<
-	    (Miscellaneous.LONG_LONG_BYTES);
+	    Miscellaneous.LONG_LONG_BYTES;
 	value |= (((long) bytes[2 + offset]) & 0xffL) <<
 	    (Miscellaneous.LONG_LONG_BYTES * 2L);
 	value |= (((long) bytes[3 + offset]) & 0xffL) <<
@@ -259,7 +258,7 @@ public class SipHash
 	    break;
 	}
 
-	long output[] = new long[] {m_v0 ^ m_v1 ^ m_v2 ^ m_v3, 0};
+	long output[] = new long[] {m_v0 ^ m_v1 ^ m_v2 ^ m_v3, 0L};
 
 	if(outputLength == 8)
 	{
