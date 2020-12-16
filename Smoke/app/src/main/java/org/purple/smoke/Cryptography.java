@@ -1463,7 +1463,7 @@ public class Cryptography
 	}
 	else // PBKDF2
 	{
-	    int length = 256; // Bits.
+	    int length = 8 * CIPHER_KEY_LENGTH; // Bits.
 
 	    try
 	    {
@@ -1521,7 +1521,7 @@ public class Cryptography
 	}
 	else // PBKDF2
 	{
-	    int length = 512; // Bits.
+	    int length = 8 * HASH_KEY_LENGTH; // Bits.
 
 	    try
 	    {
