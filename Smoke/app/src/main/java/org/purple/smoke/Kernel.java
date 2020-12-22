@@ -1813,12 +1813,10 @@ public class Kernel
 	try
 	{
 	    if(m_chatMessageRetrievalIdentity == null)
-	    {
 		m_chatMessageRetrievalIdentity =
 		    Cryptography.randomBytes(Cryptography.HASH_KEY_LENGTH);
-		m_chatTemporaryIdentityLastTick.set(System.currentTimeMillis());
-	    }
 
+	    m_chatTemporaryIdentityLastTick.set(System.currentTimeMillis());
 	    return m_chatMessageRetrievalIdentity;
 	}
 	catch(Exception exception)
