@@ -1,6 +1,7 @@
 #!/bin/bash
 # Alexis Megas, 2020.
 
+# Expected input file name: output.
 # Replace contents of sizes with relevant values.
 
 declare -a sizes=(4200090
