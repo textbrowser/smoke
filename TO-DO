@@ -102,6 +102,7 @@ Completed Items
 - Gently notify MemberChat of written messages. Gentle notifications prevent
   bouncy context menus.
 - HTTP proxy.
+- Hide Steam key type for Other destination.
 - Highlight results of Juggernaut, if possible.
 - Identity-sharing confirmation from SmokeStack.
 - If a SipHash ID is deleted, its corresponding participants entry should also
@@ -272,7 +273,6 @@ Remaining Items
 - Disable Chat / Member context menu options if public keys
   are not available.
 - Future-proof Smoke (remove fixed cryptographic values).
-- Hide Steam key type for Other destination.
 - Java does not include methods for destroying private containers.
 - Option for computing Steam digest.
 - Optional cryptographic discovery.

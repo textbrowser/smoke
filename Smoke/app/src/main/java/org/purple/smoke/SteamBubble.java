@@ -347,6 +347,7 @@ public class SteamBubble extends View
 	    m_control.setVisibility(View.VISIBLE);
 	    m_destination.setText("Destination: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.upload);
+	    m_ephemeralKeyType.setVisibility(View.GONE);
 	    m_keyExchangeStatus.setVisibility(View.GONE);
 	    m_keyStreamDigest.setVisibility(View.GONE);
 	    m_readInterval.setVisibility(View.VISIBLE);
@@ -358,6 +359,7 @@ public class SteamBubble extends View
 	    m_control.setVisibility(View.GONE);
 	    m_destination.setText("Origin: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.download);
+	    m_ephemeralKeyType.setVisibility(View.VISIBLE);
 	    m_keyExchangeStatus.setBackgroundResource
 		(steamElement.m_keyStream != null &&
 		 steamElement.m_keyStream.length ==
@@ -387,6 +389,7 @@ public class SteamBubble extends View
 	    m_control.setVisibility(View.VISIBLE);
 	    m_destination.setText("Destination: " + steamElement.m_destination);
 	    m_direction.setBackgroundResource(R.drawable.upload);
+	    m_ephemeralKeyType.setVisibility(View.VISIBLE);
 	    m_keyExchangeStatus.setBackgroundResource
 		(steamElement.m_keyStream != null &&
 		 steamElement.m_keyStream.length ==
