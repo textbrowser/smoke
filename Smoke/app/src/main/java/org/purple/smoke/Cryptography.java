@@ -362,10 +362,9 @@ public class Cryptography
 
 	try
 	{
-	    if(key.equals(m_chatEncryptionPublicKeyPair.getPublic()))
-		return true;
-	    else if(key.hashCode() ==
-		    m_chatEncryptionPublicKeyPair.getPublic().hashCode())
+	    if(key.equals(m_chatEncryptionPublicKeyPair.getPublic()) ||
+	       key.hashCode() ==
+	       m_chatEncryptionPublicKeyPair.getPublic().hashCode())
 		return true;
 	}
 	catch(Exception exception)
@@ -388,10 +387,9 @@ public class Cryptography
 
 	try
 	{
-	    if(key.equals(m_chatSignaturePublicKeyPair.getPublic()))
-		return true;
-	    else if(key.hashCode() ==
-		    m_chatSignaturePublicKeyPair.getPublic().hashCode())
+	    if(key.equals(m_chatSignaturePublicKeyPair.getPublic()) ||
+	       key.hashCode() ==
+	       m_chatSignaturePublicKeyPair.getPublic().hashCode())
 		return true;
 	}
 	catch(Exception exception)
