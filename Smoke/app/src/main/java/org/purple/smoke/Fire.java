@@ -767,10 +767,18 @@ public class Fire extends AppCompatActivity
 	else
 	{
 	    String sipHashId = menuItem.getTitle().toString();
-	    int indexOf = sipHashId.indexOf("(");
 
-	    if(indexOf >= 0)
-		sipHashId = sipHashId.substring(indexOf + 1).replace(")", "");
+	    try
+	    {
+		int indexOf = sipHashId.indexOf("(");
+
+		if(indexOf >= 0)
+		    sipHashId = sipHashId.substring
+			(indexOf + 1).replace(")", "");
+	    }
+	    catch(Exception exception)
+	    {
+	    }
 
 	    sipHashId = Miscellaneous.prepareSipHashId(sipHashId);
 	    State.getInstance().setString
