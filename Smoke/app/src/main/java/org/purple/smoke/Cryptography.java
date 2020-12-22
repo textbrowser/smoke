@@ -1757,7 +1757,7 @@ public class Cryptography
 	    return false;
 
 	int rc = 0;
-	int size = java.lang.Math.max(a.length, b.length);
+	int size = Math.max(a.length, b.length);
 
 	for(int i = 0; i < size; i++)
 	    rc |= (a.length > i ? a[i] : 0) ^ (b.length > i ? b[i] : 0);
