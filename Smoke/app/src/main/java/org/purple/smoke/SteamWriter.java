@@ -231,6 +231,12 @@ public class SteamWriter
 
 	if(steamElement == null)
 	    return false;
+	else if(offset + packet.length > steamElement.m_fileSize)
+	    /*
+	    ** Really?
+	    */
+
+	    return false;
 
 	RandomAccessFile randomAccessFile = null;
 

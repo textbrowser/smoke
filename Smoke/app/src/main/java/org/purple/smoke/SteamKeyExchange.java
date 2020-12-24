@@ -209,6 +209,10 @@ public class SteamKeyExchange
 		    (Base64.decode(string.getBytes(), Base64.NO_WRAP));
 
 		if(fileSize < 0)
+		    /*
+		    ** Really?
+		    */
+
 		    return;
 
 		ii += 1;
