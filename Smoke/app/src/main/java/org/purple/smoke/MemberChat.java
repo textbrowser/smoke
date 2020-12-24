@@ -267,6 +267,27 @@ public class MemberChat extends AppCompatActivity
 	public final static int SELECTION_STATE = 13;
     }
 
+    private boolean hasPublicKeys()
+    {
+	ArrayList<SipHashIdElement> arrayList =
+	    m_databaseHelper.readSipHashIds(s_cryptography, m_sipHashId);
+
+	if(arrayList == null ||
+	   arrayList.isEmpty() ||
+	   arrayList.get(0) == null)
+	    return false;
+
+	SipHashIdElement sipHashIdElement = m_databaseHelper.readSipHashId
+	    (s_cryptography, String.valueOf(arrayList.get(0).m_oid));
+
+	arrayList.clear();
+	return sipHashIdElement != null &&
+	    sipHashIdElement.m_encryptionPublicKey != null &&
+	    sipHashIdElement.m_encryptionPublicKey.length > 0 &&
+	    sipHashIdElement.m_signaturePublicKey != null &&
+	    sipHashIdElement.m_signaturePublicKey.length > 0;
+    }
+
     private boolean isParticipantPaired(ArrayList<ParticipantElement> arrayList)
     {
 	if(arrayList == null)
@@ -424,7 +445,8 @@ public class MemberChat extends AppCompatActivity
 			    null : arrayList.get(0);
 			final boolean isConnected = Kernel.getInstance().
 			    isConnected();
-			final boolean isPaired = isParticipantPaired(arrayList);
+			final boolean isPaired = hasPublicKeys() &&
+			    isParticipantPaired(arrayList);
 
 			try
 			{
@@ -480,7 +502,8 @@ public class MemberChat extends AppCompatActivity
 	    ParticipantElement participantElement =
 		arrayList == null || arrayList.isEmpty() ?
 		null : arrayList.get(0);
-	    boolean isPaired = isParticipantPaired(arrayList);
+	    boolean isPaired = hasPublicKeys() &&
+		isParticipantPaired(arrayList);
 	    int availableNeighbors = Kernel.getInstance().availableNeighbors();
 
 	    if(availableNeighbors > 0 && isPaired)
@@ -1575,30 +1598,34 @@ public class MemberChat extends AppCompatActivity
 	    m_databaseHelper.readParticipants
 	    (s_cryptography, m_sipHashId);
 	MenuItem menuItem = null;
+	boolean hasPublicKeys = hasPublicKeys();
 	boolean isParticipantPaired = isParticipantPaired(null);
 	boolean state = Kernel.getInstance().isConnected();
 
 	menu.add(ContextMenuEnumerator.CALL_VIA_MCELIECE,
 		 -1,
 		 0,
-		 "Call via McEliece (Fujisaki)").setEnabled(state);
+		 "Call via McEliece (Fujisaki)").
+	    setEnabled(hasPublicKeys && state);
 	menu.add(ContextMenuEnumerator.CALL_VIA_RSA,
 		 -1,
 		 0,
-		 "Call via RSA").setEnabled(state);
+		 "Call via RSA").
+	    setEnabled(hasPublicKeys && state);
 	menu.add(ContextMenuEnumerator.CUSTOM_SESSION,
 		 -1,
 		 0,
-		 "Custom Session");
+		 "Custom Session").setEnabled(hasPublicKeys);
 	menu.add(ContextMenuEnumerator.JUGGERKNOT,
 		 -1,
 		 0,
 		 "JuggerKnot Credentials").
-	    setEnabled(isParticipantPaired && state);
+	    setEnabled(hasPublicKeys && isParticipantPaired && state);
 	menu.add(ContextMenuEnumerator.JUGGERNAUT,
 		 -1,
 		 0,
-		 "Juggernaut").setEnabled(isParticipantPaired && state);
+		 "Juggernaut").
+	    setEnabled(hasPublicKeys() && isParticipantPaired && state);
 	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
 			    -1,
 			    0,

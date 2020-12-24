@@ -856,7 +856,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public ArrayList<SipHashIdElement> readSipHashIds
-	(String sipHashId, Cryptography cryptography)
+	(Cryptography cryptography, String sipHashId)
     {
 	if(cryptography == null || m_db == null)
 	    return null;

@@ -68,6 +68,7 @@ Completed Items
 - Digest of PEM(certificate).
 - Disable Delete Fiasco Keys, Delete Public Keys on Participants context menu
   if information is not available. Not necessary.
+- Disable Member context menu options if public keys are not available.
 - Disable echo on low memory. Cannot. Instead, clear queues.
 - Disable proxy fields for non-TCP.
 - Display count of queued echo packets per neighbor.
@@ -270,8 +271,7 @@ Completed Items
 Remaining Items
 
 - Brands (profiles).
-- Disable Chat / Member context menu options if public keys
-  are not available.
+- Disable Chat context menu options if public keys are not available.
 - Future-proof Smoke (remove fixed cryptographic values).
 - Java does not include methods for destroying private containers.
 - Option for computing Steam digest.
