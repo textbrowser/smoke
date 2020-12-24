@@ -1594,9 +1594,6 @@ public class MemberChat extends AppCompatActivity
 
 	super.onCreateContextMenu(menu, view, menuInfo);
 
-	ArrayList<ParticipantElement> arrayList =
-	    m_databaseHelper.readParticipants
-	    (s_cryptography, m_sipHashId);
 	MenuItem menuItem = null;
 	boolean hasPublicKeys = hasPublicKeys();
 	boolean isParticipantPaired = isParticipantPaired(null);

@@ -96,7 +96,7 @@ public abstract class SteamReader
 	    m_assetFileDescriptor = Smoke.getApplication().
 		getContentResolver().openAssetFileDescriptor(uri, "r");
 	    m_fileInputStream = m_assetFileDescriptor.createInputStream();
-	    m_fileInputStream.getChannel().position(readOffset);
+	    m_fileInputStream.getChannel().position(Math.max(0, readOffset));
 	}
 	catch(Exception exception1)
 	{
@@ -119,7 +119,7 @@ public abstract class SteamReader
 	m_completed = new AtomicBoolean(false);
 	m_oid = oid;
 	m_rate = new AtomicLong(0L);
-	m_readOffset = new AtomicLong(readOffset);
+	m_readOffset = new AtomicLong(Math.max(0, readOffset));
 	m_time0 = new AtomicLong(System.currentTimeMillis());
     }
 
