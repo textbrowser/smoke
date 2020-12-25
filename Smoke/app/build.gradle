@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:25.4.0'
     implementation 'com.android.support:support-v4:25.4.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation files('libs/bcprov-ext-jdk15on-167.jar')
+    implementation files('libs/bcprov-ext-jdk15on-168.jar')
     testImplementation 'junit:junit:4.12'
 }
 

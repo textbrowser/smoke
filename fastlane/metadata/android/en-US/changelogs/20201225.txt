@@ -1,3 +1,4 @@
+* Bouncy Castle 1.68.
 * Corrected comparisons of byte arrays.
 * Disable context menus if public keys are not available.
 * Estimate the number of physical cores for Argon2id. Smoke must be reinstalled.
