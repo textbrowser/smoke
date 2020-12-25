@@ -66,6 +66,7 @@ Completed Items
 - Determine if a remote Steam has been restarted.
 - Determine path for any file in Steam.
 - Digest of PEM(certificate).
+- Disable Chat context menu options if public keys are not available.
 - Disable Delete Fiasco Keys, Delete Public Keys on Participants context menu
   if information is not available. Not necessary.
 - Disable Member context menu options if public keys are not available.
@@ -271,7 +272,6 @@ Completed Items
 Remaining Items
 
 - Brands (profiles).
-- Disable Chat context menu options if public keys are not available.
 - Future-proof Smoke (remove fixed cryptographic values).
 - Java does not include methods for destroying private containers.
 - Option for computing Steam digest.
