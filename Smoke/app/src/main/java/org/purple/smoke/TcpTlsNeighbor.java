@@ -80,7 +80,9 @@ public class TcpTlsNeighbor extends Neighbor
 	    if(m_socket != null &&
 	       m_socket.getSession() != null &&
 	       m_socket.getSession().isValid())
-		return m_socket.getSession().getCipherSuite();
+		return m_socket.getSession().getCipherSuite() +
+		    "_" +
+		    m_socket.getSession().getProtocol();
 	}
 	catch(Exception exception)
 	{
