@@ -1,0 +1,6 @@
+* Corrected comparisons of byte arrays.
+* Disable context menus if public keys are not available.
+* Estimate the number of physical cores for Argon2id. Smoke must be reinstalled.
+* Future-proofing Smoke.
+* Guard String.indexOf().
+* Hide ephemeral key types for Other Steam destinations.
