@@ -3102,6 +3102,27 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public boolean hasPublicKeys(Cryptography cryptography, String sipHashId)
+    {
+	ArrayList<SipHashIdElement> arrayList = readSipHashIds
+	    (cryptography, sipHashId);
+
+	if(arrayList == null ||
+	   arrayList.isEmpty() ||
+	   arrayList.get(0) == null)
+	    return false;
+
+	SipHashIdElement sipHashIdElement = readSipHashId
+	    (cryptography, String.valueOf(arrayList.get(0).m_oid));
+
+	arrayList.clear();
+	return sipHashIdElement != null &&
+	    sipHashIdElement.m_encryptionPublicKey != null &&
+	    sipHashIdElement.m_encryptionPublicKey.length > 0 &&
+	    sipHashIdElement.m_signaturePublicKey != null &&
+	    sipHashIdElement.m_signaturePublicKey.length > 0;
+    }
+
     public boolean setParticipantKeyStream(Cryptography cryptography,
 					   byte keyStream[],
 					   int oid)

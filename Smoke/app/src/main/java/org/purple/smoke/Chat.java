@@ -188,6 +188,11 @@ public class Chat extends AppCompatActivity
 	}
     }
 
+    private boolean hasPublicKeys(String sipHashId)
+    {
+	return m_databaseHelper.hasPublicKeys(s_cryptography, sipHashId);
+    }
+
     private void appendMessage(String message,
 			       String name,
 			       String sipHashId,
@@ -1403,20 +1408,23 @@ public class Chat extends AppCompatActivity
 
 	if(view.getTag() != null)
 	{
+	    boolean hasPublicKeys = hasPublicKeys
+		(Miscellaneous.prepareSipHashId(view.getTag().toString()));
+
 	    menu.add
 		(ContextMenuEnumerator.CUSTOM_SESSION,
 		 view.getId(),
 		 0,
 		 "Custom Session (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
-		 ")");
+		 ")").setEnabled(hasPublicKeys);
 	    menu.add
 		(ContextMenuEnumerator.NEW_WINDOW,
 		 view.getId(),
 		 0,
 		 "New Window (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
-		 ")");
+		 ")").setEnabled(hasPublicKeys);
 	    menuItem = menu.add
 		(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
 		 view.getId(),

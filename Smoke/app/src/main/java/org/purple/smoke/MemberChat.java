@@ -269,23 +269,7 @@ public class MemberChat extends AppCompatActivity
 
     private boolean hasPublicKeys()
     {
-	ArrayList<SipHashIdElement> arrayList =
-	    m_databaseHelper.readSipHashIds(s_cryptography, m_sipHashId);
-
-	if(arrayList == null ||
-	   arrayList.isEmpty() ||
-	   arrayList.get(0) == null)
-	    return false;
-
-	SipHashIdElement sipHashIdElement = m_databaseHelper.readSipHashId
-	    (s_cryptography, String.valueOf(arrayList.get(0).m_oid));
-
-	arrayList.clear();
-	return sipHashIdElement != null &&
-	    sipHashIdElement.m_encryptionPublicKey != null &&
-	    sipHashIdElement.m_encryptionPublicKey.length > 0 &&
-	    sipHashIdElement.m_signaturePublicKey != null &&
-	    sipHashIdElement.m_signaturePublicKey.length > 0;
+	return m_databaseHelper.hasPublicKeys(s_cryptography, m_sipHashId);
     }
 
     private boolean isParticipantPaired(ArrayList<ParticipantElement> arrayList)
