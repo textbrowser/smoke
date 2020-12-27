@@ -86,6 +86,9 @@ public class SteamReaderFull extends SteamReader
 		{
 		    try
 		    {
+			if(m_canceled.get())
+			    return;
+
 			switch(s_databaseHelper.
 			       steamStatus(m_oid).toLowerCase().trim())
 			{
@@ -286,7 +289,7 @@ public class SteamReaderFull extends SteamReader
 
     public void delete()
     {
-	super.delete();
+	m_canceled.set(true);
 	m_lastResponse.set(0L);
 	m_previousOffset.set(0L);
 	m_rc.set(0L);
@@ -296,6 +299,8 @@ public class SteamReaderFull extends SteamReader
 	{
 	    m_waitMutex.notify();
 	}
+
+	super.delete();
     }
 
     public void setAcknowledgedOffset(long readOffset)

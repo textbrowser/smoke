@@ -70,6 +70,9 @@ public class SteamReaderSimple extends SteamReader
 		{
 		    try
 		    {
+			if(m_canceled.get())
+			    return;
+
 			switch(s_databaseHelper.
 			       steamStatus(m_oid).toLowerCase().trim())
 			{
@@ -199,9 +202,10 @@ public class SteamReaderSimple extends SteamReader
 
     public void delete()
     {
-	super.delete();
+	m_canceled.set(true);
 	m_lastBytesSent.set(0L);
 	m_time0.set(0L);
+	super.delete();
     }
 
     public void setReadInterval(int interval)
