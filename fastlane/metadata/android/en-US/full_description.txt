@@ -2,6 +2,7 @@ Summary of Smoke
 
 * Aliases. Preserve your contacts.
 * Almost zero-dependency software.
+* Application lock.
 * Argon2id key-derivation function.
 * Automatic, oscillatory public-key exchange protocol, via SipHash.
 * BSD 3-clause license.
@@ -9,7 +10,9 @@ Summary of Smoke
 * Decentralized. TCP, and UDP multicast and unicast.
 * Does not require Internet connectivity.
 * Does not require registration. Telephone numbers are not required.
+* F-Droid.
 * Fiasco forward secrecy.
+* Future-proof software.
 * Introduces Cryptographic Discovery. Cryptographic Discovery is a
   practical protocol which creates coordinated data paths.
 * Juggling Juggernaut Protocol!
@@ -29,3 +32,4 @@ Summary of Smoke
 * SipHash-128.
 * Software congestion control.
 * Steam, reliable file sharing. TCP over the Echo!
+* Super McEliece: m = 13, t = 118.
