@@ -331,4 +331,45 @@ public class UdpNeighbor extends Neighbor
 	    }
 	}, 0L, READ_SOCKET_INTERVAL, TimeUnit.MILLISECONDS);
     }
+
+    public String remoteIpAddress()
+    {
+	try
+	{
+	    if(m_socket != null && m_socket.getInetAddress() != null)
+		return m_socket.getInetAddress().getHostAddress();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	if(m_version.equals("IPv4"))
+	    return "0.0.0.0";
+	else
+	    return "::";
+    }
+
+    public String remotePort()
+    {
+	try
+	{
+	    if(m_socket != null)
+		return String.valueOf(m_socket.getPort());
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return "0";
+    }
+
+    public String remoteScopeId()
+    {
+	return "";
+    }
+
+    public String transport()
+    {
+	return "UDP";
+    }
 }

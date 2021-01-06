@@ -693,6 +693,11 @@ public abstract class Neighbor
 	}
     }
 
+    public abstract String remoteIpAddress();
+    public abstract String remotePort();
+    public abstract String remoteScopeId();
+    public abstract String transport();
+
     public boolean passthrough()
     {
 	return m_passthrough.get();

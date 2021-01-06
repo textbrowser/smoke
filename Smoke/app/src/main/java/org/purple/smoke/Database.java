@@ -85,9 +85,9 @@ public class Database extends SQLiteOpenHelper
 		try
 		{
 		    byte bytes1[] = InetAddress.getByName(e1.m_remoteIpAddress).
-		    getAddress();
+			getAddress();
 		    byte bytes2[] = InetAddress.getByName(e2.m_remoteIpAddress).
-		    getAddress();
+			getAddress();
 		    int length = Math.max(bytes1.length, bytes2.length);
 
 		    for(int i = 0; i < length; i++)

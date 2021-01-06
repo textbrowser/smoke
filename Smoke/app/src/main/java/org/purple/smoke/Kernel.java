@@ -47,6 +47,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -1553,7 +1554,8 @@ public class Kernel
 	** neighbor.
 	*/
 
-	TreeSet<String> addresses = new TreeSet<> ();
+	ArrayList<IPAddressElement> addresses1 = new ArrayList<> ();
+	ArrayList<IPAddressElement> addresses2 = new ArrayList<> ();
 
 	m_neighborsMutex.readLock().lock();
 
@@ -1568,11 +1570,16 @@ public class Kernel
 		if(m_neighbors.get(j) != null)
 		    if(m_neighbors.get(j).connected())
 		    {
-			if(m_neighbors.get(j).passthrough())
-			    addresses.add
-				("|" + m_neighbors.get(j).address() + "|");
+			IPAddressElement ipAddressElement = new IPAddressElement
+			    (m_neighbors.get(j).remoteIpAddress(),
+			     m_neighbors.get(j).remotePort(),
+			     m_neighbors.get(j).remoteScopeId(),
+			     m_neighbors.get(j).transport());
+
+			if(!m_neighbors.get(j).passthrough())
+			    addresses1.add(ipAddressElement);
 			else
-			    addresses.add(m_neighbors.get(j).address());
+			    addresses2.add(ipAddressElement);
 		    }
 	    }
 	}
@@ -1584,10 +1591,15 @@ public class Kernel
 	    m_neighborsMutex.readLock().unlock();
 	}
 
-	if(addresses.isEmpty())
+	Collections.sort(addresses1, Miscellaneous.s_ipAddressComparator);
+	Collections.sort(addresses2, Miscellaneous.s_ipAddressComparator);
+
+	if(addresses1.isEmpty() && addresses2.isEmpty())
 	    return "";
+	else if(addresses1.isEmpty())
+	    return addresses2.get(0).address();
 	else
-	    return addresses.first().replace("|", "");
+	    return addresses1.get(0).address();
     }
 
     public String fireIdentities()

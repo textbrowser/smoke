@@ -56,10 +56,12 @@ import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -69,6 +71,51 @@ public abstract class Miscellaneous
     public static final int INTEGER_BYTES = 4;
     public static final int LONG_BYTES = 8;
     public static final long LONG_LONG_BYTES = 8L;
+
+    public final static Comparator<IPAddressElement>
+	s_ipAddressComparator = new Comparator<IPAddressElement> ()
+	{
+	    @Override
+	    public int compare(IPAddressElement e1, IPAddressElement e2)
+	    {
+		if(e1 == null || e2 == null)
+		    return -1;
+
+		/*
+		** Sort by IP address, port, and transport.
+		*/
+
+		try
+		{
+		    byte bytes1[] = InetAddress.getByName(e1.m_ipAddress).
+			getAddress();
+		    byte bytes2[] = InetAddress.getByName(e2.m_ipAddress).
+			getAddress();
+		    int length = Math.max(bytes1.length, bytes2.length);
+
+		    for(int i = 0; i < length; i++)
+		    {
+			byte b1 = (i >= length - bytes1.length) ?
+			    bytes1[i - (length - bytes1.length)] : 0;
+			byte b2 = (i >= length - bytes2.length) ?
+			    bytes2[i - (length - bytes2.length)] : 0;
+
+			if(b1 != b2)
+			    return (0xff & b1) - (0xff & b2);
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+
+		int i = e1.m_port.compareTo(e2.m_port);
+
+		if(i != 0)
+		    return i;
+
+		return e1.m_transport.compareTo(e2.m_transport);
+	    }
+	};
 
     public static String byteArrayAsHexString(byte bytes[])
     {
