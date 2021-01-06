@@ -243,6 +243,7 @@ Completed Items
 - Steam separators.
 - Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
   the secret is brief.
+- Subtitle IP address container is not properly sorted.
 - Super McEliece (m = 13, t = 118).
 - Synchronized methods or containers? Both.
 - TCP socket setPerformancePreferences().
@@ -280,4 +281,3 @@ Remaining Items
 - Play Store.
 - Record background Fire messages.
 - SHA3 via BC.
-- Subtitle IP address container is not properly sorted.
