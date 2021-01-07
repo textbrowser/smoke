@@ -253,6 +253,8 @@ public class TcpTlsNeighbor extends Neighbor
 			scheduleSend(getIdentities());
 			Kernel.getInstance().retrieveChatMessages
 			    (m_cryptography.sipHashId());
+			Miscellaneous.sendBroadcast
+			    ("org.purple.smoke.neighbor_connected");
 
 			synchronized(m_mutex)
 			{

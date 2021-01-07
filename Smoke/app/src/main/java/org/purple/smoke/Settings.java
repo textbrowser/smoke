@@ -135,6 +135,7 @@ public class Settings extends AppCompatActivity
 	    case "org.purple.smoke.neighbor_disconnected":
 		networkStatusChanged();
 		break;
+	    case "org.purple.smoke.neighbor_connected":
 	    case "org.purple.smoke.network_connected":
 		networkStatusChanged();
 		break;
@@ -3487,6 +3488,7 @@ public class Settings extends AppCompatActivity
 
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_connected");
 	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
 	    intentFilter.addAction("org.purple.smoke.network_connected");
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");

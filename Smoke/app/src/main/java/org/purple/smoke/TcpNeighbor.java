@@ -206,6 +206,9 @@ public class TcpNeighbor extends Neighbor
 		Kernel.getInstance().retrieveChatMessages
 		    (m_cryptography.sipHashId());
 
+	    Miscellaneous.sendBroadcast
+		("org.purple.smoke.neighbor_connected");
+
 	    synchronized(m_mutex)
 	    {
 		m_mutex.notifyAll();
