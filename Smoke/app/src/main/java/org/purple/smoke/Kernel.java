@@ -216,7 +216,7 @@ public class Kernel
 							** Should be less than
 							** Chat.STATUS_WINDOW.
 							*/
-    private final static long STEAM_INTERVAL = 7500L; // 7.5 seconds.
+    private final static long STEAM_INTERVAL = 5000L; // 5 seconds.
     private final static long STEAM_SHARE_WINDOW = 15000L; // 15 seconds.
     private final static long TEMPORARY_IDENTITY_INTERVAL = 5000L; // 5 seconds.
     private final static long TEMPORARY_IDENTITY_LIFETIME =
