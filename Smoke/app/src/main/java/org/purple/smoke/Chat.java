@@ -124,6 +124,7 @@ public class Chat extends AppCompatActivity
 		     intent.getCharExtra("org.purple.smoke.keyType", 'R'));
 		break;
 	    case "org.purple.smoke.neighbor_aborted":
+	    case "org.purple.smoke.neighbor_connected":
 	    case "org.purple.smoke.neighbor_disconnected":
 	    case "org.purple.smoke.network_connected":
 	    case "org.purple.smoke.network_disconnected":
@@ -1151,6 +1152,7 @@ public class Chat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.half_and_half_call");
 	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_connected");
 	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
 	    intentFilter.addAction("org.purple.smoke.network_connected");
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");
