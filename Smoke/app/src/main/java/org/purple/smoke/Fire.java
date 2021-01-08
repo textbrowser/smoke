@@ -108,6 +108,7 @@ public class Fire extends AppCompatActivity
 
 		break;
 	    case "org.purple.smoke.neighbor_aborted":
+	    case "org.purple.smoke.neighbor_connected":
 	    case "org.purple.smoke.neighbor_disconnected":
 	    case "org.purple.smoke.network_connected":
 	    case "org.purple.smoke.network_disconnected":
@@ -713,6 +714,7 @@ public class Fire extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.chat_message");
 	    intentFilter.addAction("org.purple.smoke.fire_message");
 	    intentFilter.addAction("org.purple.smoke.neighbor_aborted");
+	    intentFilter.addAction("org.purple.smoke.neighbor_connected");
 	    intentFilter.addAction("org.purple.smoke.neighbor_disconnected");
 	    intentFilter.addAction("org.purple.smoke.network_connected");
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");
