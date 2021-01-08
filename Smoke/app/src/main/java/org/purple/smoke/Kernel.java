@@ -1282,7 +1282,8 @@ public class Kernel
 
 	for(SteamElement steamElement : steams)
 	{
-	    if(steamElement == null)
+	    if(steamElement == null ||
+	       steamElement.m_status.equals("completed"))
 		continue;
 	    else
 	    {
