@@ -123,6 +123,9 @@ public class SteamReaderSimple extends SteamReader
 
 			synchronized(m_fileInputStreamMutex)
 			{
+			    if(m_fileInputStream == null)
+				return;
+
 			    offset = m_fileInputStream.read(bytes);
 			}
 

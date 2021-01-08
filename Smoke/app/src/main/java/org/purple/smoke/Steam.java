@@ -136,6 +136,7 @@ public class Steam extends AppCompatActivity
     private String m_absoluteFileName = "";
     private TextView m_displayFileName = null;
     private TextView m_downloads = null;
+    private TextView m_information = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -258,12 +259,17 @@ public class Steam extends AppCompatActivity
 		{
 		    try
 		    {
+			final int availableSteams = Kernel.getInstance().
+			    availableSteams();
+
 			Steam.this.runOnUiThread(new Runnable()
 			{
 			    @Override
 			    public void run()
 			    {
 				m_adapter.notifyDataSetChanged();
+				m_information.setText
+				    ("Active Upload Tasks: " + availableSteams);
 			    }
 			});
 		    }
@@ -486,6 +492,7 @@ public class Steam extends AppCompatActivity
 	     getExternalStoragePublicDirectory(Environment.
 					       DIRECTORY_DOWNLOADS).
 	     toString());
+	m_information = (TextView) findViewById(R.id.information);
 	m_keysSpinner = (Spinner) findViewById(R.id.keys);
 	m_keysSpinner.setAdapter
 	    (new ArrayAdapter<>(Steam.this,

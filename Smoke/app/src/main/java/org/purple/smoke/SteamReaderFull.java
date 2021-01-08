@@ -182,6 +182,9 @@ public class SteamReaderFull extends SteamReader
 
 			synchronized(m_fileInputStreamMutex)
 			{
+			    if(m_fileInputStream == null)
+				return;
+
 			    m_fileInputStream.getChannel().position
 				(m_readOffset.get());
 			    offset = m_fileInputStream.read(bytes);

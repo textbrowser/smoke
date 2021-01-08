@@ -1282,8 +1282,7 @@ public class Kernel
 
 	for(SteamElement steamElement : steams)
 	{
-	    if(steamElement == null ||
-	       steamElement.m_status.equals("completed"))
+	    if(steamElement == null)
 		continue;
 	    else
 	    {
@@ -1303,6 +1302,10 @@ public class Kernel
 		}
 	    }
 
+	    if(steamElement.m_status.equals("completed") ||
+	       steamElement.m_status.equals("deleted"))
+		continue;
+
 	    SteamReader steam = null;
 
 	    if(steamElement.m_destination.equals(Steam.OTHER))
@@ -1317,9 +1320,6 @@ public class Kernel
 					    steamElement.m_oid,
 					    steamElement.m_fileSize,
 					    steamElement.m_readOffset);
-
-	    if(steam == null)
-		continue;
 
 	    m_steamsMutex.writeLock().lock();
 
@@ -1857,6 +1857,25 @@ public class Kernel
 	finally
 	{
 	    m_neighborsMutex.readLock().unlock();
+	}
+
+	return 0;
+    }
+
+    public int availableSteams()
+    {
+	m_steamsMutex.readLock().lock();
+
+	try
+	{
+	    return m_steams.size();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_steamsMutex.readLock().unlock();
 	}
 
 	return 0;

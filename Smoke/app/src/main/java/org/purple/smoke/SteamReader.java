@@ -152,6 +152,26 @@ public abstract class SteamReader
 
 	m_canceled.set(true);
 	m_completed.set(false);
+
+	try
+	{
+	    synchronized(m_fileInputStreamMutex)
+	    {
+		if(m_fileInputStream != null)
+		    m_fileInputStream.close();
+	    }
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    synchronized(m_fileInputStreamMutex)
+	    {
+		m_fileInputStream = null;
+	    }
+	}
+
 	m_rate.set(0L);
 	m_readOffset.set(0L);
 	cancelReader();
