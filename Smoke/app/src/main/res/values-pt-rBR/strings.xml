@@ -25,6 +25,7 @@
     <string name="digest_key">Chave Digest</string>
     <string name="echo">Echo</string>
     <string name="encryption">Criptografia</string>
+    <string name="exit">Sair</string>
     <string name="fiasco_keys">Chaves Fiasco</string>
     <string name="fire">Fire (chat em grupo)</string>
     <string name="fire_channels">Canais do Fire</string>
@@ -37,14 +38,19 @@
     <string name="ipv6">IPv6</string>
     <string name="iteration_count">Contador de iteração</string>
     <string name="join">Participar</string>
+    <string name="key_derivation_function">Função de derivação de chave (KDF)</string>
     <string name="message">Mensagem...</string>
     <string name="message_status">Status da mensagem</string>
     <string name="name">Nome</string>
     <string name="neighbor_servers">Servidores vizinhos</string>
+    <string name="non_tls">Não-TLS</string>
     <string name="ozone">Ozone</string>
     <string name="participants">Participantes</string>
+    <string name="passthrough">Passthrough</string>
     <string name="password">Senha</string>
     <string name="password_confirmation">Confirmação da senha</string>
+    <string name="pause">Pausar</string>
+    <string name="please_select">Selecione por favor</string>
     <string name="please_type_a_message">Por favor, digite uma mensagem…</string>
     <string name="port">Porta</string>
     <string name="prefer_active_cpu">Preferir CPU ativo</string>
@@ -52,6 +58,7 @@
     <string name="proxy_ip_address">Endereço Proxy de IP</string>
     <string name="proxy_port">Porta de Proxy</string>
     <string name="public_data">Dados públicos</string>
+    <string name="query_time_server">Consultar tempo no servidor</string>
     <string name="refresh_neighbors">Recarregar</string>
     <string name="refresh_participants">Recarregar</string>
     <string name="remote">Remoto</string>
@@ -67,14 +74,7 @@
     <string name="smoke_alias">Apelido do Smoke</string>
     <string name="smoke_chat_id">ID do Smoke Chat</string>
     <string name="smokeid">ID do Smoke</string>
-    <string name="your_name">Seu Nome</string>
-    <string name="exit">Sair</string>
-    <string name="steam">Transferir</string>
-    <string name="key_derivation_function">Função de derivação de chave (KDF)</string>
-    <string name="non_tls">Não-TLS</string>
-    <string name="passthrough">Passthrough</string>
-    <string name="pause">Pausar</string>
     <string name="smokescreen">Smokescreen</string>
-    <string name="please_select">Selecione por favor</string>
-    <string name="query_time_server">Consultar tempo no servidor</string>
+    <string name="steam">Transferir</string>
+    <string name="your_name">Seu Nome</string>
 </resources>

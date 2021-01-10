@@ -25,6 +25,7 @@
     <string name="digest_key">Digest Key</string>
     <string name="echo">Echo</string>
     <string name="encryption">Encryption</string>
+    <string name="exit">Exit</string>
     <string name="fiasco_keys">Fiasco Keys</string>
     <string name="fire">Fire</string>
     <string name="fire_channels">Fire Channels</string>
@@ -37,14 +38,19 @@
     <string name="ipv6">IPv6</string>
     <string name="iteration_count">Iteration Count</string>
     <string name="join">Join</string>
+    <string name="key_derivation_function">Key Derivation Function</string>
     <string name="message">Message...</string>
     <string name="message_status">Message Status</string>
     <string name="name">Name</string>
     <string name="neighbor_servers">Neighbor Servers</string>
+    <string name="non_tls">Non-TLS</string>
     <string name="ozone">Ozone</string>
     <string name="participants">Participants</string>
+    <string name="passthrough">Passthrough</string>
     <string name="password">Password</string>
     <string name="password_confirmation">Password Confirmation</string>
+    <string name="pause">Pause</string>
+    <string name="please_select">Please Select</string>
     <string name="please_type_a_message">Please type a message…</string>
     <string name="port">Port</string>
     <string name="prefer_active_cpu">Prefer Active CPU</string>
@@ -52,6 +58,7 @@
     <string name="proxy_ip_address">Proxy IP Address</string>
     <string name="proxy_port">Proxy Port</string>
     <string name="public_data">Public Data</string>
+    <string name="query_time_server">Query Time Server</string>
     <string name="refresh_neighbors">Refresh</string>
     <string name="refresh_participants">Refresh</string>
     <string name="remote">Remote</string>
@@ -67,14 +74,7 @@
     <string name="smoke_alias">Smoke Alias</string>
     <string name="smoke_chat_id">Smoke Chat ID</string>
     <string name="smokeid">Smoke ID</string>
-    <string name="your_name">Your Name</string>
-    <string name="exit">Exit</string>
-    <string name="steam">Steam</string>
-    <string name="key_derivation_function">Key Derivation Function</string>
-    <string name="non_tls">Non-TLS</string>
-    <string name="passthrough">Passthrough</string>
-    <string name="pause">Pause</string>
     <string name="smokescreen">Smokescreen</string>
-    <string name="please_select">Please Select</string>
-    <string name="query_time_server">Query Time Server</string>
+    <string name="steam">Steam</string>
+    <string name="your_name">Your Name</string>
 </resources>
