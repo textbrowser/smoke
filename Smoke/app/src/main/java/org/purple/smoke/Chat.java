@@ -585,7 +585,8 @@ public class Chat extends AppCompatActivity
 		if(participantElement.m_keyStream == null ||
 		   participantElement.m_keyStream.length == 0)
 		    stringBuilder.append("Session Closed");
-		else if(participantElement.m_keyStream.length == 48)
+		else if(participantElement.m_keyStream.length <
+			Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		    stringBuilder.append("Session Incomplete");
 		else if(participantElement.m_keyStream.length ==
 			Cryptography.CIPHER_HASH_KEYS_LENGTH)
@@ -798,7 +799,8 @@ public class Chat extends AppCompatActivity
 	    if(participantElement.m_keyStream == null ||
 	       participantElement.m_keyStream.length == 0)
 		stringBuilder.append("Session Closed");
-	    else if(participantElement.m_keyStream.length == 48)
+	    else if(participantElement.m_keyStream.length <
+		    Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		stringBuilder.append("Session Incomplete");
 	    else if(participantElement.m_keyStream.length ==
 		    Cryptography.CIPHER_HASH_KEYS_LENGTH)

@@ -148,6 +148,19 @@ public class SteamReaderFull extends SteamReader
 				return;
 			}
 
+			if(m_keyStream == null ||
+			   m_keyStream.length !=
+			   Cryptography.CIPHER_HASH_KEYS_LENGTH)
+			{
+			    m_keyStream = s_databaseHelper.readSteam
+				(s_cryptography, -1, m_oid - 1).m_keyStream;
+
+			    if(m_keyStream == null ||
+			       m_keyStream.length !=
+			       Cryptography.CIPHER_HASH_KEYS_LENGTH)
+				return;
+			}
+
 			synchronized(m_waitMutex)
 			{
 			    m_waitMutex.wait(RESPONSE_WINDOW);
@@ -166,15 +179,6 @@ public class SteamReaderFull extends SteamReader
 				return;
 			    else
 				m_lastResponse.set(System.currentTimeMillis());
-			}
-
-			if(m_keyStream == null)
-			{
-			    m_keyStream = s_databaseHelper.readSteam
-				(s_cryptography, -1, m_oid - 1).m_keyStream;
-
-			    if(m_keyStream == null)
-				return;
 			}
 
 			byte bytes[] = new byte[PACKET_SIZE];
