@@ -76,11 +76,13 @@ public class Cryptography
 
     private KeyPair m_chatEncryptionPublicKeyPair = null;
     private KeyPair m_chatSignaturePublicKeyPair = null;
-    private SecretKey m_encryptionKey = null;
-    private SecretKey m_macKey = null;
     private String m_chatEncryptionPublicKeyAlgorithm = "";
     private String m_sipHashId = "0000-0000-0000-0000-0000-0000-0000-0000";
+    private byte m_encryptionKeyBytes[] = null;
+    private byte m_encryptionKeyRandom[] = null;
     private byte m_identity[] = null; // Random identity.
+    private byte m_macKeyBytes[] = null;
+    private byte m_macKeyRandom[] = null;
     private byte m_ozoneEncryptionKey[] = null;
     private byte m_ozoneMacKey[] = null;
     private byte m_sipHashEncryptionKey[] = null;
@@ -183,6 +185,49 @@ public class Cryptography
     private Cryptography()
     {
 	prepareSecureRandom();
+	m_encryptionKeyRandom = randomBytes(CIPHER_KEY_LENGTH);
+	m_macKeyRandom = randomBytes(HASH_KEY_LENGTH);
+    }
+
+    private SecretKey encryptionKey()
+    {
+	m_encryptionKeyMutex.readLock().lock();
+
+	try
+	{
+	    return new SecretKeySpec
+		(xor(m_encryptionKeyBytes, m_encryptionKeyRandom),
+		 SYMMETRIC_ALGORITHM);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_encryptionKeyMutex.readLock().unlock();
+	}
+
+	return null;
+    }
+
+    private SecretKey macKey()
+    {
+	m_macKeyMutex.readLock().lock();
+
+	try
+	{
+	    return new SecretKeySpec
+		(xor(m_macKeyBytes, m_macKeyRandom), HASH_ALGORITHM);
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_macKeyMutex.readLock().unlock();
+	}
+
+	return null;
     }
 
     private static synchronized void prepareSecureRandom()
@@ -193,6 +238,19 @@ public class Cryptography
 	try
 	{
 	    s_secureRandom = new SecureRandom();
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
+    private void destroy(SecretKey key)
+    {
+	if(key == null)
+	    return;
+
+	try
+	{
 	}
 	catch(Exception exception)
 	{
@@ -629,7 +687,7 @@ public class Cryptography
 
 	try
 	{
-	    if(m_encryptionKey == null)
+	    if(m_encryptionKeyBytes == null)
 		return null;
 	}
 	finally
@@ -641,7 +699,7 @@ public class Cryptography
 
 	try
 	{
-	    if(m_macKey == null)
+	    if(m_macKeyBytes == null)
 		return null;
 	}
 	finally
@@ -657,7 +715,7 @@ public class Cryptography
 
 	    try
 	    {
-		if(m_encryptionKey == null)
+		if(m_encryptionKeyBytes == null)
 		    return null;
 
 		Cipher cipher = null;
@@ -666,7 +724,7 @@ public class Cryptography
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		s_secureRandom.nextBytes(iv);
 		cipher.init(Cipher.ENCRYPT_MODE,
-			    m_encryptionKey,
+			    encryptionKey(),
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal(data);
 		bytes = Miscellaneous.joinByteArrays(iv, bytes);
@@ -684,13 +742,13 @@ public class Cryptography
 
 	    try
 	    {
-		if(m_macKey == null)
+		if(m_macKeyBytes == null)
 		    return null;
 
 		Mac mac = null;
 
 		mac = Mac.getInstance(HMAC_ALGORITHM);
-		mac.init(m_macKey);
+		mac.init(macKey());
 		bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
 	    }
 	    catch(Exception exception)
@@ -833,7 +891,7 @@ public class Cryptography
 
 	try
 	{
-	    if(m_macKey == null)
+	    if(m_macKeyBytes == null)
 		return null;
 
 	    byte bytes[] = null;
@@ -843,7 +901,7 @@ public class Cryptography
 		Mac mac = null;
 
 		mac = Mac.getInstance(HMAC_ALGORITHM);
-		mac.init(m_macKey);
+		mac.init(macKey());
 		bytes = mac.doFinal(data);
 	    }
 	    catch(Exception exception)
@@ -892,7 +950,7 @@ public class Cryptography
 
 	try
 	{
-	    if(m_encryptionKey == null)
+	    if(m_encryptionKeyBytes == null)
 		return null;
 	}
 	finally
@@ -904,7 +962,7 @@ public class Cryptography
 
 	try
 	{
-	    if(m_macKey == null)
+	    if(m_macKeyBytes == null)
 		return null;
 	}
 	finally
@@ -927,13 +985,13 @@ public class Cryptography
 
 	    try
 	    {
-		if(m_macKey == null)
+		if(m_macKeyBytes == null)
 		    return null;
 
 		Mac mac = null;
 
 		mac = Mac.getInstance(HMAC_ALGORITHM);
-		mac.init(m_macKey);
+		mac.init(macKey());
 		digest2 = mac.doFinal
 		    (Arrays.copyOf(data, data.length - HASH_KEY_LENGTH));
 	    }
@@ -962,7 +1020,7 @@ public class Cryptography
 
 	    try
 	    {
-		if(m_encryptionKey == null)
+		if(m_encryptionKeyBytes == null)
 		    return null;
 
 		Cipher cipher = null;
@@ -970,7 +1028,7 @@ public class Cryptography
 
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE,
-			    m_encryptionKey,
+			    encryptionKey(),
 			    new IvParameterSpec(iv));
 		bytes = cipher.doFinal
 		    (Arrays.copyOfRange(data,
@@ -2375,10 +2433,11 @@ public class Cryptography
 
 	try
 	{
-	    byte bytes[] = new byte[CIPHER_KEY_LENGTH];
+	    if(m_encryptionKeyBytes != null)
+		Arrays.fill(m_encryptionKeyBytes, (byte) 0);
 
-	    Arrays.fill(bytes, (byte) 0);
-	    m_encryptionKey = new SecretKeySpec(bytes, SYMMETRIC_ALGORITHM);
+	    m_encryptionKeyBytes = null;
+	    m_encryptionKeyRandom = randomBytes(CIPHER_KEY_LENGTH);
 	}
 	finally
 	{
@@ -2400,10 +2459,11 @@ public class Cryptography
 
 	try
 	{
-	    byte bytes[] = new byte[HASH_KEY_LENGTH];
+	    if(m_macKeyBytes != null)
+		Arrays.fill(m_macKeyBytes, (byte) 0);
 
-	    Arrays.fill(bytes, (byte) 0);
-	    m_encryptionKey = new SecretKeySpec(bytes, HASH_ALGORITHM);
+	    m_macKeyBytes = null;
+	    m_macKeyRandom = randomBytes(HASH_KEY_LENGTH);
 	}
 	finally
 	{
@@ -2720,12 +2780,15 @@ public class Cryptography
 
 	try
 	{
-	    m_encryptionKey = key;
+	    m_encryptionKeyBytes = xor
+		(key.getEncoded(), m_encryptionKeyRandom);
 	}
 	finally
 	{
 	    m_encryptionKeyMutex.writeLock().unlock();
 	}
+
+	destroy(key);
     }
 
     public void setMacKey(SecretKey key)
@@ -2734,12 +2797,14 @@ public class Cryptography
 
 	try
 	{
-	    m_macKey = key;
+	    m_macKeyBytes = xor(key.getEncoded(), m_macKeyRandom);
 	}
 	finally
 	{
 	    m_macKeyMutex.writeLock().unlock();
 	}
+
+	destroy(key);
     }
 
     public void setOzoneEncryptionKey(byte bytes[])
