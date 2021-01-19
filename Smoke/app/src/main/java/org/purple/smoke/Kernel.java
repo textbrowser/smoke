@@ -221,6 +221,7 @@ public class Kernel
     private final static long TEMPORARY_IDENTITY_INTERVAL = 5000L; // 5 seconds.
     private final static long TEMPORARY_IDENTITY_LIFETIME =
 	60000L; // 60 seconds.
+    private final static long WAIT_TIMEOUT = 10000L; // 10 seconds.
     private static Kernel s_instance = null;
     public final static long JUGGERNAUT_DELAY = 7500L; // 7.5 seconds.
 
@@ -444,7 +445,7 @@ public class Kernel
 			    {
 				try
 				{
-				    m_callSchedulerMutex.wait();
+				    m_callSchedulerMutex.wait(WAIT_TIMEOUT);
 				}
 				catch(Exception exception)
 				{
@@ -645,7 +646,8 @@ public class Kernel
 			    {
 				try
 				{
-				    m_messagesToSendSchedulerMutex.wait();
+				    m_messagesToSendSchedulerMutex.
+					wait(WAIT_TIMEOUT);
 				}
 				catch(Exception exception)
 				{
