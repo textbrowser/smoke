@@ -1,0 +1,3 @@
+* Corrected reset of local authentication key.
+* Obfuscate local authentication and encryption keys.
+* Prepare Steam key container properly.
