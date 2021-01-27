@@ -38,6 +38,8 @@ import java.util.concurrent.TimeUnit;
 public class Time
 {
     private ScheduledExecutorService m_scheduler = null;
+    private final static String TIME_URL =
+	"https://worldtimeapi.org/api/timezone/Etc/UTC.txt";
     private final static long DELTA = 5L;
     private final static long QUERY_INTERVAL = 30L;
 
@@ -60,8 +62,7 @@ public class Time
 		try
 		{
 		    String string = "";
-		    URL url = new URL
-			("https://worldtimeapi.org/api/timezone/Etc/UTC.txt");
+		    URL url = new URL(TIME_URL);
 
 		    httpURLConnection = (HttpURLConnection)
 			url.openConnection();

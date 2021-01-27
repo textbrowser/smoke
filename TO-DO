@@ -100,6 +100,7 @@ Completed Items
 - Fire. ("AES/CTS/NoPadding")
 - Foreground service, optional.
 - Full Steams, reliable Echo.
+- Future-proof Smoke (remove fixed cryptographic values).
 - Generate and separate.
 - Gently notify MemberChat of written messages. Gentle notifications prevent
   bouncy context menus.
@@ -273,7 +274,6 @@ Completed Items
 Remaining Items
 
 - Brands (profiles).
-- Future-proof Smoke (remove fixed cryptographic values).
 - Java does not include methods for destroying private containers.
 - Option for computing Steam digest.
 - Optional cryptographic discovery.
