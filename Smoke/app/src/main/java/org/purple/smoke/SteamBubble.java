@@ -40,13 +40,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class SteamBubble extends View
 {
     private Button m_control = null;
-    private Context m_context = null;
     private ImageButton m_menuButton = null;
     private LinearLayout m_layoutA = null;
     private LinearLayout m_layoutB = null;
@@ -71,6 +71,7 @@ public class SteamBubble extends View
     private View m_keyExchangeStatus = null;
     private View m_separator = null;
     private View m_view = null;
+    private WeakReference<Context> m_context = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -125,11 +126,11 @@ public class SteamBubble extends View
     public SteamBubble(Context context, Steam steam, ViewGroup viewGroup)
     {
 	super(context);
-	m_context = context;
+	m_context = new WeakReference<> (context);
 	m_steam = steam;
 
-	LayoutInflater inflater = (LayoutInflater) m_context.getSystemService
-	    (Context.LAYOUT_INFLATER_SERVICE);
+	LayoutInflater inflater = (LayoutInflater) m_context.get().
+	    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 	m_view = inflater.inflate(R.layout.steam_bubble, viewGroup, false);
 	m_control = (Button) m_view.findViewById(R.id.control);

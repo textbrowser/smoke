@@ -258,8 +258,12 @@ public class ChatBubble extends View
 	    m_view.findViewById(R.id.message_status).setVisibility
 		(m_messageRead ? View.VISIBLE : View.INVISIBLE);
 
-	    float density = m_context.get().getResources().getDisplayMetrics().
-		density;
+	    float density = 1.0f;
+
+	    if(m_context != null &&
+	       m_context.get() != null)
+		density = m_context.get().getResources().getDisplayMetrics().
+		    density;
 
 	    m_view.findViewById(R.id.text).setPaddingRelative
 		((int) (10 * density),                         // Start
@@ -293,8 +297,12 @@ public class ChatBubble extends View
 	    m_view.findViewById(R.id.message_status).setVisibility
 		(m_messageSent ? View.VISIBLE : View.INVISIBLE);
 
-	    float density = m_context.get().getResources().getDisplayMetrics().
-		density;
+	    float density = 1.0f;
+
+	    if(m_context != null &&
+	       m_context.get() != null)
+		density = m_context.get().getResources().getDisplayMetrics().
+		    density;
 
 	    m_view.findViewById(R.id.text).setPaddingRelative
 		((int) (10 * density),                         // Start
@@ -364,8 +372,12 @@ public class ChatBubble extends View
 	    }
 	}
 
-	float density = m_context.get().getResources().getDisplayMetrics().
-	    density;
+	float density = 1.0f;
+
+	if(m_context != null &&
+	   m_context.get() != null)
+	    density = m_context.get().getResources().getDisplayMetrics().
+		density;
 
 	if(location == Locations.LEFT)
 	{

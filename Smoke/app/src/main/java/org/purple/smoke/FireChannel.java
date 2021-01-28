@@ -42,6 +42,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,13 +74,13 @@ public class FireChannel extends View
 	public long m_timestamp = -1L;
     }
 
-    private Context m_context = null;
     private LayoutInflater m_inflater = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private String m_id = "";
     private String m_name = "";
     private View m_view = null;
     private ViewGroup m_parent = null;
+    private WeakReference<Context> m_context = null;
     private final Hashtable<String, Participant> m_participants =
 	new Hashtable<> ();
     private final SimpleDateFormat m_simpleDateFormat =
@@ -102,7 +103,11 @@ public class FireChannel extends View
 			    Kernel.getInstance().enqueueFireStatus
 				(m_id, m_name);
 
-			((Activity) m_context).runOnUiThread(new Runnable()
+			if(m_context == null || m_context.get() == null)
+			    return;
+
+			((Activity) m_context.get()).
+			    runOnUiThread(new Runnable()
 			{
 			    @Override
 			    public void run()
@@ -234,15 +239,17 @@ public class FireChannel extends View
 
 	for(Participant participant : arrayList)
 	{
-	    if(participant == null)
+	    if(m_context == null ||
+	       m_context.get() == null ||
+	       participant == null)
 		continue;
 
-	    TextView textView = new TextView(m_context);
+	    TextView textView = new TextView(m_context.get());
 
 	    textView.setTag(R.id.participants, participant.m_id);
 	    textView.setText(participant.m_name.trim());
 
-	    TableRow row = new TableRow(m_context);
+	    TableRow row = new TableRow(m_context.get());
 
 	    row.addView(textView);
 	    tableLayout.addView(row, i);
@@ -409,9 +416,9 @@ public class FireChannel extends View
 		       ViewGroup parent)
     {
 	super(context);
-	m_context = context;
+	m_context = new WeakReference<> (context);
 	m_id = id;
-	m_inflater = (LayoutInflater) m_context.getSystemService
+	m_inflater = (LayoutInflater) m_context.get().getSystemService
 	    (Context.LAYOUT_INFLATER_SERVICE);
 	m_name = name;
 	m_parent = parent;
