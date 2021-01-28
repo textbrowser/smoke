@@ -11,6 +11,7 @@ Summary of Smoke
 <li>Decentralized. TCP, and UDP multicast and unicast.</li>
 <li>Does not require Internet connectivity.</li>
 <li>Does not require registration. Telephone numbers are not required.</li>
+<li>Eventful tasks. Limited polling.</li>
 <li>F-Droid.</li>
 <li>Fiasco forward secrecy.</li>
 <li>Future-proof software.</li>
