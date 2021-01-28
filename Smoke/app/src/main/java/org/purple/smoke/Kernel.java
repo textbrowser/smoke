@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.SparseArray;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
@@ -153,6 +155,7 @@ public class Kernel
     private SteamKeyExchange m_steamKeyExchange = null;
     private Time m_time = null;
     private WakeLock m_wakeLock = null;
+    private WeakReference<Activity> m_activity = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
     private final KernelBroadcastReceiver m_receiver =
@@ -2035,27 +2038,40 @@ public class Kernel
 				   writeCongestionDigest(value))
 				    return 1;
 
-				Intent intent = new Intent
-				    ("org.purple.smoke.fire_message");
+				final String channel = entry.getKey();
+				final String id = strings[2];
+				final String message = strings[3];
+				final String name = strings[1];
+				final String type = strings[0];
 
-				intent.putExtra
-				    ("org.purple.smoke.channel",
-				     entry.getKey());
-				intent.putExtra
-				    ("org.purple.smoke.id", strings[2]);
-				intent.putExtra
-				    ("org.purple.smoke.message_type",
-				     strings[0]);
-				intent.putExtra
-				    ("org.purple.smoke.name", strings[1]);
+				if(m_activity != null &&
+				   m_activity.get() != null)
+				    m_activity.get().runOnUiThread
+					(new Runnable()
+				    {
+					@Override
+					public void run()
+					{
+					    FireChannel fireChannel = State.
+						getInstance().fireChannel
+						(channel);
 
-				if(strings[0].
-				   equals(Messages.FIRE_CHAT_MESSAGE_TYPE))
-				    intent.putExtra
-					("org.purple.smoke.message",
-					 strings[3]);
+					    if(fireChannel != null)
+					    {
+						if(type.
+						   equals(Messages.
+						   FIRE_CHAT_MESSAGE_TYPE))
+						    fireChannel.append
+							(id, message, name);
+						else if
+						    (type.
+						     equals(Messages.
+						     FIRE_STATUS_MESSAGE_TYPE))
+						fireChannel.status(id, name);
+					    }
+					}
+				    });
 
-				Miscellaneous.sendBroadcast(intent);
 				return 2; // Echo Fire!
 			    }
 			}
@@ -3823,6 +3839,11 @@ public class Kernel
 	}
 
 	return sent;
+    }
+
+    public void setActivity(Activity activity)
+    {
+	m_activity = new WeakReference<> (activity);
     }
 
     public void setWakeLock(boolean state)

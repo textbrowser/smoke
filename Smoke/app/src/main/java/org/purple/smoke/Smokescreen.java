@@ -199,6 +199,7 @@ public class Smokescreen extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	Kernel.getInstance().setActivity(this);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_smokescreen);
 

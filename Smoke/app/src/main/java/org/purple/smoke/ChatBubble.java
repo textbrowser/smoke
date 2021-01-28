@@ -46,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -54,10 +55,10 @@ public class ChatBubble extends View
 {
     private CheckBox m_selected = null;
     private CompoundButton.OnCheckedChangeListener m_selected_listener = null;
-    private Context m_context = null;
     private Date m_date = new Date(System.currentTimeMillis());
     private MemberChat m_memberChat = null;
     private View m_view = null;
+    private WeakReference<Context> m_context = null;
     private boolean m_error = false;
     private boolean m_fromSmokeStack = false;
     private boolean m_local = false;
@@ -74,11 +75,11 @@ public class ChatBubble extends View
 		      ViewGroup viewGroup)
     {
 	super(context);
-	m_context = context;
+	m_context = new WeakReference<> (context);
 	m_memberChat = memberChat;
 
-	LayoutInflater inflater = (LayoutInflater) m_context.getSystemService
-	    (Context.LAYOUT_INFLATER_SERVICE);
+	LayoutInflater inflater = (LayoutInflater) m_context.get().
+	    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 	m_view = inflater.inflate(R.layout.chat_bubble, viewGroup, false);
 	m_view.findViewById(R.id.image).setVisibility(View.GONE);
@@ -257,7 +258,7 @@ public class ChatBubble extends View
 	    m_view.findViewById(R.id.message_status).setVisibility
 		(m_messageRead ? View.VISIBLE : View.INVISIBLE);
 
-	    float density = m_context.getResources().getDisplayMetrics().
+	    float density = m_context.get().getResources().getDisplayMetrics().
 		density;
 
 	    m_view.findViewById(R.id.text).setPaddingRelative
@@ -292,7 +293,7 @@ public class ChatBubble extends View
 	    m_view.findViewById(R.id.message_status).setVisibility
 		(m_messageSent ? View.VISIBLE : View.INVISIBLE);
 
-	    float density = m_context.getResources().getDisplayMetrics().
+	    float density = m_context.get().getResources().getDisplayMetrics().
 		density;
 
 	    m_view.findViewById(R.id.text).setPaddingRelative
@@ -363,7 +364,8 @@ public class ChatBubble extends View
 	    }
 	}
 
-	float density = m_context.getResources().getDisplayMetrics().density;
+	float density = m_context.get().getResources().getDisplayMetrics().
+	    density;
 
 	if(location == Locations.LEFT)
 	{

@@ -83,29 +83,6 @@ public class Fire extends AppCompatActivity
 		    (Fire.this, intent, findViewById(R.id.main_layout));
 		break;
 	    case "org.purple.smoke.fire_message":
-		FireChannel fireChannel = State.getInstance().fireChannel
-		    (intent.getStringExtra("org.purple.smoke.channel"));
-
-		if(fireChannel != null)
-		{
-		    String id = intent.getStringExtra("org.purple.smoke.id");
-		    String name = intent.getStringExtra
-			("org.purple.smoke.name");
-
-		    if(intent.getStringExtra("org.purple.smoke.message_type").
-		       equals(Messages.FIRE_CHAT_MESSAGE_TYPE))
-		    {
-			String message = intent.getStringExtra
-			    ("org.purple.smoke.message");
-
-			fireChannel.append(id, message, name);
-		    }
-		    else if(intent.
-			    getStringExtra("org.purple.smoke.message_type").
-			    equals(Messages.FIRE_STATUS_MESSAGE_TYPE))
-			fireChannel.status(id, name);
-		}
-
 		break;
 	    case "org.purple.smoke.neighbor_aborted":
 	    case "org.purple.smoke.neighbor_connected":
@@ -614,6 +591,7 @@ public class Fire extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	Kernel.getInstance().setActivity(this);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new FireBroadcastReceiver();
         setContentView(R.layout.activity_fire);

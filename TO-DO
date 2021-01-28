@@ -190,7 +190,9 @@ Completed Items
 - Prompt for neighbor removal.
 - Purging of neighbor queues should occur off of the main thread.
 - Push sent messages from Member Chat to Chat.
-- Receiving requested keys which do not include signatures should be functional.
+- Receiving requested keys which do not include signatures should be
+  functional.
+- Record background Fire messages.
 - Record received messages in Chat from Member Chat.
 - Refresh context menu on Chat table.
 - Remote storage of messages. SmokeStack.
@@ -279,5 +281,4 @@ Remaining Items
 - Optional cryptographic discovery.
 - Password-protected ZIP and Netcat transfer.
 - Play Store.
-- Record background Fire messages.
 - SHA3 via BC.

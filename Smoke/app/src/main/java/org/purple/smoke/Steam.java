@@ -467,6 +467,7 @@ public class Steam extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	Kernel.getInstance().setActivity(this);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_databaseHelper.clearSteamRates(s_cryptography);
 	m_receiver = new SteamBroadcastReceiver();

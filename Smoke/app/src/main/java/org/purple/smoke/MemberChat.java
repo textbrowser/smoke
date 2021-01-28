@@ -804,6 +804,7 @@ public class MemberChat extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	Kernel.getInstance().setActivity(this);
         setContentView(R.layout.activity_member_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 	m_layoutManager = new SmokeLinearLayoutManager(MemberChat.this);
