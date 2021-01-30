@@ -162,6 +162,8 @@ public class Kernel
 	new KernelBroadcastReceiver();
     private final Object m_callSchedulerMutex = new Object();
     private final Object m_messagesToSendSchedulerMutex = new Object();
+    private final ReentrantReadWriteLock m_activityMutex =
+	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
@@ -2042,35 +2044,46 @@ public class Kernel
 				final String id = strings[2];
 				final String message = strings[3];
 				final String name = strings[1];
-				final String type = strings[0];
+				final boolean isChatMessageType = strings[0].
+				    equals(Messages.FIRE_CHAT_MESSAGE_TYPE);
+				final boolean isStatusMessageType = strings[0].
+				    equals(Messages.FIRE_STATUS_MESSAGE_TYPE);
 
-				if(m_activity != null &&
-				   m_activity.get() != null)
-				    m_activity.get().runOnUiThread
-					(new Runnable()
-				    {
-					@Override
-					public void run()
+				m_activityMutex.readLock().lock();
+
+				try
+				{
+				    if(m_activity != null &&
+				       m_activity.get() != null)
+					m_activity.get().runOnUiThread
+					    (new Runnable()
 					{
-					    FireChannel fireChannel = State.
-						getInstance().fireChannel
-						(channel);
-
-					    if(fireChannel != null)
+					    @Override
+					    public void run()
 					    {
-						if(type.
-						   equals(Messages.
-						   FIRE_CHAT_MESSAGE_TYPE))
-						    fireChannel.append
-							(id, message, name);
-						else if
-						    (type.
-						     equals(Messages.
-						     FIRE_STATUS_MESSAGE_TYPE))
-						fireChannel.status(id, name);
+						FireChannel fireChannel = State.
+						    getInstance().fireChannel
+						    (channel);
+
+						if(fireChannel != null)
+						{
+						    if(isChatMessageType)
+							fireChannel.append
+							    (id, message, name);
+						    else if(isStatusMessageType)
+							fireChannel.status
+							    (id, name);
+						}
 					    }
-					}
-				    });
+					});
+				}
+				catch(Exception exception)
+				{
+				}
+				finally
+				{
+				    m_activityMutex.readLock().unlock();
+				}
 
 				return 2; // Echo Fire!
 			    }
@@ -3843,7 +3856,16 @@ public class Kernel
 
     public void setActivity(Activity activity)
     {
-	m_activity = new WeakReference<> (activity);
+	m_activityMutex.writeLock().lock();
+
+	try
+	{
+	    m_activity = new WeakReference<> (activity);
+	}
+	finally
+	{
+	    m_activityMutex.writeLock().unlock();
+	}
     }
 
     public void setWakeLock(boolean state)
