@@ -1,0 +1,2 @@
+* Retain Fire messages.
+* Weak references.
