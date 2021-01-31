@@ -27,7 +27,6 @@
 
 package org.purple.smoke;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +35,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager.WifiLock;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -155,15 +156,12 @@ public class Kernel
     private SteamKeyExchange m_steamKeyExchange = null;
     private Time m_time = null;
     private WakeLock m_wakeLock = null;
-    private WeakReference<Activity> m_activity = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
     private final KernelBroadcastReceiver m_receiver =
 	new KernelBroadcastReceiver();
     private final Object m_callSchedulerMutex = new Object();
     private final Object m_messagesToSendSchedulerMutex = new Object();
-    private final ReentrantReadWriteLock m_activityMutex =
-	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_callQueueMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
@@ -2049,14 +2047,10 @@ public class Kernel
 				final boolean isStatusMessageType = strings[0].
 				    equals(Messages.FIRE_STATUS_MESSAGE_TYPE);
 
-				m_activityMutex.readLock().lock();
-
 				try
 				{
-				    if(m_activity != null &&
-				       m_activity.get() != null)
-					m_activity.get().runOnUiThread
-					    (new Runnable()
+				    new Handler(Looper.getMainLooper()).
+					post(new Runnable()
 					{
 					    @Override
 					    public void run()
@@ -2082,7 +2076,6 @@ public class Kernel
 				}
 				finally
 				{
-				    m_activityMutex.readLock().unlock();
 				}
 
 				return 2; // Echo Fire!
@@ -3852,20 +3845,6 @@ public class Kernel
 	}
 
 	return sent;
-    }
-
-    public void setActivity(Activity activity)
-    {
-	m_activityMutex.writeLock().lock();
-
-	try
-	{
-	    m_activity = new WeakReference<> (activity);
-	}
-	finally
-	{
-	    m_activityMutex.writeLock().unlock();
-	}
     }
 
     public void setWakeLock(boolean state)

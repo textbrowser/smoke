@@ -961,7 +961,6 @@ public class Chat extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	Kernel.getInstance().setActivity(this);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new ChatBroadcastReceiver();
         setContentView(R.layout.activity_chat);

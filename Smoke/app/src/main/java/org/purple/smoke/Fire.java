@@ -589,7 +589,6 @@ public class Fire extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	Kernel.getInstance().setActivity(this);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new FireBroadcastReceiver();
         setContentView(R.layout.activity_fire);
