@@ -36,3 +36,16 @@ Summary of Smoke
 <li>Steam, reliable file sharing. TCP over the Echo!</li>
 <li>Super McEliece: m = 13, t = 118.</li>
 </ul>
+
+Starting a Conversation
+
+<ol>
+<li>Download and install Smoke.</li>
+<li>Download and install SmokeStack, Spot-On, or Spot-On-Lite. More adventerous users are welcome to create servers using ncat and socat.</li>
+<li>Define a private or public listener: 192.168.178.220 or tulip-ipv4.tilaa.com.</li>
+<li>Connect Smoke to defined listener.</li>
+<li>Share aliaes: super-alias-1, super-alias-2.</li>
+<li>Define aliases in respective Smoke instances.</li>
+<li>Share public keys.</li>
+<li>Done!</li>
+</ol>
