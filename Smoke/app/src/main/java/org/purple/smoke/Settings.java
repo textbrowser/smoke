@@ -3066,7 +3066,15 @@ public class Settings extends AppCompatActivity
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
 	m_receiver = new SettingsBroadcastReceiver();
-	prepareForegroundService();
+
+	if(State.getInstance().isAuthenticated())
+	{
+	    State.getInstance().setNeighborsEcho
+		(m_databaseHelper.
+		 readSetting(null, "neighbors_echo").equals("true"));
+	    prepareForegroundService();
+	}
+
         setContentView(R.layout.activity_settings);
 
 	try

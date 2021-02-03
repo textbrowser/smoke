@@ -381,6 +381,12 @@ public class Authenticate extends AppCompatActivity
 					    populateParticipants();
 					State.getInstance().
 					    setAuthenticated(true);
+					State.getInstance().setNeighborsEcho
+					    (m_databaseHelper.
+					     readSetting(null,
+							 "neighbors_echo").
+					     equals("true"));
+					prepareForegroundService();
 
 					/*
 					** Disable some widgets.
@@ -568,10 +574,6 @@ public class Authenticate extends AppCompatActivity
 	{
 	}
 
-	State.getInstance().setNeighborsEcho
-	    (m_databaseHelper.readSetting(null,
-					  "neighbors_echo").equals("true"));
-	prepareForegroundService();
 	prepareListeners();
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
