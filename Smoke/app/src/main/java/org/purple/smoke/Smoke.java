@@ -69,12 +69,13 @@ public class Smoke extends Application
 		    {
 			Cryptography.getInstance().exit();
 			SmokeService.stopForegroundTask(getApplication());
+			State.getInstance().setExit();
 
 			if(context instanceof Activity)
 			    ((Activity) context).finishAndRemoveTask();
-
-			android.os.Process.killProcess
-			    (android.os.Process.myPid());
+			else
+			    android.os.Process.killProcess
+				(android.os.Process.myPid());
 		    }
 	        }
 	    };

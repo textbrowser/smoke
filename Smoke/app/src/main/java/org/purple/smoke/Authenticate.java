@@ -593,6 +593,15 @@ public class Authenticate extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+	if(State.getInstance().exit())
+	    android.os.Process.killProcess(android.os.Process.myPid());
+	else
+	    super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.authenticate_menu, menu);

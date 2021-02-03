@@ -3457,8 +3457,13 @@ public class Settings extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-	stopTimers();
-	super.onDestroy();
+	if(State.getInstance().exit())
+	    android.os.Process.killProcess(android.os.Process.myPid());
+	else
+	{
+	    stopTimers();
+	    super.onDestroy();
+	}
     }
 
     @Override

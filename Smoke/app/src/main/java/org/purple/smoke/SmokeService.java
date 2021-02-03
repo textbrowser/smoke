@@ -85,7 +85,7 @@ public class SmokeService extends Service
 		break;
 	    case "stop":
 		stop();
-		break;
+		return START_NOT_STICKY;
 	    default:
 		break;
 	    }

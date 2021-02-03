@@ -664,6 +664,15 @@ public class Fire extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+	if(State.getInstance().exit())
+	    android.os.Process.killProcess(android.os.Process.myPid());
+	else
+	    super.onDestroy();
+    }
+
+    @Override
     protected void onPause()
     {
 	super.onPause();

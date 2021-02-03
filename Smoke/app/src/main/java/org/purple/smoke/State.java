@@ -44,6 +44,7 @@ public class State
 {
     private ArrayList<MessageElement> m_chatMessages = null;
     private ArrayList<ParticipantElement> m_participants = null;
+    private AtomicBoolean m_exit = null;
     private AtomicBoolean m_queryTimerServer = null;
     private Bundle m_bundle = null;
     private Map<String, FireChannel> m_fireChannels = null;
@@ -58,6 +59,7 @@ public class State
     private State()
     {
 	m_bundle = new Bundle();
+	m_exit = new AtomicBoolean(false);
 	m_queryTimerServer = new AtomicBoolean(false);
 	m_steamDetailsStates = new TreeMap<> ();
 	setAuthenticated(false);
@@ -166,6 +168,11 @@ public class State
     public boolean containsFire(String name)
     {
 	return m_fireChannels != null && m_fireChannels.containsKey(name);
+    }
+
+    public boolean exit()
+    {
+	return m_exit.get();
     }
 
     public boolean isAuthenticated()
@@ -627,6 +634,11 @@ public class State
 		}
 	    }
 	}
+    }
+
+    public void setExit()
+    {
+	m_exit.set(true);
     }
 
     public void setLocked(boolean state)
