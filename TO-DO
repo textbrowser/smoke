@@ -277,6 +277,7 @@ Remaining Items
 
 - Brands (profiles).
 - Java does not include methods for destroying private containers.
+- Mutex problem.
 - Option for computing Steam digest.
 - Optional cryptographic discovery.
 - Password-protected ZIP and Netcat transfer.
