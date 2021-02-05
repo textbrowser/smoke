@@ -683,86 +683,37 @@ public class Cryptography
 	if(data == null)
 	    return null;
 
-	m_encryptionKeyMutex.readLock().lock();
-
-	try
-	{
-	    if(m_encryptionKeyBytes == null)
-		return null;
-	}
-	finally
-	{
-	    m_encryptionKeyMutex.readLock().unlock();
-	}
-
-	m_macKeyMutex.readLock().lock();
-
-	try
-	{
-	    if(m_macKeyBytes == null)
-		return null;
-	}
-	finally
-	{
-	    m_macKeyMutex.readLock().unlock();
-	}
-
 	byte bytes[] = null;
 
 	try
 	{
-	    m_encryptionKeyMutex.readLock().lock();
+	    Cipher cipher = null;
+	    byte iv[] = new byte[CIPHER_IV_LENGTH];
 
-	    try
-	    {
-		if(m_encryptionKeyBytes == null)
-		    return null;
-
-		Cipher cipher = null;
-		byte iv[] = new byte[CIPHER_IV_LENGTH];
-
-		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
-		s_secureRandom.nextBytes(iv);
-		cipher.init(Cipher.ENCRYPT_MODE,
-			    encryptionKey(),
-			    new IvParameterSpec(iv));
-		bytes = cipher.doFinal(data);
-		bytes = Miscellaneous.joinByteArrays(iv, bytes);
-	    }
-	    catch(Exception exception)
-	    {
-		return null;
-	    }
-	    finally
-	    {
-		m_encryptionKeyMutex.readLock().unlock();
-	    }
-
-	    m_macKeyMutex.readLock().lock();
-
-	    try
-	    {
-		if(m_macKeyBytes == null)
-		    return null;
-
-		Mac mac = null;
-
-		mac = Mac.getInstance(HMAC_ALGORITHM);
-		mac.init(macKey());
-		bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
-	    }
-	    catch(Exception exception)
-	    {
-		return null;
-	    }
-	    finally
-	    {
-		m_macKeyMutex.readLock().unlock();
-	    }
+	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+	    s_secureRandom.nextBytes(iv);
+	    cipher.init(Cipher.ENCRYPT_MODE,
+			encryptionKey(),
+			new IvParameterSpec(iv));
+	    bytes = cipher.doFinal(data);
+	    bytes = Miscellaneous.joinByteArrays(iv, bytes);
 	}
 	catch(Exception exception)
 	{
-	    bytes = null;
+	    return null;
+	}
+
+	try
+	{
+	    Mac mac = null;
+
+	    mac = Mac.getInstance(HMAC_ALGORITHM);
+	    mac.init(macKey());
+	    bytes = Miscellaneous.joinByteArrays(bytes, mac.doFinal(bytes));
+	}
+	catch(Exception exception)
+	{
+	    return null;
 	}
 
 	return bytes;
@@ -887,34 +838,19 @@ public class Cryptography
 	if(data == null)
 	    return null;
 
-	m_macKeyMutex.readLock().lock();
-
 	try
 	{
-	    if(m_macKeyBytes == null)
-		return null;
+	    Mac mac = null;
 
-	    byte bytes[] = null;
-
-	    try
-	    {
-		Mac mac = null;
-
-		mac = Mac.getInstance(HMAC_ALGORITHM);
-		mac.init(macKey());
-		bytes = mac.doFinal(data);
-	    }
-	    catch(Exception exception)
-	    {
-		bytes = null;
-	    }
-
-	    return bytes;
+	    mac = Mac.getInstance(HMAC_ALGORITHM);
+	    mac.init(macKey());
+	    return mac.doFinal(data);
 	}
-	finally
+	catch(Exception exception)
 	{
-	    m_macKeyMutex.readLock().unlock();
 	}
+
+	return null;
     }
 
     public byte[] identity()
@@ -946,30 +882,6 @@ public class Cryptography
 	if(data == null)
 	    return null;
 
-	m_encryptionKeyMutex.readLock().lock();
-
-	try
-	{
-	    if(m_encryptionKeyBytes == null)
-		return null;
-	}
-	finally
-	{
-	    m_encryptionKeyMutex.readLock().unlock();
-	}
-
-	m_macKeyMutex.readLock().lock();
-
-	try
-	{
-	    if(m_macKeyBytes == null)
-		return null;
-	}
-	finally
-	{
-	    m_macKeyMutex.readLock().unlock();
-	}
-
 	try
 	{
 	    /*
@@ -981,13 +893,9 @@ public class Cryptography
 
 	    digest1 = Arrays.copyOfRange
 		(data, data.length - HASH_KEY_LENGTH, data.length);
-	    m_macKeyMutex.readLock().lock();
 
 	    try
 	    {
-		if(m_macKeyBytes == null)
-		    return null;
-
 		Mac mac = null;
 
 		mac = Mac.getInstance(HMAC_ALGORITHM);
@@ -998,10 +906,6 @@ public class Cryptography
 	    catch(Exception exception)
 	    {
 		return null;
-	    }
-	    finally
-	    {
-		m_macKeyMutex.readLock().unlock();
 	    }
 
 	    if(!memcmp(digest1, digest2))
@@ -1016,33 +920,17 @@ public class Cryptography
 
 	try
 	{
-	    m_encryptionKeyMutex.readLock().lock();
+	    Cipher cipher = null;
+	    byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
-	    try
-	    {
-		if(m_encryptionKeyBytes == null)
-		    return null;
-
-		Cipher cipher = null;
-		byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
-
-		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
-		cipher.init(Cipher.DECRYPT_MODE,
-			    encryptionKey(),
-			    new IvParameterSpec(iv));
-		bytes = cipher.doFinal
-		    (Arrays.copyOfRange(data,
-					CIPHER_IV_LENGTH,
-					data.length - HASH_KEY_LENGTH));
-	    }
-	    catch(Exception exception)
-	    {
-		bytes = null;
-	    }
-	    finally
-	    {
-		m_encryptionKeyMutex.readLock().unlock();
-	    }
+	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
+	    cipher.init(Cipher.DECRYPT_MODE,
+			encryptionKey(),
+			new IvParameterSpec(iv));
+	    bytes = cipher.doFinal
+		(Arrays.copyOfRange(data,
+				    CIPHER_IV_LENGTH,
+				    data.length - HASH_KEY_LENGTH));
 	}
 	catch(Exception exception)
 	{
