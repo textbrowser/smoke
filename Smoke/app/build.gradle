@@ -8,12 +8,12 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 20210130
-        versionName "2021.01.30"
+        versionCode 20210210
+        versionName "2021.02.10"
     }
     buildTypes {
         android.applicationVariants.all { variant ->
-            buildConfigField "String", "SMOKE_IPV4_HOST", "\"127.0.0.1\""
+            buildConfigField "String", "SMOKE_IPV4_HOST", "\"tulip-ipv4.tilaa.cloud\""
             buildConfigField "String", "SMOKE_IPV4_PORT", "\"4710\""
             variant.outputs.all {
                 outputFileName = "./apk/smoke.apk"

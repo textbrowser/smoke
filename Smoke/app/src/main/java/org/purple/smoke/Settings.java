@@ -3065,16 +3065,25 @@ public class Settings extends AppCompatActivity
     {
 	super.onCreate(savedInstanceState);
 	m_databaseHelper = Database.getInstance(getApplicationContext());
+
+	boolean isAuthenticated = State.getInstance().isAuthenticated();
+
+	if(!isAuthenticated)
+	    /*
+	    ** Show the Authenticate activity if an account is present.
+	    */
+
+	    if(m_databaseHelper.accountPrepared())
+	    {
+		showAuthenticateActivity();
+		return;
+	    }
+
+	State.getInstance().setNeighborsEcho
+	    (m_databaseHelper.
+	     readSetting(null, "neighbors_echo").equals("true"));
 	m_receiver = new SettingsBroadcastReceiver();
-
-	if(State.getInstance().isAuthenticated())
-	{
-	    State.getInstance().setNeighborsEcho
-		(m_databaseHelper.
-		 readSetting(null, "neighbors_echo").equals("true"));
-	    prepareForegroundService();
-	}
-
+	prepareForegroundService();
         setContentView(R.layout.activity_settings);
 
 	try
@@ -3088,7 +3097,6 @@ public class Settings extends AppCompatActivity
 
 	prepareListeners();
 
-	boolean isAuthenticated = State.getInstance().isAuthenticated();
         Button button1 = (Button) findViewById(R.id.add_neighbor);
 
         button1.setEnabled(isAuthenticated);
@@ -3430,16 +3438,6 @@ public class Settings extends AppCompatActivity
 
 	Kernel.getInstance().setWakeLock
 	    (m_databaseHelper.readSetting(null, "always_awake").equals("true"));
-
-	/*
-	** Show the Authenticate activity if an account is present.
-	*/
-
-	if(!State.getInstance().isAuthenticated())
-	{
-	    if(m_databaseHelper.accountPrepared())
-		showAuthenticateActivity();
-	}
 
 	if(!m_databaseHelper.accountPrepared())
 	{
