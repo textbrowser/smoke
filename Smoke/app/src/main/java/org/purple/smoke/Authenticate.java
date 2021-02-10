@@ -378,8 +378,6 @@ public class Authenticate extends AppCompatActivity
 					    (s_cryptography);
 					Kernel.getInstance();
 					State.getInstance().
-					    populateParticipants();
-					State.getInstance().
 					    setAuthenticated(true);
 					State.getInstance().setNeighborsEcho
 					    (m_databaseHelper.

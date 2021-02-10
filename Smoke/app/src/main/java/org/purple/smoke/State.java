@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
@@ -54,15 +55,76 @@ public class State
 	ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_participantsMutex = new
 	ReentrantReadWriteLock();
+    private final static long POPULATE_PARTICIPANTS_INTERVAL = 2500L;
     private static State s_instance = null;
 
     private State()
     {
 	m_bundle = new Bundle();
 	m_exit = new AtomicBoolean(false);
+	m_participants = new ArrayList<> ();
 	m_queryTimerServer = new AtomicBoolean(false);
 	m_steamDetailsStates = new TreeMap<> ();
+	populateParticipants();
 	setAuthenticated(false);
+    }
+
+    private void populateParticipants()
+    {
+	if(m_participantsScheduler == null)
+	    m_participantsScheduler = Executors.
+		newSingleThreadScheduledExecutor();
+
+	m_participantsScheduler.scheduleAtFixedRate(new Runnable()
+	{
+	    @Override
+	    public void run()
+	    {
+		try
+		{
+		    if(!isAuthenticated())
+			return;
+
+		    ArrayList<ParticipantElement> arrayList =
+			Database.getInstance().readParticipants
+			(Cryptography.getInstance(), "");
+
+		    if(arrayList == null)
+			return;
+		    else
+			Collections.sort(arrayList);
+
+		    m_participantsMutex.writeLock().lock();
+
+		    try
+		    {
+			if(!arrayList.equals(m_participants))
+			{
+			    m_participants = arrayList;
+
+			    Intent intent = new Intent
+				("org.purple.smoke." +
+				 "state_participants_populated");
+			    LocalBroadcastManager localBroadcastManager =
+				LocalBroadcastManager.
+				getInstance(Smoke.getApplication());
+
+			    localBroadcastManager.sendBroadcast(intent);
+			}
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		    finally
+		    {
+			m_participantsMutex.writeLock().unlock();
+		    }
+		}
+		catch(Exception exception)
+		{
+		}
+	    }
+	}, 0L, POPULATE_PARTICIPANTS_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     public ArrayList<ParticipantElement> participants()
@@ -392,79 +454,6 @@ public class State
 	{
 	    m_bundleMutex.writeLock().unlock();
 	}
-    }
-
-    public void populateParticipants()
-    {
-	m_participantsMutex.writeLock().lock();
-
-	try
-	{
-	    if(m_participants == null)
-		m_participants = new ArrayList<> ();
-	    else
-		m_participants.clear();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_participantsMutex.writeLock().unlock();
-	}
-
-	if(m_participantsScheduler == null)
-	    m_participantsScheduler = Executors.
-		newSingleThreadScheduledExecutor();
-	else
-	{
-	    try
-	    {
-		m_participantsScheduler.shutdownNow();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    m_participantsScheduler = Executors.
-		newSingleThreadScheduledExecutor();
-	}
-
-	m_participantsScheduler.schedule(new Runnable()
-	{
-	    @Override
-	    public void run()
-	    {
-		try
-		{
-		    m_participantsMutex.writeLock().lock();
-
-		    try
-		    {
-			m_participants = Database.getInstance().
-			    readParticipants(Cryptography.getInstance(), "");
-
-			Intent intent = new Intent
-			    ("org.purple.smoke.state_participants_populated");
-			LocalBroadcastManager localBroadcastManager =
-			    LocalBroadcastManager.
-			    getInstance(Smoke.getApplication());
-
-			localBroadcastManager.sendBroadcast(intent);
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		    finally
-		    {
-			m_participantsMutex.writeLock().unlock();
-		    }
-		}
-		catch(Exception exception)
-		{
-		}
-	    }
-	}, 0L, TimeUnit.MILLISECONDS);
     }
 
     public void removeChatCheckBoxOid(int oid)

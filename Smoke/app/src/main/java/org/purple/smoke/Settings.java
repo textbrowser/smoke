@@ -3579,7 +3579,6 @@ public class Settings extends AppCompatActivity
 				   deleteEntry(String.valueOf(itemId),
 					       "siphash_ids"))
 				{
-				    State.getInstance().populateParticipants();
 				    State.getInstance().
 					removeChatCheckBoxOid(itemId);
 				    State.getInstance().setString
@@ -3623,10 +3622,7 @@ public class Settings extends AppCompatActivity
 			   writeParticipantName(s_cryptography,
 						string,
 						itemId))
-			{
-			    State.getInstance().populateParticipants();
 			    populateParticipants();
-			}
 
 			State.getInstance().removeKey
 			    ("settings_participant_name_input");

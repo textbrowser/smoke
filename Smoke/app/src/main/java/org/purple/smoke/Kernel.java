@@ -186,7 +186,7 @@ public class Kernel
 	new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
     private final static SipHash s_congestionSipHash = new SipHash
 	(Cryptography.randomBytes(SipHash.KEY_LENGTH));
-    private final static int CONGESTION_LIFETIME = 60; // 60 seconds.
+    private final static int CONGESTION_LIFETIME = 65; // 65 seconds.
     private final static int FIRE_TIME_DELTA = 30000; // 30 seconds.
     private final static int MCELIECE_OUTPUT_SIZES[] = {304,   // 48 bytes.
 							320,   // 64 bytes.
@@ -2246,7 +2246,6 @@ public class Kernel
 		    ** New participant.
 		    */
 
-		    State.getInstance().populateParticipants();
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.populate_participants");
 
@@ -3193,7 +3192,6 @@ public class Kernel
 
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.populate_participants");
-		    State.getInstance().populateParticipants();
 		    return 1;
 		}
 	    }

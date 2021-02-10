@@ -1369,7 +1369,6 @@ public class Chat extends AppCompatActivity
 	    switch(groupId)
 	    {
 	    case ContextMenuEnumerator.REFRESH_PARTICIPANTS_TABLE:
-		State.getInstance().populateParticipants();
 		populateParticipants();
 		break;
 	    case ContextMenuEnumerator.RETRIEVE_MESSAGES:
@@ -1377,7 +1376,6 @@ public class Chat extends AppCompatActivity
 		requestMessages();
 		break;
 	    case ContextMenuEnumerator.SHOW_DETAILS:
-		State.getInstance().populateParticipants();
 		menuItem.setChecked(!menuItem.isChecked());
 		m_databaseHelper.writeSetting
 		    (null,

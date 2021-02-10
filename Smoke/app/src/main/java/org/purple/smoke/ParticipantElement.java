@@ -27,7 +27,7 @@
 
 package org.purple.smoke;
 
-public class ParticipantElement
+public class ParticipantElement implements Comparable<ParticipantElement>
 {
     public String m_name = "";
     public String m_sipHashId = "";
@@ -37,5 +37,35 @@ public class ParticipantElement
 
     public ParticipantElement()
     {
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if(object instanceof ParticipantElement)
+	{
+            ParticipantElement participantElement =
+		(ParticipantElement) object;
+
+	    if(participantElement != null)
+                return m_sipHashId.equals(participantElement.m_sipHashId);
+        }
+
+	return false;
+    }
+
+    @Override
+    public int compareTo(ParticipantElement participantElement)
+    {
+	if(participantElement != null)
+	    return m_sipHashId.compareTo(participantElement.m_sipHashId);
+	else
+	    return 1;
+    }
+
+    @Override
+    public int hashCode()
+    {
+	return m_sipHashId.hashCode();
     }
 }
