@@ -276,6 +276,7 @@ Completed Items
 Remaining Items
 
 - Brands (profiles).
+- Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Mutex problem.
 - Option for computing Steam digest.
