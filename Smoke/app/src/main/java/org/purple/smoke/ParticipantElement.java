@@ -58,7 +58,7 @@ public class ParticipantElement implements Comparable<ParticipantElement>
     public int compareTo(ParticipantElement participantElement)
     {
 	if(participantElement != null)
-	    return m_sipHashId.compareTo(participantElement.m_sipHashId);
+	    return m_name.compareTo(participantElement.m_name);
 	else
 	    return 1;
     }

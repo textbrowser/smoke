@@ -97,6 +97,9 @@ public class Time
 		}
 		catch(Exception exception)
 		{
+		    Miscellaneous.sendBroadcast
+			("org.purple.smoke.time",
+			 "Unable to query " + TIME_URL + ".");
 		}
 		finally
 		{
