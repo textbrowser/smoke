@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class SteamReader
 {
+    private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     protected AssetFileDescriptor m_assetFileDescriptor = null;
     protected AtomicBoolean m_canceled = null;
     protected AtomicBoolean m_completed = null;
@@ -71,7 +72,8 @@ public abstract class SteamReader
 
 	    try
 	    {
-		if(!m_reader.awaitTermination(60L, TimeUnit.SECONDS))
+		if(!m_reader.
+		   awaitTermination(AWAIT_TERMINATION, TimeUnit.SECONDS))
 		    m_reader.shutdownNow();
 	    }
 	    catch(Exception exception)
