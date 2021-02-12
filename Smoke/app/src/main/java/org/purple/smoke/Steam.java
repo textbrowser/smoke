@@ -141,6 +141,7 @@ public class Steam extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_FILE_REQUEST = 0;
+    private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     private final static long STATUS_INTERVAL = 1500L; // 1.5 seconds.
     public final static String OTHER = "Other (Non-Smoke)";
 
@@ -324,7 +325,8 @@ public class Steam extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_statusScheduler.awaitTermination(60L, TimeUnit.SECONDS))
+		if(!m_statusScheduler.
+		   awaitTermination(AWAIT_TERMINATION, TimeUnit.SECONDS))
 		    m_statusScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)

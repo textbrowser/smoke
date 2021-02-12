@@ -85,6 +85,7 @@ public class FireChannel extends View
 	new Hashtable<> ();
     private final SimpleDateFormat m_simpleDateFormat =
 	new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+    private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     private final static long STATUS_INTERVAL = 30000L;
 
     private void createSchedulers()
@@ -306,7 +307,8 @@ public class FireChannel extends View
 		    try
 		    {
 			if(!m_statusScheduler.
-			   awaitTermination(60L, TimeUnit.SECONDS))
+			   awaitTermination(AWAIT_TERMINATION,
+					    TimeUnit.SECONDS))
 			    m_statusScheduler.shutdownNow();
 		    }
 		    catch(Exception exception)

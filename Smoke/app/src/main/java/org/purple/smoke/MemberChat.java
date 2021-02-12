@@ -248,6 +248,7 @@ public class MemberChat extends AppCompatActivity
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
+    private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     private int m_oid = -1;
 
     public abstract static class ContextMenuEnumerator
@@ -544,7 +545,8 @@ public class MemberChat extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_statusScheduler.awaitTermination(60L, TimeUnit.SECONDS))
+		if(!m_statusScheduler.
+		   awaitTermination(AWAIT_TERMINATION, TimeUnit.SECONDS))
 		    m_statusScheduler.shutdownNow();
 	    }
 	    catch(Exception exception)

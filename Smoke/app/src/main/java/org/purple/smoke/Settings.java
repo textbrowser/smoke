@@ -214,6 +214,7 @@ public class Settings extends AppCompatActivity
     };
     private final static int OZONE_STREAM_CREATION_ITERATION_COUNT = 4096;
     private final static int TEXTVIEW_WIDTH = 500;
+    private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     private final static long TIMER_INTERVAL = 2500L; // 2.5 seconds.
 
     private boolean generateOzone(String string)
@@ -2548,29 +2549,7 @@ public class Settings extends AppCompatActivity
 
     private void releaseResources()
     {
-	if(m_scheduler != null)
-	{
-	    try
-	    {
-		m_scheduler.shutdown();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	    try
-	    {
-		if(!m_scheduler.awaitTermination(60L, TimeUnit.SECONDS))
-		    m_scheduler.shutdownNow();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-	    finally
-	    {
-		m_scheduler = null;
-	    }
-	}
+	stopTimers();
     }
 
     private void requestKeysOf(final String oid)
@@ -3047,7 +3026,8 @@ public class Settings extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_scheduler.awaitTermination(60L, TimeUnit.SECONDS))
+		if(!m_scheduler.
+		   awaitTermination(AWAIT_TERMINATION, TimeUnit.SECONDS))
 		    m_scheduler.shutdownNow();
 	    }
 	    catch(Exception exception)

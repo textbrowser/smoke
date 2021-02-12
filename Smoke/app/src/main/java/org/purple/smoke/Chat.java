@@ -157,6 +157,7 @@ public class Chat extends AppCompatActivity
 		     (byte) 0x0c, (byte) 0x0d, (byte) 0x0e, (byte) 0x0f});
     private final static int CHECKBOX_TEXT_SIZE = 13;
     private final static long STATUS_INTERVAL = 30000L; // 30 seconds.
+    private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     public final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     public final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
     public final static long CHAT_WINDOW = 60000L; // 1 Minute
@@ -746,14 +747,17 @@ public class Chat extends AppCompatActivity
 			    return;
 
 			for(final String string : arrayList)
-			    Chat.this.runOnUiThread(new Runnable()
-			    {
-				@Override
-				public void run()
+			    if(Thread.currentThread().isInterrupted())
+				break;
+			    else
+				Chat.this.runOnUiThread(new Runnable()
 				{
-				    refreshCheckBox(string);
-				}
-			    });
+				    @Override
+				    public void run()
+				    {
+					refreshCheckBox(string);
+				    }
+				});
 
 			arrayList.clear();
 		    }
@@ -865,7 +869,8 @@ public class Chat extends AppCompatActivity
 
 	    try
 	    {
-		if(!m_scheduler.awaitTermination(60L, TimeUnit.SECONDS))
+		if(!m_scheduler.
+		   awaitTermination(AWAIT_TERMINATION, TimeUnit.SECONDS))
 		    m_scheduler.shutdownNow();
 	    }
 	    catch(Exception exception)
