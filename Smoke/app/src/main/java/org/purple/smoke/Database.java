@@ -3268,23 +3268,6 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.delete("outbound_queue",
-			"message_identity_digest = ?",
-			new String[] {messageIdentityDigest});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
 	    ContentValues values = new ContentValues();
 
 	    values.put
@@ -3360,6 +3343,26 @@ public class Database extends SQLiteOpenHelper
     {
 	if(cryptography == null || m_db == null || messageIdentity == null)
 	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    m_db.delete
+		("outbound_queue",
+		 "message_identity_digest = ?",
+		 new String[] {Base64.encodeToString(cryptography.
+						     hmac(messageIdentity),
+						     Base64.DEFAULT)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
 
 	m_db.beginTransactionNonExclusive();
 
