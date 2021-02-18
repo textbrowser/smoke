@@ -673,7 +673,8 @@ public class Settings extends AppCompatActivity
 
 		    if(!Kernel.getInstance().
 		       enqueueMessage(Messages.bytesToMessageString(bytes),
-				      null))
+				      null,
+				      Database.MESSAGE_DELIVERY_ATTEMPTS - 1))
 		    {
 			m_error = "enqueueMessage() failure";
 			break;
@@ -2594,7 +2595,9 @@ public class Settings extends AppCompatActivity
 		    else if(!Kernel.getInstance().
 			    enqueueMessage(Messages.
 					   bytesToMessageString(bytes),
-					   null))
+					   null,
+					   Database.
+					   MESSAGE_DELIVERY_ATTEMPTS - 1))
 			m_error = "enqueueMessage() failure";
 		}
 
@@ -2673,7 +2676,9 @@ public class Settings extends AppCompatActivity
 		    else if(!Kernel.getInstance().
 			    enqueueMessage(Messages.
 					   bytesToMessageString(bytes),
-					   null))
+					   null,
+					   Database.
+					   MESSAGE_DELIVERY_ATTEMPTS - 1))
 			m_error = "enqueueMessage() failure";
 		}
 

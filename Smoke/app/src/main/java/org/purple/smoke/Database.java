@@ -155,7 +155,6 @@ public class Database extends SQLiteOpenHelper
 	new ReentrantReadWriteLock();
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
-    private final static long MESSAGE_DELIVERY_ATTEMPTS = 5L; // Must be > 0!
     private final static long WRITE_PARTICIPANT_TIME_DELTA =
 	60000L; // 60 seconds.
     private static Database s_instance = null;
@@ -164,6 +163,7 @@ public class Database extends SQLiteOpenHelper
 	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
     }
     public final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
+    public final static int MESSAGE_DELIVERY_ATTEMPTS = 5; // Must be > 0!
 
     private Database(Context context)
     {
@@ -4544,6 +4544,7 @@ public class Database extends SQLiteOpenHelper
     public void enqueueOutboundMessage(Cryptography cryptography,
 				       String message,
 				       byte messageIdentity[],
+				       int attempts,
 				       int oid)
     {
 	if(cryptography == null ||
@@ -4558,6 +4559,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
+	    values.put("attempts", attempts);
 	    values.put
 		("message",
 		 Base64.encodeToString(cryptography.etm(message.getBytes()),

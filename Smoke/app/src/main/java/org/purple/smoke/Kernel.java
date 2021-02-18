@@ -866,7 +866,8 @@ public class Kernel
 				    enqueueMessage
 					(Messages.
 					 bytesToMessageString(bytes),
-					 messageElement.m_messageIdentity);
+					 messageElement.m_messageIdentity,
+					 0);
 
 				    if(messageElement.m_messageType !=
 				       MessageElement.
@@ -880,7 +881,9 @@ public class Kernel
 				    enqueueMessage
 					(Messages.
 					 bytesToMessageStringNonBase64(bytes),
-					 null);
+					 null,
+					 Database.
+					 MESSAGE_DELIVERY_ATTEMPTS - 1);
 				    break;
 				case MessageElement.FIRE_STATUS_MESSAGE_TYPE:
 				    scheduleSend
@@ -908,12 +911,17 @@ public class Kernel
 				    enqueueMessage
 					(Messages.
 					 bytesToMessageString(bytes),
-					 null);
+					 null,
+					 Database.
+					 MESSAGE_DELIVERY_ATTEMPTS - 1);
 				    break;
 				case MessageElement.
 				     STEAM_KEY_EXCHANGE_MESSAGE_TYPE:
 				    enqueueMessage
-					(messageElement.m_message, null);
+					(messageElement.m_message,
+					 null,
+					 Database.
+					 MESSAGE_DELIVERY_ATTEMPTS - 1);
 				    break;
 				default:
 				    break;
@@ -947,7 +955,9 @@ public class Kernel
 					("OZONE-" + Base64.
 					 encodeToString(bytes,
 							Base64.NO_WRAP),
-					 null);
+					 null,
+					 Database.
+					 MESSAGE_DELIVERY_ATTEMPTS - 1);
 			    }
 
 			    break;
@@ -1062,7 +1072,9 @@ public class Kernel
 					enqueueMessage
 					    (Messages.
 					     bytesToMessageString(bytes),
-					     null);
+					     null,
+					     Database.
+					     MESSAGE_DELIVERY_ATTEMPTS - 1);
 				}
 
 				arrayList.clear();
@@ -1096,7 +1108,9 @@ public class Kernel
 					enqueueMessage
 					    (Messages.
 					     bytesToMessageString(bytes),
-					     null);
+					     null,
+					     Database.
+					     MESSAGE_DELIVERY_ATTEMPTS - 1);
 				}
 
 				arrayList.clear();
@@ -1700,7 +1714,9 @@ public class Kernel
 	return true;
     }
 
-    public boolean enqueueMessage(String message, byte messageIdentity[])
+    public boolean enqueueMessage(String message,
+				  byte messageIdentity[],
+				  int attempts)
     {
 	if(message == null || message.trim().isEmpty())
 	    return false;
@@ -1721,6 +1737,7 @@ public class Kernel
 		    (s_cryptography,
 		     message,
 		     messageIdentity,
+		     attempts,
 		     arrayList.get(i).m_oid);
 
 	arrayList.clear();
@@ -2285,7 +2302,9 @@ public class Kernel
 
 		    if(bytes != null)
 			enqueueMessage
-			    (Messages.bytesToMessageString(bytes), null);
+			    (Messages.bytesToMessageString(bytes),
+			     null,
+			     Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
 		}
 
 		return 1;
@@ -2857,7 +2876,8 @@ public class Kernel
 							  strings[1],
 							  keyStream,
 							  messageIdentity)),
-			 null);
+			 null,
+			 Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
 
 		    if(ourMessageViaChatTemporaryIdentity)
 			enqueueMessage
@@ -2865,7 +2885,8 @@ public class Kernel
 			     bytesToMessageString(Messages.
 						  messageRead(s_cryptography,
 							      sha512OfMessage)),
-			     null);
+			     null,
+			     Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
 		}
 
 		return 1;
