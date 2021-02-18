@@ -359,29 +359,30 @@ public abstract class Neighbor
 			(m_oid.get());
 
 		    /*
-		    ** array[0]: Message
-		    ** array[1]: Message Identity Digest
-		    ** array[2]: OID
+		    ** array[0]: Attempts
+		    ** array[1]: Message
+		    ** array[2]: Message Identity Digest
+		    ** array[3]: OID
 		    */
 
 		    /*
 		    ** If the message is sent successfully, mark its timestamp.
 		    */
 
-		    if(array != null && array.length == 3)
+		    if(array != null && array.length == 4)
 		    {
 			byte bytes[] = m_cryptography.mtd
-			    (Base64.decode(array[0], Base64.DEFAULT));
+			    (Base64.decode(array[1], Base64.DEFAULT));
 
 			if(bytes != null)
-			    array[0] = new String(bytes);
+			    array[1] = new String(bytes);
 			else
-			    array[0] = "";
+			    array[1] = "";
 
-			if(array[0].startsWith("OZONE-"))
+			if(array[1].startsWith("OZONE-"))
 			{
 			    bytes = Base64.decode
-				(array[0].substring(6), Base64.NO_WRAP);
+				(array[1].substring(6), Base64.NO_WRAP);
 
 			    if(bytes != null)
 			    {
@@ -406,25 +407,26 @@ public abstract class Neighbor
 					  m_cryptography.ozoneMacKey()));
 			    }
 			    else
-				array[0] = "";
+				array[1] = "";
 
 			    if(bytes != null)
-				array[0] = Messages.bytesToMessageString(bytes);
+				array[1] = Messages.bytesToMessageString(bytes);
 			    else
-				array[0] = "";
+				array[1] = "";
 			}
 
-			if(array[0].isEmpty())
+			if(array[1].isEmpty())
 			    m_databaseHelper.deleteEntry
-				(array[2], "outbound_queue");
-			else if(send(array[0]) > 0)
+				(array[3], "outbound_queue");
+			else if(send(array[1]) > 0)
 			{
-			    m_databaseHelper.markMessageTimestamp(array[2]);
+			    m_databaseHelper.markMessageTimestamp
+				(array[0], array[3]);
 
 			    if(m_databaseHelper.
-			       writeMessageStatus(m_cryptography, array[1]))
+			       writeMessageStatus(m_cryptography, array[2]))
 				Kernel.getInstance().notifyOfDataSetChange
-				    (array[2]);
+				    (array[3]);
 			}
 		    }
 

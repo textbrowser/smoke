@@ -155,6 +155,7 @@ public class Database extends SQLiteOpenHelper
 	new ReentrantReadWriteLock();
     private final static String DATABASE_NAME = "smoke.db";
     private final static int DATABASE_VERSION = 1;
+    private final static long MESSAGE_DELIVERY_ATTEMPTS = 5L; // Must be > 0!
     private final static long WRITE_PARTICIPANT_TIME_DELTA =
 	60000L; // 60 seconds.
     private static Database s_instance = null;
@@ -2869,21 +2870,25 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT message, message_identity_digest, oid " +
+		("SELECT attempts, message, message_identity_digest, oid " +
 		 "FROM outbound_queue " +
-		 "WHERE neighbor_oid = ? AND " +
+		 "WHERE attempts < CAST(? AS INTEGER) AND " +
+		 "neighbor_oid = ? AND " +
 		 "(CAST(? AS INTEGER) - timestamp) > CAST(? AS INTEGER) " +
 		 "ORDER BY oid LIMIT 1",
-		 new String[] {String.valueOf(oid),
+		 new String[] {String.valueOf(MESSAGE_DELIVERY_ATTEMPTS),
+			       String.valueOf(oid),
 			       String.valueOf(System.currentTimeMillis()),
-			       String.valueOf(Chat.CHAT_WINDOW / 3)});
+			       String.valueOf(Chat.CHAT_WINDOW /
+					      MESSAGE_DELIVERY_ATTEMPTS)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		array = new String[3];
-		array[0] = cursor.getString(0);
+		array = new String[4];
+		array[0] = String.valueOf(cursor.getInt(0));
 		array[1] = cursor.getString(1);
-		array[2] = String.valueOf(cursor.getInt(2));
+		array[2] = cursor.getString(2);
+		array[3] = String.valueOf(cursor.getInt(3));
 	    }
 	}
 	catch(Exception exception)
@@ -3258,6 +3263,23 @@ public class Database extends SQLiteOpenHelper
     {
 	if(cryptography == null || m_db == null)
 	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    m_db.delete("outbound_queue",
+			"message_identity_digest = ?",
+			new String[] {messageIdentityDigest});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
 
 	m_db.beginTransactionNonExclusive();
 
@@ -4578,7 +4600,7 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public void markMessageTimestamp(String oid)
+    public void markMessageTimestamp(String attempts, String oid)
     {
 	if(m_db == null)
 	    return;
@@ -4589,6 +4611,7 @@ public class Database extends SQLiteOpenHelper
 	{
 	    ContentValues values = new ContentValues();
 
+	    values.put("attempts", Integer.parseInt(attempts) + 1);
 	    values.put("timestamp", System.currentTimeMillis());
 	    m_db.update
 		("outbound_queue", values, "oid = ?", new String[] {oid});
@@ -4839,6 +4862,7 @@ public class Database extends SQLiteOpenHelper
 	*/
 
 	str = "CREATE TABLE IF NOT EXISTS outbound_queue (" +
+	    "attempts INTEGER DEFAULT 0, " +
 	    "message TEXT NOT NULL, " +
 	    "message_identity_digest TEXT NOT NULL, " +
 	    "neighbor_oid INTEGER NOT NULL, " +
