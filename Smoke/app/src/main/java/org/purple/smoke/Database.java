@@ -2871,8 +2871,12 @@ public class Database extends SQLiteOpenHelper
 	    cursor = m_db.rawQuery
 		("SELECT message, message_identity_digest, oid " +
 		 "FROM outbound_queue " +
-		 "WHERE neighbor_oid = ? ORDER BY oid LIMIT 1",
-		 new String[] {String.valueOf(oid)});
+		 "WHERE neighbor_oid = ? AND " +
+		 "(CAST(? AS INTEGER) - timestamp) > CAST(? AS INTEGER) " +
+		 "ORDER BY oid LIMIT 1",
+		 new String[] {String.valueOf(oid),
+			       String.valueOf(System.currentTimeMillis()),
+			       String.valueOf(Chat.CHAT_WINDOW / 3)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -4574,6 +4578,31 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void markMessageTimestamp(String oid)
+    {
+	if(m_db == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("timestamp", System.currentTimeMillis());
+	    m_db.update
+		("outbound_queue", values, "oid = ?", new String[] {oid});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+        {
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void neighborControlStatus(Cryptography cryptography,
 				      String controlStatus,
 				      String oid)
@@ -4813,6 +4842,7 @@ public class Database extends SQLiteOpenHelper
 	    "message TEXT NOT NULL, " +
 	    "message_identity_digest TEXT NOT NULL, " +
 	    "neighbor_oid INTEGER NOT NULL, " +
+	    "timestamp INTEGER DEFAULT 0, " +
 	    "PRIMARY KEY (message, neighbor_oid))";
 
 	try

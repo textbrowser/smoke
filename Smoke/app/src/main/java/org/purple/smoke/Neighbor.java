@@ -365,8 +365,7 @@ public abstract class Neighbor
 		    */
 
 		    /*
-		    ** If the message is sent successfully, remove it
-		    ** from the database.
+		    ** If the message is sent successfully, mark its timestamp.
 		    */
 
 		    if(array != null && array.length == 3)
@@ -420,8 +419,7 @@ public abstract class Neighbor
 				(array[2], "outbound_queue");
 			else if(send(array[0]) > 0)
 			{
-			    m_databaseHelper.deleteEntry
-				(array[2], "outbound_queue");
+			    m_databaseHelper.markMessageTimestamp(array[2]);
 
 			    if(m_databaseHelper.
 			       writeMessageStatus(m_cryptography, array[1]))
