@@ -205,6 +205,12 @@ Completed Items
 - Requesting offline messages stalls if there are several active neighbors.
   https://developer.android.com/reference/android/net/wifi/
   WifiManager.WifiLock.html
+- Reliable delivery of deliverable text messages:
+  [x] Delete messages which are not deliverable.
+  [x] Delete messages which have been received.
+  [x] Retrieve deliverable messages. Messages are deliverable if their
+      timestamps are within well-defined time windows.
+  [x] Text messages only.
 - Reset option in Authenticate activity.
 - Reset option. Remove smoke.db. Reset widget states.
 - Reset spinners after credentials are initialized.
@@ -284,10 +290,4 @@ Remaining Items
 - Password-protected ZIP and Netcat transfer.
 - Play Store.
 - Puff.
-- Reliable delivery of deliverable text messages:
-  [x] Delete messages which are not deliverable.
-  [x] Delete messages which have been received.
-  [x] Retrieve deliverable messages. Messages are deliverable if their
-      timestamps are within well-defined time windows.
-  [x] Text messages only.
 - SHA3 via BC.
