@@ -211,7 +211,7 @@ public class Kernel
     private final static long NEIGHBORS_INTERVAL = 5000L; // 5 seconds.
     private final static long NETWORK_STATUS_INTERVAL = 1500L; // 1.5 seconds.
     private final static long PUBLISH_KEYS_INTERVAL = 45000L; // 45 seconds.
-    private final static long PURGE_INTERVAL = 30000L; // 30 seconds.
+    private final static long PURGE_INTERVAL = 5000L; // 5 seconds.
     private final static long REQUEST_MESSAGES_INTERVAL = 60000L; // 60 seconds.
     private final static long SHARE_SIPHASH_ID_CONFIRMATION_WINDOW =
 	15000L; // 15 seconds.
@@ -1122,9 +1122,6 @@ public class Kernel
 
 		    try
 		    {
-		    }
-		    catch(Exception exception)
-		    {
 			Iterator<Hashtable.Entry<String, Juggernaut> >
 			    it = m_juggernauts.entrySet().iterator();
 
@@ -1145,6 +1142,9 @@ public class Kernel
 				it.remove();
 			}
 		    }
+		    catch(Exception exception)
+		    {
+		    }
 		    finally
 		    {
 			m_juggernautsMutex.writeLock().unlock();
@@ -1152,6 +1152,7 @@ public class Kernel
 
 		    try
 		    {
+			s_databaseHelper.cleanDanglingOutboundQueued();
 			s_databaseHelper.purgeCongestion(CONGESTION_LIFETIME);
 			s_databaseHelper.purgeParticipantsKeyStreams
 			    (PARTICIPANTS_KEYSTREAMS_LIFETIME);

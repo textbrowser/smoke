@@ -4311,16 +4311,15 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
-	Cursor cursor = null;
-
 	m_db.beginTransactionNonExclusive();
 
 	try
 	{
-	    cursor = m_db.rawQuery
-		("DELETE FROM outbound_queue WHERE neighbor_oid " +
-		 "NOT IN (SELECT oid FROM neighbors)",
-		 null);
+	    m_db.execSQL
+		("DELETE FROM outbound_queue WHERE attempts >= " +
+		 "CAST(? AS INTEGER) OR " +
+		 "neighbor_oid NOT IN (SELECT oid FROM neighbors)",
+		 new String[] {String.valueOf(MESSAGE_DELIVERY_ATTEMPTS)});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
@@ -4328,9 +4327,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	finally
 	{
-	    if(cursor != null)
-		cursor.close();
-
 	    m_db.endTransaction();
 	}
     }
@@ -4340,13 +4336,11 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
-	Cursor cursor = null;
-
 	m_db.beginTransactionNonExclusive();
 
 	try
 	{
-	    cursor = m_db.rawQuery
+	    m_db.rawQuery
 		("DELETE FROM participants WHERE siphash_id_digest " +
 		 "NOT IN (SELECT siphash_id_digest FROM siphash_ids)",
 		 null);
@@ -4357,9 +4351,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	finally
 	{
-	    if(cursor != null)
-		cursor.close();
-
 	    m_db.endTransaction();
 	}
     }
@@ -4369,13 +4360,11 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
-	Cursor cursor = null;
-
 	m_db.beginTransactionNonExclusive();
 
 	try
 	{
-	    cursor = m_db.rawQuery
+	    m_db.execSQL
 		("DELETE FROM steam_files WHERE status = 'deleted'", null);
 	    m_db.setTransactionSuccessful();
 	}
@@ -4384,9 +4373,6 @@ public class Database extends SQLiteOpenHelper
 	}
 	finally
 	{
-	    if(cursor != null)
-		cursor.close();
-
 	    m_db.endTransaction();
 	}
     }

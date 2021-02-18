@@ -285,8 +285,9 @@ Remaining Items
 - Play Store.
 - Puff.
 - Reliable delivery of deliverable messages:
-  [ ] Delete messages which are not deliverable.
+  [x] Delete messages which are not deliverable.
   [x] Delete messages which have been received.
   [x] Retrieve deliverable messages. Messages are deliverable if their
       timestamps are within well-defined time windows.
+  [ ] Text messages only.
 - SHA3 via BC.
