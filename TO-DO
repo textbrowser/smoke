@@ -117,6 +117,7 @@ Completed Items
 - Inbound database table.
 - Include file extensions in Steams.
 - Include network information in neighbors pertaining to errors.
+- Include some random information in message headers.
 - Include status in Smokescreen activity.
 - Increase network buffer sizes for large attachments.
 - Individual member pages.
@@ -283,7 +284,6 @@ Remaining Items
 
 - Brands (profiles).
 - Include member's name in Share Keys Of, if possible.
-- Include some random information in message headers.
 - Java does not include methods for destroying private containers.
 - Mutex problem.
 - Option for computing Steam digest.
