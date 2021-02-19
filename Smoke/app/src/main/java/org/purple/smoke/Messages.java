@@ -100,9 +100,9 @@ public class Messages
 	    StringBuilder results = new StringBuilder();
 
 	    results.append("POST HTTP/1.1\r\n");
+	    results.append("Content-Length: %1\r\n");
 	    results.append
 		("Content-Type: application/x-www-form-urlencoded\r\n");
-	    results.append("Content-Length: %1\r\n");
 	    results.append("\r\n");
 	    results.append("type=");
 	    results.append(AUTHENTICATE_MESSAGE_TYPE);
@@ -143,10 +143,14 @@ public class Messages
 	    StringBuilder results = new StringBuilder();
 
 	    results.append("POST HTTP/1.1\r\n");
+	    results.append("Content-Length: %1\r\n");
 	    results.append
 		("Content-Type: application/x-www-form-urlencoded\r\n");
-	    results.append("Content-Length: %1\r\n");
-	    results.append("\r\n");
+	    results.append("ETag: ");
+	    results.append
+		(Miscellaneous.
+		 byteArrayAsHexString(Cryptography.randomBytes(16)));
+	    results.append("\r\n\r\n");
 	    results.append("content=%2\r\n");
 	    results.append("\r\n\r\n");
 
@@ -177,10 +181,14 @@ public class Messages
 	    StringBuilder results = new StringBuilder();
 
 	    results.append("POST HTTP/1.1\r\n");
+	    results.append("Content-Length: %1\r\n");
 	    results.append
 		("Content-Type: application/x-www-form-urlencoded\r\n");
-	    results.append("Content-Length: %1\r\n");
-	    results.append("\r\n");
+	    results.append("ETag: ");
+	    results.append
+		(Miscellaneous.
+		 byteArrayAsHexString(Cryptography.randomBytes(16)));
+	    results.append("\r\n\r\n");
 	    results.append("content=%2\r\n");
 	    results.append("\r\n\r\n");
 
@@ -213,9 +221,9 @@ public class Messages
 	    StringBuilder results = new StringBuilder();
 
 	    results.append("POST HTTP/1.1\r\n");
+	    results.append("Content-Length: %1\r\n");
 	    results.append
 		("Content-Type: application/x-www-form-urlencoded\r\n");
-	    results.append("Content-Length: %1\r\n");
 	    results.append("\r\n");
 	    results.append("type=");
 	    results.append(IDENTITY_MESSAGE_TYPE);
