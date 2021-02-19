@@ -437,6 +437,24 @@ public class State
 	m_fireChannels.put(fireChannel.name(), fireChannel);
     }
 
+    public void clearParticipants()
+    {
+	m_participantsMutex.writeLock().lock();
+
+	try
+	{
+	    if(m_participants != null)
+		m_participants.clear();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_participantsMutex.writeLock().unlock();
+	}
+    }
+
     public void incrementChatSequence(String sipHashId)
     {
 	long sequence = chatSequence(sipHashId);
