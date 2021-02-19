@@ -163,7 +163,7 @@ public class Database extends SQLiteOpenHelper
 	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
     }
     public final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
-    public final static int MESSAGE_DELIVERY_ATTEMPTS = 5; // Must be > 0!
+    public final static int MESSAGE_DELIVERY_ATTEMPTS = 10; // Must be > 0!
 
     private Database(Context context)
     {
@@ -2874,12 +2874,12 @@ public class Database extends SQLiteOpenHelper
 		 "FROM outbound_queue " +
 		 "WHERE attempts < CAST(? AS INTEGER) AND " +
 		 "neighbor_oid = ? AND " +
-		 "(CAST(? AS INTEGER) - timestamp) > CAST(? AS INTEGER) " +
+		 "(CAST(? AS INTEGER) - timestamp) >= CAST(? AS INTEGER) " +
 		 "ORDER BY oid LIMIT 1",
 		 new String[] {String.valueOf(MESSAGE_DELIVERY_ATTEMPTS),
 			       String.valueOf(oid),
 			       String.valueOf(System.currentTimeMillis()),
-			       String.valueOf(Chat.CHAT_WINDOW /
+			       String.valueOf(Chat.CHAT_WINDOW / (long)
 					      MESSAGE_DELIVERY_ATTEMPTS)});
 
 	    if(cursor != null && cursor.moveToFirst())
