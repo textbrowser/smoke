@@ -418,7 +418,7 @@ public abstract class Neighbor
 			if(array[1].isEmpty())
 			    m_databaseHelper.deleteEntry
 				(array[3], "outbound_queue");
-			else if(send(array[1]) > 0)
+			else if(send(Messages.replaceETag(array[1])) > 0)
 			{
 			    m_databaseHelper.markMessageTimestamp
 				(array[0], array[3]);

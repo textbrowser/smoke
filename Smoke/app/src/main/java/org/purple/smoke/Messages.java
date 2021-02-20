@@ -40,6 +40,7 @@ public class Messages
 {
     private final static SimpleDateFormat s_fireSimpleDateFormat = new
 	SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
+    private final static int ETAG_LENGTH = 32;
     public final static String EOM = "\r\n\r\n\r\n";
     public final static String AUTHENTICATE_MESSAGE_TYPE = "0097b";
     public final static String FIRE_CHAT_MESSAGE_TYPE = "0040b";
@@ -149,7 +150,8 @@ public class Messages
 	    results.append("ETag: ");
 	    results.append
 		(Miscellaneous.
-		 byteArrayAsHexString(Cryptography.randomBytes(16)));
+		 byteArrayAsHexString(Cryptography.
+				      randomBytes(ETAG_LENGTH / 2)));
 	    results.append("\r\n\r\n");
 	    results.append("content=%2\r\n");
 	    results.append("\r\n\r\n");
@@ -187,7 +189,8 @@ public class Messages
 	    results.append("ETag: ");
 	    results.append
 		(Miscellaneous.
-		 byteArrayAsHexString(Cryptography.randomBytes(16)));
+		 byteArrayAsHexString(Cryptography.
+				      randomBytes(ETAG_LENGTH / 2)));
 	    results.append("\r\n\r\n");
 	    results.append("content=%2\r\n");
 	    results.append("\r\n\r\n");
@@ -247,6 +250,30 @@ public class Messages
 	}
 
 	return "";
+    }
+
+    public static String replaceETag(String message)
+    {
+	if(message == null)
+	    return "";
+
+	int indexOf = message.indexOf("ETag: ");
+
+	if(indexOf >= 0)
+	{
+	    StringBuilder stringBuilder = new StringBuilder(message);
+
+	    stringBuilder = stringBuilder.replace
+		(indexOf,
+		 ETAG_LENGTH + indexOf + 6,
+		 "ETag: " +
+		 Miscellaneous.
+		 byteArrayAsHexString(Cryptography.
+				      randomBytes(ETAG_LENGTH / 2)));
+	    return stringBuilder.toString();
+	}
+
+	return message;
     }
 
     public static String stripMessage(String message)
