@@ -40,10 +40,10 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
@@ -53,10 +53,10 @@ import java.util.Locale;
 
 public class ChatBubble extends View
 {
-    private CheckBox m_selected = null;
     private CompoundButton.OnCheckedChangeListener m_selected_listener = null;
     private Date m_date = new Date(System.currentTimeMillis());
     private MemberChat m_memberChat = null;
+    private Switch m_selected = null;
     private View m_view = null;
     private WeakReference<Context> m_context = null;
     private boolean m_error = false;
@@ -93,7 +93,7 @@ public class ChatBubble extends View
 	** Prepare widget variables.
 	*/
 
-	m_selected = (CheckBox) m_view.findViewById(R.id.selected);
+	m_selected = (Switch) m_view.findViewById(R.id.selected);
 	m_selected_listener = new CompoundButton.OnCheckedChangeListener()
 	{
 	    @Override
