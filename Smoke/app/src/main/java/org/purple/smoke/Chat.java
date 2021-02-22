@@ -45,6 +45,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Base64;
+import android.util.LayoutDirection;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -52,9 +53,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -160,6 +161,7 @@ public class Chat extends AppCompatActivity
     private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     public final static int CHAT_MESSAGE_PREFERRED_SIZE = 8 * 1024;
     public final static int CUSTOM_SESSION_ITERATION_COUNT = 4096;
+    public final static int SWITCH_ICON_PADDING = 5;
     public final static long CHAT_WINDOW = 60000L; // 1 Minute
     public final static long CONNECTION_STATUS_INTERVAL = 3500L; // 3.5 seconds.
     public final static long STATUS_WINDOW = 30000L; // 30 seconds.
@@ -282,21 +284,21 @@ public class Chat extends AppCompatActivity
 	    if(m_databaseHelper.readSetting(null, "show_chat_icons").
 	       equals("true"))
 	    {
-		CheckBox checkBox1 = (CheckBox) findViewById
+		Switch switch1 = (Switch) findViewById
 		    (R.id.participants).findViewWithTag(sipHashId);
 
-		if(checkBox1 != null)
+		if(switch1 != null)
 		{
 		    if(!Kernel.getInstance().isConnected() ||
 		       Math.abs(System.currentTimeMillis() - timestamp) >
 		       STATUS_WINDOW)
-			checkBox1.setCompoundDrawablesWithIntrinsicBounds
+			switch1.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.chat_status_offline, 0, 0, 0);
 		    else
-			checkBox1.setCompoundDrawablesWithIntrinsicBounds
+			switch1.setCompoundDrawablesWithIntrinsicBounds
 			    (R.drawable.chat_status_online, 0, 0, 0);
 
-		    checkBox1.setCompoundDrawablePadding(5);
+		    switch1.setCompoundDrawablePadding(SWITCH_ICON_PADDING);
 		}
 	    }
 	}
@@ -511,7 +513,7 @@ public class Chat extends AppCompatActivity
 	    if(participantElement == null)
 		continue;
 
-	    CheckBox checkBox1 = new CheckBox(Chat.this);
+	    Switch switch1 = new Switch(Chat.this);
 	    final int oid = participantElement.m_oid;
 
 	    if(showIcons)
@@ -519,30 +521,31 @@ public class Chat extends AppCompatActivity
 		if(participantElement.m_keyStream == null ||
 		   participantElement.m_keyStream.length !=
 		   Cryptography.CIPHER_HASH_KEYS_LENGTH)
-		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
+		    switch1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_faulty_session, 0, 0, 0);
 		else if(Math.abs(System.currentTimeMillis() -
 				 participantElement.m_lastStatusTimestamp) >
 			STATUS_WINDOW ||
 			!state)
-		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
+		    switch1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_offline, 0, 0, 0);
 		else
-		    checkBox1.setCompoundDrawablesWithIntrinsicBounds
+		    switch1.setCompoundDrawablesWithIntrinsicBounds
 			(R.drawable.chat_status_online, 0, 0, 0);
 
-		checkBox1.setCompoundDrawablePadding(5);
+		switch1.setCompoundDrawablePadding(SWITCH_ICON_PADDING);
 	    }
 
-	    registerForContextMenu(checkBox1);
-	    checkBox1.setChecked
+	    registerForContextMenu(switch1);
+	    switch1.setChecked
 		(State.getInstance().chatCheckBoxIsSelected(oid));
-	    checkBox1.setId(participantElement.m_oid);
-	    checkBox1.setLayoutParams
+	    switch1.setId(participantElement.m_oid);
+	    switch1.setLayoutDirection(LayoutDirection.LTR);
+	    switch1.setLayoutParams
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,
 					   1));
-	    checkBox1.setOnCheckedChangeListener
+	    switch1.setOnCheckedChangeListener
 		(new CompoundButton.OnCheckedChangeListener()
 		{
 		    @Override
@@ -613,14 +616,14 @@ public class Chat extends AppCompatActivity
 		}
 	    }
 
-	    checkBox1.setTag(participantElement.m_sipHashId);
-	    checkBox1.setText(stringBuilder);
-	    checkBox1.setTextColor(Color.BLACK);
-	    checkBox1.setTextSize(CHECKBOX_TEXT_SIZE);
+	    switch1.setTag(participantElement.m_sipHashId);
+	    switch1.setText(stringBuilder);
+	    switch1.setTextColor(Color.BLACK);
+	    switch1.setTextSize(CHECKBOX_TEXT_SIZE);
 
 	    TableRow row = new TableRow(Chat.this);
 
-	    row.addView(checkBox1);
+	    row.addView(switch1);
 	    tableLayout.addView(row, i);
 	    i += 1;
 	}
@@ -653,17 +656,17 @@ public class Chat extends AppCompatActivity
 		    if(row == null)
 			continue;
 
-		    CheckBox checkBox1 = (CheckBox) row.getChildAt(0);
+		    Switch switch1 = (Switch) row.getChildAt(0);
 
-		    if(checkBox1 == null)
+		    if(switch1 == null)
 			continue;
 
-		    if(checkBox1.getTag() != null && checkBox1.isChecked())
+		    if(switch1.getTag() != null && switch1.isChecked())
 		    {
 			boolean ok = Kernel.getInstance().call
-			    (checkBox1.getId(),
+			    (switch1.getId(),
 			     ParticipantCall.Algorithms.RSA,
-			     checkBox1.getTag().toString());
+			     switch1.getTag().toString());
 
 			stringBuilder.delete(0, stringBuilder.length());
 			stringBuilder.append("[");
@@ -679,12 +682,12 @@ public class Chat extends AppCompatActivity
 				 "establish a session with ");
 
 			stringBuilder.append
-			    (nameFromCheckBoxText(checkBox1.getText().
+			    (nameFromCheckBoxText(switch1.getText().
 						  toString()));
 			stringBuilder.append(" (");
 			stringBuilder.append
 			    (Miscellaneous.
-			     prepareSipHashId(checkBox1.getTag().toString()));
+			     prepareSipHashId(switch1.getTag().toString()));
 			stringBuilder.append("). ");
 
 			if(!ok)
@@ -692,7 +695,7 @@ public class Chat extends AppCompatActivity
 			    stringBuilder.append("Please try again in ");
 			    stringBuilder.append
 				(Kernel.getInstance().
-				 callTimeRemaining(checkBox1.getTag().
+				 callTimeRemaining(switch1.getTag().
 						   toString()));
 			    stringBuilder.append(" second(s).\n\n");
 			}
@@ -771,10 +774,10 @@ public class Chat extends AppCompatActivity
 
     private void refreshCheckBox(String sipHashId)
     {
-	CheckBox checkBox1 = (CheckBox)
+	Switch switch1 = (Switch)
 	    findViewById(R.id.participants).findViewWithTag(sipHashId);
 
-	if(checkBox1 == null)
+	if(switch1 == null)
 	    return;
 
 	ArrayList<ParticipantElement> arrayList =
@@ -829,7 +832,7 @@ public class Chat extends AppCompatActivity
 						   '-', 4).toUpperCase());
 	    }
 
-	    checkBox1.setText(stringBuilder);
+	    switch1.setText(stringBuilder);
 	}
 
 	if(m_databaseHelper.readSetting(null, "show_chat_icons").equals("true"))
@@ -837,19 +840,19 @@ public class Chat extends AppCompatActivity
 	    if(participantElement.m_keyStream == null ||
 	       participantElement.m_keyStream.length !=
 	       Cryptography.CIPHER_HASH_KEYS_LENGTH)
-		checkBox1.setCompoundDrawablesWithIntrinsicBounds
+		switch1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_faulty_session, 0, 0, 0);
 	    else if(!Kernel.getInstance().isConnected() ||
 		    Math.abs(System.currentTimeMillis() -
 			     participantElement.m_lastStatusTimestamp) >
 		    STATUS_WINDOW)
-		checkBox1.setCompoundDrawablesWithIntrinsicBounds
+		switch1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_status_offline, 0, 0, 0);
 	    else
-		checkBox1.setCompoundDrawablesWithIntrinsicBounds
+		switch1.setCompoundDrawablesWithIntrinsicBounds
 		    (R.drawable.chat_status_online, 0, 0, 0);
 
-	    checkBox1.setCompoundDrawablePadding(5);
+	    switch1.setCompoundDrawablePadding(SWITCH_ICON_PADDING);
 	}
 
 	arrayList.clear();
@@ -1069,14 +1072,14 @@ public class Chat extends AppCompatActivity
 		    if(row == null)
 			continue;
 
-		    CheckBox checkBox1 = (CheckBox) row.getChildAt(0);
+		    Switch switch1 = (Switch) row.getChildAt(0);
 
-		    if(checkBox1 == null ||
-		       checkBox1.getTag() == null ||
-		       !checkBox1.isChecked())
+		    if(switch1 == null ||
+		       switch1.getTag() == null ||
+		       !switch1.isChecked())
 			continue;
 
-		    String sipHashId = checkBox1.getTag().toString();
+		    String sipHashId = switch1.getTag().toString();
 		    byte keyStream[] = m_databaseHelper.participantKeyStream
 			(s_cryptography, sipHashId);
 
