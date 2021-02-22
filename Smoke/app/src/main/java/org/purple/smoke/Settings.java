@@ -67,6 +67,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -1630,6 +1631,7 @@ public class Settings extends AppCompatActivity
     {
 	Button button1 = null;
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
+	Switch switch1 = null;
 	TextView textView1 = (TextView) findViewById(R.id.participant_name);
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
@@ -2155,8 +2157,8 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	checkBox1 = (CheckBox) findViewById(R.id.foreground_service);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.foreground_service);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -2220,8 +2222,8 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	checkBox1 = (CheckBox) findViewById(R.id.query_time_server);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.query_time_server);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -2236,8 +2238,8 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.sleepless);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -3114,6 +3116,7 @@ public class Settings extends AppCompatActivity
 	    (R.drawable.help, 0, 0, 0);
 
 	CheckBox checkBox1 = null;
+	Switch switch1 = null;
 
 	checkBox1 = (CheckBox) findViewById(R.id.as_alias);
 	checkBox1.setChecked(true);
@@ -3142,13 +3145,13 @@ public class Settings extends AppCompatActivity
 	else
 	    checkBox1.setChecked(false);
 
-	checkBox1 = (CheckBox) findViewById(R.id.foreground_service);
+	switch1 = (Switch) findViewById(R.id.foreground_service);
 
 	if(m_databaseHelper.
 	   readSetting(null, "foreground_service").equals("false"))
-	    checkBox1.setChecked(false);
+	    switch1.setChecked(false);
 	else
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 
 	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
 
@@ -3158,27 +3161,27 @@ public class Settings extends AppCompatActivity
 	else
 	    checkBox1.setChecked(false);
 
-	checkBox1 = (CheckBox) findViewById(R.id.query_time_server);
+	switch1 = (Switch) findViewById(R.id.query_time_server);
 
 	if(m_databaseHelper.readSetting(null, "query_time_server").
 	   equals("true"))
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 	else
-	    checkBox1.setChecked(false);
+	    switch1.setChecked(false);
 
 	State.getInstance().setQueryTimerServer(checkBox1.isChecked());
-	checkBox1 = (CheckBox) findViewById(R.id.sleepless);
+	switch1 = (Switch) findViewById(R.id.sleepless);
 
 	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())
 	{
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 	    m_databaseHelper.writeSetting(null, "always_awake", "true");
 	}
 	else if(m_databaseHelper.readSetting(null, "always_awake").
 		equals("true"))
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 	else
-	    checkBox1.setChecked(false);
+	    switch1.setChecked(false);
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);

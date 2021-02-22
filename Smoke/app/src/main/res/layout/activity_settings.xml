@@ -60,24 +60,27 @@
                     android:layout_marginEnd="5dp"
                     android:textIsSelectable="true" />
 
-                <CheckBox
+                <Switch
                     android:id="@+id/foreground_service"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
+                    android:layoutDirection="rtl"
                     android:text="@string/foreground_service" />
 
-                <CheckBox
+                <Switch
                     android:id="@+id/sleepless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
+                    android:layoutDirection="rtl"
                     android:text="@string/prefer_active_cpu" />
 
-                <CheckBox
+                <Switch
                     android:id="@+id/query_time_server"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
                     android:text="@string/query_time_server" />
 
                 <Button
