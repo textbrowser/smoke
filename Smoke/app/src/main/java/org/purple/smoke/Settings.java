@@ -741,7 +741,7 @@ public class Settings extends AppCompatActivity
 	else
 	{
 	    stringBuilder = new StringBuilder();
-	    stringBuilder.append("Chat Encryption Key\n");
+	    stringBuilder.append("Encryption Key\n");
 	    stringBuilder.append
 		(Cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
@@ -764,7 +764,7 @@ public class Settings extends AppCompatActivity
 	    else
 		stringBuilder.delete(0, stringBuilder.length());
 
-	    stringBuilder.append("Chat Signature Key\n");
+	    stringBuilder.append("Signature Key\n");
 	    stringBuilder.append
 		(Cryptography.
 		 fancyKeyInformationOutput(s_cryptography.
@@ -2857,7 +2857,7 @@ public class Settings extends AppCompatActivity
 			    stringBuilder.append(" (");
 			    stringBuilder.append(m_sipHashId);
 			    stringBuilder.append(")\n");
-			    stringBuilder.append("\nChat Encryption Key (");
+			    stringBuilder.append("\nEncryption Key (");
 			    textView1.append(stringBuilder.toString());
 
 			    SpannableStringBuilder spannable =
@@ -2883,7 +2883,7 @@ public class Settings extends AppCompatActivity
 			    stringBuilder.delete(0, stringBuilder.length());
 			    stringBuilder.append(")\n");
 			    stringBuilder.append(m_string1);
-			    stringBuilder.append("\nChat Signature Key (");
+			    stringBuilder.append("\nSignature Key (");
 			    textView1.append(stringBuilder);
 			    spannable = new SpannableStringBuilder
 				(m_strings[1].equals("true") ?

@@ -14,8 +14,8 @@
     <string name="call">Call</string>
     <string name="channel">Channel</string>
     <string name="chat">Chat</string>
-    <string name="chat_encryption_key_data">Chat Encryption Key Data</string>
-    <string name="chat_signature_key_data">Chat Signature Key Data</string>
+    <string name="chat_encryption_key_data">Encryption Key Data</string>
+    <string name="chat_signature_key_data">Signature Key Data</string>
     <string name="clear">Clear</string>
     <string name="clear_log">Clear Log</string>
     <string name="close">Close</string>
@@ -72,7 +72,7 @@
     <string name="share_smoke_id">Share Smoke ID</string>
     <string name="signature">Signature</string>
     <string name="smoke_alias">Smoke Alias</string>
-    <string name="smoke_chat_id">Smoke Chat ID</string>
+    <string name="smoke_chat_id">Smoke ID</string>
     <string name="smokeid">Smoke ID</string>
     <string name="smokescreen">Smokescreen</string>
     <string name="steam">Steam</string>
