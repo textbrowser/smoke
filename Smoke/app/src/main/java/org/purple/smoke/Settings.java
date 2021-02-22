@@ -59,7 +59,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
@@ -296,15 +295,15 @@ public class Settings extends AppCompatActivity
 
     private void addNeighbor()
     {
-	CheckBox checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
-	CheckBox checkBox2 = (CheckBox) findViewById(R.id.initialize_ozone);
-	CheckBox checkBox3 = (CheckBox) findViewById(R.id.non_tls);
-	CheckBox checkBox4 = (CheckBox) findViewById(R.id.passthrough);
 	RadioGroup radioGroup1 = (RadioGroup) findViewById
 	    (R.id.neighbors_ipv_radio_group);
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
 	Spinner spinner2 = (Spinner) findViewById(R.id.proxy_type);
 	String ipVersion = "";
+	Switch switch1 = (Switch) findViewById(R.id.automatic_refresh);
+	Switch switch2 = (Switch) findViewById(R.id.initialize_ozone);
+	Switch switch3 = (Switch) findViewById(R.id.non_tls);
+	Switch switch4 = (Switch) findViewById(R.id.passthrough);
 	TextView proxyIpAddress = (TextView) findViewById
 	    (R.id.proxy_ip_address);
 	TextView proxyPort = (TextView) findViewById(R.id.proxy_port);
@@ -322,8 +321,8 @@ public class Settings extends AppCompatActivity
 		(Settings.this, "Please complete the IP Address field.");
 	else if(!m_databaseHelper.
 		writeNeighbor(s_cryptography,
-			      checkBox3.isChecked() ? "true" : "false",
-			      checkBox4.isChecked() ? "true" : "false",
+			      switch3.isChecked() ? "true" : "false",
+			      switch4.isChecked() ? "true" : "false",
 			      proxyIpAddress.getText().toString(),
 			      proxyPort.getText().toString(),
 			      spinner2.getSelectedItem().toString(),
@@ -337,10 +336,10 @@ public class Settings extends AppCompatActivity
 		 "An error occurred while saving the neighbor information.");
 	else
 	{
-	    if(!checkBox1.isChecked())
+	    if(!switch1.isChecked())
 		populateNeighbors(null);
 
-	    if(checkBox2.isChecked())
+	    if(switch2.isChecked())
 	    {
 		String string = textView1.getText().toString() + ":" +
 		    textView2.getText().toString() + ":" +
@@ -360,13 +359,13 @@ public class Settings extends AppCompatActivity
 	if(Settings.this.isFinishing())
 	    return;
 
-	CheckBox checkBox1 = (CheckBox) findViewById(R.id.as_alias);
 	String string = "";
+	Switch switch1 = (Switch) findViewById(R.id.as_alias);
 	TextView textView1 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
 	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
 
-	if(checkBox1.isChecked())
+	if(switch1.isChecked())
 	{
 	    string = textView1.getText().toString().trim();
 
@@ -531,11 +530,11 @@ public class Settings extends AppCompatActivity
     private void disablePKIButtons()
     {
 	Button button1 = (Button) findViewById(R.id.generate_pki);
-	CheckBox checkBox1 = (CheckBox) findViewById(R.id.overwrite);
+	Switch switch1 = (Switch) findViewById(R.id.overwrite);
 
-	button1.setEnabled(checkBox1.isChecked());
+	button1.setEnabled(switch1.isChecked());
 	button1 = (Button) findViewById(R.id.set_password);
-	button1.setEnabled(checkBox1.isChecked());
+	button1.setEnabled(switch1.isChecked());
     }
 
     private void enableWidgets(boolean state)
@@ -561,11 +560,11 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.share_via_ozone);
 	button1.setEnabled(state);
 
-	CheckBox checkBox1 = null;
+	Switch switch1 = null;
 
-	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
-	checkBox1.setChecked(!state);
-	checkBox1.setEnabled(state);
+	switch1 = (Switch) findViewById(R.id.overwrite);
+	switch1.setChecked(!state);
+	switch1.setEnabled(state);
 	button1 = (Button) findViewById(R.id.generate_pki);
 	button1.setEnabled(!state);
 	button1 = (Button) findViewById(R.id.set_password);
@@ -855,7 +854,7 @@ public class Settings extends AppCompatActivity
 		tableLayout.removeView(row);
 	}
 
-	CheckBox checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
+	Switch switch1 = (Switch) findViewById(R.id.neighbor_details);
 
 	i = 0;
 
@@ -1089,7 +1088,7 @@ public class Settings extends AppCompatActivity
 		stringBuilder.append(neighborElement.m_proxyType);
 	    }
 
-	    if(checkBox1.isChecked())
+	    if(switch1.isChecked())
 	    {
 		if(neighborElement.m_remoteCertificate != null &&
 		   neighborElement.m_remoteCertificate.length > 0)
@@ -1798,16 +1797,15 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
-		CheckBox checkBox1 = (CheckBox) findViewById
-		    (R.id.initialize_ozone);
-		CheckBox checkBox2 = (CheckBox) findViewById(R.id.non_tls);
-		CheckBox checkBox3 = (CheckBox) findViewById(R.id.passthrough);
 		RadioButton radioButton1 = (RadioButton) findViewById
 		    (R.id.neighbors_ipv4);
 		Spinner spinner1 = (Spinner) findViewById
 		    (R.id.neighbors_transport);
 		Spinner spinner2 = (Spinner) findViewById
 		    (R.id.proxy_type);
+		Switch switch1 = (Switch) findViewById(R.id.initialize_ozone);
+		Switch switch2 = (Switch) findViewById(R.id.non_tls);
+		Switch switch3 = (Switch) findViewById(R.id.passthrough);
 		TextView proxyIpAddress = (TextView) findViewById
 		    (R.id.proxy_ip_address);
 		TextView proxyPort = (TextView) findViewById
@@ -1819,9 +1817,9 @@ public class Settings extends AppCompatActivity
 		TextView textView3 = (TextView) findViewById
 		    (R.id.neighbors_scope_id);
 
-		checkBox1.setChecked(false);
-		checkBox2.setChecked(false);
-		checkBox3.setChecked(false);
+		switch1.setChecked(false);
+		switch2.setChecked(false);
+		switch3.setChecked(false);
 		proxyIpAddress.setText("");
 		proxyPort.setText("");
 		radioButton1.setChecked(true);
@@ -1842,13 +1840,13 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
-		CheckBox checkBox1 = (CheckBox) findViewById(R.id.as_alias);
+		Switch switch1 = (Switch) findViewById(R.id.as_alias);
 		TextView textView1 = (TextView) findViewById
 		    (R.id.participant_name);
 		TextView textView2 = (TextView) findViewById
 		    (R.id.participant_siphash_id);
 
-		checkBox1.setChecked(true);
+		switch1.setChecked(true);
 		textView1.setText("");
 		textView2.setText("");
 		textView1.requestFocus();
@@ -2043,7 +2041,7 @@ public class Settings extends AppCompatActivity
 		     (int) (10 * density),
 		     (int) (10 * density));
 
-		if(((CheckBox) findViewById(R.id.as_alias)).isChecked())
+		if(((Switch) findViewById(R.id.as_alias)).isChecked())
 		    textView1.setText
 			("A Smoke Alias is an arrangement of digits and " +
 			 "letters assigned to a specific subscriber " +
@@ -2075,10 +2073,8 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	CheckBox checkBox1 = null;
-
-	checkBox1 = (CheckBox) findViewById(R.id.as_alias);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.as_alias);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -2110,8 +2106,8 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.automatic_refresh);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -2133,8 +2129,8 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	checkBox1 = (CheckBox) findViewById(R.id.echo);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.echo);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -2182,8 +2178,8 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.neighbor_details);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -2197,16 +2193,16 @@ public class Settings extends AppCompatActivity
 			m_databaseHelper.writeSetting
 			    (null, "neighbors_details", "false");
 
-		    CheckBox checkBox1 = (CheckBox) findViewById
+		    Switch switch1 = (Switch) findViewById
 			(R.id.automatic_refresh);
 
-		    if(!checkBox1.isChecked())
+		    if(!switch1.isChecked())
 			populateNeighbors(null);
 		}
 	    });
 
-	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
-	checkBox1.setOnCheckedChangeListener
+	switch1 = (Switch) findViewById(R.id.overwrite);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -2274,9 +2270,9 @@ public class Settings extends AppCompatActivity
 					   int position,
 					   long id)
 		{
-		    CheckBox nonTls = (CheckBox) findViewById(R.id.non_tls);
 		    Spinner proxyType = (Spinner)
 			findViewById(R.id.proxy_type);
+		    Switch nonTls = (Switch) findViewById(R.id.non_tls);
 		    TextView proxyIpAddress =
 			(TextView) findViewById(R.id.proxy_ip_address);
 		    TextView proxyPort = (TextView) findViewById
@@ -2322,10 +2318,10 @@ public class Settings extends AppCompatActivity
 		{
 		    if(s != null)
 		    {
-			CheckBox checkBox1 = (CheckBox) findViewById
+			Switch switch1 = (Switch) findViewById
 			    (R.id.as_alias);
 
-			if(checkBox1.isChecked())
+			if(switch1.isChecked())
 			{
 			    TextView textView1 = (TextView)
 				findViewById(R.id.participant_siphash_id);
@@ -3115,35 +3111,34 @@ public class Settings extends AppCompatActivity
 	button1.setCompoundDrawablesWithIntrinsicBounds
 	    (R.drawable.help, 0, 0, 0);
 
-	CheckBox checkBox1 = null;
 	Switch switch1 = null;
 
-	checkBox1 = (CheckBox) findViewById(R.id.as_alias);
-	checkBox1.setChecked(true);
-	checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
+	switch1 = (Switch) findViewById(R.id.as_alias);
+	switch1.setChecked(true);
+	switch1 = (Switch) findViewById(R.id.automatic_refresh);
 
 	if(m_databaseHelper.
 	   readSetting(null, "automatic_neighbors_refresh").isEmpty())
 	{
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 	    m_databaseHelper.writeSetting
 		(null, "automatic_neighbors_refresh", "true");
 	}
 	else if(m_databaseHelper.
 		readSetting(null, "automatic_neighbors_refresh").equals("true"))
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 	else
-	    checkBox1.setChecked(false);
+	    switch1.setChecked(false);
 
-	if(checkBox1.isChecked())
+	if(switch1.isChecked())
 	    startTimers();
 
-	checkBox1 = (CheckBox) findViewById(R.id.echo);
+	switch1 = (Switch) findViewById(R.id.echo);
 
 	if(m_databaseHelper.readSetting(null, "neighbors_echo").equals("true"))
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 	else
-	    checkBox1.setChecked(false);
+	    switch1.setChecked(false);
 
 	switch1 = (Switch) findViewById(R.id.foreground_service);
 
@@ -3153,13 +3148,13 @@ public class Settings extends AppCompatActivity
 	else
 	    switch1.setChecked(true);
 
-	checkBox1 = (CheckBox) findViewById(R.id.neighbor_details);
+	switch1 = (Switch) findViewById(R.id.neighbor_details);
 
 	if(m_databaseHelper.readSetting(null, "neighbors_details").
 	   equals("true"))
-	    checkBox1.setChecked(true);
+	    switch1.setChecked(true);
 	else
-	    checkBox1.setChecked(false);
+	    switch1.setChecked(false);
 
 	switch1 = (Switch) findViewById(R.id.query_time_server);
 
@@ -3169,7 +3164,7 @@ public class Settings extends AppCompatActivity
 	else
 	    switch1.setChecked(false);
 
-	State.getInstance().setQueryTimerServer(checkBox1.isChecked());
+	State.getInstance().setQueryTimerServer(switch1.isChecked());
 	switch1 = (Switch) findViewById(R.id.sleepless);
 
 	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())
@@ -3310,9 +3305,9 @@ public class Settings extends AppCompatActivity
 	** Enable widgets.
 	*/
 
-	checkBox1 = (CheckBox) findViewById(R.id.overwrite);
-	checkBox1.setChecked(false);
-	checkBox1.setEnabled(isAuthenticated);
+	switch1 = (Switch) findViewById(R.id.overwrite);
+	switch1.setChecked(false);
+	switch1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.generate_pki);
 
 	if(isAuthenticated)
@@ -3391,7 +3386,7 @@ public class Settings extends AppCompatActivity
 
 	if(isAuthenticated)
 	{
-	    checkBox1 = (CheckBox) findViewById(R.id.automatic_refresh);
+	    switch1 = (Switch) findViewById(R.id.automatic_refresh);
 	    textView1 = (TextView) findViewById(R.id.alias);
 	    textView1.setText
 		(m_databaseHelper.readSetting(s_cryptography, "alias"));
@@ -3401,7 +3396,7 @@ public class Settings extends AppCompatActivity
 	    populateParticipants();
 	    startKernel();
 
-	    if(!checkBox1.isChecked())
+	    if(!switch1.isChecked())
 		populateNeighbors(null);
 	}
 	else
