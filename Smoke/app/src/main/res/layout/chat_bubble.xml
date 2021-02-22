@@ -40,7 +40,7 @@
         android:id="@+id/linear_layout"
         android:layout_width="225dp"
         android:layout_height="match_parent"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="55dp"
         android:layout_marginEnd="5dp"
         android:layout_toStartOf="@+id/name_right"
         android:orientation="vertical">
