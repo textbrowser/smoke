@@ -149,6 +149,7 @@ Completed Items
   Calls are not logged.
 - Messages must be temporarily retained if the Chat activity loses focus.
 - Modify Settings so that TCP neighbors support SOCKS proxies.
+- Mutex problem. Most likely large awaitTermination() values.
 - Names or PINs alongside SipHashes. The extra bits will increase the
   possibilities. SipHash-128.
 - Neighbor class.
@@ -285,7 +286,6 @@ Remaining Items
 - Brands (profiles).
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
-- Mutex problem.
 - Option for computing Steam digest.
 - Optional cryptographic discovery.
 - Password-protected ZIP and Netcat transfer.

@@ -83,6 +83,7 @@ public class Steam extends AppCompatActivity
 		break;
 	    case "org.purple.smoke.state_participants_populated":
 		invalidateOptionsMenu();
+		populateParticipants();
 		break;
 	    case "org.purple.smoke.steam_added":
 	    case "org.purple.smoke.steam_status":
