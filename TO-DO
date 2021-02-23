@@ -286,9 +286,10 @@ Remaining Items
 - Brands (profiles).
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
-- Option for computing Steam digest.
+- Message details.
+- Option for computing Steam digest. Why?
 - Optional cryptographic discovery.
 - Password-protected ZIP and Netcat transfer.
 - Play Store.
-- Puff.
+- Puff, or, video on the Echo. Nearly impossible.
 - SHA3 via BC.
