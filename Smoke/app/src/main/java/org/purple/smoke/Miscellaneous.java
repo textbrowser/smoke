@@ -42,16 +42,17 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.util.Base64;
+import android.util.LayoutDirection;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.Switch;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -924,7 +925,7 @@ public abstract class Miscellaneous
 	    return;
 
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-	CheckBox checkBox1 = new CheckBox(context);
+	Switch switch1 = new Switch(context);
 
 	State.getInstance().removeKey("dialog_accepted");
 	alertDialog.setButton
@@ -953,14 +954,15 @@ public abstract class Miscellaneous
 							 ** for a response.
 							 */
 	alertDialog.setTitle("Confirmation");
-	alertDialog.setView(checkBox1);
+	alertDialog.setView(switch1);
 	alertDialog.show();
 
 	final Button button1 = alertDialog.getButton
 	    (AlertDialog.BUTTON_POSITIVE);
 
 	button1.setEnabled(false);
-	checkBox1.setOnCheckedChangeListener
+	switch1.setLayoutDirection(LayoutDirection.RTL);
+	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
 		@Override
@@ -970,7 +972,7 @@ public abstract class Miscellaneous
 		    button1.setEnabled(isChecked);
 		}
 	    });
-	checkBox1.setText("Confirm");
+	switch1.setText("Confirm");
     }
 
     public static void showTextInputDialog
