@@ -1,0 +1,7 @@
+* Corrected raw SQLite queries.
+* Decreased awaitTermination() values. Method may stall Smoke.
+* ETags for bypassing congestion.
+* Reliable distribution of deliverable text messages. Requires reinstall as new database fields have been introduced.
+* Replaced checkboxes with switches.
+* Tool tips.
+* Warn if the time server cannot be queried.
