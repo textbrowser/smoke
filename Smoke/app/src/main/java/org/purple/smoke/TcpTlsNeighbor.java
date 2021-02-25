@@ -53,7 +53,7 @@ public class TcpTlsNeighbor extends Neighbor
     private String m_proxyType = "";
     private TrustManager m_trustManagers[] = null;
     private final static int CONNECTION_TIMEOUT = 10000; // 10 seconds.
-    private final static int HANDSHAKE_TIMEOUT = 10000; // 10 seconds.
+    private final static int HANDSHAKE_TIMEOUT = 20000; // 20 seconds.
     private int m_proxyPort = -1;
 
     protected String getLocalIp()
