@@ -1691,7 +1691,9 @@ public class Settings extends AppCompatActivity
 		textView1.setText
 		    ("Echo queues allow Smoke to echo internal data from " +
 		     "local neighbor to local neighbor. Each Echo queue may " +
-		     "contain at most 256 messages. Please note that the " +
+		     "contain at most " +
+		     Neighbor.MAXIMUM_QUEUED_ECHO_PACKETS +
+		     " messages. Please note that the " +
 		     "Echo mechanism may burden a device. A neighbor will " +
 		     "echo data if it discovers that the data are not " +
 		     "intended for it.");
