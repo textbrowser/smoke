@@ -269,12 +269,27 @@
 
                 </RadioGroup>
 
-                <Switch
-                    android:id="@+id/initialize_ozone"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layoutDirection="rtl"
-                    android:text="@string/initialize_ozone" />
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="horizontal">
+
+                    <Switch
+                        android:id="@+id/initialize_ozone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:layoutDirection="rtl"
+                        android:text="@string/initialize_ozone" />
+
+                    <Button
+                        android:id="@+id/initialize_ozone_help"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
 
                 <Switch
                     android:id="@+id/non_tls"

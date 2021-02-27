@@ -1735,6 +1735,41 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
+	button1 = (Button) findViewById(R.id.initialize_ozone_help);
+	button1.setOnClickListener(new View.OnClickListener()
+	{
+	    public void onClick(View view)
+	    {
+		if(Settings.this.isFinishing())
+		    return;
+
+		PopupWindow popupWindow = new PopupWindow(Settings.this);
+		TextView textView1 = new TextView(Settings.this);
+		float density = getApplicationContext().getResources().
+		    getDisplayMetrics().density;
+
+		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
+		textView1.setPaddingRelative
+		    ((int) (10 * density),
+		     (int) (10 * density),
+		     (int) (10 * density),
+		     (int) (10 * density));
+		textView1.setText
+		    ("Set the Ozone to IP Address:Port:Type.");
+		textView1.setTextSize(16);
+		popupWindow.setContentView(textView1);
+		popupWindow.setOutsideTouchable(true);
+
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		{
+		    popupWindow.setHeight(450);
+		    popupWindow.setWidth(700);
+		}
+
+		popupWindow.showAsDropDown(view);
+	    }
+	});
+
 	button1 = (Button) findViewById(R.id.ozone_help);
 	button1.setOnClickListener(new View.OnClickListener()
 	{
@@ -3135,6 +3170,9 @@ public class Settings extends AppCompatActivity
 	button1.setCompoundDrawablesWithIntrinsicBounds
 	    (R.drawable.share, 0, 0, 0);
 	button1.setEnabled(isAuthenticated);
+	button1 = (Button) findViewById(R.id.initialize_ozone_help);
+	button1.setCompoundDrawablesWithIntrinsicBounds
+	    (R.drawable.help, 0, 0, 0);
 	button1 = (Button) findViewById(R.id.ozone_help);
 	button1.setCompoundDrawablesWithIntrinsicBounds
 	    (R.drawable.help, 0, 0, 0);
