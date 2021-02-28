@@ -1635,6 +1635,11 @@ public class MemberChat extends AppCompatActivity
 		 "Retrieve Messages").setEnabled
 	    (!m_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty() && state);
+	menuItem = menu.add(ContextMenuEnumerator.SELECTION_STATE,
+			    -1,
+			    0,
+			    "Selection State").setCheckable(true);
+	menuItem.setChecked(messageSelectionState());
     }
 
     @Override
