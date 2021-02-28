@@ -25,7 +25,7 @@
     <string name="digest_key">Digest Key</string>
     <string name="echo">Echo</string>
     <string name="encryption">Encryption</string>
-    <string name="exit">Exit</string>
+    <string name="exit">Terminate Smoke</string>
     <string name="fiasco_keys">Fiasco Keys</string>
     <string name="fire">Fire</string>
     <string name="fire_channels">Fire Channels</string>
