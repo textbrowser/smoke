@@ -18,7 +18,7 @@ Summary of Smoke
 <li>Introduces Cryptographic Discovery. Cryptographic Discovery is a practical protocol which creates coordinated data paths.</li>
 <li>Juggling Juggernaut Protocol!</li>
 <li>McEliece Fujisaka and Pointcheval.</li>
-<li>Message structures do not explicitly expose contents. Header-less protocols!</li>
+<li>Message structures do not explicitly expose contents. Header-less protocols! Some messages do include type information.</li>
 <li>Mobile servers via <a href="https://github.com/textbrowser/smokestack">SmokeStack</a>.</li>
 <li>Obfuscation of resident secret keys.</li>
 <li>Optional foreground services.</li>
