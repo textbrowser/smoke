@@ -3208,10 +3208,6 @@ public class Kernel
 			    scheduleSend(Messages.bytesToMessageString(bytes));
 		    }
 
-		    /*
-		    ** Refresh the Settings activity's Participants table.
-		    */
-
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.populate_participants");
 		    return 1;

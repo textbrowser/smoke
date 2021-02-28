@@ -149,6 +149,10 @@ public class Settings extends AppCompatActivity
 		Miscellaneous.showNotification
 		    (Settings.this, intent, findViewById(R.id.main_layout));
 		break;
+	    case "org.purple.smoke.state_participants_populated":
+		invalidateOptionsMenu();
+		populateParticipants();
+		break;
 	    case "org.purple.smoke.time":
 		Miscellaneous.showNotification
 		    (Settings.this, intent, findViewById(R.id.main_layout));
@@ -1187,8 +1191,6 @@ public class Settings extends AppCompatActivity
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
-	State.getInstance().clearParticipants();
-	invalidateOptionsMenu();
 	tableLayout.removeAllViews();
 
 	if(arrayList == null || arrayList.isEmpty())
@@ -3616,6 +3618,8 @@ public class Settings extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.populate_participants");
 	    intentFilter.addAction
 		("org.purple.smoke.siphash_share_confirmation");
+	    intentFilter.addAction
+		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.time");
 	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		registerReceiver(m_receiver, intentFilter);
@@ -3695,6 +3699,7 @@ public class Settings extends AppCompatActivity
 					("member_chat_oid", "");
 				    State.getInstance().setString
 					("member_chat_siphash_id", "");
+				    invalidateOptionsMenu();
 				    m_databaseHelper.writeSetting
 					(s_cryptography,
 					 "member_chat_oid", "");

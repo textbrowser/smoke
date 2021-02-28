@@ -291,6 +291,7 @@ Remaining Items
   [ ] Attempts.
   [ ] Disk size.
 - Option for computing Steam digest. Why?
+- Optional Steam, per participant.
 - Optional cryptographic discovery.
 - Password-protected ZIP and Netcat transfer.
 - Play Store.
