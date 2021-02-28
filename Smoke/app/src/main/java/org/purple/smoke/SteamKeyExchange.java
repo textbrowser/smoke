@@ -278,12 +278,18 @@ public class SteamKeyExchange
 	if(tag == Messages.STEAM_KEY_EXCHANGE[0])
 	{
 	    /*
-	    ** Record the new Steam.
+	    ** Record the new Steam, if allowed to.
 	    */
 
-	    SteamElement steamElement = new SteamElement();
 	    String array[] = s_databaseHelper.nameSipHashIdFromDigest
 		(s_cryptography, senderPublicEncryptionKeyDigest);
+
+	    if(s_databaseHelper.readParticipantOptions(s_cryptography,
+						       array[1]).
+	       contains("optional_steam = true"))
+		return;
+
+	    SteamElement steamElement = new SteamElement();
 
 	    if(array[1].isEmpty())
 		steamElement.m_destination = array[0];

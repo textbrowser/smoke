@@ -168,6 +168,7 @@ Completed Items
 - Notify operator of incorrect time.
 - Notify the Chat activity of new participants.
 - Optimize loops.
+- Optional per-participant Steam.
 - Optional per-participant signatures.
 - Optional time notification.
 - Orderly delivery of chaotic Steams. First-in-first-Steam.
@@ -291,7 +292,6 @@ Remaining Items
   [ ] Attempts.
   [ ] Disk size.
 - Option for computing Steam digest. Why?
-- Optional Steam, per participant.
 - Optional cryptographic discovery.
 - Password-protected ZIP and Netcat transfer.
 - Play Store.

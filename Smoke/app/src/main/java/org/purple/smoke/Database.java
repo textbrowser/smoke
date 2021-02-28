@@ -2678,7 +2678,8 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case "options":
 		    bytes = cryptography.etm
-			("optional_signatures = false".getBytes());
+			(("optional_signatures = false;" +
+			  "optional_steam = false").getBytes());
 		    break;
 		case "signature_public_key":
 		    bytes = cryptography.etm(signatureKey.getEncoded());

@@ -263,10 +263,11 @@ public class MemberChat extends AppCompatActivity
 	public final static int JUGGERKNOT = 7;
 	public final static int JUGGERNAUT = 8;
 	public final static int OPTIONAL_SIGNATURES = 9;
-	public final static int RESEND_MESSAGE = 10;
-	public final static int RETRIEVE_MESSAGES = 11;
-	public final static int SAVE_ATTACHMENT = 12;
-	public final static int SELECTION_STATE = 13;
+	public final static int OPTIONAL_STEAM = 10;
+	public final static int RESEND_MESSAGE = 11;
+	public final static int RETRIEVE_MESSAGES = 12;
+	public final static int SAVE_ATTACHMENT = 13;
+	public final static int SELECTION_STATE = 14;
     }
 
     private boolean hasPublicKeys()
@@ -1255,53 +1256,107 @@ public class MemberChat extends AppCompatActivity
 
 	    break;
 	case ContextMenuEnumerator.OPTIONAL_SIGNATURES:
-	    menuItem.setChecked(!menuItem.isChecked());
-
-	    String strings[] = null;
-	    StringBuilder stringBuilder = new StringBuilder
-		(m_databaseHelper.
-		 readParticipantOptions(s_cryptography, m_sipHashId));
-
-	    strings = stringBuilder.toString().split(";");
-
-	    if(strings == null || strings.length == 0)
 	    {
-		if(menuItem.isChecked())
-		    stringBuilder.append("optional_signatures = true");
-		else
-		    stringBuilder.append("optional_signatures = false");
-	    }
-	    else
-	    {
-		stringBuilder.delete(0, stringBuilder.length());
+		menuItem.setChecked(!menuItem.isChecked());
 
-		int i = 0;
-		int length = strings.length;
+		String strings[] = null;
+		StringBuilder stringBuilder = new StringBuilder
+		    (m_databaseHelper.
+		     readParticipantOptions(s_cryptography, m_sipHashId));
 
-		for(String string : strings)
+		strings = stringBuilder.toString().split(";");
+
+		if(strings == null || strings.length == 0)
 		{
-		    if(!(string.equals("optional_signatures = false") ||
-			 string.equals("optional_signatures = true")))
-		    {
-			stringBuilder.append(string);
+		    if(menuItem.isChecked())
+			stringBuilder.append("optional_signatures = true");
+		    else
+			stringBuilder.append("optional_signatures = false");
+		}
+		else
+		{
+		    stringBuilder.delete(0, stringBuilder.length());
 
-			if(i != length - 1)
-			    stringBuilder.append(";");
+		    int i = 0;
+		    int length = strings.length;
+
+		    for(String string : strings)
+		    {
+			if(!(string.equals("optional_signatures = false") ||
+			     string.equals("optional_signatures = true")))
+			{
+			    stringBuilder.append(string);
+
+			    if(i != length - 1)
+				stringBuilder.append(";");
+			}
+
+			i += 1;
 		    }
 
-		    i += 1;
+		    if(stringBuilder.length() > 0)
+			stringBuilder.append(";");
+
+		    stringBuilder.append("optional_signatures = ");
+		    stringBuilder.append
+			(menuItem.isChecked() ? "true" : "false");
 		}
 
-		if(stringBuilder.length() > 0)
-		    stringBuilder.append(";");
-
-		stringBuilder.append("optional_signatures = ");
-		stringBuilder.append(menuItem.isChecked() ? "true" : "false");
+		m_databaseHelper.writeParticipantOptions
+		    (s_cryptography, stringBuilder.toString(), m_sipHashId);
+		break;
 	    }
+	case ContextMenuEnumerator.OPTIONAL_STEAM:
+	    {
+		menuItem.setChecked(!menuItem.isChecked());
 
-	    m_databaseHelper.writeParticipantOptions
-		(s_cryptography, stringBuilder.toString(), m_sipHashId);
-	    break;
+		String strings[] = null;
+		StringBuilder stringBuilder = new StringBuilder
+		    (m_databaseHelper.
+		     readParticipantOptions(s_cryptography, m_sipHashId));
+
+		strings = stringBuilder.toString().split(";");
+
+		if(strings == null || strings.length == 0)
+		{
+		    if(menuItem.isChecked())
+			stringBuilder.append("optional_steam = true");
+		    else
+			stringBuilder.append("optional_steam = false");
+		}
+		else
+		{
+		    stringBuilder.delete(0, stringBuilder.length());
+
+		    int i = 0;
+		    int length = strings.length;
+
+		    for(String string : strings)
+		    {
+			if(!(string.equals("optional_steam = false") ||
+			     string.equals("optional_steam = true")))
+			{
+			    stringBuilder.append(string);
+
+			    if(i != length - 1)
+				stringBuilder.append(";");
+			}
+
+			i += 1;
+		    }
+
+		    if(stringBuilder.length() > 0)
+			stringBuilder.append(";");
+
+		    stringBuilder.append("optional_steam = ");
+		    stringBuilder.append
+			(menuItem.isChecked() ? "true" : "false");
+		}
+
+		m_databaseHelper.writeParticipantOptions
+		    (s_cryptography, stringBuilder.toString(), m_sipHashId);
+		break;
+	    }
 	case ContextMenuEnumerator.RESEND_MESSAGE:
 	    Kernel.getInstance().resendMessage(m_sipHashId, itemId);
 	    break;
@@ -1629,6 +1684,15 @@ public class MemberChat extends AppCompatActivity
 	    (m_databaseHelper.
 	     readParticipantOptions(s_cryptography, m_sipHashId).
 	     contains("optional_signatures = true"));
+	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_STEAM,
+			    -1,
+			    0,
+			    "Optional Steam");
+	menuItem.setCheckable(true);
+	menuItem.setChecked
+	    (m_databaseHelper.
+	     readParticipantOptions(s_cryptography, m_sipHashId).
+	     contains("optional_steam = true"));
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
 		 0,
