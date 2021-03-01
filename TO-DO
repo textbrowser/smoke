@@ -286,13 +286,14 @@ Remaining Items
 
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
+- Ignore private duplicate keys.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Message details:
   [ ] Attempts.
   [ ] Disk size.
 - Option for computing Steam digest. Why?
-- Optional cryptographic discovery.
+- Optional cryptographic discovery, per neighbor.
 - Password-protected ZIP and Netcat transfer.
 - Play Store.
 - Puff, or, video on the Echo. Nearly impossible.
