@@ -1944,8 +1944,12 @@ public class Kernel
 	** 2 - Force Echo
 	*/
 
+	final int ECHO = 0;
+	final int FINE = 1;
+	final int FORCE_ECHO = 2;
+
 	if(buffer == null)
-	    return 1;
+	    return FINE;
 
 	try
 	{
@@ -1953,9 +1957,9 @@ public class Kernel
 		(buffer.getBytes(), Cryptography.SIPHASH_OUTPUT_LENGTH / 2)[0];
 
 	    if(s_databaseHelper.containsCongestionDigest(value))
-		return 1;
+		return FINE;
 	    else if(s_databaseHelper.writeCongestionDigest(value))
-		return 1;
+		return FINE;
 
 	    /*
 	    ** Fire!
@@ -2005,7 +2009,7 @@ public class Kernel
 							CIPHER_KEY_LENGTH));
 
 				if(ciphertext == null)
-				    return 1;
+				    return FINE;
 
 				ciphertext = Arrays.copyOfRange
 
@@ -2019,7 +2023,7 @@ public class Kernel
 
 				if(!(strings.length == 4 ||
 				     strings.length == 5))
-				    return 1;
+				    return FINE;
 
 				strings[strings.length - 1] = new
 				    String(Base64.
@@ -2034,7 +2038,7 @@ public class Kernel
 				if(Math.abs(System.currentTimeMillis() -
 					    timestamp.getTime()) >
 				   FIRE_TIME_DELTA)
-				    return 1;
+				    return FINE;
 
 				int length = strings.length - 1;
 
@@ -2054,7 +2058,7 @@ public class Kernel
 
 				if(s_databaseHelper.
 				   writeCongestionDigest(value))
-				    return 1;
+				    return FINE;
 
 				final String channel = entry.getKey();
 				final String id = strings[2];
@@ -2096,7 +2100,7 @@ public class Kernel
 				{
 				}
 
-				return 2; // Echo Fire!
+				return FORCE_ECHO; // Echo Fire!
 			    }
 			}
 		    }
@@ -2114,7 +2118,7 @@ public class Kernel
 		Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT);
 
 	    if(bytes == null || bytes.length < 128)
-		return 0;
+		return ECHO;
 
 	    /*
 	    ** Ozone!
@@ -2142,14 +2146,14 @@ public class Kernel
 			(data, s_cryptography.ozoneEncryptionKey());
 
 		    if(ciphertext == null)
-			return 1;
+			return FINE;
 
 		    long timestamp = Miscellaneous.byteArrayToLong
 			(Arrays.copyOfRange(ciphertext, 1, 9));
 
 		    if(Math.abs(System.currentTimeMillis() - timestamp) >
 		       SHARE_SIPHASH_ID_CONFIRMATION_WINDOW)
-			return 1;
+			return FINE;
 
 		    /*
 		    ** Did we share something?
@@ -2164,7 +2168,7 @@ public class Kernel
 				     Cryptography.SIPHASH_IDENTITY_LENGTH));
 
 		    if(identity != m_shareSipHashIdIdentity.get())
-			return 1;
+			return FINE;
 
 		    m_shareSipHashIdIdentity.set(0L);
 
@@ -2179,7 +2183,7 @@ public class Kernel
 
 		    intent.putExtra("org.purple.smoke.sipHashId", sipHashId);
 		    Miscellaneous.sendBroadcast(intent);
-		    return 1;
+		    return FINE;
 		}
 	    }
 
@@ -2245,7 +2249,7 @@ public class Kernel
 							Cryptography.
 							HASH_KEY_LENGTH),
 				     destination))
-		    return 0;
+		    return ECHO;
 
 	    if(s_cryptography.isValidSipHashMac(data, hmac))
 	    {
@@ -2307,7 +2311,7 @@ public class Kernel
 			     Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
 		}
 
-		return 1;
+		return FINE;
 	    }
 
 	    byte pki[] = null;
@@ -2375,7 +2379,7 @@ public class Kernel
 	    }
 
 	    if(pki == null)
-		return 1;
+		return FINE;
 
 	    if(pki.length == Cryptography.HASH_KEY_LENGTH)
 	    {
@@ -2390,7 +2394,7 @@ public class Kernel
 		    (s_cryptography, pki);
 
 		if(keyStream == null)
-		    return 1;
+		    return FINE;
 
 		byte hmacc[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
@@ -2409,10 +2413,10 @@ public class Kernel
 			    (s_cryptography, pki, hmac, bytes);
 
 			if(keyStream == null)
-			    return 1;
+			    return FINE;
 		    }
 		    else
-			return 1;
+			return FINE;
 		}
 
 		byte ciphertext[] = Cryptography.decrypt
@@ -2426,7 +2430,7 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH));
 
 		if(ciphertext == null)
-		    return 1;
+		    return FINE;
 
 		byte abyte[] = new byte[] {ciphertext[0]};
 
@@ -2436,7 +2440,7 @@ public class Kernel
 			(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
-			return 1;
+			return FINE;
 
 		    String sipHashId = array[1];
 
@@ -2449,13 +2453,13 @@ public class Kernel
 
 			if(Math.abs(System.currentTimeMillis() - timestamp) >
 			   Chat.STATUS_WINDOW)
-			    return 1;
+			    return FINE;
 
 			PublicKey signatureKey = s_databaseHelper.
 			    signatureKeyForDigest(s_cryptography, pki);
 
 			if(signatureKey == null)
-			    return 1;
+			    return FINE;
 
 			if(!Cryptography.
 			   verifySignature
@@ -2471,12 +2475,12 @@ public class Kernel
 						       10),
 					   s_cryptography.
 					   chatEncryptionPublicKeyDigest())))
-			    return 1;
+			    return FINE;
 		    }
 
 		    s_databaseHelper.updateParticipantLastTimestamp
 			(s_cryptography, pki);
-		    return 1;
+		    return FINE;
 		}
 		else if(abyte[0] == Messages.JUGGERNAUT_TYPE[0])
 		{
@@ -2497,7 +2501,7 @@ public class Kernel
 
 			    if(Math.abs(System.currentTimeMillis() -
 					timestamp) > JUGGERNAUT_WINDOW)
-				return 1;
+				return FINE;
 
 			    ii += 1;
 			    break;
@@ -2512,7 +2516,7 @@ public class Kernel
 				signatureKeyForDigest(s_cryptography, pki);
 
 			    if(signatureKey == null)
-				return 1;
+				return FINE;
 
 			    byte publicKeySignature[] = Base64.decode
 				(string.getBytes(), Base64.NO_WRAP);
@@ -2530,7 +2534,7 @@ public class Kernel
 				 "\n".getBytes(),
 				 s_cryptography.
 				 chatEncryptionPublicKeyDigest())))
-				return 1;
+				return FINE;
 
 			    break;
 			default:
@@ -2541,7 +2545,7 @@ public class Kernel
 			nameSipHashIdFromDigest(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
-			return 1;
+			return FINE;
 
 		    byte sessionCredentials[] = null;
 		    int state = -1;
@@ -2555,14 +2559,14 @@ public class Kernel
 			    ** Misplaced Juggernaut!
 			    */
 
-			    return 1;
+			    return FINE;
 
 			Juggernaut juggernaut = m_juggernauts.get(array[1]);
 
 			if(juggernaut == null)
 			{
 			    m_juggernauts.remove(array[1]);
-			    return 1;
+			    return FINE;
 			}
 
 			if(juggernaut.state() ==
@@ -2661,7 +2665,7 @@ public class Kernel
 			    ("org.purple.smoke.notify_data_set_changed");
 		    }
 
-		    return 1;
+		    return FINE;
 		}
 		else if(abyte[0] == Messages.MESSAGE_READ_TYPE[0])
 		{
@@ -2673,7 +2677,7 @@ public class Kernel
 			signatureKeyForDigest(s_cryptography, pki);
 
 		    if(signatureKey == null)
-			return 1;
+			return FINE;
 
 		    if(!Cryptography.
 		       verifySignature
@@ -2690,13 +2694,13 @@ public class Kernel
 						   HASH_KEY_LENGTH + 1),
 				       s_cryptography.
 				       chatEncryptionPublicKeyDigest())))
-			return 1;
+			return FINE;
 
 		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
-			return 1;
+			return FINE;
 
 		    if(s_databaseHelper.
 		       writeMessageStatus
@@ -2708,7 +2712,7 @@ public class Kernel
 					   HASH_KEY_LENGTH + 1)))
 			notifyOfDataSetChange("-1");
 
-		    return 1;
+		    return FINE;
 		}
 
 		ciphertext = Arrays.copyOfRange
@@ -2717,7 +2721,7 @@ public class Kernel
 		String strings[] = new String(ciphertext).split("\\n");
 
 		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
-		    return 1;
+		    return FINE;
 
 		String message = null;
 		boolean updateTimeStamp = true;
@@ -2747,7 +2751,7 @@ public class Kernel
 			    */
 
 			    if(!ourMessageViaChatTemporaryIdentity)
-				return 1;
+				return FINE;
 
 			ii += 1;
 			break;
@@ -2778,7 +2782,7 @@ public class Kernel
 			    nameSipHashIdFromDigest(s_cryptography, pki);
 
 			if(array == null || array.length != 2)
-			    return 1;
+			    return FINE;
 
 			String sipHashId = array[1];
 
@@ -2791,7 +2795,7 @@ public class Kernel
 				signatureKeyForDigest(s_cryptography, pki);
 
 			    if(signatureKey == null)
-				return 1;
+				return FINE;
 
 			    publicKeySignature = Base64.decode
 				(string.getBytes(), Base64.NO_WRAP);
@@ -2816,7 +2820,7 @@ public class Kernel
 				 "\n".getBytes(),
 				 s_cryptography.
 				 chatEncryptionPublicKeyDigest())))
-				return 1;
+				return FINE;
 			}
 
 			strings = array;
@@ -2826,7 +2830,7 @@ public class Kernel
 		    }
 
 		if(message == null)
-		    return 1;
+		    return FINE;
 
 		if(updateTimeStamp)
 		    s_databaseHelper.updateParticipantLastTimestamp
@@ -2837,7 +2841,7 @@ public class Kernel
 		     Cryptography.SIPHASH_OUTPUT_LENGTH)[0];
 
 		if(s_databaseHelper.writeCongestionDigest(value))
-		    return 1;
+		    return FINE;
 
 		if(s_databaseHelper.
 		   writeParticipantMessage(s_cryptography,
@@ -2889,7 +2893,7 @@ public class Kernel
 			     Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
 		}
 
-		return 1;
+		return FINE;
 	    }
 	    else if(pki.length == Cryptography.CIPHER_HASH_KEYS_LENGTH)
 	    {
@@ -2909,7 +2913,7 @@ public class Kernel
 					pki.length));
 
 		if(!Cryptography.memcmp(hmac, hmacc))
-		    return 1;
+		    return FINE;
 
 		byte ciphertext[] = Cryptography.decrypt
 		    (Arrays.
@@ -2922,7 +2926,7 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH));
 
 		if(ciphertext == null)
-		    return 1;
+		    return FINE;
 
 		byte tag = ciphertext[0];
 
@@ -2930,12 +2934,12 @@ public class Kernel
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1] ||
 		     tag == Messages.STEAM_KEY_EXCHANGE[0] ||
 		     tag == Messages.STEAM_KEY_EXCHANGE[1]))
-		    return 1;
+		    return FINE;
 		else if(tag == Messages.STEAM_KEY_EXCHANGE[0] ||
 			tag == Messages.STEAM_KEY_EXCHANGE[1])
 		{
 		    m_steamKeyExchange.append(ciphertext, pki);
-		    return 1;
+		    return FINE;
 		}
 
 		ciphertext = Arrays.copyOfRange
@@ -2944,7 +2948,7 @@ public class Kernel
 		String strings[] = new String(ciphertext).split("\\n");
 
 		if(strings.length != Messages.CALL_GROUP_TWO_ELEMENT_COUNT)
-		    return 1;
+		    return FINE;
 
 		byte ephemeralPublicKey[] = null;
 		byte ephemeralPublicKeyType[] = null;
@@ -2962,7 +2966,7 @@ public class Kernel
 
 			if(Math.abs(System.currentTimeMillis() - timestamp) >
 			   CALL_LIFETIME)
-			    return 1;
+			    return FINE;
 
 			ii += 1;
 			break;
@@ -2990,7 +2994,7 @@ public class Kernel
 			    (s_cryptography, senderPublicEncryptionKeyDigest);
 
 			if(signatureKey == null)
-			    return 1;
+			    return FINE;
 
 			publicKeySignature = Base64.decode
 			    (string.getBytes(), Base64.NO_WRAP);
@@ -3014,7 +3018,7 @@ public class Kernel
 					    "\n".getBytes(),
 					    s_cryptography.
 					    chatEncryptionPublicKeyDigest())))
-			    return 1;
+			    return FINE;
 
 			ii += 1;
 			break;
@@ -3065,7 +3069,7 @@ public class Kernel
 			    }
 
 			    if(publicKey == null)
-				return 1;
+				return FINE;
 
 			    /*
 			    ** Generate new AES-256 and SHA-512 keys.
@@ -3099,7 +3103,7 @@ public class Kernel
 			    intent.putExtra
 				("org.purple.smoke.sipHashId", array[1]);
 			    Miscellaneous.sendBroadcast(intent);
-			    return 1;
+			    return FINE;
 			}
 		    }
 		    else if(tag == Messages.CALL_HALF_AND_HALF_TAGS[1])
@@ -3118,7 +3122,7 @@ public class Kernel
 			}
 
 			if(participantCall == null)
-			    return 1;
+			    return FINE;
 
 			m_callQueueMutex.writeLock().lock();
 
@@ -3139,13 +3143,15 @@ public class Kernel
 			     ephemeralPublicKey);
 
 			if(keyStream == null)
-			    return 1;
+			    return FINE;
 		    }
 		    else
-			return 1;
+			return FINE;
 
-		    s_databaseHelper.writeCallKeys
-			(s_cryptography, array[1], keyStream);
+		    if(!s_databaseHelper.writeCallKeys(s_cryptography,
+						       array[1],
+						       keyStream))
+			return FINE;
 
 		    Intent intent = new Intent
 			("org.purple.smoke.half_and_half_call");
@@ -3210,7 +3216,7 @@ public class Kernel
 
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.populate_participants");
-		    return 1;
+		    return FINE;
 		}
 	    }
 	    else if(pki.length == Cryptography.STEAM_FILE_IDENTITY_LENGTH)
@@ -3228,7 +3234,7 @@ public class Kernel
 		    (s_cryptography, pki);
 
 		if(keyStream == null)
-		    return 1;
+		    return FINE;
 
 		byte hmacc[] = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
@@ -3240,7 +3246,7 @@ public class Kernel
 					keyStream.length));
 
 		if(!Cryptography.memcmp(hmac, hmacc))
-		    return 1;
+		    return FINE;
 
 		byte ciphertext[] = Cryptography.decrypt
 		    (Arrays.
@@ -3253,20 +3259,20 @@ public class Kernel
 					Cryptography.CIPHER_KEY_LENGTH));
 
 		if(ciphertext == null)
-		    return 1;
+		    return FINE;
 
 		long timestamp = Miscellaneous.byteArrayToLong
 		    (Arrays.copyOfRange(ciphertext, 1, 9));
 
 		if(Math.abs(System.currentTimeMillis() - timestamp) >
 		   STEAM_SHARE_WINDOW)
-		    return 1;
+		    return FINE;
 
 		long offset = Miscellaneous.byteArrayToLong
 		    (Arrays.copyOfRange(ciphertext, 9, 17));
 
 		if(offset < 0)
-		    return 1;
+		    return FINE;
 
 		byte abyte[] = new byte[] {ciphertext[0]};
 
@@ -3337,10 +3343,10 @@ public class Kernel
 	}
 	catch(Exception exception)
 	{
-	    return 0;
+	    return ECHO;
 	}
 
-	return 0;
+	return ECHO;
     }
 
     public long callTimeRemaining(String sipHashId)

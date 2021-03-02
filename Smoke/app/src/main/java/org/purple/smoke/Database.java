@@ -3176,6 +3176,67 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public boolean writeCallKeys(Cryptography cryptography,
+				 String sipHashId,
+				 byte keyStream[])
+    {
+	if(cryptography == null || keyStream == null || m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("keystream",
+		 Base64.encodeToString(cryptography.etm(keyStream),
+				       Base64.DEFAULT));
+	    values.put
+		("last_status_timestamp",
+		 Base64.
+		 encodeToString(cryptography.
+				etm(Miscellaneous.
+				    longToByteArray(System.
+						    currentTimeMillis())),
+				Base64.DEFAULT));
+	    m_db.update("participants", values, "siphash_id_digest = ?",
+			new String[] {Base64.
+				      encodeToString
+				      (cryptography.
+				       hmac(sipHashId.toUpperCase().trim().
+					    getBytes(StandardCharsets.UTF_8)),
+				       Base64.DEFAULT)});
+	    values.clear();
+	    values.put("keystream",
+		       Base64.encodeToString(cryptography.etm(keyStream),
+					     Base64.DEFAULT));
+	    values.put("keystream_digest",
+		       Base64.encodeToString(cryptography.hmac(keyStream),
+					     Base64.DEFAULT));
+	    values.put
+		("siphash_id_digest",
+		 Base64.encodeToString(cryptography.
+				       hmac(sipHashId.toUpperCase().trim().
+					    getBytes(StandardCharsets.UTF_8)),
+				       Base64.DEFAULT));
+	    m_db.insertOrThrow("participants_keys", null, values);
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+        {
+	    if(exception.getMessage().toLowerCase().contains("unique"))
+		return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
+    }
+
     public boolean writeCongestionDigest(long value)
     {
 	if(m_db == null)
@@ -5506,63 +5567,6 @@ public class Database extends SQLiteOpenHelper
 			"encryption_public_key_digest = ?",
 			new String[] {Base64.encodeToString(digest,
 							    Base64.DEFAULT)});
-	    m_db.setTransactionSuccessful();
-	}
-	catch(Exception exception)
-        {
-	}
-	finally
-	{
-	    m_db.endTransaction();
-	}
-    }
-
-    public void writeCallKeys(Cryptography cryptography,
-			      String sipHashId,
-			      byte keyStream[])
-    {
-	if(cryptography == null || keyStream == null || m_db == null)
-	    return;
-
-	m_db.beginTransactionNonExclusive();
-
-	try
-	{
-	    ContentValues values = new ContentValues();
-
-	    values.put
-		("keystream",
-		 Base64.encodeToString(cryptography.etm(keyStream),
-				       Base64.DEFAULT));
-	    values.put
-		("last_status_timestamp",
-		 Base64.
-		 encodeToString(cryptography.
-				etm(Miscellaneous.
-				    longToByteArray(System.
-						    currentTimeMillis())),
-				Base64.DEFAULT));
-	    m_db.update("participants", values, "siphash_id_digest = ?",
-			new String[] {Base64.
-				      encodeToString
-				      (cryptography.
-				       hmac(sipHashId.toUpperCase().trim().
-					    getBytes(StandardCharsets.UTF_8)),
-				       Base64.DEFAULT)});
-	    values.clear();
-	    values.put("keystream",
-		       Base64.encodeToString(cryptography.etm(keyStream),
-					     Base64.DEFAULT));
-	    values.put("keystream_digest",
-		       Base64.encodeToString(cryptography.hmac(keyStream),
-					     Base64.DEFAULT));
-	    values.put
-		("siphash_id_digest",
-		 Base64.encodeToString(cryptography.
-				       hmac(sipHashId.toUpperCase().trim().
-					    getBytes(StandardCharsets.UTF_8)),
-				       Base64.DEFAULT));
-	    m_db.insertOrThrow("participants_keys", null, values);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
