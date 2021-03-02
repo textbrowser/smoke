@@ -1581,8 +1581,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "encryption_public_key " +
+		("SELECT encryption_public_key " +
 		 "FROM participants WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString
@@ -1626,8 +1625,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "signature_public_key " +
+		("SELECT signature_public_key " +
 		 "FROM participants WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString
@@ -1671,8 +1669,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "signature_public_key " +
+		("SELECT signature_public_key " +
 		 "FROM participants WHERE encryption_public_key_digest = ?",
 		 new String[] {Base64.encodeToString(digest, Base64.DEFAULT)});
 
@@ -2110,8 +2107,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT " +
-		 "encryption_public_key_algorithm " +
+		("SELECT encryption_public_key_algorithm " +
 		 "FROM participants WHERE siphash_id_digest = ?",
 		 new String[] {Base64.
 			       encodeToString
@@ -3180,7 +3176,11 @@ public class Database extends SQLiteOpenHelper
 				 String sipHashId,
 				 byte keyStream[])
     {
-	if(cryptography == null || keyStream == null || m_db == null)
+	if(Cryptography.
+	   memcmp(keyStream, participantKeyStream(cryptography, sipHashId)) ||
+	   cryptography == null ||
+	   keyStream == null ||
+	   m_db == null)
 	    return false;
 
 	m_db.beginTransactionNonExclusive();
