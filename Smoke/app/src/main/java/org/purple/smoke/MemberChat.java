@@ -38,9 +38,11 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap.Config;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -52,12 +54,14 @@ import android.text.SpannableStringBuilder;
 import android.util.Base64;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
@@ -245,6 +249,7 @@ public class MemberChat extends AppCompatActivity
     private final Database m_databaseHelper = Database.getInstance();
     private final ReentrantReadWriteLock m_selectedMessagesMutex =
 	new ReentrantReadWriteLock();
+    private final int m_lastContextMenuPosition[] = new int[] {0, 0};
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
@@ -268,6 +273,7 @@ public class MemberChat extends AppCompatActivity
 	public final static int RETRIEVE_MESSAGES = 12;
 	public final static int SAVE_ATTACHMENT = 13;
 	public final static int SELECTION_STATE = 14;
+	public final static int VIEW_DETAILS = 15;
     }
 
     private boolean hasPublicKeys()
@@ -576,6 +582,66 @@ public class MemberChat extends AppCompatActivity
 
 	startActivity(intent);
 	finish();
+    }
+
+    private void showDetailsOfMessage(int oid)
+    {
+	if(MemberChat.this.isFinishing())
+	    return;
+
+	class SingleShot implements Runnable
+	{
+	    private int m_oid = -1;
+
+	    SingleShot(int oid)
+	    {
+		m_oid = oid;
+	    }
+
+	    @Override
+	    public void run()
+	    {
+		MemberChat.this.runOnUiThread(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+			PopupWindow popupWindow = new PopupWindow
+			    (MemberChat.this);
+			StringBuilder stringBuilder = new StringBuilder();
+			TextView textView1 = new TextView(MemberChat.this);
+			float density = getApplicationContext().getResources().
+			    getDisplayMetrics().density;
+
+			textView1.setBackgroundColor(Color.rgb(255, 255, 255));
+			textView1.setPaddingRelative
+			    ((int) (10 * density),
+			     (int) (10 * density),
+			     (int) (10 * density),
+			     (int) (10 * density));
+			textView1.setTextSize(16);
+			popupWindow.setContentView(textView1);
+			popupWindow.setOutsideTouchable(true);
+
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+			{
+			    popupWindow.setHeight(450);
+			    popupWindow.setWidth(700);
+			}
+
+			popupWindow.showAtLocation
+			    (findViewById(R.id.recycler_view),
+			     Gravity.START | Gravity.TOP,
+			     m_lastContextMenuPosition[0],
+			     m_lastContextMenuPosition[1]);
+		    }
+		});
+	    }
+	}
+
+	Thread thread = new Thread(new SingleShot(oid));
+
+	thread.start();
     }
 
     private void showFireActivity()
@@ -1528,6 +1594,9 @@ public class MemberChat extends AppCompatActivity
 	    m_selectedMessages.clear();
 	    m_adapter.notifyDataSetChanged();
 	    break;
+	case ContextMenuEnumerator.VIEW_DETAILS:
+	    showDetailsOfMessage(itemId);
+	    break;
 	default:
 	    break;
 	}
@@ -1612,6 +1681,23 @@ public class MemberChat extends AppCompatActivity
     public boolean messageSelectionState()
     {
 	return m_messageSelectionStateEnabled;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+	boolean isAuthenticated = State.getInstance().isAuthenticated();
+
+	if(!m_databaseHelper.accountPrepared())
+	    /*
+	    ** The database may have been modified or removed.
+	    */
+
+	    isAuthenticated = true;
+
+	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
+	Miscellaneous.addMembersToMenu(menu, 7, 250);
+	return true;
     }
 
     public int selectedMessagesCount()
@@ -1706,21 +1792,12 @@ public class MemberChat extends AppCompatActivity
 	menuItem.setChecked(messageSelectionState());
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    public void prepareContextMenuPosition(View view)
     {
-	boolean isAuthenticated = State.getInstance().isAuthenticated();
+	if(view == null)
+	    return;
 
-	if(!m_databaseHelper.accountPrepared())
-	    /*
-	    ** The database may have been modified or removed.
-	    */
-
-	    isAuthenticated = true;
-
-	menu.findItem(R.id.action_authenticate).setEnabled(!isAuthenticated);
-	Miscellaneous.addMembersToMenu(menu, 7, 250);
-	return true;
+	view.getLocationOnScreen(m_lastContextMenuPosition);
     }
 
     public void setMessageSelected(int oid, boolean isChecked)

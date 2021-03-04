@@ -145,6 +145,9 @@ Completed Items
 - Member status in Member Chat.
 - Member Chat attachment.
 - Messages from the past may trigger presence.
+- Message details:
+  [x] Attempts.
+  [x] Disk size.
 - Messages may arrive while the Settings activity is the primary activity.
   Calls are not logged.
 - Messages must be temporarily retained if the Chat activity loses focus.
@@ -289,9 +292,6 @@ Remaining Items
 - Ignore private duplicate keys.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
-- Message details:
-  [ ] Attempts.
-  [ ] Disk size.
 - Option for computing Steam digest. Why?
 - Optional cryptographic discovery, per neighbor.
 - Password-protected ZIP and Netcat transfer.

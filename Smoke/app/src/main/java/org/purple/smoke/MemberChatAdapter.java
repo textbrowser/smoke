@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class MemberChatAdapter extends RecyclerView.Adapter
 				       <MemberChatAdapter.ViewHolder>
@@ -72,6 +73,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		return;
 
 	    m_contextMenuShown = true;
+	    m_memberChat.prepareContextMenuPosition(view);
 
 	    /*
 	    ** Please update the first parameter if the context menu
@@ -112,6 +114,11 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		 6,
 		 "Selection State").setCheckable(true);
 	    menuItem.setChecked(m_memberChat.messageSelectionState());
+	    menu.add
+		(MemberChat.ContextMenuEnumerator.VIEW_DETAILS,
+		 m_position,
+		 7,
+		 "View Details");
 	}
 
 	public void setData(MemberChatElement memberChatElement, int position)
