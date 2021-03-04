@@ -588,6 +588,9 @@ public class MemberChat extends AppCompatActivity
     {
 	if(MemberChat.this.isFinishing())
 	    return;
+	else if(m_lastContextMenuPosition[0] < 0 ||
+		m_lastContextMenuPosition[1] < 0)
+	    return;
 
 	class SingleShot implements Runnable
 	{
@@ -634,6 +637,8 @@ public class MemberChat extends AppCompatActivity
 			     Gravity.START | Gravity.TOP,
 			     m_lastContextMenuPosition[0],
 			     m_lastContextMenuPosition[1]);
+			m_lastContextMenuPosition[0] =
+			    m_lastContextMenuPosition[1] = -1;
 		    }
 		});
 	    }
