@@ -108,6 +108,7 @@ Completed Items
 - Hide Steam key type for Other destination.
 - Highlight results of Juggernaut, if possible.
 - Identity-sharing confirmation from SmokeStack.
+- Ignore private duplicate keys.
 - If a SipHash ID is deleted, its corresponding participants entry should also
   be removed. Foreign key constraints.
 - Improve PBKDF2 uses. Initially, generate a temporary stream of 20 bytes
@@ -288,7 +289,6 @@ Remaining Items
 
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
-- Ignore private duplicate keys.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Option for computing Steam digest. Why?
