@@ -146,7 +146,6 @@ Completed Items
 - Member Chat attachment.
 - Messages from the past may trigger presence.
 - Message details:
-  [x] Attempts.
   [x] Disk size.
 - Messages may arrive while the Settings activity is the primary activity.
   Calls are not logged.

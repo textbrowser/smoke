@@ -116,7 +116,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    menuItem.setChecked(m_memberChat.messageSelectionState());
 	    menu.add
 		(MemberChat.ContextMenuEnumerator.VIEW_DETAILS,
-		 m_position,
+		 view.getId()
 		 7,
 		 "View Details");
 	}

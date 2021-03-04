@@ -611,7 +611,8 @@ public class MemberChat extends AppCompatActivity
 		    {
 			PopupWindow popupWindow = new PopupWindow
 			    (MemberChat.this);
-			StringBuilder stringBuilder = new StringBuilder();
+			String string = m_databaseHelper.messageDetails
+			    (m_oid).trim();
 			TextView textView1 = new TextView(MemberChat.this);
 			float density = getApplicationContext().getResources().
 			    getDisplayMetrics().density;
@@ -623,6 +624,13 @@ public class MemberChat extends AppCompatActivity
 			     (int) (10 * density),
 			     (int) (10 * density));
 			textView1.setTextSize(16);
+
+			if(string.isEmpty())
+			    textView1.setText
+				("Cannot retrieve message details.");
+			else
+			    textView1.setText(string);
+
 			popupWindow.setContentView(textView1);
 			popupWindow.setOutsideTouchable(true);
 

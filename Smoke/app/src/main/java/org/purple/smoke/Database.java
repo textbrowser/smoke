@@ -2054,6 +2054,43 @@ public class Database extends SQLiteOpenHelper
 	return steamElement;
     }
 
+    public String messageDetails(int oid)
+    {
+	if(m_db == null)
+	    return "";
+
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT LENGTH(attachment) + " +
+		 "LENGTH(from_smokestack) + " +
+		 "LENGTH(message) + " +
+		 "LENGTH(message_digest) + " +
+		 "LENGTH(message_identity_digest) + " +
+		 "LENGTH(message_read) + " +
+		 "LENGTH(message_sent) + " +
+		 "LENGTH(siphash_id_digest) + " +
+		 "LENGTH(timestamp) " +
+		 "FROM participants_messages WHERE oid = ?",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		return "Disk Size: " + cursor.getLong(0) + " Bytes";
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return "";
+    }
+
     public String nameFromSipHashId(Cryptography cryptography,
 				    String sipHashId)
     {
