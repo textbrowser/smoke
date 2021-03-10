@@ -19,7 +19,9 @@ Summary of Smoke
 * Juggling Juggernaut Protocol!
 * McEliece Fujisaka and Pointcheval.
 * Message structures do not explicitly expose contents. Header-less protocols!
+  Some messages do include type information.
 * Mobile servers via SmokeStack.
+* Obfuscation of resident secret keys.
 * Optional foreground services.
 * Original implementation of SipHash.
 * Ozone destinations: private and public repositories.
@@ -27,6 +29,7 @@ Summary of Smoke
 * Private servers.
 * Public and private public-key servers.
 * Reliable distribution of archived messages.
+* Reliable distribution of deliverable text messages.
 * SSL/TLS through SmokeStack.
 * Semi-compatible with Spot-On via Fire.
 * Share files with TCP utilities such as Netcat.
