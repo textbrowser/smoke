@@ -287,6 +287,7 @@ Completed Items
 
 Remaining Items
 
+- Authenticate via TLS. Requires BC.
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
 - Include member's name in Share Keys Of, if possible.
