@@ -3151,6 +3151,10 @@ public class Kernel
 		    if(!s_databaseHelper.writeCallKeys(s_cryptography,
 						       array[1],
 						       keyStream))
+			/*
+			** Duplicate or error.
+			*/
+
 			return FINE;
 
 		    Intent intent = new Intent

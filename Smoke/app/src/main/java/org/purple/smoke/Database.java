@@ -3263,8 +3263,7 @@ public class Database extends SQLiteOpenHelper
 	}
 	catch(Exception exception)
         {
-	    if(exception.getMessage().toLowerCase().contains("unique"))
-		return false;
+	    return false;
 	}
 	finally
 	{
