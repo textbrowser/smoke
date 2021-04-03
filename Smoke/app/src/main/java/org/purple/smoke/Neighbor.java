@@ -311,6 +311,7 @@ public abstract class Neighbor
 	}, 0L, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
 	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
 	{
+	    private int m_lastMessageOid = -1;
 	    private long m_accumulatedTime = System.nanoTime();
 
 	    @Override
@@ -356,7 +357,7 @@ public abstract class Neighbor
 		    */
 
 		    String array[] = m_databaseHelper.readOutboundMessage
-			(m_oid.get());
+			(m_lastMessageOid, m_oid.get());
 
 		    /*
 		    ** array[0]: Attempts
@@ -371,6 +372,8 @@ public abstract class Neighbor
 
 		    if(array != null && array.length == 4)
 		    {
+			m_lastMessageOid = Integer.parseInt(array[3]);
+
 			byte bytes[] = m_cryptography.mtd
 			    (Base64.decode(array[1], Base64.DEFAULT));
 
@@ -429,6 +432,8 @@ public abstract class Neighbor
 				    (array[3]);
 			}
 		    }
+		    else
+			m_lastMessageOid = -1;
 
 		    /*
 		    ** Echo packets.

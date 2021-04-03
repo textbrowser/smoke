@@ -153,6 +153,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 
 	    m_canResend = memberChatElement.m_fromSmokeStack.equals("local");
 	    m_chatBubble.setDate(memberChatElement.m_timestamp);
+	    m_chatBubble.setError(false);
 	    m_chatBubble.setFromeSmokeStack
 		(memberChatElement.m_fromSmokeStack.equals("true"));
 	    m_chatBubble.setImageAttachment(memberChatElement.m_attachment);

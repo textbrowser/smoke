@@ -2893,7 +2893,7 @@ public class Database extends SQLiteOpenHelper
 	return array;
     }
 
-    public String[] readOutboundMessage(int oid)
+    public String[] readOutboundMessage(int messageOid, int neighborOid)
     {
 	if(m_db == null)
 	    return null;
@@ -2908,13 +2908,15 @@ public class Database extends SQLiteOpenHelper
 		 "FROM outbound_queue " +
 		 "WHERE attempts < CAST(? AS INTEGER) AND " +
 		 "neighbor_oid = ? AND " +
-		 "(CAST(? AS INTEGER) - timestamp) >= CAST(? AS INTEGER) " +
+		 "(CAST(? AS INTEGER) - timestamp) >= CAST(? AS INTEGER) AND " +
+		 "oid > CAST(? AS INTEGER) " +
 		 "ORDER BY oid LIMIT 1",
 		 new String[] {String.valueOf(MESSAGE_DELIVERY_ATTEMPTS),
-			       String.valueOf(oid),
+			       String.valueOf(neighborOid),
 			       String.valueOf(System.currentTimeMillis()),
 			       String.valueOf(Chat.CHAT_WINDOW / (long)
-					      MESSAGE_DELIVERY_ATTEMPTS)});
+					      MESSAGE_DELIVERY_ATTEMPTS),
+			       String.valueOf(messageOid)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
