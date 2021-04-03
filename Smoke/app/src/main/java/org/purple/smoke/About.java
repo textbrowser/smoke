@@ -38,7 +38,7 @@ public class About
 {
     private final static SimpleDateFormat s_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss", Locale.getDefault());
-    public static String s_about = "";
+    private static String s_about = "";
 
     private About()
     {
