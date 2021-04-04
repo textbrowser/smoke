@@ -4,7 +4,7 @@ Completed Items
 - A release target for the make files.
 - Aliases.
 - Allow for two McEliece parameter sets ((11, 50), (12, 68)):
-  Eleven of Sixty-One, Twelve of Eighty.
+  Eleven of Fifty, Twelve of Sixty-Eight.
 - Allow log clearing.
 - Allow resending of messages.
 - Allow resetting of Chat session keys via context menu.
