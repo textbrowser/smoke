@@ -287,6 +287,7 @@ Completed Items
 
 Remaining Items
 
+- Append some text to duplicate Steams on write.
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
