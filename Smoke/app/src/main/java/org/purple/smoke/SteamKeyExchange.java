@@ -297,12 +297,17 @@ public class SteamKeyExchange
 		steamElement.m_destination = array[0] + " (" + array[1] + ")";
 
 	    if(displayFileName.indexOf('.') == 0)
-		steamElement.m_displayFileName = "Smoke_Steam_" +
-		    Miscellaneous.byteArrayAsHexString(fileIdentity) +
+		steamElement.m_displayFileName = "Smoke_" +
+		    Miscellaneous.
+		    byteArrayAsHexString(Cryptography.randomBytes(32)) +
 		    fileExtension;
 	    else
 		steamElement.m_displayFileName =
-		    "Smoke_Steam_" + displayFileName;
+		    "Smoke_" +
+		    Miscellaneous.
+		    byteArrayAsHexString(Cryptography.randomBytes(5)) +
+		    "_" +
+		    displayFileName;
 
 	    steamElement.m_ephemeralPublicKey = ephemeralPublicKey;
 	    steamElement.m_fileDigest = fileDigest;

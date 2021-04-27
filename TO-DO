@@ -10,6 +10,7 @@ Completed Items
 - Allow resetting of Chat session keys via context menu.
 - Allow sharing of participant pairs.
 - Append new messages in Member Chat.
+- Append some text (file identity) to prevent duplicate Steams on write.
 - Application icon.
 - Application lock: Smokescreen.
 - As Name option in Alias mode (set alias to name). Name as Alias.
@@ -285,17 +286,19 @@ Completed Items
 - Zero ports are valid. If a system is allowing connections on port
   zero, Smoke will be able to connect to it.
 
+Peculiar Items
+
+- Option for computing Steam digest. Why?
+- Password-protected ZIP and Netcat transfer.
+- Play Store.
+
 Remaining Items
 
-- Append some text to duplicate Steams on write.
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
-- Option for computing Steam digest. Why?
 - Optional cryptographic discovery, per neighbor.
-- Password-protected ZIP and Netcat transfer.
-- Play Store.
 - Puff, or, video on the Echo. Nearly impossible.
 - SHA3 via BC.
