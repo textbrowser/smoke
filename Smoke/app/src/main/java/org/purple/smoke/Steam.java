@@ -154,6 +154,7 @@ public class Steam extends AppCompatActivity
 	public final static int REWIND_ALL_STEAMS = 3;
 	public final static int REWIND_AND_RESUME_ALL_STEAMS = 4;
 	public final static int REWIND_STEAM = 5;
+	public final static int STEAMROLL_STEAM = 6;
     }
 
     private void networkStatusChanged()
@@ -673,6 +674,8 @@ public class Steam extends AppCompatActivity
 	    m_databaseHelper.writeSteamStatus
 		(s_cryptography, "rewind", Miscellaneous.RATE, itemId, 0);
 	    m_adapter.notifyDataSetChanged();
+	    break;
+	case ContextMenuEnumerator.STEAMROLL_STEAM:
 	    break;
 	default:
 	    break;
