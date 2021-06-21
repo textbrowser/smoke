@@ -228,14 +228,12 @@ public abstract class Miscellaneous
 	    }
 	    else if(v < 1073741824L)
 	    {
-		stringBuilder.append
-		    (decimalFormat.format(v / (1048576.0)));
+		stringBuilder.append(decimalFormat.format(v / (1048576.0)));
 		stringBuilder.append(" MiB");
 	    }
 	    else
 	    {
-		stringBuilder.append
-		    (decimalFormat.format(v / (1073741824.0)));
+		stringBuilder.append(decimalFormat.format(v / (1073741824.0)));
 		stringBuilder.append(" GiB");
 	    }
 
