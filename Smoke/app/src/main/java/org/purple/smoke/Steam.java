@@ -676,6 +676,11 @@ public class Steam extends AppCompatActivity
 	    m_adapter.notifyDataSetChanged();
 	    break;
 	case ContextMenuEnumerator.STEAMROLL_STEAM:
+	    /*
+	    ** Oh no! We shall require a list of the participants!
+	    ** We will not have too many members, right?
+	    */
+
 	    break;
 	default:
 	    break;
