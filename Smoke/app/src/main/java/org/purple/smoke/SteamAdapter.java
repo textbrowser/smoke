@@ -104,7 +104,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	    if(view.getId() == -1)
 		menuItem.setEnabled(false);
 
-	    menuItem = menu.add(Steam.ContextMenuEnumerator.REWIND_STEAM,
+	    menuItem = menu.add(Steam.ContextMenuEnumerator.STEAMROLL_STEAM,
 				view.getId(),
 				6,
 				"Steamroll Steam");

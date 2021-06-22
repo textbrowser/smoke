@@ -124,6 +124,8 @@ public class Steam extends AppCompatActivity
 	}
     }
 
+    private ArrayList<String> m_selectedSteamRollingParticipants = new
+	ArrayList<> ();
     private Button m_attachmentButton = null;
     private Button m_sendButton = null;
     private Database m_databaseHelper = null;
@@ -638,6 +640,12 @@ public class Steam extends AppCompatActivity
 			    }
 
 			break;
+		    case ContextMenuEnumerator.STEAMROLL_STEAM:
+			m_databaseHelper.steamRoll
+			    (m_selectedSteamRollingParticipants,
+			     s_cryptography,
+			     itemId);
+			break;
 		    default:
 			break;
 		    }
@@ -681,6 +689,7 @@ public class Steam extends AppCompatActivity
 	    ** We will not have too many members, right?
 	    */
 
+	    m_selectedSteamRollingParticipants.clear();
 	    break;
 	default:
 	    break;

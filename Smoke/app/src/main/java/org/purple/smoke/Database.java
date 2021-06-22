@@ -5542,6 +5542,17 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void steamRoll(final ArrayList<String> participants,
+			  final Cryptography cryptography,
+			  final int steamId)
+    {
+	if(cryptography == null ||
+	   m_db == null ||
+	   participants == null ||
+	   participants.isEmpty())
+	    return;
+    }
+
     public void updateParticipantLastTimestamp(Cryptography cryptography,
 					       String sipHashId)
     {
