@@ -4,7 +4,7 @@
 
 # Bouncy Castle
 
-bouncycastle1=bcprov-ext-jdk15on-168.jar
+bouncycastle1=bcprov-ext-jdk15on-169.jar
 
 rm -f $bouncycastle1
 wget --progress=bar https://bouncycastle.org/download/$bouncycastle1
