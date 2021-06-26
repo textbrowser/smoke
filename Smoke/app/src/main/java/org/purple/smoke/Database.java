@@ -5552,6 +5552,11 @@ public class Database extends SQLiteOpenHelper
 	   participants.isEmpty())
 	    return;
 
+	SteamElement steamElement = readSteam(cryptography, -1, steamId);
+
+	if(steamElement == null)
+	    return;
+
 	m_db.beginTransactionNonExclusive();
 
 	try
