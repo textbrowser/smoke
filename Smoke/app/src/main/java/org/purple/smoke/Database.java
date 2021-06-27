@@ -179,6 +179,122 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    private void writeSteamImplementation
+	(Cryptography cryptography, SteamElement steamElement)
+    {
+	if(cryptography == null || m_db == null || steamElement == null)
+	    return;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put
+		("absolute_filename",
+		 cryptography.etmBase64String(steamElement.m_fileName));
+	    values.put
+		("destination",
+		 cryptography.
+		 etmBase64String(steamElement.m_destination.
+				 getBytes(StandardCharsets.UTF_8)));
+	    values.put
+		("display_filename",
+		 cryptography.
+		 etmBase64String(steamElement.m_displayFileName.
+				 getBytes(StandardCharsets.UTF_8)));
+	    values.put
+		("ephemeral_private_key",
+		 cryptography.
+		 etmBase64String(steamElement.m_ephemeralPrivateKey));
+	    values.put
+		("ephemeral_public_key",
+		 cryptography.
+		 etmBase64String(steamElement.m_ephemeralPublicKey));
+
+	    if(steamElement.m_fileDigest == null)
+	    {
+		String fileName = steamElement.m_fileName;
+
+		if(fileName.lastIndexOf('.') > 0)
+		    fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+
+		values.put
+		    ("file_digest",
+		     cryptography.
+		     etmBase64String(Cryptography.sha256FileDigest(fileName)));
+	    }
+	    else
+		values.put
+		    ("file_digest",
+		     cryptography.etmBase64String(steamElement.m_fileDigest));
+
+	    if(steamElement.m_fileIdentity == null)
+	    {
+		byte bytes[] = Cryptography.randomBytes
+		    (Cryptography.STEAM_FILE_IDENTITY_LENGTH);
+
+		values.put
+		    ("file_identity", cryptography.etmBase64String(bytes));
+		values.put
+		    ("file_identity_digest",
+		     Base64.encodeToString(cryptography.hmac(bytes),
+					   Base64.DEFAULT));
+	    }
+	    else
+	    {
+		values.put
+		    ("file_identity",
+		     cryptography.etmBase64String(steamElement.m_fileIdentity));
+		values.put
+		    ("file_identity_digest",
+		     Base64.encodeToString(cryptography.
+					   hmac(steamElement.m_fileIdentity),
+					   Base64.DEFAULT));
+		}
+
+	    values.put
+		("file_size",
+		 cryptography.etmBase64String(steamElement.m_fileSize));
+	    values.put
+		("is_download", String.valueOf(steamElement.m_direction));
+	    values.put
+		("key_type",
+		 cryptography.etmBase64String(steamElement.m_keyType));
+	    values.put
+		("keystream",
+		 cryptography.etmBase64String(steamElement.m_keyStream));
+	    values.put
+		("read_interval",
+		 cryptography.etmBase64String(steamElement.m_readInterval));
+	    values.put
+		("read_offset",
+		 cryptography.etmBase64String(steamElement.m_readOffset));
+	    values.put("status", steamElement.m_status);
+
+	    if(steamElement.m_transferRate.isEmpty())
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(Miscellaneous.RATE));
+	    else
+		values.put
+		    ("transfer_rate",
+		     cryptography.etmBase64String(steamElement.m_transferRate));
+
+	    m_db.insertOrThrow("steam_files", null, values);
+	    m_db.setTransactionSuccessful();
+	    Miscellaneous.sendBroadcast("org.purple.smoke.steam_added");
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public ArrayList<FireElement> readFires(Cryptography cryptography)
     {
 	if(cryptography == null || m_db == null)
@@ -5547,7 +5663,6 @@ public class Database extends SQLiteOpenHelper
 			  final int steamId)
     {
 	if(cryptography == null ||
-	   m_db == null ||
 	   participants == null ||
 	   participants.isEmpty())
 	    return;
@@ -5557,18 +5672,15 @@ public class Database extends SQLiteOpenHelper
 	if(steamElement == null)
 	    return;
 
-	m_db.beginTransactionNonExclusive();
-
 	try
 	{
-	    m_db.setTransactionSuccessful();
+	    for(String string : participants)
+	    {
+		writeSteamImplementation(cryptography, steamElement);
+	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_db.endTransaction();
 	}
     }
 
@@ -5789,133 +5901,7 @@ public class Database extends SQLiteOpenHelper
 	    {
 		try
 		{
-		    m_db.beginTransactionNonExclusive();
-
-		    try
-		    {
-			ContentValues values = new ContentValues();
-
-			values.put
-			    ("absolute_filename",
-			     cryptography.
-			     etmBase64String(steamElement.m_fileName));
-			values.put
-			    ("destination",
-			     cryptography.
-			     etmBase64String(steamElement.m_destination.
-					     getBytes(StandardCharsets.UTF_8)));
-			values.put
-			    ("display_filename",
-			     cryptography.
-			     etmBase64String(steamElement.m_displayFileName.
-					     getBytes(StandardCharsets.UTF_8)));
-			values.put
-			    ("ephemeral_private_key",
-			     cryptography.
-			     etmBase64String(steamElement.
-					     m_ephemeralPrivateKey));
-			values.put
-			    ("ephemeral_public_key",
-			     cryptography.
-			     etmBase64String(steamElement.
-					     m_ephemeralPublicKey));
-
-			if(steamElement.m_fileDigest == null)
-			{
-			    String fileName = steamElement.m_fileName;
-
-			    if(fileName.lastIndexOf('.') > 0)
-				fileName = fileName.substring
-				    (0, fileName.lastIndexOf('.'));
-
-			    values.put
-				("file_digest",
-				 cryptography.
-				 etmBase64String(Cryptography.
-						 sha256FileDigest(fileName)));
-			}
-			else
-			    values.put
-				("file_digest",
-				 cryptography.
-				 etmBase64String(steamElement.m_fileDigest));
-
-			if(steamElement.m_fileIdentity == null)
-			{
-			    byte bytes[] = Cryptography.randomBytes
-				(Cryptography.STEAM_FILE_IDENTITY_LENGTH);
-
-			    values.put
-				("file_identity",
-				 cryptography.etmBase64String(bytes));
-			    values.put
-				("file_identity_digest",
-				 Base64.encodeToString(cryptography.hmac(bytes),
-						       Base64.DEFAULT));
-			}
-			else
-			{
-			    values.put
-				("file_identity",
-				 cryptography.
-				 etmBase64String(steamElement.m_fileIdentity));
-			    values.put
-				("file_identity_digest",
-				 Base64.
-				 encodeToString(cryptography.
-						hmac(steamElement.
-						     m_fileIdentity),
-						Base64.DEFAULT));
-			}
-
-			values.put
-			    ("file_size",
-			     cryptography.
-			     etmBase64String(steamElement.m_fileSize));
-			values.put
-			    ("is_download",
-			     String.valueOf(steamElement.m_direction));
-			values.put
-			    ("key_type",
-			     cryptography.
-			     etmBase64String(steamElement.m_keyType));
-			values.put
-			    ("keystream",
-			     cryptography.
-			     etmBase64String(steamElement.m_keyStream));
-			values.put
-			    ("read_interval",
-			     cryptography.
-			     etmBase64String(steamElement.m_readInterval));
-			values.put
-			    ("read_offset",
-			     cryptography.
-			     etmBase64String(steamElement.m_readOffset));
-			values.put("status", steamElement.m_status);
-
-			if(steamElement.m_transferRate.isEmpty())
-			    values.put
-				("transfer_rate",
-				 cryptography.
-				 etmBase64String(Miscellaneous.RATE));
-			else
-			    values.put
-				("transfer_rate",
-				 cryptography.
-				 etmBase64String(steamElement.m_transferRate));
-
-			m_db.insertOrThrow("steam_files", null, values);
-			m_db.setTransactionSuccessful();
-			Miscellaneous.sendBroadcast
-			    ("org.purple.smoke.steam_added");
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		    finally
-		    {
-			m_db.endTransaction();
-		    }
+		    writeSteamImplementation(cryptography, steamElement);
 		}
 		catch(Exception exception)
 		{
