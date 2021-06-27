@@ -5674,8 +5674,19 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
+	    steamElement.m_direction = SteamElement.UPLOAD;
+	    steamElement.m_ephemeralPrivateKey = null;
+	    steamElement.m_ephemeralPublicKey = null;
+	    steamElement.m_fileIdentity = null;
+	    steamElement.m_keyStream = null;
+	    steamElement.m_readInterval = 4L;
+	    steamElement.m_readOffset = 0L;
+	    steamElement.m_status = "paused";
+	    steamElement.m_transferRate = "";
+
 	    for(String string : participants)
 	    {
+		steamElement.m_destination = string;
 		writeSteamImplementation(cryptography, steamElement);
 	    }
 	}

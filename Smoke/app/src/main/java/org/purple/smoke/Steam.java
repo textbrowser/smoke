@@ -641,10 +641,15 @@ public class Steam extends AppCompatActivity
 
 			break;
 		    case ContextMenuEnumerator.STEAMROLL_STEAM:
-			m_databaseHelper.steamRoll
-			    (m_selectedSteamRollingParticipants,
-			     s_cryptography,
-			     itemId);
+			if(!m_selectedSteamRollingParticipants.isEmpty())
+			{
+			    m_databaseHelper.steamRoll
+				(m_selectedSteamRollingParticipants,
+				 s_cryptography,
+				 itemId);
+			    m_selectedSteamRollingParticipants.clear();
+			}
+
 			break;
 		    default:
 			break;
@@ -687,6 +692,7 @@ public class Steam extends AppCompatActivity
 	    /*
 	    ** Oh no! We shall require a list of the participants!
 	    ** We will not have too many members, right?
+	    ** Ignore the current participant.
 	    */
 
 	    m_selectedSteamRollingParticipants.clear();
