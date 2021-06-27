@@ -141,6 +141,31 @@ public class State
 	}
     }
 
+    public ArrayList<String> participantsNames(String sipHashId)
+    {
+	ArrayList<String> arrayList = new ArrayList<> ();
+
+	m_participantsMutex.readLock().lock();
+
+	try
+	{
+	    for(ParticipantElement participantElement : m_participants)
+		if(participantElement != null &&
+		   !participantElement.m_sipHashId.equals(sipHashId))
+		    arrayList.add
+			(participantElement.m_name +
+			 " (" +
+			 participantElement.m_sipHashId +
+			 ")");
+	}
+	finally
+	{
+	    m_participantsMutex.readLock().unlock();
+	}
+
+	return arrayList;
+    }
+
     public CharSequence getCharSequence(String key)
     {
 	m_bundleMutex.readLock().lock();

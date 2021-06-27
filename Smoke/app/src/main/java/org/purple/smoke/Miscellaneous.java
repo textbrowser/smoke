@@ -912,6 +912,48 @@ public abstract class Miscellaneous
 	}, 10000L); // 10 seconds.
     }
 
+    public static void showCheckBoxDialog
+	(ArrayList<String> arrayList,
+	 Context context,
+	 DialogInterface.OnCancelListener cancelListener,
+	 String prompt,
+	 String title)
+    {
+	if(arrayList == null ||
+	   context == null ||
+	   !(context instanceof Activity) ||
+	   ((Activity) context).isFinishing())
+	    return;
+
+	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_NEGATIVE, "Cancel",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     dialog.dismiss();
+		 }
+	     });
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_POSITIVE, "Accept",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     dialog.cancel();
+		 }
+	     });
+	alertDialog.setMessage(prompt);
+	alertDialog.setOnCancelListener(cancelListener); /*
+							 ** We cannot wait
+							 ** for a response.
+							 */
+	alertDialog.setTitle(title);
+	alertDialog.show();
+    }
+
     public static void showPromptDialog
 	(Context context,
 	 DialogInterface.OnCancelListener cancelListener,

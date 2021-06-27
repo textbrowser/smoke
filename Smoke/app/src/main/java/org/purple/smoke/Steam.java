@@ -689,13 +689,13 @@ public class Steam extends AppCompatActivity
 	    m_adapter.notifyDataSetChanged();
 	    break;
 	case ContextMenuEnumerator.STEAMROLL_STEAM:
-	    /*
-	    ** Oh no! We shall require a list of the participants!
-	    ** We will not have too many members, right?
-	    ** Ignore the current participant.
-	    */
-
 	    m_selectedSteamRollingParticipants.clear();
+	    Miscellaneous.showCheckBoxDialog
+		(State.getInstance().participantsNames("xyz"),
+		 Steam.this,
+		 listener,
+		 "Please select the desired destination participants.",
+		 "Steamroll Selection");
 	    break;
 	default:
 	    break;
