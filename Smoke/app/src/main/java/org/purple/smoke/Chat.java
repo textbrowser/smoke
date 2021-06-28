@@ -618,7 +618,6 @@ public class Chat extends AppCompatActivity
 
 	    switch1.setTag(participantElement.m_sipHashId);
 	    switch1.setText(stringBuilder);
-	    switch1.setTextColor(Color.BLACK);
 	    switch1.setTextSize(CHECKBOX_TEXT_SIZE);
 
 	    TableRow row = new TableRow(Chat.this);

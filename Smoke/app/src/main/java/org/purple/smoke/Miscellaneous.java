@@ -44,15 +44,19 @@ import android.text.InputType;
 import android.util.Base64;
 import android.util.LayoutDirection;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.Switch;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -919,13 +923,42 @@ public abstract class Miscellaneous
 	 String prompt,
 	 String title)
     {
-	if(arrayList == null ||
-	   context == null ||
+	if(context == null ||
 	   !(context instanceof Activity) ||
 	   ((Activity) context).isFinishing())
 	    return;
 
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+	View view = null;
+
+	if(arrayList != null && !arrayList.isEmpty())
+	{
+	    LayoutInflater inflater = (LayoutInflater)
+		context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    TableLayout tableLayout = null;
+	    int i = 0;
+
+	    view = inflater.inflate(R.layout.participants_table, null);
+	    tableLayout = (TableLayout) view.findViewById(R.id.participants);
+
+	    for(String string : arrayList)
+	    {
+		Switch switch1 = new Switch(context);
+
+		switch1.setLayoutDirection(LayoutDirection.LTR);
+		switch1.setLayoutParams
+		    (new TableRow.LayoutParams(0,
+					       LayoutParams.WRAP_CONTENT,
+					       1));
+		switch1.setText(string);
+
+		TableRow row = new TableRow(context);
+
+		row.addView(switch1);
+		tableLayout.addView(row, i);
+		i += 1;
+	    }
+	}
 
 	alertDialog.setButton
 	    (AlertDialog.BUTTON_NEGATIVE, "Cancel",
@@ -945,12 +978,21 @@ public abstract class Miscellaneous
 		     dialog.cancel();
 		 }
 	     });
-	alertDialog.setMessage(prompt);
+
+	if(view != null)
+	    alertDialog.setMessage(prompt);
+	else
+	    alertDialog.setMessage("Empty list.");
+
 	alertDialog.setOnCancelListener(cancelListener); /*
 							 ** We cannot wait
 							 ** for a response.
 							 */
 	alertDialog.setTitle(title);
+
+	if(view != null)
+	    alertDialog.setView(view);
+
 	alertDialog.show();
     }
 

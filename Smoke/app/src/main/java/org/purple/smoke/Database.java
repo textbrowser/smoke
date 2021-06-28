@@ -5667,7 +5667,7 @@ public class Database extends SQLiteOpenHelper
 	   participants.isEmpty())
 	    return;
 
-	SteamElement steamElement = readSteam(cryptography, -1, steamId);
+	SteamElement steamElement = readSteam(cryptography, -1, steamId - 1);
 
 	if(steamElement == null)
 	    return;

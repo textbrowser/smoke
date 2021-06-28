@@ -43,8 +43,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -690,17 +690,16 @@ public class Steam extends AppCompatActivity
 	    break;
 	case ContextMenuEnumerator.STEAMROLL_STEAM:
 	    SteamElement steamElement = m_databaseHelper.readSteam
-		(s_cryptography, -1, itemId);
+		(s_cryptography, -1, itemId - 1);
 	    String sipHashId = steamElement != null ?
 		Miscellaneous.sipHashIdFromDestination
 		(steamElement.m_destination) : "";
 
-	    m_selectedSteamRollingParticipants.clear();
 	    Miscellaneous.showCheckBoxDialog
 		(State.getInstance().participantsNames(sipHashId),
 		 Steam.this,
 		 listener,
-		 "Please select the desired destination participants.",
+		 "Please select the desired destination participant(s).",
 		 "Steamroll Selection");
 	    break;
 	default:
