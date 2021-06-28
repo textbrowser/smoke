@@ -39,8 +39,10 @@ import android.util.SparseArray;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +52,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
-import java.security.KeyPair;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -5661,6 +5662,7 @@ public class Database extends SQLiteOpenHelper
 
     public void steamRoll(Cryptography cryptography,
 			  Set<String> participants,
+			  String downloadsPath,
 			  int steamId)
     {
 	if(cryptography == null ||
@@ -5679,6 +5681,9 @@ public class Database extends SQLiteOpenHelper
 	    steamElement.m_ephemeralPrivateKey = null;
 	    steamElement.m_ephemeralPublicKey = null;
 	    steamElement.m_fileIdentity = null;
+	    steamElement.m_fileName = downloadsPath +
+		File.separator +
+		steamElement.m_displayFileName;
 	    steamElement.m_keyStream = null;
 	    steamElement.m_readInterval = 4L;
 	    steamElement.m_readOffset = 0L;

@@ -642,6 +642,9 @@ public class Steam extends AppCompatActivity
 			m_databaseHelper.steamRoll
 			    (s_cryptography,
 			     State.getInstance().selectedSwitches(),
+			     Environment.
+			     getExternalStoragePublicDirectory
+			     (Environment.DIRECTORY_DOWNLOADS).toString(),
 			     itemId);
 			State.getInstance().clearSelectedSwitches();
 			break;

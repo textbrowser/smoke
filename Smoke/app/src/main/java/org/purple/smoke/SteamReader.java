@@ -90,14 +90,28 @@ public abstract class SteamReader
     {
 	try
 	{
-	    if(fileName.lastIndexOf('.') > 0)
+	    if(fileName.lastIndexOf('.') > 0 &&
+	       fileName.startsWith("content://"))
+	    {
+		/*
+		** Selected by the operator.
+		*/
+
 		fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
-	    Uri uri = Uri.parse(fileName);
+		Uri uri = Uri.parse(fileName);
 
-	    m_assetFileDescriptor = Smoke.getApplication().
-		getContentResolver().openAssetFileDescriptor(uri, "r");
-	    m_fileInputStream = m_assetFileDescriptor.createInputStream();
+		m_assetFileDescriptor = Smoke.getApplication().
+		    getContentResolver().openAssetFileDescriptor(uri, "r");
+		m_fileInputStream = m_assetFileDescriptor.createInputStream();
+	    }
+	    else
+		/*
+		** Shared, or, steamrolled.
+		*/
+
+		m_fileInputStream = new FileInputStream(fileName);
+
 	    m_fileInputStream.getChannel().position(Math.max(0, readOffset));
 	}
 	catch(Exception exception1)
