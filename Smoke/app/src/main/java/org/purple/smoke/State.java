@@ -34,6 +34,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,8 +49,9 @@ public class State
     private AtomicBoolean m_exit = null;
     private AtomicBoolean m_queryTimerServer = null;
     private Bundle m_bundle = null;
-    private Map<String, FireChannel> m_fireChannels = null;
     private Map<Integer, Boolean> m_steamDetailsStates = null;
+    private Map<String, Boolean> m_selectedSwitches = null;
+    private Map<String, FireChannel> m_fireChannels = null;
     private ScheduledExecutorService m_participantsScheduler = null;
     private final ReentrantReadWriteLock m_bundleMutex = new
 	ReentrantReadWriteLock();
@@ -64,6 +66,7 @@ public class State
 	m_exit = new AtomicBoolean(false);
 	m_participants = new ArrayList<> ();
 	m_queryTimerServer = new AtomicBoolean(false);
+	m_selectedSwitches = new TreeMap<> ();
 	m_steamDetailsStates = new TreeMap<> ();
 	populateParticipants();
 	setAuthenticated(false);
@@ -199,6 +202,11 @@ public class State
     public Map<String, FireChannel> fireChannels()
     {
 	return m_fireChannels;
+    }
+
+    public Set<String> selectedSwitches()
+    {
+	return m_selectedSwitches.keySet();
     }
 
     public String getString(String key)
@@ -480,6 +488,11 @@ public class State
 	}
     }
 
+    public void clearSelectedSwitches()
+    {
+	m_selectedSwitches.clear();
+    }
+
     public void incrementChatSequence(String sipHashId)
     {
 	long sequence = chatSequence(sipHashId);
@@ -544,6 +557,7 @@ public class State
     public void reset()
     {
 	clearChatLog();
+	clearSelectedSwitches();
 	clearSteamDetailsStates();
 	m_bundleMutex.writeLock().lock();
 
@@ -570,6 +584,15 @@ public class State
 	{
 	    m_participantsMutex.writeLock().unlock();
 	}
+    }
+
+    public void selectSwitch(String string, boolean state)
+    {
+	if(!state)
+	    m_selectedSwitches.remove(string);
+
+	if(!string.isEmpty())
+	    m_selectedSwitches.put(string, state);
     }
 
     public void setAuthenticated(boolean state)

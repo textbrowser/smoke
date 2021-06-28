@@ -124,8 +124,6 @@ public class Steam extends AppCompatActivity
 	}
     }
 
-    private ArrayList<String> m_selectedSteamRollingParticipants = new
-	ArrayList<> ();
     private Button m_attachmentButton = null;
     private Button m_sendButton = null;
     private Database m_databaseHelper = null;
@@ -641,15 +639,11 @@ public class Steam extends AppCompatActivity
 
 			break;
 		    case ContextMenuEnumerator.STEAMROLL_STEAM:
-			if(!m_selectedSteamRollingParticipants.isEmpty())
-			{
-			    m_databaseHelper.steamRoll
-				(m_selectedSteamRollingParticipants,
-				 s_cryptography,
-				 itemId);
-			    m_selectedSteamRollingParticipants.clear();
-			}
-
+			m_databaseHelper.steamRoll
+			    (s_cryptography,
+			     State.getInstance().selectedSwitches(),
+			     itemId);
+			State.getInstance().clearSelectedSwitches();
 			break;
 		    default:
 			break;
@@ -695,12 +689,13 @@ public class Steam extends AppCompatActivity
 		Miscellaneous.sipHashIdFromDestination
 		(steamElement.m_destination) : "";
 
-	    Miscellaneous.showCheckBoxDialog
+	    Miscellaneous.showSwitchDialog
 		(State.getInstance().participantsNames(sipHashId),
 		 Steam.this,
 		 listener,
 		 "Please select the desired destination participant(s).",
 		 "Steamroll Selection");
+	    State.getInstance().clearSelectedSwitches();
 	    break;
 	default:
 	    break;

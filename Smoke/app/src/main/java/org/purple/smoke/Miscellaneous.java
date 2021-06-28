@@ -916,86 +916,6 @@ public abstract class Miscellaneous
 	}, 10000L); // 10 seconds.
     }
 
-    public static void showCheckBoxDialog
-	(ArrayList<String> arrayList,
-	 Context context,
-	 DialogInterface.OnCancelListener cancelListener,
-	 String prompt,
-	 String title)
-    {
-	if(context == null ||
-	   !(context instanceof Activity) ||
-	   ((Activity) context).isFinishing())
-	    return;
-
-	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-	View view = null;
-
-	if(arrayList != null && !arrayList.isEmpty())
-	{
-	    LayoutInflater inflater = (LayoutInflater)
-		context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    TableLayout tableLayout = null;
-	    int i = 0;
-
-	    view = inflater.inflate(R.layout.participants_table, null);
-	    tableLayout = (TableLayout) view.findViewById(R.id.participants);
-
-	    for(String string : arrayList)
-	    {
-		Switch switch1 = new Switch(context);
-
-		switch1.setLayoutDirection(LayoutDirection.LTR);
-		switch1.setLayoutParams
-		    (new TableRow.LayoutParams(0,
-					       LayoutParams.WRAP_CONTENT,
-					       1));
-		switch1.setText(string);
-
-		TableRow row = new TableRow(context);
-
-		row.addView(switch1);
-		tableLayout.addView(row, i);
-		i += 1;
-	    }
-	}
-
-	alertDialog.setButton
-	    (AlertDialog.BUTTON_NEGATIVE, "Cancel",
-	     new DialogInterface.OnClickListener()
-	     {
-		 public void onClick(DialogInterface dialog, int which)
-		 {
-		     dialog.dismiss();
-		 }
-	     });
-	alertDialog.setButton
-	    (AlertDialog.BUTTON_POSITIVE, "Accept",
-	     new DialogInterface.OnClickListener()
-	     {
-		 public void onClick(DialogInterface dialog, int which)
-		 {
-		     dialog.cancel();
-		 }
-	     });
-
-	if(view != null)
-	    alertDialog.setMessage(prompt);
-	else
-	    alertDialog.setMessage("Empty list.");
-
-	alertDialog.setOnCancelListener(cancelListener); /*
-							 ** We cannot wait
-							 ** for a response.
-							 */
-	alertDialog.setTitle(title);
-
-	if(view != null)
-	    alertDialog.setView(view);
-
-	alertDialog.show();
-    }
-
     public static void showPromptDialog
 	(Context context,
 	 DialogInterface.OnCancelListener cancelListener,
@@ -1055,6 +975,98 @@ public abstract class Miscellaneous
 		}
 	    });
 	switch1.setText("Confirm");
+    }
+
+    public static void showSwitchDialog
+	(ArrayList<String> arrayList,
+	 Context context,
+	 DialogInterface.OnCancelListener cancelListener,
+	 String prompt,
+	 String title)
+    {
+	if(context == null ||
+	   !(context instanceof Activity) ||
+	   ((Activity) context).isFinishing())
+	    return;
+
+	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+	View view = null;
+
+	if(arrayList != null && !arrayList.isEmpty())
+	{
+	    LayoutInflater inflater = (LayoutInflater)
+		context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    TableLayout tableLayout = null;
+	    int i = 0;
+
+	    view = inflater.inflate(R.layout.participants_table, null);
+	    tableLayout = (TableLayout) view.findViewById(R.id.participants);
+
+	    for(String string : arrayList)
+	    {
+		Switch switch1 = new Switch(context);
+
+		switch1.setLayoutDirection(LayoutDirection.LTR);
+		switch1.setLayoutParams
+		    (new TableRow.LayoutParams(0,
+					       LayoutParams.WRAP_CONTENT,
+					       1));
+		switch1.setOnCheckedChangeListener
+		    (new CompoundButton.OnCheckedChangeListener()
+		    {
+			@Override
+			public void onCheckedChanged
+			    (CompoundButton buttonView, boolean isChecked)
+			{
+			    State.getInstance().selectSwitch
+				(buttonView.getText().toString(), isChecked);
+			}
+		    });
+
+		switch1.setText(string);
+
+		TableRow row = new TableRow(context);
+
+		row.addView(switch1);
+		tableLayout.addView(row, i);
+		i += 1;
+	    }
+	}
+
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_NEGATIVE, "Cancel",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     dialog.dismiss();
+		 }
+	     });
+	alertDialog.setButton
+	    (AlertDialog.BUTTON_POSITIVE, "Accept",
+	     new DialogInterface.OnClickListener()
+	     {
+		 public void onClick(DialogInterface dialog, int which)
+		 {
+		     dialog.cancel();
+		 }
+	     });
+
+	if(view != null)
+	    alertDialog.setMessage(prompt);
+	else
+	    alertDialog.setMessage("Empty list.");
+
+	alertDialog.setOnCancelListener(cancelListener); /*
+							 ** We cannot wait
+							 ** for a response.
+							 */
+	alertDialog.setTitle(title);
+
+	if(view != null)
+	    alertDialog.setView(view);
+
+	alertDialog.show();
     }
 
     public static void showTextInputDialog

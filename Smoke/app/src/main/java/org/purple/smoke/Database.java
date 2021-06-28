@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -5658,9 +5659,9 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public void steamRoll(final ArrayList<String> participants,
-			  final Cryptography cryptography,
-			  final int steamId)
+    public void steamRoll(Cryptography cryptography,
+			  Set<String> participants,
+			  int steamId)
     {
 	if(cryptography == null ||
 	   participants == null ||
