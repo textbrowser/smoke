@@ -294,6 +294,7 @@ Peculiar Items
 
 Remaining Items
 
+- Android 11 does not tolerate Steam continuation after Smoke exit.
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
