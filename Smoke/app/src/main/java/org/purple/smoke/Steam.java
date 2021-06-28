@@ -689,9 +689,15 @@ public class Steam extends AppCompatActivity
 	    m_adapter.notifyDataSetChanged();
 	    break;
 	case ContextMenuEnumerator.STEAMROLL_STEAM:
+	    SteamElement steamElement = m_databaseHelper.readSteam
+		(s_cryptography, -1, itemId);
+	    String sipHashId = steamElement != null ?
+		Miscellaneous.sipHashIdFromDestination
+		(steamElement.m_destination) : "";
+
 	    m_selectedSteamRollingParticipants.clear();
 	    Miscellaneous.showCheckBoxDialog
-		(State.getInstance().participantsNames("xyz"),
+		(State.getInstance().participantsNames(sipHashId),
 		 Steam.this,
 		 listener,
 		 "Please select the desired destination participants.",
