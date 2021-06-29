@@ -1006,7 +1006,7 @@ public abstract class Miscellaneous
 	    {
 		Switch switch1 = new Switch(context);
 
-		switch1.setLayoutDirection(LayoutDirection.LTR);
+		switch1.setLayoutDirection(LayoutDirection.RTL);
 		switch1.setLayoutParams
 		    (new TableRow.LayoutParams(0,
 					       LayoutParams.WRAP_CONTENT,

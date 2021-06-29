@@ -302,12 +302,7 @@ public class SteamKeyExchange
 		    byteArrayAsHexString(Cryptography.randomBytes(32)) +
 		    fileExtension;
 	    else
-		steamElement.m_displayFileName =
-		    "Smoke_" +
-		    Miscellaneous.
-		    byteArrayAsHexString(Cryptography.randomBytes(5)) +
-		    "_" +
-		    displayFileName;
+		steamElement.m_displayFileName = displayFileName;
 
 	    steamElement.m_ephemeralPublicKey = ephemeralPublicKey;
 	    steamElement.m_fileDigest = fileDigest;
