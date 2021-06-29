@@ -90,7 +90,7 @@ public class SteamReaderFull extends SteamReader
 			    return;
 
 			switch(s_databaseHelper.
-			       steamStatus(m_oid).toLowerCase().trim())
+			       steamStatus(m_oid.get()).toLowerCase().trim())
 			{
 			case "":
 			    /*
@@ -105,21 +105,36 @@ public class SteamReaderFull extends SteamReader
 			    return;
 			case "paused":
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "", Miscellaneous.RATE, m_oid);
+				(s_cryptography,
+				 "",
+				 Miscellaneous.RATE,
+				 m_oid.get());
 			    return;
 			case "received private-key pair":
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "transferring", "", m_oid, 0);
+				(s_cryptography,
+				 "transferring",
+				 "",
+				 m_oid.get(),
+				 0);
 			    break;
 			case "rewind":
 			    rewind();
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "paused", "", m_oid, 0);
+				(s_cryptography,
+				 "paused",
+				 "",
+				 m_oid.get(),
+				 0);
 			    return;
 			case "rewind & resume":
 			    rewind();
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "transferring", "", m_oid, 0);
+				(s_cryptography,
+				 "transferring",
+				 "",
+				 m_oid.get(),
+				 0);
 			    break;
 			default:
 			    if(m_fileSize.get() == m_readOffset.get())
@@ -129,7 +144,7 @@ public class SteamReaderFull extends SteamReader
 				    (s_cryptography,
 				     "completed",
 				     "",
-				     m_oid,
+				     m_oid.get(),
 				     m_readOffset.get());
 			    }
 
@@ -153,7 +168,8 @@ public class SteamReaderFull extends SteamReader
 			   Cryptography.CIPHER_HASH_KEYS_LENGTH)
 			{
 			    m_keyStream = s_databaseHelper.readSteam
-				(s_cryptography, -1, m_oid - 1).m_keyStream;
+				(s_cryptography, -1, m_oid.get() - 1).
+				m_keyStream;
 
 			    if(m_keyStream == null ||
 			       m_keyStream.length !=
@@ -272,7 +288,7 @@ public class SteamReaderFull extends SteamReader
     private void saveReadOffset()
     {
 	s_databaseHelper.writeSteamStatus
-	    (s_cryptography, "", prettyRate(), m_oid, m_readOffset.get());
+	    (s_cryptography, "", prettyRate(), m_oid.get(), m_readOffset.get());
     }
 
     public SteamReaderFull(String destination,
@@ -332,7 +348,11 @@ public class SteamReaderFull extends SteamReader
 	    m_completed.set(true);
 	    read = false;
 	    s_databaseHelper.writeSteamStatus
-		(s_cryptography, "completed", "", m_oid, m_readOffset.get());
+		(s_cryptography,
+		 "completed",
+		 "",
+		 m_oid.get(),
+		 m_readOffset.get());
 	}
 
 	m_read.set(read);

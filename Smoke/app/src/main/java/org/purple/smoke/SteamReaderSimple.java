@@ -74,7 +74,7 @@ public class SteamReaderSimple extends SteamReader
 			    return;
 
 			switch(s_databaseHelper.
-			       steamStatus(m_oid).toLowerCase().trim())
+			       steamStatus(m_oid.get()).toLowerCase().trim())
 			{
 			case "":
 			    /*
@@ -89,23 +89,35 @@ public class SteamReaderSimple extends SteamReader
 			    return;
 			case "paused":
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "", Miscellaneous.RATE, m_oid);
+				(s_cryptography,
+				 "",
+				 Miscellaneous.RATE,
+				 m_oid.get());
 			    return;
 			case "rewind":
 			    rewind();
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "paused", "", m_oid, 0);
+				(s_cryptography,
+				 "paused",
+				 "",
+				 m_oid.get(),
+				 0);
 			    return;
 			case "rewind & resume":
 			    rewind();
 			    s_databaseHelper.writeSteamStatus
-				(s_cryptography, "transferring", "", m_oid, 0);
+				(s_cryptography,
+				 "transferring",
+				 "",
+				 m_oid.get(),
+				 0);
 			    break;
 			default:
 			    break;
 			}
 
-			if(Kernel.getInstance().nextSimpleSteamOid() != m_oid ||
+			if(Kernel.getInstance().nextSimpleSteamOid() !=
+			   m_oid.get() ||
 			   m_canceled.get())
 			    return;
 
@@ -140,7 +152,7 @@ public class SteamReaderSimple extends SteamReader
 				(s_cryptography,
 				 "completed",
 				 "",
-				 m_oid,
+				 m_oid.get(),
 				 m_readOffset.get());
 			    return;
 			}
@@ -158,7 +170,7 @@ public class SteamReaderSimple extends SteamReader
 			    (s_cryptography,
 			     "",
 			     prettyRate(),
-			     m_oid,
+			     m_oid.get(),
 			     m_readOffset.get());
 		    }
 		    catch(Exception exception)

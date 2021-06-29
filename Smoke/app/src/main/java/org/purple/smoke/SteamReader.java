@@ -33,6 +33,7 @@ import java.io.FileInputStream;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class SteamReader
@@ -41,6 +42,7 @@ public abstract class SteamReader
     protected AssetFileDescriptor m_assetFileDescriptor = null;
     protected AtomicBoolean m_canceled = null;
     protected AtomicBoolean m_completed = null;
+    protected AtomicInteger m_oid = null;
     protected AtomicLong m_rate = null;
     protected AtomicLong m_readOffset = null;
     protected AtomicLong m_time0 = null;
@@ -50,7 +52,6 @@ public abstract class SteamReader
     protected final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     protected final static Database s_databaseHelper = Database.getInstance();
-    protected int m_oid = -1;
 
     protected String prettyRate()
     {
@@ -133,7 +134,7 @@ public abstract class SteamReader
 
 	m_canceled = new AtomicBoolean(false);
 	m_completed = new AtomicBoolean(false);
-	m_oid = oid;
+	m_oid = new AtomicInteger(oid);
 	m_rate = new AtomicLong(0L);
 	m_readOffset = new AtomicLong(Math.max(0, readOffset));
 	m_time0 = new AtomicLong(System.currentTimeMillis());
@@ -148,7 +149,7 @@ public abstract class SteamReader
 
     public int getOid()
     {
-	return m_oid;
+	return m_oid.get();
     }
 
     public void delete()
