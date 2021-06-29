@@ -229,6 +229,11 @@ public class SteamReaderFull extends SteamReader
 		    }
 		    catch(Exception exception)
 		    {
+			/*
+			** May occur if reading beyond the end of the file.
+			*/
+
+			m_read.set(false);
 		    }
 		}
 	    }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
