@@ -257,6 +257,7 @@ Completed Items
 - Steam keys (McEliece, RSA, etc.).
 - Steam rates.
 - Steam separators.
+- Steamrolling, or, forwarding incomplete Steams to other participants.
 - Store a digest of the secret string (Miscellaneous.showTextInputDialog()) if
   the secret is brief.
 - Subtitle IP address container is not properly sorted.
@@ -306,4 +307,3 @@ Remaining Items
 - Puff, or, video on the Echo. Nearly impossible.
 - SHA3 via BC.
 - Silent mode.
-- Steamrolling, or, forwarding incomplete Steams to other participants.
