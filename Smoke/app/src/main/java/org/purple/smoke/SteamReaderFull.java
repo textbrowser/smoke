@@ -48,6 +48,7 @@ public class SteamReaderFull extends SteamReader
     private final static int PACKET_SIZE = 32768;
     private final static long READ_INTERVAL = 250L; // 250 milliseconds.
     private final static long RESPONSE_WINDOW = 7500L; // 7.5 seconds.
+    private long m_lastReceivedOffset = -1L;
 
     private void computeRate()
     {
@@ -198,7 +199,7 @@ public class SteamReaderFull extends SteamReader
 			}
 
 			byte bytes[] = new byte[PACKET_SIZE];
-			int offset = 0;
+			int offset = -1;
 
 			synchronized(m_fileInputStreamMutex)
 			{
@@ -273,6 +274,7 @@ public class SteamReaderFull extends SteamReader
 	{
 	}
 
+	m_lastReceivedOffset = -1L;
 	m_lastResponse.set(0L);
 	m_previousOffset.set(0L);
 	m_read.set(true);
@@ -302,6 +304,7 @@ public class SteamReaderFull extends SteamReader
 	super(fileName, oid, readOffset);
 	m_fileIdentity = fileIdentity;
 	m_fileSize = new AtomicLong(fileSize);
+	m_lastReceivedOffset = -1L;
 	m_lastResponse = new AtomicLong(System.currentTimeMillis());
 	m_previousOffset = new AtomicLong(readOffset);
 	m_read = new AtomicBoolean(true);
@@ -319,6 +322,7 @@ public class SteamReaderFull extends SteamReader
     public void delete()
     {
 	m_canceled.set(true);
+	m_lastReceivedOffset = -1L;
 	m_lastResponse.set(0L);
 	m_previousOffset.set(0L);
 	m_read.set(false);
@@ -334,10 +338,22 @@ public class SteamReaderFull extends SteamReader
 
     public void setAcknowledgedOffset(long readOffset)
     {
+	if(readOffset < 0)
+	    /*
+	    ** What shall we do?
+	    */
+
+	    return;
+
 	boolean read = false;
 
-	if(m_readOffset.get() == readOffset)
+	if(m_lastReceivedOffset != readOffset && /*
+						 ** Prevent duplicate
+						 ** acknowledgments.
+						 */
+	   m_readOffset.get() == readOffset)
 	{
+	    m_lastReceivedOffset = readOffset;
 	    m_lastResponse.set(System.currentTimeMillis());
 	    m_readOffset.addAndGet(m_readResult.get());
 	    read = true;
