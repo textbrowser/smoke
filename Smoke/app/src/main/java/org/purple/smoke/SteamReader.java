@@ -128,6 +128,18 @@ public abstract class SteamReader
 	    finally
 	    {
 		m_assetFileDescriptor = null;
+	    }
+
+	    try
+	    {
+		if(m_fileInputStream != null)
+		    m_fileInputStream.close();
+	    }
+	    catch(Exception exception2)
+	    {
+	    }
+	    finally
+	    {
 		m_fileInputStream = null;
 	    }
 	}
