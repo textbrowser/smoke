@@ -64,7 +64,7 @@ public class SteamReaderFull extends SteamReader
 
 	    if(m_rate.get() > 0L)
 		m_stalled.set(0);
-	    else if(m_stalled.getAndIncrement() <= 5)
+	    else if(m_stalled.getAndIncrement() <= 3)
 		m_rate.set(rate);
 
 	    m_previousOffset.set(m_readOffset.get());
@@ -246,7 +246,8 @@ public class SteamReaderFull extends SteamReader
 		    catch(Exception exception)
 		    {
 			/*
-			** May occur if reading beyond the end of the file.
+			** May occur if an attempt is made to read beyond
+			** the end of the file.
 			*/
 
 			m_read.set(false);
