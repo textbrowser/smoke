@@ -338,7 +338,7 @@ public class SteamReaderFull extends SteamReader
 
     public void setAcknowledgedOffset(long readOffset)
     {
-	if(readOffset < 0)
+	if(readOffset < 0L)
 	    /*
 	    ** What shall we do?
 	    */
