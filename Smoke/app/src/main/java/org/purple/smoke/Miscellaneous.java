@@ -1128,7 +1128,12 @@ public abstract class Miscellaneous
 		     }
 		     else if(contextIsMemberChat)
 		     {
-			 String string = editText.getText().toString();
+			 String string = "";
+
+			 if(showTextInput)
+			     string = editText.getText().toString();
+			 else
+			     string = text;
 
 			 if(string.length() <= Cryptography.HASH_KEY_LENGTH)
 			     string = Base64.encodeToString
@@ -1155,7 +1160,7 @@ public abstract class Miscellaneous
 							 */
 	alertDialog.setTitle(title);
 	editText.setInputType(InputType.TYPE_CLASS_TEXT);
-	editText.setText(text);
+	editText.setText(showTextInput ? text : "");
 	editText.setVisibility(showTextInput ? View.VISIBLE : View.GONE);
 
 	if(showTextInput)

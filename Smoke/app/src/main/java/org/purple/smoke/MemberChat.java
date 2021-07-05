@@ -1221,7 +1221,9 @@ public class MemberChat extends AppCompatActivity
 					(string,
 					 m_sipHashId,
 					 groupId ==
-					 ContextMenuEnumerator.JUGGERKNOT,
+					 ContextMenuEnumerator.JUGGERKNOT ||
+					 groupId ==
+					 ContextMenuEnumerator.JUGGERLI,
 					 keyStream);
 			    }
 			}
