@@ -1,5 +1,6 @@
 * Avoid extending received Steam names.
 * Bouncy Castle 1.69.
 * Improved SQLite selection of deliverable messages.
+* JuggerLi, or, the Juggernaut protocol via xor(public keys).
 * Prevent duplicate offset acknowledgments in Steam.
 * Steamrolling, or, sharing complete and incomplete Steams.
