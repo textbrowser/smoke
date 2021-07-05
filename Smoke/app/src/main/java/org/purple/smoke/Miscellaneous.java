@@ -1074,7 +1074,8 @@ public abstract class Miscellaneous
 	 DialogInterface.OnCancelListener cancelListener,
 	 String prompt,
 	 String text,
-	 String title)
+	 String title,
+	 boolean showTextInput)
     {
 	if(context == null ||
 	   !(context instanceof Activity) ||
@@ -1155,7 +1156,11 @@ public abstract class Miscellaneous
 	alertDialog.setTitle(title);
 	editText.setInputType(InputType.TYPE_CLASS_TEXT);
 	editText.setText(text);
-	alertDialog.setView(editText);
+	editText.setVisibility(showTextInput ? View.VISIBLE : View.GONE);
+
+	if(showTextInput)
+	    alertDialog.setView(editText);
+
 	alertDialog.show();
     }
 }

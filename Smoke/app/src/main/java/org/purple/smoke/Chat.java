@@ -1295,7 +1295,8 @@ public class Chat extends AppCompatActivity
 		     replace("Custom Session (", "").
 		     replace(")", "") + ".",
 		     "",
-		     "Secret");
+		     "Secret",
+		     true);
 		break;
 	    case ContextMenuEnumerator.NEW_WINDOW:
 		State.getInstance().setString

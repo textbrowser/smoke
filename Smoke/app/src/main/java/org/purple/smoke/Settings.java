@@ -3790,7 +3790,8 @@ public class Settings extends AppCompatActivity
 		 listener,
 		 "Please provide a new name for " + string + ".",
 		 string,
-		 "Name");
+		 "Name",
+		 true);
 	    break;
 	case ContextMenuEnumerator.REQUEST_KEYS_VIA_OZONE:
 	    requestKeysOf(String.valueOf(itemId));
