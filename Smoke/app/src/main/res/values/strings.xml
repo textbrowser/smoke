@@ -77,4 +77,5 @@
     <string name="smokescreen">Smokescreen</string>
     <string name="steam">Steam</string>
     <string name="your_name">Your Name</string>
+    <string name="silent">Silent</string>
 </resources>
