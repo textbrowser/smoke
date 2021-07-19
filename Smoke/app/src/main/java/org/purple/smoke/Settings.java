@@ -2389,6 +2389,19 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
+	switch1 = (Switch) findViewById(R.id.silent);
+	switch1.setOnCheckedChangeListener
+	    (new CompoundButton.OnCheckedChangeListener()
+	    {
+		@Override
+		public void onCheckedChanged
+		    (CompoundButton buttonView, boolean isChecked)
+		{
+		    m_databaseHelper.writeSetting
+			(null, "silent", isChecked ? "true" : "false");
+		}
+	    });
+
 	switch1 = (Switch) findViewById(R.id.sleepless);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
@@ -3332,6 +3345,13 @@ public class Settings extends AppCompatActivity
 	    switch1.setChecked(false);
 
 	State.getInstance().setQueryTimerServer(switch1.isChecked());
+	switch1 = (Switch) findViewById(R.id.silent);
+
+	if(m_databaseHelper.readSetting(null, "silent").equals("true"))
+	    switch1.setChecked(true);
+	else
+	    switch1.setChecked(false);
+
 	switch1 = (Switch) findViewById(R.id.sleepless);
 
 	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())
