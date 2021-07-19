@@ -63,6 +63,7 @@ public class SteamBubble extends View
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
     private TextView m_keyStreamDigest = null;
+    private TextView m_percent = null;
     private TextView m_readIntervalLabel = null;
     private TextView m_sent = null;
     private TextView m_status = null;
@@ -213,6 +214,7 @@ public class SteamBubble extends View
 		m_steam.showContextMenu(view);
 	    }
         });
+	m_percent = (TextView) m_view.findViewById(R.id.percent_value);
 	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
 	m_readInterval = (SeekBar) m_view.findViewById(R.id.read_interval);
 	m_readInterval.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
@@ -317,19 +319,23 @@ public class SteamBubble extends View
 		m_controlString = "rewind";
 	    }
 
+	    m_percent.setVisibility(View.GONE);
 	    m_progress.setVisibility(View.GONE);
 	    break;
 	case "paused":
 	    m_control.setText("Resume");
 	    m_controlString = "resume";
+	    m_percent.setVisibility(View.GONE);
 	    m_progress.setVisibility(View.GONE);
 	    break;
 	case "receiving":
+	    m_percent.setVisibility(View.VISIBLE);
 	    m_progress.setVisibility(View.VISIBLE);
 	    break;
 	case "transferring":
 	    m_control.setText("Pause");
 	    m_controlString = "pause";
+	    m_percent.setVisibility(View.VISIBLE);
 	    m_progress.setVisibility(View.VISIBLE);
 	    break;
 	default:
@@ -432,6 +438,14 @@ public class SteamBubble extends View
 		 Miscellaneous.
 		 byteArrayAsHexString(Cryptography.
 				      sha256(steamElement.m_keyStream)));
+
+	if(steamElement.m_fileSize > 0)
+	    m_percent.setText
+		((int) ((100.0 * (double) steamElement.m_readOffset) /
+			(double) steamElement.m_fileSize) +
+		 "%");
+	else
+	    m_percent.setText("0%");
 
 	m_progress.setMax((int) steamElement.m_fileSize);
 	m_progress.setProgress((int) steamElement.m_readOffset);
