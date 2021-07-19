@@ -315,7 +315,7 @@
 
                 <Switch
                     android:id="@+id/non_tls"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layoutDirection="rtl"
                     android:text="@string/non_tls" />
