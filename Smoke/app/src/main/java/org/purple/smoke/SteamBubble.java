@@ -115,7 +115,7 @@ public class SteamBubble extends View
 		return "ETA: " +
 		    s_decimalFormat.format(((fileSize - readOffset) / rate) /
 					   60.0) +
-		    " minutes";
+		    " minute(s)";
 	}
 	catch(Exception exception)
 	{

@@ -46,16 +46,16 @@ public class About
 
     public static synchronized String about()
     {
+	// The version must agree with Smoke/app/build.gradle.
+
 	try
 	{
 	    if(s_about.isEmpty())
 	    {
-		// The version must agree with Smoke/app/build.gradle.
-
 		s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		s_about = "Bouncy Castle Version " +
 		    new BouncyCastleProvider().getVersion() +
-		    "\nSmoke Version 2021.07.07 Pyro (Final) " +
+		    "\nSmoke Version 2021.07.25 Pyro (Final) " +
 		    (BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		    "\nBuild Date " +
 		    s_simpleDateFormat.
@@ -68,7 +68,7 @@ public class About
 	catch(Exception exception)
 	{
 	    if(s_about.isEmpty())
-		s_about = "Smoke Version 2021.07.07 Pyro (Final)";
+		s_about = "Smoke Version 2021.07.25 Pyro (Final)";
 	}
 
 	return s_about;
