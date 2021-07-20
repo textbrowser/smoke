@@ -3,7 +3,7 @@ Summary of Smoke
 * Aliases. Preserve your contacts.
 * Almost zero-dependency software.
 * Application lock.
-* Argon2id key-derivation function.
+* Argon2id and PBKDF2 key-derivation functions.
 * Automatic, oscillatory public-key exchange protocol, via SipHash.
 * BSD 3-clause license.
 * Content is recorded via authenticated encryption.
