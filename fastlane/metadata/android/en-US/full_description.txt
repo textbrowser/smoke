@@ -23,6 +23,7 @@ Summary of Smoke
 * Mobile servers via SmokeStack.
 * Obfuscation of resident secret keys.
 * Optional foreground services.
+* Optional silence over the wires.
 * Original implementation of SipHash.
 * Ozone destinations: private and public repositories.
 * Post offices for messages of the past.
