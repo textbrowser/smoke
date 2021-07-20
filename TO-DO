@@ -241,6 +241,7 @@ Completed Items
 - Settings::prepareListeners()::...::run().
 - Sign encryption and signature keys as a pair.
 - Signed release.
+- Silent mode.
 - Simple Steam through UDP.
 - Simple binary status in Chat. Kernel scheduler.
 - SipHash (https://en.wikipedia.org/wiki/SipHash).
@@ -306,4 +307,3 @@ Remaining Items
 - Optional cryptographic discovery, per neighbor.
 - Puff, or, video on the Echo. Nearly impossible.
 - SHA3 via BC.
-- Silent mode.

@@ -1203,7 +1203,7 @@ public class Kernel
 		{
 		    try
 		    {
-			if(!isConnected())
+			if(State.getInstance().silent() || !isConnected())
 			    return;
 
 			ArrayList<ParticipantElement> arrayList =

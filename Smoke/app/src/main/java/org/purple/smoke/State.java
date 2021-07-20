@@ -48,6 +48,7 @@ public class State
     private ArrayList<ParticipantElement> m_participants = null;
     private AtomicBoolean m_exit = null;
     private AtomicBoolean m_queryTimerServer = null;
+    private AtomicBoolean m_silent = null;
     private Bundle m_bundle = null;
     private Map<Integer, Boolean> m_steamDetailsStates = null;
     private Map<String, Boolean> m_selectedSwitches = null;
@@ -67,6 +68,7 @@ public class State
 	m_participants = new ArrayList<> ();
 	m_queryTimerServer = new AtomicBoolean(false);
 	m_selectedSwitches = new TreeMap<> ();
+	m_silent = new AtomicBoolean(false);
 	m_steamDetailsStates = new TreeMap<> ();
 	populateParticipants();
 	setAuthenticated(false);
@@ -330,6 +332,11 @@ public class State
     public boolean queryTimerServer()
     {
 	return m_queryTimerServer.get();
+    }
+
+    public boolean silent()
+    {
+	return m_silent.get();
     }
 
     public char getChar(String key)
@@ -733,6 +740,11 @@ public class State
     public void setQueryTimerServer(boolean state)
     {
 	m_queryTimerServer.set(state);
+    }
+
+    public void setSilent(boolean state)
+    {
+	m_silent.set(state);
     }
 
     public void setString(String key, String value)

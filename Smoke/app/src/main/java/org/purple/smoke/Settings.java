@@ -2397,6 +2397,7 @@ public class Settings extends AppCompatActivity
 		public void onCheckedChanged
 		    (CompoundButton buttonView, boolean isChecked)
 		{
+		    State.getInstance().setSilent(isChecked);
 		    m_databaseHelper.writeSetting
 			(null, "silent", isChecked ? "true" : "false");
 		}
@@ -3352,6 +3353,7 @@ public class Settings extends AppCompatActivity
 	else
 	    switch1.setChecked(false);
 
+	State.getInstance().setSilent(switch1.isChecked());
 	switch1 = (Switch) findViewById(R.id.sleepless);
 
 	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())
