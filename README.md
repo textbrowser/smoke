@@ -52,3 +52,5 @@ Starting a Conversation
 <li>Share public keys.</li>
 <li>Done!</li>
 </ol>
+
+![alt text](https://github.com/textbrowser/smoke/blob/master/Images/smoke_7.png)
