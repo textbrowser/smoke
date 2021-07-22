@@ -30,8 +30,8 @@ package org.purple.smoke;
 import android.os.Environment;
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -89,10 +89,8 @@ public class SteamWriter
     }
 
     private ScheduledExecutorService m_scheduler = null;
-    private final Hashtable<Integer, FileInformation> m_files;
+    private final ConcurrentHashMap<Integer, FileInformation> m_files;
     private final Object m_schedulerMutex = new Object();
-    private final ReentrantReadWriteLock m_filesMutex =
-	new ReentrantReadWriteLock();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -101,8 +99,6 @@ public class SteamWriter
 
     private void removeFileInformation(int oid)
     {
-	m_filesMutex.writeLock().lock();
-
 	try
 	{
 	    m_files.remove(oid);
@@ -110,15 +106,11 @@ public class SteamWriter
 	catch(Exception exception)
 	{
 	}
-	finally
-	{
-	    m_filesMutex.writeLock().unlock();
-	}
     }
 
     public SteamWriter()
     {
-	m_files = new Hashtable<> ();
+	m_files = new ConcurrentHashMap<> ();
 	m_scheduler = Executors.newSingleThreadScheduledExecutor();
 	m_scheduler.scheduleAtFixedRate(new Runnable()
 	{
@@ -127,23 +119,7 @@ public class SteamWriter
 	    {
 		try
 		{
-		    boolean empty = false;
-
-		    m_filesMutex.readLock().lock();
-
-		    try
-		    {
-			empty = m_files.isEmpty();
-		    }
-		    catch(Exception exception)
-		    {
-		    }
-		    finally
-		    {
-			m_filesMutex.readLock().unlock();
-		    }
-
-		    if(empty)
+		    if(m_files.isEmpty())
 			synchronized(m_schedulerMutex)
 			{
 			    try
@@ -155,53 +131,43 @@ public class SteamWriter
 			    }
 			}
 
-		    m_filesMutex.writeLock().lock();
-
 		    try
 		    {
-			Iterator<Hashtable.Entry<Integer, FileInformation> >
-			    it = m_files.entrySet().iterator();
-
-			while(it.hasNext())
+			for(Integer key : m_files.keySet())
 			{
-			    Hashtable.Entry<Integer, FileInformation> entry =
-				it.next();
+			    FileInformation fileInformation = m_files.get(key);
 
-			    if(entry.getValue() == null)
+			    if(fileInformation == null)
 			     {
-				 it.remove();
+				 m_files.remove(key);
 				 continue;
 			     }
 
 			    int oid = s_databaseHelper.steamOidFromFileIdentity
 				(s_cryptography,
-				 entry.getValue().m_fileIdentity);
+				 fileInformation.m_fileIdentity);
 
 			    if(Math.
 			       abs(System.currentTimeMillis() -
-				   entry.getValue().m_lastStatusTimestamp) >
+				   fileInformation.m_lastStatusTimestamp) >
 			       FILE_INFORMATION_LIFETIME ||
 			       oid == -1)
 			    {
-				it.remove();
+				m_files.remove(key);
 				continue;
 			    }
 
-			    entry.getValue().computeRate();
+			    fileInformation.computeRate();
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography,
 				 "receiving",
-				 entry.getValue().prettyRate(),
-				 entry.getValue().m_oid,
-				 entry.getValue().m_offset);
+				 fileInformation.prettyRate(),
+				 fileInformation.m_oid,
+				 fileInformation.m_offset);
 			}
 		    }
 		    catch(Exception exception)
 		    {
-		    }
-		    finally
-		    {
-			m_filesMutex.writeLock().unlock();
 		    }
 		}
 		catch(Exception exception)
@@ -209,6 +175,11 @@ public class SteamWriter
 		}
 	    }
         }, 1500L, SCHEDULER_INTERVAL, TimeUnit.MILLISECONDS);
+    }
+
+    public int size()
+    {
+	return m_files.size();
     }
 
     public boolean write(byte fileIdentity[], byte packet[], long offset)
@@ -275,8 +246,6 @@ public class SteamWriter
 		return true;
 	    }
 
-	    m_filesMutex.writeLock().lock();
-
 	    try
 	    {
 		FileInformation fileInformation = m_files.get(oid);
@@ -295,10 +264,6 @@ public class SteamWriter
 	    }
 	    catch(Exception exception)
 	    {
-	    }
-	    finally
-	    {
-		m_filesMutex.writeLock().unlock();
 	    }
 
 	    synchronized(m_schedulerMutex)

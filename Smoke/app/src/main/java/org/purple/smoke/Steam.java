@@ -151,10 +151,11 @@ public class Steam extends AppCompatActivity
 	public final static int DELETE_ALL_STEAMS = 0;
 	public final static int DELETE_STEAM = 1;
 	public final static int PAUSE_ALL_STEAMS = 2;
-	public final static int REWIND_ALL_STEAMS = 3;
-	public final static int REWIND_AND_RESUME_ALL_STEAMS = 4;
-	public final static int REWIND_STEAM = 5;
-	public final static int STEAMROLL_STEAM = 6;
+	public final static int RESUME_ALL_STEAMS = 3;
+	public final static int REWIND_ALL_STEAMS = 4;
+	public final static int REWIND_AND_RESUME_ALL_STEAMS = 5;
+	public final static int REWIND_STEAM = 6;
+	public final static int STEAMROLL_STEAM = 7;
     }
 
     private void networkStatusChanged()
@@ -264,6 +265,8 @@ public class Steam extends AppCompatActivity
 		    {
 			final int availableSteams = Kernel.getInstance().
 			    availableSteams();
+			final int availableWriters = Kernel.getInstance().
+			    availableWriters();
 
 			Steam.this.runOnUiThread(new Runnable()
 			{
@@ -272,7 +275,10 @@ public class Steam extends AppCompatActivity
 			    {
 				m_adapter.notifyDataSetChanged();
 				m_information.setText
-				    ("Active Upload Tasks: " + availableSteams);
+				    ("Active Upload Tasks: " +
+				     availableSteams + "\n" +
+				     "Active Writers: " +
+				     availableWriters);
 			    }
 			});
 		    }

@@ -1440,14 +1440,14 @@ public class Chat extends AppCompatActivity
 	    menu.add
 		(ContextMenuEnumerator.NEW_WINDOW,
 		 view.getId(),
-		 0,
+		 1,
 		 "New Window (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")").setEnabled(hasPublicKeys);
 	    menuItem = menu.add
 		(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
 		 view.getId(),
-		 0,
+		 2,
 		 "Optional Signatures (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")").setCheckable(true);
@@ -1459,7 +1459,7 @@ public class Chat extends AppCompatActivity
 	    menuItem = menu.add
 		(ContextMenuEnumerator.PURGE_SESSION,
 		 view.getId(),
-		 0,
+		 3,
 		 "Purge Session (" +
 		 Miscellaneous.prepareSipHashId(view.getTag().toString()) +
 		 ")");
@@ -1470,11 +1470,11 @@ public class Chat extends AppCompatActivity
 
 	menu.add(ContextMenuEnumerator.REFRESH_PARTICIPANTS_TABLE,
 		 -1,
-		 0,
+		 4,
 		 "Refresh Participants Table");
 	menuItem = menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 			    -1,
-			    0,
+			    5,
 			    "Retrieve Messages");
 	menuItem.setEnabled
 	    (Kernel.getInstance().isConnected() &&
@@ -1482,14 +1482,14 @@ public class Chat extends AppCompatActivity
 	     isEmpty());
 	menuItem = menu.add(ContextMenuEnumerator.SHOW_DETAILS,
 			    -1,
-			    0,
+			    6,
 			    "Show Details").setCheckable(true);
 	menuItem.setChecked
 	    (m_databaseHelper.
 	     readSetting(null, "show_chat_details").equals("true"));
 	menuItem = menu.add(ContextMenuEnumerator.SHOW_ICONS,
 			    -1,
-			    0,
+			    7,
 			    "Show Icons").setCheckable(true);
 	menuItem.setChecked
 	    (m_databaseHelper.

@@ -1904,6 +1904,11 @@ public class Kernel
 	return 0;
     }
 
+    public int availableWriters()
+    {
+	return m_steamWriter.size();
+    }
+
     public int nextSimpleSteamOid()
     {
 	/*

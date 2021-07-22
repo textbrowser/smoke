@@ -79,15 +79,19 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 		     "Delete Steam").setEnabled(view.getId() != -1);
 	    menu.add(Steam.ContextMenuEnumerator.PAUSE_ALL_STEAMS,
 		     -1,
-		     3,
+		     2,
 		     "Pause All Steams");
-	    menu.add(Steam.ContextMenuEnumerator.REWIND_AND_RESUME_ALL_STEAMS,
+	    menu.add(Steam.ContextMenuEnumerator.RESUME_ALL_STEAMS,
 		     -1,
 		     3,
+		     "Resume All Steams");
+	    menu.add(Steam.ContextMenuEnumerator.REWIND_AND_RESUME_ALL_STEAMS,
+		     -1,
+		     4,
 		     "Rewind & Resume All Steams");
 	    menu.add(Steam.ContextMenuEnumerator.REWIND_ALL_STEAMS,
 		     -1,
-		     4,
+		     5,
 		     "Rewind All Steams");
 
 	    SteamElement steamElement = s_database.readSteam
@@ -95,7 +99,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 
 	    menuItem = menu.add(Steam.ContextMenuEnumerator.REWIND_STEAM,
 				view.getId(),
-				5,
+				6,
 				"Rewind Steam");
 	    menuItem.setEnabled
 		(steamElement == null ?
@@ -106,7 +110,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 
 	    menuItem = menu.add(Steam.ContextMenuEnumerator.STEAMROLL_STEAM,
 				view.getId(),
-				6,
+				7,
 				"Steamroll Steam");
 	    menuItem.setEnabled
 		(steamElement == null ?
