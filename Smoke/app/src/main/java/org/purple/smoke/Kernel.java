@@ -3524,12 +3524,11 @@ public class Kernel
 				   byte imageBytes[],
 				   byte keyStream[])
     {
-	m_messagesToSendMutex.writeLock().lock();
+	MessageElement messageElement = null;
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
+	    messageElement = new MessageElement();
 	    messageElement.m_attachment = imageBytes;
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = keyStream;
@@ -3537,6 +3536,16 @@ public class Kernel
 	    messageElement.m_messageIdentity = Cryptography.randomBytes
 		(Cryptography.HASH_KEY_LENGTH);
 	    messageElement.m_messageType = MessageElement.CHAT_MESSAGE_TYPE;
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
@@ -3572,16 +3581,25 @@ public class Kernel
 	if(keyStream == null)
 	    return;
 
-	m_messagesToSendMutex.writeLock().lock();
+	MessageElement messageElement = null;
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
+	    messageElement = new MessageElement();
 	    messageElement.m_id = id;
 	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = message;
 	    messageElement.m_messageType = MessageElement.FIRE_MESSAGE_TYPE;
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
@@ -3617,16 +3635,25 @@ public class Kernel
 	if(keyStream == null)
 	    return;
 
-	m_messagesToSendMutex.writeLock().lock();
+	MessageElement messageElement = null;
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
+	    messageElement = new MessageElement();
 	    messageElement.m_id = id;
 	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_messageType =
 		MessageElement.FIRE_STATUS_MESSAGE_TYPE;
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
@@ -3664,12 +3691,11 @@ public class Kernel
 	    m_juggernautsMutex.writeLock().unlock();
 	}
 
-	m_messagesToSendMutex.writeLock().lock();
+	MessageElement messageElement = null;
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
+	    messageElement = new MessageElement();
 	    messageElement.m_delay = JUGGERNAUT_DELAY;
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = keyStream;
@@ -3677,6 +3703,16 @@ public class Kernel
 	    messageElement.m_messageType =
 		MessageElement.JUGGERNAUT_MESSAGE_TYPE;
 	    messageElement.m_timestamp = System.currentTimeMillis();
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
@@ -3692,15 +3728,24 @@ public class Kernel
 
     public void enqueueShareSipHashIdMessage(int oid)
     {
+	MessageElement messageElement = null;
+
+	try
+	{
+	    messageElement = new MessageElement();
+	    messageElement.m_id = String.valueOf(oid);
+	    messageElement.m_messageType = MessageElement.
+		SHARE_SIPHASH_ID_MESSAGE_TYPE;
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
 	m_messagesToSendMutex.writeLock().lock();
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
-	    messageElement.m_id = String.valueOf(oid);
-	    messageElement.m_messageType = MessageElement.
-		SHARE_SIPHASH_ID_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
@@ -3716,16 +3761,25 @@ public class Kernel
 
     public void enqueueSteamKeyExchange(String message, String sipHashId)
     {
-	m_messagesToSendMutex.writeLock().lock();
+	MessageElement messageElement = null;
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
+	    messageElement = new MessageElement();
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_message = message;
 	    messageElement.m_messageType =
 		MessageElement.STEAM_KEY_EXCHANGE_MESSAGE_TYPE;
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
@@ -3769,18 +3823,27 @@ public class Kernel
 
     public void resendMessage(String sipHashId, int position)
     {
-	m_messagesToSendMutex.writeLock().lock();
+	MessageElement messageElement = null;
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
+	    messageElement = new MessageElement();
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_messageIdentity = Cryptography.randomBytes
 		(Cryptography.HASH_KEY_LENGTH);
 	    messageElement.m_messageType =
 		MessageElement.RESEND_CHAT_MESSAGE_TYPE;
 	    messageElement.m_position = position;
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
+	m_messagesToSendMutex.writeLock().lock();
+
+	try
+	{
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
@@ -3796,15 +3859,24 @@ public class Kernel
 
     public void retrieveChatMessages(String sipHashId)
     {
+	MessageElement messageElement = null;
+
+	try
+	{
+	    messageElement = new MessageElement();
+	    messageElement.m_id = sipHashId;
+	    messageElement.m_messageType =
+		MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE;
+	}
+	catch(Exception exception)
+	{
+	    return;
+	}
+
 	m_messagesToSendMutex.writeLock().lock();
 
 	try
 	{
-	    MessageElement messageElement = new MessageElement();
-
-	    messageElement.m_id = sipHashId;
-	    messageElement.m_messageType =
-		MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE;
 	    m_messagesToSend.add(messageElement);
 	}
 	catch(Exception exception)
