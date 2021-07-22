@@ -301,6 +301,7 @@ Remaining Items
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
+- Delete Fiasco keys from Member activity.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Mist, or, SMS.
