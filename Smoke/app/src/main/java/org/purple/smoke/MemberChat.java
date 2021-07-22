@@ -73,12 +73,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MemberChat extends AppCompatActivity
 {
@@ -179,34 +177,16 @@ public class MemberChat extends AppCompatActivity
 	@Override
 	public void run()
 	{
-	    m_selectedMessagesMutex.writeLock().lock();
-
 	    try
 	    {
-		Iterator<Hashtable.Entry<Integer, Boolean> >
-		    it = m_selectedMessages.entrySet().iterator();
-
-		while(it.hasNext())
-		{
-		    Hashtable.Entry<Integer, Boolean> entry = it.next();
-
-		    if(entry.getKey() == null || entry.getValue() == null)
-		    {
-			it.remove();
-			continue;
-		    }
-
+		for(Integer key : m_selectedMessages.keySet())
 		    s_databaseHelper.deleteParticipantMessage
-			(s_cryptography, m_sipHashId, entry.getKey());
-		    it.remove();
-		}
+			(s_cryptography, m_sipHashId, key);
+
+		m_selectedMessages.clear();
 	    }
 	    catch(Exception exception)
 	    {
-	    }
-	    finally
-	    {
-		m_selectedMessagesMutex.writeLock().unlock();
 	    }
 	}
     }
@@ -236,7 +216,7 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
-    private Hashtable<Integer, Boolean> m_selectedMessages = null;
+    private ConcurrentHashMap<Integer, Boolean> m_selectedMessages = null;
     private MemberChatAdapter m_adapter = null;
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
@@ -247,8 +227,6 @@ public class MemberChat extends AppCompatActivity
     private boolean m_messageSelectionStateEnabled = false;
     private boolean m_receiverRegistered = false;
     private byte m_attachment[] = null;
-    private final ReentrantReadWriteLock m_selectedMessagesMutex =
-	new ReentrantReadWriteLock();
     private final int m_lastContextMenuPosition[] = new int[] {0, 0};
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -910,7 +888,7 @@ public class MemberChat extends AppCompatActivity
 	m_receiver = new MemberChatBroadcastReceiver();
 	m_recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 	m_recyclerView.setHasFixedSize(true);
-	m_selectedMessages = new Hashtable<> ();
+	m_selectedMessages = new ConcurrentHashMap<> ();
 
 	if(m_sipHashId.isEmpty())
 	    m_name = m_sipHashId = Cryptography.DEFAULT_SIPHASH_ID;
@@ -1060,19 +1038,16 @@ public class MemberChat extends AppCompatActivity
 
     public boolean isMessageSelected(int oid)
     {
-	m_selectedMessagesMutex.readLock().lock();
-
 	try
 	{
 	    if(m_selectedMessages.containsKey(oid))
 		return m_selectedMessages.get(oid);
-	    else
-		return false;
 	}
-	finally
+	catch(Exception exception)
 	{
-	    m_selectedMessagesMutex.readLock().unlock();
 	}
+
+	return false;
     }
 
     @Override
@@ -1856,9 +1831,15 @@ public class MemberChat extends AppCompatActivity
 
     public void setMessageSelected(int oid, boolean isChecked)
     {
-	if(isChecked)
-	    m_selectedMessages.put(oid, isChecked);
-	else
-	    m_selectedMessages.remove(oid);
+	try
+	{
+	    if(isChecked)
+		m_selectedMessages.put(oid, isChecked);
+	    else
+		m_selectedMessages.remove(oid);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 }
