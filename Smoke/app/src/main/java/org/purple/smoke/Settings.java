@@ -3990,15 +3990,15 @@ public class Settings extends AppCompatActivity
 		     "Delete (" + tag1 + ")");
 	    menu.add(ContextMenuEnumerator.DELETE_FIASCO_KEYS,
 		     view.getId(),
-		     0,
+		     1,
 		     "Delete Fiasco Keys (" + tag1 + ")");
 	    menu.add(ContextMenuEnumerator.DELETE_PUBLIC_KEYS,
 		     view.getId(),
-		     0,
+		     2,
 		     "Delete Public Keys (" + tag1 + ")");
 	    menu.add(ContextMenuEnumerator.NEW_NAME,
 		     view.getId(),
-		     0,
+		     3,
 		     "New Name (" + tag1 + ")");
 
 	    boolean validOzone = s_cryptography.hasValidOzoneKeys();
@@ -4011,17 +4011,17 @@ public class Settings extends AppCompatActivity
 		setEnabled(validOzone);
 	    menu.add(ContextMenuEnumerator.SHARE_KEYS_OF,
 		     view.getId(),
-		     0,
+		     4,
 		     "Share Keys Of (" + tag1 + ")").
 		setEnabled((boolean) tag2);
 	    menu.add(ContextMenuEnumerator.SHARE_SMOKE_ID_OF,
 		     view.getId(),
-		     0,
+		     5,
 		     "Share Smoke ID Of (" + tag1 + ")").
 		setEnabled(validOzone);
 	    menu.add(ContextMenuEnumerator.VIEW_DETAILS,
 		     view.getId(),
-		     0,
+		     6,
 		     "View Details (" + tag1 + ")");
 	}
     }
