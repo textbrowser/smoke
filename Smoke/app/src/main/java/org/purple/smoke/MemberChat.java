@@ -1793,31 +1793,31 @@ public class MemberChat extends AppCompatActivity
 	    setEnabled(hasPublicKeys && state);
 	menu.add(ContextMenuEnumerator.CALL_VIA_RSA,
 		 -1,
-		 0,
+		 1,
 		 "Call via RSA").
 	    setEnabled(hasPublicKeys && state);
 	menu.add(ContextMenuEnumerator.CUSTOM_SESSION,
 		 -1,
-		 0,
+		 2,
 		 "Custom Session").setEnabled(hasPublicKeys);
 	menu.add(ContextMenuEnumerator.JUGGERKNOT,
 		 -1,
-		 0,
+		 3,
 		 "JuggerKnot Credentials").
 	    setEnabled(hasPublicKeys && isParticipantPaired && state);
 	menu.add(ContextMenuEnumerator.JUGGERLI,
 		 -1,
-		 0,
+		 4,
 		 "JuggerLi Credentials (Public Keys)").
 	    setEnabled(hasPublicKeys && isParticipantPaired && state);
 	menu.add(ContextMenuEnumerator.JUGGERNAUT,
 		 -1,
-		 0,
+		 5,
 		 "Juggernaut").
 	    setEnabled(hasPublicKeys() && isParticipantPaired && state);
 	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
 			    -1,
-			    0,
+			    6,
 			    "Optional Signatures");
 	menuItem.setCheckable(true);
 	menuItem.setChecked
@@ -1826,7 +1826,7 @@ public class MemberChat extends AppCompatActivity
 	     contains("optional_signatures = true"));
 	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_STEAM,
 			    -1,
-			    0,
+			    7,
 			    "Optional Steam");
 	menuItem.setCheckable(true);
 	menuItem.setChecked
@@ -1835,13 +1835,13 @@ public class MemberChat extends AppCompatActivity
 	     contains("optional_steam = true"));
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
-		 0,
+		 8,
 		 "Retrieve Messages").setEnabled
 	    (!s_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty() && state);
 	menuItem = menu.add(ContextMenuEnumerator.SELECTION_STATE,
 			    -1,
-			    0,
+			    9,
 			    "Selection State").setCheckable(true);
 	menuItem.setChecked(messageSelectionState());
     }
