@@ -135,21 +135,19 @@ public class SteamWriter
 		    {
 			for(Integer key : m_files.keySet())
 			{
-			    FileInformation fileInformation = m_files.get(key);
+			    FileInformation value = m_files.get(key);
 
-			    if(fileInformation == null)
+			    if(value == null)
 			     {
 				 m_files.remove(key);
 				 continue;
 			     }
 
 			    int oid = s_databaseHelper.steamOidFromFileIdentity
-				(s_cryptography,
-				 fileInformation.m_fileIdentity);
+				(s_cryptography, value.m_fileIdentity);
 
-			    if(Math.
-			       abs(System.currentTimeMillis() -
-				   fileInformation.m_lastStatusTimestamp) >
+			    if(Math.abs(System.currentTimeMillis() -
+					value.m_lastStatusTimestamp) >
 			       FILE_INFORMATION_LIFETIME ||
 			       oid == -1)
 			    {
@@ -157,13 +155,13 @@ public class SteamWriter
 				continue;
 			    }
 
-			    fileInformation.computeRate();
+			    value.computeRate();
 			    s_databaseHelper.writeSteamStatus
 				(s_cryptography,
 				 "receiving",
-				 fileInformation.prettyRate(),
-				 fileInformation.m_oid,
-				 fileInformation.m_offset);
+				 value.prettyRate(),
+				 value.m_oid,
+				 value.m_offset);
 			}
 		    }
 		    catch(Exception exception)
