@@ -263,10 +263,10 @@ public class Steam extends AppCompatActivity
 		{
 		    try
 		    {
-			final int availableSteams = Kernel.getInstance().
-			    availableSteams();
-			final int availableWriters = Kernel.getInstance().
-			    availableWriters();
+			final int availableSteamReaders = Kernel.getInstance().
+			    availableSteamReaders();
+			final int availableSteamWriters = Kernel.getInstance().
+			    availableSteamWriters();
 
 			Steam.this.runOnUiThread(new Runnable()
 			{
@@ -275,10 +275,10 @@ public class Steam extends AppCompatActivity
 			    {
 				m_adapter.notifyDataSetChanged();
 				m_information.setText
-				    ("Active Upload Tasks: " +
-				     availableSteams + "\n" +
-				     "Active Writers: " +
-				     availableWriters);
+				    ("Active Steam Readers: " +
+				     availableSteamReaders + "\n" +
+				     "Active Steam Writers: " +
+				     availableSteamWriters);
 			    }
 			});
 		    }
