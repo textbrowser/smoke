@@ -249,11 +249,12 @@ public class MemberChat extends AppCompatActivity
 	public final static int JUGGERNAUT = 9;
 	public final static int OPTIONAL_SIGNATURES = 10;
 	public final static int OPTIONAL_STEAM = 11;
-	public final static int RESEND_MESSAGE = 12;
-	public final static int RETRIEVE_MESSAGES = 13;
-	public final static int SAVE_ATTACHMENT = 14;
-	public final static int SELECTION_STATE = 15;
-	public final static int VIEW_DETAILS = 16;
+	public final static int PURGE_FIASCO_KEYS = 12;
+	public final static int RESEND_MESSAGE = 13;
+	public final static int RETRIEVE_MESSAGES = 14;
+	public final static int SAVE_ATTACHMENT = 15;
+	public final static int SELECTION_STATE = 16;
+	public final static int VIEW_DETAILS = 17;
     }
 
     private boolean hasPublicKeys()
@@ -1209,6 +1210,13 @@ public class MemberChat extends AppCompatActivity
 			State.getInstance().removeKey
 			    ("member_chat_secret_input");
 			break;
+		    case ContextMenuEnumerator.PURGE_FIASCO_KEYS:
+			if(State.getInstance().getString("dialog_accepted").
+			   equals("true"))
+			    s_databaseHelper.deleteFiascoKeysOfSiphashId
+				(s_cryptography, m_sipHashId);
+
+			break;
 		    default:
 			break;
 		    }
@@ -1447,6 +1455,14 @@ public class MemberChat extends AppCompatActivity
 		    (s_cryptography, stringBuilder.toString(), m_sipHashId);
 		break;
 	    }
+	case ContextMenuEnumerator.PURGE_FIASCO_KEYS:
+	    Miscellaneous.showPromptDialog
+		(MemberChat.this,
+		 listener,
+		 "Are you sure that you wish to delete the Fiasco keys of " +
+		 m_sipHashId +
+		 "?");
+	    break;
 	case ContextMenuEnumerator.RESEND_MESSAGE:
 	    Kernel.getInstance().resendMessage(m_sipHashId, itemId);
 	    break;
@@ -1808,15 +1824,19 @@ public class MemberChat extends AppCompatActivity
 	    (s_databaseHelper.
 	     readParticipantOptions(s_cryptography, m_sipHashId).
 	     contains("optional_steam = true"));
-	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
+	menu.add(ContextMenuEnumerator.PURGE_FIASCO_KEYS,
 		 -1,
 		 8,
+		 "Purge Fiasco Keys");
+	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
+		 -1,
+		 9,
 		 "Retrieve Messages").setEnabled
 	    (!s_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty() && state);
 	menuItem = menu.add(ContextMenuEnumerator.SELECTION_STATE,
 			    -1,
-			    9,
+			    10,
 			    "Selection State").setCheckable(true);
 	menuItem.setChecked(messageSelectionState());
     }

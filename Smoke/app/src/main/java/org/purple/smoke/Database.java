@@ -3216,10 +3216,44 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.execSQL
-		("DELETE FROM participants_keys WHERE siphash_id_digest IN " +
+	    m_db.delete
+		("participants_keys",
+		 "siphash_id_digest IN " +
 		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
 		 new String[] {oid});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
+    }
+
+    public boolean deleteFiascoKeysOfSiphashId
+	(Cryptography cryptography, String sipHashId)
+    {
+	if(cryptography == null || m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    m_db.delete
+		("participants_keys",
+		 "siphash_id_digest = ?",
+		 new String[]
+		    {Base64.encodeToString(cryptography.
+					   hmac(sipHashId.toUpperCase().trim().
+						getBytes(StandardCharsets.
+							 UTF_8)),
+					   Base64.DEFAULT)});
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)

@@ -51,6 +51,7 @@ Completed Items
 - Database method for retrieving neighbor OIDs.
 - Decide if the State class requires cryptographic data.
 - Define passthrough devices.
+- Delete Fiasco keys from Member activity.
 - Deleting a connected neighbor and quickly re-adding it is problematic. If
   the current thread has been interrupted, exit run().
 - Deleting a neighbor does not cause an immediate disconnect.
@@ -301,7 +302,6 @@ Remaining Items
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
 - Databases and versions; avoid reinstalls.
-- Delete Fiasco keys from Member activity.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Mist, or, SMS.
