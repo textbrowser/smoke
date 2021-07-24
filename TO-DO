@@ -232,6 +232,7 @@ Completed Items
 - Retrieve/store user name.
 - Return message-read status in status messages.
 - Rich context menu containing other members.
+- SQL execSQL(): cannot be delete / insert / select / update.
 - SQLite secure delete (onConfigure()).
 - Save attachment.
 - Save files and images to Downloads folder.
@@ -308,4 +309,3 @@ Remaining Items
 - Optional cryptographic discovery, per neighbor.
 - Puff, or, video on the Echo. Nearly impossible.
 - SHA3 via BC.
-- SQL execSQL(): cannot be delete / insert / select / update.
