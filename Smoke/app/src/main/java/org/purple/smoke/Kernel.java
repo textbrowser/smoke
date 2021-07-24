@@ -52,11 +52,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -140,9 +139,9 @@ public class Kernel
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private AtomicLong m_shareSipHashIdIdentity = null;
     private AtomicLong m_shareSipHashIdIdentityLastTick = null;
-    private Hashtable<String, Juggernaut> m_juggernauts = null;
-    private Hashtable<String, ParticipantCall> m_callQueue = null;
-    private Hashtable<String, byte[]> m_fireStreams = null;
+    private ConcurrentHashMap<String, ParticipantCall> m_callQueue = null;
+    private ConcurrentHashMap<String, Juggernaut> m_juggernauts = null;
+    private ConcurrentHashMap<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_networkStatusScheduler = null;
@@ -162,13 +161,7 @@ public class Kernel
 	new KernelBroadcastReceiver();
     private final Object m_callSchedulerMutex = new Object();
     private final Object m_messagesToSendSchedulerMutex = new Object();
-    private final ReentrantReadWriteLock m_callQueueMutex =
-	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
-	new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock m_fireStreamsMutex =
-	new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock m_juggernautsMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_messagesToSendMutex =
 	new ReentrantReadWriteLock();
@@ -230,11 +223,11 @@ public class Kernel
 
     private Kernel()
     {
-	m_callQueue = new Hashtable<> ();
+	m_callQueue = new ConcurrentHashMap<> ();
 	m_chatTemporaryIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
-	m_fireStreams = new Hashtable<> ();
-	m_juggernauts = new Hashtable<> ();
+	m_fireStreams = new ConcurrentHashMap<> ();
+	m_juggernauts = new ConcurrentHashMap<> ();
 	m_messagesToSend = new ArrayList<> ();
 	m_shareSipHashIdIdentity = new AtomicLong(0L);
 	m_shareSipHashIdIdentityLastTick = new AtomicLong
@@ -426,24 +419,7 @@ public class Kernel
 		{
 		    try
 		    {
-			boolean empty = false;
-
-			m_callQueueMutex.readLock().lock();
-
-			try
-			{
-			    empty = m_callQueue.isEmpty();
-			}
-			catch(Exception exception)
-			{
-			    empty = false;
-			}
-			finally
-			{
-			    m_callQueueMutex.readLock().unlock();
-			}
-
-			if(empty)
+			if(m_callQueue.isEmpty())
 			    synchronized(m_callSchedulerMutex)
 			    {
 				try
@@ -464,8 +440,6 @@ public class Kernel
 			** ephemeral keys.
 			*/
 
-			m_callQueueMutex.writeLock().lock();
-
 			try
 			{
 			    if(m_callQueue.isEmpty())
@@ -475,23 +449,15 @@ public class Kernel
 			    ** Remove expired calls.
 			    */
 
-			    Iterator<Hashtable.Entry<String, ParticipantCall> >
-				it = m_callQueue.entrySet().iterator();
-
-			    while(it.hasNext())
+			    for(String key : m_callQueue.keySet())
 			    {
-				Hashtable.Entry<String, ParticipantCall> entry =
-				    it.next();
+				ParticipantCall value = m_callQueue.get(key);
 
-				if(entry.getValue() == null)
-				{
-				    it.remove();
-				    continue;
-				}
-
-				if((System.nanoTime() - entry.getValue().
-				    m_startTime) / 1000000L > CALL_LIFETIME)
-				    it.remove();
+				if(value == null ||
+				   (System.nanoTime() -
+				    value.m_startTime) / 1000000L >
+				   CALL_LIFETIME)
+				    m_callQueue.remove(key);
 			    }
 
 			    /*
@@ -500,14 +466,20 @@ public class Kernel
 
 			    int participantOid = -1;
 
-			    for(String string : m_callQueue.keySet())
+			    for(String key : m_callQueue.keySet())
 			    {
-				if(m_callQueue.get(string).m_keyPair != null)
+				ParticipantCall value = m_callQueue.get(key);
+
+				if(value == null)
+				{
+				    m_callQueue.remove(key);
+				    continue;
+				}
+				else if(value.m_keyPair != null)
 				    continue;
 
-				participantOid = m_callQueue.get(string).
-				    m_participantOid;
-				sipHashId = string;
+				participantOid = value.m_participantOid;
+				sipHashId = key;
 				break;
 			    }
 
@@ -523,17 +495,11 @@ public class Kernel
 			catch(Exception exception)
 			{
 			}
-			finally
-			{
-			    m_callQueueMutex.writeLock().unlock();
-			}
 
 			if(participantCall == null)
 			    return;
 			else
 			    participantCall.preparePrivatePublicKey();
-
-			m_callQueueMutex.writeLock().lock();
 
 			try
 			{
@@ -546,10 +512,6 @@ public class Kernel
 			}
 			catch(Exception exception)
 			{
-			}
-			finally
-			{
-			    m_callQueueMutex.writeLock().unlock();
 			}
 
 			if(isConnected())
@@ -747,14 +709,13 @@ public class Kernel
 				     messageElement.m_keyStream);
 				break;
 			    case MessageElement.JUGGERNAUT_MESSAGE_TYPE:
-				m_juggernautsMutex.readLock().lock();
-
 				try
 				{
 				    Juggernaut juggernaut = m_juggernauts.
 					get(messageElement.m_id);
 
-				    if(juggernaut.state() ==
+				    if(juggernaut != null &&
+				       juggernaut.state() ==
 				       JPAKEParticipant.STATE_INITIALIZED)
 					bytes = juggernaut.next(null).
 					    getBytes();
@@ -764,10 +725,6 @@ public class Kernel
 				catch(Exception exception)
 				{
 				    bytes = null;
-				}
-				finally
-				{
-				    m_juggernautsMutex.readLock().unlock();
 				}
 
 				if(bytes != null)
@@ -1132,36 +1089,21 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    m_juggernautsMutex.writeLock().lock();
-
 		    try
 		    {
-			Iterator<Hashtable.Entry<String, Juggernaut> >
-			    it = m_juggernauts.entrySet().iterator();
-
-			while(it.hasNext())
+			for(String key : m_juggernauts.keySet())
 			{
-			    Hashtable.Entry<String, Juggernaut> entry =
-				it.next();
+			    Juggernaut value = m_juggernauts.get(key);
 
-			    if(entry.getValue() == null)
-			    {
-				it.remove();
-				continue;
-			    }
-
-			    if((System.currentTimeMillis() -
-				entry.getValue().lastEventTime()) >
+			    if(value == null ||
+			       System.currentTimeMillis() -
+			       value.lastEventTime() >
 			       JUGGERNAUT_LIFETIME)
-				it.remove();
+				m_juggernauts.remove(key);
 			}
 		    }
 		    catch(Exception exception)
 		    {
-		    }
-		    finally
-		    {
-			m_juggernautsMutex.writeLock().unlock();
 		    }
 
 		    try
@@ -1625,31 +1567,31 @@ public class Kernel
 
     public String fireIdentities()
     {
-	m_fireStreamsMutex.readLock().lock();
-
 	try
 	{
 	    if(!m_fireStreams.isEmpty())
 	    {
 		StringBuilder stringBuilder = new StringBuilder();
 
-		for(Hashtable.Entry<String, byte[]> entry :
-			m_fireStreams.entrySet())
+		for(String key : m_fireStreams.keySet())
 		{
-		    if(entry.getValue() == null)
+		    byte keys[] = m_fireStreams.get(key);
+
+		    if(keys == null)
+		    {
+			m_fireStreams.remove(key);
 			continue;
+		    }
 
 		    stringBuilder.append
-			(Messages.
-			 identityMessage
+			(Messages.identityMessage
 			 (Cryptography.
-			  sha512(Arrays.
-				 copyOfRange(entry.getValue(),
-					     Cryptography.
-					     CIPHER_KEY_LENGTH +
-					     Cryptography.
-					     FIRE_HASH_KEY_LENGTH,
-					     entry.getValue().length))));
+			  sha512(Arrays.copyOfRange(keys,
+						    Cryptography.
+						    CIPHER_KEY_LENGTH +
+						    Cryptography.
+						    FIRE_HASH_KEY_LENGTH,
+						    keys.length))));
 		}
 
 		return stringBuilder.toString();
@@ -1657,10 +1599,6 @@ public class Kernel
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_fireStreamsMutex.readLock().unlock();
 	}
 
 	return "";
@@ -1674,8 +1612,6 @@ public class Kernel
 	** Calling messages are not placed in the outbound_queue
 	** as they are considered temporary.
 	*/
-
-	m_callQueueMutex.writeLock().lock();
 
 	try
 	{
@@ -1692,18 +1628,14 @@ public class Kernel
 		 null,
 		 null,
 		 System.currentTimeMillis());
-	    Miscellaneous.sendBroadcast
-		("org.purple.smoke.notify_data_set_changed");
 	    m_callQueue.put
 		(sipHashId,
 		 new ParticipantCall(algorithm, sipHashId, participantOid));
+	    Miscellaneous.sendBroadcast
+		("org.purple.smoke.notify_data_set_changed");
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_callQueueMutex.writeLock().unlock();
 	}
 
 	synchronized(m_callSchedulerMutex)
@@ -1746,8 +1678,6 @@ public class Kernel
 
     public boolean igniteFire(String name)
     {
-	m_fireStreamsMutex.writeLock().lock();
-
 	try
 	{
 	    if(!m_fireStreams.containsKey(name))
@@ -1764,10 +1694,6 @@ public class Kernel
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_fireStreamsMutex.writeLock().unlock();
 	}
 
 	return false;
@@ -1885,7 +1811,7 @@ public class Kernel
 	return 0;
     }
 
-    public int availableSteams()
+    public int availableSteamReaders()
     {
 	m_steamsMutex.readLock().lock();
 
@@ -1904,7 +1830,7 @@ public class Kernel
 	return 0;
     }
 
-    public int availableWriters()
+    public int availableSteamWriters()
     {
 	return m_steamWriter.size();
     }
@@ -1970,8 +1896,6 @@ public class Kernel
 	    ** Fire!
 	    */
 
-	    m_fireStreamsMutex.readLock().lock();
-
 	    try
 	    {
 		if(!m_fireStreams.isEmpty())
@@ -1986,18 +1910,22 @@ public class Kernel
 			byte hmac[] = Base64.decode
 			    (strings[1], Base64.NO_WRAP);
 
-			for(Hashtable.Entry<String, byte[]> entry :
-				m_fireStreams.entrySet())
+			for(String key : m_fireStreams.keySet())
 			{
-			    if(entry.getValue() == null)
+			    byte keys[] = m_fireStreams.get(key);
+
+			    if(keys == null)
+			    {
+				m_fireStreams.remove(key);
 				continue;
+			    }
 
 			    if(Cryptography.
 			       memcmp
 			       (Cryptography.
 				hmacFire(ciphertext,
 					 Arrays.
-					 copyOfRange(entry.getValue(),
+					 copyOfRange(keys,
 						     Cryptography.
 						     CIPHER_KEY_LENGTH,
 						     Cryptography.
@@ -2008,7 +1936,7 @@ public class Kernel
 			    {
 				ciphertext = Cryptography.decryptFire
 				    (ciphertext,
-				     Arrays.copyOfRange(entry.getValue(),
+				     Arrays.copyOfRange(keys,
 							0,
 							Cryptography.
 							CIPHER_KEY_LENGTH));
@@ -2055,7 +1983,7 @@ public class Kernel
 
 				value = s_congestionSipHash.hmac
 				    (("fire" +
-				      entry.getKey() +
+				      key +
 				      strings[2] +
 				      strings[3] +
 				      timestamp).getBytes(),
@@ -2065,7 +1993,7 @@ public class Kernel
 				   writeCongestionDigest(value))
 				    return FINE;
 
-				final String channel = entry.getKey();
+				final String channel = key;
 				final String id = strings[2];
 				final String message = strings[3];
 				final String name = strings[1];
@@ -2113,10 +2041,6 @@ public class Kernel
 	    }
 	    catch(Exception exception)
 	    {
-	    }
-	    finally
-	    {
-		m_fireStreamsMutex.readLock().unlock();
 	    }
 
 	    byte bytes[] =
@@ -2555,8 +2479,6 @@ public class Kernel
 		    byte sessionCredentials[] = null;
 		    int state = -1;
 
-		    m_juggernautsMutex.writeLock().lock();
-
 		    try
 		    {
 			if(!m_juggernauts.containsKey(array[1]))
@@ -2611,10 +2533,6 @@ public class Kernel
 		    catch(Exception exception)
 		    {
 			bytes = null;
-		    }
-		    finally
-		    {
-			m_juggernautsMutex.writeLock().unlock();
 		    }
 
 		    if(bytes != null)
@@ -3043,18 +2961,12 @@ public class Kernel
 		    {
 			ParticipantCall participantCall = null;
 
-			m_callQueueMutex.readLock().lock();
-
 			try
 			{
 			    participantCall = m_callQueue.get(array[1]);
 			}
 			catch(Exception exception)
 			{
-			}
-			finally
-			{
-			    m_callQueueMutex.readLock().unlock();
 			}
 
 			if(participantCall == null)
@@ -3090,15 +3002,12 @@ public class Kernel
 			    ** We're busy!
 			    */
 
-			    m_callQueueMutex.writeLock().lock();
-
 			    try
 			    {
 				m_callQueue.remove(array[1]);
 			    }
-			    finally
+			    catch(Exception exception)
 			    {
-				m_callQueueMutex.writeLock().unlock();
 			    }
 
 			    Intent intent = new Intent
@@ -3115,21 +3024,16 @@ public class Kernel
 		    {
 			ParticipantCall participantCall = null;
 
-			m_callQueueMutex.readLock().lock();
-
 			try
 			{
 			    participantCall = m_callQueue.get(array[1]);
 			}
-			finally
+			catch(Exception exception)
 			{
-			    m_callQueueMutex.readLock().unlock();
 			}
 
 			if(participantCall == null)
 			    return FINE;
-
-			m_callQueueMutex.writeLock().lock();
 
 			try
 			{
@@ -3137,10 +3041,6 @@ public class Kernel
 			}
 			catch(Exception exception)
 			{
-			}
-			finally
-			{
-			    m_callQueueMutex.writeLock().unlock();
 			}
 
 			keyStream = Cryptography.pkiDecrypt
@@ -3360,22 +3260,18 @@ public class Kernel
 
     public long callTimeRemaining(String sipHashId)
     {
-	m_callQueueMutex.readLock().lock();
-
 	try
 	{
-	    if(m_callQueue.containsKey(sipHashId))
+	    ParticipantCall participantCall = m_callQueue.get(sipHashId);
+
+	    if(participantCall != null)
 		return Math.abs
 		    (CALL_LIFETIME / 1000L - (System.nanoTime() -
-					      m_callQueue.get(sipHashId).
+					      participantCall.
 					      m_startTime) / 1000000000L);
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_callQueueMutex.readLock().unlock();
 	}
 
 	return 0L;
@@ -3568,8 +3464,6 @@ public class Kernel
     {
 	byte keyStream[] = null;
 
-	m_fireStreamsMutex.readLock().lock();
-
 	try
 	{
 	    if(m_fireStreams.containsKey(name))
@@ -3578,13 +3472,12 @@ public class Kernel
 	catch(Exception exception)
 	{
 	}
-	finally
-	{
-	    m_fireStreamsMutex.readLock().unlock();
-	}
 
 	if(keyStream == null)
+	{
+	    m_fireStreams.remove(name);
 	    return;
+	}
 
 	MessageElement messageElement = null;
 
@@ -3622,8 +3515,6 @@ public class Kernel
     {
 	byte keyStream[] = null;
 
-	m_fireStreamsMutex.readLock().lock();
-
 	try
 	{
 	    if(m_fireStreams.containsKey(name))
@@ -3632,13 +3523,12 @@ public class Kernel
 	catch(Exception exception)
 	{
 	}
-	finally
-	{
-	    m_fireStreamsMutex.readLock().unlock();
-	}
 
 	if(keyStream == null)
+	{
+	    m_fireStreams.remove(name);
 	    return;
+	}
 
 	MessageElement messageElement = null;
 
@@ -3647,8 +3537,8 @@ public class Kernel
 	    messageElement = new MessageElement();
 	    messageElement.m_id = id;
 	    messageElement.m_keyStream = keyStream;
-	    messageElement.m_messageType =
-		MessageElement.FIRE_STATUS_MESSAGE_TYPE;
+	    messageElement.m_messageType = MessageElement.
+		FIRE_STATUS_MESSAGE_TYPE;
 	}
 	catch(Exception exception)
 	{
@@ -3677,8 +3567,6 @@ public class Kernel
 				  boolean isJuggerKnot,
 				  byte keyStream[])
     {
-	m_juggernautsMutex.writeLock().lock();
-
 	try
 	{
 	    m_juggernauts.remove(sipHashId);
@@ -3691,10 +3579,6 @@ public class Kernel
 	catch(Exception exception)
 	{
 	}
-	finally
-	{
-	    m_juggernautsMutex.writeLock().unlock();
-	}
 
 	MessageElement messageElement = null;
 
@@ -3705,8 +3589,8 @@ public class Kernel
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_keyStream = keyStream;
 	    messageElement.m_message = secret;
-	    messageElement.m_messageType =
-		MessageElement.JUGGERNAUT_MESSAGE_TYPE;
+	    messageElement.m_messageType = MessageElement.
+		JUGGERNAUT_MESSAGE_TYPE;
 	    messageElement.m_timestamp = System.currentTimeMillis();
 	}
 	catch(Exception exception)
@@ -3773,8 +3657,8 @@ public class Kernel
 	    messageElement = new MessageElement();
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_message = message;
-	    messageElement.m_messageType =
-		MessageElement.STEAM_KEY_EXCHANGE_MESSAGE_TYPE;
+	    messageElement.m_messageType = MessageElement.
+		STEAM_KEY_EXCHANGE_MESSAGE_TYPE;
 	}
 	catch(Exception exception)
 	{
@@ -3800,18 +3684,12 @@ public class Kernel
 
     public void extinguishFire(String name)
     {
-	m_fireStreamsMutex.writeLock().lock();
-
 	try
 	{
 	    m_fireStreams.remove(name);
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_fireStreamsMutex.writeLock().unlock();
 	}
     }
 
@@ -3836,8 +3714,8 @@ public class Kernel
 	    messageElement.m_id = sipHashId;
 	    messageElement.m_messageIdentity = Cryptography.randomBytes
 		(Cryptography.HASH_KEY_LENGTH);
-	    messageElement.m_messageType =
-		MessageElement.RESEND_CHAT_MESSAGE_TYPE;
+	    messageElement.m_messageType = MessageElement.
+		RESEND_CHAT_MESSAGE_TYPE;
 	    messageElement.m_position = position;
 	}
 	catch(Exception exception)
@@ -3870,8 +3748,8 @@ public class Kernel
 	{
 	    messageElement = new MessageElement();
 	    messageElement.m_id = sipHashId;
-	    messageElement.m_messageType =
-		MessageElement.RETRIEVE_MESSAGES_MESSAGE_TYPE;
+	    messageElement.m_messageType = MessageElement.
+		RETRIEVE_MESSAGES_MESSAGE_TYPE;
 	}
 	catch(Exception exception)
 	{
