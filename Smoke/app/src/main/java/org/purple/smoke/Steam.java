@@ -678,6 +678,10 @@ public class Steam extends AppCompatActivity
 	    m_databaseHelper.pauseAllSteams();
 	    m_adapter.notifyDataSetChanged();
 	    break;
+	case ContextMenuEnumerator.RESUME_ALL_STEAMS:
+	    m_databaseHelper.resumeAllSteams();
+	    m_adapter.notifyDataSetChanged();
+	    break;
 	case ContextMenuEnumerator.REWIND_ALL_STEAMS:
 	    m_databaseHelper.rewindAllSteams();
 	    m_adapter.notifyDataSetChanged();

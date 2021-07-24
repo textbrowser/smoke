@@ -119,6 +119,14 @@ public class SteamReaderFull extends SteamReader
 				 m_oid.get(),
 				 0);
 			    break;
+			case "resume":
+			    s_databaseHelper.writeSteamStatus
+				(s_cryptography,
+				 "transferring",
+				 "",
+				 m_oid.get(),
+				 0);
+			    break;
 			case "rewind":
 			    rewind();
 			    s_databaseHelper.writeSteamStatus

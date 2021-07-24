@@ -5445,6 +5445,38 @@ public class Database extends SQLiteOpenHelper
 	onCreate(m_db);
     }
 
+    public void resumeAllSteams()
+    {
+	if(m_db == null)
+	    return;
+
+	/*
+	** Ignore received Steams.
+	*/
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("status", "resume");
+	    m_db.update
+		("steam_files",
+		 values,
+		 "is_download <> ?",
+		 new String[] {String.valueOf(SteamElement.DOWNLOAD)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+    }
+
     public void rewindAllSteams()
     {
 	if(m_db == null)
