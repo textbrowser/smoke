@@ -3277,12 +3277,14 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.execSQL
-		("DELETE FROM participants WHERE siphash_id_digest IN " +
+	    m_db.delete
+		("participants",
+		 "siphash_id_digest IN " +
 		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
 		 new String[] {oid});
-	    m_db.execSQL
-		("DELETE FROM participants_keys WHERE siphash_id_digest IN " +
+	    m_db.delete
+		("participants_keys",
+		 "siphash_id_digest IN " +
 		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
 		 new String[] {oid});
 	    m_db.setTransactionSuccessful();
