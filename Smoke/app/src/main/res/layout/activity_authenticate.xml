@@ -53,6 +53,20 @@
             android:inputType="textPassword"
             android:selectAllOnFocus="true" />
 
+        <TextView
+            android:id="@+id/warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reset"
+            android:layout_centerInParent="true"
+            android:background="@drawable/graysectiongradient"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="@string/incorrect_password_please_try_again"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
         <ProgressBar
             android:id="@+id/progress_bar"
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"

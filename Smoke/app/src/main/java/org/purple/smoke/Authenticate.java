@@ -31,6 +31,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -47,6 +48,7 @@ import javax.crypto.SecretKey;
 public class Authenticate extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private TextView m_warningLabel = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
 
@@ -160,13 +162,25 @@ public class Authenticate extends AppCompatActivity
 					Base64.encode(saltedPassword,
 						      Base64.DEFAULT)))
 		{
-		    Miscellaneous.showErrorDialog
-			(Authenticate.this,
-			 "Incorrect password. Please try again.");
+		    m_warningLabel.setVisibility(View.VISIBLE);
 		    textView1.setText("");
 		    textView1.requestFocus();
+
+		    Handler handler = new Handler();
+
+		    handler.postDelayed(new Runnable()
+		    {
+			@Override
+			public void run()
+			{
+			    m_warningLabel.setVisibility(View.GONE);
+			}
+		    }, 5000L); // 5 seconds.
+
 		    return;
 		}
+		else
+		    m_warningLabel.setVisibility(View.GONE);
 
 		final ProgressBar bar = (ProgressBar) findViewById
 		    (R.id.progress_bar);
@@ -572,6 +586,7 @@ public class Authenticate extends AppCompatActivity
 	{
 	}
 
+	m_warningLabel = (TextView) findViewById(R.id.warning);
 	prepareListeners();
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();

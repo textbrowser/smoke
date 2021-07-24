@@ -32,6 +32,7 @@
     <string name="foreground_service">Foreground Service</string>
     <string name="generate">Generate</string>
     <string name="generate_pk">Generate PK</string>
+    <string name="incorrect_password_please_try_again">Incorrect password. Please try again.</string>
     <string name="initialize_ozone">Initialize Ozone</string>
     <string name="ip_address">IP Address</string>
     <string name="ipv4">IPv4</string>
