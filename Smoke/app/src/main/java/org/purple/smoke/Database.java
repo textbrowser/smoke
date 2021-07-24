@@ -4569,9 +4569,9 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.execSQL
-		("DELETE FROM outbound_queue WHERE attempts >= " +
-		 "CAST(? AS INTEGER) OR " +
+	    m_db.delete
+		("outbound_queue",
+		 "attempts >= CAST(? AS INTEGER) OR " +
 		 "neighbor_oid NOT IN (SELECT oid FROM neighbors)",
 		 new String[] {String.valueOf(MESSAGE_DELIVERY_ATTEMPTS)});
 	    m_db.setTransactionSuccessful();
@@ -4618,8 +4618,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    m_db.execSQL
-		("DELETE FROM steam_files WHERE status = 'deleted'", null);
+	    m_db.delete("steam_files", "status = 'deleted'", null);
 	    m_db.setTransactionSuccessful();
 	}
 	catch(Exception exception)
