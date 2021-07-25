@@ -1,0 +1,8 @@
+* Allow removal of Fiasco keys from Member activity.
+* Concurrent collections.
+* Decreased lock regions.
+* Limit execSQL(): cannot be delete / insert / select / update.
+* Resume All Steams context-menu option.
+* Silence over the wires. Optional.
+* Steam percents.
+* Wrap switches.
