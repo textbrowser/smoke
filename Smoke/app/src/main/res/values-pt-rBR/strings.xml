@@ -11,13 +11,13 @@
     <string name="authenticate_password">Senha</string>
     <string name="auto_fill">Preenchimento automático</string>
     <string name="automatic_refresh">Atualização automática</string>
-    <string name="call">Chamar</string>
+    <string name="call">Ligar</string>
     <string name="channel">Canal</string>
     <string name="chat">Chat</string>
     <string name="chat_encryption_key_data">Dados da chave de criptografia do chat</string>
     <string name="chat_signature_key_data">Dados da chave de assinatura do chat</string>
     <string name="clear">Limpar</string>
-    <string name="clear_log">Limpar logs</string>
+    <string name="clear_log">Limpar os logs</string>
     <string name="close">Fechar</string>
     <string name="control">Controle</string>
     <string name="delete">Excluir</string>
@@ -32,8 +32,9 @@
     <string name="foreground_service">Serviço em primeiro plano</string>
     <string name="generate">Gerar</string>
     <string name="generate_pk">Gerar PK</string>
+    <string name="incorrect_password_please_try_again">Senha incorreta. Por favor, tente novamente.</string>
     <string name="initialize_ozone">Inicializar Ozone (caixa de entrada)</string>
-    <string name="ip_address">Endereço IP</string>
+    <string name="ip_address">Endereço de IP</string>
     <string name="ipv4">IPv4</string>
     <string name="ipv6">IPv6</string>
     <string name="iteration_count">Contador de iteração</string>
@@ -62,8 +63,8 @@
     <string name="refresh_neighbors">Recarregar</string>
     <string name="refresh_participants">Recarregar</string>
     <string name="remote">Remoto</string>
-    <string name="reset_fields">Redefinir os campos</string>
-    <string name="reset_smoke">Redefinir Smoke</string>
+    <string name="reset_fields">Resetar os campos</string>
+    <string name="reset_smoke">Resetar Smoke</string>
     <string name="salt">Salt</string>
     <string name="save">Salvar</string>
     <string name="scope_id">ID do Scope</string>
@@ -71,10 +72,11 @@
     <string name="share_keys">Compartilhar as chaves</string>
     <string name="share_smoke_id">Compartilhar ID do Smoke</string>
     <string name="signature">Assinatura</string>
+    <string name="silent">Silencioso</string>
     <string name="smoke_alias">Apelido do Smoke</string>
     <string name="smoke_chat_id">ID do Smoke Chat</string>
     <string name="smokeid">ID do Smoke</string>
     <string name="smokescreen">Smokescreen</string>
-    <string name="steam">Transferir</string>
+    <string name="steam">Transmitir</string>
     <string name="your_name">Seu Nome</string>
 </resources>
