@@ -186,6 +186,8 @@ Completed Items
 - Participant status icon should not be modified if newly-received message is
   from an Ozone.
 - Passthrough devices.
+- Password-protected ZIP and Netcat transfer. Steam is functional over
+  TLS connection.
 - Per request, include the source in the application bundle.
 - Periodic key publishing requires more intelligence.
 - Populate Chat member list without accessing the database.
@@ -293,7 +295,6 @@ Completed Items
 Peculiar Items
 
 - Option for computing Steam digest. Why?
-- Password-protected ZIP and Netcat transfer.
 - Play Store.
 
 Remaining Items

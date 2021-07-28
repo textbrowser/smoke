@@ -707,7 +707,7 @@ public class Steam extends AppCompatActivity
 		 Steam.this,
 		 listener,
 		 "Please select the desired destination participant(s).",
-		 "Steamroll Selection");
+		 "Steamroll Participant Selection");
 	    State.getInstance().clearSelectedSwitches();
 	    break;
 	default:
