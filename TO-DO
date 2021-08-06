@@ -303,6 +303,12 @@ Remaining Items
   (ACTION_OPEN_DOCUMENT)
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
+- Create a special port (say, 33333). If a neighbor is connected on
+  this port, bind to the device's address and this port. The bind must
+  occur whenever the destination socket is created. As now, attempt
+  to connect to the neighbor. Two Smoke instances will be able to
+  connect without listening sockets and intermediate servers. See
+  internal QtChess as an example.
 - Databases and versions; avoid reinstalls.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
