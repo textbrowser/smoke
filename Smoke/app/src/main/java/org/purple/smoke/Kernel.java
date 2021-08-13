@@ -139,13 +139,13 @@ public class Kernel
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private AtomicLong m_shareSipHashIdIdentity = null;
     private AtomicLong m_shareSipHashIdIdentityLastTick = null;
-    private ConcurrentHashMap<String, ParticipantCall> m_callQueue = null;
     private ConcurrentHashMap<String, Juggernaut> m_juggernauts = null;
+    private ConcurrentHashMap<String, ParticipantCall> m_callQueue = null;
     private ConcurrentHashMap<String, byte[]> m_fireStreams = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
-    private ScheduledExecutorService m_networkStatusScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
+    private ScheduledExecutorService m_networkStatusScheduler = null;
     private ScheduledExecutorService m_publishKeysScheduler = null;
     private ScheduledExecutorService m_purgeScheduler = null;
     private ScheduledExecutorService m_requestMessagesScheduler = null;
