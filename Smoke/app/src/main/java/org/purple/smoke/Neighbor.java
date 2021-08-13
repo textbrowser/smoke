@@ -342,8 +342,7 @@ public abstract class Neighbor
 
 			m_accumulatedTime = System.nanoTime();
 
-			if(!State.getInstance().silent() &&
-			   !m_passthrough.get())
+			if(!m_passthrough.get())
 			{
 			    if(!m_capabilitiesSent.get())
 				m_capabilitiesSent.set
