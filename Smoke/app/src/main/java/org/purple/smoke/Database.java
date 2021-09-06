@@ -156,7 +156,7 @@ public class Database extends SQLiteOpenHelper
     private final static ReentrantReadWriteLock s_congestionControlMutex =
 	new ReentrantReadWriteLock();
     private final static String DATABASE_NAME = "smoke.db";
-    private final static int DATABASE_VERSION = 1;
+    private final static int DATABASE_VERSION = 20210909;
     private final static long WRITE_PARTICIPANT_TIME_DELTA =
 	60000L; // 60 seconds.
     private static Database s_instance = null;
@@ -3322,6 +3322,12 @@ public class Database extends SQLiteOpenHelper
 	    sipHashIdElement.m_signaturePublicKey.length > 0;
     }
 
+    public boolean isSteamLocked()
+    {
+	if(m_db == null)
+	    return true;
+    }
+
     public boolean setParticipantKeyStream(Cryptography cryptography,
 					   byte keyStream[],
 					   int oid)
@@ -5243,6 +5249,7 @@ public class Database extends SQLiteOpenHelper
 	    "file_identity_digest TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
+	    "is_locked INTEGER NOT NULL DEFAULT 1, " +
 	    "key_type TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " + /*
 					  ** Authentication and encryption
@@ -5272,7 +5279,23 @@ public class Database extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
+	if(db == null)
+	    return;
+
         onCreate(db);
+
+	String str = "";
+
+	str = "ALTER TABLE steam_files ADD is_locked " +
+	    "INTEGER NOT NULL DEFAULT 1";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     public void pauseAllSteams()
