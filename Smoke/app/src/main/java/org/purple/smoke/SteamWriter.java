@@ -206,6 +206,9 @@ public class SteamWriter
 	    */
 
 	    return false;
+	else if(steamElement.m_status.equals("completed"))
+	    if(s_databaseHelper.isSteamLocked(oid))
+		return false;
 
 	RandomAccessFile randomAccessFile = null;
 

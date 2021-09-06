@@ -3322,10 +3322,32 @@ public class Database extends SQLiteOpenHelper
 	    sipHashIdElement.m_signaturePublicKey.length > 0;
     }
 
-    public boolean isSteamLocked()
+    public boolean isSteamLocked(int oid)
     {
 	if(m_db == null)
 	    return true;
+
+	Cursor cursor = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT is_locked FROM steam_files WHERE oid = ?",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		return cursor.getInt(0) == 1;
+	}
+	catch(Exception exception)
+	{
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return true;
     }
 
     public boolean setParticipantKeyStream(Cryptography cryptography,
