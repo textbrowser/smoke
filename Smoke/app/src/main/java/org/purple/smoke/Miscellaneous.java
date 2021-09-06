@@ -39,7 +39,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.util.Base64;
 import android.util.LayoutDirection;
@@ -54,10 +53,14 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.PopupWindow;
-import android.widget.Switch;
+
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
@@ -927,7 +930,7 @@ public abstract class Miscellaneous
 	    return;
 
 	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-	Switch switch1 = new Switch(context);
+	SwitchCompat switch1 = new SwitchCompat(context);
 
 	State.getInstance().removeKey("dialog_accepted");
 	alertDialog.setButton
@@ -1004,7 +1007,7 @@ public abstract class Miscellaneous
 
 	    for(String string : arrayList)
 	    {
-		Switch switch1 = new Switch(context);
+		SwitchCompat switch1 = new SwitchCompat(context);
 
 		switch1.setLayoutDirection(LayoutDirection.RTL);
 		switch1.setLayoutParams

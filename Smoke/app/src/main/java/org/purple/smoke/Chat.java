@@ -27,6 +27,7 @@
 
 package org.purple.smoke;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,9 +38,13 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -55,7 +60,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ScrollView;
-import android.widget.Switch;
+
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -284,7 +289,7 @@ public class Chat extends AppCompatActivity
 	    if(m_databaseHelper.readSetting(null, "show_chat_icons").
 	       equals("true"))
 	    {
-		Switch switch1 = (Switch) findViewById
+		SwitchCompat switch1 = (SwitchCompat) findViewById
 		    (R.id.participants).findViewWithTag(sipHashId);
 
 		if(switch1 != null)
@@ -513,7 +518,7 @@ public class Chat extends AppCompatActivity
 	    if(participantElement == null)
 		continue;
 
-	    Switch switch1 = new Switch(Chat.this);
+		SwitchCompat switch1 = new SwitchCompat(Chat.this);
 	    final int oid = participantElement.m_oid;
 
 	    if(showIcons)
@@ -655,7 +660,7 @@ public class Chat extends AppCompatActivity
 		    if(row == null)
 			continue;
 
-		    Switch switch1 = (Switch) row.getChildAt(0);
+		    SwitchCompat switch1 = (SwitchCompat) row.getChildAt(0);
 
 		    if(switch1 == null)
 			continue;
@@ -773,7 +778,7 @@ public class Chat extends AppCompatActivity
 
     private void refreshCheckBox(String sipHashId)
     {
-	Switch switch1 = (Switch)
+	SwitchCompat switch1 = (SwitchCompat)
 	    findViewById(R.id.participants).findViewWithTag(sipHashId);
 
 	if(switch1 == null)
@@ -1071,7 +1076,7 @@ public class Chat extends AppCompatActivity
 		    if(row == null)
 			continue;
 
-		    Switch switch1 = (Switch) row.getChildAt(0);
+		    SwitchCompat switch1 = (SwitchCompat) row.getChildAt(0);
 
 		    if(switch1 == null ||
 		       switch1.getTag() == null ||
@@ -1189,8 +1194,9 @@ public class Chat extends AppCompatActivity
 	prepareSchedulers();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState)
+    @SuppressLint("MissingSuperCall")
+	@Override
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState)
     {
 	/*
 	** Do not issue a super.onSaveInstanceState().

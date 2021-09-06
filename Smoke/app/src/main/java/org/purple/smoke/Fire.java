@@ -33,8 +33,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
@@ -52,7 +54,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Switch;
+
 import android.widget.TextView;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
@@ -511,7 +513,7 @@ public class Fire extends AppCompatActivity
 	    }
 	});
 
-	Switch switch1 = (Switch) findViewById(R.id.show_details);
+	SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.show_details);
 
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
@@ -605,7 +607,7 @@ public class Fire extends AppCompatActivity
 	if(State.getInstance().isAuthenticated())
 	    populateFires();
 
-	Switch switch1 = (Switch) findViewById(R.id.show_details);
+	SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.show_details);
 
 	switch1.setChecked
 	    (m_databaseHelper.readSetting(null, "fire_show_details").

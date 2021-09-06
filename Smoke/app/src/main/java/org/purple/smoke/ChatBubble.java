@@ -31,8 +31,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -43,7 +44,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
@@ -56,7 +56,7 @@ public class ChatBubble extends View
     private CompoundButton.OnCheckedChangeListener m_selected_listener = null;
     private Date m_date = new Date(System.currentTimeMillis());
     private MemberChat m_memberChat = null;
-    private Switch m_selected = null;
+    private SwitchCompat m_selected = null;
     private View m_view = null;
     private WeakReference<Context> m_context = null;
     private boolean m_error = false;
@@ -93,7 +93,7 @@ public class ChatBubble extends View
 	** Prepare widget variables.
 	*/
 
-	m_selected = (Switch) m_view.findViewById(R.id.selected);
+	m_selected = (SwitchCompat) m_view.findViewById(R.id.selected);
 	m_selected_listener = new CompoundButton.OnCheckedChangeListener()
 	{
 	    @Override

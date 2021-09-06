@@ -49,7 +49,7 @@ public class SmokeService extends Service
 	Intent notificationIntent = new Intent(this, Settings.class);
 	Notification notification = null;
 	PendingIntent pendingIntent = PendingIntent.getActivity
-	    (this, 0, notificationIntent, 0);
+	    (this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
 	notification = new Notification.Builder(this).
 	    setContentIntent(pendingIntent).

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fadeScrollbars="false">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -18,7 +18,7 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                     android:layout_marginEnd="5dp"
                     android:textIsSelectable="true" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/foreground_service"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                     android:layoutDirection="rtl"
                     android:text="@string/foreground_service" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sleepless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                     android:layoutDirection="rtl"
                     android:text="@string/prefer_active_cpu" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/query_time_server"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                     android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/silent"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -143,7 +143,7 @@
                         android:text="@string/remote" />
                 </LinearLayout>
 
-                <android.support.v4.widget.NestedScrollView
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_marginEnd="5dp"
@@ -158,7 +158,7 @@
                         android:scrollbars="horizontal|vertical">
 
                     </TableLayout>
-                </android.support.v4.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -167,7 +167,7 @@
                     android:orientation="horizontal"
                     android:weightSum="1">
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/automatic_refresh"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -175,7 +175,7 @@
                         android:layoutDirection="rtl"
                         android:text="@string/automatic_refresh" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/neighbor_details"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -190,7 +190,7 @@
                     android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/echo"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -297,7 +297,7 @@
                     android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/initialize_ozone"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -313,7 +313,7 @@
                         android:background="@android:color/transparent" />
                 </LinearLayout>
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/non_tls"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -326,7 +326,7 @@
                     android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/passthrough"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -498,7 +498,7 @@
 
                 </LinearLayout>
 
-                <android.support.v4.widget.NestedScrollView
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_marginEnd="5dp"
@@ -512,7 +512,7 @@
                         android:layout_marginEnd="5dp">
 
                     </TableLayout>
-                </android.support.v4.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -588,7 +588,7 @@
 
                 </LinearLayout>
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/as_alias"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -715,7 +715,7 @@
                     android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/overwrite"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -831,4 +831,4 @@
         </ScrollView>
     </RelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

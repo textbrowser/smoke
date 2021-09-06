@@ -30,7 +30,7 @@ package org.purple.smoke;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.widget.NestedScrollView;
+import androidx.core.widget.NestedScrollView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;

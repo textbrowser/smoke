@@ -36,9 +36,12 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spannable;
@@ -66,7 +69,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Switch;
+
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -304,10 +307,10 @@ public class Settings extends AppCompatActivity
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
 	Spinner spinner2 = (Spinner) findViewById(R.id.proxy_type);
 	String ipVersion = "";
-	Switch switch1 = (Switch) findViewById(R.id.automatic_refresh);
-	Switch switch2 = (Switch) findViewById(R.id.initialize_ozone);
-	Switch switch3 = (Switch) findViewById(R.id.non_tls);
-	Switch switch4 = (Switch) findViewById(R.id.passthrough);
+	SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.automatic_refresh);
+	SwitchCompat switch2 = (SwitchCompat) findViewById(R.id.initialize_ozone);
+	SwitchCompat switch3 = (SwitchCompat) findViewById(R.id.non_tls);
+	SwitchCompat switch4 = (SwitchCompat) findViewById(R.id.passthrough);
 	TextView proxyIpAddress = (TextView) findViewById
 	    (R.id.proxy_ip_address);
 	TextView proxyPort = (TextView) findViewById(R.id.proxy_port);
@@ -364,7 +367,7 @@ public class Settings extends AppCompatActivity
 	    return;
 
 	String string = "";
-	Switch switch1 = (Switch) findViewById(R.id.as_alias);
+	SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.as_alias);
 	TextView textView1 = (TextView) findViewById
 	    (R.id.participant_siphash_id);
 	TextView textView2 = (TextView) findViewById(R.id.siphash_identity);
@@ -534,7 +537,7 @@ public class Settings extends AppCompatActivity
     private void disablePKIButtons()
     {
 	Button button1 = (Button) findViewById(R.id.generate_pki);
-	Switch switch1 = (Switch) findViewById(R.id.overwrite);
+	SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.overwrite);
 
 	button1.setEnabled(switch1.isChecked());
 	button1 = (Button) findViewById(R.id.set_password);
@@ -564,9 +567,9 @@ public class Settings extends AppCompatActivity
 	button1 = (Button) findViewById(R.id.share_via_ozone);
 	button1.setEnabled(state);
 
-	Switch switch1 = null;
+	SwitchCompat switch1 = null;
 
-	switch1 = (Switch) findViewById(R.id.overwrite);
+	switch1 = (SwitchCompat) findViewById(R.id.overwrite);
 	switch1.setChecked(!state);
 	switch1.setEnabled(state);
 	button1 = (Button) findViewById(R.id.generate_pki);
@@ -858,7 +861,7 @@ public class Settings extends AppCompatActivity
 		tableLayout.removeView(row);
 	}
 
-	Switch switch1 = (Switch) findViewById(R.id.neighbor_details);
+	SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.neighbor_details);
 
 	i = 0;
 
@@ -1632,7 +1635,7 @@ public class Settings extends AppCompatActivity
     {
 	Button button1 = null;
 	Spinner spinner1 = (Spinner) findViewById(R.id.neighbors_transport);
-	Switch switch1 = null;
+	SwitchCompat switch1 = null;
 	TextView textView1 = (TextView) findViewById(R.id.participant_name);
 
 	button1 = (Button) findViewById(R.id.add_neighbor);
@@ -1922,9 +1925,9 @@ public class Settings extends AppCompatActivity
 		    (R.id.neighbors_transport);
 		Spinner spinner2 = (Spinner) findViewById
 		    (R.id.proxy_type);
-		Switch switch1 = (Switch) findViewById(R.id.initialize_ozone);
-		Switch switch2 = (Switch) findViewById(R.id.non_tls);
-		Switch switch3 = (Switch) findViewById(R.id.passthrough);
+		SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.initialize_ozone);
+		SwitchCompat switch2 = (SwitchCompat) findViewById(R.id.non_tls);
+		SwitchCompat switch3 = (SwitchCompat) findViewById(R.id.passthrough);
 		TextView proxyIpAddress = (TextView) findViewById
 		    (R.id.proxy_ip_address);
 		TextView proxyPort = (TextView) findViewById
@@ -1959,7 +1962,7 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
-		Switch switch1 = (Switch) findViewById(R.id.as_alias);
+		SwitchCompat switch1 = (SwitchCompat) findViewById(R.id.as_alias);
 		TextView textView1 = (TextView) findViewById
 		    (R.id.participant_name);
 		TextView textView2 = (TextView) findViewById
@@ -2196,7 +2199,7 @@ public class Settings extends AppCompatActivity
 		     (int) (10 * density),
 		     (int) (10 * density));
 
-		if(((Switch) findViewById(R.id.as_alias)).isChecked())
+		if(((SwitchCompat) findViewById(R.id.as_alias)).isChecked())
 		    textView1.setText
 			("A Smoke Alias is an arrangement of digits and " +
 			 "letters assigned to a specific subscriber " +
@@ -2228,7 +2231,7 @@ public class Settings extends AppCompatActivity
 	    }
 	});
 
-	switch1 = (Switch) findViewById(R.id.as_alias);
+	switch1 = (SwitchCompat) findViewById(R.id.as_alias);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2261,7 +2264,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.automatic_refresh);
+	switch1 = (SwitchCompat) findViewById(R.id.automatic_refresh);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2284,7 +2287,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.echo);
+	switch1 = (SwitchCompat) findViewById(R.id.echo);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2308,7 +2311,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.foreground_service);
+	switch1 = (SwitchCompat) findViewById(R.id.foreground_service);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2333,7 +2336,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.neighbor_details);
+	switch1 = (SwitchCompat) findViewById(R.id.neighbor_details);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2348,7 +2351,7 @@ public class Settings extends AppCompatActivity
 			m_databaseHelper.writeSetting
 			    (null, "neighbors_details", "false");
 
-		    Switch switch1 = (Switch) findViewById
+		    SwitchCompat switch1 = (SwitchCompat) findViewById
 			(R.id.automatic_refresh);
 
 		    if(!switch1.isChecked())
@@ -2356,7 +2359,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.overwrite);
+	switch1 = (SwitchCompat) findViewById(R.id.overwrite);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2373,7 +2376,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.query_time_server);
+	switch1 = (SwitchCompat) findViewById(R.id.query_time_server);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2389,7 +2392,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.silent);
+	switch1 = (SwitchCompat) findViewById(R.id.silent);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2403,7 +2406,7 @@ public class Settings extends AppCompatActivity
 		}
 	    });
 
-	switch1 = (Switch) findViewById(R.id.sleepless);
+	switch1 = (SwitchCompat) findViewById(R.id.sleepless);
 	switch1.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -2441,7 +2444,7 @@ public class Settings extends AppCompatActivity
 		{
 		    Spinner proxyType = (Spinner)
 			findViewById(R.id.proxy_type);
-		    Switch nonTls = (Switch) findViewById(R.id.non_tls);
+		    SwitchCompat nonTls = (SwitchCompat) findViewById(R.id.non_tls);
 		    TextView proxyIpAddress =
 			(TextView) findViewById(R.id.proxy_ip_address);
 		    TextView proxyPort = (TextView) findViewById
@@ -2487,7 +2490,7 @@ public class Settings extends AppCompatActivity
 		{
 		    if(s != null)
 		    {
-			Switch switch1 = (Switch) findViewById
+			SwitchCompat switch1 = (SwitchCompat) findViewById
 			    (R.id.as_alias);
 
 			if(switch1.isChecked())
@@ -3292,11 +3295,11 @@ public class Settings extends AppCompatActivity
 	button1.setCompoundDrawablesWithIntrinsicBounds
 	    (R.drawable.help, 0, 0, 0);
 
-	Switch switch1 = null;
+	SwitchCompat switch1 = null;
 
-	switch1 = (Switch) findViewById(R.id.as_alias);
+	switch1 = (SwitchCompat) findViewById(R.id.as_alias);
 	switch1.setChecked(true);
-	switch1 = (Switch) findViewById(R.id.automatic_refresh);
+	switch1 = (SwitchCompat) findViewById(R.id.automatic_refresh);
 
 	if(m_databaseHelper.
 	   readSetting(null, "automatic_neighbors_refresh").isEmpty())
@@ -3314,14 +3317,14 @@ public class Settings extends AppCompatActivity
 	if(switch1.isChecked())
 	    startTimers();
 
-	switch1 = (Switch) findViewById(R.id.echo);
+	switch1 = (SwitchCompat) findViewById(R.id.echo);
 
 	if(m_databaseHelper.readSetting(null, "neighbors_echo").equals("true"))
 	    switch1.setChecked(true);
 	else
 	    switch1.setChecked(false);
 
-	switch1 = (Switch) findViewById(R.id.foreground_service);
+	switch1 = (SwitchCompat) findViewById(R.id.foreground_service);
 
 	if(m_databaseHelper.
 	   readSetting(null, "foreground_service").equals("false"))
@@ -3329,7 +3332,7 @@ public class Settings extends AppCompatActivity
 	else
 	    switch1.setChecked(true);
 
-	switch1 = (Switch) findViewById(R.id.neighbor_details);
+	switch1 = (SwitchCompat) findViewById(R.id.neighbor_details);
 
 	if(m_databaseHelper.readSetting(null, "neighbors_details").
 	   equals("true"))
@@ -3337,7 +3340,7 @@ public class Settings extends AppCompatActivity
 	else
 	    switch1.setChecked(false);
 
-	switch1 = (Switch) findViewById(R.id.query_time_server);
+	switch1 = (SwitchCompat) findViewById(R.id.query_time_server);
 
 	if(m_databaseHelper.readSetting(null, "query_time_server").
 	   equals("true"))
@@ -3346,7 +3349,7 @@ public class Settings extends AppCompatActivity
 	    switch1.setChecked(false);
 
 	State.getInstance().setQueryTimerServer(switch1.isChecked());
-	switch1 = (Switch) findViewById(R.id.silent);
+	switch1 = (SwitchCompat) findViewById(R.id.silent);
 
 	if(m_databaseHelper.readSetting(null, "silent").equals("true"))
 	    switch1.setChecked(true);
@@ -3354,7 +3357,7 @@ public class Settings extends AppCompatActivity
 	    switch1.setChecked(false);
 
 	State.getInstance().setSilent(switch1.isChecked());
-	switch1 = (Switch) findViewById(R.id.sleepless);
+	switch1 = (SwitchCompat) findViewById(R.id.sleepless);
 
 	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())
 	{
@@ -3494,7 +3497,7 @@ public class Settings extends AppCompatActivity
 	** Enable widgets.
 	*/
 
-	switch1 = (Switch) findViewById(R.id.overwrite);
+	switch1 = (SwitchCompat) findViewById(R.id.overwrite);
 	switch1.setChecked(false);
 	switch1.setEnabled(isAuthenticated);
 	button1 = (Button) findViewById(R.id.generate_pki);
@@ -3575,7 +3578,7 @@ public class Settings extends AppCompatActivity
 
 	if(isAuthenticated)
 	{
-	    switch1 = (Switch) findViewById(R.id.automatic_refresh);
+	    switch1 = (SwitchCompat) findViewById(R.id.automatic_refresh);
 	    textView1 = (TextView) findViewById(R.id.alias);
 	    textView1.setText
 		(m_databaseHelper.readSetting(s_cryptography, "alias"));

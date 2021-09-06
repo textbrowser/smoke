@@ -39,10 +39,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.SparseArray;
-import java.lang.ref.WeakReference;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
@@ -54,7 +55,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

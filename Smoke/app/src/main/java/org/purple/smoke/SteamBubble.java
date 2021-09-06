@@ -38,8 +38,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
-import android.widget.Switch;
+
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
+
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -54,7 +57,7 @@ public class SteamBubble extends View
     private SeekBar m_readInterval = null;
     private Steam m_steam = null;
     private String m_controlString = "";
-    private Switch m_details = null;
+    private SwitchCompat m_details = null;
     private TextView m_destination = null;
     private TextView m_digest = null;
     private TextView m_ephemeralKeyType = null;
@@ -169,7 +172,7 @@ public class SteamBubble extends View
 	    }
         });
 	m_destination = (TextView) m_view.findViewById(R.id.destination);
-	m_details = (Switch) m_view.findViewById(R.id.details);
+	m_details = (SwitchCompat) m_view.findViewById(R.id.details);
 	m_details.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {

@@ -72,7 +72,7 @@ public class Smoke extends Application
 			State.getInstance().setExit();
 
 			if(context instanceof Activity)
-			    ((Activity) context).finishAndRemoveTask();
+			    ((Activity) context).finish();
 			else
 			    android.os.Process.killProcess
 				(android.os.Process.myPid());
