@@ -302,7 +302,7 @@ Remaining Items
 - Android 11 does not tolerate Steam continuation after Smoke exit.
   (ACTION_OPEN_DOCUMENT)
 - Authenticate via TLS. Authenticate activity.
-- Automatically lock completed Steam. New database column.
+- Automatically lock completed Steams. New database column.
 - Brands (profiles).
 - Create a special port (say, 33333). If a neighbor is connected on
   this port, bind to the device's address and this port. The bind must
