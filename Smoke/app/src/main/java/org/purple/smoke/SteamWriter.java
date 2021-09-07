@@ -180,35 +180,39 @@ public class SteamWriter
 	return m_files.size();
     }
 
-    public boolean write(byte fileIdentity[], byte packet[], long offset)
+    public long write(byte fileIdentity[], byte packet[], long offset)
     {
 	if(fileIdentity == null ||
 	   fileIdentity.length == 0 ||
 	   offset < 0 ||
 	   packet == null ||
 	   packet.length == 0)
-	    return false;
+	    return -1L;
 
 	int oid = s_databaseHelper.steamOidFromFileIdentity
 	    (s_cryptography, fileIdentity);
 
 	if(oid == -1)
-	    return false;
+	    return -1L;
 
 	SteamElement steamElement = s_databaseHelper.readSteam
 	    (s_cryptography, -1, oid - 1);
 
 	if(steamElement == null)
-	    return false;
+	    return -1L;
 	else if(offset + packet.length > steamElement.m_fileSize)
 	    /*
 	    ** Really?
 	    */
 
-	    return false;
-	else if(steamElement.m_status.equals("completed"))
-	    if(s_databaseHelper.isSteamLocked(oid))
-		return false;
+	    return -1L;
+	else if(steamElement.m_status.equals("completed") &&
+		s_databaseHelper.isSteamLocked(oid))
+	    /*
+	    ** Completed and locked! The other participant should halt.
+	    */
+
+	    return steamElement.m_fileSize;
 
 	RandomAccessFile randomAccessFile = null;
 
@@ -244,7 +248,7 @@ public class SteamWriter
 		     "",
 		     oid,
 		     offset + packet.length);
-		return true;
+		return offset;
 	    }
 
 	    try
@@ -274,7 +278,7 @@ public class SteamWriter
 	}
 	catch(Exception exception)
 	{
-	    return false;
+	    return -1L;
 	}
 	finally
 	{
@@ -288,6 +292,6 @@ public class SteamWriter
 	    }
 	}
 
-	return true;
+	return offset;
     }
 }

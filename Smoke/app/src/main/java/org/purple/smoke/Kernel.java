@@ -3187,12 +3187,14 @@ public class Kernel
 
 		if(abyte[0] == Messages.STEAM_SHARE[0])
 		{
-		    if(m_steamWriter.
-		       write(pki,
-			     Arrays.copyOfRange(ciphertext,
-						17,
-						ciphertext.length),
-			     offset))
+		    long rc = m_steamWriter.write
+			(pki,
+			 Arrays.copyOfRange(ciphertext,
+					    17,
+					    ciphertext.length),
+			 offset);
+
+		    if(rc >= 0L)
 		    {
 			String sipHashId = s_databaseHelper.steamSipHashId
 			    (s_cryptography, pki);
@@ -3204,7 +3206,7 @@ public class Kernel
 			     keyStream,
 			     null,
 			     Messages.STEAM_SHARE[1],
-			     offset);
+			     rc);
 
 			if(bytes != null)
 			    sendSteam

@@ -368,7 +368,8 @@ public class SteamReaderFull extends SteamReader
 	    saveReadOffset();
 	}
 
-	if(m_fileSize.get() == m_readOffset.get())
+	if(m_fileSize.get() == m_readOffset.get() ||
+	   m_fileSize.get() == readOffset)
 	{
 	    m_completed.set(true);
 	    read = false;
