@@ -72,6 +72,7 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class Miscellaneous
 {
+    private static Ringtone s_ringtone = null;
     public static final String RATE = "0.00 B / s";
     public static final int INTEGER_BYTES = 4;
     public static final int LONG_BYTES = 8;
@@ -892,12 +893,14 @@ public abstract class Miscellaneous
 
 	try
 	{
-	    Ringtone ringtone = null;
+	    if(s_ringtone != null)
+		s_ringtone.stop();
+
 	    Uri notification = RingtoneManager.getDefaultUri
 		(RingtoneManager.TYPE_NOTIFICATION);
 
-	    ringtone = RingtoneManager.getRingtone(context, notification);
-	    ringtone.play();
+	    s_ringtone = RingtoneManager.getRingtone(context, notification);
+	    s_ringtone.play();
 	}
 	catch(Exception exception)
 	{
