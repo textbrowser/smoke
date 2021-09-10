@@ -122,15 +122,20 @@ public class MemberChat extends AppCompatActivity
 		    {
 			try
 			{
-			    Ringtone ringtone = null;
+			    if(m_ringtone != null)
+				m_ringtone.stop();
+
 			    Uri notification = RingtoneManager.getDefaultUri
 				(RingtoneManager.TYPE_NOTIFICATION);
 
-			    ringtone = RingtoneManager.getRingtone
+			    m_ringtone = RingtoneManager.getRingtone
 				(getApplicationContext(), notification);
-			    ringtone.play();
+			    m_ringtone.play();
 			}
 			catch(Exception exception)
+			{
+			}
+			finally
 			{
 			}
 		    }
@@ -220,6 +225,7 @@ public class MemberChat extends AppCompatActivity
     private MemberChatAdapter m_adapter = null;
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
+    private Ringtone m_ringtone = null;
     private ScheduledExecutorService m_statusScheduler = null;
     private SmokeLinearLayoutManager m_layoutManager = null;
     private String m_name = Cryptography.DEFAULT_SIPHASH_ID;
