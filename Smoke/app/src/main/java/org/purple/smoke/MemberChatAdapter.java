@@ -133,7 +133,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 		m_chatBubble.setName(ChatBubble.Locations.LEFT, "?");
 		m_chatBubble.setText
 		    (ChatBubble.Locations.LEFT,
-		     "Smoke malfunction! The database entry is zero!\n");
+		     "Smoke malfunction! The database entry at " +
+		     position +
+		     " is zero!\n");
 		m_hasAttachment = false;
 		m_position = position;
 		return;
