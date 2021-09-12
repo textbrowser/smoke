@@ -156,7 +156,7 @@ public class Database extends SQLiteOpenHelper
     private final static ReentrantReadWriteLock s_congestionControlMutex =
 	new ReentrantReadWriteLock();
     private final static String DATABASE_NAME = "smoke.db";
-    private final static int DATABASE_VERSION = 20210909;
+    private final static int DATABASE_VERSION = 20210912;
     private final static long WRITE_PARTICIPANT_TIME_DELTA =
 	60000L; // 60 seconds.
     private static Database s_instance = null;
@@ -1588,7 +1588,9 @@ public class Database extends SQLiteOpenHelper
 					hmac(sipHashId.toUpperCase().trim().
 					     getBytes(StandardCharsets.UTF_8)),
 					Base64.DEFAULT)});
-		    m_readMemberChatSipHashId = sipHashId;
+
+		    if(m_readMemberChatCursor != null)
+			m_readMemberChatSipHashId = sipHashId;
 		}
 
 		if(m_readMemberChatCursor != null &&
@@ -5239,6 +5241,18 @@ public class Database extends SQLiteOpenHelper
 	{
 	}
 
+	str = "CREATE INDEX IF NOT EXISTS " +
+	    "participants_messages_timestamp_index " +
+	    "ON participants_messages(timestamp)";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
 	/*
 	** Create the settings table.
 	*/
@@ -5310,6 +5324,18 @@ public class Database extends SQLiteOpenHelper
 
 	str = "ALTER TABLE steam_files ADD is_locked " +
 	    "INTEGER NOT NULL DEFAULT 1";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	str = "CREATE INDEX IF NOT EXISTS " +
+	    "participants_messages_timestamp_index " +
+	    "ON participants_messages(timestamp)";
 
 	try
 	{
