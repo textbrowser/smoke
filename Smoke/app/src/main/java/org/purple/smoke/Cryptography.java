@@ -1305,7 +1305,7 @@ public class Cryptography
 	    EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		(privateBytes);
 
-	    for(int i = 0; i < 3; i++)
+	    for(int i = 0; i < 4; i++)
 		try
 		{
 		    KeyFactory generator = null;
@@ -1319,8 +1319,12 @@ public class Cryptography
 			generator = KeyFactory.getInstance
 			    (PQCObjectIdentifiers.mcElieceCca2.getId());
 			break;
-		    default:
+		    case 2:
 			generator = KeyFactory.getInstance("RSA");
+			break;
+		    default:
+			generator = KeyFactory.getInstance
+			    (PQCObjectIdentifiers.rainbowWithSha512.getId());
 			break;
 		    }
 
@@ -1346,7 +1350,7 @@ public class Cryptography
 	{
 	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
 
-	    for(int i = 0; i < 3; i++)
+	    for(int i = 0; i < 4; i++)
 		try
 		{
 		    KeyFactory generator = null;
@@ -1360,8 +1364,12 @@ public class Cryptography
 			generator = KeyFactory.getInstance
 			    (PQCObjectIdentifiers.mcElieceCca2.getId());
 			break;
-		    default:
+		    case 2:
 			generator = KeyFactory.getInstance("RSA");
+			break;
+		    default:
+			generator = KeyFactory.getInstance
+			    (PQCObjectIdentifiers.rainbowWithSha512.getId());
 			break;
 		    }
 
@@ -1553,6 +1561,7 @@ public class Cryptography
 	    stringBuilder.append(publicKey.getAlgorithm());
 
 	    if(algorithm.equals("RSA") ||
+	       algorithm.equals("Rainbow") ||
 	       algorithm.startsWith("EC") ||
 	       algorithm.startsWith("McEliece"))
 		try
@@ -1592,6 +1601,16 @@ public class Cryptography
 			if(rsaPublicKey != null)
 			    stringBuilder.append("\n").append("Size: ").
 				append(rsaPublicKey.getModulus().bitLength());
+
+			break;
+		    case "Rainbow":
+			BCRainbowPublicKey rainbowPublicKey =
+			    (BCRainbowPublicKey) publicKey;
+
+			if(rainbowPublicKey != null)
+			    stringBuilder.append("\n").append("n = ").
+				append(rainbowPublicKey.
+				       getCoeffQuadratic().length);
 
 			break;
 		    default:
@@ -1667,6 +1686,8 @@ public class Cryptography
 	    else if(asn1ObjectIdentifier.
 		    equals(PQCObjectIdentifiers.mcEliecePointcheval))
 		return "McEliece-Pointcheval";
+	    else if(publicKey instanceof BCRainbowPublicKey)
+		return "Rainbow";
 	    else if(publicKey.getAlgorithm().equals("EC"))
 		return "ECDSA";
 	    else
