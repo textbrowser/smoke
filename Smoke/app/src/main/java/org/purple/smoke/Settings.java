@@ -1409,7 +1409,7 @@ public class Settings extends AppCompatActivity
 			    (m_signatureAlgorithm,
 			     Cryptography.PKI_SIGNATURE_KEY_SIZES[1],
 			     0);
-		    else if(m_signatureAlgorithm.equals("RSA"))
+		    else
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm,

@@ -62,6 +62,10 @@ import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
+import org.bouncycastle.pqc.crypto.rainbow.RainbowKeyGenerationParameters;
+import org.bouncycastle.pqc.crypto.rainbow.RainbowKeyPairGenerator;
+import org.bouncycastle.pqc.crypto.rainbow.RainbowParameters;
+import org.bouncycastle.pqc.crypto.rainbow.RainbowSigner;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
 import org.bouncycastle.pqc.jcajce.spec.McElieceCCA2KeyGenParameterSpec;
@@ -466,8 +470,10 @@ public class Cryptography
 	byte bytes1[] = ozoneEncryptionKey();
 	byte bytes2[] = ozoneMacKey();
 
-	return !(bytes1 == null || bytes1.length != CIPHER_KEY_LENGTH ||
-		 bytes2 == null || bytes2.length != HASH_KEY_LENGTH);
+	return !(bytes1 == null ||
+		 bytes1.length != CIPHER_KEY_LENGTH ||
+		 bytes2 == null ||
+		 bytes2.length != HASH_KEY_LENGTH);
     }
 
     public boolean hasValidOzoneMacKey()
