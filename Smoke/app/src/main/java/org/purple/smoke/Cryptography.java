@@ -59,15 +59,19 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
+import org.bouncycastle.pqc.crypto.DigestingMessageSigner;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowKeyGenerationParameters;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowKeyPairGenerator;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowParameters;
+import org.bouncycastle.pqc.crypto.rainbow.RainbowPublicKeyParameters;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowSigner;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
+import org.bouncycastle.pqc.jcajce.provider.rainbow.BCRainbowPublicKey;
 import org.bouncycastle.pqc.jcajce.spec.McElieceCCA2KeyGenParameterSpec;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -1739,29 +1743,48 @@ public class Cryptography
 	if(bytes == null || data == null || publicKey == null)
 	    return false;
 
-	Signature signature = null;
-	boolean ok = false;
-
 	try
 	{
 	    String algorithm = publicKey.getAlgorithm();
 
-	    if(algorithm.equals("EC"))
-		signature = Signature.getInstance
-		    (PKI_ECDSA_SIGNATURE_ALGORITHM);
-	    else if(algorithm.equals("RSA"))
-		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
+	    switch(algorithm)
+	    {
+	    case "EC":
+	    case "RSA":
+		Signature signature = null;
 
-	    signature.initVerify(publicKey);
-	    signature.update(data);
-	    ok = signature.verify(bytes);
+		if(algorithm.equals("EC"))
+		    signature = Signature.getInstance
+			(PKI_ECDSA_SIGNATURE_ALGORITHM);
+		else
+		    signature = Signature.getInstance
+			(PKI_RSA_SIGNATURE_ALGORITHM);
+
+		signature.initVerify(publicKey);
+		signature.update(data);
+		return signature.verify(bytes);
+	    default:
+		BCRainbowPublicKey key = (BCRainbowPublicKey) publicKey;
+		DigestingMessageSigner signer =
+		    new DigestingMessageSigner
+		    (new RainbowSigner(), new SHA512Digest());
+		RainbowPublicKeyParameters parameters = new
+		    RainbowPublicKeyParameters
+		    (key.getDocLength(),
+		     key.getCoeffQuadratic(),
+		     key.getCoeffSingular(),
+		     key.getCoeffScalar());
+
+		signer.init(false, parameters);
+		signer.update(data, 0, data.length);
+		return signer.verifySignature(bytes);
+	    }
 	}
 	catch(Exception exception)
 	{
-	    return false;
 	}
 
-	return ok;
+	return false;
     }
 
     public static byte[] aes256KeyBytes()
