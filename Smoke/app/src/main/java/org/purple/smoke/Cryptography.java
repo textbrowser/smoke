@@ -1038,11 +1038,13 @@ public class Cryptography
 
 	    try
 	    {
-		if(m_chatEncryptionPublicKeyPair.getPrivate().getAlgorithm().
-		   equals("EC"))
+		String algorithm = m_chatEncryptionPublicKeyPair.getPrivate().
+		    getAlgorithm();
+
+		if(algorithm.equals("EC"))
 		    signature = Signature.getInstance
 			(PKI_ECDSA_SIGNATURE_ALGORITHM);
-		else
+		else if(algorithm.equals("RSA"))
 		    signature = Signature.getInstance
 			(PKI_RSA_SIGNATURE_ALGORITHM);
 
@@ -1081,11 +1083,13 @@ public class Cryptography
 
 	    try
 	    {
-		if(m_chatSignaturePublicKeyPair.getPrivate().getAlgorithm().
-		   equals("EC"))
+		String algorithm = m_chatSignaturePublicKeyPair.getPrivate().
+		    getAlgorithm();
+
+		if(algorithm.equals("EC"))
 		    signature = Signature.getInstance
 			(PKI_ECDSA_SIGNATURE_ALGORITHM);
-		else
+		else if(algorithm.equals("RSA"))
 		    signature = Signature.getInstance
 			(PKI_RSA_SIGNATURE_ALGORITHM);
 
@@ -1721,10 +1725,12 @@ public class Cryptography
 
 	try
 	{
-	    if(publicKey.getAlgorithm().equals("EC"))
+	    String algorithm = publicKey.getAlgorithm();
+
+	    if(algorithm.equals("EC"))
 		signature = Signature.getInstance
 		    (PKI_ECDSA_SIGNATURE_ALGORITHM);
-	    else
+	    else if(algorithm.equals("RSA"))
 		signature = Signature.getInstance(PKI_RSA_SIGNATURE_ALGORITHM);
 
 	    signature.initVerify(publicKey);
