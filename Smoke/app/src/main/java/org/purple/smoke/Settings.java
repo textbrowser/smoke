@@ -1403,11 +1403,17 @@ public class Settings extends AppCompatActivity
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    ("EC", Cryptography.PKI_SIGNATURE_KEY_SIZES[0], 0);
-		    else
+		    else if(m_signatureAlgorithm.equals("RSA"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm,
 			     Cryptography.PKI_SIGNATURE_KEY_SIZES[1],
+			     0);
+		    else if(m_signatureAlgorithm.equals("RSA"))
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    (m_signatureAlgorithm,
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[2],
 			     0);
 
 		    if(chatSignatureKeyPair == null)
@@ -2586,11 +2592,17 @@ public class Settings extends AppCompatActivity
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    ("EC", Cryptography.PKI_SIGNATURE_KEY_SIZES[0], 0);
-		    else
+		    else if(m_signatureAlgorithm.equals("RSA"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm,
 			     Cryptography.PKI_SIGNATURE_KEY_SIZES[1],
+			     0);
+		    else
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    (m_signatureAlgorithm,
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[2],
 			     0);
 
 		    if(chatSignatureKeyPair == null)

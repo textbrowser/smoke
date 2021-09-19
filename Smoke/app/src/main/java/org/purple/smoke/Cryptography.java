@@ -174,7 +174,7 @@ public class Cryptography
     public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
     public final static int PARTICIPANT_CALL_RSA_KEY_SIZE = 3072;
     public final static int PKI_SIGNATURE_KEY_SIZES[] =
-        {384, 4096}; // ECDSA, RSA
+        {384, 4096, 33}; // ECDSA, RSA, Rainbow
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {4096}; // RSA
     public final static int SIPHASH_OUTPUT_LENGTH = 16; // Bytes (128 bits).
     public final static int SIPHASH_IDENTITY_LENGTH =
