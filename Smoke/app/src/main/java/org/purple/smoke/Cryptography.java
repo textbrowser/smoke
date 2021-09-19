@@ -1210,17 +1210,27 @@ public class Cryptography
 	{
 	    prepareSecureRandom();
 
-	    try
-	    {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.
-		    getInstance(algorithm);
+	    if(algorithm.equals("EC") ||
+	       algorithm.equals("ECDSA") ||
+	       algorithm.equals("RSA"))
+		try
+		{
+		    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+			getInstance(algorithm);
 
-		keyPairGenerator.initialize(keySize1, s_secureRandom);
-		return keyPairGenerator.generateKeyPair();
-	    }
-	    catch(Exception exception)
-	    {
-	    }
+		    keyPairGenerator.initialize(keySize1, s_secureRandom);
+		    return keyPairGenerator.generateKeyPair();
+		}
+		catch(Exception exception)
+		{
+		}
+	    else
+		try
+		{
+		}
+		catch(Exception exception)
+		{
+		}
 
 	    return null;
 	}
@@ -1238,7 +1248,20 @@ public class Cryptography
 
 	try
 	{
-	    if(algorithm.startsWith("McEliece"))
+	    if(algorithm.startsWith("EC") || algorithm.startsWith("RSA"))
+	    {
+		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
+		    (privateBytes);
+		EncodedKeySpec publicKeySpec = new X509EncodedKeySpec
+		    (publicBytes);
+		KeyFactory generator = KeyFactory.getInstance(algorithm);
+		PrivateKey privateKey = generator.generatePrivate
+		    (privateKeySpec);
+		PublicKey publicKey = generator.generatePublic(publicKeySpec);
+
+		return new KeyPair(publicKey, privateKey);
+	    }
+	    else if(algorithm.startsWith("McEliece"))
 	    {
 		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		    (privateBytes);
@@ -1254,16 +1277,6 @@ public class Cryptography
 	    }
 	    else
 	    {
-		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
-		    (privateBytes);
-		EncodedKeySpec publicKeySpec = new X509EncodedKeySpec
-		    (publicBytes);
-		KeyFactory generator = KeyFactory.getInstance(algorithm);
-		PrivateKey privateKey = generator.generatePrivate
-		    (privateKeySpec);
-		PublicKey publicKey = generator.generatePublic(publicKeySpec);
-
-		return new KeyPair(publicKey, privateKey);
 	    }
 	}
 	catch(Exception exception)
