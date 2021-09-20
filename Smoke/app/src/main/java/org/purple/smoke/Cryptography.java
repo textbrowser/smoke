@@ -64,15 +64,13 @@ import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
 import org.bouncycastle.pqc.crypto.DigestingMessageSigner;
-import org.bouncycastle.pqc.crypto.rainbow.RainbowKeyGenerationParameters;
-import org.bouncycastle.pqc.crypto.rainbow.RainbowKeyPairGenerator;
-import org.bouncycastle.pqc.crypto.rainbow.RainbowParameters;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowPublicKeyParameters;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowSigner;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
 import org.bouncycastle.pqc.jcajce.provider.rainbow.BCRainbowPublicKey;
 import org.bouncycastle.pqc.jcajce.spec.McElieceCCA2KeyGenParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.RainbowParameterSpec;
 import org.bouncycastle.util.encoders.Hex;
 
 public class Cryptography
@@ -1231,6 +1229,14 @@ public class Cryptography
 	    else
 		try
 		{
+		    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+			getInstance("Rainbow",
+				    BouncyCastlePQCProvider.PROVIDER_NAME);
+		    RainbowParameterSpec parameters =
+			new RainbowParameterSpec();
+
+		    keyPairGenerator.initialize(parameters);
+		    return keyPairGenerator.generateKeyPair();
 		}
 		catch(Exception exception)
 		{
@@ -1281,6 +1287,17 @@ public class Cryptography
 	    }
 	    else
 	    {
+		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
+		    (privateBytes);
+		EncodedKeySpec publicKeySpec = new X509EncodedKeySpec
+		    (publicBytes);
+		KeyFactory generator = KeyFactory.getInstance
+		    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
+		PrivateKey privateKey = generator.generatePrivate
+		    (privateKeySpec);
+		PublicKey publicKey = generator.generatePublic(publicKeySpec);
+
+		return new KeyPair(publicKey, privateKey);
 	    }
 	}
 	catch(Exception exception)
@@ -1324,7 +1341,7 @@ public class Cryptography
 			break;
 		    default:
 			generator = KeyFactory.getInstance
-			    (PQCObjectIdentifiers.rainbowWithSha512.getId());
+			    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
 			break;
 		    }
 
@@ -1369,7 +1386,7 @@ public class Cryptography
 			break;
 		    default:
 			generator = KeyFactory.getInstance
-			    (PQCObjectIdentifiers.rainbowWithSha512.getId());
+			    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
 			break;
 		    }
 
@@ -1610,7 +1627,7 @@ public class Cryptography
 			if(rainbowPublicKey != null)
 			    stringBuilder.append("\n").append("n = ").
 				append(rainbowPublicKey.
-				       getCoeffQuadratic().length);
+				       getCoeffSingular()[0].length);
 
 			break;
 		    default:
