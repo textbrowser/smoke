@@ -170,12 +170,10 @@ public class MemberChat extends AppCompatActivity
 
     private class RemoveSelectedMessages implements Runnable
     {
-	private Dialog m_dialog = null;
 	private String m_sipHashId = null;
 
 	private RemoveSelectedMessages(Dialog dialog, String sipHashId)
 	{
-	    m_dialog = dialog;
 	    m_sipHashId = sipHashId;
 	}
 

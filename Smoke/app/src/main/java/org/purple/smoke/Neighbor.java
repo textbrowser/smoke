@@ -481,7 +481,7 @@ public abstract class Neighbor
 
 	    message.append(m_uuid.toString());
 	    message.append("\n");
-	    message.append(String.valueOf(LANE_WIDTH));
+	    message.append(LANE_WIDTH);
 	    message.append("\n");
 	    message.append("full"); // Echo Mode
 
