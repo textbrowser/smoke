@@ -4633,11 +4633,13 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
+	Cursor cursor = null;
+
 	m_db.beginTransactionNonExclusive();
 
 	try
 	{
-	    m_db.rawQuery
+	    cursor = m_db.rawQuery
 		("DELETE FROM participants WHERE siphash_id_digest " +
 		 "NOT IN (SELECT siphash_id_digest FROM siphash_ids)",
 		 null);
@@ -4648,6 +4650,9 @@ public class Database extends SQLiteOpenHelper
 	}
 	finally
 	{
+	    if(cursor != null)
+		cursor.close();
+
 	    m_db.endTransaction();
 	}
     }
