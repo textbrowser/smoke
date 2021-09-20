@@ -59,13 +59,9 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
-import org.bouncycastle.pqc.crypto.DigestingMessageSigner;
-import org.bouncycastle.pqc.crypto.rainbow.RainbowPublicKeyParameters;
-import org.bouncycastle.pqc.crypto.rainbow.RainbowSigner;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
 import org.bouncycastle.pqc.jcajce.provider.rainbow.BCRainbowPublicKey;
@@ -1752,7 +1748,7 @@ public class Cryptography
 		SipHash sipHash = new SipHash();
 		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
-		if(value.equals(new long[] {0L, 0L}))
+		if(Arrays.equals(new long[] {0L, 0L}, value))
 		    return "";
 
 		bytes = Miscellaneous.longArrayToByteArray(value);
@@ -1794,40 +1790,27 @@ public class Cryptography
 
 	try
 	{
-	    String algorithm = publicKey.getAlgorithm();
+	    Signature signature = null;
 
-	    switch(algorithm)
+	    switch(publicKey.getAlgorithm())
 	    {
 	    case "EC":
+		signature = Signature.getInstance
+		    (PKI_ECDSA_SIGNATURE_ALGORITHM);
+		break;
 	    case "RSA":
-		Signature signature = null;
-
-		if(algorithm.equals("EC"))
-		    signature = Signature.getInstance
-			(PKI_ECDSA_SIGNATURE_ALGORITHM);
-		else
-		    signature = Signature.getInstance
-			(PKI_RSA_SIGNATURE_ALGORITHM);
-
-		signature.initVerify(publicKey);
-		signature.update(data);
-		return signature.verify(bytes);
+		signature = Signature.getInstance
+		    (PKI_RSA_SIGNATURE_ALGORITHM);
+		break;
 	    default:
-		BCRainbowPublicKey key = (BCRainbowPublicKey) publicKey;
-		DigestingMessageSigner signer =
-		    new DigestingMessageSigner
-		    (new RainbowSigner(), new SHA512Digest());
-		RainbowPublicKeyParameters parameters = new
-		    RainbowPublicKeyParameters
-		    (key.getDocLength(),
-		     key.getCoeffQuadratic(),
-		     key.getCoeffSingular(),
-		     key.getCoeffScalar());
-
-		signer.init(false, parameters);
-		signer.update(data, 0, data.length);
-		return signer.verifySignature(bytes);
+		signature = Signature.getInstance
+		    (PKI_RAINBOW_SIGNATURE_ALGORITHM);
+		break;
 	    }
+
+	    signature.initVerify(publicKey);
+	    signature.update(data);
+	    return signature.verify(bytes);
 	}
 	catch(Exception exception)
 	{
@@ -2333,7 +2316,7 @@ public class Cryptography
 		SipHash sipHash = new SipHash();
 		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
-		if(value.equals(new long[] {0L, 0L}))
+		if(Arrays.equals(new long[] {0L, 0L}, value))
 		    return false;
 
 		bytes = Miscellaneous.longArrayToByteArray(value);
