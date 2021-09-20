@@ -30,12 +30,10 @@ package org.purple.smoke;
 import android.os.Environment;
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SteamWriter
 {
