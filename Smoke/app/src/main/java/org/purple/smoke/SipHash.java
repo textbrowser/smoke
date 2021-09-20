@@ -55,7 +55,7 @@ public class SipHash
 
 	long value = 0L;
 
-	value |= (((long) bytes[offset]) & 0xffL) << 0L;
+	value |= (((long) bytes[offset]) & 0xffL);
 	value |= (((long) bytes[1 + offset]) & 0xffL) <<
 	    Miscellaneous.LONG_LONG_BYTES;
 	value |= (((long) bytes[2 + offset]) & 0xffL) <<
