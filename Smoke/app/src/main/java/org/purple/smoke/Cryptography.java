@@ -1184,7 +1184,6 @@ public class Cryptography
     {
 	if(algorithm.startsWith("McEliece-Fujisaki") ||
 	   algorithm.startsWith("McEliece-Pointcheval"))
-	{
 	    try
 	    {
 		KeyPairGenerator keyPairGenerator = null;
@@ -1213,16 +1212,15 @@ public class Cryptography
 	    catch(Exception exception)
 	    {
 	    }
-
-	    return null;
-	}
 	else
 	{
-	    prepareSecureRandom();
+	    switch(algorithm)
+	    {
+	    case "EC":
+	    case "ECDSA":
+	    case "RSA":
+		prepareSecureRandom();
 
-	    if(algorithm.equals("EC") ||
-	       algorithm.equals("ECDSA") ||
-	       algorithm.equals("RSA"))
 		try
 		{
 		    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
@@ -1234,7 +1232,9 @@ public class Cryptography
 		catch(Exception exception)
 		{
 		}
-	    else
+
+		break;
+	    default:
 		try
 		{
 		    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
@@ -1250,8 +1250,11 @@ public class Cryptography
 		{
 		}
 
-	    return null;
+		break;
+	    }
 	}
+
+	return null;
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
