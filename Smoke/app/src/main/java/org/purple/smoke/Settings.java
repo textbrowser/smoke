@@ -1396,7 +1396,7 @@ public class Settings extends AppCompatActivity
 			m_error = "encryption-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.reset();
-			return;
+			throw new Exception(m_error);
 		    }
 
 		    if(m_signatureAlgorithm.equals("EC"))
@@ -1421,7 +1421,7 @@ public class Settings extends AppCompatActivity
 			m_error = "signature-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.reset();
-			return;
+			throw new Exception(m_error);
 		    }
 
 		    encryptionKey = Cryptography.
@@ -1435,7 +1435,7 @@ public class Settings extends AppCompatActivity
 		    {
 			m_error = "generateEncryptionKey() failure";
 			s_cryptography.reset();
-			return;
+			throw new Exception(m_error);
 		    }
 
 		    macKey = Cryptography.generateMacKey
@@ -1448,7 +1448,7 @@ public class Settings extends AppCompatActivity
 		    {
 			m_error = "generateMacKey() failure";
 			s_cryptography.reset();
-			return;
+			throw new Exception(m_error);
 		    }
 
 		    /*
@@ -2585,7 +2585,7 @@ public class Settings extends AppCompatActivity
 			m_error = "encryption-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.resetPKI();
-			return;
+			throw new Exception(m_error);
 		    }
 
 		    if(m_signatureAlgorithm.equals("EC"))
@@ -2610,7 +2610,7 @@ public class Settings extends AppCompatActivity
 			m_error = "signature-key " +
 			    "generatePrivatePublicKeyPair() failure";
 			s_cryptography.resetPKI();
-			return;
+			throw new Exception(m_error);
 		    }
 
 		    /*
