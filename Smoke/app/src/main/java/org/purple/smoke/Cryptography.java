@@ -142,6 +142,7 @@ public class Cryptography
     private final static int MCELIECE_T[] = {50, 68, 118};
     private final static int NUMBER_OF_CORES = Math.max
 	(4, Runtime.getRuntime().availableProcessors());
+    private final static int RAINBOW_VI[] = {34, 57, 80};
     private final static int SHA_1_OUTPUT_SIZE_BITS = 160;
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
@@ -1237,7 +1238,7 @@ public class Cryptography
 			getInstance("Rainbow",
 				    BouncyCastlePQCProvider.PROVIDER_NAME);
 		    RainbowParameterSpec parameters =
-			new RainbowParameterSpec();
+			new RainbowParameterSpec(RAINBOW_VI);
 
 		    keyPairGenerator.initialize(parameters);
 		    return keyPairGenerator.generateKeyPair();
