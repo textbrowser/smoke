@@ -52,6 +52,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
+import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -1800,17 +1801,29 @@ public class Database extends SQLiteOpenHelper
 				   Base64.DEFAULT));
 
 		if(bytes != null)
-		    for(int i = 0; i < 2; i++)
+		    for(int i = 0; i < 3; i++)
 			try
 			{
-			    if(i == 0)
+			    switch(i)
+			    {
+			    case 0:
 				publicKey = KeyFactory.getInstance("EC").
 				    generatePublic
 				    (new X509EncodedKeySpec(bytes));
-			    else
+				break;
+			    case 1:
 				publicKey = KeyFactory.getInstance("RSA").
 				    generatePublic
 				    (new X509EncodedKeySpec(bytes));
+				break;
+			    default:
+				publicKey = KeyFactory.getInstance
+				    ("Rainbow",
+				     BouncyCastlePQCProvider.PROVIDER_NAME).
+				    generatePublic
+				    (new X509EncodedKeySpec(bytes));
+				break;
+			    }
 
 			    break;
 			}
