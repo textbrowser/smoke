@@ -3776,7 +3776,7 @@ public class Database extends SQLiteOpenHelper
 	    ** Proxy information.
 	    */
 
-	    if(!transport.toLowerCase().equals("tcp"))
+	    if(!transport.equalsIgnoreCase("tcp"))
 	    {
 		proxyIpAddress = "";
 		proxyPort = "";
@@ -3800,7 +3800,7 @@ public class Database extends SQLiteOpenHelper
 
 		if(!matcher.matches())
 		{
-		    if(version.toLowerCase().equals("ipv4"))
+		    if(version.equalsIgnoreCase("ipv4"))
 			remoteIpAddress = "0.0.0.0";
 		    else
 			remoteIpAddress = "0:0:0:0:0:ffff:0:0";

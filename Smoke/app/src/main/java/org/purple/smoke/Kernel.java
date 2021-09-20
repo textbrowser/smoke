@@ -304,10 +304,10 @@ public class Kernel
 		    m_neighborsMutex.readLock().unlock();
 		}
 
-		if(neighborElement.m_statusControl.toLowerCase().
-		   equals("delete") ||
-		   neighborElement.m_statusControl.toLowerCase().
-		   equals("disconnect"))
+		if(neighborElement.m_statusControl.
+		   equalsIgnoreCase("delete") ||
+		   neighborElement.m_statusControl.
+		   equalsIgnoreCase("disconnect"))
 		{
 		    if(neighborElement.m_statusControl.toLowerCase().
 		       equals("disconnect"))

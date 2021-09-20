@@ -306,8 +306,7 @@ public class UdpNeighbor extends Neighbor
 
 		    if(byteArrayOutputStream != null &&
 		       m_stringBuffer.length() < MAXIMUM_BYTES)
-			m_stringBuffer.append
-			    (new String(byteArrayOutputStream.toByteArray()));
+			m_stringBuffer.append(byteArrayOutputStream.toString());
 
 		    synchronized(m_parsingSchedulerMutex)
 		    {
