@@ -30,7 +30,7 @@ Summary of Smoke
 * Post offices for messages of the past.
 * Private servers.
 * Public and private public-key servers.
-* Rainbows.
+* Rainbow digital signature scheme.
 * Reliable distribution of archived messages.
 * Reliable distribution of deliverable text messages.
 * SSL/TLS through SmokeStack.
