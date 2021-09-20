@@ -128,6 +128,8 @@ public class Cryptography
     private final static String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
     private final static String PKI_ECDSA_SIGNATURE_ALGORITHM =
 	"SHA512withECDSA";
+    private final static String PKI_RAINBOW_SIGNATURE_ALGORITHM =
+	"SHA512WITHRainbow";
     private final static String PKI_RSA_ENCRYPTION_ALGORITHM =
 	"RSA/NONE/OAEPwithSHA-512andMGF1Padding";
     private final static String PKI_RSA_SIGNATURE_ALGORITHM =
@@ -1055,6 +1057,9 @@ public class Cryptography
 		else if(algorithm.equals("RSA"))
 		    signature = Signature.getInstance
 			(PKI_RSA_SIGNATURE_ALGORITHM);
+		else
+		    signature = Signature.getInstance
+			(PKI_RAINBOW_SIGNATURE_ALGORITHM);
 
 		signature.initSign(m_chatEncryptionPublicKeyPair.getPrivate());
 		signature.update(data);
@@ -1100,6 +1105,9 @@ public class Cryptography
 		else if(algorithm.equals("RSA"))
 		    signature = Signature.getInstance
 			(PKI_RSA_SIGNATURE_ALGORITHM);
+		else
+		    signature = Signature.getInstance
+			(PKI_RAINBOW_SIGNATURE_ALGORITHM);
 
 		signature.initSign(m_chatSignaturePublicKeyPair.getPrivate());
 		signature.update(data);
