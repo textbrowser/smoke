@@ -183,8 +183,6 @@ public class TcpNeighbor extends Neighbor
 	    }
 	    else
 	    {
-		Socket socket = null;
-
 		if(m_proxyType.equals("HTTP"))
 		    m_socket = new Socket
 			(new Proxy(Proxy.Type.HTTP, m_proxyInetSocketAddress));

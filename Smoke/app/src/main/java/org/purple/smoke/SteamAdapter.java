@@ -46,7 +46,6 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	implements OnCreateContextMenuListener
     {
 	SteamBubble m_steamBubble = null;
-	int m_position = -1;
 
         public ViewHolder(SteamBubble steamBubble)
 	{
@@ -125,12 +124,8 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	    if(m_steamBubble == null)
 		return;
 	    else if(steamElement == null)
-	    {
-		m_position = position;
 		return;
-	    }
 
-	    m_position = position;
 	    m_steamBubble.setData(steamElement, count, position);
 	}
     }
