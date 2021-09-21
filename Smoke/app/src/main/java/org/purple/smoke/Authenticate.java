@@ -49,6 +49,7 @@ import javax.crypto.SecretKey;
 public class Authenticate extends AppCompatActivity
 {
     private Database m_databaseHelper = null;
+    private Handler m_handler = null;
     private TextView m_warningLabel = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -167,9 +168,12 @@ public class Authenticate extends AppCompatActivity
 		    textView1.setText("");
 		    textView1.requestFocus();
 
-		    Handler handler = new Handler(Looper.getMainLooper());
+		    if(m_handler == null)
+			m_handler = new Handler(Looper.getMainLooper());
+		    else
+			m_handler.removeCallbacksAndMessages(null);
 
-		    handler.postDelayed(new Runnable()
+		    m_handler.postDelayed(new Runnable()
 		    {
 			@Override
 			public void run()
