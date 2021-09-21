@@ -1327,37 +1327,16 @@ public class Cryptography
 
 	try
 	{
-	    EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
-		(privateBytes);
+	    KeyFactory generator = null;
 
-	    for(int i = 0; i < 4; i++)
-		try
-		{
-		    KeyFactory generator = null;
+	    if(privateBytes.length < 2000)
+		generator = KeyFactory.getInstance("RSA");
+	    else
+		generator = KeyFactory.getInstance
+		    (PQCObjectIdentifiers.mcElieceCca2.getId());
 
-		    switch(i)
-		    {
-		    case 0:
-			generator = KeyFactory.getInstance("EC");
-			break;
-		    case 1:
-			generator = KeyFactory.getInstance
-			    (PQCObjectIdentifiers.mcElieceCca2.getId());
-			break;
-		    case 2:
-			generator = KeyFactory.getInstance("RSA");
-			break;
-		    default:
-			generator = KeyFactory.getInstance
-			    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
-			break;
-		    }
-
-		    return generator.generatePrivate(privateKeySpec);
-		}
-		catch(Exception exception)
-		{
-		}
+	    return generator.generatePrivate
+		(new PKCS8EncodedKeySpec(privateBytes));
 	}
 	catch(Exception exception)
 	{
