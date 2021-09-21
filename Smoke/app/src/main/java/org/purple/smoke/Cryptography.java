@@ -1544,10 +1544,13 @@ public class Cryptography
 	    return "";
 	else
 	    return fancyKeyInformationOutput
-		(keyPair.getPublic(), algorithmIdentifier);
+		(keyPair.getPrivate(),
+		 keyPair.getPublic(),
+		 algorithmIdentifier);
     }
 
-    public static String fancyKeyInformationOutput(PublicKey publicKey,
+    public static String fancyKeyInformationOutput(PrivateKey privateKey,
+						   PublicKey publicKey,
 						   String algorithmIdentifier)
     {
 	if(publicKey == null)

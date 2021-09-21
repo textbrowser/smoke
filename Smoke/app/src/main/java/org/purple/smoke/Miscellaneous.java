@@ -39,6 +39,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.util.Base64;
@@ -906,7 +907,7 @@ public abstract class Miscellaneous
 	{
 	}
 
-	Handler handler = new Handler();
+	Handler handler = new Handler(Looper.getMainLooper());
 
 	handler.postDelayed(new Runnable()
 	{

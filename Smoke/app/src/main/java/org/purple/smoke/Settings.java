@@ -2970,12 +2970,14 @@ public class Settings extends AppCompatActivity
 		m_name = sipHashIdElement == null ?
 		    "" : sipHashIdElement.m_name;
 		m_string1 = Cryptography.fancyKeyInformationOutput
-		    (m_databaseHelper.
+		    (null,
+		     m_databaseHelper.
 		     publicEncryptionKeyForSipHashId(s_cryptography,
 						     m_sipHashId),
 		     chatEncryptionPublicKeyAlgorithm).trim();
 		m_string2 = Cryptography.fancyKeyInformationOutput
-		    (m_databaseHelper.
+		    (null,
+		     m_databaseHelper.
 		     publicSignatureKeyForSipHashId(s_cryptography,
 						    m_sipHashId),
 		     "").trim();

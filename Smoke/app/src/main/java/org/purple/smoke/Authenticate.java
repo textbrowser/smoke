@@ -32,6 +32,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -166,7 +167,7 @@ public class Authenticate extends AppCompatActivity
 		    textView1.setText("");
 		    textView1.requestFocus();
 
-		    Handler handler = new Handler();
+		    Handler handler = new Handler(Looper.getMainLooper());
 
 		    handler.postDelayed(new Runnable()
 		    {
