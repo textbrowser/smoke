@@ -1390,17 +1390,37 @@ public class Cryptography
 	return null;
     }
 
-    public static PublicKey publicRSAKeyFromBytes(byte publicBytes[])
+    public static PublicKey publicMcElieceKeyFromBytes(byte publicBytes[])
     {
-	if(publicBytes == null)
+	if(publicBytes == null || publicBytes.length == 0)
 	    return null;
 
 	try
 	{
-	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
+	    KeyFactory generator = KeyFactory.getInstance
+		(PQCObjectIdentifiers.mcElieceCca2.getId());
+
+	    return generator.generatePublic
+		(new X509EncodedKeySpec(publicBytes));
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return null;
+    }
+
+    public static PublicKey publicRSAKeyFromBytes(byte publicBytes[])
+    {
+	if(publicBytes == null || publicBytes.length == 0)
+	    return null;
+
+	try
+	{
 	    KeyFactory generator = KeyFactory.getInstance("RSA");
 
-	    return generator.generatePublic(publicKeySpec);
+	    return generator.generatePublic
+		(new X509EncodedKeySpec(publicBytes));
 	}
 	catch(Exception exception)
 	{

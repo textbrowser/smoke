@@ -2972,7 +2972,8 @@ public class Kernel
 			    switch(ephemeralPublicKeyType[0])
 			    {
 			    case (byte) 'M':
-				publicKey = Cryptography.publicKeyFromBytes
+				publicKey = Cryptography.
+				    publicMcElieceKeyFromBytes
 				    (ephemeralPublicKey);
 				break;
 			    case (byte) 'R':
