@@ -1571,7 +1571,14 @@ public class Cryptography
 		stringBuilder.append(")");
 	    }
 
-	    stringBuilder.append("\nDisk Size: ");
+	    if(privateKey != null)
+	    {
+		stringBuilder.append("\nDisk Size (Private): ");
+		stringBuilder.append(privateKey.getEncoded().length);
+		stringBuilder.append(" Bytes");
+	    }
+
+	    stringBuilder.append("\nDisk Size (Public): ");
 	    stringBuilder.append(publicKey.getEncoded().length);
 	    stringBuilder.append(" Bytes\n");
 	    stringBuilder.append("Fingerprint: ");
