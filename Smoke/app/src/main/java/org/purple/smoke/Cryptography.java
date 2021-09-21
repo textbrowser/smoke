@@ -1286,7 +1286,8 @@ public class Cryptography
 		EncodedKeySpec publicKeySpec = new X509EncodedKeySpec
 		    (publicBytes);
 		KeyFactory generator = KeyFactory.getInstance
-		    (PQCObjectIdentifiers.mcElieceCca2.getId());
+		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
+		     BouncyCastlePQCProvider.PROVIDER_NAME);
 		PrivateKey privateKey = generator.generatePrivate
 		    (privateKeySpec);
 		PublicKey publicKey = generator.generatePublic(publicKeySpec);
@@ -1333,7 +1334,8 @@ public class Cryptography
 		generator = KeyFactory.getInstance("RSA");
 	    else
 		generator = KeyFactory.getInstance
-		    (PQCObjectIdentifiers.mcElieceCca2.getId());
+		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
+		     BouncyCastlePQCProvider.PROVIDER_NAME);
 
 	    return generator.generatePrivate
 		(new PKCS8EncodedKeySpec(privateBytes));
@@ -1352,36 +1354,27 @@ public class Cryptography
 
 	try
 	{
-	    EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicBytes);
+	    KeyFactory generator = null;
+	    int length = publicBytes.length;
 
-	    for(int i = 0; i < 4; i++)
-		try
-		{
-		    KeyFactory generator = null;
+	    if(length < 200)
+		generator = KeyFactory.getInstance("EC");
+	    else if(length < 600)
+		generator = KeyFactory.getInstance("RSA");
+	    else if(length < 110000)
+		generator = KeyFactory.getInstance
+		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
+		     BouncyCastlePQCProvider.PROVIDER_NAME);
+	    else if(length < 160000)
+		generator = KeyFactory.getInstance
+		    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
+	    else
+		generator = KeyFactory.getInstance
+		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
+		     BouncyCastlePQCProvider.PROVIDER_NAME);
 
-		    switch(i)
-		    {
-		    case 0:
-			generator = KeyFactory.getInstance("EC");
-			break;
-		    case 1:
-			generator = KeyFactory.getInstance
-			    (PQCObjectIdentifiers.mcElieceCca2.getId());
-			break;
-		    case 2:
-			generator = KeyFactory.getInstance("RSA");
-			break;
-		    default:
-			generator = KeyFactory.getInstance
-			    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
-			break;
-		    }
-
-		    return generator.generatePublic(publicKeySpec);
-		}
-		catch(Exception exception)
-		{
-		}
+	    return generator.generatePublic
+		(new X509EncodedKeySpec(publicBytes));
 	}
 	catch(Exception exception)
 	{
@@ -1398,7 +1391,8 @@ public class Cryptography
 	try
 	{
 	    KeyFactory generator = KeyFactory.getInstance
-		(PQCObjectIdentifiers.mcElieceCca2.getId());
+		(PQCObjectIdentifiers.mcElieceCca2.getId(),
+		 BouncyCastlePQCProvider.PROVIDER_NAME);
 
 	    return generator.generatePublic
 		(new X509EncodedKeySpec(publicBytes));
