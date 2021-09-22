@@ -1510,7 +1510,7 @@ public class Chat extends AppCompatActivity
 	    switch(itemId)
 	    {
 	    case R.id.action_exit:
-		Smoke.exit(Chat.this);
+		Smoke.exit(true, Chat.this);
 		return true;
 	    case R.id.action_fire:
 	    {

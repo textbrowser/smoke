@@ -732,7 +732,7 @@ public class Fire extends AppCompatActivity
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
-		Smoke.exit(Fire.this);
+		Smoke.exit(true, Fire.this);
 		return true;
 	    case R.id.action_settings:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");

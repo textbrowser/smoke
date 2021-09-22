@@ -55,9 +55,9 @@ public class Smoke extends Application
 	return s_instance;
     }
 
-    public static synchronized void exit(final Context context)
+    public static synchronized void exit(boolean confirm, final Context context)
     {
-	if(context != null)
+	if(confirm && context != null)
 	{
 	    final DialogInterface.OnCancelListener listener =
 		new DialogInterface.OnCancelListener()
@@ -82,6 +82,18 @@ public class Smoke extends Application
 
 	    Miscellaneous.showPromptDialog
 		(context, listener, "Terminate Smoke?");
+	}
+	else
+	{
+	    Cryptography.getInstance().exit();
+	    SmokeService.stopForegroundTask(getApplication());
+	    State.getInstance().setExit();
+
+	    if(context != null && context instanceof Activity)
+		((Activity) context).finishAndRemoveTask();
+	    else
+		android.os.Process.killProcess
+		    (android.os.Process.myPid());
 	}
     }
 

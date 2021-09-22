@@ -1669,7 +1669,7 @@ public class MemberChat extends AppCompatActivity
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
-		Smoke.exit(MemberChat.this);
+		Smoke.exit(true, MemberChat.this);
 		return true;
 	    case R.id.action_fire:
 		s_databaseHelper.writeSetting(null, "lastActivity", "Fire");

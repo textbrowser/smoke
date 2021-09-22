@@ -247,7 +247,7 @@ public class Smokescreen extends AppCompatActivity
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
-		Smoke.exit(Smokescreen.this);
+		Smoke.exit(true, Smokescreen.this);
 		return true;
 	    case R.id.action_fire:
 		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
