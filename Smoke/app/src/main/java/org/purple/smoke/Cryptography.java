@@ -2673,7 +2673,16 @@ public class Cryptography
 
     public void setChatEncryptionPublicKeyAlgorithm(String algorithm)
     {
-	m_chatEncryptionPublicKeyAlgorithm = algorithm;
+	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
+
+	try
+	{
+	    m_chatEncryptionPublicKeyAlgorithm = algorithm;
+	}
+	finally
+	{
+	    m_chatEncryptionPublicKeyPairMutex.writeLock().unlock();
+	}
     }
 
     public void setChatEncryptionPublicKeyPair(KeyPair keyPair)
