@@ -251,13 +251,32 @@ public class Kernel
 
 	try
 	{
+	    PowerManager powerManager = (PowerManager)
+		Smoke.getApplication().getApplicationContext().
+		getSystemService(Context.POWER_SERVICE);
+
+	    if(powerManager != null)
+		m_wakeLock = powerManager.newWakeLock
+		    (PowerManager.PARTIAL_WAKE_LOCK,
+		     "Smoke:SmokeWakeLockTag");
+
+	    if(m_wakeLock != null)
+		m_wakeLock.setReferenceCounted(false);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
 	    WifiManager wifiManager = (WifiManager)
 		Smoke.getApplication().getApplicationContext().
 		getSystemService(Context.WIFI_SERVICE);
 
 	    if(wifiManager != null)
 		m_wifiLock = wifiManager.createWifiLock
-		    (WifiManager.WIFI_MODE_FULL_HIGH_PERF, "SmokeWiFiLockTag");
+		    (WifiManager.WIFI_MODE_FULL_HIGH_PERF,
+		     "Smoke:SmokeWiFiLockTag");
 
 	    if(m_wifiLock != null)
 	    {
@@ -1753,7 +1772,10 @@ public class Kernel
     public boolean wakeLocked()
     {
 	if(m_wakeLock != null)
-	    return m_wakeLock.isHeld();
+	    synchronized(m_wakeLock)
+	    {
+		return m_wakeLock.isHeld();
+	    }
 
 	return false;
     }
@@ -1761,7 +1783,10 @@ public class Kernel
     public boolean wifiLocked()
     {
 	if(m_wifiLock != null)
-	    return m_wifiLock.isHeld();
+	    synchronized(m_wifiLock)
+	    {
+		return m_wifiLock.isHeld();
+	    }
 
 	return false;
     }
@@ -3831,42 +3856,24 @@ public class Kernel
 
     public void setWakeLock(boolean state)
     {
-	if(m_wakeLock == null)
-	    try
+	if(m_wakeLock != null)
+	    synchronized(m_wakeLock)
 	    {
-		PowerManager powerManager = (PowerManager)
-		    Smoke.getApplication().getApplicationContext().
-		    getSystemService(Context.POWER_SERVICE);
-
-		if(powerManager != null)
-		    m_wakeLock = powerManager.newWakeLock
-			(PowerManager.PARTIAL_WAKE_LOCK,
-			 "Smoke:SmokeWakeLockTag");
-
-		if(m_wakeLock != null)
-		    m_wakeLock.setReferenceCounted(false);
-	    }
-	    catch(Exception exception)
-	    {
-	    }
-
-	try
-	{
-	    if(m_wakeLock != null)
-	    {
-		if(state)
+		try
 		{
-		    if(m_wakeLock.isHeld())
-			m_wakeLock.release();
+		    if(state)
+		    {
+			if(m_wakeLock.isHeld())
+			    m_wakeLock.release();
 
-		    m_wakeLock.acquire();
+			m_wakeLock.acquire();
+		    }
+		    else if(m_wakeLock.isHeld())
+			m_wakeLock.release();
 		}
-		else if(m_wakeLock.isHeld())
-		    m_wakeLock.release();
+		catch(Exception exception)
+		{
+		}
 	    }
-	}
-	catch(Exception exception)
-	{
-	}
     }
 }

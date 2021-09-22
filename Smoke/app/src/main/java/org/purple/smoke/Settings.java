@@ -3246,6 +3246,8 @@ public class Settings extends AppCompatActivity
 		return;
 	    }
 
+	Kernel.getInstance().setWakeLock
+	    (m_databaseHelper.readSetting(null, "always_awake").equals("true"));
 	State.getInstance().setNeighborsEcho
 	    (m_databaseHelper.
 	     readSetting(null, "neighbors_echo").equals("true"));
@@ -3622,9 +3624,6 @@ public class Settings extends AppCompatActivity
 	    findViewById(R.id.generate_pki).setVisibility(View.GONE);
 	    findViewById(R.id.overwrite).setVisibility(View.GONE);
 	}
-
-	Kernel.getInstance().setWakeLock
-	    (m_databaseHelper.readSetting(null, "always_awake").equals("true"));
 
 	if(!m_databaseHelper.accountPrepared())
 	{
