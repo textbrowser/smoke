@@ -19,6 +19,7 @@ Completed Items
 - Asynchronous database writes.
 - Authenticate activity and member menu: menu is empty if Smoke was
   recently initialized.
+- Automatically lock completed Steams. New database column.
 - Automatically set the Fire name if the Alias is changed, unless
   the Fire name is not empty.
 - Banner text may shadow member status in Member Chat.
@@ -49,6 +50,7 @@ Completed Items
 - Create random Steam name on initial write.
 - Custom key streams via context menus.
 - Database method for retrieving neighbor OIDs.
+- Databases and versions; avoid reinstalls.
 - Decide if the State class requires cryptographic data.
 - Define passthrough devices.
 - Delete Fiasco keys from Member activity.
@@ -302,7 +304,6 @@ Remaining Items
 - Android 11 does not tolerate Steam continuation after Smoke exit.
   (ACTION_OPEN_DOCUMENT)
 - Authenticate via TLS. Authenticate activity.
-- Automatically lock completed Steams. New database column.
 - Brands (profiles).
 - Create a special port (say, 33333). If a neighbor is connected on
   this port, bind to the device's address and this port. The bind must
@@ -310,7 +311,6 @@ Remaining Items
   connect to the neighbor. Two Smoke instances will be able to
   connect without listening sockets and intermediate servers. See
   internal QtChess as an example.
-- Databases and versions; avoid reinstalls.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Mist, or, SMS.
