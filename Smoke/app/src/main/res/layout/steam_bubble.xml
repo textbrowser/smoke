@@ -99,8 +99,7 @@
                 <TextView
                     android:id="@+id/eta"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="clip_vertical" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/ephemeral_key_type"
@@ -113,6 +112,11 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:id="@+id/locked"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
                     android:id="@+id/digest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -120,8 +124,7 @@
                 <TextView
                     android:id="@+id/file_size"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/keystream_digest"
@@ -131,14 +134,12 @@
                 <TextView
                     android:id="@+id/sent"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/transfer_rate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
         </LinearLayout>

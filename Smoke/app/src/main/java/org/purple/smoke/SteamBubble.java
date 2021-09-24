@@ -63,6 +63,7 @@ public class SteamBubble extends View
     private TextView m_fileName = null;
     private TextView m_fileSize = null;
     private TextView m_keyStreamDigest = null;
+    private TextView m_locked = null;
     private TextView m_percent = null;
     private TextView m_readIntervalLabel = null;
     private TextView m_sent = null;
@@ -206,6 +207,7 @@ public class SteamBubble extends View
 	m_layoutA.setVisibility(LinearLayout.GONE);
 	m_layoutB = (LinearLayout) m_view.findViewById(R.id.layout_b);
 	m_layoutB.setVisibility(LinearLayout.GONE);
+	m_locked = (TextView) m_view.findViewById(R.id.locked);
 	m_menuButton = (ImageButton) m_view.findViewById(R.id.menu);
 	m_menuButton.setOnClickListener(new View.OnClickListener()
 	{
@@ -357,6 +359,7 @@ public class SteamBubble extends View
 	    m_ephemeralKeyType.setVisibility(View.GONE);
 	    m_keyExchangeStatus.setVisibility(View.GONE);
 	    m_keyStreamDigest.setVisibility(View.GONE);
+	    m_locked.setVisibility(View.GONE);
 	    m_readInterval.setVisibility(View.VISIBLE);
 	    m_readIntervalLabel.setVisibility(View.VISIBLE);
 	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
@@ -374,6 +377,9 @@ public class SteamBubble extends View
 		 R.drawable.lock : R.drawable.unlock);
 	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
 	    m_keyStreamDigest.setVisibility(View.VISIBLE);
+	    m_locked.setVisibility(View.VISIBLE);
+	    m_locked.setText
+	    	("Locked: " + (steamElement.m_locked ? "Yes" : "No"));
 	    m_readInterval.setVisibility(View.GONE);
 	    m_readIntervalLabel.setVisibility(View.GONE);
 	    m_sent.setText
@@ -385,10 +391,6 @@ public class SteamBubble extends View
 	}
 	else
 	{
-	    /*
-	    ** Full Steams.
-	    */
-
 	    m_control.setEnabled
 		(steamElement.m_keyStream != null &&
 		 steamElement.m_keyStream.length ==
@@ -404,6 +406,7 @@ public class SteamBubble extends View
 		 R.drawable.lock : R.drawable.unlock);
 	    m_keyExchangeStatus.setVisibility(View.VISIBLE);
 	    m_keyStreamDigest.setVisibility(View.VISIBLE);
+	    m_locked.setVisibility(View.GONE);
 	    m_readInterval.setVisibility(View.GONE);
 	    m_sent.setText("Sent: " + formatSize(steamElement.m_readOffset));
 	}

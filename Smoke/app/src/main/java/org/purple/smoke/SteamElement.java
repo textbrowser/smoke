@@ -35,6 +35,7 @@ public class SteamElement
     public String m_keyType = "McEliece";
     public String m_status = "paused";
     public String m_transferRate = "";
+    public boolean m_locked = true;
     public byte m_ephemeralPrivateKey[] = null;
     public byte m_ephemeralPublicKey[] = null;
     public byte m_fileDigest[] = null;
