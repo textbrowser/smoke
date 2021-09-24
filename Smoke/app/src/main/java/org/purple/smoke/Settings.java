@@ -1406,14 +1406,18 @@ public class Settings extends AppCompatActivity
 		    else if(m_signatureAlgorithm.equals("RSA"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    (m_signatureAlgorithm,
-			     Cryptography.PKI_SIGNATURE_KEY_SIZES[1],
+			    ("RSA", Cryptography.PKI_SIGNATURE_KEY_SIZES[1], 0);
+		    else if(m_signatureAlgorithm.equals("Rainbow"))
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    ("Rainbow",
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[2],
 			     0);
 		    else
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm,
-			     Cryptography.PKI_SIGNATURE_KEY_SIZES[2],
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[3],
 			     0);
 
 		    if(chatSignatureKeyPair == null)
@@ -2595,14 +2599,18 @@ public class Settings extends AppCompatActivity
 		    else if(m_signatureAlgorithm.equals("RSA"))
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
-			    (m_signatureAlgorithm,
-			     Cryptography.PKI_SIGNATURE_KEY_SIZES[1],
+			    ("RSA", Cryptography.PKI_SIGNATURE_KEY_SIZES[1], 0);
+		    else if(m_signatureAlgorithm.equals("Rainbow"))
+			chatSignatureKeyPair = Cryptography.
+			    generatePrivatePublicKeyPair
+			    ("Rainbow",
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[2],
 			     0);
 		    else
 			chatSignatureKeyPair = Cryptography.
 			    generatePrivatePublicKeyPair
 			    (m_signatureAlgorithm,
-			     Cryptography.PKI_SIGNATURE_KEY_SIZES[2],
+			     Cryptography.PKI_SIGNATURE_KEY_SIZES[3],
 			     0);
 
 		    if(chatSignatureKeyPair == null)
@@ -3471,7 +3479,7 @@ public class Settings extends AppCompatActivity
 	spinner1.setAdapter(arrayAdapter);
 	array = new String[]
 	{
-	    "ECDSA", "RSA", "Rainbow"
+	    "ECDSA", "RSA", "Rainbow", "SPHINCS"
 	};
 	arrayAdapter = new ArrayAdapter<>
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
