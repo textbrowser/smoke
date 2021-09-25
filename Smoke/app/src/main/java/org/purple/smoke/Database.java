@@ -157,7 +157,7 @@ public class Database extends SQLiteOpenHelper
     private final static ReentrantReadWriteLock s_congestionControlMutex =
 	new ReentrantReadWriteLock();
     private final static String DATABASE_NAME = "smoke.db";
-    private final static int DATABASE_VERSION = 20210912;
+    private final static int DATABASE_VERSION = 20211005;
     private final static long WRITE_PARTICIPANT_TIME_DELTA =
 	60000L; // 60 seconds.
     private static Database s_instance = null;
