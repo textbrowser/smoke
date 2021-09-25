@@ -97,7 +97,7 @@ public class UdpMulticastNeighbor extends Neighbor
 
 	    while(byteArrayInputStream.available() > 0)
 	    {
-		if(m_aborted.get())
+		if(m_disconnected.get())
 		    break;
 
 		byte b[] = new byte
@@ -232,7 +232,7 @@ public class UdpMulticastNeighbor extends Neighbor
 
 		try
 		{
-		    if(!connected() && !m_aborted.get())
+		    if(!connected() && !m_disconnected.get())
 			synchronized(m_mutex)
 			{
 			    try
@@ -244,7 +244,7 @@ public class UdpMulticastNeighbor extends Neighbor
 			    }
 			}
 
-		    if(!connected() || m_aborted.get())
+		    if(!connected() || m_disconnected.get())
 			return;
 		    else if(m_error)
 		    {

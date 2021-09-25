@@ -63,7 +63,7 @@ public abstract class Neighbor
 	200L; // 200 milliseconds.
     private final static long SILENCE = 90000L; // 90 seconds.
     private final static long TIMER_INTERVAL = 3500L; // 3.5 seconds.
-    protected AtomicBoolean m_aborted = null;
+    protected AtomicBoolean m_disconnected = null;
     protected AtomicBoolean m_passthrough = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
@@ -151,12 +151,12 @@ public abstract class Neighbor
 		       String version,
 		       int oid)
     {
-	m_aborted = new AtomicBoolean(false);
 	m_bytesRead = new AtomicLong(0L);
 	m_bytesWritten = new AtomicLong(0L);
 	m_capabilitiesSent = new AtomicBoolean(false);
 	m_cryptography = Cryptography.getInstance();
 	m_databaseHelper = Database.getInstance();
+	m_disconnected = new AtomicBoolean(false);
 	m_echoQueue = new ArrayList<> ();
 	m_ipAddress = ipAddress;
 	m_ipPort = ipPort;
@@ -180,7 +180,7 @@ public abstract class Neighbor
 	    {
 		try
 		{
-		    if(!connected() && !m_aborted.get())
+		    if(!connected() && !m_disconnected.get())
 			synchronized(m_mutex)
 			{
 			    try
@@ -192,7 +192,7 @@ public abstract class Neighbor
 			    }
 			}
 
-		    if(!connected() || m_aborted.get())
+		    if(!connected() || m_disconnected.get())
 			return;
 
 		    /*
@@ -227,7 +227,7 @@ public abstract class Neighbor
 			while((indexOf = m_stringBuffer.
 			                 indexOf(Messages.EOM)) >= 0)
 			{
-			    if(m_aborted.get())
+			    if(m_disconnected.get())
 				break;
 
 			    m_lastParsed.set(System.currentTimeMillis());
@@ -319,7 +319,7 @@ public abstract class Neighbor
 	    {
 		try
 		{
-		    if(!connected() && !m_aborted.get())
+		    if(!connected() && !m_disconnected.get())
 			synchronized(m_mutex)
 			{
 			    try
@@ -331,7 +331,7 @@ public abstract class Neighbor
 			    }
 			}
 
-		    if(!connected() || m_aborted.get())
+		    if(!connected() || m_disconnected.get())
 			return;
 
 		    if(System.nanoTime() - m_accumulatedTime >= 15000000000L)
@@ -569,7 +569,7 @@ public abstract class Neighbor
 
     protected void abort()
     {
-	m_aborted.set(true);
+	m_disconnected.set(true);
 
 	synchronized(m_mutex)
 	{
@@ -653,8 +653,8 @@ public abstract class Neighbor
 
     protected void disconnect()
     {
-	m_aborted.set(true);
 	m_capabilitiesSent.set(false);
+	m_disconnected.set(true);
 
 	synchronized(m_echoQueueMutex)
 	{
