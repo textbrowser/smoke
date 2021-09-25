@@ -653,6 +653,7 @@ public abstract class Neighbor
 
     protected void disconnect()
     {
+	m_aborted.set(true);
 	m_capabilitiesSent.set(false);
 
 	synchronized(m_echoQueueMutex)
