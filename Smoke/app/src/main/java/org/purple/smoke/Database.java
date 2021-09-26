@@ -1810,6 +1810,11 @@ public class Database extends SQLiteOpenHelper
 		    else if(length < 600)
 			publicKey = KeyFactory.getInstance("RSA").
 			    generatePublic(new X509EncodedKeySpec(bytes));
+		    else if(length < 1200)
+			publicKey = KeyFactory.getInstance
+			    ("SPHINCS256",
+			     BouncyCastlePQCProvider.PROVIDER_NAME).
+			    generatePublic(new X509EncodedKeySpec(bytes));
 		    else
 			publicKey = KeyFactory.getInstance
 			    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME).

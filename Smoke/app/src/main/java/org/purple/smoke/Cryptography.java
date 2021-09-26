@@ -65,6 +65,7 @@ import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
 import org.bouncycastle.pqc.jcajce.provider.rainbow.BCRainbowPublicKey;
+import org.bouncycastle.pqc.jcajce.provider.sphincs.BCSphincs256PublicKey;
 import org.bouncycastle.pqc.jcajce.spec.McElieceCCA2KeyGenParameterSpec;
 import org.bouncycastle.pqc.jcajce.spec.RainbowParameterSpec;
 import org.bouncycastle.pqc.jcajce.spec.SPHINCS256KeyGenParameterSpec;
@@ -1283,6 +1284,7 @@ public class Cryptography
 			(SPHINCS256KeyGenParameterSpec.SHA3_256);
 
 		    keyPairGenerator.initialize(parameters, s_secureRandom);
+		    return keyPairGenerator.generateKeyPair();
 		}
 		catch(Exception exception)
 		{
@@ -1416,6 +1418,9 @@ public class Cryptography
 		generator = KeyFactory.getInstance("EC");
 	    else if(length < 600)
 		generator = KeyFactory.getInstance("RSA");
+	    else if(length < 1200)
+		generator = KeyFactory.getInstance
+		    ("SPHINCS256", BouncyCastlePQCProvider.PROVIDER_NAME);
 	    else if(length < 110000)
 		generator = KeyFactory.getInstance
 		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
@@ -1646,7 +1651,8 @@ public class Cryptography
 	    if(algorithm.equals("RSA") ||
 	       algorithm.equals("Rainbow") ||
 	       algorithm.startsWith("EC") ||
-	       algorithm.startsWith("McEliece"))
+	       algorithm.startsWith("McEliece") ||
+	       algorithm.startsWith("SPHINCS"))
 		try
 		{
 		    switch(algorithm)
@@ -1697,6 +1703,12 @@ public class Cryptography
 
 			break;
 		    default:
+			BCSphincs256PublicKey sphincsPublicKey =
+			    (BCSphincs256PublicKey) publicKey;
+
+			if(sphincsPublicKey != null)
+			    stringBuilder.append("\n").append("Size: 512");
+
 			break;
 		    }
 		}
@@ -1771,6 +1783,8 @@ public class Cryptography
 		return "McEliece-Pointcheval";
 	    else if(publicKey instanceof BCRainbowPublicKey)
 		return "Rainbow";
+	    else if(publicKey instanceof BCSphincs256PublicKey)
+		return "SPHINCS";
 	    else if(publicKey.getAlgorithm().equals("EC"))
 		return "ECDSA";
 	    else
