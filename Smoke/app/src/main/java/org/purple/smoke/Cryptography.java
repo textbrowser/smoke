@@ -134,6 +134,8 @@ public class Cryptography
 	*/
 
 	"SHA512withRSA";
+    private final static String PKI_SPHINCS_SIGNATURE_ALGORITHM =
+	"SHA3-512withSPHINCS256";
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
@@ -178,8 +180,10 @@ public class Cryptography
     public final static int IDENTITY_SIZE = 8; // Size of a long.
     public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
     public final static int PARTICIPANT_CALL_RSA_KEY_SIZE = 3072;
-    public final static int PKI_SIGNATURE_KEY_SIZES[] = new int
-        {384, 4096, 80, 64}; // ECDSA, RSA, Rainbow, SPHINCS
+    public final static int PKI_SIGNATURE_KEY_SIZES[] = {384,  // ECDSA
+							 4096, // RSA
+							 80,   // Rainbow
+							 64};  // SPHINCS
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {4096}; // RSA
     public final static int SIPHASH_OUTPUT_LENGTH = 16; // Bytes (128 bits).
     public final static int SIPHASH_IDENTITY_LENGTH =
@@ -1045,18 +1049,28 @@ public class Cryptography
 
 	    try
 	    {
-		String algorithm = m_chatEncryptionPublicKeyPair.getPrivate().
-		    getAlgorithm();
-
-		if(algorithm.equals("EC"))
+		switch(m_chatEncryptionPublicKeyPair.
+		       getPrivate().getAlgorithm())
+		{
+		case "EC":
 		    signature = Signature.getInstance
 			(PKI_ECDSA_SIGNATURE_ALGORITHM);
-		else if(algorithm.equals("RSA"))
+		    break;
+		case "RSA":
 		    signature = Signature.getInstance
 			(PKI_RSA_SIGNATURE_ALGORITHM);
-		else
+		    break;
+		case "Rainbow":
 		    signature = Signature.getInstance
-			(PKI_RAINBOW_SIGNATURE_ALGORITHM);
+			(PKI_RAINBOW_SIGNATURE_ALGORITHM,
+			 BouncyCastlePQCProvider.PROVIDER_NAME);
+		    break;
+		default:
+		    signature = Signature.getInstance
+			(PKI_SPHINCS_SIGNATURE_ALGORITHM,
+			 BouncyCastlePQCProvider.PROVIDER_NAME);
+		    break;
+		}
 
 		signature.initSign(m_chatEncryptionPublicKeyPair.getPrivate());
 		signature.update(data);
@@ -1093,18 +1107,27 @@ public class Cryptography
 
 	    try
 	    {
-		String algorithm = m_chatSignaturePublicKeyPair.getPrivate().
-		    getAlgorithm();
-
-		if(algorithm.equals("EC"))
+		switch(m_chatSignaturePublicKeyPair.getPrivate().getAlgorithm())
+		{
+		case "EC":
 		    signature = Signature.getInstance
 			(PKI_ECDSA_SIGNATURE_ALGORITHM);
-		else if(algorithm.equals("RSA"))
+		    break;
+		case "RSA":
 		    signature = Signature.getInstance
 			(PKI_RSA_SIGNATURE_ALGORITHM);
-		else
+		    break;
+		case "Rainbow":
 		    signature = Signature.getInstance
-			(PKI_RAINBOW_SIGNATURE_ALGORITHM);
+			(PKI_RAINBOW_SIGNATURE_ALGORITHM,
+			 BouncyCastlePQCProvider.PROVIDER_NAME);
+		    break;
+		default:
+		    signature = Signature.getInstance
+			(PKI_SPHINCS_SIGNATURE_ALGORITHM,
+			 BouncyCastlePQCProvider.PROVIDER_NAME);
+		    break;
+		}
 
 		signature.initSign(m_chatSignaturePublicKeyPair.getPrivate());
 		signature.update(data);
@@ -1231,11 +1254,11 @@ public class Cryptography
 		}
 
 		break;
-	    default:
+	    case "Rainbow":
 		try
 		{
 		    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
-			getInstance("Rainbow",
+			getInstance(algorithm,
 				    BouncyCastlePQCProvider.PROVIDER_NAME);
 		    RainbowParameterSpec parameters =
 			new RainbowParameterSpec(RAINBOW_VI);
@@ -1247,6 +1270,8 @@ public class Cryptography
 		{
 		}
 
+		break;
+	    default:
 		break;
 	    }
 	}
