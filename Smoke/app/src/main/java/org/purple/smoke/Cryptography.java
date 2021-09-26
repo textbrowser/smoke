@@ -67,6 +67,7 @@ import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
 import org.bouncycastle.pqc.jcajce.provider.rainbow.BCRainbowPublicKey;
 import org.bouncycastle.pqc.jcajce.spec.McElieceCCA2KeyGenParameterSpec;
 import org.bouncycastle.pqc.jcajce.spec.RainbowParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.SPHINCS256KeyGenParameterSpec;
 import org.bouncycastle.util.encoders.Hex;
 
 public class Cryptography
@@ -1263,7 +1264,7 @@ public class Cryptography
 		    RainbowParameterSpec parameters =
 			new RainbowParameterSpec(RAINBOW_VI);
 
-		    keyPairGenerator.initialize(parameters);
+		    keyPairGenerator.initialize(parameters, s_secureRandom);
 		    return keyPairGenerator.generateKeyPair();
 		}
 		catch(Exception exception)
@@ -1272,6 +1273,21 @@ public class Cryptography
 
 		break;
 	    default:
+		try
+		{
+		    KeyPairGenerator keyPairGenerator = KeyPairGenerator.
+			getInstance("SPHINCS256",
+				    BouncyCastlePQCProvider.PROVIDER_NAME);
+		    SPHINCS256KeyGenParameterSpec parameters =
+			new SPHINCS256KeyGenParameterSpec
+			(SPHINCS256KeyGenParameterSpec.SHA3_256);
+
+		    keyPairGenerator.initialize(parameters, s_secureRandom);
+		}
+		catch(Exception exception)
+		{
+		}
+
 		break;
 	    }
 	}
@@ -1319,7 +1335,7 @@ public class Cryptography
 
 		return new KeyPair(publicKey, privateKey);
 	    }
-	    else
+	    else if(algorithm.startsWith("Rainbow"))
 	    {
 		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
 		    (privateBytes);
@@ -1327,6 +1343,20 @@ public class Cryptography
 		    (publicBytes);
 		KeyFactory generator = KeyFactory.getInstance
 		    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
+		PrivateKey privateKey = generator.generatePrivate
+		    (privateKeySpec);
+		PublicKey publicKey = generator.generatePublic(publicKeySpec);
+
+		return new KeyPair(publicKey, privateKey);
+	    }
+	    else
+	    {
+		EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec
+		    (privateBytes);
+		EncodedKeySpec publicKeySpec = new X509EncodedKeySpec
+		    (publicBytes);
+		KeyFactory generator = KeyFactory.getInstance
+		    ("SPHINCS256", BouncyCastlePQCProvider.PROVIDER_NAME);
 		PrivateKey privateKey = generator.generatePrivate
 		    (privateKeySpec);
 		PublicKey publicKey = generator.generatePublic(publicKeySpec);
@@ -1831,9 +1861,15 @@ public class Cryptography
 		signature = Signature.getInstance
 		    (PKI_RSA_SIGNATURE_ALGORITHM);
 		break;
+	    case "Rainbow":
+		signature = Signature.getInstance
+		    (PKI_RAINBOW_SIGNATURE_ALGORITHM,
+		     BouncyCastlePQCProvider.PROVIDER_NAME);
+		break;
 	    default:
 		signature = Signature.getInstance
-		    (PKI_RAINBOW_SIGNATURE_ALGORITHM);
+		    (PKI_SPHINCS_SIGNATURE_ALGORITHM,
+		     BouncyCastlePQCProvider.PROVIDER_NAME);
 		break;
 	    }
 
