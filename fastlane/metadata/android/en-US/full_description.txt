@@ -33,6 +33,7 @@ Summary of Smoke
 * Rainbow digital signature scheme.
 * Reliable distribution of archived messages.
 * Reliable distribution of deliverable text messages.
+* SPHINCS digital signature scheme.
 * SSL/TLS through SmokeStack.
 * Semi-compatible with Spot-On via Fire.
 * Share files with TCP utilities such as Netcat.

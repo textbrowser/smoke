@@ -1,0 +1,7 @@
+* Introduced new database table index for Member Chat.
+* Lock safety.
+* Rainbow digital signature scheme.
+* Release Ringtone resources.
+* Sphincs digital signature scheme.
+* Steam locking, or, prevent the replacement of completed transfers.
+* Write identities in silent mode.
