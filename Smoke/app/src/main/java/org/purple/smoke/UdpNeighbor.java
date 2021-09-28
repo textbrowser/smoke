@@ -119,7 +119,7 @@ public class UdpNeighbor extends Neighbor
 		    (new DatagramPacket(b,
 					b.length,
 					InetAddress.getByName(m_ipAddress),
-					Integer.parseInt(m_ipPort)));
+					m_ipPort.get()));
 		sent += b.length;
 	    }
 
@@ -180,8 +180,8 @@ public class UdpNeighbor extends Neighbor
 	    m_lastParsed.set(System.currentTimeMillis());
 	    m_lastTimeRead.set(System.nanoTime());
 	    m_socket = new DatagramSocket();
-	    m_socket.connect(InetAddress.getByName(m_ipAddress),
-			     Integer.parseInt(m_ipPort));
+	    m_socket.connect
+		(InetAddress.getByName(m_ipAddress), m_ipPort.get());
 	    m_socket.setSoTimeout(SO_TIMEOUT);
 	    m_startTime.set(System.nanoTime());
 	    setError("");

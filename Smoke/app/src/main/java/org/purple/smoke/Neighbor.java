@@ -65,6 +65,7 @@ public abstract class Neighbor
     private final static long TIMER_INTERVAL = 3500L; // 3.5 seconds.
     protected AtomicBoolean m_disconnected = null;
     protected AtomicBoolean m_passthrough = null;
+    protected AtomicInteger m_ipPort = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
     protected AtomicLong m_bytesWritten = null;
@@ -74,7 +75,6 @@ public abstract class Neighbor
     protected Cryptography m_cryptography = null;
     protected Database m_databaseHelper = null;
     protected String m_ipAddress = "";
-    protected String m_ipPort = "";
     protected String m_version = "";
     protected final Object m_errorMutex = new Object();
     protected final Object m_mutex = new Object();
@@ -159,7 +159,7 @@ public abstract class Neighbor
 	m_disconnected = new AtomicBoolean(false);
 	m_echoQueue = new ArrayList<> ();
 	m_ipAddress = ipAddress;
-	m_ipPort = ipPort;
+	m_ipPort = new AtomicInteger(Integer.parseInt(ipPort));
 	m_lastParsed = new AtomicLong(System.currentTimeMillis());
 	m_lastTimeRead = new AtomicLong(System.nanoTime());
 	m_oid = new AtomicInteger(oid);
@@ -719,7 +719,7 @@ public abstract class Neighbor
 
     public synchronized String address()
     {
-	return m_ipAddress + ":" + m_ipPort;
+	return m_ipAddress + ":" + m_ipPort.get();
     }
 
     public void clearEchoQueue()

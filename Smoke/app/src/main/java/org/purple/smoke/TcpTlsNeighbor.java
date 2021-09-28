@@ -205,7 +205,7 @@ public class TcpTlsNeighbor extends Neighbor
 	    m_lastTimeRead.set(System.nanoTime());
 
 	    InetSocketAddress inetSocketAddress = new InetSocketAddress
-		(m_ipAddress, Integer.parseInt(m_ipPort));
+		(m_ipAddress, m_ipPort.get());
 	    SSLContext sslContext = null;
 
 	    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)

@@ -172,7 +172,7 @@ public class TcpNeighbor extends Neighbor
 	    m_lastTimeRead.set(System.nanoTime());
 
 	    InetSocketAddress inetSocketAddress = new InetSocketAddress
-		(m_ipAddress, Integer.parseInt(m_ipPort));
+		(m_ipAddress, m_ipPort.get());
 
 	    if(m_proxyInetSocketAddress == null)
 	    {
