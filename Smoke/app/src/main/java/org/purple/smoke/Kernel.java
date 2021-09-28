@@ -137,6 +137,7 @@ public class Kernel
     private AtomicLong m_chatTemporaryIdentityLastTick = null;
     private AtomicLong m_shareSipHashIdIdentity = null;
     private AtomicLong m_shareSipHashIdIdentityLastTick = null;
+    private ConcurrentHashMap<Integer, Neighbor> m_neighbors = null;
     private ConcurrentHashMap<String, Juggernaut> m_juggernauts = null;
     private ConcurrentHashMap<String, ParticipantCall> m_callQueue = null;
     private ConcurrentHashMap<String, byte[]> m_fireStreams = null;
@@ -163,11 +164,8 @@ public class Kernel
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_messagesToSendMutex =
 	new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock m_neighborsMutex =
-	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_steamsMutex =
 	new ReentrantReadWriteLock();
-    private final SparseArray<Neighbor> m_neighbors = new SparseArray<> ();
     private final SparseArray<SteamReader> m_steams = new SparseArray<> ();
     private final SteamWriter m_steamWriter = new SteamWriter();
     private final static Cryptography s_cryptography =
@@ -227,6 +225,7 @@ public class Kernel
 	m_fireStreams = new ConcurrentHashMap<> ();
 	m_juggernauts = new ConcurrentHashMap<> ();
 	m_messagesToSend = new ArrayList<> ();
+	m_neighbors = new ConcurrentHashMap<> ();
 	m_shareSipHashIdIdentity = new AtomicLong(0L);
 	m_shareSipHashIdIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
@@ -308,8 +307,6 @@ public class Kernel
 		continue;
 	    else
 	    {
-		m_neighborsMutex.readLock().lock();
-
 		try
 		{
 		    if(m_neighbors.get(neighborElement.m_oid) != null)
@@ -317,10 +314,6 @@ public class Kernel
 		}
 		catch(Exception exception)
 		{
-		}
-		finally
-		{
-		    m_neighborsMutex.readLock().unlock();
 		}
 
 		if(neighborElement.m_statusControl.
@@ -406,18 +399,12 @@ public class Kernel
 	    if(neighbor == null)
 		continue;
 
-	    m_neighborsMutex.writeLock().lock();
-
 	    try
 	    {
-		m_neighbors.append(neighborElement.m_oid, neighbor);
+		m_neighbors.put(neighborElement.m_oid, neighbor);
 	    }
 	    catch(Exception exception)
 	    {
-	    }
-	    finally
-	    {
-		m_neighborsMutex.writeLock().unlock();
 	    }
 	}
 
@@ -1324,28 +1311,20 @@ public class Kernel
 	** Disconnect all existing sockets.
 	*/
 
-	m_neighborsMutex.writeLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null)
-		    m_neighbors.get(j).abort();
+		if(value != null)
+		    value.abort();
 	    }
 
 	    m_neighbors.clear();
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.writeLock().unlock();
 	}
     }
 
@@ -1381,27 +1360,18 @@ public class Kernel
 	if(message == null || message.trim().isEmpty())
 	    return;
 
-	m_neighborsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null)
-		    if(!m_neighbors.get(j).passthrough())
-			m_neighbors.get(j).scheduleSend(message);
+		if(value != null && !value.passthrough())
+		    value.scheduleSend(message);
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
 	}
     }
 
@@ -1424,8 +1394,6 @@ public class Kernel
 	    return neighbors;
 	}
 
-	m_neighborsMutex.writeLock().lock();
-
 	try
 	{
 	    /*
@@ -1433,16 +1401,16 @@ public class Kernel
 	    ** Also removed will be neighbors having disconnected statuses.
 	    */
 
-	    for(int i = m_neighbors.size() - 1; i >= 0; i--)
+	    for(Integer key : m_neighbors.keySet())
 	    {
+		Neighbor value = m_neighbors.get(key);
 		boolean found = false;
-		int oid = m_neighbors.keyAt(i);
 
 		for(NeighborElement neighbor : neighbors)
-		    if(neighbor != null && neighbor.m_oid == oid)
+		    if(neighbor != null && key == neighbor.m_oid)
 		    {
-			if(!neighbor.m_statusControl.toLowerCase().
-			   equals("disconnect"))
+			if(!neighbor.m_statusControl.
+			   equalsIgnoreCase("disconnect"))
 			    found = true;
 
 			break;
@@ -1450,19 +1418,15 @@ public class Kernel
 
 		if(!found)
 		{
-		    if(m_neighbors.get(oid) != null)
-			m_neighbors.get(oid).abort();
+		    if(value != null)
+			value.abort();
 
-		    m_neighbors.remove(oid);
+		    m_neighbors.remove(key);
 		}
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.writeLock().unlock();
 	}
 
 	return neighbors;
@@ -1537,26 +1501,22 @@ public class Kernel
 	ArrayList<IPAddressElement> addresses1 = new ArrayList<> ();
 	ArrayList<IPAddressElement> addresses2 = new ArrayList<> ();
 
-	m_neighborsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null)
-		    if(m_neighbors.get(j).connected())
+		if(value != null)
+		    if(value.connected())
 		    {
 			IPAddressElement ipAddressElement = new IPAddressElement
-			    (m_neighbors.get(j).remoteIpAddress(),
-			     m_neighbors.get(j).remotePort(),
-			     m_neighbors.get(j).remoteScopeId(),
-			     m_neighbors.get(j).transport());
+			    (value.remoteIpAddress(),
+			     value.remotePort(),
+			     value.remoteScopeId(),
+			     value.transport());
 
-			if(!m_neighbors.get(j).passthrough())
+			if(!value.passthrough())
 			    addresses1.add(ipAddressElement);
 			else
 			    addresses2.add(ipAddressElement);
@@ -1565,10 +1525,6 @@ public class Kernel
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
 	}
 
 	Collections.sort(addresses1, Miscellaneous.s_ipAddressComparator);
@@ -1721,28 +1677,19 @@ public class Kernel
 	if(!isNetworkConnected())
 	    return false;
 
-	m_neighborsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null)
-		    if(m_neighbors.get(j).connected() &&
-		       !m_neighbors.get(j).passthrough())
+		if(value != null)
+		    if(value.connected() && !value.passthrough())
 			return true;
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
 	}
 
 	return false;
@@ -1817,21 +1764,7 @@ public class Kernel
 
     public int availableNeighbors()
     {
-	m_neighborsMutex.readLock().lock();
-
-	try
-	{
-	    return m_neighbors.size();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
-	}
-
-	return 0;
+	return m_neighbors.size();
     }
 
     public int availableSteamReaders()
@@ -3358,29 +3291,21 @@ public class Kernel
 
     public void clearNeighborQueues()
     {
-	m_neighborsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null)
+		if(value != null)
 		{
-		    m_neighbors.get(j).clearEchoQueue();
-		    m_neighbors.get(j).clearQueue();
+		    value.clearEchoQueue();
+		    value.clearQueue();
 		}
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
 	}
     }
 
@@ -3391,28 +3316,20 @@ public class Kernel
 	   message.trim().isEmpty())
 	    return;
 
-	m_neighborsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null &&
-		   m_neighbors.get(j).getOid() != oid &&
-		   !m_neighbors.get(j).passthrough())
-		    m_neighbors.get(j).scheduleEchoSend(message);
+		if(value != null &&
+		   value.getOid() != oid &&
+		   !value.passthrough())
+		    value.scheduleEchoSend(message);
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
 	}
     }
 
@@ -3421,28 +3338,20 @@ public class Kernel
 	if(message == null || message.trim().isEmpty())
 	    return;
 
-	m_neighborsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null &&
-		   m_neighbors.get(j).getOid() != oid &&
-		   !m_neighbors.get(j).passthrough())
-		    m_neighbors.get(j).scheduleEchoSend(message);
+		if(value != null &&
+		   value.getOid() != oid &&
+		   !value.passthrough())
+		    value.scheduleEchoSend(message);
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
 	}
     }
 
@@ -3806,17 +3715,13 @@ public class Kernel
 	if(bytes == null || bytes.length == 0)
 	    return sent;
 
-	m_neighborsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_neighbors.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_neighbors.keySet())
 	    {
-		int j = m_neighbors.keyAt(i);
+		Neighbor value = m_neighbors.get(key);
 
-		if(m_neighbors.get(j) != null && m_neighbors.get(j).connected())
+		if(value != null && value.connected())
 		{
 		    /*
 		    ** Increase the offset by the minimum number of bytes.
@@ -3824,18 +3729,18 @@ public class Kernel
 
 		    if(simple)
 		    {
-			if(m_neighbors.get(j).passthrough())
+			if(value.passthrough())
 			{
-			    int rc = m_neighbors.get(j).send(bytes);
+			    int rc = value.send(bytes);
 
 			    sent = Math.max(0, Math.min(Integer.MAX_VALUE, rc));
 			}
 		    }
 		    else
 		    {
-			if(!m_neighbors.get(j).passthrough())
+			if(!value.passthrough())
 			{
-			    int rc = m_neighbors.get(j).send(bytes);
+			    int rc = value.send(bytes);
 
 			    sent = Math.max(0, Math.min(Integer.MAX_VALUE, rc));
 			}
@@ -3845,10 +3750,6 @@ public class Kernel
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_neighborsMutex.readLock().unlock();
 	}
 
 	return sent;
