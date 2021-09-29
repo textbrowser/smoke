@@ -99,30 +99,21 @@ public class Kernel
 		    ** interval.
 		    */
 
-		    m_steamsMutex.readLock().lock();
-
 		    try
 		    {
-			int size = m_steams.size();
-
-			for(int i = 0; i < size; i++)
+			for(Integer key : m_steams.keySet())
 			{
-			    int j = m_steams.keyAt(i);
+			    SteamReader value = m_steams.get(key);
 
-			    if(m_steams.get(j) != null &&
-			       m_steams.get(j).getOid() == oid)
+			    if(value != null && oid == value.getOid())
 			    {
-				m_steams.get(j).setReadInterval(readInterval);
-				return;
+				value.setReadInterval(readInterval);
+				break;
 			    }
 			}
 		    }
 		    catch(Exception exception)
 		    {
-		    }
-		    finally
-		    {
-			m_steamsMutex.readLock().unlock();
 		    }
 		}
 
@@ -138,6 +129,7 @@ public class Kernel
     private AtomicLong m_shareSipHashIdIdentity = null;
     private AtomicLong m_shareSipHashIdIdentityLastTick = null;
     private ConcurrentHashMap<Integer, Neighbor> m_neighbors = null;
+    private ConcurrentHashMap<Integer, SteamReader> m_steams = null;
     private ConcurrentHashMap<String, Juggernaut> m_juggernauts = null;
     private ConcurrentHashMap<String, ParticipantCall> m_callQueue = null;
     private ConcurrentHashMap<String, byte[]> m_fireStreams = null;
@@ -164,9 +156,6 @@ public class Kernel
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_messagesToSendMutex =
 	new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock m_steamsMutex =
-	new ReentrantReadWriteLock();
-    private final SparseArray<SteamReader> m_steams = new SparseArray<> ();
     private final SteamWriter m_steamWriter = new SteamWriter();
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -230,6 +219,7 @@ public class Kernel
 	m_shareSipHashIdIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
 	m_steamKeyExchange = new SteamKeyExchange();
+	m_steams = new ConcurrentHashMap<> ();
 	m_time = new Time();
 
 	try
@@ -1252,8 +1242,6 @@ public class Kernel
 		continue;
 	    else
 	    {
-		m_steamsMutex.readLock().lock();
-
 		try
 		{
 		    if(m_steams.get(steamElement.m_oid) != null)
@@ -1261,10 +1249,6 @@ public class Kernel
 		}
 		catch(Exception exception)
 		{
-		}
-		finally
-		{
-		    m_steamsMutex.readLock().unlock();
 		}
 	    }
 
@@ -1287,18 +1271,12 @@ public class Kernel
 					    steamElement.m_fileSize,
 					    steamElement.m_readOffset);
 
-	    m_steamsMutex.writeLock().lock();
-
 	    try
 	    {
-		m_steams.append(steamElement.m_oid, steam);
+		m_steams.put(steamElement.m_oid, steam);
 	    }
 	    catch(Exception exception)
 	    {
-	    }
-	    finally
-	    {
-		m_steamsMutex.writeLock().unlock();
 	    }
 	}
 
@@ -1330,28 +1308,20 @@ public class Kernel
 
     private void purgeSteams()
     {
-	m_steamsMutex.writeLock().lock();
-
 	try
 	{
-	    int size = m_steams.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_steams.keySet())
 	    {
-		int j = m_steams.keyAt(i);
+		SteamReader value = m_steams.get(key);
 
-		if(m_steams.get(j) != null)
-		    m_steams.get(j).delete();
+		if(value != null)
+		    value.delete();
 	    }
 
 	    m_steams.clear();
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_steamsMutex.writeLock().unlock();
 	}
     }
 
@@ -1443,8 +1413,6 @@ public class Kernel
 	    return steams;
 	}
 
-	m_steamsMutex.writeLock().lock();
-
 	try
 	{
 	    /*
@@ -1453,13 +1421,13 @@ public class Kernel
 	    ** statuses.
 	    */
 
-	    for(int i = m_steams.size() - 1; i >= 0; i--)
+	    for(Integer key : m_steams.keySet())
 	    {
+		SteamReader value = m_steams.get(key);
 		boolean found = false;
-		int oid = m_steams.keyAt(i);
 
 		for(SteamElement steamElement : steams)
-		    if(steamElement != null && steamElement.m_oid == oid)
+		    if(steamElement != null && key == steamElement.m_oid)
 		    {
 			String status = steamElement.m_status.toLowerCase();
 
@@ -1472,19 +1440,15 @@ public class Kernel
 
 		if(!found)
 		{
-		    if(m_steams.get(oid) != null)
-			m_steams.get(oid).delete();
+		    if(value != null)
+			value.delete();
 
-		    m_steams.remove(oid);
+		    m_steams.remove(key);
 		}
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_steamsMutex.writeLock().unlock();
 	}
 
 	return steams;
@@ -1769,21 +1733,7 @@ public class Kernel
 
     public int availableSteamReaders()
     {
-	m_steamsMutex.readLock().lock();
-
-	try
-	{
-	    return m_steams.size();
-	}
-	catch(Exception exception)
-	{
-	}
-	finally
-	{
-	    m_steamsMutex.readLock().unlock();
-	}
-
-	return 0;
+	return m_steams.size();
     }
 
     public int availableSteamWriters()
@@ -1797,27 +1747,18 @@ public class Kernel
 	** Discover the oldest, incomplete Simple Steam.
 	*/
 
-	m_steamsMutex.readLock().lock();
-
 	try
 	{
-	    int size = m_steams.size();
-
-	    for(int i = 0; i < size; i++)
+	    for(Integer key : m_steams.keySet())
 	    {
-		int j = m_steams.keyAt(i);
+		SteamReader value = m_steams.get(key);
 
-		if(m_steams.get(j) instanceof SteamReaderSimple &&
-		   m_steams.get(j).completed() == false)
-		    return m_steams.get(j).getOid();
+		if(value instanceof SteamReaderSimple && !value.completed())
+		    return value.getOid();
 	    }
 	}
 	catch(Exception exception)
 	{
-	}
-	finally
-	{
-	    m_steamsMutex.readLock().unlock();
 	}
 
 	return -1;
@@ -3174,20 +3115,16 @@ public class Kernel
 		}
 		else if(abyte[0] == Messages.STEAM_SHARE[1])
 		{
-		    m_steamsMutex.readLock().lock();
-
 		    try
 		    {
-			int size = m_steams.size();
-
-			for(int i = 0; i < size; i++)
+			for(Integer key : m_steams.keySet())
 			{
-			    int j = m_steams.keyAt(i);
+			    SteamReader v = m_steams.get(key);
 
-			    if(m_steams.get(j) instanceof SteamReaderFull)
+			    if(v instanceof SteamReaderFull)
 			    {
 				SteamReaderFull steamReaderFull =
-				    (SteamReaderFull) m_steams.get(j);
+				    (SteamReaderFull) v;
 
 				if(Arrays.
 				   equals(pki, steamReaderFull.fileIdentity()))
@@ -3201,10 +3138,6 @@ public class Kernel
 		    }
 		    catch(Exception exception)
 		    {
-		    }
-		    finally
-		    {
-			m_steamsMutex.readLock().unlock();
 		    }
 		}
 	    }
