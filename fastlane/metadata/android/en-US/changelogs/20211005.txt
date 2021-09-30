@@ -1,3 +1,4 @@
+* Concurrent collections.
 * Introduced new database table index for Member Chat.
 * Lock safety.
 * Rainbow digital signature scheme.
