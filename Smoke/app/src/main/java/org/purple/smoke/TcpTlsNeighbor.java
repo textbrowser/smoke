@@ -248,6 +248,7 @@ public class TcpTlsNeighbor extends Neighbor
 		    public void handshakeCompleted
 			(HandshakeCompletedEvent event)
 		    {
+			m_disconnected.set(false);
 			m_handshakeCompleted.set(true);
 			scheduleSend(getCapabilities());
 			scheduleSend(getIdentities());
