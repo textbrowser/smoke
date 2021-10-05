@@ -43,6 +43,8 @@ Summary of Smoke
 <li>Super McEliece: m = 13, t = 118.</li>
 </ul>
 
+Please read https://github.com/textbrowser/smoke/tree/master/Documentation for more information.
+
 Starting a Conversation
 
 <ol>
