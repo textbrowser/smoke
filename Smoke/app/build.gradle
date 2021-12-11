@@ -8,8 +8,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 20211005
-        versionName "2021.10.05"
+        versionCode 20211212
+        versionName "2021.12.11"
     }
     buildTypes {
         android.applicationVariants.all { variant ->
@@ -39,8 +39,7 @@ dependencies {
     implementation 'com.android.support:design:25.4.0'
     implementation 'com.android.support:recyclerview-v7:25.4.0'
     implementation 'com.android.support:support-v4:25.4.0'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation files('libs/bcprov-ext-jdk15on-169.jar')
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
     testImplementation 'junit:junit:4.12'
 }
 
