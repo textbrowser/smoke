@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
@@ -287,7 +288,14 @@ public class Database extends SQLiteOpenHelper
 
 	    m_db.insertOrThrow("steam_files", null, values);
 	    m_db.setTransactionSuccessful();
-	    Miscellaneous.sendBroadcast("org.purple.smoke.steam_added");
+
+	    Intent intent = new Intent("org.purple.smoke.steam_added");
+
+	    intent.putExtra
+		("org.purple.smoke.extra1", steamElement.m_destination);
+	    intent.putExtra
+		("org.purple.smoke.extra2", steamElement.m_displayFileName);
+	    Miscellaneous.sendBroadcast(intent);
 	}
 	catch(Exception exception)
 	{

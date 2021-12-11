@@ -850,6 +850,7 @@ public abstract class Miscellaneous
 
 	    break;
 	case "org.purple.smoke.time":
+	{
 	    String string = intent.getStringExtra("org.purple.smoke.extra1");
 
 	    if(string == null)
@@ -858,6 +859,19 @@ public abstract class Miscellaneous
 		message = string;
 
 	    break;
+	}
+	case "org.purple.smoke.steam_added":
+	{
+	    String string1 = intent.getStringExtra("org.purple.smoke.extra1");
+	    String string2 = intent.getStringExtra("org.purple.smoke.extra2");
+
+	    message = "A new Steam (" +
+		string2 +
+		") has arrived from " +
+		string1 +
+		"!";
+	    break;
+	}
 	default:
 	    break;
 	}

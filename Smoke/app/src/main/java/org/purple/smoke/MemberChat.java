@@ -162,6 +162,10 @@ public class MemberChat extends AppCompatActivity
 		Miscellaneous.showNotification
 		    (MemberChat.this, intent, findViewById(R.id.main_layout));
 		break;
+	    case "org.purple.smoke.steam_added":
+		Miscellaneous.showNotification
+		    (MemberChat.this, intent, findViewById(R.id.main_layout));
+		break;
 	    default:
 		break;
 	    }
@@ -1016,6 +1020,7 @@ public class MemberChat extends AppCompatActivity
 	    intentFilter.addAction("org.purple.smoke.network_disconnected");
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
+	    intentFilter.addAction("org.purple.smoke.steam_added");
 	    intentFilter.addAction("org.purple.smoke.time");
 	    LocalBroadcastManager.getInstance(getApplicationContext()).
 		registerReceiver(m_receiver, intentFilter);
