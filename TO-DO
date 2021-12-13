@@ -306,6 +306,7 @@ Remaining Items
   (ACTION_OPEN_DOCUMENT)
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
+- Diagram.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Mist, or, SMS.
