@@ -59,3 +59,29 @@ Starting a Conversation
 </ol>
 
 ![alt text](https://github.com/textbrowser/smoke/blob/master/Images/smoke_7.png)
+
+Steamrolling is the process of real-time broadcasting of complete and incomplete inbound Steams. Let’s review a colorful example.
+
+*---------------*
+| Participant A | <--------------------------------------
+*---------------*                                       |
+       |                                                |
+       | (Steam A)                                      |
+       V                                                |
+*---------------*  (Steam A)  *---------------*         | (Steam A)
+| Participant B | ----------> | Participant C |         |
+*---------------*             *---------------*         |
+       |                                                |
+       | (Steam A)                                      |
+       V                                                |
+*---------------*                                       |
+| Participant D |                                       |
+*---------------*                                       |
+       |                                                |
+       | (Steam A)                                      |
+       V                                                |
+*---------------*                                       |
+| Participant E | ---------------------------------------
+*---------------*
+
+Participants C, D, and E shall receive Steam A data as participant B receives and writes Steam A data. If the stream of bytes between A and B is interrupted, the interruption will percolate throughout the network. Unique keys are established between each of the paired participants. 
