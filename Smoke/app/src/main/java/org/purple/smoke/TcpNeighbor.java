@@ -180,7 +180,6 @@ public class TcpNeighbor extends Neighbor
 		m_socket = new Socket();
 		m_socket.setReceiveBufferSize(SO_RCVBUF);
 		m_socket.setSendBufferSize(SO_RCVBUF);
-		m_socket.setSoLinger(true, 0);
 		m_socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 	    }
 	    else
@@ -194,10 +193,10 @@ public class TcpNeighbor extends Neighbor
 
 		m_socket.setReceiveBufferSize(SO_RCVBUF);
 		m_socket.setSendBufferSize(SO_SNDBUF);
-		m_socket.setSoLinger(true, 0);
 		m_socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 	    }
 
+	    m_socket.setSoLinger(true, 0);
 	    m_socket.setSoTimeout(CONNECTION_TIMEOUT);
 	    m_socket.setTcpNoDelay(true);
 	    m_startTime.set(System.nanoTime());

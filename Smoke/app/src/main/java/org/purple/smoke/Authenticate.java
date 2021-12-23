@@ -58,9 +58,9 @@ public class Authenticate extends AppCompatActivity
     {
 	if(m_databaseHelper.
 	   readSetting(null, "foreground_service").equals("false"))
-	    SmokeService.stopForegroundTask(getApplicationContext());
+	    SmokeService.stopForegroundTask(Authenticate.this);
 	else
-	    SmokeService.startForegroundTask(getApplicationContext());
+	    SmokeService.startForegroundTask(Authenticate.this);
     }
 
     private void prepareListeners()

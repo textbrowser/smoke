@@ -1633,9 +1633,9 @@ public class Settings extends AppCompatActivity
     {
 	if(m_databaseHelper.
 	   readSetting(null, "foreground_service").equals("false"))
-	    SmokeService.stopForegroundTask(getApplicationContext());
+	    SmokeService.stopForegroundTask(Settings.this);
 	else
-	    SmokeService.startForegroundTask(getApplicationContext());
+	    SmokeService.startForegroundTask(Settings.this);
     }
 
     private void prepareListeners()
@@ -1691,7 +1691,7 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
-		float density = getApplicationContext().getResources().
+		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
 		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
@@ -1757,7 +1757,7 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
-		float density = getApplicationContext().getResources().
+		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
 		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
@@ -1792,7 +1792,7 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
-		float density = getApplicationContext().getResources().
+		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
 		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
@@ -1831,7 +1831,7 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
-		float density = getApplicationContext().getResources().
+		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
 		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
@@ -2160,7 +2160,7 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
-		float density = getApplicationContext().getResources().
+		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
 		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
@@ -2196,7 +2196,7 @@ public class Settings extends AppCompatActivity
 
 		PopupWindow popupWindow = new PopupWindow(Settings.this);
 		TextView textView1 = new TextView(Settings.this);
-		float density = getApplicationContext().getResources().
+		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
 		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
@@ -2328,15 +2328,13 @@ public class Settings extends AppCompatActivity
 		{
 		    if(isChecked)
 		    {
-			SmokeService.startForegroundTask
-			    (getApplicationContext());
+			SmokeService.startForegroundTask(Settings.this);
 			m_databaseHelper.writeSetting
 			    (null, "foreground_service", "true");
 		    }
 		    else
 		    {
-			SmokeService.stopForegroundTask
-			    (getApplicationContext());
+			SmokeService.stopForegroundTask(Settings.this);
 			m_databaseHelper.writeSetting
 			    (null, "foreground_service", "false");
 		    }
@@ -3014,7 +3012,7 @@ public class Settings extends AppCompatActivity
 			    (Settings.this);
 			StringBuilder stringBuilder = new StringBuilder();
 			TextView textView1 = new TextView(Settings.this);
-			float density = getApplicationContext().getResources().
+			float density = Settings.this.getResources().
 			    getDisplayMetrics().density;
 
 			if(m_string1.isEmpty() || m_string2.isEmpty())
@@ -3665,7 +3663,7 @@ public class Settings extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
+	    LocalBroadcastManager.getInstance(Settings.this).
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
@@ -3703,7 +3701,7 @@ public class Settings extends AppCompatActivity
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
+	    LocalBroadcastManager.getInstance(Settings.this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}

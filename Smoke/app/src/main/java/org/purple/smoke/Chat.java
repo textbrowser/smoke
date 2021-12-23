@@ -316,7 +316,7 @@ public class Chat extends AppCompatActivity
 		    (RingtoneManager.TYPE_NOTIFICATION);
 
 		m_ringtone = RingtoneManager.getRingtone
-		    (getApplicationContext(), notification);
+		    (Chat.this, notification);
 		m_ringtone.play();
 	    }
 	    catch(Exception exception)
@@ -1151,7 +1151,7 @@ public class Chat extends AppCompatActivity
 
 	if(m_receiverRegistered)
 	{
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
+	    LocalBroadcastManager.getInstance(Chat.this).
 		unregisterReceiver(m_receiver);
 	    m_receiverRegistered = false;
 	}
@@ -1181,7 +1181,7 @@ public class Chat extends AppCompatActivity
 	    intentFilter.addAction
 		("org.purple.smoke.state_participants_populated");
 	    intentFilter.addAction("org.purple.smoke.time");
-	    LocalBroadcastManager.getInstance(getApplicationContext()).
+	    LocalBroadcastManager.getInstance(Chat.this).
 		registerReceiver(m_receiver, intentFilter);
 	    m_receiverRegistered = true;
 	}

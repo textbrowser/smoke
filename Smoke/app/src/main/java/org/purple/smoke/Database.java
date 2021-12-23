@@ -4596,7 +4596,7 @@ public class Database extends SQLiteOpenHelper
     public static synchronized Database getInstance(Context context)
     {
 	if(s_instance == null)
-	    s_instance = new Database(context.getApplicationContext());
+	    s_instance = new Database(context);
 
 	return s_instance;
     }

@@ -553,8 +553,8 @@ public abstract class Neighbor
 	try
 	{
 	    ConnectivityManager connectivityManager = (ConnectivityManager)
-		Smoke.getApplication().getApplicationContext().
-		getSystemService(Context.CONNECTIVITY_SERVICE);
+		Smoke.getApplication().getSystemService
+		(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo networkInfo = connectivityManager.
 		getActiveNetworkInfo();
 
