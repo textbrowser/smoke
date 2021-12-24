@@ -23,7 +23,8 @@
         android:id="@+id/information"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/downloads" />
+        android:layout_below="@id/downloads"
+        android:fontFamily="monospace" />
 
     <View
         android:id="@+id/divider"
