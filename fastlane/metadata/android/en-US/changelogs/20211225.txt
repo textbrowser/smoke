@@ -1,0 +1,3 @@
+* Enable SO_LINGER on TCP sockets.
+* Fewer Context objects.
+* Monospace fonts.
