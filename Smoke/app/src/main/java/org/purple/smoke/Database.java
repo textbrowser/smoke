@@ -5052,6 +5052,26 @@ public class Database extends SQLiteOpenHelper
 	}
 
 	/*
+	** Create the arson table.
+	*/
+
+	str = "CREATE TABLE IF NOT EXISTS arson (" +
+	    "authentication_key TEXT NOT NULL, " +
+	    "encryption_key TEXT NOT NULL, " +
+	    "siphash_id_digest TEXT NOT NULL, " +
+	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
+	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
+	    "PRIMARY KEY (siphash_id_digest))";
+
+	try
+	{
+	    db.execSQL(str);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	/*
 	** Create the congestion_control table.
 	*/
 
@@ -5543,7 +5563,8 @@ public class Database extends SQLiteOpenHelper
 	    return;
 
 	String strings[] = new String[]
-	    {"DROP TABLE IF EXISTS congestion_control",
+	    {"DROP TABLE IF EXISTS arson",
+	     "DROP TABLE IF EXISTS congestion_control",
 	     "DROP TABLE IF EXISTS fire",
 	     "DROP TABLE IF EXISTS log",
 	     "DROP TABLE IF EXISTS neighbors",
