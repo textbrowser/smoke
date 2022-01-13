@@ -5,6 +5,7 @@ Summary of Smoke
 <li>Almost zero-dependency software.</li>
 <li>Application lock.</li>
 <li>Argon2id and PBKDF2 key-derivation functions.</li>
+<li>Arson.</li>
 <li>Automatic, oscillatory public-key exchange protocol, via SipHash.</li>
 <li>BSD 3-clause license.</li>
 <li>Content is recorded via authenticated encryption.</li>
