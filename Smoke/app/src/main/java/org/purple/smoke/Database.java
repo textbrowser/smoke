@@ -5058,6 +5058,9 @@ public class Database extends SQLiteOpenHelper
 	str = "CREATE TABLE IF NOT EXISTS arson (" +
 	    "authentication_key TEXT NOT NULL, " +
 	    "encryption_key TEXT NOT NULL, " +
+	    "moonlander TEXT NOT NULL, " +
+	    "public_encryption_key TEXT NOT NULL, " +
+	    "private_encryption_key TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
