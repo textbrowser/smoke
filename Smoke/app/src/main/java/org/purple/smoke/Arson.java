@@ -50,6 +50,18 @@ public class Arson
 	}
     }
 
+    private static class BundleB
+    {
+	public byte m_w[] = null;
+	public byte m_x[] = null;
+	public byte m_y[] = null;
+	public byte m_z[] = null;
+
+	public BundleB(byte bytes[])
+	{
+	}
+    }
+
     public Arson()
     {
     }
