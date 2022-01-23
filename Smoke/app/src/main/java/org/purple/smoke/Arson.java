@@ -42,8 +42,11 @@ public class Arson
 
 	public BundleA(byte bytes[])
 	{
-	    m_x = Arrays.copyOfRange
-		(bytes, 0, bytes.length - Y_SIZE - Z_SIZE);
+	    m_x = Arrays.copyOfRange(bytes, 0, bytes.length - Y_SIZE - Z_SIZE);
+	    m_y = Arrays.copyOfRange
+		(bytes, bytes.length - Y_SIZE - Z_SIZE, bytes.length - Z_SIZE);
+	    m_z = Arrays.copyOfRange
+		(bytes, bytes.length - Z_SIZE, bytes.length);
 	}
     }
 
