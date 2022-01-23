@@ -31,8 +31,8 @@ import java.util.Arrays;
 
 public class Arson
 {
-    public final static int Y_SIZE = 64;
-    public final static int Z_SIZE = 64;
+    public final static int Y_SIZE = 64; // Size of HMAC output.
+    public final static int Z_SIZE = 64; // Size of HMAC output.
 
     private static class BundleA
     {
