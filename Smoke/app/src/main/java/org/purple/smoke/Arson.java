@@ -27,8 +27,26 @@
 
 package org.purple.smoke;
 
+import java.util.Arrays;
+
 public class Arson
 {
+    public final static int Y_SIZE = 64;
+    public final static int Z_SIZE = 64;
+
+    private static class BundleA
+    {
+	public byte m_x[] = null;
+	public byte m_y[] = null;
+	public byte m_z[] = null;
+
+	public BundleA(byte bytes[])
+	{
+	    m_x = Arrays.copyOfRange
+		(bytes, 0, bytes.length - Y_SIZE - Z_SIZE);
+	}
+    }
+
     public Arson()
     {
     }
