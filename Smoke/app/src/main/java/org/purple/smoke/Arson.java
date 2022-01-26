@@ -65,9 +65,10 @@ public class Arson
 		64 + // Sender Digest
 		96 + // Arson Keys
 		96;  // Message Keys
-	    int w_size = bytes.length - V_SIZE - Y_SIZE - Z_SIZE - x_size;
+	    final int w_size = bytes.length - V_SIZE - Y_SIZE - Z_SIZE - x_size;
 
 	    m_v = Arrays.copyOfRange(bytes, 0, V_SIZE);
+	    m_w = Arrays.copyOfRange(bytes, V_SIZE, w_size);
 	}
     }
 
