@@ -31,6 +31,7 @@ import java.util.Arrays;
 
 public class Arson
 {
+    public final static int V_SIZE = 64; // Moonlander Index size.
     public final static int Y_SIZE = 64; // Size of HMAC output.
     public final static int Z_SIZE = 64; // Size of HMAC output.
 
@@ -52,6 +53,7 @@ public class Arson
 
     private static class BundleB
     {
+	public byte m_v[] = null;
 	public byte m_w[] = null;
 	public byte m_x[] = null;
 	public byte m_y[] = null;
@@ -59,6 +61,13 @@ public class Arson
 
 	public BundleB(byte bytes[])
 	{
+	    final int x_size = 8 + // Time
+		64 + // Sender Digest
+		96 + // Arson Keys
+		96;  // Message Keys
+	    int w_size = bytes.length - V_SIZE - Y_SIZE - Z_SIZE - x_size;
+
+	    m_v = Arrays.copyOfRange(bytes, 0, V_SIZE);
 	}
     }
 
