@@ -69,6 +69,11 @@ public class Arson
 
 	    m_v = Arrays.copyOfRange(bytes, 0, V_SIZE);
 	    m_w = Arrays.copyOfRange(bytes, V_SIZE, w_size);
+	    m_x = Arrays.copyOfRange(bytes, w_size, w_size + x_size);
+	    m_y = Arrays.copyOfRange
+		(bytes, w_size + x_size, Y_SIZE + w_size + x_size);
+	    m_z = Arrays.copyOfRange
+		(bytes, bytes.length - Z_SIZE, bytes.length);
 	}
     }
 
