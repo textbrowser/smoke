@@ -31,9 +31,11 @@ import java.util.Arrays;
 
 public class Arson
 {
-    public final static int V_SIZE = 64; // Moonlander Index size.
-    public final static int Y_SIZE = 64; // Size of HMAC output.
-    public final static int Z_SIZE = 64; // Size of HMAC output.
+    private final static Cryptography s_cryptography =
+	Cryptography.getInstance();
+    private final static int V_SIZE = 64; // Moonlander Index size.
+    private final static int Y_SIZE = 64; // Size of HMAC output.
+    private final static int Z_SIZE = 64; // Size of HMAC output.
 
     private static class BundleA
     {
