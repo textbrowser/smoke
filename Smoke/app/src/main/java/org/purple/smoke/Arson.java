@@ -79,7 +79,18 @@ public class Arson
 	}
     }
 
+    /*
+    ** A single Arson object provides fewer containers in the kernel.
+    ** However, it complicates management of multiple participants.
+    */
+
     public Arson()
     {
+    }
+
+    public void append(byte bytes[])
+    {
+	if(bytes == null || bytes.length == 0)
+	    return;
     }
 }
