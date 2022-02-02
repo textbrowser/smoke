@@ -304,9 +304,10 @@ Remaining Items
 - Allow unlocking of locked Steams.
 - Android 11 does not tolerate Steam continuation after Smoke exit.
   (ACTION_OPEN_DOCUMENT)
+- Arson.
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
-- Diagram.
+- Diagram the processes.
 - Include member's name in Share Keys Of, if possible.
 - Java does not include methods for destroying private containers.
 - Mist, or, SMS.
