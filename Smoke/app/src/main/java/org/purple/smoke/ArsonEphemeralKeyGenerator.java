@@ -27,12 +27,55 @@
 
 package org.purple.smoke;
 
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class ArsonEphemeralKeyGenerator
 {
+    private ScheduledExecutorService m_generatorSchedule = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
+    private final static Database s_databaseHelper = Database.getInstance();
+    private final static long GENERATOR_INTERVAL = 1500L;
+
+    private void prepareSchedulers()
+    {
+	if(m_generatorSchedule == null)
+	{
+	    m_generatorSchedule = Executors.newSingleThreadScheduledExecutor();
+	    m_generatorSchedule.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+			ArrayList<ParticipantElement> arrayList =
+			    s_databaseHelper.
+			    readParticipants(s_cryptography, "");
+
+			if(arrayList == null || arrayList.isEmpty())
+			    return;
+
+			for(ParticipantElement participantElement : arrayList)
+			    if(participantElement != null)
+			    {
+			    }
+
+			arrayList.clear();
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 1500L, GENERATOR_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+    }
 
     public ArsonEphemeralKeyGenerator()
     {
+	prepareSchedulers();
     }
 }
