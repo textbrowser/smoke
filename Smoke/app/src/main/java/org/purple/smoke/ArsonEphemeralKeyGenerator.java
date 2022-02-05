@@ -52,15 +52,15 @@ public class ArsonEphemeralKeyGenerator
 		{
 		    try
 		    {
-			ArrayList<ParticipantElement> arrayList =
-			    s_databaseHelper.
-			    readParticipants(s_cryptography, "");
+			ArrayList<String> arrayList =
+			    s_databaseHelper.readSipHashIdStrings
+			    (s_cryptography);
 
 			if(arrayList == null || arrayList.isEmpty())
 			    return;
 
-			for(ParticipantElement participantElement : arrayList)
-			    if(participantElement != null)
+			for(String string : arrayList)
+			    if(string != null)
 			    {
 			    }
 
