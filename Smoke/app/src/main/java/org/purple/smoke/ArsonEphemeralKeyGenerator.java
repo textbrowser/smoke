@@ -38,7 +38,7 @@ public class ArsonEphemeralKeyGenerator
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
-    private final static long GENERATOR_INTERVAL = 1500L;
+    private final static long GENERATOR_INTERVAL = 250L;
 
     private void prepareSchedulers()
     {
@@ -50,11 +50,14 @@ public class ArsonEphemeralKeyGenerator
 		@Override
 		public void run()
 		{
+		    if(!Kernel.getInstance().isNetworkConnected() ||
+		       !State.getInstance().isAuthenticated())
+			return;
+
 		    try
 		    {
-			ArrayList<String> arrayList =
-			    s_databaseHelper.readSipHashIdStrings
-			    (s_cryptography);
+			ArrayList<String> arrayList = s_databaseHelper.
+			    readSipHashIdStrings(s_cryptography);
 
 			if(arrayList == null || arrayList.isEmpty())
 			    return;

@@ -148,6 +148,8 @@ public class Kernel
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
+    private final ArsonEphemeralKeyGenerator m_arsonEphemeralKeyGenerator =
+	new ArsonEphemeralKeyGenerator();
     private final KernelBroadcastReceiver m_receiver =
 	new KernelBroadcastReceiver();
     private final Object m_callSchedulerMutex = new Object();
