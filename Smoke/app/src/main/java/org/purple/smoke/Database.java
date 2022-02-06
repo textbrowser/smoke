@@ -5061,6 +5061,7 @@ public class Database extends SQLiteOpenHelper
 	    "moonlander TEXT, " +
 	    "private_encryption_key TEXT, " +
 	    "public_encryption_key TEXT, " +
+	    "siphash_id TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
