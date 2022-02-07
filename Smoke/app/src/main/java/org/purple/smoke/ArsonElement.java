@@ -29,12 +29,13 @@ package org.purple.smoke;
 
 public class ArsonElement
 {
-    String m_sipHashId = "";
-    byte m_arsonKeystream[] = null;
-    byte m_messageKeystream[] = null;
-    byte m_moonlander[] = null;
-    byte m_privateKey[] = null;
-    byte m_publicKey[] = null;
+    public String m_sipHashId = "";
+    public byte m_arsonKeystream[] = null;
+    public byte m_messageKeystream[] = null;
+    public byte m_moonlander[] = null;
+    public byte m_privateKey[] = null;
+    public byte m_publicKey[] = null;
+    public int m_oid = -1;
 
     public ArsonElement()
     {

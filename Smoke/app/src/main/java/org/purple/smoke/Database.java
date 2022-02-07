@@ -306,6 +306,79 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public ArrayList<ArsonElement> readArsons(Cryptography cryptography)
+    {
+	if(cryptography == null || m_db == null)
+	    return null;
+
+	Cursor cursor = null;
+	ArrayList<ArsonElement> arrayList = null;
+
+	try
+	{
+	    cursor = m_db.rawQuery("SELECT * FROM arson", null);
+
+	    if(cursor != null && cursor.moveToFirst())
+	    {
+		arrayList = new ArrayList<> ();
+
+		while(!cursor.isAfterLast())
+		{
+		    ArsonElement arsonElement = new ArsonElement();
+		    int count = cursor.getColumnCount();
+		    int oid = cursor.getInt(count - 1);
+
+		    for(int i = 0; i < count; i++)
+		    {
+			if(i == count - 1)
+			{
+			    arsonElement.m_oid = oid;
+			    continue;
+			}
+
+			byte bytes[] = cryptography.mtd
+			    (Base64.decode(cursor.getString(i).getBytes(),
+					   Base64.DEFAULT));
+
+			if(bytes == null)
+			{
+			    StringBuilder stringBuilder = new StringBuilder();
+
+			    stringBuilder.append("Database::readArsons(): ");
+			    stringBuilder.append("error on column ");
+			    stringBuilder.append(cursor.getColumnName(i));
+			    stringBuilder.append(".");
+			    writeLog(stringBuilder.toString());
+			}
+
+			switch(i)
+			{
+			default:
+			    break;
+			}
+		    }
+
+		    arrayList.add(arsonElement);
+		    cursor.moveToNext();
+		}
+	    }
+	}
+	catch(Exception exception)
+	{
+	    if(arrayList != null)
+		arrayList.clear();
+
+	    arrayList = null;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return arrayList;
+    }
+
     public ArrayList<FireElement> readFires(Cryptography cryptography)
     {
 	if(cryptography == null || m_db == null)
