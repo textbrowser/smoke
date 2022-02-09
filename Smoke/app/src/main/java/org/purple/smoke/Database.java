@@ -316,7 +316,14 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    cursor = m_db.rawQuery("SELECT * FROM arson", null);
+	    cursor = m_db.rawQuery("SELECT arson_keystream, " +
+				   "message_keystream, " +
+				   "moonlander, " +
+				   "private_encryption_key, " +
+				   "public_encryption_key, " +
+				   "siphash_id, " +
+				   "OID " +
+				   "FROM arson", null);
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
@@ -353,6 +360,30 @@ public class Database extends SQLiteOpenHelper
 
 			switch(i)
 			{
+			case 0:
+			    arsonElement.m_arsonKeystream = bytes;
+			    break;
+			case 1:
+			    arsonElement.m_messageKeystream = bytes;
+			    break;
+			case 2:
+			    arsonElement.m_moonlander = bytes;
+			    break;
+			case 3:
+			    arsonElement.m_privateKey = bytes;
+			    break;
+			case 4:
+			    arsonElement.m_publicKey = bytes;
+			    break;
+			case 5:
+			    if(bytes != null)
+				arsonElement.m_sipHashId = new String
+				    (bytes, StandardCharsets.UTF_8);
+			    else
+				arsonElement.m_sipHashId =
+				    "error (" + oid + ")";
+
+			    break;
 			default:
 			    break;
 			}
