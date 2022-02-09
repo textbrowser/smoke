@@ -306,7 +306,8 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public ArrayList<ArsonElement> readArsons(Cryptography cryptography)
+    public ArrayList<ArsonElement> readArsons(Cryptography cryptography,
+					      String sipHashId)
     {
 	if(cryptography == null || m_db == null)
 	    return null;
@@ -316,14 +317,23 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    cursor = m_db.rawQuery("SELECT arson_keystream, " +
-				   "message_keystream, " +
-				   "moonlander, " +
-				   "private_encryption_key, " +
-				   "public_encryption_key, " +
-				   "siphash_id, " +
-				   "OID " +
-				   "FROM arson", null);
+	    cursor = m_db.rawQuery
+		("SELECT arson_keystream, " +
+		 "message_keystream, " +
+		 "moonlander, " +
+		 "private_encryption_key, " +
+		 "public_encryption_key, " +
+		 "siphash_id, " +
+		 "OID " +
+		 "FROM arson " +
+		 "WHERE siphash_id_digest = ?",
+		 new String[] {Base64.
+			       encodeToString(cryptography.
+					      hmac(sipHashId.toUpperCase().
+						   trim().
+						   getBytes(StandardCharsets.
+							    UTF_8)),
+					      Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
