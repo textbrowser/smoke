@@ -327,13 +327,11 @@ public class Database extends SQLiteOpenHelper
 		 "OID " +
 		 "FROM arson " +
 		 "WHERE siphash_id_digest = ?",
-		 new String[] {Base64.
-			       encodeToString(cryptography.
-					      hmac(sipHashId.toUpperCase().
-						   trim().
-						   getBytes(StandardCharsets.
-							    UTF_8)),
-					      Base64.DEFAULT)});
+		 new String[] {Base64.encodeToString
+			       (cryptography.
+				hmac(sipHashId.toUpperCase().trim().
+				     getBytes(StandardCharsets.UTF_8)),
+				Base64.DEFAULT)});
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
