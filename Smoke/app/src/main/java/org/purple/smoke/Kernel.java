@@ -3205,6 +3205,22 @@ public class Kernel
 	}
     }
 
+    public void arsonCall
+	(ParticipantCall.Algorithms algorithm, String sipHashId)
+    {
+	/*
+	** Calling messages are not placed in the outbound_queue
+	** as they are considered temporary.
+	*/
+
+	try
+	{
+	}
+	catch(Exception exception)
+	{
+	}
+    }
+
     public void clearMessagesToSend()
     {
 	m_messagesToSendMutex.writeLock().lock();

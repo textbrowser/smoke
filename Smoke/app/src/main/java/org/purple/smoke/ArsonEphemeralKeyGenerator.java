@@ -62,10 +62,13 @@ public class ArsonEphemeralKeyGenerator
 			if(arrayList == null || arrayList.isEmpty())
 			    return;
 
+			/*
+			** Perform periodic exchanges.
+			*/
+
 			for(String string : arrayList)
-			    if(string != null)
-			    {
-			    }
+			    Kernel.getInstance().arsonCall
+				(ParticipantCall.Algorithms.MCELIECE, string);
 
 			arrayList.clear();
 		    }
