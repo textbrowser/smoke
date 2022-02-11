@@ -306,118 +306,6 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
-    public ArrayList<ArsonElement> readArsons(Cryptography cryptography,
-					      String sipHashId)
-    {
-	if(cryptography == null || m_db == null)
-	    return null;
-
-	Cursor cursor = null;
-	ArrayList<ArsonElement> arrayList = null;
-
-	try
-	{
-	    cursor = m_db.rawQuery
-		("SELECT arson_keystream, " +
-		 "message_keystream, " +
-		 "moonlander, " +
-		 "private_encryption_key, " +
-		 "public_encryption_key, " +
-		 "siphash_id, " +
-		 "OID " +
-		 "FROM arson " +
-		 "WHERE siphash_id_digest = ?",
-		 new String[] {Base64.encodeToString
-			       (cryptography.
-				hmac(sipHashId.toUpperCase().trim().
-				     getBytes(StandardCharsets.UTF_8)),
-				Base64.DEFAULT)});
-
-	    if(cursor != null && cursor.moveToFirst())
-	    {
-		arrayList = new ArrayList<> ();
-
-		while(!cursor.isAfterLast())
-		{
-		    ArsonElement arsonElement = new ArsonElement();
-		    int count = cursor.getColumnCount();
-		    int oid = cursor.getInt(count - 1);
-
-		    for(int i = 0; i < count; i++)
-		    {
-			if(i == count - 1)
-			{
-			    arsonElement.m_oid = oid;
-			    continue;
-			}
-
-			byte bytes[] = cryptography.mtd
-			    (Base64.decode(cursor.getString(i).getBytes(),
-					   Base64.DEFAULT));
-
-			if(bytes == null)
-			{
-			    StringBuilder stringBuilder = new StringBuilder();
-
-			    stringBuilder.append("Database::readArsons(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
-			}
-
-			switch(i)
-			{
-			case 0:
-			    arsonElement.m_arsonKeystream = bytes;
-			    break;
-			case 1:
-			    arsonElement.m_messageKeystream = bytes;
-			    break;
-			case 2:
-			    arsonElement.m_moonlander = bytes;
-			    break;
-			case 3:
-			    arsonElement.m_privateKey = bytes;
-			    break;
-			case 4:
-			    arsonElement.m_publicKey = bytes;
-			    break;
-			case 5:
-			    if(bytes != null)
-				arsonElement.m_sipHashId = new String
-				    (bytes, StandardCharsets.UTF_8);
-			    else
-				arsonElement.m_sipHashId =
-				    "error (" + oid + ")";
-
-			    break;
-			default:
-			    break;
-			}
-		    }
-
-		    arrayList.add(arsonElement);
-		    cursor.moveToNext();
-		}
-	    }
-	}
-	catch(Exception exception)
-	{
-	    if(arrayList != null)
-		arrayList.clear();
-
-	    arrayList = null;
-	}
-	finally
-	{
-	    if(cursor != null)
-		cursor.close();
-	}
-
-	return arrayList;
-    }
-
     public ArrayList<FireElement> readFires(Cryptography cryptography)
     {
 	if(cryptography == null || m_db == null)
@@ -5167,17 +5055,13 @@ public class Database extends SQLiteOpenHelper
 	** Create the arson table.
 	*/
 
-	str = "CREATE TABLE IF NOT EXISTS arson (" +
-	    "arson_keystream TEXT, " +
-	    "message_keystream TEXT, " +
-	    "moonlander TEXT, " +
-	    "private_encryption_key TEXT, " +
-	    "public_encryption_key TEXT, " +
-	    "siphash_id TEXT NOT NULL, " +
+	str = "CREATE TABLE IF NOT EXISTS arson_keys (" +
+	    "message_keystream TEXT NOT NULL, " +
+	    "message_keystream_digest TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
 	    "FOREIGN KEY (siphash_id_digest) REFERENCES " +
 	    "siphash_ids (siphash_id_digest) ON DELETE CASCADE, " +
-	    "PRIMARY KEY (siphash_id_digest))";
+	    "PRIMARY KEY (message_keystream_digest, siphash_id_digest))";
 
 	try
 	{
@@ -5679,7 +5563,7 @@ public class Database extends SQLiteOpenHelper
 	    return;
 
 	String strings[] = new String[]
-	    {"DROP TABLE IF EXISTS arson",
+	    {"DROP TABLE IF EXISTS arson_keys",
 	     "DROP TABLE IF EXISTS congestion_control",
 	     "DROP TABLE IF EXISTS fire",
 	     "DROP TABLE IF EXISTS log",
