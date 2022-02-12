@@ -39,6 +39,14 @@ public class ParticipantCall
     public enum Algorithms {MCELIECE, RSA}
 
     public ParticipantCall(Algorithms algorithm,
+			   String sipHashId)
+    {
+	m_algorithm = algorithm;
+	m_sipHashId = sipHashId;
+	m_startTime = System.nanoTime();
+    }
+
+    public ParticipantCall(Algorithms algorithm,
 			   String sipHashId,
 			   int participantOid)
     {

@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -133,6 +134,8 @@ public class Kernel
     private ConcurrentHashMap<String, Juggernaut> m_juggernauts = null;
     private ConcurrentHashMap<String, ParticipantCall> m_callQueue = null;
     private ConcurrentHashMap<String, byte[]> m_fireStreams = null;
+    private ConcurrentLinkedQueue<ParticipantCall> m_arsonCallQueue = null;
+    private ScheduledExecutorService m_arsonCallScheduler = null;
     private ScheduledExecutorService m_callScheduler = null;
     private ScheduledExecutorService m_messagesToSendScheduler = null;
     private ScheduledExecutorService m_neighborsScheduler = null;
@@ -152,6 +155,7 @@ public class Kernel
 	new ArsonEphemeralKeyGenerator();
     private final KernelBroadcastReceiver m_receiver =
 	new KernelBroadcastReceiver();
+    private final Object m_arsonCallSchedulerMutex = new Object();
     private final Object m_callSchedulerMutex = new Object();
     private final Object m_messagesToSendSchedulerMutex = new Object();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
@@ -210,6 +214,7 @@ public class Kernel
 
     private Kernel()
     {
+	m_arsonCallQueue = new ConcurrentLinkedQueue<> ();
 	m_callQueue = new ConcurrentHashMap<> ();
 	m_chatTemporaryIdentityLastTick = new AtomicLong
 	    (System.currentTimeMillis());
@@ -3215,6 +3220,7 @@ public class Kernel
 
 	try
 	{
+	    m_arsonCallQueue.add(new ParticipantCall(algorithm, sipHashId));
 	}
 	catch(Exception exception)
 	{
