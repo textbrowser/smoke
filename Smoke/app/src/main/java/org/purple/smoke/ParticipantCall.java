@@ -34,14 +34,15 @@ public class ParticipantCall
     public Algorithms m_algorithm = Algorithms.RSA;
     public KeyPair m_keyPair = null;
     public String m_sipHashId = "";
+    public boolean m_arson = false;
     public int m_participantOid = -1;
     public long m_startTime = -1L; // Calls expire.
     public enum Algorithms {MCELIECE, RSA}
 
-    public ParticipantCall(Algorithms algorithm,
-			   String sipHashId)
+    public ParticipantCall(Algorithms algorithm, String sipHashId)
     {
 	m_algorithm = algorithm;
+	m_arson = true;
 	m_sipHashId = sipHashId;
 	m_startTime = System.nanoTime();
     }
