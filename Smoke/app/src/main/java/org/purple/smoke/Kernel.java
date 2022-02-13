@@ -411,6 +411,19 @@ public class Kernel
 	if(m_arsonCallScheduler == null)
 	{
 	    m_arsonCallScheduler = Executors.newSingleThreadScheduledExecutor();
+	    m_arsonCallScheduler.scheduleAtFixedRate(new Runnable()
+	    {
+		@Override
+		public void run()
+		{
+		    try
+		    {
+		    }
+		    catch(Exception exception)
+		    {
+		    }
+		}
+	    }, 1500L, CALL_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 
 	if(m_callScheduler == null)
@@ -440,8 +453,8 @@ public class Kernel
 
 			/*
 			** Allow the UI to respond to calling requests
-			** while the kernel attempts to generate
-			** ephemeral keys.
+			** while the kernel attempts to generate ephemeral
+			** keys.
 			*/
 
 			try
