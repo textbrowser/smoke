@@ -408,6 +408,11 @@ public class Kernel
 
     private void prepareSchedulers()
     {
+	if(m_arsonCallScheduler == null)
+	{
+	    m_arsonCallScheduler = Executors.newSingleThreadScheduledExecutor();
+	}
+
 	if(m_callScheduler == null)
 	{
 	    m_callScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -452,13 +457,20 @@ public class Kernel
 			    {
 				ParticipantCall value = m_callQueue.get(key);
 
-				if(value == null ||
-				   (System.nanoTime() -
-				    value.m_startTime) / 1000000L >
-				   CALL_LIFETIME)
+				if(value == null)
+				    m_callQueue.remove(key);
+				else if((System.nanoTime() -
+					 value.m_startTime) / 1000000L >
+					CALL_LIFETIME)
 				    m_callQueue.remove(key);
 			    }
+			}
+			catch(Exception exception)
+			{
+			}
 
+			try
+			{
 			    /*
 			    ** Discover a pending call.
 			    */
