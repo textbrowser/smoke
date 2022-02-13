@@ -59,6 +59,9 @@ public class ParticipantCall
 
     public void preparePrivatePublicKey()
     {
+	if(m_keyPair != null)
+	    return;
+
 	try
 	{
 	    switch(m_algorithm)
