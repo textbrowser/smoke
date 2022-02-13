@@ -68,7 +68,7 @@ public class ChatBubble extends View
     private int m_oid = -1;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
-    public enum Locations {LEFT, RIGHT}
+    public enum Locations {LEFT, RIGHT};
 
     public ChatBubble(Context context,
 		      MemberChat memberChat,

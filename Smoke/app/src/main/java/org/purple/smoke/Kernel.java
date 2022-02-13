@@ -1020,7 +1020,8 @@ public class Kernel
 		{
 		    try
 		    {
-			if(!isConnected())
+			if(!State.getInstance().isAuthenticated() ||
+			   !isConnected())
 			    return;
 
 			if(m_state == 0x00)
@@ -1153,7 +1154,9 @@ public class Kernel
 		@Override
 		public void run()
 		{
-		    if(isConnected() && s_cryptography.ozoneMacKey() != null)
+		    if(State.getInstance().isAuthenticated() &&
+		       isConnected() &&
+		       s_cryptography.ozoneMacKey() != null)
 			retrieveChatMessages("");
 		}
 	    }, 10000L, REQUEST_MESSAGES_INTERVAL, TimeUnit.MILLISECONDS);
@@ -1169,7 +1172,9 @@ public class Kernel
 		{
 		    try
 		    {
-			if(State.getInstance().silent() || !isConnected())
+			if(!State.getInstance().isAuthenticated() ||
+			   State.getInstance().silent() ||
+			   !isConnected())
 			    return;
 
 			ArrayList<ParticipantElement> arrayList =

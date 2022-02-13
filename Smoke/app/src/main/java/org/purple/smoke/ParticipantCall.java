@@ -37,7 +37,7 @@ public class ParticipantCall
     public boolean m_arson = false;
     public int m_participantOid = -1;
     public long m_startTime = -1L; // Calls expire.
-    public enum Algorithms {MCELIECE, RSA}
+    public enum Algorithms {MCELIECE, RSA};
 
     public ParticipantCall(Algorithms algorithm, String sipHashId)
     {

@@ -165,7 +165,7 @@ public class Database extends SQLiteOpenHelper
     public enum ExceptionLevels
     {
 	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
-    }
+    };
     public final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     public final static int MESSAGE_DELIVERY_ATTEMPTS = 10; // Must be > 0!
 
