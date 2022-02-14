@@ -92,8 +92,7 @@ public class Smoke extends Application
 	    if(context != null && context instanceof Activity)
 		((Activity) context).finishAndRemoveTask();
 	    else
-		android.os.Process.killProcess
-		    (android.os.Process.myPid());
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
     }
 
