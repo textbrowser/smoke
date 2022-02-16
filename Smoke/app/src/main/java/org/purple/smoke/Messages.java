@@ -47,7 +47,7 @@ public class Messages
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
     public final static String IDENTITY_MESSAGE_TYPE = "0095a";
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
-	new byte[] {0x00, 0x01};
+	new byte[] {0x00, 0x01, 0x02, 0x03};
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
