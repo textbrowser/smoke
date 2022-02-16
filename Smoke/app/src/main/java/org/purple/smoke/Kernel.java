@@ -418,6 +418,18 @@ public class Kernel
 		{
 		    try
 		    {
+			if(m_arsonCallQueue.isEmpty())
+			    synchronized(m_arsonCallSchedulerMutex)
+			    {
+				try
+				{
+				    m_arsonCallSchedulerMutex.wait
+					(WAIT_TIMEOUT);
+				}
+				catch(Exception exception)
+				{
+				}
+			    }
 		    }
 		    catch(Exception exception)
 		    {
@@ -3254,6 +3266,11 @@ public class Kernel
 	}
 	catch(Exception exception)
 	{
+	}
+
+	synchronized(m_arsonCallSchedulerMutex)
+	{
+	    m_arsonCallSchedulerMutex.notify();
 	}
     }
 
