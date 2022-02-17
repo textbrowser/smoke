@@ -65,8 +65,8 @@ public class Arson
 	{
 	    final int x_size = 8 + // Time
 		64 + // Sender Digest
-		96 + // Arson Keys (AES (32) + SHA (64))
-		96;  // Message Keys (AES (32) + SHA (64))
+		96 + // Arson Keys (Cipher (32) + Hash (64))
+		96;  // Message Keys (Cipher (32) + Hash (64))
 	    final int w_size = bytes.length - V_SIZE - Y_SIZE - Z_SIZE - x_size;
 
 	    m_v = Arrays.copyOfRange(bytes, 0, V_SIZE);
