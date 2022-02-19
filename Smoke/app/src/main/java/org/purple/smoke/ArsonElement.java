@@ -29,6 +29,7 @@ package org.purple.smoke;
 
 public class ArsonElement
 {
+    public boolean m_enabled = false;
     public byte m_messageKeyStream[] = null;
     public int m_oid = -1;
 

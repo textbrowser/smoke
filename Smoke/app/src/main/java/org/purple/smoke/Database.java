@@ -5056,6 +5056,7 @@ public class Database extends SQLiteOpenHelper
 	*/
 
 	str = "CREATE TABLE IF NOT EXISTS arson_keys (" +
+	    "enabled TEXT NOT NULL, " +
 	    "message_keystream TEXT NOT NULL, " +
 	    "message_keystream_digest TEXT NOT NULL, " +
 	    "siphash_id_digest TEXT NOT NULL, " +
