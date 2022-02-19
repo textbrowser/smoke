@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
@@ -430,6 +431,32 @@ public class Kernel
 				{
 				}
 			    }
+
+			try
+			{
+			    /*
+			    ** Remove expired calls.
+			    */
+
+			    Iterator<ParticipantCall> iterator =
+				m_arsonCallQueue.iterator();
+
+			    while(iterator.hasNext())
+			    {
+				ParticipantCall value = iterator.next();
+
+				if(value == null)
+				    iterator.remove();
+				else if((System.nanoTime() -
+					 value.m_startTime) / 1000000L >
+					CALL_LIFETIME)
+				    iterator.remove();
+			    }
+			}
+			catch(Exception exception)
+			{
+			}
+
 		    }
 		    catch(Exception exception)
 		    {
