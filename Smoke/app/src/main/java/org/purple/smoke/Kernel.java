@@ -457,6 +457,56 @@ public class Kernel
 			{
 			}
 
+			ParticipantCall participantCall = null;
+
+			try
+			{
+			    Iterator<ParticipantCall> iterator =
+				m_arsonCallQueue.iterator();
+
+			    while(iterator.hasNext())
+			    {
+				ParticipantCall value = iterator.next();
+
+				if(value == null)
+				{
+				    iterator.remove();
+				    continue;
+				}
+				else if(value.m_keyPair != null)
+				    continue;
+
+				break;
+			    }
+			}
+			catch(Exception exception)
+			{
+			}
+
+			if(participantCall == null)
+			    return;
+
+			if(isConnected())
+			{
+			    byte publicKeyType = Cryptography.
+				MESSAGES_KEY_TYPES[0]; // McEliece
+
+			    /*
+			    ** Place a call request to all neighbors.
+			    */
+
+			    byte bytes[] = Messages.callMessage
+				(s_cryptography,
+				 participantCall.m_sipHashId,
+				 participantCall.m_keyPair.getPublic().
+				 getEncoded(),
+				 publicKeyType,
+				 Messages.ARSON_CALL_HALF_AND_HALF_TAGS[0]);
+
+			    if(bytes != null)
+				scheduleSend
+				    (Messages.bytesToMessageString(bytes));
+			}
 		    }
 		    catch(Exception exception)
 		    {
@@ -580,12 +630,12 @@ public class Kernel
 			if(isConnected())
 			{
 			    byte publicKeyType = Cryptography.
-				MESSAGES_KEY_TYPES[0];
+				MESSAGES_KEY_TYPES[0]; // McEliece
 
 			    if(participantCall.m_algorithm ==
 			       ParticipantCall.Algorithms.RSA)
-				publicKeyType =
-				    Cryptography.MESSAGES_KEY_TYPES[1];
+				publicKeyType = Cryptography.
+				    MESSAGES_KEY_TYPES[1];
 
 			    /*
 			    ** Place a call request to all neighbors.
