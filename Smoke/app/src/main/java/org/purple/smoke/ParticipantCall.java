@@ -57,7 +57,7 @@ public class ParticipantCall
 	m_startTime = System.nanoTime();
     }
 
-    public void preparePrivatePublicKey()
+    public void preparePrivatePublicKeys()
     {
 	if(m_keyPair != null)
 	    return;

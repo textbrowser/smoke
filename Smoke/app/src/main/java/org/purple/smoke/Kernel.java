@@ -152,8 +152,6 @@ public class Kernel
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
     private byte m_chatMessageRetrievalIdentity[] = null;
-    private final ArsonEphemeralKeyGenerator m_arsonEphemeralKeyGenerator =
-	new ArsonEphemeralKeyGenerator();
     private final KernelBroadcastReceiver m_receiver =
 	new KernelBroadcastReceiver();
     private final Object m_arsonCallSchedulerMutex = new Object();
@@ -612,7 +610,7 @@ public class Kernel
 			if(participantCall == null)
 			    return;
 			else
-			    participantCall.preparePrivatePublicKey();
+			    participantCall.preparePrivatePublicKeys();
 
 			try
 			{
@@ -3329,25 +3327,30 @@ public class Kernel
 	}
     }
 
-    public void arsonCall
-	(ParticipantCall.Algorithms algorithm, String sipHashId)
+    public void call(ParticipantCall participantCall)
     {
-	/*
-	** Calling messages are not placed in the outbound_queue
-	** as they are considered temporary.
-	*/
+	if(participantCall == null)
+	    return;
 
-	try
+	if(participantCall.m_arson && participantCall.m_keyPair != null)
 	{
-	    m_arsonCallQueue.add(new ParticipantCall(algorithm, sipHashId));
-	}
-	catch(Exception exception)
-	{
-	}
+	    /*
+	    ** Calling messages are not placed in the outbound_queue
+	    ** as they are considered temporary.
+	    */
 
-	synchronized(m_arsonCallSchedulerMutex)
-	{
-	    m_arsonCallSchedulerMutex.notify();
+	    try
+	    {
+		m_arsonCallQueue.add(participantCall);
+	    }
+	    catch(Exception exception)
+	    {
+	    }
+
+	    synchronized(m_arsonCallSchedulerMutex)
+	    {
+		m_arsonCallSchedulerMutex.notify();
+	    }
 	}
     }
 

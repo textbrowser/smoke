@@ -40,7 +40,7 @@ public class ArsonEphemeralKeyGenerator
     private final static Database s_databaseHelper = Database.getInstance();
     private final static long GENERATOR_INTERVAL = 250L;
 
-    private void prepareSchedulers()
+    private void prepareSchedulers(String sipHashId)
     {
 	if(m_generatorSchedule == null)
 	{
@@ -56,21 +56,11 @@ public class ArsonEphemeralKeyGenerator
 
 		    try
 		    {
-			ArrayList<String> arrayList = s_databaseHelper.
-			    readSipHashIdStrings(s_cryptography);
+			ParticipantCall participantCall = new ParticipantCall
+			    (ParticipantCall.Algorithms.MCELIECE, sipHashId);
 
-			if(arrayList == null || arrayList.isEmpty())
-			    return;
-
-			/*
-			** Perform periodic exchanges.
-			*/
-
-			for(String string : arrayList)
-			    Kernel.getInstance().arsonCall
-				(ParticipantCall.Algorithms.MCELIECE, string);
-
-			arrayList.clear();
+			participantCall.preparePrivatePublicKeys();
+			Kernel.getInstance().call(participantCall);
 		    }
 		    catch(Exception exception)
 		    {
@@ -80,8 +70,8 @@ public class ArsonEphemeralKeyGenerator
 	}
     }
 
-    public ArsonEphemeralKeyGenerator()
+    public ArsonEphemeralKeyGenerator(String sipHashId)
     {
-	prepareSchedulers();
+	prepareSchedulers(sipHashId);
     }
 }
