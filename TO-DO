@@ -313,5 +313,6 @@ Remaining Items
 - Diagram the processes.
 - Include member's name in Share Keys Of, if possible.
 - Optional cryptographic discovery, per neighbor.
+- Purge neighbors in a task via Settings.
 - SHA3 via BC.
 - Server-less.
