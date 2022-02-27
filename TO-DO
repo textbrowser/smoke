@@ -304,6 +304,7 @@ Peculiar Items
 
 Remaining Items
 
+- Add qTESLA signature scheme.
 - Allow unlocking of locked Steams.
 - Android 11 does not tolerate Steam continuation after Smoke exit.
   (ACTION_OPEN_DOCUMENT)
