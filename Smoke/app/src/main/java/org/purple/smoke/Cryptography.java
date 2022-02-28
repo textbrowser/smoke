@@ -146,7 +146,7 @@ public class Cryptography
     private final static int MCELIECE_T[] = {50, 68, 118};
     private final static int NUMBER_OF_CORES = Math.max
 	(4, Runtime.getRuntime().availableProcessors());
-    private final static int RAINBOW_VI[] = {34, 57, 80};
+    private final static int RAINBOW_VI[] = {68, 104, 140};
     private final static int SHA_1_OUTPUT_SIZE_BITS = 160;
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
@@ -184,7 +184,7 @@ public class Cryptography
     public final static int PARTICIPANT_CALL_RSA_KEY_SIZE = 3072;
     public final static int PKI_SIGNATURE_KEY_SIZES[] = {384,  // ECDSA
 							 4096, // RSA
-							 80,   // Rainbow
+							 140,  // Rainbow
 							 64};  // SPHINCS
     public final static int PKI_ENCRYPTION_KEY_SIZES[] = {4096}; // RSA
     public final static int SIPHASH_OUTPUT_LENGTH = 16; // Bytes (128 bits).
@@ -1425,13 +1425,13 @@ public class Cryptography
 		generator = KeyFactory.getInstance
 		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
 		     BouncyCastlePQCProvider.PROVIDER_NAME);
-	    else if(length < 160000)
-		generator = KeyFactory.getInstance
-		    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
-	    else
+	    else if(length < 335000)
 		generator = KeyFactory.getInstance
 		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
 		     BouncyCastlePQCProvider.PROVIDER_NAME);
+	    else
+		generator = KeyFactory.getInstance
+		    ("Rainbow", BouncyCastlePQCProvider.PROVIDER_NAME);
 
 	    return generator.generatePublic
 		(new X509EncodedKeySpec(publicBytes));
