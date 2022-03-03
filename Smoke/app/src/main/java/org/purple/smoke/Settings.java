@@ -482,11 +482,9 @@ public class Settings extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread
+	new Thread
 	    (new SingleShot(((TextView) findViewById(R.id.participant_name)).
-			    getText().toString(), string));
-
-	thread.start();
+			    getText().toString(), string)).start();
     }
 
     private void deleteNeighbor(String ipAndPort, int id)
@@ -513,7 +511,21 @@ public class Settings extends AppCompatActivity
 			    ** field may represent a recycled value.
 			    */
 
-			    Kernel.getInstance().purgeDeletedNeighbors();
+			    class SingleShot implements Runnable
+			    {
+				SingleShot()
+				{
+				}
+
+				@Override
+				public void run()
+				{
+				    Kernel.getInstance().
+					purgeDeletedNeighbors();
+				}
+			    }
+
+			    new Thread(new SingleShot()).start();
 
 			    TableLayout tableLayout = (TableLayout)
 				findViewById(R.id.neighbors);
@@ -716,9 +728,7 @@ public class Settings extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread(new SingleShot());
-
-	thread.start();
+	new Thread(new SingleShot()).start();
     }
 
     private void networkStatusChanged()
@@ -1621,14 +1631,11 @@ public class Settings extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread
-	    (new SingleShot(spinner3.getSelectedItem().toString(),
-			    textView1.getText().toString(),
-			    spinner4.getSelectedItem().toString(),
-			    iterationCount,
-			    keyDerivationFunction));
-
-	thread.start();
+	new Thread(new SingleShot(spinner3.getSelectedItem().toString(),
+				  textView1.getText().toString(),
+				  spinner4.getSelectedItem().toString(),
+				  iterationCount,
+				  keyDerivationFunction)).start();
     }
 
     private void prepareForegroundService()
@@ -2729,11 +2736,9 @@ public class Settings extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread
+	new Thread
 	    (new SingleShot(spinner1.getSelectedItem().toString(),
-			    spinner2.getSelectedItem().toString()));
-
-	thread.start();
+			    spinner2.getSelectedItem().toString())).start();
     }
 
     private void releaseResources()
@@ -2812,9 +2817,7 @@ public class Settings extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread(new SingleShot());
-
-	thread.start();
+	new Thread(new SingleShot()).start();
     }
 
     private void shareKeysOf(final String oid)
@@ -2893,9 +2896,7 @@ public class Settings extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread(new SingleShot());
-
-	thread.start();
+	new Thread(new SingleShot()).start();
     }
 
     private void shareSipHashId(int oid)
@@ -3120,9 +3121,7 @@ public class Settings extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread(new SingleShot(oid));
-
-	thread.start();
+	new Thread(new SingleShot(oid)).start();
     }
 
     private void showFireActivity()

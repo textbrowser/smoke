@@ -200,6 +200,7 @@ Completed Items
 - Prevent-sleep option in Settings.
 - Preview attachment.
 - Prompt for neighbor removal.
+- Purge neighbors in a task via Settings.
 - Purging of neighbor queues should occur off of the main thread.
 - Push sent messages from Member Chat to Chat.
 - Receiving requested keys which do not include signatures should be
@@ -314,6 +315,6 @@ Remaining Items
 - Diagram the processes.
 - Include member's name in Share Keys Of, if possible.
 - Optional cryptographic discovery, per neighbor.
-- Purge neighbors in a task via Settings.
+- Rare event: connected device with a disconnected neighbor representation.
 - SHA3 via BC.
 - Server-less.

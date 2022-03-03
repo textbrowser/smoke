@@ -481,14 +481,12 @@ public class Authenticate extends AppCompatActivity
 		    }
 		}
 
-		Thread thread = new Thread
+		new Thread
 		    (new SingleShot(textView1.getText().toString(),
 				    encryptionSalt,
 				    macSalt,
 				    iterationCount,
-				    keyDerivationFunction));
-
-		thread.start();
+				    keyDerivationFunction)).start();
 	    }
 	});
 

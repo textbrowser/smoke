@@ -420,9 +420,7 @@ public class Fire extends AppCompatActivity
 			}
 		    }
 
-		    Thread thread = new Thread(new SingleShot());
-
-		    thread.start();
+		    new Thread(new SingleShot()).start();
 		}
 	    }
 	});

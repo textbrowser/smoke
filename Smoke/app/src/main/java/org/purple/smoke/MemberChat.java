@@ -641,9 +641,7 @@ public class MemberChat extends AppCompatActivity
 	    }
 	}
 
-	Thread thread = new Thread(new SingleShot(oid));
-
-	thread.start();
+	new Thread(new SingleShot(oid)).start();
     }
 
     private void showFireActivity()
@@ -860,9 +858,7 @@ public class MemberChat extends AppCompatActivity
 		    }
 		}
 
-		Thread thread = new Thread(new SingleShot(data.getData()));
-
-		thread.start();
+		new Thread(new SingleShot(data.getData())).start();
             }
 	}
 	catch(Exception exception)
@@ -1627,9 +1623,7 @@ public class MemberChat extends AppCompatActivity
 			    }
 			}
 
-			Thread thread = new Thread(new SingleShot());
-
-			thread.start();
+			new Thread(new SingleShot()).start();
 		    }
 		}
 	    }
