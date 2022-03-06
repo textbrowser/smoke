@@ -209,7 +209,7 @@ public class Cryptography
     public final static int SIPHASH_IDENTITY_LENGTH =
 	DEFAULT_SIPHASH_ID.length();
     public final static int STEAM_FILE_IDENTITY_LENGTH = 48;
-    public final static int STEAM_KEY_EXCHANGE_RSA_KEY_SIZE = 4096;
+    public final static int STEAM_KEY_EXCHANGE_RSA_KEY_SIZE = 3072;
 
     private Cryptography()
     {
