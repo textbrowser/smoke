@@ -483,6 +483,8 @@ public class Kernel
 
 			if(participantCall == null)
 			    return;
+			else if(participantCall.m_keyPair == null)
+			    participantCall.preparePrivatePublicKeys();
 
 			if(isConnected())
 			{
@@ -3332,7 +3334,7 @@ public class Kernel
 	if(participantCall == null)
 	    return;
 
-	if(participantCall.m_arson && participantCall.m_keyPair != null)
+	if(participantCall.m_arson)
 	{
 	    /*
 	    ** Calling messages are not placed in the outbound_queue
