@@ -73,6 +73,24 @@ import org.bouncycastle.util.encoders.Hex;
 
 public class Cryptography
 {
+    public class PKIKeySizeBounds
+    {
+	/*
+	** Private Keys
+	*/
+
+	public final static int PRIVATE_RSA = 2000;
+
+	/*
+	** Public Keys
+	*/
+
+	public final static int PUBLIC_EC = 200;
+	public final static int PUBLIC_MCELIECE = 335000;
+	public final static int PUBLIC_RSA = 600;
+	public final static int PUBLIC_SPHINCS = 1200;
+    };
+
     static
     {
 	Security.addProvider(new BouncyCastlePQCProvider());
@@ -191,7 +209,7 @@ public class Cryptography
     public final static int SIPHASH_IDENTITY_LENGTH =
 	DEFAULT_SIPHASH_ID.length();
     public final static int STEAM_FILE_IDENTITY_LENGTH = 48;
-    public final static int STEAM_KEY_EXCHANGE_RSA_KEY_SIZE = 3096;
+    public final static int STEAM_KEY_EXCHANGE_RSA_KEY_SIZE = 4096;
 
     private Cryptography()
     {
@@ -1387,7 +1405,7 @@ public class Cryptography
 	{
 	    KeyFactory generator = null;
 
-	    if(privateBytes.length < 2000)
+	    if(privateBytes.length < PKIKeySizeBounds.PRIVATE_RSA)
 		generator = KeyFactory.getInstance("RSA");
 	    else
 		generator = KeyFactory.getInstance
@@ -1414,18 +1432,14 @@ public class Cryptography
 	    KeyFactory generator = null;
 	    int length = publicBytes.length;
 
-	    if(length < 200)
+	    if(length < PKIKeySizeBounds.PUBLIC_EC)
 		generator = KeyFactory.getInstance("EC");
-	    else if(length < 600)
+	    else if(length < PKIKeySizeBounds.PUBLIC_RSA)
 		generator = KeyFactory.getInstance("RSA");
-	    else if(length < 1200)
+	    else if(length < PKIKeySizeBounds.PUBLIC_SPHINCS)
 		generator = KeyFactory.getInstance
 		    ("SPHINCS256", BouncyCastlePQCProvider.PROVIDER_NAME);
-	    else if(length < 110000)
-		generator = KeyFactory.getInstance
-		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
-		     BouncyCastlePQCProvider.PROVIDER_NAME);
-	    else if(length < 335000)
+	    else if(length < PKIKeySizeBounds.PUBLIC_MCELIECE)
 		generator = KeyFactory.getInstance
 		    (PQCObjectIdentifiers.mcElieceCca2.getId(),
 		     BouncyCastlePQCProvider.PROVIDER_NAME);

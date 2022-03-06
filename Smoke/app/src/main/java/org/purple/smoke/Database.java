@@ -1812,13 +1812,14 @@ public class Database extends SQLiteOpenHelper
 		{
 		    int length = bytes.length;
 
-		    if(length < 200)
+		    if(length < Cryptography.PKIKeySizeBounds.PUBLIC_EC)
 			publicKey = KeyFactory.getInstance("EC").
 			    generatePublic(new X509EncodedKeySpec(bytes));
-		    else if(length < 600)
+		    else if(length < Cryptography.PKIKeySizeBounds.PUBLIC_RSA)
 			publicKey = KeyFactory.getInstance("RSA").
 			    generatePublic(new X509EncodedKeySpec(bytes));
-		    else if(length < 1200)
+		    else if(length <
+			    Cryptography.PKIKeySizeBounds.PUBLIC_SPHINCS)
 			publicKey = KeyFactory.getInstance
 			    ("SPHINCS256",
 			     BouncyCastlePQCProvider.PROVIDER_NAME).
