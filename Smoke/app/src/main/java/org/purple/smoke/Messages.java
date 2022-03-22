@@ -47,9 +47,9 @@ public class Messages
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
     public final static String IDENTITY_MESSAGE_TYPE = "0095a";
     public final static byte ARSON_CALL_HALF_AND_HALF_TAGS[] =
-	new byte[] {0x02, 0x03};
+	new byte[] {0x02, 0x03}; // Be careful of Steam tags.
     public final static byte CALL_HALF_AND_HALF_TAGS[] =
-	new byte[] {0x00, 0x01};
+	new byte[] {0x00, 0x01}; // Be careful of Steam tags.
     public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
     public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
@@ -63,7 +63,8 @@ public class Messages
     public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
     public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
     public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
-    public final static byte STEAM_KEY_EXCHANGE[] = new byte[] {0x04, 0x05};
+    public final static byte STEAM_KEY_EXCHANGE[] =
+	new byte[] {0x04, 0x05}; // Be careful of calling tags.
     public final static byte STEAM_SHARE[] = new byte[] {0x06, 0x07};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first

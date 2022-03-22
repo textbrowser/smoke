@@ -2842,6 +2842,7 @@ public class Kernel
 	    else if(pki.length == Cryptography.CIPHER_HASH_KEYS_LENGTH)
 	    {
 		/*
+		** Arson Half-And-Half
 		** Organic Half-And-Half
 		** Steam Key Exchange A
 		** Steam Key Exchange B
@@ -2874,7 +2875,9 @@ public class Kernel
 
 		byte tag = ciphertext[0];
 
-		if(!(tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
+		if(!(tag == Messages.ARSON_CALL_HALF_AND_HALF_TAGS[0] ||
+		     tag == Messages.ARSON_CALL_HALF_AND_HALF_TAGS[1] ||
+		     tag == Messages.CALL_HALF_AND_HALF_TAGS[0] ||
 		     tag == Messages.CALL_HALF_AND_HALF_TAGS[1] ||
 		     tag == Messages.STEAM_KEY_EXCHANGE[0] ||
 		     tag == Messages.STEAM_KEY_EXCHANGE[1]))
