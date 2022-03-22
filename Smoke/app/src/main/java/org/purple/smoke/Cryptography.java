@@ -159,6 +159,7 @@ public class Cryptography
     private final static String SYMMETRIC_ALGORITHM = "AES";
     private final static String SYMMETRIC_CIPHER_TRANSFORMATION =
 	"AES/CBC/PKCS7Padding";
+    private final static int ARSON_MAXIMUM_KEYS_PER_PARTICIPANT = 2500;
     private final static int FIRE_STREAM_CREATION_ITERATION_COUNT = 10000;
     private final static int MCELIECE_M[] = {11, 12, 13};
     private final static int MCELIECE_T[] = {50, 68, 118};

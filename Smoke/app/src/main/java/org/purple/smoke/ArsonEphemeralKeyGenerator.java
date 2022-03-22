@@ -38,7 +38,7 @@ public class ArsonEphemeralKeyGenerator
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
-    private final static long GENERATOR_INTERVAL = 250L;
+    private final static long GENERATOR_INTERVAL = 2500L;
 
     private void prepareSchedulers(String sipHashId)
     {
