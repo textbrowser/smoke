@@ -323,7 +323,10 @@ public class TcpTlsNeighbor extends Neighbor
 	m_handshakeCompleted = new AtomicBoolean(false);
 	m_isValidCertificate = new AtomicBoolean(false);
 
-	if(Build.VERSION.RELEASE.startsWith("10"))
+	if(Build.VERSION.RELEASE.startsWith("10") ||
+	   Build.VERSION.RELEASE.startsWith("11") ||
+	   Build.VERSION.RELEASE.startsWith("12") ||
+	   Build.VERSION.RELEASE.startsWith("13"))
 	    m_protocols = Cryptography.TLS_NEW;
 	else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 	    m_protocols = Cryptography.TLS_V1_V12;
@@ -465,9 +468,15 @@ public class TcpTlsNeighbor extends Neighbor
 		    (X509Certificate chain[], String authType)
 		{
 		    if(authType == null || authType.length() == 0)
+		    {
 			m_isValidCertificate.set(false);
+			setError("Empty authentication type.");
+		    }
 		    else if(chain == null || chain.length == 0)
+		    {
 			m_isValidCertificate.set(false);
+			setError("Empty chain.");
+		    }
 		    else
 		    {
 			try

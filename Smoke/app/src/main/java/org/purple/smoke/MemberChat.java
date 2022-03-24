@@ -223,6 +223,7 @@ public class MemberChat extends AppCompatActivity
 	}
     }
 
+    private ArsonEphemeralKeyGenerator m_arson = null;
     private ConcurrentHashMap<Integer, Boolean> m_selectedMessages = null;
     private MemberChatAdapter m_adapter = null;
     private MemberChatBroadcastReceiver m_receiver = null;
@@ -873,6 +874,8 @@ public class MemberChat extends AppCompatActivity
 	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_chat);
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+	m_arson = new ArsonEphemeralKeyGenerator
+	    (State.getInstance().getString("member_chat_siphash_id"));
 	m_layoutManager = new SmokeLinearLayoutManager(MemberChat.this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_layoutManager.setReverseLayout(true);
