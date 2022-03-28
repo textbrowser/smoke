@@ -221,6 +221,7 @@ public class TcpTlsNeighbor extends Neighbor
 		    createSocket();
 		m_socket.setReceiveBufferSize(SO_RCVBUF);
 		m_socket.setSendBufferSize(SO_SNDBUF);
+		m_socket.setUseClientMode(true);
 		m_socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 	    }
 	    else
@@ -239,6 +240,7 @@ public class TcpTlsNeighbor extends Neighbor
 		socket.connect(inetSocketAddress, CONNECTION_TIMEOUT);
 		m_socket = (SSLSocket) sslContext.getSocketFactory().
 		    createSocket(socket, m_proxyIpAddress, m_proxyPort, true);
+		m_socket.setUseClientMode(true);
 	    }
 
 	    m_socket.addHandshakeCompletedListener

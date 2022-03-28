@@ -231,7 +231,7 @@ public class SteamWriter
 
 	    if(offset == 0)
 		/*
-		** Erase the ephemeral key.
+		** Erase the ephemeral keys.
 		*/
 
 		s_databaseHelper.writeEphemeralSteamKeys
