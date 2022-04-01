@@ -528,12 +528,16 @@ public class TcpTlsNeighbor extends Neighbor
 		    }
 
 		    if(!m_isValidCertificate.get())
+		    {
+			disconnect();
+
 			synchronized(m_errorMutex)
 			{
 			    if(m_error.length() == 0)
 				m_error.append
 				    ("A generic certificate error occurred.");
 			}
+		    }
 		}
 	    }
 	};
