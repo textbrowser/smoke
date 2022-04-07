@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class ArsonEphemeralKeyGenerator
 {
     private ScheduledExecutorService m_generatorSchedule = null;
+    private String m_sipHashId = "";
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
@@ -72,6 +73,11 @@ public class ArsonEphemeralKeyGenerator
 
     public ArsonEphemeralKeyGenerator(String sipHashId)
     {
-	prepareSchedulers(sipHashId);
+	m_sipHashId = sipHashId;
+    }
+
+    public void start()
+    {
+	prepareSchedulers(m_sipHashId);
     }
 }
