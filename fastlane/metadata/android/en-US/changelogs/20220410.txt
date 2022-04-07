@@ -1,0 +1,7 @@
+* A neighbor removed from Settings will be deleted in a separate task.
+* Avoid accessing encrypted database content if not authenticated:
+  publishing keys, publishing status, retrieving messages.
+* Corrected RSA key size for Steam: 3072, not 3096.
+* New parameters for Rainbow. Please read https://eprint.iacr.org/2022/214.
+* Proper termination of Smoke service.
+* Terminate connections on TLS handshake errors.
