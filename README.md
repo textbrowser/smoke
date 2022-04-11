@@ -1,3 +1,6 @@
+Smoke
+-----
+
 Summary of Smoke
 
 <ul>
@@ -59,3 +62,6 @@ Starting a Conversation
 </ol>
 
 ![alt text](https://github.com/textbrowser/smoke/blob/master/Images/smoke_7.png)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid!"
+     height="80">](https://f-droid.org/packages/org.purple.smoke/)
