@@ -58,6 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:minHeight="48dp"
                     android:textIsSelectable="true" />
 
                 <Switch
@@ -66,6 +67,7 @@
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:layoutDirection="rtl"
+                    android:minHeight="48dp"
                     android:text="@string/foreground_service" />
 
                 <Switch
@@ -74,6 +76,7 @@
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:layoutDirection="rtl"
+                    android:minHeight="48dp"
                     android:text="@string/prefer_active_cpu" />
 
                 <Switch
@@ -81,6 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layoutDirection="rtl"
+                    android:minHeight="48dp"
                     android:text="@string/query_time_server" />
 
                 <LinearLayout
@@ -170,7 +174,7 @@
                     <Switch
                         android:id="@+id/automatic_refresh"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="48dp"
                         android:checked="true"
                         android:layoutDirection="rtl"
                         android:text="@string/automatic_refresh" />

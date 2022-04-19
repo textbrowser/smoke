@@ -40,10 +40,10 @@
             android:layout_alignParentStart="false"
             android:layout_alignParentEnd="false"
             android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
             android:ems="10"
             android:hint="@string/authenticate_password"
             android:inputType="textPassword"
+            android:minHeight="48dp"
             android:selectAllOnFocus="true" />
 
         <TextView

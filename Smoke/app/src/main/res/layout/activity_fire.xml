@@ -65,13 +65,14 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/your_name"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp" />
 
                     <Button
                         android:id="@+id/save_name"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="48dp"
                         android:text="@string/save"
                         android:textAllCaps="false" />
 
@@ -98,7 +99,7 @@
                     <Switch
                         android:id="@+id/show_details"
                         android:layout_width="100dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="48dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:checked="true" />
@@ -115,7 +116,7 @@
                     <Spinner
                         android:id="@+id/auto_fill"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="48dp"
                         android:layout_weight="1" />
 
                     <TextView
@@ -137,7 +138,8 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/channel"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp" />
 
                     <EditText
                         android:id="@+id/digest"
@@ -145,7 +147,8 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/digest_key"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp" />
 
                     <EditText
                         android:id="@+id/salt"
@@ -153,7 +156,8 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/salt"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp" />
                 </GridLayout>
 
                 <LinearLayout
