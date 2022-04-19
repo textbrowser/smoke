@@ -61,6 +61,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
+import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.pqc.asn1.PQCObjectIdentifiers;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.bouncycastle.pqc.jcajce.provider.mceliece.BCMcElieceCCA2PublicKey;
@@ -2301,6 +2302,28 @@ public class Cryptography
 	}
 
 	return null;
+    }
+
+    public static byte[] sha3_512(byte[] ... data)
+    {
+	byte bytes[] = null;
+
+	try
+	{
+	    SHA3.Digest512 messageDigest = new SHA3.Digest512();
+
+	    for(byte b[] : data)
+		if(b != null)
+		    messageDigest.update(b);
+
+	    bytes = messageDigest.digest();
+	}
+	catch(Exception exception)
+	{
+	    bytes = null;
+	}
+
+	return bytes;
     }
 
     public static byte[] sha512(byte[] ... data)
