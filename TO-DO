@@ -313,7 +313,6 @@ Remaining Items
 - Authenticate via TLS. Authenticate activity.
 - Brands (profiles).
 - Diagram the processes.
-- Drawer for participants. Maybe.
 - Include member's name in Share Keys Of, if possible.
 - Optional cryptographic discovery, per neighbor.
 - Rare event: connected device with a disconnected neighbor representation.
