@@ -1852,8 +1852,8 @@ public class Settings extends AppCompatActivity
 		textView1.setText
 		    ("Passthrough neighbors are special full-duplex " +
 		     "connections which Smoke utilizes for distributing " +
-		     "data to non-Smoke destinations. Data which is " +
-		     "received on passthrough connections is echoed " +
+		     "data to non-Smoke destinations. Data which are " +
+		     "received on passthrough connections are echoed " +
 		     "directly to other non-passthrough neighbors if " +
 		     "echoing is enabled.");
 		textView1.setTextSize(16);
