@@ -28,6 +28,7 @@ android {
     lint {
         disable 'MissingTranslation'
     }
+    namespace 'org.purple.smoke'
 }
 
 dependencies {
