@@ -95,7 +95,3 @@ between each of the paired participants.
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid!"
      height="80">](https://f-droid.org/packages/org.purple.smoke/)
-
-Defining a Neighbor
-
-https://user-images.githubusercontent.com/10701156/170352433-efd3fa85-00f5-4ad6-846b-60a3da699b92.mp4
