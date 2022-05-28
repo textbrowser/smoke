@@ -1,0 +1,3 @@
+* Documentation.
+* Larger touch areas.
+* New public server.
