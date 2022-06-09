@@ -43,6 +43,7 @@ Summary of Smoke
 <li>Semi-compatible with <a href="https://github.com/textbrowser/spot-on">Spot-On</a> via Fire.</li>
 <li>Share files with TCP utilities such as Netcat.</li>
 <li>SipHash-128.</li>
+<li>Smoke and mirrors.</li>
 <li>Software congestion control.</li>
 <li>Steam, reliable file sharing. TCP over the Echo!</li>
 <li>Steamrolling, or, real-time broadcasting of inbound Steams to fellow participants.</li>
