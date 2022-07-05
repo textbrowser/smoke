@@ -66,6 +66,8 @@ Starting a Conversation
 <li>Done!</li>
 </ol>
 
+![alt text](https://github.com/textbrowser/smoke/blob/master/Images/traffic-1.png)
+
 ```
 Steamrolling is the process of real-time broadcasting of complete and
 incomplete inbound Steams. Let’s review a colorful example.
