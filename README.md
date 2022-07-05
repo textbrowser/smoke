@@ -66,6 +66,7 @@ Starting a Conversation
 <li>Done!</li>
 </ol>
 
+Network traffic on 5.180.182.220 covering the last three months.
 ![alt text](https://github.com/textbrowser/smoke/blob/master/Images/traffic-1.png)
 
 ```
