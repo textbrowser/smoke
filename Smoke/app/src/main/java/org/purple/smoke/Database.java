@@ -3364,6 +3364,37 @@ public class Database extends SQLiteOpenHelper
 	return true;
     }
 
+    public boolean lockSteam(boolean state, int oid)
+    {
+	if(m_db == null)
+	    return false;
+
+	m_db.beginTransactionNonExclusive();
+
+	try
+	{
+	    ContentValues values = new ContentValues();
+
+	    values.put("is_locked", state ? 1 : 0);
+	    m_db.update
+		("steam_files",
+		 values,
+		 "oid = ?",
+		 new String[] {String.valueOf(oid)});
+	    m_db.setTransactionSuccessful();
+	}
+	catch(Exception exception)
+	{
+	    return false;
+	}
+	finally
+	{
+	    m_db.endTransaction();
+	}
+
+	return true;
+    }
+
     public boolean setParticipantKeyStream(Cryptography cryptography,
 					   byte keyStream[],
 					   int oid)
