@@ -40,6 +40,7 @@ Summary of Smoke
 * SipHash-128.
 * Smoke and mirrors.
 * Software congestion control.
+* Software manual included.
 * Steam, reliable file sharing. TCP over the Echo!
 * Steamrolling, or, real-time broadcasting of inbound Steams to fellow participants.
 * Super McEliece: m = 13, t = 118.
