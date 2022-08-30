@@ -711,6 +711,10 @@ public class Steam extends AppCompatActivity
 		 "Steamroll Participant Selection");
 	    State.getInstance().clearSelectedSwitches();
 	    break;
+	case ContextMenuEnumerator.UNLOCK_STEAM:
+	    m_databaseHelper.lockSteam(false, itemId);
+	    m_adapter.notifyDataSetChanged();
+	    break;
 	default:
 	    break;
 	}
