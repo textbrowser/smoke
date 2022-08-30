@@ -156,6 +156,7 @@ public class Steam extends AppCompatActivity
 	public final static int REWIND_AND_RESUME_ALL_STEAMS = 5;
 	public final static int REWIND_STEAM = 6;
 	public final static int STEAMROLL_STEAM = 7;
+	public final static int UNLOCK_STEAM = 8;
     }
 
     private void networkStatusChanged()
