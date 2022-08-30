@@ -9,6 +9,7 @@ Completed Items
 - Allow resending of messages.
 - Allow resetting of Chat session keys via context menu.
 - Allow sharing of participant pairs.
+- Allow unlocking of locked Steams.
 - Append new messages in Member Chat.
 - Append some text (file identity) to prevent duplicate Steams on write.
 - Application icon.
@@ -313,7 +314,6 @@ Peculiar Items
 Remaining Items
 
 - Add qTESLA signature scheme.
-- Allow unlocking of locked Steams.
 - Arson.
 - Diagram the processes.
 - Rare event: connected device with a disconnected neighbor representation.
