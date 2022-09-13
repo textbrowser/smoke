@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 adb="${HOME}/Android/Sdk/platform-tools/adb"
 

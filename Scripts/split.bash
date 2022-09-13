@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Alexis Megas, 2020.
 
 # Expected input file name: output.
