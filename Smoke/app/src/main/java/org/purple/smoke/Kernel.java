@@ -2812,30 +2812,36 @@ public class Kernel
 		    intent.putExtra("org.purple.smoke.timestamp", timestamp);
 		    Miscellaneous.sendBroadcast(intent);
 
-		    /*
-		    ** Prepare a read-proof message.
-		    */
+		    if(s_databaseHelper.readParticipantOptions(s_cryptography,
+							       strings[1]).
+		       contains("optional_receive_response = false"))
+		    {
+			/*
+			** Prepare a read-proof message.
+			*/
 
-		    keyStream = s_databaseHelper.participantKeyStream
-			(s_cryptography, pki); // Current key stream.
-		    enqueueMessage
-			(Messages.
-			 bytesToMessageString(Messages.
-					      messageRead(s_cryptography,
-							  strings[1],
-							  keyStream,
-							  messageIdentity)),
-			 null,
-			 Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
-
-		    if(ourMessageViaChatTemporaryIdentity)
+			keyStream = s_databaseHelper.participantKeyStream
+			    (s_cryptography, pki); // Current key stream.
 			enqueueMessage
 			    (Messages.
 			     bytesToMessageString(Messages.
 						  messageRead(s_cryptography,
-							      sha512OfMessage)),
+							      strings[1],
+							      keyStream,
+							      messageIdentity)),
 			     null,
 			     Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
+
+			if(ourMessageViaChatTemporaryIdentity)
+			    enqueueMessage
+				(Messages.
+				 bytesToMessageString
+				 (Messages.
+				  messageRead(s_cryptography,
+					      sha512OfMessage)),
+				 null,
+				 Database.MESSAGE_DELIVERY_ATTEMPTS - 1);
+		    }
 		}
 
 		return FINE;

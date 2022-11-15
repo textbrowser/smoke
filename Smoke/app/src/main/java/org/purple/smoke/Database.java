@@ -1978,14 +1978,15 @@ public class Database extends SQLiteOpenHelper
 		     "file_identity, " +            // 6
 		     "file_size, " +                // 7
 		     "is_download, " +              // 8
-		     "key_type, " +                 // 9
-		     "keystream, " +                // 10
-		     "read_interval, " +            // 11
-		     "read_offset, " +              // 12
-		     "someoid, " +                  // 13
-		     "status, " +                   // 14
-		     "transfer_rate, " +            // 15
-		     "oid " +                       // 16
+		     "is_locked, " +                // 9
+		     "key_type, " +                 // 10
+		     "keystream, " +                // 11
+		     "read_interval, " +            // 12
+		     "read_offset, " +              // 13
+		     "someoid, " +                  // 14
+		     "status, " +                   // 15
+		     "transfer_rate, " +            // 16
+		     "oid " +                       // 17
 		     "FROM steam_files ORDER BY someoid", null);
 
 		if(cursor == null || !cursor.moveToPosition(position))
@@ -2003,14 +2004,15 @@ public class Database extends SQLiteOpenHelper
 		     "file_identity, " +            // 6
 		     "file_size, " +                // 7
 		     "is_download, " +              // 8
-		     "key_type, " +                 // 9
-		     "keystream, " +                // 10
-		     "read_interval, " +            // 11
-		     "read_offset, " +              // 12
-		     "someoid, " +                  // 13
-		     "status, " +                   // 14
-		     "transfer_rate, " +            // 15
-		     "oid " +                       // 16
+		     "is_locked, " +                // 9
+		     "key_type, " +                 // 10
+		     "keystream, " +                // 11
+		     "read_interval, " +            // 12
+		     "read_offset, " +              // 13
+		     "someoid, " +                  // 14
+		     "status, " +                   // 15
+		     "transfer_rate, " +            // 16
+		     "oid " +                       // 17
 		     "FROM steam_files WHERE someoid > CAST(? AS INTEGER) " +
 		     "ORDER BY someoid LIMIT 1",
 		     new String[] {String.valueOf(someOid)});
@@ -2026,12 +2028,12 @@ public class Database extends SQLiteOpenHelper
 
 	    for(int i = 0; i < count; i++)
 	    {
-		if(i == 13)
+		if(i == 14)
 		{
 		    steamElement.m_someOid = cursor.getInt(i);
 		    continue;
 		}
-		else if(i == 14)
+		else if(i == 15)
 		{
 		    steamElement.m_status = cursor.getString(i).trim();
 		    continue;
@@ -2052,15 +2054,16 @@ public class Database extends SQLiteOpenHelper
 				       Base64.DEFAULT));
 
 		if(bytes == null)
-		{
-		    StringBuilder stringBuilder = new StringBuilder();
+		    if( i != 9)
+		    {
+			StringBuilder stringBuilder = new StringBuilder();
 
-		    stringBuilder.append("Database::readSteam(): ");
-		    stringBuilder.append("error on column ");
-		    stringBuilder.append(cursor.getColumnName(i));
-		    stringBuilder.append(".");
-		    writeLog(stringBuilder.toString());
-		}
+			stringBuilder.append("Database::readSteam(): ");
+			stringBuilder.append("error on column ");
+			stringBuilder.append(cursor.getColumnName(i));
+			stringBuilder.append(".");
+			writeLog(stringBuilder.toString());
+		    }
 
 		switch(i)
 		{
@@ -2124,16 +2127,19 @@ public class Database extends SQLiteOpenHelper
 
 		    break;
 		case 9:
+		    steamElement.m_locked = cursor.getInt(i) != 0;
+		    break;
+		case 10:
 		    if(bytes != null)
 			steamElement.m_keyType = new String(bytes);
 		    else
 			steamElement.m_keyType = "error (" + oid + ")";
 
 		    break;
-		case 10:
+		case 11:
 		    steamElement.m_keyStream = bytes;
 		    break;
-		case 11:
+		case 12:
 		    if(bytes != null)
 			try
 			{
@@ -2145,7 +2151,7 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 12:
+		case 13:
 		    if(bytes != null)
 			try
 			{
@@ -2157,11 +2163,11 @@ public class Database extends SQLiteOpenHelper
 			}
 
 		    break;
-		case 13:
-		    break;
 		case 14:
 		    break;
 		case 15:
+		    break;
+		case 16:
 		    if(bytes != null)
 			steamElement.m_transferRate = new String(bytes);
 		    else
@@ -2843,7 +2849,8 @@ public class Database extends SQLiteOpenHelper
 		    break;
 		case "options":
 		    bytes = cryptography.etm
-			(("optional_signatures = false;" +
+			(("optional_receive_response = false;" +
+			  "optional_signatures = false;" +
 			  "optional_steam = false").getBytes());
 		    break;
 		case "signature_public_key":
@@ -5388,31 +5395,6 @@ public class Database extends SQLiteOpenHelper
 	    return;
 
         onCreate(db);
-
-	String str = "";
-
-	str = "ALTER TABLE steam_files ADD is_locked " +
-	    "INTEGER NOT NULL DEFAULT 1";
-
-	try
-	{
-	    db.execSQL(str);
-	}
-	catch(Exception exception)
-	{
-	}
-
-	str = "CREATE INDEX IF NOT EXISTS " +
-	    "participants_messages_timestamp_index " +
-	    "ON participants_messages(timestamp)";
-
-	try
-	{
-	    db.execSQL(str);
-	}
-	catch(Exception exception)
-	{
-	}
     }
 
     public void pauseAllSteams()

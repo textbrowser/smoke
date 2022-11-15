@@ -256,14 +256,15 @@ public class MemberChat extends AppCompatActivity
 	public final static int JUGGERKNOT = 7;
 	public final static int JUGGERLI = 8;
 	public final static int JUGGERNAUT = 9;
-	public final static int OPTIONAL_SIGNATURES = 10;
-	public final static int OPTIONAL_STEAM = 11;
-	public final static int PURGE_FIASCO_KEYS = 12;
-	public final static int RESEND_MESSAGE = 13;
-	public final static int RETRIEVE_MESSAGES = 14;
-	public final static int SAVE_ATTACHMENT = 15;
-	public final static int SELECTION_STATE = 16;
-	public final static int VIEW_DETAILS = 17;
+	public final static int OPTIONAL_RECEIVE_RESPONSE = 10;
+	public final static int OPTIONAL_SIGNATURES = 11;
+	public final static int OPTIONAL_STEAM = 12;
+	public final static int PURGE_FIASCO_KEYS = 13;
+	public final static int RESEND_MESSAGE = 14;
+	public final static int RETRIEVE_MESSAGES = 15;
+	public final static int SAVE_ATTACHMENT = 16;
+	public final static int SELECTION_STATE = 17;
+	public final static int VIEW_DETAILS = 18;
     }
 
     private boolean hasPublicKeys()
@@ -1361,108 +1362,158 @@ public class MemberChat extends AppCompatActivity
 		     true);
 
 	    break;
+	case ContextMenuEnumerator.OPTIONAL_RECEIVE_RESPONSE:
+	{
+	    menuItem.setChecked(!menuItem.isChecked());
+
+	    String strings[] = null;
+	    StringBuilder stringBuilder = new StringBuilder
+		(s_databaseHelper.
+		 readParticipantOptions(s_cryptography, m_sipHashId));
+
+	    strings = stringBuilder.toString().split(";");
+
+	    if(strings == null || strings.length == 0)
+	    {
+		if(menuItem.isChecked())
+		    stringBuilder.append("optional_receive_response = true");
+		else
+		    stringBuilder.append("optional_receive_response = false");
+	    }
+	    else
+	    {
+		stringBuilder.delete(0, stringBuilder.length());
+
+		int i = 0;
+		int length = strings.length;
+
+		for(String string : strings)
+		{
+		    if(!(string.equals("optional_receive_response = false") ||
+			 string.equals("optional_receive_response = true")))
+		    {
+			stringBuilder.append(string);
+
+			if(i != length - 1)
+			    stringBuilder.append(";");
+		    }
+
+		    i += 1;
+		}
+
+		if(stringBuilder.length() > 0)
+		    stringBuilder.append(";");
+
+		stringBuilder.append("optional_receive_response = ");
+		stringBuilder.append(menuItem.isChecked() ? "true" : "false");
+	    }
+
+	    s_databaseHelper.writeParticipantOptions
+		(s_cryptography, stringBuilder.toString(), m_sipHashId);
+	    break;
+	}
 	case ContextMenuEnumerator.OPTIONAL_SIGNATURES:
+	{
+	    menuItem.setChecked(!menuItem.isChecked());
+
+	    String strings[] = null;
+	    StringBuilder stringBuilder = new StringBuilder
+		(s_databaseHelper.
+		 readParticipantOptions(s_cryptography, m_sipHashId));
+
+	    strings = stringBuilder.toString().split(";");
+
+	    if(strings == null || strings.length == 0)
 	    {
-		menuItem.setChecked(!menuItem.isChecked());
-
-		String strings[] = null;
-		StringBuilder stringBuilder = new StringBuilder
-		    (s_databaseHelper.
-		     readParticipantOptions(s_cryptography, m_sipHashId));
-
-		strings = stringBuilder.toString().split(";");
-
-		if(strings == null || strings.length == 0)
-		{
-		    if(menuItem.isChecked())
-			stringBuilder.append("optional_signatures = true");
-		    else
-			stringBuilder.append("optional_signatures = false");
-		}
+		if(menuItem.isChecked())
+		    stringBuilder.append("optional_signatures = true");
 		else
+		    stringBuilder.append("optional_signatures = false");
+	    }
+	    else
+	    {
+		stringBuilder.delete(0, stringBuilder.length());
+
+		int i = 0;
+		int length = strings.length;
+
+		for(String string : strings)
 		{
-		    stringBuilder.delete(0, stringBuilder.length());
-
-		    int i = 0;
-		    int length = strings.length;
-
-		    for(String string : strings)
+		    if(!(string.equals("optional_signatures = false") ||
+			 string.equals("optional_signatures = true")))
 		    {
-			if(!(string.equals("optional_signatures = false") ||
-			     string.equals("optional_signatures = true")))
-			{
-			    stringBuilder.append(string);
+			stringBuilder.append(string);
 
-			    if(i != length - 1)
-				stringBuilder.append(";");
-			}
-
-			i += 1;
+			if(i != length - 1)
+			    stringBuilder.append(";");
 		    }
 
-		    if(stringBuilder.length() > 0)
-			stringBuilder.append(";");
-
-		    stringBuilder.append("optional_signatures = ");
-		    stringBuilder.append
-			(menuItem.isChecked() ? "true" : "false");
+		    i += 1;
 		}
 
-		s_databaseHelper.writeParticipantOptions
-		    (s_cryptography, stringBuilder.toString(), m_sipHashId);
-		break;
+		if(stringBuilder.length() > 0)
+		    stringBuilder.append(";");
+
+		stringBuilder.append("optional_signatures = ");
+		stringBuilder.append
+		    (menuItem.isChecked() ? "true" : "false");
 	    }
+
+	    s_databaseHelper.writeParticipantOptions
+		(s_cryptography, stringBuilder.toString(), m_sipHashId);
+	    break;
+	}
 	case ContextMenuEnumerator.OPTIONAL_STEAM:
+	{
+	    menuItem.setChecked(!menuItem.isChecked());
+
+	    String strings[] = null;
+	    StringBuilder stringBuilder = new StringBuilder
+		(s_databaseHelper.
+		 readParticipantOptions(s_cryptography, m_sipHashId));
+
+	    strings = stringBuilder.toString().split(";");
+
+	    if(strings == null || strings.length == 0)
 	    {
-		menuItem.setChecked(!menuItem.isChecked());
-
-		String strings[] = null;
-		StringBuilder stringBuilder = new StringBuilder
-		    (s_databaseHelper.
-		     readParticipantOptions(s_cryptography, m_sipHashId));
-
-		strings = stringBuilder.toString().split(";");
-
-		if(strings == null || strings.length == 0)
-		{
-		    if(menuItem.isChecked())
-			stringBuilder.append("optional_steam = true");
-		    else
-			stringBuilder.append("optional_steam = false");
-		}
+		if(menuItem.isChecked())
+		    stringBuilder.append("optional_steam = true");
 		else
+		    stringBuilder.append("optional_steam = false");
+	    }
+	    else
+	    {
+		stringBuilder.delete(0, stringBuilder.length());
+
+		int i = 0;
+		int length = strings.length;
+
+		for(String string : strings)
 		{
-		    stringBuilder.delete(0, stringBuilder.length());
-
-		    int i = 0;
-		    int length = strings.length;
-
-		    for(String string : strings)
+		    if(!(string.equals("optional_steam = false") ||
+			 string.equals("optional_steam = true")))
 		    {
-			if(!(string.equals("optional_steam = false") ||
-			     string.equals("optional_steam = true")))
-			{
-			    stringBuilder.append(string);
+			stringBuilder.append(string);
 
-			    if(i != length - 1)
-				stringBuilder.append(";");
-			}
-
-			i += 1;
+			if(i != length - 1)
+			    stringBuilder.append(";");
 		    }
 
-		    if(stringBuilder.length() > 0)
-			stringBuilder.append(";");
-
-		    stringBuilder.append("optional_steam = ");
-		    stringBuilder.append
-			(menuItem.isChecked() ? "true" : "false");
+		    i += 1;
 		}
 
-		s_databaseHelper.writeParticipantOptions
-		    (s_cryptography, stringBuilder.toString(), m_sipHashId);
-		break;
+		if(stringBuilder.length() > 0)
+		    stringBuilder.append(";");
+
+		stringBuilder.append("optional_steam = ");
+		stringBuilder.append
+		    (menuItem.isChecked() ? "true" : "false");
 	    }
+
+	    s_databaseHelper.writeParticipantOptions
+		(s_cryptography, stringBuilder.toString(), m_sipHashId);
+	    break;
+	}
 	case ContextMenuEnumerator.PURGE_FIASCO_KEYS:
 	    Miscellaneous.showPromptDialog
 		(MemberChat.this,
@@ -1812,9 +1863,18 @@ public class MemberChat extends AppCompatActivity
 		 5,
 		 "Juggernaut").
 	    setEnabled(hasPublicKeys() && isParticipantPaired && state);
-	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
+	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_RECEIVE_RESPONSE,
 			    -1,
 			    6,
+			    "Optional Receive Responses");
+	menuItem.setCheckable(true);
+	menuItem.setChecked
+	    (s_databaseHelper.
+	     readParticipantOptions(s_cryptography, m_sipHashId).
+	     contains("optional_receive_response = true"));
+	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
+			    -1,
+			    7,
 			    "Optional Signatures");
 	menuItem.setCheckable(true);
 	menuItem.setChecked
@@ -1823,7 +1883,7 @@ public class MemberChat extends AppCompatActivity
 	     contains("optional_signatures = true"));
 	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_STEAM,
 			    -1,
-			    7,
+			    8,
 			    "Optional Steam");
 	menuItem.setCheckable(true);
 	menuItem.setChecked
@@ -1832,17 +1892,17 @@ public class MemberChat extends AppCompatActivity
 	     contains("optional_steam = true"));
 	menu.add(ContextMenuEnumerator.PURGE_FIASCO_KEYS,
 		 -1,
-		 8,
+		 9,
 		 "Purge Fiasco Keys");
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
-		 9,
+		 10,
 		 "Retrieve Messages").setEnabled
 	    (!s_databaseHelper.readSetting(s_cryptography, "ozone_address").
 	     isEmpty() && state);
 	menuItem = menu.add(ContextMenuEnumerator.SELECTION_STATE,
 			    -1,
-			    10,
+			    11,
 			    "Selection State").setCheckable(true);
 	menuItem.setChecked(messageSelectionState());
     }
