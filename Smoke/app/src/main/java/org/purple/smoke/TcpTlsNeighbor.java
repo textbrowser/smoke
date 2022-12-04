@@ -515,7 +515,6 @@ public class TcpTlsNeighbor extends Neighbor
 			}
 			catch(Exception exception)
 			{
-
 			    m_databaseHelper.neighborControlStatus
 				(m_cryptography,
 				 "disconnect",
