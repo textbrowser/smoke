@@ -297,26 +297,12 @@ Completed Items
 - Zero ports are valid. If a system is allowing connections on port
   zero, Smoke will be able to connect to it.
 
-Peculiar Items
+Remaining Items
 
 - Android 11 does not tolerate Steam continuation after Smoke exit.
   (ACTION_OPEN_DOCUMENT)
 - Authenticate via TLS. Authenticate activity.
-- Brands (profiles).
-- Include member's name in Share Keys Of, if possible.
-- Java does not include methods for destroying private containers.
-- Mist, or, SMS.
-- Option for computing Steam digest. Why?
-- Optional cryptographic discovery, per neighbor.
-- Play Store.
-- Puff, or, video on the Echo. Nearly impossible.
-
-Remaining Items
-
-- Add qTESLA signature scheme.
-- Arson.
 - Diagram the processes.
+- Include member's name in Share Keys Of, if possible.
 - Rare event: connected device with a disconnected neighbor representation.
 - Retain Selection State option.
-- SHA3 via BC.
-- Server-less.
