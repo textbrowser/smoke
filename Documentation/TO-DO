@@ -232,6 +232,7 @@ Completed Items
 - Retain Chat participant states on refresh.
 - Retain Chat widget selection states. Remove State objects if participants
   are removed via the Settings activity.
+- Retain Selection State option.
 - Retain first-contact server certificate. Inspect stored bytes with received
   bytes.
 - Retrieve a subset of message data in Member Chat. New data via scroll.
@@ -305,4 +306,3 @@ Remaining Items
 - Diagram the processes.
 - Include member's name in Share Keys Of, if possible.
 - Rare event: connected device with a disconnected neighbor representation.
-- Retain Selection State option.
