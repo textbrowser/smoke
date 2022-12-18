@@ -1044,6 +1044,16 @@ public class MemberChat extends AppCompatActivity
 	catch(Exception exception)
 	{
 	}
+
+	try
+	{
+	    m_messageSelectionStateEnabled = State.getInstance().
+		selectSwitch(m_sipHashId + "_selection_state");
+	    m_adapter.notifyDataSetChanged();
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     public boolean isMessageSelected(int oid)
@@ -1690,6 +1700,9 @@ public class MemberChat extends AppCompatActivity
 	    m_messageSelectionStateEnabled = !m_messageSelectionStateEnabled;
 	    m_selectedMessages.clear();
 	    m_adapter.notifyDataSetChanged();
+	    State.getInstance().selectSwitch
+		(m_sipHashId + "_selection_state",
+		 m_messageSelectionStateEnabled);
 	    break;
 	case ContextMenuEnumerator.VIEW_DETAILS:
 	    showDetailsOfMessage(itemId);

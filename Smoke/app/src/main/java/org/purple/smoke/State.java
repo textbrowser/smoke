@@ -334,6 +334,14 @@ public class State
 	return m_queryTimerServer.get();
     }
 
+    public boolean selectSwitch(String key)
+    {
+	if(key != null && m_selectedSwitches.containsKey(key))
+	    return m_selectedSwitches.get(key);
+	else
+	    return false;
+    }
+
     public boolean silent()
     {
 	return m_silent.get();
