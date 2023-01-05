@@ -55,7 +55,7 @@ public class About
 		s_simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		s_about = "Bouncy Castle Version " +
 		    new BouncyCastleProvider().getVersion() +
-		    "\nSmoke Version 2022.11.15 Signal (Final) " +
+		    "\nSmoke Version 2023.01.05 Slate (Final) " +
 		    (BuildConfig.DEBUG ? "(Debug) " : "(Release)") +
 		    "\nBuild Date " +
 		    s_simpleDateFormat.
@@ -68,7 +68,7 @@ public class About
 	catch(Exception exception)
 	{
 	    if(s_about.isEmpty())
-		s_about = "Smoke Version 2022.11.15 Signal (Final)";
+		s_about = "Smoke Version 2023.01.05 Slate (Final)";
 	}
 
 	return s_about;

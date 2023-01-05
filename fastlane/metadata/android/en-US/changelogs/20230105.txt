@@ -1,0 +1,1 @@
+* Retain Selection State in Member activity. Session only.
