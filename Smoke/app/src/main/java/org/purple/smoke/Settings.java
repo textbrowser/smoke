@@ -4009,11 +4009,13 @@ public class Settings extends AppCompatActivity
 	    menu.add(ContextMenuEnumerator.DELETE_FIASCO_KEYS,
 		     view.getId(),
 		     1,
-		     "Delete Fiasco Keys (" + tag1 + ")");
+		     "Delete Fiasco Keys (" + tag1 + ")").setEnabled
+		(m_databaseHelper.fiascoCount(view.getId()) > 0);
 	    menu.add(ContextMenuEnumerator.DELETE_PUBLIC_KEYS,
 		     view.getId(),
 		     2,
-		     "Delete Public Keys (" + tag1 + ")");
+		     "Delete Public Keys (" + tag1 + ")").setEnabled
+		(true);
 	    menu.add(ContextMenuEnumerator.NEW_NAME,
 		     view.getId(),
 		     3,

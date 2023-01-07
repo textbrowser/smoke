@@ -4441,6 +4441,36 @@ public class Database extends SQLiteOpenHelper
 	return keyStream;
     }
 
+    public long fiascoCount(int oid)
+    {
+	if(m_db == null)
+	    return -1L;
+
+	Cursor cursor = null;
+	long count = 0L;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT COUNT(*) FROM participants_keys WHERE oid = ?",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		count = cursor.getLong(0);
+	}
+	catch(Exception exception)
+	{
+	    count = -1L;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return count;
+    }
+
     public int participantOidFromSipHash(Cryptography cryptography,
 					 String sipHashId)
     {
