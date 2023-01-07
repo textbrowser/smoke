@@ -345,7 +345,7 @@ public class Authenticate extends AppCompatActivity
 				    if(s_cryptography.
 				       chatSignatureKeyPair() == null)
 					m_error += "chatSignatureKeyPair() " +
-					    "return zero ";
+					    "returned zero ";
 
 				    m_error = m_error.trim();
 				    s_cryptography.reset();
