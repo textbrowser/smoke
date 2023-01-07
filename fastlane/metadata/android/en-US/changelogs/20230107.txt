@@ -1,0 +1,6 @@
+* Corrected error text.
+* Do not disable generate widgets during generation functions.
+  Progress widgets are sufficient.
+* Enable Participants context-menu items if data are available:
+  Delete Fiasco Keys, Delete Public Keys.
+* Reverted to Bouncy Castle 1.71 as key generation fails in 1.72.
