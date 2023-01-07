@@ -3327,9 +3327,7 @@ public class Database extends SQLiteOpenHelper
 	ArrayList<SipHashIdElement> arrayList = readSipHashIds
 	    (cryptography, sipHashId);
 
-	if(arrayList == null ||
-	   arrayList.isEmpty() ||
-	   arrayList.get(0) == null)
+	if(arrayList == null || arrayList.isEmpty() || arrayList.get(0) == null)
 	    return false;
 
 	SipHashIdElement sipHashIdElement = readSipHashId
@@ -3341,6 +3339,13 @@ public class Database extends SQLiteOpenHelper
 	    sipHashIdElement.m_encryptionPublicKey.length > 0 &&
 	    sipHashIdElement.m_signaturePublicKey != null &&
 	    sipHashIdElement.m_signaturePublicKey.length > 0;
+    }
+
+    public boolean hasPublicKeys(Cryptography cryptography, int oid)
+    {
+	return hasPublicKeys
+	    (cryptography,
+	     readSipHashIdString(cryptography, String.valueOf(oid)));
     }
 
     public boolean isSteamLocked(int oid)

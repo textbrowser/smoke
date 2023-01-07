@@ -4015,7 +4015,7 @@ public class Settings extends AppCompatActivity
 		     view.getId(),
 		     2,
 		     "Delete Public Keys (" + tag1 + ")").setEnabled
-		(true);
+		(m_databaseHelper.hasPublicKeys(s_cryptography, view.getId()));
 	    menu.add(ContextMenuEnumerator.NEW_NAME,
 		     view.getId(),
 		     3,
