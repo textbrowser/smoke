@@ -1582,7 +1582,6 @@ public class Settings extends AppCompatActivity
 			     FLAG_NOT_TOUCHABLE);
 			Miscellaneous.enableChildren
 			    (findViewById(R.id.linear_layout), true);
-			disablePKIButtons();
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog
@@ -2713,7 +2712,6 @@ public class Settings extends AppCompatActivity
 			     FLAG_NOT_TOUCHABLE);
 			Miscellaneous.enableChildren
 			    (findViewById(R.id.linear_layout), true);
-			disablePKIButtons();
 
 			if(!m_error.isEmpty())
 			    Miscellaneous.showErrorDialog

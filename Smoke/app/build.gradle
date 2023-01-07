@@ -8,8 +8,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 20230105
-        versionName "2023.01.05"
+        versionCode 20230107
+        versionName "2023.01.07"
     }
     buildTypes {
         android.applicationVariants.all { variant ->
@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.android.support:design:25.4.0'
     implementation 'com.android.support:recyclerview-v7:25.4.0'
     implementation 'com.android.support:support-v4:25.4.0'
-    implementation 'org.bouncycastle:bcprov-jdk15to18:1.72'
+    implementation 'org.bouncycastle:bcprov-jdk15to18:1.71'
     testImplementation 'junit:junit:4.12'
 }
 
