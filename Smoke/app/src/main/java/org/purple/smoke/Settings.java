@@ -4008,7 +4008,7 @@ public class Settings extends AppCompatActivity
 		     "Delete (" + tag1 + ")");
 
 	    /*
-	    ** Notice that the count must be greater than or equalt to one.
+	    ** Notice that the count must be greater than or equal to one.
 	    ** At least one pair of keys is required. Fiasco keys are past keys.
 	    */
 
