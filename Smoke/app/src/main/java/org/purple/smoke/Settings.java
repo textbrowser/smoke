@@ -4008,15 +4008,15 @@ public class Settings extends AppCompatActivity
 		     "Delete (" + tag1 + ")");
 
 	    /*
-	    ** Notice that the count must be greater than one. At least
-	    ** one pair of keys is required. Fiasco keys are past keys.
+	    ** Notice that the count must be greater than or equalt to one.
+	    ** At least one pair of keys is required. Fiasco keys are past keys.
 	    */
 
 	    menu.add(ContextMenuEnumerator.DELETE_FIASCO_KEYS,
 		     view.getId(),
 		     1,
 		     "Delete Fiasco Keys (" + tag1 + ")").setEnabled
-		(m_databaseHelper.fiascoCount(view.getId()) > 1);
+		(m_databaseHelper.fiascoCount(view.getId()) >= 1L);
 	    menu.add(ContextMenuEnumerator.DELETE_PUBLIC_KEYS,
 		     view.getId(),
 		     2,

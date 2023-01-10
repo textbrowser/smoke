@@ -4457,7 +4457,9 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    cursor = m_db.rawQuery
-		("SELECT COUNT(*) FROM participants_keys WHERE oid = ?",
+		("SELECT COUNT(oid) FROM participants_keys WHERE " +
+		 "siphash_id_digest IN " +
+		 "(SELECT siphash_id_digest FROM siphash_ids WHERE oid = ?)",
 		 new String[] {String.valueOf(oid)});
 
 	    if(cursor != null && cursor.moveToFirst())
