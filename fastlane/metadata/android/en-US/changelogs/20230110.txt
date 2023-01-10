@@ -1,0 +1,1 @@
+* Corrected state of Delete Fiasco Keys context menu item.
