@@ -1,1 +1,2 @@
 * New Steams will be initially unlocked.
+* Toggle Lock Status context-menu item in Steam activity.

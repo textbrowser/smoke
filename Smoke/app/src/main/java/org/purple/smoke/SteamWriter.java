@@ -204,13 +204,15 @@ public class SteamWriter
 	    */
 
 	    return -1L;
-	else if(steamElement.m_status.equals("completed") &&
-		s_databaseHelper.isSteamLocked(oid))
+	else if(steamElement.m_locked &&
+		steamElement.m_status.equals("completed"))
 	    /*
 	    ** Completed and locked! The other participant should halt.
 	    */
 
 	    return steamElement.m_fileSize;
+	else if(steamElement.m_locked)
+	    return -1L;
 
 	RandomAccessFile randomAccessFile = null;
 

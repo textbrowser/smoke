@@ -5931,6 +5931,11 @@ public class Database extends SQLiteOpenHelper
 	}
     }
 
+    public void toggleSteamLockStatus(int oid)
+    {
+	lockSteam(!isSteamLocked(oid), oid);
+    }
+
     public void updateParticipantLastTimestamp(Cryptography cryptography,
 					       String sipHashId)
     {
@@ -6212,6 +6217,9 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    ContentValues values = new ContentValues();
+
+	    if(status.equals("completed"))
+		values.put("is_locked", 1);
 
 	    values.put("read_offset", cryptography.etmBase64String(offset));
 

@@ -156,7 +156,7 @@ public class Steam extends AppCompatActivity
 	public final static int REWIND_AND_RESUME_ALL_STEAMS = 5;
 	public final static int REWIND_STEAM = 6;
 	public final static int STEAMROLL_STEAM = 7;
-	public final static int UNLOCK_STEAM = 8;
+	public final static int TOGGLE_LOCK_STATUS = 8;
     }
 
     private void networkStatusChanged()
@@ -711,8 +711,8 @@ public class Steam extends AppCompatActivity
 		 "Steamroll Participant Selection");
 	    State.getInstance().clearSelectedSwitches();
 	    break;
-	case ContextMenuEnumerator.UNLOCK_STEAM:
-	    m_databaseHelper.lockSteam(false, itemId);
+	case ContextMenuEnumerator.TOGGLE_LOCK_STATUS:
+	    m_databaseHelper.toggleSteamLockStatus(itemId);
 	    m_adapter.notifyDataSetChanged();
 	    break;
 	default:

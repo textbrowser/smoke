@@ -118,10 +118,10 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 	    if(view.getId() == -1)
 		menuItem.setEnabled(false);
 
-	    menuItem = menu.add(Steam.ContextMenuEnumerator.UNLOCK_STEAM,
+	    menuItem = menu.add(Steam.ContextMenuEnumerator.TOGGLE_LOCK_STATUS,
 				view.getId(),
 				8,
-				"Unlock Steam");
+				"Toggle Lock Status");
 	    menuItem.setEnabled
 		(steamElement == null ?
 		 false : (steamElement.m_direction == SteamElement.DOWNLOAD));
