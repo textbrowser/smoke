@@ -263,6 +263,7 @@ public class Database extends SQLiteOpenHelper
 		 cryptography.etmBase64String(steamElement.m_fileSize));
 	    values.put
 		("is_download", String.valueOf(steamElement.m_direction));
+	    values.put("is_locked", 0);
 	    values.put
 		("key_type",
 		 cryptography.etmBase64String(steamElement.m_keyType));
@@ -5400,7 +5401,7 @@ public class Database extends SQLiteOpenHelper
 	    "file_identity_digest TEXT NOT NULL, " +
 	    "file_size TEXT NOT NULL, " +
 	    "is_download TEXT NOT NULL, " +
-	    "is_locked INTEGER NOT NULL DEFAULT 1, " +
+	    "is_locked INTEGER NOT NULL DEFAULT 0, " +
 	    "key_type TEXT NOT NULL, " +
 	    "keystream TEXT NOT NULL, " + /*
 					  ** Authentication and encryption
