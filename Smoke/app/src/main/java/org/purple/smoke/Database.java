@@ -1201,8 +1201,7 @@ public class Database extends SQLiteOpenHelper
 		 "status, " +                   // 10
 		 "transfer_rate, " +            // 11
 		 "oid " +                       // 12
-		 "FROM steam_files WHERE is_download = ? " +
-		 "ORDER BY someoid",
+		 "FROM steam_files WHERE is_download = ? ORDER BY someoid",
 		 new String[] {String.valueOf(direction)});
 
 	    if(cursor != null && cursor.moveToFirst())
@@ -2028,7 +2027,12 @@ public class Database extends SQLiteOpenHelper
 
 	    for(int i = 0; i < count; i++)
 	    {
-		if(i == 14)
+		if(i == 9)
+		{
+		    steamElement.m_locked = cursor.getInt(i) != 0;
+		    continue;
+		}
+		else if(i == 14)
 		{
 		    steamElement.m_someOid = cursor.getInt(i);
 		    continue;
@@ -2054,16 +2058,15 @@ public class Database extends SQLiteOpenHelper
 				       Base64.DEFAULT));
 
 		if(bytes == null)
-		    if( i != 9)
-		    {
-			StringBuilder stringBuilder = new StringBuilder();
+		{
+		    StringBuilder stringBuilder = new StringBuilder();
 
-			stringBuilder.append("Database::readSteam(): ");
-			stringBuilder.append("error on column ");
-			stringBuilder.append(cursor.getColumnName(i));
-			stringBuilder.append(".");
-			writeLog(stringBuilder.toString());
-		    }
+		    stringBuilder.append("Database::readSteam(): ");
+		    stringBuilder.append("error on column ");
+		    stringBuilder.append(cursor.getColumnName(i));
+		    stringBuilder.append(".");
+		    writeLog(stringBuilder.toString());
+		}
 
 		switch(i)
 		{
@@ -2127,7 +2130,6 @@ public class Database extends SQLiteOpenHelper
 
 		    break;
 		case 9:
-		    steamElement.m_locked = cursor.getInt(i) != 0;
 		    break;
 		case 10:
 		    if(bytes != null)
