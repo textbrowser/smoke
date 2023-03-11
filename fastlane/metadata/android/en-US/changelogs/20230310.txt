@@ -1,0 +1,2 @@
+* Steam now functional on Android 10 and 13. Do not interpret an integer
+  as a Base64.

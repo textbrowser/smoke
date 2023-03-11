@@ -10,6 +10,7 @@ Completed Items
 - Allow resetting of Chat session keys via context menu.
 - Allow sharing of participant pairs.
 - Allow unlocking of locked Steams.
+- Android 13 and Steam. Files are not present. Android is garbage.
 - Append new messages in Member Chat.
 - Append some text (file identity) to prevent duplicate Steams on write.
 - Application icon.
@@ -302,7 +303,6 @@ Remaining Items
 
 - Android 11 does not tolerate Steam continuation after Smoke exit.
   (ACTION_OPEN_DOCUMENT)
-- Android 13 and Steam. Files are not present. Android is garbage.
 - Authenticate via TLS. Authenticate activity.
 - Diagram the processes.
 - Include member's name in Share Keys Of, if possible.
