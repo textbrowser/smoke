@@ -246,6 +246,7 @@ public class SteamWriter
 		     "",
 		     oid,
 		     offset + packet.length);
+		Miscellaneous.sendBroadcast("org.purple.smoke.steam_status");
 		return offset;
 	    }
 

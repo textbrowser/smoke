@@ -1541,9 +1541,8 @@ public class Kernel
 	try
 	{
 	    /*
+	    ** Remove Steam objects having completed or deleted statuses.
 	    ** Remove Steam objects which do not exist in the database.
-	    ** Also removed will be Steams having completed or deleted
-	    ** statuses.
 	    */
 
 	    for(Integer key : m_steams.keySet())
