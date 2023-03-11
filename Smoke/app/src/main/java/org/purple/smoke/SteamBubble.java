@@ -47,6 +47,7 @@ import java.text.NumberFormat;
 public class SteamBubble extends View
 {
     private Button m_control = null;
+    private Database m_database = null;
     private ImageButton m_menuButton = null;
     private LinearLayout m_layoutA = null;
     private LinearLayout m_layoutB = null;
@@ -76,7 +77,6 @@ public class SteamBubble extends View
     private WeakReference<Context> m_context = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
-    private final static Database s_databaseHelper = Database.getInstance();
     private final static DecimalFormat s_decimalFormat =
 	new DecimalFormat("0.00");
     private final static NumberFormat s_numberFormat =
@@ -129,6 +129,7 @@ public class SteamBubble extends View
     {
 	super(context);
 	m_context = new WeakReference<> (context);
+	m_database = Database.getInstance(context);
 	m_steam = steam;
 
 	LayoutInflater inflater = (LayoutInflater) m_context.get().
@@ -144,18 +145,18 @@ public class SteamBubble extends View
 		{
 		case "pause":
 		    m_eta.setText("ETA: stalled");
-		    s_databaseHelper.writeSteamStatus
+		    m_database.writeSteamStatus
 			(s_cryptography, "paused", Miscellaneous.RATE, m_oid);
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.steam_status");
 		    break;
 		case "resume":
-		    s_databaseHelper.writeSteamStatus("transferring", m_oid);
+		    m_database.writeSteamStatus("transferring", m_oid);
 		    Miscellaneous.sendBroadcast
 			("org.purple.smoke.steam_status");
 		    break;
 		case "rewind":
-		    s_databaseHelper.writeSteamStatus
+		    m_database.writeSteamStatus
 			(s_cryptography,
 			 "rewind",
 			 Miscellaneous.RATE,
@@ -260,7 +261,7 @@ public class SteamBubble extends View
 
 		    if(fromUser)
 		    {
-			s_databaseHelper.writeSteamStatus
+			m_database.writeSteamStatus
 			    (s_cryptography, m_oid, readInterval);
 			Miscellaneous.sendBroadcast
 			    ("org.purple.smoke.steam_read_interval_change",

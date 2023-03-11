@@ -1388,11 +1388,6 @@ public class Cryptography
 	}
 	catch(Exception exception)
 	{
-	    Database.getInstance().writeLog
-		("Cryptography::generatePrivatePublicKeyPair(): " +
-		 "exception raised (" +
-		 exception.getMessage().toLowerCase().trim()
-		 + ").");
 	}
 
 	return null;

@@ -73,7 +73,7 @@ public abstract class Neighbor
     protected AtomicLong m_lastTimeRead = null;
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
-    protected Database m_databaseHelper = null;
+    protected Database m_database = null;
     protected String m_ipAddress = "";
     protected String m_version = "";
     protected final Object m_errorMutex = new Object();
@@ -120,18 +120,24 @@ public abstract class Neighbor
 	else
 	    status = "disconnected";
 
-	m_databaseHelper.saveNeighborInformation
-	    (m_cryptography,
-	     String.valueOf(m_bytesRead.get()),
-	     String.valueOf(m_bytesWritten.get()),
-	     echoQueueSize,
-	     error,
-	     localIp,
-	     localPort,
-	     sessionCiper,
-	     status,
-	     String.valueOf(uptime),
-	     String.valueOf(m_oid.get()));
+	try
+	{
+	    m_database.saveNeighborInformation
+		(m_cryptography,
+		 String.valueOf(m_bytesRead.get()),
+		 String.valueOf(m_bytesWritten.get()),
+		 echoQueueSize,
+		 error,
+		 localIp,
+		 localPort,
+		 sessionCiper,
+		 status,
+		 String.valueOf(uptime),
+		 String.valueOf(m_oid.get()));
+	}
+	catch(Exception exception)
+	{
+	}
     }
 
     private void terminateOnSilence()
@@ -155,7 +161,7 @@ public abstract class Neighbor
 	m_bytesWritten = new AtomicLong(0L);
 	m_capabilitiesSent = new AtomicBoolean(false);
 	m_cryptography = Cryptography.getInstance();
-	m_databaseHelper = Database.getInstance();
+	m_database = Database.getInstance();
 	m_disconnected = new AtomicBoolean(false);
 	m_echoQueue = new ArrayList<> ();
 	m_ipAddress = ipAddress;
@@ -280,7 +286,7 @@ public abstract class Neighbor
 	    {
 		try
 		{
-		    String statusControl = m_databaseHelper.
+		    String statusControl = m_database.
 			readNeighborStatusControl(m_cryptography, m_oid.get());
 
 		    switch(statusControl)
@@ -356,7 +362,7 @@ public abstract class Neighbor
 		    ** Retrieve a database message.
 		    */
 
-		    String array[] = m_databaseHelper.readOutboundMessage
+		    String array[] = m_database.readOutboundMessage
 			(m_lastMessageOid, m_oid.get());
 
 		    /*
@@ -419,14 +425,12 @@ public abstract class Neighbor
 			}
 
 			if(array[1].isEmpty())
-			    m_databaseHelper.deleteEntry
-				(array[3], "outbound_queue");
+			    m_database.deleteEntry(array[3], "outbound_queue");
 			else if(send(Messages.replaceETag(array[1])) > 0)
 			{
-			    m_databaseHelper.markMessageTimestamp
-				(array[0], array[3]);
+			    m_database.markMessageTimestamp(array[0], array[3]);
 
-			    if(m_databaseHelper.
+			    if(m_database.
 			       writeMessageStatus(m_cryptography, array[2]))
 				Kernel.getInstance().notifyOfDataSetChange
 				    (array[3]);

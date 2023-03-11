@@ -37,12 +37,12 @@ import android.view.ViewGroup;
 
 public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 {
+    private Database m_database = null;
     private Steam m_steam = null;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
-    private final static Database s_database = Database.getInstance();
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
+    public class ViewHolder extends RecyclerView.ViewHolder
 	implements OnCreateContextMenuListener
     {
 	SteamBubble m_steamBubble = null;
@@ -93,7 +93,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 		     5,
 		     "Rewind All Steams");
 
-	    SteamElement steamElement = s_database.readSteam
+	    SteamElement steamElement = m_database.readSteam
 		(s_cryptography, -1, view.getId() - 1);
 
 	    menuItem = menu.add(Steam.ContextMenuEnumerator.REWIND_STEAM,
@@ -143,6 +143,7 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 
     public SteamAdapter(Steam steam)
     {
+	m_database = Database.getInstance(steam.getApplicationContext());
 	m_steam = steam;
     }
 
@@ -157,18 +158,18 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
     @Override
     public int getItemCount()
     {
-	return (int) s_database.countOfSteams();
+	return (int) m_database.countOfSteams();
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position)
     {
-	if(viewHolder == null)
-	    return;
+	if(viewHolder != null)
+	{
+	    SteamElement steamElement = m_database.readSteam
+		(s_cryptography, Math.max(0, position), -1);
 
-	SteamElement steamElement = s_database.readSteam
-	    (s_cryptography, Math.max(0, position), -1);
-
-	viewHolder.setData(steamElement, getItemCount(), position);
+	    viewHolder.setData(steamElement, getItemCount(), position);
+	 }
     }
 }

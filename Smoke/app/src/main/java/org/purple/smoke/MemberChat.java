@@ -187,7 +187,7 @@ public class MemberChat extends AppCompatActivity
 	    try
 	    {
 		for(Integer key : m_selectedMessages.keySet())
-		    s_databaseHelper.deleteParticipantMessage
+		    m_database.deleteParticipantMessage
 			(s_cryptography, m_sipHashId, key);
 
 		m_selectedMessages.clear();
@@ -225,6 +225,7 @@ public class MemberChat extends AppCompatActivity
 
     private ArsonEphemeralKeyGenerator m_arson = null;
     private ConcurrentHashMap<Integer, Boolean> m_selectedMessages = null;
+    private Database m_database = null;
     private MemberChatAdapter m_adapter = null;
     private MemberChatBroadcastReceiver m_receiver = null;
     private RecyclerView m_recyclerView = null;
@@ -239,7 +240,6 @@ public class MemberChat extends AppCompatActivity
     private final int m_lastContextMenuPosition[] = new int[] {0, 0};
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
-    private final static Database s_databaseHelper = Database.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
     private final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     private int m_oid = -1;
@@ -269,13 +269,13 @@ public class MemberChat extends AppCompatActivity
 
     private boolean hasPublicKeys()
     {
-	return s_databaseHelper.hasPublicKeys(s_cryptography, m_sipHashId);
+	return m_database.hasPublicKeys(s_cryptography, m_sipHashId);
     }
 
     private boolean isParticipantPaired(ArrayList<ParticipantElement> arrayList)
     {
 	if(arrayList == null)
-	    arrayList = s_databaseHelper.readParticipants
+	    arrayList = m_database.readParticipants
 		(s_cryptography, m_sipHashId);
 
 	ParticipantElement participantElement =
@@ -372,7 +372,7 @@ public class MemberChat extends AppCompatActivity
 		    str += new String(a);
 		}
 
-		byte keyStream[] = s_databaseHelper.participantKeyStream
+		byte keyStream[] = m_database.participantKeyStream
 		    (s_cryptography, m_sipHashId);
 
 		if(keyStream == null ||
@@ -422,7 +422,7 @@ public class MemberChat extends AppCompatActivity
 		    try
 		    {
 			ArrayList<ParticipantElement> arrayList =
-			    s_databaseHelper.readParticipants
+			    m_database.readParticipants
 			    (s_cryptography, m_sipHashId);
 			final ParticipantElement participantElement =
 			    arrayList == null || arrayList.isEmpty() ?
@@ -481,7 +481,7 @@ public class MemberChat extends AppCompatActivity
 	try
 	{
 	    ArrayList<ParticipantElement> arrayList =
-		s_databaseHelper.readParticipants(s_cryptography, m_sipHashId);
+		m_database.readParticipants(s_cryptography, m_sipHashId);
 	    Button button = (Button) findViewById(R.id.send_chat_message);
 	    ParticipantElement participantElement =
 		arrayList == null || arrayList.isEmpty() ?
@@ -602,8 +602,7 @@ public class MemberChat extends AppCompatActivity
 		    {
 			PopupWindow popupWindow = new PopupWindow
 			    (MemberChat.this);
-			String string = s_databaseHelper.messageDetails
-			    (m_oid).trim();
+			String string = m_database.messageDetails(m_oid).trim();
 			TextView textView1 = new TextView(MemberChat.this);
 			float density = getApplicationContext().getResources().
 			    getDisplayMetrics().density;
@@ -877,6 +876,7 @@ public class MemberChat extends AppCompatActivity
 	setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 	m_arson = new ArsonEphemeralKeyGenerator
 	    (State.getInstance().getString("member_chat_siphash_id"));
+	m_database = Database.getInstance(getApplicationContext());
 	m_layoutManager = new SmokeLinearLayoutManager(MemberChat.this);
 	m_layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	m_layoutManager.setReverseLayout(true);
@@ -926,8 +926,7 @@ public class MemberChat extends AppCompatActivity
 			(m_recyclerView, null, positionStart - itemCount);
 		}
 	    });
-	m_name = s_databaseHelper.nameFromSipHashId
-	    (s_cryptography, m_sipHashId);
+	m_name = m_database.nameFromSipHashId(s_cryptography, m_sipHashId);
 
 	if(m_name.isEmpty())
 	    m_name = m_sipHashId;
@@ -1105,8 +1104,7 @@ public class MemberChat extends AppCompatActivity
 				     string.toCharArray(),
 				     Chat.CUSTOM_SESSION_ITERATION_COUNT,
 				     160); // SHA-1
-				int oid = s_databaseHelper.
-				    participantOidFromSipHash
+				int oid = m_database.participantOidFromSipHash
 				    (s_cryptography, m_sipHashId);
 
 				if(bytes != null)
@@ -1122,7 +1120,7 @@ public class MemberChat extends AppCompatActivity
 					 Cryptography.CIPHER_HASH_KEYS_LENGTH *
 					 8);
 
-				s_databaseHelper.setParticipantKeyStream
+				m_database.setParticipantKeyStream
 				    (s_cryptography, bytes, oid);
 			    }
 			}
@@ -1137,7 +1135,7 @@ public class MemberChat extends AppCompatActivity
 			if(State.getInstance().getString("dialog_accepted").
 			   equals("true"))
 			{
-			    s_databaseHelper.deleteParticipantMessages
+			    m_database.deleteParticipantMessages
 				(s_cryptography, m_sipHashId);
 			    m_selectedMessages.clear();
 			    m_adapter.notifyDataSetChanged();
@@ -1148,7 +1146,7 @@ public class MemberChat extends AppCompatActivity
 			if(State.getInstance().getString("dialog_accepted").
 			   equals("true"))
 			{
-			    s_databaseHelper.deleteParticipantMessage
+			    m_database.deleteParticipantMessage
 				(s_cryptography, m_sipHashId, itemId);
 			    m_selectedMessages.remove(itemId);
 			    m_adapter.notifyDataSetChanged();
@@ -1205,7 +1203,7 @@ public class MemberChat extends AppCompatActivity
 
 			    if(!string.isEmpty())
 			    {
-				byte keyStream[] = s_databaseHelper.
+				byte keyStream[] = m_database.
 				    participantKeyStream
 				    (s_cryptography, m_sipHashId);
 
@@ -1232,7 +1230,7 @@ public class MemberChat extends AppCompatActivity
 		    case ContextMenuEnumerator.PURGE_FIASCO_KEYS:
 			if(State.getInstance().getString("dialog_accepted").
 			   equals("true"))
-			    s_databaseHelper.deleteFiascoKeysOfSiphashId
+			    m_database.deleteFiascoKeysOfSiphashId
 				(s_cryptography, m_sipHashId);
 
 			break;
@@ -1334,12 +1332,11 @@ public class MemberChat extends AppCompatActivity
 		     true);
 	    else if(groupId == ContextMenuEnumerator.JUGGERLI)
 	    {
-		PublicKey publicKey1 = s_databaseHelper.
+		PublicKey publicKey1 = m_database.
 		    publicEncryptionKeyForSipHashId
 		    (s_cryptography, m_sipHashId);
-		PublicKey publicKey2 = s_databaseHelper.
-		    publicSignatureKeyForSipHashId
-		    (s_cryptography, m_sipHashId);
+		PublicKey publicKey2 = m_database.
+		    publicSignatureKeyForSipHashId(s_cryptography, m_sipHashId);
 		byte bytes[] = Cryptography.xor
 		    (s_cryptography.chatEncryptionPublicKey().getEncoded(),
 		     s_cryptography.chatSignaturePublicKey().getEncoded(),
@@ -1378,7 +1375,7 @@ public class MemberChat extends AppCompatActivity
 
 	    String strings[] = null;
 	    StringBuilder stringBuilder = new StringBuilder
-		(s_databaseHelper.
+		(m_database.
 		 readParticipantOptions(s_cryptography, m_sipHashId));
 
 	    strings = stringBuilder.toString().split(";");
@@ -1418,7 +1415,7 @@ public class MemberChat extends AppCompatActivity
 		stringBuilder.append(menuItem.isChecked() ? "true" : "false");
 	    }
 
-	    s_databaseHelper.writeParticipantOptions
+	    m_database.writeParticipantOptions
 		(s_cryptography, stringBuilder.toString(), m_sipHashId);
 	    break;
 	}
@@ -1428,7 +1425,7 @@ public class MemberChat extends AppCompatActivity
 
 	    String strings[] = null;
 	    StringBuilder stringBuilder = new StringBuilder
-		(s_databaseHelper.
+		(m_database.
 		 readParticipantOptions(s_cryptography, m_sipHashId));
 
 	    strings = stringBuilder.toString().split(";");
@@ -1469,7 +1466,7 @@ public class MemberChat extends AppCompatActivity
 		    (menuItem.isChecked() ? "true" : "false");
 	    }
 
-	    s_databaseHelper.writeParticipantOptions
+	    m_database.writeParticipantOptions
 		(s_cryptography, stringBuilder.toString(), m_sipHashId);
 	    break;
 	}
@@ -1479,7 +1476,7 @@ public class MemberChat extends AppCompatActivity
 
 	    String strings[] = null;
 	    StringBuilder stringBuilder = new StringBuilder
-		(s_databaseHelper.
+		(m_database.
 		 readParticipantOptions(s_cryptography, m_sipHashId));
 
 	    strings = stringBuilder.toString().split(";");
@@ -1520,7 +1517,7 @@ public class MemberChat extends AppCompatActivity
 		    (menuItem.isChecked() ? "true" : "false");
 	    }
 
-	    s_databaseHelper.writeParticipantOptions
+	    m_database.writeParticipantOptions
 		(s_cryptography, stringBuilder.toString(), m_sipHashId);
 	    break;
 	}
@@ -1583,21 +1580,25 @@ public class MemberChat extends AppCompatActivity
 				    options.inSampleSize = 2;
 
 				    MemberChatElement memberChatElement =
-					s_databaseHelper.
-					readMemberChat(s_cryptography,
-						       m_sipHashId,
-						       itemId);
+					m_database.readMemberChat
+					(s_cryptography, m_sipHashId, itemId);
 
-				    byteArrayInputStream =
-					new ByteArrayInputStream
-					(memberChatElement.m_attachment);
+				    if(memberChatElement != null)
+					byteArrayInputStream = new
+					    ByteArrayInputStream
+					    (memberChatElement.m_attachment);
 
 				    /*
 				    ** Convert the bytes into a bitmap.
 				    */
 
-				    Bitmap bitmap = BitmapFactory.decodeStream
-					(byteArrayInputStream, null, options);
+				    Bitmap bitmap = null;
+
+				    if(byteArrayInputStream != null)
+					bitmap = BitmapFactory.decodeStream
+					    (byteArrayInputStream,
+					     null,
+					     options);
 
 				    if(bitmap != null)
 				    {
@@ -1731,25 +1732,25 @@ public class MemberChat extends AppCompatActivity
 	    switch(itemId)
 	    {
 	    case R.id.action_chat:
-		s_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+		m_database.writeSetting(null, "lastActivity", "Chat");
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
 		Smoke.exit(true, MemberChat.this);
 		return true;
 	    case R.id.action_fire:
-		s_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+		m_database.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
 		return true;
 	    case R.id.action_settings:
-		s_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+		m_database.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
 		return true;
 	    case R.id.action_smokescreen:
 		showSmokescreenActivity();
 		return true;
 	    case R.id.action_steam:
-		s_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+		m_database.writeSetting(null, "lastActivity", "Steam");
 		showSteamActivity();
 		return true;
 	    default:
@@ -1776,11 +1777,10 @@ public class MemberChat extends AppCompatActivity
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString
 		("member_chat_siphash_id", sipHashId);
-	    s_databaseHelper.writeSetting
-		(null, "lastActivity", "MemberChat");
-	    s_databaseHelper.writeSetting
+	    m_database.writeSetting(null, "lastActivity", "MemberChat");
+	    m_database.writeSetting
 		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
-	    s_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(s_cryptography, "member_chat_siphash_id", sipHashId);
 	    showMemberChatActivity();
 	}
@@ -1798,7 +1798,7 @@ public class MemberChat extends AppCompatActivity
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
 
-	if(!s_databaseHelper.accountPrepared())
+	if(!m_database.accountPrepared())
 	    /*
 	    ** The database may have been modified or removed.
 	    */
@@ -1882,7 +1882,7 @@ public class MemberChat extends AppCompatActivity
 			    "Optional Receive Responses");
 	menuItem.setCheckable(true);
 	menuItem.setChecked
-	    (s_databaseHelper.
+	    (m_database.
 	     readParticipantOptions(s_cryptography, m_sipHashId).
 	     contains("optional_receive_response = true"));
 	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_SIGNATURES,
@@ -1891,7 +1891,7 @@ public class MemberChat extends AppCompatActivity
 			    "Optional Signatures");
 	menuItem.setCheckable(true);
 	menuItem.setChecked
-	    (s_databaseHelper.
+	    (m_database.
 	     readParticipantOptions(s_cryptography, m_sipHashId).
 	     contains("optional_signatures = true"));
 	menuItem = menu.add(ContextMenuEnumerator.OPTIONAL_STEAM,
@@ -1900,7 +1900,7 @@ public class MemberChat extends AppCompatActivity
 			    "Optional Steam");
 	menuItem.setCheckable(true);
 	menuItem.setChecked
-	    (s_databaseHelper.
+	    (m_database.
 	     readParticipantOptions(s_cryptography, m_sipHashId).
 	     contains("optional_steam = true"));
 	menu.add(ContextMenuEnumerator.PURGE_FIASCO_KEYS,
@@ -1911,7 +1911,7 @@ public class MemberChat extends AppCompatActivity
 		 -1,
 		 10,
 		 "Retrieve Messages").setEnabled
-	    (!s_databaseHelper.readSetting(s_cryptography, "ozone_address").
+	    (!m_database.readSetting(s_cryptography, "ozone_address").
 	     isEmpty() && state);
 	menuItem = menu.add(ContextMenuEnumerator.SELECTION_STATE,
 			    -1,
