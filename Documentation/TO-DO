@@ -298,12 +298,3 @@ Completed Items
 - Wrap neighbor text.
 - Zero ports are valid. If a system is allowing connections on port
   zero, Smoke will be able to connect to it.
-
-Remaining Items
-
-- Android 11 does not tolerate Steam continuation after Smoke exit.
-  (ACTION_OPEN_DOCUMENT)
-- Authenticate via TLS. Authenticate activity.
-- Diagram the processes.
-- Include member's name in Share Keys Of, if possible.
-- Rare event: connected device with a disconnected neighbor representation.
