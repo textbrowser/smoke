@@ -4669,7 +4669,10 @@ public class Database extends SQLiteOpenHelper
 
     public static synchronized Database getInstance()
     {
-	return s_instance; // Should never be null.
+	if(s_instance == null)
+	    s_instance = new Database(Smoke.getApplication());
+
+	return s_instance;
     }
 
     public static synchronized Database getInstance(Context context)
