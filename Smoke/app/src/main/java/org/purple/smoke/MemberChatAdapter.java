@@ -38,12 +38,12 @@ import android.view.ViewGroup;
 public class MemberChatAdapter extends RecyclerView.Adapter
 				       <MemberChatAdapter.ViewHolder>
 {
+    private Database m_database = null;
     private MemberChat m_memberChat = null;
     private String m_sipHashId = "";
     private boolean m_contextMenuShown = false;
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
-    private final static Database s_database = Database.getInstance();
 
     public class ViewHolder extends RecyclerView.ViewHolder
 	implements OnCreateContextMenuListener
@@ -59,7 +59,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    super(chatBubble.view());
 	    chatBubble.view().setOnCreateContextMenuListener(this);
 	    m_chatBubble = chatBubble;
-	    m_name = s_database.nameFromSipHashId(s_cryptography, sipHashId);
+	    m_name = m_database.nameFromSipHashId(s_cryptography, sipHashId);
         }
 
 	public void onCreateContextMenu(ContextMenu menu,
@@ -194,6 +194,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 
     public MemberChatAdapter(MemberChat memberChat, String sipHashId)
     {
+	m_database = Database.getInstance(memberChat.getApplicationContext());
 	m_memberChat = memberChat;
 	m_sipHashId = sipHashId;
     }
@@ -215,7 +216,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
     @Override
     public int getItemCount()
     {
-	return (int) s_database.countOfMessages(s_cryptography, m_sipHashId);
+	return (int) m_database.countOfMessages(s_cryptography, m_sipHashId);
     }
 
     @Override
@@ -224,7 +225,7 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	if(viewHolder == null)
 	    return;
 
-	MemberChatElement memberChatElement = s_database.readMemberChat
+	MemberChatElement memberChatElement = m_database.readMemberChat
 	    (s_cryptography, m_sipHashId, position);
 
 	viewHolder.setData(memberChatElement, position);

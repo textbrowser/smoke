@@ -164,7 +164,7 @@ public class Settings extends AppCompatActivity
 	}
     }
 
-    private Database m_databaseHelper = null;
+    private Database m_database = null;
     private ScheduledExecutorService m_scheduler = null;
     private SettingsBroadcastReceiver m_receiver = null;
     private boolean m_receiverRegistered = false;
@@ -258,15 +258,14 @@ public class Settings extends AppCompatActivity
 
 	    if(bytes != null || string.trim().isEmpty())
 	    {
-		m_databaseHelper.writeSetting
+		m_database.writeSetting
 		    (s_cryptography, "ozone_address", string.trim());
 
 		if(string.trim().isEmpty())
 		{
-		    m_databaseHelper.writeSetting
-			(s_cryptography,
-			 "ozone_address_stream",
-			 "");
+		    m_database.writeSetting(s_cryptography,
+					    "ozone_address_stream",
+					    "");
 		    ok = true;
 		    s_cryptography.setOzoneEncryptionKey(null);
 		    s_cryptography.setOzoneMacKey(null);
@@ -274,7 +273,7 @@ public class Settings extends AppCompatActivity
 		else if(bytes != null &&
 			bytes.length == Cryptography.CIPHER_HASH_KEYS_LENGTH)
 		    {
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (s_cryptography,
 			     "ozone_address_stream",
 			     Base64.encodeToString(bytes, Base64.DEFAULT));
@@ -324,7 +323,7 @@ public class Settings extends AppCompatActivity
 	if(textView1.getText().toString().trim().isEmpty())
 	    Miscellaneous.showErrorDialog
 		(Settings.this, "Please complete the IP Address field.");
-	else if(!m_databaseHelper.
+	else if(!m_database.
 		writeNeighbor(s_cryptography,
 			      switch3.isChecked() ? "true" : "false",
 			      switch4.isChecked() ? "true" : "false",
@@ -381,7 +380,7 @@ public class Settings extends AppCompatActivity
 		     "A Smoke Alias must include at least eight characters.");
 		return;
 	    }
-	    else if(m_databaseHelper.
+	    else if(m_database.
 		    readSetting(s_cryptography, "alias").equals(string))
 	    {
 		Miscellaneous.showErrorDialog
@@ -453,9 +452,9 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		if(!m_databaseHelper.writeSipHashParticipant(s_cryptography,
-							     m_name,
-							     m_sipHashId))
+		if(!m_database.writeSipHashParticipant(s_cryptography,
+						       m_name,
+						       m_sipHashId))
 		    m_error = true;
 
 		Settings.this.runOnUiThread(new Runnable()
@@ -502,7 +501,7 @@ public class Settings extends AppCompatActivity
 		{
 		    if(State.getInstance().getString("dialog_accepted").
 		       equals("true"))
-			if(m_databaseHelper.
+			if(m_database.
 			   deleteEntry(String.valueOf(oid), "neighbors"))
 			{
 			    /*
@@ -649,7 +648,7 @@ public class Settings extends AppCompatActivity
 	    public void run()
 	    {
 		ArrayList<SipHashIdElement> arrayList =
-		    m_databaseHelper.readSipHashIds(s_cryptography, sipHashId);
+		    m_database.readSipHashIds(s_cryptography, sipHashId);
 
 		if(arrayList == null)
 		    arrayList = new ArrayList<> ();
@@ -805,7 +804,7 @@ public class Settings extends AppCompatActivity
     private void populateNeighbors(ArrayList<NeighborElement> arrayList)
     {
 	if(arrayList == null)
-	    arrayList = m_databaseHelper.readNeighbors(s_cryptography);
+	    arrayList = m_database.readNeighbors(s_cryptography);
 
 	final TableLayout tableLayout = (TableLayout)
 	    findViewById(R.id.neighbors);
@@ -970,7 +969,7 @@ public class Settings extends AppCompatActivity
 			    switch(position)
 			    {
 			    case 1: // Connect.
-				m_databaseHelper.neighborControlStatus
+				m_database.neighborControlStatus
 				    (s_cryptography,
 				     "connect",
 				     String.valueOf(parent.getId()));
@@ -979,21 +978,21 @@ public class Settings extends AppCompatActivity
 				deleteNeighbor(ipAndPort, parent.getId());
 				break;
 			    case 3: // Disconnect.
-				m_databaseHelper.neighborControlStatus
+				m_database.neighborControlStatus
 				    (s_cryptography,
 				     "disconnect",
 				     String.valueOf(parent.getId()));
 				break;
 			    case 4: // Purge queue.
-				m_databaseHelper.purgeNeighborQueue
+				m_database.purgeNeighborQueue
 				    (String.valueOf(parent.getId()));
 				break;
 			    case 5: // Reset SSL/TLS credentials.
-				m_databaseHelper.neighborRecordCertificate
+				m_database.neighborRecordCertificate
 				    (s_cryptography,
 				     String.valueOf(parent.getId()),
 				     null);
-				m_databaseHelper.neighborControlStatus
+				m_database.neighborControlStatus
 				    (s_cryptography,
 				     "disconnect",
 				     String.valueOf(parent.getId()));
@@ -1193,13 +1192,13 @@ public class Settings extends AppCompatActivity
 	TextView textView1 = (TextView) findViewById(R.id.ozone);
 
 	textView1.setText
-	    (m_databaseHelper.readSetting(s_cryptography, "ozone_address"));
+	    (m_database.readSetting(s_cryptography, "ozone_address"));
     }
 
     private void populateParticipants()
     {
 	ArrayList<SipHashIdElement> arrayList =
-	    m_databaseHelper.readSipHashIds(s_cryptography, "");
+	    m_database.readSipHashIds(s_cryptography, "");
 	TableLayout tableLayout = (TableLayout) findViewById
 	    (R.id.participants);
 
@@ -1386,7 +1385,7 @@ public class Settings extends AppCompatActivity
 		    (Cryptography.CIPHER_KEY_LENGTH);
 		macSalt = Cryptography.randomBytes
 		    (Cryptography.HASH_KEY_LENGTH);
-		m_databaseHelper.reset();
+		m_database.reset();
 
 		try
 		{
@@ -1485,29 +1484,29 @@ public class Settings extends AppCompatActivity
 		    ** Record the data.
 		    */
 
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(null,
 			 "encryptionSalt",
 			 Base64.encodeToString(encryptionSalt,
 					       Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(null,
 			 "iterationCount",
 			 String.valueOf(m_iterationCount));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(null,
 			 "keyDerivationFunction",
 			 String.valueOf(m_keyDerivationFunction));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(null,
 			 "macSalt",
 			 Base64.encodeToString(macSalt,
 					       Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_encryption_algorithm",
 			 m_encryptionAlgorithm);
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_encryption_private_key",
 			 Base64.
@@ -1515,7 +1514,7 @@ public class Settings extends AppCompatActivity
 					getPrivate().
 					getEncoded(),
 					Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_encryption_public_key",
 			 Base64.
@@ -1523,18 +1522,18 @@ public class Settings extends AppCompatActivity
 					getPublic().
 					getEncoded(),
 					Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_signature_algorithm",
 			 m_signatureAlgorithm);
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_signature_private_key",
 			 Base64.encodeToString(chatSignatureKeyPair.
 					       getPrivate().
 					       getEncoded(),
 					       Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_signature_public_key",
 			 Base64.encodeToString(chatSignatureKeyPair.
@@ -1550,7 +1549,7 @@ public class Settings extends AppCompatActivity
 			       macSalt);
 
 		    if(e1 && e2 && saltedPassword != null)
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null,
 			     "saltedPassword",
 			     Base64.encodeToString(saltedPassword,
@@ -1601,7 +1600,7 @@ public class Settings extends AppCompatActivity
 			    textView1.requestFocus();
 			    textView1.setText("");
 			    textView2.setText("");
-			    m_databaseHelper.writeNeighbor
+			    m_database.writeNeighbor
 				(s_cryptography,
 				 "false",
 				 "false",
@@ -1618,7 +1617,7 @@ public class Settings extends AppCompatActivity
 			    populateParticipants();
 			    startKernel();
 
-			    if(m_databaseHelper.
+			    if(m_database.
 			       readSetting(null, "automatic_neighbors_refresh").
 			       equals("true"))
 				startTimers();
@@ -1639,8 +1638,7 @@ public class Settings extends AppCompatActivity
 
     private void prepareForegroundService()
     {
-	if(m_databaseHelper.
-	   readSetting(null, "foreground_service").equals("false"))
+	if(m_database.readSetting(null, "foreground_service").equals("false"))
 	    SmokeService.stopForegroundTask(Settings.this);
 	else
 	    SmokeService.startForegroundTask(Settings.this);
@@ -1685,7 +1683,7 @@ public class Settings extends AppCompatActivity
 		if(Settings.this.isFinishing())
 		    return;
 
-		m_databaseHelper.clearTable("log");
+		m_database.clearTable("log");
 	    }
 	});
 
@@ -1902,7 +1900,7 @@ public class Settings extends AppCompatActivity
 		       equals("true"))
 		    {
 			State.getInstance().reset();
-			m_databaseHelper.resetAndDrop();
+			m_database.resetAndDrop();
 			s_cryptography.reset();
 
 			Intent intent = getIntent();
@@ -2002,7 +2000,7 @@ public class Settings extends AppCompatActivity
 			    (R.id.ozone);
 
 			textView1.setText("");
-			m_databaseHelper.reset();
+			m_database.reset();
 			populateFancyKeyData();
 			populateNeighbors(null);
 			populateParticipants();
@@ -2029,20 +2027,19 @@ public class Settings extends AppCompatActivity
 			 "least eight characters. ");
 		else if(alias.isEmpty())
 		{
-		    m_databaseHelper.writeSetting(s_cryptography, "alias", "");
+		    m_database.writeSetting(s_cryptography, "alias", "");
 		    s_cryptography.prepareSipHashIds(null);
 		    s_cryptography.prepareSipHashKeys();
 		}
 		else
 		{
-		    if(m_databaseHelper.
+		    if(m_database.
 		       readSetting(s_cryptography, "fire_user_name").trim().
 		       isEmpty())
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (s_cryptography, "fire_user_name", alias);
 
-		    m_databaseHelper.writeSetting
-			(s_cryptography, "alias", alias);
+		    m_database.writeSetting(s_cryptography, "alias", alias);
 		    s_cryptography.prepareSipHashIds(alias);
 		    s_cryptography.prepareSipHashKeys();
 		}
@@ -2289,13 +2286,13 @@ public class Settings extends AppCompatActivity
 		{
 		    if(isChecked)
 		    {
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "automatic_neighbors_refresh", "true");
 			startTimers();
 		    }
 		    else
 		    {
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "automatic_neighbors_refresh", "false");
 			stopTimers();
 		    }
@@ -2312,13 +2309,13 @@ public class Settings extends AppCompatActivity
 		{
 		    if(isChecked)
 		    {
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "neighbors_echo", "true");
 			State.getInstance().setNeighborsEcho(true);
 		    }
 		    else
 		    {
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "neighbors_echo", "false");
 			Kernel.getInstance().clearNeighborQueues();
 			State.getInstance().setNeighborsEcho(false);
@@ -2337,13 +2334,13 @@ public class Settings extends AppCompatActivity
 		    if(isChecked)
 		    {
 			SmokeService.startForegroundTask(Settings.this);
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "foreground_service", "true");
 		    }
 		    else
 		    {
 			SmokeService.stopForegroundTask(Settings.this);
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "foreground_service", "false");
 		    }
 		}
@@ -2358,10 +2355,10 @@ public class Settings extends AppCompatActivity
 		    (CompoundButton buttonView, boolean isChecked)
 		{
 		    if(isChecked)
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "neighbors_details", "true");
 		    else
-			m_databaseHelper.writeSetting
+			m_database.writeSetting
 			    (null, "neighbors_details", "false");
 
 		    Switch switch1 = (Switch) findViewById
@@ -2398,7 +2395,7 @@ public class Settings extends AppCompatActivity
 		    (CompoundButton buttonView, boolean isChecked)
 		{
 		    State.getInstance().setQueryTimerServer(isChecked);
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(null,
 			 "query_time_server",
 			 isChecked ? "true" : "false");
@@ -2414,7 +2411,7 @@ public class Settings extends AppCompatActivity
 		    (CompoundButton buttonView, boolean isChecked)
 		{
 		    State.getInstance().setSilent(isChecked);
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(null, "silent", isChecked ? "true" : "false");
 		}
 	    });
@@ -2428,7 +2425,7 @@ public class Settings extends AppCompatActivity
 		    (CompoundButton buttonView, boolean isChecked)
 		{
 		    Kernel.getInstance().setWakeLock(isChecked);
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(null, "always_awake", isChecked ? "true" : "false");
 
 		    TextView textView1 = (TextView) findViewById(R.id.about);
@@ -2642,11 +2639,11 @@ public class Settings extends AppCompatActivity
 		    ** Record the data.
 		    */
 
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_encryption_algorithm",
 			 m_encryptionAlgorithm);
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_encryption_private_key",
 			 Base64.
@@ -2654,7 +2651,7 @@ public class Settings extends AppCompatActivity
 					getPrivate().
 					getEncoded(),
 					Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_encryption_public_key",
 			 Base64.
@@ -2662,18 +2659,18 @@ public class Settings extends AppCompatActivity
 					getPublic().
 					getEncoded(),
 					Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_signature_algorithm",
 			 m_signatureAlgorithm);
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_signature_private_key",
 			 Base64.encodeToString(chatSignatureKeyPair.
 					       getPrivate().
 					       getEncoded(),
 					       Base64.DEFAULT));
-		    m_databaseHelper.writeSetting
+		    m_database.writeSetting
 			(s_cryptography,
 			 "pki_chat_signature_public_key",
 			 Base64.encodeToString(chatSignatureKeyPair.
@@ -2682,7 +2679,7 @@ public class Settings extends AppCompatActivity
 					       Base64.DEFAULT));
 
 		    boolean e1 = s_cryptography.prepareSipHashIds
-			(m_databaseHelper.readSetting(s_cryptography, "alias"));
+			(m_database.readSetting(s_cryptography, "alias"));
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
 
 		    if(!e1 || !e2)
@@ -2771,7 +2768,7 @@ public class Settings extends AppCompatActivity
 	    @Override
 	    public void run()
 	    {
-		String sipHashId = m_databaseHelper.readSipHashIdString
+		String sipHashId = m_database.readSipHashIdString
 		    (s_cryptography, oid);
 
 		if(sipHashId.isEmpty())
@@ -2846,7 +2843,7 @@ public class Settings extends AppCompatActivity
 	    public void run()
 	    {
 		SipHashIdElement sipHashIdElement =
-		    m_databaseHelper.readSipHashId(s_cryptography, oid);
+		    m_database.readSipHashId(s_cryptography, oid);
 
 		if(sipHashIdElement == null)
 		    m_error = "readSipHashId() failure";
@@ -2964,7 +2961,7 @@ public class Settings extends AppCompatActivity
 		** Retrieve everything that requires the SipHash.
 		*/
 
-		SipHashIdElement sipHashIdElement = m_databaseHelper.
+		SipHashIdElement sipHashIdElement = m_database.
 		    readSipHashId(s_cryptography, m_oid);
 
 		m_sipHashId = sipHashIdElement == null ?
@@ -2978,17 +2975,17 @@ public class Settings extends AppCompatActivity
 		    "" : sipHashIdElement.m_name;
 		m_string1 = Cryptography.fancyKeyInformationOutput
 		    (null,
-		     m_databaseHelper.
+		     m_database.
 		     publicEncryptionKeyForSipHashId(s_cryptography,
 						     m_sipHashId),
 		     chatEncryptionPublicKeyAlgorithm).trim();
 		m_string2 = Cryptography.fancyKeyInformationOutput
 		    (null,
-		     m_databaseHelper.
+		     m_database.
 		     publicSignatureKeyForSipHashId(s_cryptography,
 						    m_sipHashId),
 		     "").trim();
-		m_strings = m_databaseHelper.
+		m_strings = m_database.
 		    keysSigned(s_cryptography, m_sipHashId);
 
 		if(m_name.isEmpty())
@@ -3189,12 +3186,12 @@ public class Settings extends AppCompatActivity
 		    try
 		    {
 			ArrayList<NeighborElement> arrayList =
-			    m_databaseHelper.readNeighbors(s_cryptography);
+			    m_database.readNeighbors(s_cryptography);
 
 			Settings.this.runOnUiThread
 			    (new PopulateNeighbors(arrayList));
-			m_databaseHelper.cleanDanglingOutboundQueued();
-			m_databaseHelper.cleanDanglingParticipants();
+			m_database.cleanDanglingOutboundQueued();
+			m_database.cleanDanglingParticipants();
 		    }
 		    catch(Exception exception)
 		    {
@@ -3236,7 +3233,7 @@ public class Settings extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_database = Database.getInstance(getApplicationContext());
 
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
 
@@ -3245,16 +3242,16 @@ public class Settings extends AppCompatActivity
 	    ** Show the Authenticate activity if an account is present.
 	    */
 
-	    if(m_databaseHelper.accountPrepared())
+	    if(m_database.accountPrepared())
 	    {
 		showAuthenticateActivity();
 		return;
 	    }
 
 	Kernel.getInstance().setWakeLock
-	    (m_databaseHelper.readSetting(null, "always_awake").equals("true"));
+	    (m_database.readSetting(null, "always_awake").equals("true"));
 	State.getInstance().setNeighborsEcho
-	    (m_databaseHelper.
+	    (m_database.
 	     readSetting(null, "neighbors_echo").equals("true"));
 	m_receiver = new SettingsBroadcastReceiver();
 	prepareForegroundService();
@@ -3319,14 +3316,14 @@ public class Settings extends AppCompatActivity
 	switch1.setChecked(true);
 	switch1 = (Switch) findViewById(R.id.automatic_refresh);
 
-	if(m_databaseHelper.
+	if(m_database.
 	   readSetting(null, "automatic_neighbors_refresh").isEmpty())
 	{
 	    switch1.setChecked(true);
-	    m_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(null, "automatic_neighbors_refresh", "true");
 	}
-	else if(m_databaseHelper.
+	else if(m_database.
 		readSetting(null, "automatic_neighbors_refresh").equals("true"))
 	    switch1.setChecked(true);
 	else
@@ -3337,14 +3334,14 @@ public class Settings extends AppCompatActivity
 
 	switch1 = (Switch) findViewById(R.id.echo);
 
-	if(m_databaseHelper.readSetting(null, "neighbors_echo").equals("true"))
+	if(m_database.readSetting(null, "neighbors_echo").equals("true"))
 	    switch1.setChecked(true);
 	else
 	    switch1.setChecked(false);
 
 	switch1 = (Switch) findViewById(R.id.foreground_service);
 
-	if(m_databaseHelper.
+	if(m_database.
 	   readSetting(null, "foreground_service").equals("false"))
 	    switch1.setChecked(false);
 	else
@@ -3352,7 +3349,7 @@ public class Settings extends AppCompatActivity
 
 	switch1 = (Switch) findViewById(R.id.neighbor_details);
 
-	if(m_databaseHelper.readSetting(null, "neighbors_details").
+	if(m_database.readSetting(null, "neighbors_details").
 	   equals("true"))
 	    switch1.setChecked(true);
 	else
@@ -3360,7 +3357,7 @@ public class Settings extends AppCompatActivity
 
 	switch1 = (Switch) findViewById(R.id.query_time_server);
 
-	if(m_databaseHelper.readSetting(null, "query_time_server").
+	if(m_database.readSetting(null, "query_time_server").
 	   equals("true"))
 	    switch1.setChecked(true);
 	else
@@ -3369,7 +3366,7 @@ public class Settings extends AppCompatActivity
 	State.getInstance().setQueryTimerServer(switch1.isChecked());
 	switch1 = (Switch) findViewById(R.id.silent);
 
-	if(m_databaseHelper.readSetting(null, "silent").equals("true"))
+	if(m_database.readSetting(null, "silent").equals("true"))
 	    switch1.setChecked(true);
 	else
 	    switch1.setChecked(false);
@@ -3377,12 +3374,12 @@ public class Settings extends AppCompatActivity
 	State.getInstance().setSilent(switch1.isChecked());
 	switch1 = (Switch) findViewById(R.id.sleepless);
 
-	if(m_databaseHelper.readSetting(null, "always_awake").isEmpty())
+	if(m_database.readSetting(null, "always_awake").isEmpty())
 	{
 	    switch1.setChecked(true);
-	    m_databaseHelper.writeSetting(null, "always_awake", "true");
+	    m_database.writeSetting(null, "always_awake", "true");
 	}
-	else if(m_databaseHelper.readSetting(null, "always_awake").
+	else if(m_database.readSetting(null, "always_awake").
 		equals("true"))
 	    switch1.setChecked(true);
 	else
@@ -3448,7 +3445,7 @@ public class Settings extends AppCompatActivity
 	    (Settings.this, android.R.layout.simple_spinner_item, array);
 
 	int index1 = arrayAdapter.getPosition
-	    (m_databaseHelper.readSetting(null, "iterationCount"));
+	    (m_database.readSetting(null, "iterationCount"));
 
 	spinner1 = (Spinner) findViewById(R.id.iteration_count);
 	spinner1.setAdapter(arrayAdapter);
@@ -3461,7 +3458,7 @@ public class Settings extends AppCompatActivity
 	try
 	{
 	    index2 = Integer.parseInt
-		(m_databaseHelper.readSetting(null, "keyDerivationFunction"));
+		(m_database.readSetting(null, "keyDerivationFunction"));
 	}
 	catch(Exception exception)
 	{
@@ -3599,10 +3596,10 @@ public class Settings extends AppCompatActivity
 	    switch1 = (Switch) findViewById(R.id.automatic_refresh);
 	    textView1 = (TextView) findViewById(R.id.alias);
 	    textView1.setText
-		(m_databaseHelper.readSetting(s_cryptography, "alias"));
+		(m_database.readSetting(s_cryptography, "alias"));
 	    textView1 = (TextView) findViewById(R.id.ozone);
 	    textView1.setText
-		(m_databaseHelper.readSetting(s_cryptography, "ozone_address"));
+		(m_database.readSetting(s_cryptography, "ozone_address"));
 	    populateParticipants();
 	    startKernel();
 
@@ -3630,7 +3627,7 @@ public class Settings extends AppCompatActivity
 	    findViewById(R.id.overwrite).setVisibility(View.GONE);
 	}
 
-	if(!m_databaseHelper.accountPrepared())
+	if(!m_database.accountPrepared())
 	{
 	    ActivityCompat.requestPermissions(this, new String[]
 	    {
@@ -3715,7 +3712,7 @@ public class Settings extends AppCompatActivity
 	** Resume the last activity, if necessary.
 	*/
 
-	String str = m_databaseHelper.readSetting(null, "lastActivity");
+	String str = m_database.readSetting(null, "lastActivity");
 
 	switch(str)
 	{
@@ -3732,7 +3729,7 @@ public class Settings extends AppCompatActivity
 	    showSteamActivity();
 	    break;
 	default:
-	    if(m_databaseHelper.
+	    if(m_database.
 	       readSetting(null, "automatic_neighbors_refresh").equals("true"))
 		startTimers();
 
@@ -3768,7 +3765,7 @@ public class Settings extends AppCompatActivity
 			default:
 			    if(State.getInstance().
 			       getString("dialog_accepted").equals("true"))
-				if(m_databaseHelper.
+				if(m_database.
 				   deleteEntry(String.valueOf(itemId),
 					       "siphash_ids"))
 				{
@@ -3779,10 +3776,10 @@ public class Settings extends AppCompatActivity
 				    State.getInstance().setString
 					("member_chat_siphash_id", "");
 				    invalidateOptionsMenu();
-				    m_databaseHelper.writeSetting
+				    m_database.writeSetting
 					(s_cryptography,
 					 "member_chat_oid", "");
-				    m_databaseHelper.writeSetting
+				    m_database.writeSetting
 					(s_cryptography,
 					 "member_chat_siphash_id", "");
 				    populateParticipants();
@@ -3795,7 +3792,7 @@ public class Settings extends AppCompatActivity
 		    case ContextMenuEnumerator.DELETE_FIASCO_KEYS:
 			if(State.getInstance().
 			   getString("dialog_accepted").equals("true"))
-			    if(m_databaseHelper.
+			    if(m_database.
 			       deleteFiascoKeys(String.valueOf(itemId)))
 				populateParticipants();
 
@@ -3803,7 +3800,7 @@ public class Settings extends AppCompatActivity
 		    case ContextMenuEnumerator.DELETE_PUBLIC_KEYS:
 			if(State.getInstance().
 			   getString("dialog_accepted").equals("true"))
-			    if(m_databaseHelper.
+			    if(m_database.
 			       deletePublicKeys(String.valueOf(itemId)))
 				populateParticipants();
 
@@ -3812,7 +3809,7 @@ public class Settings extends AppCompatActivity
 			string = State.getInstance().
 			    getString("settings_participant_name_input");
 
-			if(m_databaseHelper.
+			if(m_database.
 			   writeParticipantName(s_cryptography,
 						string,
 						itemId))
@@ -3909,21 +3906,21 @@ public class Settings extends AppCompatActivity
 	    switch(itemId)
 	    {
 	    case R.id.action_chat:
-		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+		m_database.writeSetting(null, "lastActivity", "Chat");
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
 		Smoke.exit(true, Settings.this);
 		return true;
 	    case R.id.action_fire:
-		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+		m_database.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
 		return true;
 	    case R.id.action_smokescreen:
 		showSmokescreenActivity();
 		return true;
 	    case R.id.action_steam:
-		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+		m_database.writeSetting(null, "lastActivity", "Steam");
 		showSteamActivity();
 		return true;
 	    default:
@@ -3951,11 +3948,11 @@ public class Settings extends AppCompatActivity
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString
 		("member_chat_siphash_id", sipHashId);
-	    m_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(null, "lastActivity", "MemberChat");
-	    m_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
-	    m_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(s_cryptography, "member_chat_siphash_id", sipHashId);
 	    showMemberChatActivity();
 	}
@@ -3968,7 +3965,7 @@ public class Settings extends AppCompatActivity
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
 
-	if(!m_databaseHelper.accountPrepared())
+	if(!m_database.accountPrepared())
 	    /*
 	    ** The database may have been modified or removed.
 	    */
@@ -4016,12 +4013,12 @@ public class Settings extends AppCompatActivity
 		     view.getId(),
 		     1,
 		     "Delete Fiasco Keys (" + tag1 + ")").setEnabled
-		(m_databaseHelper.fiascoCount(view.getId()) >= 1L);
+		(m_database.fiascoCount(view.getId()) >= 1L);
 	    menu.add(ContextMenuEnumerator.DELETE_PUBLIC_KEYS,
 		     view.getId(),
 		     2,
 		     "Delete Public Keys (" + tag1 + ")").setEnabled
-		(m_databaseHelper.hasPublicKeys(s_cryptography, view.getId()));
+		(m_database.hasPublicKeys(s_cryptography, view.getId()));
 	    menu.add(ContextMenuEnumerator.NEW_NAME,
 		     view.getId(),
 		     3,

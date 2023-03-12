@@ -485,13 +485,13 @@ public class TcpTlsNeighbor extends Neighbor
 			{
 			    chain[0].checkValidity();
 
-			    byte bytes[] = m_databaseHelper.
+			    byte bytes[] = m_database.
 				neighborRemoteCertificate
 				(m_cryptography, m_oid.get());
 
 			    if(bytes == null || bytes.length == 0)
 			    {
-				m_databaseHelper.neighborRecordCertificate
+				m_database.neighborRecordCertificate
 				    (m_cryptography,
 				     String.valueOf(m_oid.get()),
 				     chain[0].getEncoded());
@@ -500,7 +500,7 @@ public class TcpTlsNeighbor extends Neighbor
 			    else if(!Cryptography.memcmp(bytes,
 							 chain[0].getEncoded()))
 			    {
-				m_databaseHelper.neighborControlStatus
+				m_database.neighborControlStatus
 				    (m_cryptography,
 				     "disconnect",
 				     String.valueOf(m_oid.get()));
@@ -515,7 +515,7 @@ public class TcpTlsNeighbor extends Neighbor
 			}
 			catch(Exception exception)
 			{
-			    m_databaseHelper.neighborControlStatus
+			    m_database.neighborControlStatus
 				(m_cryptography,
 				 "disconnect",
 				 String.valueOf(m_oid.get()));

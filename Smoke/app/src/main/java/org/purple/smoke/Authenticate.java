@@ -48,7 +48,7 @@ import javax.crypto.SecretKey;
 
 public class Authenticate extends AppCompatActivity
 {
-    private Database m_databaseHelper = null;
+    private Database m_database = null;
     private Handler m_handler = null;
     private TextView m_warningLabel = null;
     private final static Cryptography s_cryptography =
@@ -56,8 +56,7 @@ public class Authenticate extends AppCompatActivity
 
     private void prepareForegroundService()
     {
-	if(m_databaseHelper.
-	   readSetting(null, "foreground_service").equals("false"))
+	if(m_database.readSetting(null, "foreground_service").equals("false"))
 	    SmokeService.stopForegroundTask(Authenticate.this);
 	else
 	    SmokeService.startForegroundTask(Authenticate.this);
@@ -75,8 +74,7 @@ public class Authenticate extends AppCompatActivity
 		    return;
 
 		byte encryptionSalt[] = Base64.decode
-		    (m_databaseHelper.
-		     readSetting(null, "encryptionSalt").getBytes(),
+		    (m_database.readSetting(null, "encryptionSalt").getBytes(),
 		     Base64.DEFAULT);
 		final TextView textView1 = (TextView) findViewById
 		    (R.id.password);
@@ -94,7 +92,7 @@ public class Authenticate extends AppCompatActivity
 		}
 
 		byte macSalt[] = Base64.decode
-		    (m_databaseHelper.readSetting(null, "macSalt").getBytes(),
+		    (m_database.readSetting(null, "macSalt").getBytes(),
 		     Base64.DEFAULT);
 
 		if(macSalt == null)
@@ -127,8 +125,7 @@ public class Authenticate extends AppCompatActivity
 		try
 		{
 		    iterationCount = Integer.parseInt
-			(m_databaseHelper.
-			 readSetting(null, "iterationCount"));
+			(m_database.readSetting(null, "iterationCount"));
 		}
 		catch(Exception exception)
 		{
@@ -150,7 +147,7 @@ public class Authenticate extends AppCompatActivity
 		try
 		{
 		    keyDerivationFunction = Integer.parseInt
-			(m_databaseHelper.
+			(m_database.
 			 readSetting(null, "keyDerivationFunction"));
 		}
 		catch(Exception exception)
@@ -158,7 +155,7 @@ public class Authenticate extends AppCompatActivity
 		    keyDerivationFunction = 1;
 		}
 
-		if(!Cryptography.memcmp(m_databaseHelper.
+		if(!Cryptography.memcmp(m_database.
 					readSetting(null, "saltedPassword").
 					getBytes(),
 					Base64.encode(saltedPassword,
@@ -228,9 +225,9 @@ public class Authenticate extends AppCompatActivity
 
 			try
 			{
-			    m_databaseHelper.cleanDanglingOutboundQueued();
-			    m_databaseHelper.cleanDanglingParticipants();
-			    m_databaseHelper.cleanDanglingSteams();
+			    m_database.cleanDanglingOutboundQueued();
+			    m_database.cleanDanglingParticipants();
+			    m_database.cleanDanglingSteams();
 			    encryptionKey = Cryptography.generateEncryptionKey
 				(m_encryptionSalt,
 				 m_password.toCharArray(),
@@ -249,24 +246,24 @@ public class Authenticate extends AppCompatActivity
 
 				String algorithm = "";
 				byte ozoneKeyStream[] = Base64.decode
-				    (m_databaseHelper.
+				    (m_database.
 				     readSetting(s_cryptography,
 						 "ozone_address_stream").
 						 getBytes(), Base64.DEFAULT);
 				byte privateBytes[] = Base64.decode
-				    (m_databaseHelper.
+				    (m_database.
 				     readSetting(s_cryptography,
 						 "pki_chat_encryption_" +
 						 "private_key").
 				     getBytes(), Base64.DEFAULT);
 				byte publicBytes[] = Base64.decode
-				    (m_databaseHelper.
+				    (m_database.
 				     readSetting(s_cryptography,
 						 "pki_chat_encryption_" +
 						 "public_key").
 				     getBytes(), Base64.DEFAULT);
 
-				algorithm = m_databaseHelper.
+				algorithm = m_database.
 				    readSetting(s_cryptography,
 						"pki_chat_encryption_" +
 						"algorithm");
@@ -276,18 +273,18 @@ public class Authenticate extends AppCompatActivity
 				s_cryptography.setChatEncryptionPublicKeyPair
 				    (algorithm, privateBytes, publicBytes);
 				privateBytes = Base64.decode
-				    (m_databaseHelper.
+				    (m_database.
 				     readSetting(s_cryptography,
 						 "pki_chat_signature_" +
 						 "private_key").
 				     getBytes(), Base64.DEFAULT);
 				publicBytes = Base64.decode
-				    (m_databaseHelper.
+				    (m_database.
 				     readSetting(s_cryptography,
 						 "pki_chat_signature_" +
 						 "public_key").
 				     getBytes(), Base64.DEFAULT);
-				algorithm = m_databaseHelper.
+				algorithm = m_database.
 				    readSetting(s_cryptography,
 						"pki_chat_signature_" +
 						"algorithm");
@@ -316,9 +313,8 @@ public class Authenticate extends AppCompatActivity
 				    s_cryptography.setOzoneMacKey(null);
 				}
 
-				boolean e1 = s_cryptography.
-				    prepareSipHashIds
-				    (m_databaseHelper.
+				boolean e1 = s_cryptography.prepareSipHashIds
+				    (m_database.
 				     readSetting(s_cryptography, "alias"));
 				boolean e2 = s_cryptography.
 				    prepareSipHashKeys();
@@ -393,13 +389,13 @@ public class Authenticate extends AppCompatActivity
 					     "data.");
 				    else
 				    {
-					m_databaseHelper.cleanNeighborStatistics
+					m_database.cleanNeighborStatistics
 					    (s_cryptography);
 					Kernel.getInstance();
 					State.getInstance().
 					    setAuthenticated(true);
 					State.getInstance().setNeighborsEcho
-					    (m_databaseHelper.
+					    (m_database.
 					     readSetting(null,
 							 "neighbors_echo").
 					     equals("true"));
@@ -413,7 +409,7 @@ public class Authenticate extends AppCompatActivity
 					textView1.setEnabled(false);
 					textView1.setText("");
 
-					String str = m_databaseHelper.
+					String str = m_database.
 					    readSetting(null, "lastActivity");
 
 					switch(str)
@@ -426,16 +422,16 @@ public class Authenticate extends AppCompatActivity
 					    break;
 					case "MemberChat":
 					    String oid =
-						m_databaseHelper.
+						m_database.
 						readSetting(s_cryptography,
 							    "member_chat_oid");
 					    String sipHashId =
-						m_databaseHelper.
+						m_database.
 						readSetting(s_cryptography,
 							    "member_chat_" +
 							    "siphash_id");
 
-					    if(m_databaseHelper.
+					    if(m_database.
 					       containsParticipant
 					       (s_cryptography,
 						sipHashId))
@@ -449,11 +445,11 @@ public class Authenticate extends AppCompatActivity
 					    }
 					    else
 					    {
-						m_databaseHelper.writeSetting
+						m_database.writeSetting
 						    (s_cryptography,
 						     "member_chat_oid",
 						     "");
-						m_databaseHelper.writeSetting
+						m_database.writeSetting
 						    (s_cryptography,
 						     "member_chat_siphash_id",
 						     "");
@@ -499,7 +495,7 @@ public class Authenticate extends AppCompatActivity
 		       equals("true"))
 		    {
 			State.getInstance().reset();
-			m_databaseHelper.resetAndDrop();
+			m_database.resetAndDrop();
 			s_cryptography.reset();
 
 			Intent intent = new Intent
@@ -578,7 +574,7 @@ public class Authenticate extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	m_databaseHelper = Database.getInstance(getApplicationContext());
+	m_database = Database.getInstance(getApplicationContext());
         setContentView(R.layout.activity_authenticate);
 
 	try
@@ -634,25 +630,25 @@ public class Authenticate extends AppCompatActivity
 	    switch(itemId)
 	    {
 	    case R.id.action_chat:
-		m_databaseHelper.writeSetting(null, "lastActivity", "Chat");
+		m_database.writeSetting(null, "lastActivity", "Chat");
 		showChatActivity();
 		return true;
 	    case R.id.action_exit:
 		Smoke.exit(false, Authenticate.this);
 		return true;
 	    case R.id.action_fire:
-		m_databaseHelper.writeSetting(null, "lastActivity", "Fire");
+		m_database.writeSetting(null, "lastActivity", "Fire");
 		showFireActivity();
 		return true;
 	    case R.id.action_settings:
-		m_databaseHelper.writeSetting(null, "lastActivity", "Settings");
+		m_database.writeSetting(null, "lastActivity", "Settings");
 		showSettingsActivity();
 		return true;
 	    case R.id.action_smokescreen:
 		showSmokescreenActivity();
 		return true;
 	    case R.id.action_steam:
-		m_databaseHelper.writeSetting(null, "lastActivity", "Steam");
+		m_database.writeSetting(null, "lastActivity", "Steam");
 		showSteamActivity();
 		return true;
 	    default:
@@ -679,11 +675,11 @@ public class Authenticate extends AppCompatActivity
 		("member_chat_oid", String.valueOf(itemId));
 	    State.getInstance().setString
 		("member_chat_siphash_id", sipHashId);
-	    m_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(null, "lastActivity", "MemberChat");
-	    m_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(s_cryptography, "member_chat_oid", String.valueOf(itemId));
-	    m_databaseHelper.writeSetting
+	    m_database.writeSetting
 		(s_cryptography, "member_chat_siphash_id", sipHashId);
 	    showMemberChatActivity();
 	}
@@ -696,7 +692,7 @@ public class Authenticate extends AppCompatActivity
     {
 	boolean isAuthenticated = State.getInstance().isAuthenticated();
 
-	if(!m_databaseHelper.accountPrepared())
+	if(!m_database.accountPrepared())
 	    /*
 	    ** The database may have been modified or removed.
 	    */
