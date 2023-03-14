@@ -1,2 +1,1 @@
 * Emergency initialization of singletons, if possible.
-* Final feature release.
