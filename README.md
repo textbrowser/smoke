@@ -65,7 +65,7 @@ Starting a Conversation
 <li>Define aliases in respective Smoke instances.</li>
 <li>Share public keys.</li>
 <li>Done!</li>
-<li><b>Server status is available at https://5.180.182.220:4710. Please accept the certificate.</b></li>
+<li><b>Server status is available at http://5.180.182.220:5000.</b></li>
 </ol>
 
 Network traffic on 5.180.182.220 covering the last three months.
