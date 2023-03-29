@@ -1772,7 +1772,7 @@ public class Kernel
 		Neighbor value = m_neighbors.get(key);
 
 		if(value != null)
-		    if(value.connected() && !value.passthrough())
+		    if(!value.passthrough() && value.connected())
 			return true;
 	    }
 	}
