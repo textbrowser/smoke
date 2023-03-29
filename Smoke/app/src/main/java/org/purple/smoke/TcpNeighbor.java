@@ -231,6 +231,24 @@ public class TcpNeighbor extends Neighbor
 	try
 	{
 	    if(m_socket != null)
+		m_socket.shutdownInput();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
+	    if(m_socket != null)
+		m_socket.shutdownOutput();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
+	    if(m_socket != null)
 		m_socket.close();
 	}
 	catch(Exception exception)

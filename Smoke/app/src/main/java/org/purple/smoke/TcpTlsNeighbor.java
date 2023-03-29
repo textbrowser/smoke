@@ -294,6 +294,24 @@ public class TcpTlsNeighbor extends Neighbor
 	try
 	{
 	    if(m_socket != null)
+		m_socket.shutdownInput();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
+	    if(m_socket != null)
+		m_socket.shutdownOutput();
+	}
+	catch(Exception exception)
+	{
+	}
+
+	try
+	{
+	    if(m_socket != null)
 		m_socket.close();
 	}
 	catch(Exception exception)
@@ -500,6 +518,7 @@ public class TcpTlsNeighbor extends Neighbor
 			    else if(!Cryptography.memcmp(bytes,
 							 chain[0].getEncoded()))
 			    {
+				abort();
 				m_database.neighborControlStatus
 				    (m_cryptography,
 				     "disconnect",
@@ -515,6 +534,7 @@ public class TcpTlsNeighbor extends Neighbor
 			}
 			catch(Exception exception)
 			{
+			    abort();
 			    m_database.neighborControlStatus
 				(m_cryptography,
 				 "disconnect",
@@ -528,7 +548,7 @@ public class TcpTlsNeighbor extends Neighbor
 
 		    if(!m_isValidCertificate.get())
 		    {
-			disconnect();
+			abort();
 
 			synchronized(m_errorMutex)
 			{
