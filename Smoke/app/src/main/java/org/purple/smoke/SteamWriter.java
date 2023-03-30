@@ -182,7 +182,7 @@ public class SteamWriter
     {
 	if(fileIdentity == null ||
 	   fileIdentity.length == 0 ||
-	   offset < 0 ||
+	   offset < 0L ||
 	   packet == null ||
 	   packet.length == 0)
 	    return -1L;
@@ -231,7 +231,7 @@ public class SteamWriter
 	    randomAccessFile.seek(offset);
 	    randomAccessFile.write(packet);
 
-	    if(offset == 0)
+	    if(offset == 0L)
 		/*
 		** Erase the ephemeral keys.
 		*/
