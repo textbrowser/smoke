@@ -4481,6 +4481,38 @@ public class Database extends SQLiteOpenHelper
 	return count;
     }
 
+    public long fiascoCountViaParticipants(int oid)
+    {
+	if(m_db == null)
+	    return -1L;
+
+	Cursor cursor = null;
+	long count = 0L;
+
+	try
+	{
+	    cursor = m_db.rawQuery
+		("SELECT COUNT(oid) FROM participants_keys WHERE " +
+		 "siphash_id_digest IN " +
+		 "(SELECT siphash_id_digest FROM participants WHERE oid = ?)",
+		 new String[] {String.valueOf(oid)});
+
+	    if(cursor != null && cursor.moveToFirst())
+		count = cursor.getLong(0);
+	}
+	catch(Exception exception)
+	{
+	    count = -1L;
+	}
+	finally
+	{
+	    if(cursor != null)
+		cursor.close();
+	}
+
+	return count;
+    }
+
     public int participantOidFromSipHash(Cryptography cryptography,
 					 String sipHashId)
     {

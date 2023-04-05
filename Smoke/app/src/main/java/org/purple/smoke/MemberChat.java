@@ -1906,7 +1906,8 @@ public class MemberChat extends AppCompatActivity
 	menu.add(ContextMenuEnumerator.PURGE_FIASCO_KEYS,
 		 -1,
 		 9,
-		 "Purge Fiasco Keys");
+		 "Purge Fiasco Keys").setEnabled
+	    (m_database.fiascoCountViaParticipants(m_oid) >= 1L);
 	menu.add(ContextMenuEnumerator.RETRIEVE_MESSAGES,
 		 -1,
 		 10,

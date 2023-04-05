@@ -1,5 +1,5 @@
 * Concurrent collections.
-* Introduced new database table index for Member Chat.
+* Introduced new database table index for Member activity.
 * Lock safety.
 * Rainbow digital signature scheme.
 * Release Ringtone resources.

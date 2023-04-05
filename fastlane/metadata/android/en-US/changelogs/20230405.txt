@@ -1,0 +1,2 @@
+* Corrected state of Purge Fiasco Keys context menu item in
+  Member activity.
