@@ -298,3 +298,7 @@ Completed Items
 - Wrap neighbor text.
 - Zero ports are valid. If a system is allowing connections on port
   zero, Smoke will be able to connect to it.
+
+Remaining Items
+
+- Completed!
