@@ -60,14 +60,12 @@ Starting a Conversation
 <ol>
 <li>Download and install Smoke.</li>
 <li>Download and install SmokeStack, Spot-On, or Spot-On-Lite. More adventurous operators are welcome to create servers using ncat and socat.</li>
-<li>Define a private or public listener: 5.180.182.220. The server is provided for everyone so please do not abuse it!</li>
+<li>Define a private or public listener.</li>
 <li>Connect Smoke to defined listener.</li>
 <li>Share aliases: super-alias-1, super-alias-2.</li>
 <li>Define aliases in respective Smoke instances.</li>
 <li>Share public keys.</li>
 <li>Done!</li>
-<li><b>Public server certificate is valid for one year.</b></li>
-<li><b>Public server status is available at http://5.180.182.220:5000.</b></li>
 </ol>
 
 Network traffic on 5.180.182.220 covering the last three months.
