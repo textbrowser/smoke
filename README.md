@@ -68,9 +68,6 @@ Starting a Conversation
 <li>Done!</li>
 </ol>
 
-Network traffic on 5.180.182.220 covering the last three months.
-![alt text](https://github.com/textbrowser/smoke/blob/master/Images/traffic-1.png)
-
 ```
 Steamrolling is the process of real-time broadcasting of complete and
 incomplete inbound Steams. Let’s review a colorful example.
