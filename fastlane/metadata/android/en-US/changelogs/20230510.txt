@@ -1,1 +1,3 @@
 * Android API 28. Older devices may not be functional.
+* Final APK release. Future releases will be source-only. Future-future
+  releases may include APKs.
