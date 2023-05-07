@@ -1,0 +1,1 @@
+* Android API 28. Older devices may not be functional.
