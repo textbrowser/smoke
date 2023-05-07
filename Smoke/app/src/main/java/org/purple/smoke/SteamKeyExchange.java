@@ -497,7 +497,7 @@ public class SteamKeyExchange
 					  steamElement.m_someOid))
 			    return;
 		    }
-		    else if(Kernel.getInstance().isNetworkConnected())
+		    else if(Kernel.isNetworkConnected())
 		    {
 			/*
 			** Do not enqueue key information if the network
@@ -521,8 +521,7 @@ public class SteamKeyExchange
 		    ** available.
 		    */
 
-		    if(Kernel.getInstance().isNetworkConnected() &&
-		       keyPair != null)
+		    if(Kernel.isNetworkConnected() && keyPair != null)
 		    {
 			/*
 			** Share the key pair.

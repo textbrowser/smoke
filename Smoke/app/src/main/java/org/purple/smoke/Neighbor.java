@@ -27,9 +27,6 @@
 
 package org.purple.smoke;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Base64;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -554,21 +551,7 @@ public abstract class Neighbor
 
     protected boolean isNetworkConnected()
     {
-	try
-	{
-	    ConnectivityManager connectivityManager = (ConnectivityManager)
-		Smoke.getApplication().getSystemService
-		(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = connectivityManager.
-		getActiveNetworkInfo();
-
-	    return networkInfo != null && networkInfo.isConnected();
-	}
-	catch(Exception exception)
-	{
-	}
-
-	return false;
+	return Kernel.isNetworkConnected();
     }
 
     protected void abort()

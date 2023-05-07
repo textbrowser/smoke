@@ -51,7 +51,7 @@ public class ArsonEphemeralKeyGenerator
 		@Override
 		public void run()
 		{
-		    if(!Kernel.getInstance().isNetworkConnected() ||
+		    if(!Kernel.isNetworkConnected() ||
 		       !State.getInstance().isAuthenticated())
 			return;
 

@@ -32,7 +32,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.wifi.WifiManager.WifiLock;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -1775,27 +1776,6 @@ public class Kernel
 		    if(!value.passthrough() && value.connected())
 			return true;
 	    }
-	}
-	catch(Exception exception)
-	{
-	}
-
-	return false;
-    }
-
-    public boolean isNetworkConnected()
-    {
-	try
-	{
-	    ConnectivityManager connectivityManager = (ConnectivityManager)
-		Smoke.getApplication().getSystemService
-		(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = connectivityManager.
-		getActiveNetworkInfo();
-
-	    return networkInfo != null &&
-		networkInfo.getType() == ConnectivityManager.TYPE_WIFI &&
-		networkInfo.isConnected();
 	}
 	catch(Exception exception)
 	{
@@ -3846,6 +3826,38 @@ public class Kernel
 	}
 
 	return sent;
+    }
+
+    public static boolean isNetworkConnected()
+    {
+	try
+	{
+	    ConnectivityManager connectivityManager = (ConnectivityManager)
+		Smoke.getApplication().getSystemService
+		(Context.CONNECTIVITY_SERVICE);
+	    Network network = connectivityManager.getActiveNetwork();
+
+	    if(network == null)
+		return false;
+
+	    NetworkCapabilities networkCapabilities = connectivityManager.
+		getNetworkCapabilities(network);
+
+	    if(networkCapabilities == null)
+		return false;
+
+	    return networkCapabilities.
+		hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+		networkCapabilities.
+		hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+		networkCapabilities.
+		hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+	}
+	catch(Exception exception)
+	{
+	}
+
+	return false;
     }
 
     public void setWakeLock(boolean state)

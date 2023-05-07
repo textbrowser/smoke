@@ -28,6 +28,8 @@
 package org.purple.smoke;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -37,7 +39,8 @@ import android.os.IBinder;
 public class SmokeService extends Service
 {
     private boolean m_isRunning = false;
-    private final static int NOTIFICATION_ID = 1936551787;
+    private final static String NOTIFICATION_ID_STRING = "12345";
+    private final static int NOTIFICATION_ID = 12345;
 
     private void start()
     {
@@ -48,17 +51,31 @@ public class SmokeService extends Service
 
 	Intent notificationIntent = new Intent(this, Settings.class);
 	Notification notification = null;
+	NotificationChannel channel = null;
+	NotificationManager manager = (NotificationManager)
+	    getSystemService(Context.NOTIFICATION_SERVICE);
 	PendingIntent pendingIntent = PendingIntent.getActivity
 	    (this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-	notification = new Notification.Builder(this).
+	channel = new NotificationChannel
+	    (NOTIFICATION_ID_STRING,
+	     "SmokeService",
+	     NotificationManager.IMPORTANCE_HIGH);
+	channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
+	manager.createNotificationChannel(channel);
+	notification = new Notification.Builder(this, NOTIFICATION_ID_STRING).
+	    setCategory(Notification.CATEGORY_SERVICE).
+            setChannelId(NOTIFICATION_ID_STRING).
 	    setContentIntent(pendingIntent).
 	    setContentText("Smoke Activity").
 	    setContentTitle("Smoke Activity").
+	    setOngoing(true).
 	    setSmallIcon(R.drawable.smoke).
 	    setTicker("Smoke Activity").
 	    build();
-	startForeground(NOTIFICATION_ID, notification);
+
+	if(notification != null)
+	    startForeground(NOTIFICATION_ID, notification);
     }
 
     private void stop()

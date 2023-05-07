@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 28
     defaultConfig {
         applicationId "org.purple.smoke"
         buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
-        minSdkVersion 19
-        targetSdkVersion 25
+        minSdkVersion 25
+        targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 20230405
-        versionName "2023.04.05"
+        versionCode 20230510
+        versionName "2023.05.10"
     }
     buildTypes {
         android.applicationVariants.all { variant ->
