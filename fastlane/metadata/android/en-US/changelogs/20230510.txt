@@ -1,8 +1,8 @@
 * Android API 28. Older devices may not be functional.
-* BouncyCastle's Rainbow implementation in 1.73 is new. Legacy Rainbow
+* BouncyCastle's Rainbow implementation in version 1.73 is new. Legacy Rainbow
   is compromised and deprecated. A new implementation will not be included.
 * Final APK release. Future releases will be source-only. Future-future
   releases may include APKs.
-* McEliece is not functional in BounctyCastle 1.72 and newer. A new
+* McEliece is not functional in BounctyCastle version 1.72 and newer. A new
   implementation is required. This will not be addressed.
 * New Rainbow parameters. Previous parameters cannot be tolerated.
