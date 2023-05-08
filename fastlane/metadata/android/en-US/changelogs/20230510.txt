@@ -4,6 +4,7 @@
 * Current documentation.
 * Final APK release. Future releases will be source-only. Future-future
   releases may include APKs.
-* McEliece is not functional in BounctyCastle version 1.72 and newer. A new
+* Free server has been discontinued.
+* McEliece is not functional in BouncyCastle version 1.72 and newer. A new
   implementation is required. This will not be addressed.
 * New Rainbow parameters. Previous parameters cannot be tolerated.
