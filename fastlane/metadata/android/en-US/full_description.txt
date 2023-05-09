@@ -6,6 +6,7 @@ Summary of Smoke
 * Argon2id and PBKDF2 key-derivation functions.
 * Automatic, oscillatory public-key exchange protocol, via SipHash.
 * BSD 3-clause license.
+* Completed.
 * Content is recorded via authenticated encryption.
 * Decentralized. TCP, and UDP multicast and unicast.
 * Does not require Internet connectivity.
