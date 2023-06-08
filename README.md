@@ -2,6 +2,8 @@ Neither snow nor rain nor heat nor gloom of night stays these violet
 couriers from the swift completion of their appointed rounds. A project
 for the curious.
 
+![alt text](https://github.com/textbrowser/smoke/blob/master/Images/smoke.gif)
+
 Smoke
 -----
 
