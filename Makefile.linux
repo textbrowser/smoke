@@ -23,7 +23,7 @@ clear-smoke:
 	./adb.bash shell pm clear org.purple.smoke
 
 copy-apk: all
-	cp ./Smoke/app/build/outputs/apk/debug/apk/smoke.apk ~/Desktop/.
+	cp ./Smoke/app/build/outputs/apk/debug/smoke.apk ~/Desktop/.
 
 debug-with-source: all
 	rm -rf Smoke/build Smoke/captures
