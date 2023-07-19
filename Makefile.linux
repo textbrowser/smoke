@@ -62,6 +62,7 @@ list-files:
 	ls -l /data/data/org.purple.smoke/databases
 
 load-apk: all
+	$(ADB) install ./Smoke/app/build/outputs/apk/debug/smoke.apk
 	$(ADB) shell am start \
 	-a android.intent.action.MAIN \
 	-c android.intent.category.LAUNCHER \
