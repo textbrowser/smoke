@@ -18,7 +18,7 @@ clean:
 	$(GRADLEW) --build-file Smoke/build.gradle clean --warning-mode all
 
 clear-smoke:
-	./adb.bash shell pm clear org.purple.smoke
+	$(ADB) shell pm clear org.purple.smoke
 
 copy-apk: all
 	cp ./Smoke/app/build/outputs/apk/debug/smoke.apk ~/Desktop/.
@@ -58,27 +58,27 @@ list-devices:
 	$(ADB) devices -l
 
 list-files:
-	./adb.bash shell run-as org.purple.smoke \
+	$(ADB) shell run-as org.purple.smoke \
 	ls -l /data/data/org.purple.smoke/databases
 
 load-apk: all
-	./adb.bash shell am start \
+	$(ADB) shell am start \
 	-a android.intent.action.MAIN \
 	-c android.intent.category.LAUNCHER \
 	-n "org.purple.smoke/org.purple.smoke.Settings"
 
 pull-database:
-	./adb.bash exec-out run-as org.purple.smoke \
+	$(ADB) exec-out run-as org.purple.smoke \
 	cat /data/data/org.purple.smoke/databases/smoke.db > smoke.db
 
 purge:
 	find . -name '*~*' -exec rm -f {} \;
 
 remove-database:
-	./adb.bash shell run-as org.purple.smoke \
+	$(ADB) shell run-as org.purple.smoke \
 	rm -f /data/data/org.purple.smoke/databases/smoke.db
-	./adb.bash shell run-as org.purple.smoke \
+	$(ADB) shell run-as org.purple.smoke \
 	rm -f /data/data/org.purple.smoke/databases/smoke.db-journal
 
 stop-smoke:
-	./adb.bash shell am force-stop org.purple.smoke
+	$(ADB) shell am force-stop org.purple.smoke
