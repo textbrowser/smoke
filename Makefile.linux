@@ -10,14 +10,12 @@ all:
 	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
 	-Dorg.gradle.warning.mode=all \
 	--build-file Smoke/build.gradle assembleDebug \
-	--configure-on-demand --daemon --parallel \
-	--warning-mode all
+	--configure-on-demand --daemon --parallel --warning-mode all
 
 clean:
 	rm -f Smoke/app/src/main/assets/smoke.src.d.zip
 	rm -f smoke.src.d.zip
-	$(GRADLEW) --build-file Smoke/build.gradle clean \
-	--warning-mode all
+	$(GRADLEW) --build-file Smoke/build.gradle clean --warning-mode all
 
 clear-smoke:
 	./adb.bash shell pm clear org.purple.smoke
