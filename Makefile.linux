@@ -3,7 +3,6 @@
 ADB = ~/Android/Sdk/platform-tools/adb
 EMULATOR = ~/Android/Sdk/tools/emulator
 GRADLEW = ./Smoke/gradlew
-JARSIGNER = "/snap/android-studio/current/android-studio/jbr/bin/jarsigner"
 JDK = "/snap/android-studio/current/android-studio/jbr"
 export JAVA_HOME = /snap/android-studio/current/android-studio/jbr
 
@@ -57,14 +56,6 @@ kill-adb-server:
 kill-gradle-daemon:
 	$(GRADLEW) --stop
 
-launch-emulator-1:
-	$(EMULATOR) -netdelay none -netspeed full -avd \
-	`$(EMULATOR) -list-avds | sort | sed "1q;d"` &
-
-launch-emulator-2:
-	$(EMULATOR) -netdelay none -netspeed full -avd \
-	`$(EMULATOR) -list-avds | sort | sed "2q;d"` &
-
 list-devices:
 	$(ADB) devices -l
 
@@ -73,22 +64,10 @@ list-files:
 	ls -l /data/data/org.purple.smoke/databases
 
 load-apk: all
-	./adb.bash install -r \
-	./Smoke/app/build/outputs/apk/debug/apk/smoke.apk
-	./adb.bash shell am start -S -W \
-	-n org.purple.smoke/org.purple.smoke.Settings \
-	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
-
-load-apk-release: release
-	$(JARSIGNER) -verbose -keystore ~/Android-Keys/smoke-release.keystore \
-	./Smoke/app/build/outputs/apk/release/apk/smoke.apk smoke
-	$(JARSIGNER) -verify \
-	./Smoke/app/build/outputs/apk/release/apk/smoke.apk
-	./adb.bash install -r \
-	./Smoke/app/build/outputs/apk/release/apk/smoke.apk
-	./adb.bash shell am start -S -W \
-	-n org.purple.smoke/org.purple.smoke.Settings \
-	-a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+	./adb.bash shell am start \
+	-a android.intent.action.MAIN \
+	-c android.intent.category.LAUNCHER \
+	-n "org.purple.smoke/org.purple.smoke.Settings"
 
 pull-database:
 	./adb.bash exec-out run-as org.purple.smoke \
@@ -96,13 +75,6 @@ pull-database:
 
 purge:
 	find . -name '*~*' -exec rm -f {} \;
-
-release: clean
-	rm -rf Smoke/build Smoke/captures
-	$(GRADLEW) -Dorg.gradle.java.home=$(JDK) \
-	--build-file Smoke/build.gradle assembleRelease \
-	--configure-on-demand --daemon --parallel
-	rm -f Smoke/app/src/main/assets/smoke.src.d.zip
 
 remove-database:
 	./adb.bash shell run-as org.purple.smoke \
