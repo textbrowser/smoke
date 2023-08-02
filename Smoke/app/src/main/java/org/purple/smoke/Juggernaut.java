@@ -457,8 +457,10 @@ public class Juggernaut
 
     public static void test1()
     {
-	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!", false);
-	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!", false);
+	// Must fail!
+
+	Juggernaut juggernaut1 = new Juggernaut("x", "The Juggernaut!", false);
+	Juggernaut juggernaut2 = new Juggernaut("x", "The Juggernaut!", false);
 	String payload1 = juggernaut1.payload1Stream();
 	String payload2 = juggernaut2.payload1Stream();
 	boolean ok1 = false;
@@ -500,6 +502,8 @@ public class Juggernaut
 
     public static void test2()
     {
+	// Must fail!
+
 	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!", false);
 	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut.", false);
 	String payload1 = juggernaut1.payload1Stream();
@@ -543,6 +547,8 @@ public class Juggernaut
 
     public static void test3()
     {
+	// Must pass!
+
 	Juggernaut juggernaut1 = new Juggernaut("a", "The Juggernaut!", false);
 	Juggernaut juggernaut2 = new Juggernaut("b", "The Juggernaut!", false);
 
