@@ -1,7 +1,4 @@
-# Please have at least one AVD defined.
-
 ADB = ~/Android/Sdk/platform-tools/adb
-EMULATOR = ~/Android/Sdk/tools/emulator
 GRADLEW = ./Smoke/gradlew
 JDK = "/snap/android-studio/current/android-studio/jbr"
 export JAVA_HOME = /snap/android-studio/current/android-studio/jbr
