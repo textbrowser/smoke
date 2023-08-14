@@ -45,7 +45,7 @@ distclean: clean kill-adb-server kill-gradle-daemon
 	rm -f smoke.db
 
 kill-adb-server:
-	$(ADB) kill-server
+	$(ADB) kill-server 2>/dev/null
 
 kill-gradle-daemon:
 	$(GRADLEW) --stop
