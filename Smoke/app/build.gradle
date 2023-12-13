@@ -29,6 +29,9 @@ android {
         disable 'MissingTranslation'
     }
     namespace 'org.purple.smoke'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
