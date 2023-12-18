@@ -1,7 +1,6 @@
 ADB = ~/Android/Sdk/platform-tools/adb
 GRADLEW = ./Smoke/gradlew
 JDK = "/snap/android-studio/current/jbr"
-export ANDROID_HOME = ~/Android/Sdk
 export JAVA_HOME = /snap/android-studio/current/jbr
 
 all:
