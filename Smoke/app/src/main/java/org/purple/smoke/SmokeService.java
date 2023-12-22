@@ -55,7 +55,10 @@ public class SmokeService extends Service
 	NotificationManager manager = (NotificationManager)
 	    getSystemService(Context.NOTIFICATION_SERVICE);
 	PendingIntent pendingIntent = PendingIntent.getActivity
-	    (this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+	    (this,
+	     0,
+	     notificationIntent,
+	     PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
 
 	channel = new NotificationChannel
 	    (NOTIFICATION_ID_STRING,

@@ -4541,16 +4541,16 @@ public class Database extends SQLiteOpenHelper
 		stringBuilder.append("SELECT COUNT(*) FROM participants ");
 		stringBuilder.append("WHERE LENGTH(keystream) >= ");
 		stringBuilder.append
-		    (4 * (Math.ceil(Cryptography.CIPHER_HASH_KEYS_LENGTH +
-				    Cryptography.CIPHER_IV_LENGTH) / 3.0));
+		    (4 * (Math.ceil((Cryptography.CIPHER_HASH_KEYS_LENGTH +
+				     Cryptography.CIPHER_IV_LENGTH) / 3.0)));
 	    }
 	    else
 	    {
 		stringBuilder.append("SELECT COUNT(*) FROM participants ");
 		stringBuilder.append("WHERE LENGTH(keystream) >= ");
 		stringBuilder.append
-		    (4 * (Math.ceil(Cryptography.CIPHER_HASH_KEYS_LENGTH +
-				    Cryptography.CIPHER_IV_LENGTH) / 3.0));
+		    (4 * (Math.ceil((Cryptography.CIPHER_HASH_KEYS_LENGTH +
+				     Cryptography.CIPHER_IV_LENGTH) / 3.0)));
 		stringBuilder.append(" AND oid = ");
 		stringBuilder.append(oid);
 	    }

@@ -101,7 +101,8 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 				6,
 				"Rewind Steam");
 	    menuItem.setEnabled
-		(steamElement != null && (steamElement.m_direction == SteamElement.UPLOAD));
+		(steamElement != null && (steamElement.m_direction ==
+					  SteamElement.UPLOAD));
 
 	    if(view.getId() == -1)
 		menuItem.setEnabled(false);
@@ -111,7 +112,8 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 				7,
 				"Steamroll Steam");
 	    menuItem.setEnabled
-		(steamElement != null && (steamElement.m_direction == SteamElement.DOWNLOAD));
+		(steamElement != null && (steamElement.m_direction ==
+					  SteamElement.DOWNLOAD));
 
 	    if(view.getId() == -1)
 		menuItem.setEnabled(false);
@@ -121,7 +123,8 @@ public class SteamAdapter extends RecyclerView.Adapter<SteamAdapter.ViewHolder>
 				8,
 				"Toggle Lock Status");
 	    menuItem.setEnabled
-		(steamElement != null && (steamElement.m_direction == SteamElement.DOWNLOAD));
+		(steamElement != null && (steamElement.m_direction ==
+					  SteamElement.DOWNLOAD));
 
 	    if(view.getId() == -1)
 		menuItem.setEnabled(false);

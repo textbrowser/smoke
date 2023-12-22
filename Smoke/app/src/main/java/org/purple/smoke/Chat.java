@@ -45,7 +45,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Base64;
-import android.util.LayoutDirection;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -541,7 +540,7 @@ public class Chat extends AppCompatActivity
 	    switch1.setChecked
 		(State.getInstance().chatCheckBoxIsSelected(oid));
 	    switch1.setId(participantElement.m_oid);
-	    switch1.setLayoutDirection(LayoutDirection.LTR);
+	    switch1.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 	    switch1.setLayoutParams
 		(new TableRow.LayoutParams(0,
 					   LayoutParams.WRAP_CONTENT,

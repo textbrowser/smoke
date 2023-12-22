@@ -74,7 +74,7 @@ import org.bouncycastle.util.encoders.Hex;
 
 public class Cryptography
 {
-    public class PKIKeySizeBounds
+    public static class PKIKeySizeBounds
     {
 	/*
 	** Private Keys

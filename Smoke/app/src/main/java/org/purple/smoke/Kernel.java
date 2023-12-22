@@ -42,7 +42,6 @@ import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
-import android.util.SparseArray;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
@@ -154,6 +153,7 @@ public class Kernel
     private final Object m_arsonCallSchedulerMutex = new Object();
     private final Object m_callSchedulerMutex = new Object();
     private final Object m_messagesToSendSchedulerMutex = new Object();
+    private final Object m_wakeLockMutex = new Object();
     private final ReentrantReadWriteLock m_chatMessageRetrievalIdentityMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_messagesToSendMutex =
@@ -1782,7 +1782,7 @@ public class Kernel
     public boolean wakeLocked()
     {
 	if(m_wakeLock != null)
-	    synchronized(m_wakeLock)
+	    synchronized(m_wakeLockMutex)
 	    {
 		return m_wakeLock.isHeld();
 	    }
@@ -3855,7 +3855,7 @@ public class Kernel
     public void setWakeLock(boolean state)
     {
 	if(m_wakeLock != null)
-	    synchronized(m_wakeLock)
+	    synchronized(m_wakeLockMutex)
 	    {
 		try
 		{
