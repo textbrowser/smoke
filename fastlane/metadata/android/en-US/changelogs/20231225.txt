@@ -1,0 +1,6 @@
+* Removed Makefile targets as they are difficult to support:
+  launch-emulator-1, launch-emulator-2, load-apk-release, release.
+* Removed import statements.
+* Removed redundant conversions.
+* Replaced StringBuilder with String in some instances.
+* String comparisons and equalsIgnoreCase().
