@@ -79,9 +79,9 @@ public class Kernel
 	    if(intent == null || intent.getAction() == null)
 		return;
 
-	    switch(intent.getAction())
+	    if(intent.getAction().
+	       equals("org.purple.smoke.steam_read_interval_change"))
 	    {
-	    case "org.purple.smoke.steam_read_interval_change":
 		int oid = -1;
 		int readInterval = 4;
 
@@ -119,10 +119,6 @@ public class Kernel
 		    {
 		    }
 		}
-
-		break;
-	    default:
-		break;
 	    }
 	}
     }
@@ -152,7 +148,7 @@ public class Kernel
     private Time m_time = null;
     private WakeLock m_wakeLock = null;
     private WifiLock m_wifiLock = null;
-    private byte m_chatMessageRetrievalIdentity[] = null;
+    private byte[] m_chatMessageRetrievalIdentity = null;
     private final KernelBroadcastReceiver m_receiver =
 	new KernelBroadcastReceiver();
     private final Object m_arsonCallSchedulerMutex = new Object();
@@ -173,7 +169,7 @@ public class Kernel
     private final static boolean m_arsonImplemented = false;
     private final static int CONGESTION_LIFETIME = 65; // 65 seconds.
     private final static int FIRE_TIME_DELTA = 30000; // 30 seconds.
-    private final static int MCELIECE_OUTPUT_SIZES[] = {304,   // 48 bytes.
+    private final static int[] MCELIECE_OUTPUT_SIZES = {304,   // 48 bytes.
 							320,   // 64 bytes.
 							352,   // 96 bytes.
 							491,   // 48 bytes.
@@ -312,13 +308,12 @@ public class Kernel
 		{
 		}
 
-		if(neighborElement.m_statusControl.
-		   equalsIgnoreCase("delete") ||
+		if(neighborElement.m_statusControl.equalsIgnoreCase("delete") ||
 		   neighborElement.m_statusControl.
 		   equalsIgnoreCase("disconnect"))
 		{
-		    if(neighborElement.m_statusControl.toLowerCase().
-		       equals("disconnect"))
+		    if(neighborElement.m_statusControl.
+		       equalsIgnoreCase("disconnect"))
 			s_databaseHelper.saveNeighborInformation
 			    (s_cryptography,
 			     "0",             // Bytes Read
@@ -497,7 +492,7 @@ public class Kernel
 			    ** Place a call request to all neighbors.
 			    */
 
-			    byte bytes[] = Messages.callMessage
+			    byte[] bytes = Messages.callMessage
 				(s_cryptography,
 				 participantCall.m_sipHashId,
 				 participantCall.m_keyPair.getPublic().
@@ -643,7 +638,7 @@ public class Kernel
 			    ** Place a call request to all neighbors.
 			    */
 
-			    byte bytes[] = Messages.callMessage
+			    byte[] bytes = Messages.callMessage
 				(s_cryptography,
 				 participantCall.m_sipHashId,
 				 participantCall.m_keyPair.getPublic().
@@ -740,7 +735,7 @@ public class Kernel
 			    messageElement.m_timestamp =
 				System.currentTimeMillis();
 
-			byte bytes[] = null;
+			byte[] bytes = null;
 
 			try
 			{
@@ -1135,7 +1130,7 @@ public class Kernel
 				    if(sipHashIdElement == null)
 					continue;
 
-				    byte bytes[] = Messages.epksMessage
+				    byte[] bytes = Messages.epksMessage
 					(s_cryptography,
 					 sipHashIdElement.m_sipHashId,
 					 sipHashIdElement.m_stream,
@@ -1173,7 +1168,7 @@ public class Kernel
 				    if(sipHashIdElement == null)
 					continue;
 
-				    byte bytes[] = Messages.pkpRequestMessage
+				    byte[] bytes = Messages.pkpRequestMessage
 					(s_cryptography,
 					 sipHashIdElement.m_sipHashId);
 
@@ -1278,7 +1273,7 @@ public class Kernel
 			for(ParticipantElement participantElement : arrayList)
 			    if(participantElement != null)
 			    {
-				byte bytes[] = Messages.chatStatus
+				byte[] bytes = Messages.chatStatus
 				    (s_cryptography,
 				     participantElement.m_sipHashId,
 				     participantElement.m_keyStream);
@@ -1637,7 +1632,7 @@ public class Kernel
 
 		for(String key : m_fireStreams.keySet())
 		{
-		    byte keys[] = m_fireStreams.get(key);
+		    byte[] keys = m_fireStreams.get(key);
 
 		    if(keys == null)
 		    {
@@ -1709,7 +1704,7 @@ public class Kernel
     }
 
     public boolean enqueueMessage(String message,
-				  byte messageIdentity[],
+				  byte[] messageIdentity,
 				  int attempts)
     {
 	if(message == null || message.trim().isEmpty())
@@ -1725,8 +1720,8 @@ public class Kernel
 
 	for(int i = 0; i < size; i++)
 	    if(arrayList.get(i) != null &&
-	       arrayList.get(i).m_passthrough.toLowerCase().equals("false") &&
-	       arrayList.get(i).m_statusControl.toLowerCase().equals("connect"))
+	       arrayList.get(i).m_passthrough.equalsIgnoreCase("false") &&
+	       arrayList.get(i).m_statusControl.equalsIgnoreCase("connect"))
 		s_databaseHelper.enqueueOutboundMessage
 		    (s_cryptography,
 		     message,
@@ -1744,7 +1739,7 @@ public class Kernel
 	{
 	    if(!m_fireStreams.containsKey(name))
 	    {
-		byte bytes[] = s_databaseHelper.fireStream
+		byte[] bytes = s_databaseHelper.fireStream
 		    (s_cryptography, name);
 
 		if(bytes != null)
@@ -1901,19 +1896,19 @@ public class Kernel
 	    {
 		if(!m_fireStreams.isEmpty())
 		{
-		    String strings[] = Messages.stripMessage(buffer).
+		    String[] strings = Messages.stripMessage(buffer).
 			split("\\n");
 
 		    if(strings != null && strings.length >= 2)
 		    {
-			byte ciphertext[] = Base64.decode
+			byte[] ciphertext = Base64.decode
 			    (strings[0], Base64.NO_WRAP);
-			byte hmac[] = Base64.decode
+			byte[] hmac = Base64.decode
 			    (strings[1], Base64.NO_WRAP);
 
 			for(String key : m_fireStreams.keySet())
 			{
-			    byte keys[] = m_fireStreams.get(key);
+			    byte[] keys = m_fireStreams.get(key);
 
 			    if(keys == null)
 			    {
@@ -2030,9 +2025,6 @@ public class Kernel
 				catch(Exception exception)
 				{
 				}
-				finally
-				{
-				}
 
 				return FORCE_ECHO; // Echo Fire!
 			    }
@@ -2044,7 +2036,7 @@ public class Kernel
 	    {
 	    }
 
-	    byte bytes[] =
+	    byte[] bytes =
 		Base64.decode(Messages.stripMessage(buffer), Base64.DEFAULT);
 
 	    if(bytes == null || bytes.length < 128)
@@ -2058,11 +2050,11 @@ public class Kernel
 	       s_cryptography.ozoneEncryptionKey() != null &&
 	       s_cryptography.ozoneMacKey() != null)
 	    {
-		byte data[] = Arrays.copyOfRange
+		byte[] data = Arrays.copyOfRange
 		    (bytes,
 		     0,
 		     bytes.length - 2 * Cryptography.HASH_KEY_LENGTH);
-		byte hmac[] = Arrays.copyOfRange
+		byte[] hmac = Arrays.copyOfRange
 		    (bytes,
 		     bytes.length - 2 * Cryptography.HASH_KEY_LENGTH,
 		     bytes.length - Cryptography.HASH_KEY_LENGTH);
@@ -2072,7 +2064,7 @@ public class Kernel
 			  Cryptography.hmac(data,
 					    s_cryptography.ozoneMacKey())))
 		{
-		    byte ciphertext[] = Cryptography.decrypt
+		    byte[] ciphertext = Cryptography.decrypt
 			(data, s_cryptography.ozoneEncryptionKey());
 
 		    if(ciphertext == null)
@@ -2123,17 +2115,17 @@ public class Kernel
 								** arrive from
 								** SmokeStack?
 								*/
-	    byte data[] = Arrays.copyOfRange // Blocks #1, #2, etc.
+	    byte[] data = Arrays.copyOfRange // Blocks #1, #2, etc.
 		(bytes, 0, bytes.length - 2 * Cryptography.HASH_KEY_LENGTH);
-	    byte destination[] = Arrays.copyOfRange
+	    byte[] destination = Arrays.copyOfRange
 		(bytes,
 		 bytes.length - Cryptography.HASH_KEY_LENGTH,
 		 bytes.length);
-	    byte hmac[] = Arrays.copyOfRange
+	    byte[] hmac = Arrays.copyOfRange
 		(bytes,
 		 bytes.length - 2 * Cryptography.HASH_KEY_LENGTH,
 		 bytes.length - Cryptography.HASH_KEY_LENGTH);
-	    byte sha512OfMessage[] = Cryptography.sha512
+	    byte[] sha512OfMessage = Cryptography.sha512
 		(Arrays.
 		 copyOfRange(bytes,
 			     0,
@@ -2205,9 +2197,9 @@ public class Kernel
 		    ** Response-share.
 		    */
 
-		    byte salt[] = Cryptography.sha512
+		    byte[] salt = Cryptography.sha512
 			(sipHashId.trim().getBytes(StandardCharsets.UTF_8));
-		    byte temporary[] = Cryptography.
+		    byte[] temporary = Cryptography.
 			pbkdf2(salt,
 			       sipHashId.toCharArray(),
 			       Database.
@@ -2244,7 +2236,7 @@ public class Kernel
 		return FINE;
 	    }
 
-	    byte pki[] = null;
+	    byte[] pki = null;
 	    int pki_output_size = 0;
 
 	    if(s_cryptography.chatEncryptionPublicKeyAlgorithm().
@@ -2320,13 +2312,13 @@ public class Kernel
 		** Message-Read Proof
 		*/
 
-		byte keyStream[] = s_databaseHelper.participantKeyStream
+		byte[] keyStream = s_databaseHelper.participantKeyStream
 		    (s_cryptography, pki);
 
 		if(keyStream == null)
 		    return FINE;
 
-		byte hmacc[] = Cryptography.hmac
+		byte[] hmacc = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
 					0,
 					bytes.length -
@@ -2349,7 +2341,7 @@ public class Kernel
 			return FINE;
 		}
 
-		byte ciphertext[] = Cryptography.decrypt
+		byte[] ciphertext = Cryptography.decrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 pki_output_size,
@@ -2362,11 +2354,11 @@ public class Kernel
 		if(ciphertext == null)
 		    return FINE;
 
-		byte abyte[] = new byte[] {ciphertext[0]};
+		byte[] abyte = new byte[] {ciphertext[0]};
 
 		if(abyte[0] == Messages.CHAT_STATUS_MESSAGE_TYPE[0])
 		{
-		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
+		    String[] array = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
@@ -2418,7 +2410,7 @@ public class Kernel
 			(ciphertext, 1, ciphertext.length);
 
 		    String payload = "";
-		    String strings[] = new String(ciphertext).split("\\n");
+		    String[] strings = new String(ciphertext).split("\\n");
 		    int ii = 0;
 
 		    for(String string : strings)
@@ -2448,7 +2440,7 @@ public class Kernel
 			    if(signatureKey == null)
 				return FINE;
 
-			    byte publicKeySignature[] = Base64.decode
+			    byte[] publicKeySignature = Base64.decode
 				(string.getBytes(), Base64.NO_WRAP);
 
 			    if(!Cryptography.verifySignature
@@ -2471,13 +2463,13 @@ public class Kernel
 			    break;
 			}
 
-		    String array[] = s_databaseHelper.
+		    String[] array = s_databaseHelper.
 			nameSipHashIdFromDigest(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
 			return FINE;
 
-		    byte sessionCredentials[] = null;
+		    byte[] sessionCredentials = null;
 		    int state = -1;
 
 		    try
@@ -2620,7 +2612,7 @@ public class Kernel
 				       chatEncryptionPublicKeyDigest())))
 			return FINE;
 
-		    String array[] = s_databaseHelper.nameSipHashIdFromDigest
+		    String[] array = s_databaseHelper.nameSipHashIdFromDigest
 			(s_cryptography, pki);
 
 		    if(array == null || array.length != 2)
@@ -2642,16 +2634,16 @@ public class Kernel
 		ciphertext = Arrays.copyOfRange
 		    (ciphertext, 1, ciphertext.length);
 
-		String strings[] = new String(ciphertext).split("\\n");
+		String[] strings = new String(ciphertext).split("\\n");
 
 		if(strings.length != Messages.CHAT_GROUP_TWO_ELEMENT_COUNT)
 		    return FINE;
 
 		String message = null;
 		boolean updateTimeStamp = true;
-		byte attachment[] = null;
-		byte messageIdentity[] = null;
-		byte publicKeySignature[] = null;
+		byte[] attachment = null;
+		byte[] messageIdentity = null;
+		byte[] publicKeySignature = null;
 		int ii = 0;
 		long sequence = 0;
 		long timestamp = 0;
@@ -2702,7 +2694,7 @@ public class Kernel
 			ii += 1;
 			break;
 		    case 5:
-			String array[] = s_databaseHelper.
+			String[] array = s_databaseHelper.
 			    nameSipHashIdFromDigest(s_cryptography, pki);
 
 			if(array == null || array.length != 2)
@@ -2834,7 +2826,7 @@ public class Kernel
 		** Steam Key Exchange B
 		*/
 
-		byte hmacc[] = Cryptography.hmac
+		byte[] hmacc = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
 					0,
 					bytes.length -
@@ -2846,7 +2838,7 @@ public class Kernel
 		if(!Cryptography.memcmp(hmac, hmacc))
 		    return FINE;
 
-		byte ciphertext[] = Cryptography.decrypt
+		byte[] ciphertext = Cryptography.decrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 pki_output_size,
@@ -2878,15 +2870,15 @@ public class Kernel
 		ciphertext = Arrays.copyOfRange
 		    (ciphertext, 1, ciphertext.length);
 
-		String strings[] = new String(ciphertext).split("\\n");
+		String[] strings = new String(ciphertext).split("\\n");
 
 		if(strings.length != Messages.CALL_GROUP_TWO_ELEMENT_COUNT)
 		    return FINE;
 
-		byte ephemeralPublicKey[] = null;
-		byte ephemeralPublicKeyType[] = null;
-		byte publicKeySignature[] = null;
-		byte senderPublicEncryptionKeyDigest[] = null;
+		byte[] ephemeralPublicKey = null;
+		byte[] ephemeralPublicKeyType = null;
+		byte[] publicKeySignature = null;
+		byte[] senderPublicEncryptionKeyDigest = null;
 		int ii = 0;
 		long timestamp = 0;
 
@@ -2959,13 +2951,13 @@ public class Kernel
 			break;
 		    }
 
-		String array[] = s_databaseHelper.nameSipHashIdFromDigest
+		String[] array = s_databaseHelper.nameSipHashIdFromDigest
 		    (s_cryptography, senderPublicEncryptionKeyDigest);
 
 		if(array != null && array.length == 2)
 		{
 		    PublicKey publicKey = null;
-		    byte keyStream[] = null;
+		    byte[] keyStream = null;
 
 		    if(tag == Messages.CALL_HALF_AND_HALF_TAGS[0])
 		    {
@@ -3150,13 +3142,13 @@ public class Kernel
 		** Discover the Steam having the presented identity.
 		*/
 
-		byte keyStream[] = s_databaseHelper.steamKeyStream
+		byte[] keyStream = s_databaseHelper.steamKeyStream
 		    (s_cryptography, pki);
 
 		if(keyStream == null)
 		    return FINE;
 
-		byte hmacc[] = Cryptography.hmac
+		byte[] hmacc = Cryptography.hmac
 		    (Arrays.copyOfRange(bytes,
 					0,
 					bytes.length -
@@ -3168,7 +3160,7 @@ public class Kernel
 		if(!Cryptography.memcmp(hmac, hmacc))
 		    return FINE;
 
-		byte ciphertext[] = Cryptography.decrypt
+		byte[] ciphertext = Cryptography.decrypt
 		    (Arrays.
 		     copyOfRange(bytes,
 				 pki_output_size,
@@ -3194,7 +3186,7 @@ public class Kernel
 		if(offset < 0)
 		    return FINE;
 
-		byte abyte[] = new byte[] {ciphertext[0]};
+		byte[] abyte = new byte[] {ciphertext[0]};
 
 		if(abyte[0] == Messages.STEAM_SHARE[0])
 		{
@@ -3305,7 +3297,7 @@ public class Kernel
 	    }
     }
 
-    public static void writeCongestionDigest(byte data[])
+    public static void writeCongestionDigest(byte[] data)
     {
 	try
 	{
@@ -3430,8 +3422,8 @@ public class Kernel
 
     public void enqueueChatMessage(String message,
 				   String sipHashId,
-				   byte imageBytes[],
-				   byte keyStream[])
+				   byte[] imageBytes,
+				   byte[] keyStream)
     {
 	MessageElement messageElement = null;
 
@@ -3470,7 +3462,7 @@ public class Kernel
 
     public void enqueueFireMessage(String message, String id, String name)
     {
-	byte keyStream[] = null;
+	byte[] keyStream = null;
 
 	try
 	{
@@ -3521,7 +3513,7 @@ public class Kernel
 
     public void enqueueFireStatus(String id, String name)
     {
-	byte keyStream[] = null;
+	byte[] keyStream = null;
 
 	try
 	{
@@ -3573,7 +3565,7 @@ public class Kernel
     public void enqueueJuggernaut(String secret,
 				  String sipHashId,
 				  boolean isJuggerKnot,
-				  byte keyStream[])
+				  byte[] keyStream)
     {
 	try
 	{
@@ -3781,7 +3773,7 @@ public class Kernel
 	wakeMessagesToSendScheduler();
     }
 
-    public int sendSteam(boolean simple, byte bytes[])
+    public int sendSteam(boolean simple, byte[] bytes)
     {
 	int sent = 0;
 

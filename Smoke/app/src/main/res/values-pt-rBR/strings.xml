@@ -40,7 +40,6 @@
     <string name="iteration_count">Contador de iteração</string>
     <string name="join">Participar</string>
     <string name="key_derivation_function">Função de derivação de chave (KDF)</string>
-    <string name="message">Mensagem...</string>
     <string name="message_status">Status da mensagem</string>
     <string name="name">Nome</string>
     <string name="neighbor_servers">Servidores vizinhos</string>
@@ -68,7 +67,6 @@
     <string name="salt">Salt</string>
     <string name="save">Salvar</string>
     <string name="scope_id">ID do Scope</string>
-    <string name="send">Enviar</string>
     <string name="share_keys">Compartilhar as chaves</string>
     <string name="share_smoke_id">Compartilhar ID do Smoke</string>
     <string name="signature">Assinatura</string>

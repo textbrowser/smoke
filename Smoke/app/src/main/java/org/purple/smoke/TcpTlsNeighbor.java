@@ -48,10 +48,10 @@ public class TcpTlsNeighbor extends Neighbor
     private AtomicBoolean m_isValidCertificate = null;
     private InetSocketAddress m_proxyInetSocketAddress = null;
     private SSLSocket m_socket = null;
-    private String m_protocols[] = null;
+    private String[] m_protocols = null;
     private String m_proxyIpAddress = "";
     private String m_proxyType = "";
-    private TrustManager m_trustManagers[] = null;
+    private TrustManager[] m_trustManagers = null;
     private final static int CONNECTION_TIMEOUT = 10000; // 10 seconds.
     private final static int HANDSHAKE_TIMEOUT = 20000; // 20 seconds.
     private int m_proxyPort = -1;
@@ -130,7 +130,7 @@ public class TcpTlsNeighbor extends Neighbor
 	    return send(message.getBytes());
     }
 
-    protected int send(byte bytes[])
+    protected int send(byte[] bytes)
     {
 	if(bytes == null || bytes.length == 0 || !connected())
 	    return 0;
@@ -419,7 +419,7 @@ public class TcpTlsNeighbor extends Neighbor
 
 			m_socket.setSoTimeout(SO_TIMEOUT);
 
-		    byte bytes[] = new byte[BYTES_PER_READ];
+		    byte[] bytes = new byte[BYTES_PER_READ];
 		    int i = 0;
 
 		    try
@@ -435,7 +435,7 @@ public class TcpTlsNeighbor extends Neighbor
 			m_error = true;
 		    }
 
-		    long bytesRead = (long) i;
+		    long bytesRead = i;
 
 		    if(bytesRead < 0L || m_error)
 		    {
@@ -480,12 +480,12 @@ public class TcpTlsNeighbor extends Neighbor
 		}
 
 		public void checkClientTrusted
-		    (X509Certificate chain[], String authType)
+		    (X509Certificate[] chain, String authType)
 		{
 		}
 
 		public void checkServerTrusted
-		    (X509Certificate chain[], String authType)
+		    (X509Certificate[] chain, String authType)
 		{
 		    if(authType == null || authType.length() == 0)
 		    {
@@ -503,7 +503,7 @@ public class TcpTlsNeighbor extends Neighbor
 			{
 			    chain[0].checkValidity();
 
-			    byte bytes[] = m_database.
+			    byte[] bytes = m_database.
 				neighborRemoteCertificate
 				(m_cryptography, m_oid.get());
 

@@ -90,7 +90,7 @@ public class Cryptography
 	public final static int PUBLIC_MCELIECE = 335000;
 	public final static int PUBLIC_RSA = 600;
 	public final static int PUBLIC_SPHINCS = 1200;
-    };
+    }
 
     static
     {
@@ -101,16 +101,16 @@ public class Cryptography
     private KeyPair m_chatSignaturePublicKeyPair = null;
     private String m_chatEncryptionPublicKeyAlgorithm = "";
     private String m_sipHashId = "0000-0000-0000-0000-0000-0000-0000-0000";
-    private byte m_encryptionKeyBytes[] = null;
-    private byte m_encryptionKeyRandom[] = null;
-    private byte m_identity[] = null; // Random identity.
-    private byte m_macKeyBytes[] = null;
-    private byte m_macKeyRandom[] = null;
-    private byte m_ozoneEncryptionKey[] = null;
-    private byte m_ozoneMacKey[] = null;
-    private byte m_sipHashEncryptionKey[] = null;
-    private byte m_sipHashIdDigest[] = null;
-    private byte m_sipHashMacKey[] = null;
+    private byte[] m_encryptionKeyBytes = null;
+    private byte[] m_encryptionKeyRandom = null;
+    private byte[] m_identity = null; // Random identity.
+    private byte[] m_macKeyBytes = null;
+    private byte[] m_macKeyRandom = null;
+    private byte[] m_ozoneEncryptionKey = null;
+    private byte[] m_ozoneMacKey = null;
+    private byte[] m_sipHashEncryptionKey = null;
+    private byte[] m_sipHashIdDigest = null;
+    private byte[] m_sipHashMacKey = null;
     private final ReentrantReadWriteLock m_chatEncryptionPublicKeyPairMutex =
 	new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock m_chatSignaturePublicKeyPairMutex =
@@ -162,11 +162,11 @@ public class Cryptography
 	"AES/CBC/PKCS7Padding";
     private final static int ARSON_MAXIMUM_KEYS_PER_PARTICIPANT = 2500;
     private final static int FIRE_STREAM_CREATION_ITERATION_COUNT = 10000;
-    private final static int MCELIECE_M[] = {11, 12, 13};
-    private final static int MCELIECE_T[] = {50, 68, 118};
+    private final static int[] MCELIECE_M = {11, 12, 13};
+    private final static int[] MCELIECE_T = {50, 68, 118};
     private final static int NUMBER_OF_CORES = Math.max
 	(4, Runtime.getRuntime().availableProcessors());
-    private final static int RAINBOW_VI[] = {48, 80, 112};
+    private final static int[] RAINBOW_VI = {48, 80, 112};
     private final static int SHA_1_OUTPUT_SIZE_BITS = 160;
     private final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     private static Cryptography s_instance = null;
@@ -175,7 +175,7 @@ public class Cryptography
 	"0000-0000-0000-0000-0000-0000-0000-0000";
     public final static String PARTICIPANT_CALL_MCELIECE_KEY_SIZE =
 	"McEliece-Fujisaki (11, 50)";
-    public final static String PUBLIC_KEY_TYPES[] = new String[]
+    public final static String[] PUBLIC_KEY_TYPES = new String[]
 	{ // Please see Kernel.java.
 	 "McEliece-Fujisaki (11, 50)",    // 0
 	 "McEliece-Fujisaki (12, 68)",    // 1
@@ -185,13 +185,13 @@ public class Cryptography
 	};
     public final static String STEAM_KEY_EXCHANGE_MCELIECE_KEY_SIZE =
 	"McEliece-Fujisaki (11, 50)";
-    public final static String TLS_LEGACY_V12[] = new String[]
+    public final static String[] TLS_LEGACY_V12 = new String[]
 	{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
-    public final static String TLS_NEW[] = new String[]
+    public final static String[] TLS_NEW = new String[]
 	{"TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"};
-    public final static String TLS_V1_V12[] = new String[]
+    public final static String[] TLS_V1_V12 = new String[]
 	{"TLSv1", "TLSv1.1", "TLSv1.2"};
-    public final static byte MESSAGES_KEY_TYPES[] =
+    public final static byte[] MESSAGES_KEY_TYPES =
 	new byte[] {(byte) 'M', (byte) 'R'};
     public final static int CIPHER_HASH_KEYS_LENGTH = 96;
     public final static int CIPHER_IV_LENGTH = 16;
@@ -202,11 +202,11 @@ public class Cryptography
     public final static int IDENTITY_SIZE = 8; // Size of a long.
     public final static int KEY_EXCHANGE_INITIAL_PBKDF2_ITERATION = 1000;
     public final static int PARTICIPANT_CALL_RSA_KEY_SIZE = 3072;
-    public final static int PKI_SIGNATURE_KEY_SIZES[] = {384,  // ECDSA
+    public final static int[] PKI_SIGNATURE_KEY_SIZES = {384,  // ECDSA
 							 4096, // RSA
 							 112,  // Rainbow
 							 64};  // SPHINCS
-    public final static int PKI_ENCRYPTION_KEY_SIZES[] = {4096}; // RSA
+    public final static int[] PKI_ENCRYPTION_KEY_SIZES = {4096}; // RSA
     public final static int SIPHASH_OUTPUT_LENGTH = 16; // Bytes (128 bits).
     public final static int SIPHASH_IDENTITY_LENGTH =
 	DEFAULT_SIPHASH_ID.length();
@@ -383,7 +383,7 @@ public class Cryptography
 	return null;
     }
 
-    public String etmBase64String(byte data[])
+    public String etmBase64String(byte[] data)
     {
 	try
 	{
@@ -494,8 +494,8 @@ public class Cryptography
 
     public boolean hasValidOzoneKeys()
     {
-	byte bytes1[] = ozoneEncryptionKey();
-	byte bytes2[] = ozoneMacKey();
+	byte[] bytes1 = ozoneEncryptionKey();
+	byte[] bytes2 = ozoneMacKey();
 
 	return !(bytes1 == null ||
 		 bytes1.length != CIPHER_KEY_LENGTH ||
@@ -505,12 +505,12 @@ public class Cryptography
 
     public boolean hasValidOzoneMacKey()
     {
-	byte bytes[] = ozoneMacKey();
+	byte[] bytes = ozoneMacKey();
 
 	return !(bytes == null || bytes.length != HASH_KEY_LENGTH);
     }
 
-    public boolean isValidSipHashMac(byte data[], byte mac[])
+    public boolean isValidSipHashMac(byte[] data, byte[] mac)
     {
 	if(data == null || mac == null)
 	    return false;
@@ -527,7 +527,7 @@ public class Cryptography
 	}
     }
 
-    public boolean iAmTheDestination(byte data[], byte mac[])
+    public boolean iAmTheDestination(byte[] data, byte[] mac)
     {
 	if(data == null || mac == null)
 	    return false;
@@ -548,9 +548,9 @@ public class Cryptography
     {
 	try
 	{
-	    byte bytes[] = null;
-	    byte salt[] = null;
-	    byte temporary[] = null;
+	    byte[] bytes = null;
+	    byte[] salt = null;
+	    byte[] temporary = null;
 
 	    m_sipHashIdMutex.readLock().lock();
 
@@ -662,12 +662,12 @@ public class Cryptography
 	return null;
     }
 
-    public byte[] decryptWithSipHashKey(byte data[])
+    public byte[] decryptWithSipHashKey(byte[] data)
     {
 	if(data == null)
 	    return null;
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -681,7 +681,7 @@ public class Cryptography
 		Cipher cipher = null;
 		SecretKey secretKey = new SecretKeySpec
 		    (m_sipHashEncryptionKey, SYMMETRIC_ALGORITHM);
-		byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
+		byte[] iv = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
 		cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE,
@@ -707,7 +707,7 @@ public class Cryptography
 	return bytes;
     }
 
-    public byte[] etm(byte data[]) // Encrypt-Then-MAC
+    public byte[] etm(byte[] data) // Encrypt-Then-MAC
     {
 	/*
 	** Encrypt-then-MAC.
@@ -716,12 +716,12 @@ public class Cryptography
 	if(data == null)
 	    return null;
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    Cipher cipher = null;
-	    byte iv[] = new byte[CIPHER_IV_LENGTH];
+	    byte[] iv = new byte[CIPHER_IV_LENGTH];
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
@@ -754,7 +754,7 @@ public class Cryptography
 
     public byte[] generateFireDigestKeyStream(String digest)
     {
-	byte salt[] = null;
+	byte[] salt = null;
 
 	try
 	{
@@ -773,7 +773,7 @@ public class Cryptography
 	** Now, a key stream.
 	*/
 
-	byte stream[] = null;
+	byte[] stream = null;
 
 	try
 	{
@@ -794,7 +794,7 @@ public class Cryptography
 
     public byte[] generateFireEncryptionKey(String channel, String salt)
     {
-	byte ciphertext[] = null;
+	byte[] ciphertext = null;
 
 	try
 	{
@@ -806,7 +806,7 @@ public class Cryptography
 	    return null;
 	}
 
-	byte c[] = null;
+	byte[] c = null;
 
 	try
 	{
@@ -817,7 +817,7 @@ public class Cryptography
 	    return null;
 	}
 
-	byte s[] = null;
+	byte[] s = null;
 
 	try
 	{
@@ -828,7 +828,7 @@ public class Cryptography
 	    return null;
 	}
 
-	byte sha384[] = null;
+	byte[] sha384 = null;
 
 	try
 	{
@@ -843,7 +843,7 @@ public class Cryptography
 	** Now, a key.
 	*/
 
-	byte key[] = null;
+	byte[] key = null;
 
 	try
 	{
@@ -866,7 +866,7 @@ public class Cryptography
 	return key;
     }
 
-    public byte[] hmac(byte data[])
+    public byte[] hmac(byte[] data)
     {
 	if(data == null)
 	    return null;
@@ -906,7 +906,7 @@ public class Cryptography
 	}
     }
 
-    public byte[] mtd(byte data[]) // MAC-Then-Decrypt
+    public byte[] mtd(byte[] data) // MAC-Then-Decrypt
     {
 	/*
 	** MAC-then-decrypt.
@@ -921,8 +921,8 @@ public class Cryptography
 	    ** Verify the computed digest with the provided digest.
 	    */
 
-	    byte digest1[] = null; // Provided digest.
-	    byte digest2[] = null; // Computed digest.
+	    byte[] digest1 = null; // Provided digest.
+	    byte[] digest2 = null; // Computed digest.
 
 	    digest1 = Arrays.copyOfRange
 		(data, data.length - HASH_KEY_LENGTH, data.length);
@@ -949,12 +949,12 @@ public class Cryptography
 	    return null;
 	}
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    Cipher cipher = null;
-	    byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
+	    byte[] iv = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    cipher.init(Cipher.DECRYPT_MODE,
@@ -1001,7 +1001,7 @@ public class Cryptography
 	}
     }
 
-    public byte[] pkiDecrypt(byte data[])
+    public byte[] pkiDecrypt(byte[] data)
     {
 	if(data == null)
 	    return null;
@@ -1010,7 +1010,7 @@ public class Cryptography
 
 	try
 	{
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    try
 	    {
@@ -1053,7 +1053,7 @@ public class Cryptography
 	}
     }
 
-    public byte[] signViaChatEncryption(byte data[])
+    public byte[] signViaChatEncryption(byte[] data)
     {
 	if(data == null)
 	    return null;
@@ -1067,7 +1067,7 @@ public class Cryptography
 		return null;
 
 	    Signature signature = null;
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    try
 	    {
@@ -1111,7 +1111,7 @@ public class Cryptography
 	}
     }
 
-    public byte[] signViaChatSignature(byte data[])
+    public byte[] signViaChatSignature(byte[] data)
     {
 	if(data == null)
 	    return null;
@@ -1125,7 +1125,7 @@ public class Cryptography
 		return null;
 
 	    Signature signature = null;
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    try
 	    {
@@ -1318,8 +1318,8 @@ public class Cryptography
     }
 
     public static KeyPair generatePrivatePublicKeyPair(String algorithm,
-						       byte privateBytes[],
-						       byte publicBytes[])
+						       byte[] privateBytes,
+						       byte[] publicBytes)
     {
 	if(privateBytes == null ||
 	   privateBytes.length == 0 ||
@@ -1393,7 +1393,7 @@ public class Cryptography
 	return null;
     }
 
-    public static PrivateKey privateKeyFromBytes(byte privateBytes[])
+    public static PrivateKey privateKeyFromBytes(byte[] privateBytes)
     {
 	if(privateBytes == null || privateBytes.length == 0)
 	    return null;
@@ -1419,7 +1419,7 @@ public class Cryptography
 	return null;
     }
 
-    public static PublicKey publicKeyFromBytes(byte publicBytes[])
+    public static PublicKey publicKeyFromBytes(byte[] publicBytes)
     {
 	if(publicBytes == null || publicBytes.length == 0)
 	    return null;
@@ -1454,7 +1454,7 @@ public class Cryptography
 	return null;
     }
 
-    public static PublicKey publicMcElieceKeyFromBytes(byte publicBytes[])
+    public static PublicKey publicMcElieceKeyFromBytes(byte[] publicBytes)
     {
 	if(publicBytes == null || publicBytes.length == 0)
 	    return null;
@@ -1475,7 +1475,7 @@ public class Cryptography
 	return null;
     }
 
-    public static PublicKey publicRSAKeyFromBytes(byte publicBytes[])
+    public static PublicKey publicRSAKeyFromBytes(byte[] publicBytes)
     {
 	if(publicBytes == null || publicBytes.length == 0)
 	    return null;
@@ -1494,8 +1494,8 @@ public class Cryptography
 	return null;
     }
 
-    public static SecretKey generateEncryptionKey(byte salt[],
-						  char password[],
+    public static SecretKey generateEncryptionKey(byte[] salt,
+						  char[] password,
 						  int iterations,
 						  int keyDerivationFunction)
     {
@@ -1519,7 +1519,7 @@ public class Cryptography
 		    withSecret(new String(password).
 			       getBytes(StandardCharsets.UTF_8)).
 		    withSalt(salt);
-		byte bytes[] = new byte[CIPHER_KEY_LENGTH];
+		byte[] bytes = new byte[CIPHER_KEY_LENGTH];
 
 		generator.init(builder.build());
 		generator.generateBytes(password, bytes);
@@ -1550,8 +1550,8 @@ public class Cryptography
 	return null;
     }
 
-    public static SecretKey generateMacKey(byte salt[],
-					   char password[],
+    public static SecretKey generateMacKey(byte[] salt,
+					   char[] password,
 					   int iterations,
 					   int keyDerivationFunction)
     {
@@ -1577,7 +1577,7 @@ public class Cryptography
 		    withSecret(new String(password).
 			       getBytes(StandardCharsets.UTF_8)).
 		    withSalt(salt);
-		byte bytes[] = new byte[HASH_KEY_LENGTH];
+		byte[] bytes = new byte[HASH_KEY_LENGTH];
 
 		generator.init(builder.build());
 		generator.generateBytes(password, bytes);
@@ -1736,7 +1736,7 @@ public class Cryptography
 	return "";
     }
 
-    public static String fingerPrint(byte bytes[])
+    public static String fingerPrint(byte[] bytes)
     {
 	String fingerprint =
 	    "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc" +
@@ -1820,17 +1820,17 @@ public class Cryptography
     {
 	try
 	{
-	    byte bytes[] = string.getBytes(StandardCharsets.UTF_8);
+	    byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
 
 	    if(bytes != null)
 	    {
-		byte key[] = keyForSipHash(bytes);
+		byte[] key = keyForSipHash(bytes);
 
 		if(key == null)
 		    return "";
 
 		SipHash sipHash = new SipHash();
-		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
+		long[] value = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
 		if(Arrays.equals(new long[] {0L, 0L}, value))
 		    return "";
@@ -1851,7 +1851,7 @@ public class Cryptography
 	return "";
     }
 
-    public static boolean memcmp(byte a[], byte b[])
+    public static boolean memcmp(byte[] a, byte[] b)
     {
 	if(a == null || b == null)
 	    return false;
@@ -1866,8 +1866,8 @@ public class Cryptography
     }
 
     public static boolean verifySignature(PublicKey publicKey,
-					  byte bytes[],
-					  byte data[])
+					  byte[] bytes,
+					  byte[] data)
     {
 	if(bytes == null || data == null || publicKey == null)
 	    return false;
@@ -1924,19 +1924,19 @@ public class Cryptography
 	}
     }
 
-    public static byte[] decrypt(byte data[], byte keyBytes[])
+    public static byte[] decrypt(byte[] data, byte[] keyBytes)
     {
 	if(data == null || keyBytes == null)
 	    return null;
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, SYMMETRIC_ALGORITHM);
-	    byte iv[] = Arrays.copyOf(data, CIPHER_IV_LENGTH);
+	    byte[] iv = Arrays.copyOf(data, CIPHER_IV_LENGTH);
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    cipher.init(Cipher.DECRYPT_MODE,
@@ -1953,19 +1953,19 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] decryptFire(byte data[], byte keyBytes[])
+    public static byte[] decryptFire(byte[] data, byte[] keyBytes)
     {
 	if(data == null || keyBytes == null)
 	    return null;
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, FIRE_SYMMETRIC_ALGORITHM);
-	    byte iv[] = Arrays.copyOf(data, FIRE_CIPHER_IV_LENGTH);
+	    byte[] iv = Arrays.copyOf(data, FIRE_CIPHER_IV_LENGTH);
 
 	    cipher = Cipher.getInstance(FIRE_SYMMETRIC_CIPHER_TRANSFORMATION);
 	    cipher.init(Cipher.DECRYPT_MODE,
@@ -1982,21 +1982,21 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] encrypt(byte data[], byte keyBytes[])
+    public static byte[] encrypt(byte[] data, byte[] keyBytes)
     {
 	if(data == null || keyBytes == null)
 	    return null;
 
 	prepareSecureRandom();
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, SYMMETRIC_ALGORITHM);
-	    byte iv[] = new byte[CIPHER_IV_LENGTH];
+	    byte[] iv = new byte[CIPHER_IV_LENGTH];
 
 	    cipher = Cipher.getInstance(SYMMETRIC_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
@@ -2014,21 +2014,21 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] encryptFire(byte data[], byte keyBytes[])
+    public static byte[] encryptFire(byte[] data, byte[] keyBytes)
     {
 	if(data == null || keyBytes == null)
 	    return null;
 
 	prepareSecureRandom();
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    Cipher cipher = null;
 	    SecretKey secretKey = new SecretKeySpec
 		(keyBytes, FIRE_SYMMETRIC_ALGORITHM);
-	    byte iv[] = new byte[FIRE_CIPHER_IV_LENGTH];
+	    byte[] iv = new byte[FIRE_CIPHER_IV_LENGTH];
 
 	    cipher = Cipher.getInstance(FIRE_SYMMETRIC_CIPHER_TRANSFORMATION);
 	    s_secureRandom.nextBytes(iv);
@@ -2054,7 +2054,7 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] keyForSipHash(byte data[])
+    public static byte[] keyForSipHash(byte[] data)
     {
 	if(data == null)
 	    return null;
@@ -2065,12 +2065,12 @@ public class Cryptography
 		      8 * SipHash.KEY_LENGTH);
     }
 
-    public static byte[] hmac(byte data[], byte keyBytes[])
+    public static byte[] hmac(byte[] data, byte[] keyBytes)
     {
 	if(data == null || keyBytes == null)
 	    return null;
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -2089,12 +2089,12 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] hmacFire(byte data[], byte keyBytes[])
+    public static byte[] hmacFire(byte[] data, byte[] keyBytes)
     {
 	if(data == null || keyBytes == null)
 	    return null;
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -2113,8 +2113,8 @@ public class Cryptography
 	return bytes;
     }
 
-    public static byte[] pbkdf2(byte salt[],
-				char password[],
+    public static byte[] pbkdf2(byte[] salt,
+				char[] password,
 				int iterations,
 				int length)
     {
@@ -2136,12 +2136,12 @@ public class Cryptography
 	}
     }
 
-    public static byte[] pkiDecrypt(PrivateKey privateKey, byte data[])
+    public static byte[] pkiDecrypt(PrivateKey privateKey, byte[] data)
     {
 	if(data == null || privateKey == null)
 	    return null;
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -2165,14 +2165,14 @@ public class Cryptography
 
     public static byte[] pkiEncrypt(PublicKey publicKey,
 				    String algorithm,
-				    byte data[])
+				    byte[] data)
     {
 	if(data == null || publicKey == null)
 	    return null;
 
 	prepareSecureRandom();
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -2214,7 +2214,7 @@ public class Cryptography
 
 	prepareSecureRandom();
 
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -2231,13 +2231,13 @@ public class Cryptography
 
     public static byte[] sha256(byte[] ... data)
     {
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
-	    for(byte b[] : data)
+	    for(byte[] b : data)
 		if(b != null)
 		    messageDigest.update(b);
 
@@ -2265,7 +2265,7 @@ public class Cryptography
 	    FileInputStream fileInputStream = assetFileDescriptor.
 		createInputStream();
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-	    byte buffer[] = new byte[4096];
+	    byte[] buffer = new byte[4096];
 	    int n = 0;
 
 	    while(n != -1)
@@ -2301,13 +2301,13 @@ public class Cryptography
 
     public static byte[] sha3_512(byte[] ... data)
     {
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    SHA3.Digest512 messageDigest = new SHA3.Digest512();
 
-	    for(byte b[] : data)
+	    for(byte[] b : data)
 		if(b != null)
 		    messageDigest.update(b);
 
@@ -2323,13 +2323,13 @@ public class Cryptography
 
     public static byte[] sha512(byte[] ... data)
     {
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
 
-	    for(byte b[] : data)
+	    for(byte[] b : data)
 		if(b != null)
 		    messageDigest.update(b);
 
@@ -2367,7 +2367,7 @@ public class Cryptography
 	{
 	    int length = 0;
 
-	    for(byte b[] : data)
+	    for(byte[] b : data)
 		if(b != null)
 		{
 		    if(length == 0)
@@ -2379,11 +2379,11 @@ public class Cryptography
 	    if(length == 0)
 		return null;
 
-	    byte bytes[] = new byte[length];
+	    byte[] bytes = new byte[length];
 
 	    Arrays.fill(bytes, (byte) 0);
 
-	    for(byte b[] : data)
+	    for(byte[] b : data)
 		if(b != null)
 		    for(int i = 0; i < length; i++)
 			bytes[i] = (byte) (b[i] ^ bytes[i]);
@@ -2409,7 +2409,7 @@ public class Cryptography
     {
 	try
 	{
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    if(alias == null || alias.trim().isEmpty())
 		bytes = Miscellaneous.joinByteArrays
@@ -2420,13 +2420,13 @@ public class Cryptography
 
 	    if(bytes != null)
 	    {
-		byte key[] = keyForSipHash(bytes);
+		byte[] key = keyForSipHash(bytes);
 
 		if(key == null)
 		    return false;
 
 		SipHash sipHash = new SipHash();
-		long value[] = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
+		long[] value = sipHash.hmac(bytes, key, SIPHASH_OUTPUT_LENGTH);
 
 		if(Arrays.equals(new long[] {0L, 0L}, value))
 		    return false;
@@ -2808,8 +2808,8 @@ public class Cryptography
     }
 
     public void setChatEncryptionPublicKeyPair(String algorithm,
-					       byte privateBytes[],
-					       byte publicBytes[])
+					       byte[] privateBytes,
+					       byte[] publicBytes)
     {
 	m_chatEncryptionPublicKeyPairMutex.writeLock().lock();
 
@@ -2843,8 +2843,8 @@ public class Cryptography
     }
 
     public void setChatSignaturePublicKeyPair(String algorithm,
-					      byte privateBytes[],
-					      byte publicBytes[])
+					      byte[] privateBytes,
+					      byte[] publicBytes)
     {
 	m_chatSignaturePublicKeyPairMutex.writeLock().lock();
 
@@ -2896,7 +2896,7 @@ public class Cryptography
 	destroy(key);
     }
 
-    public void setOzoneEncryptionKey(byte bytes[])
+    public void setOzoneEncryptionKey(byte[] bytes)
     {
 	m_ozoneEncryptionKeyMutex.writeLock().lock();
 
@@ -2921,7 +2921,7 @@ public class Cryptography
 	}
     }
 
-    public void setOzoneMacKey(byte bytes[])
+    public void setOzoneMacKey(byte[] bytes)
     {
 	m_ozoneMacKeyMutex.writeLock().lock();
 

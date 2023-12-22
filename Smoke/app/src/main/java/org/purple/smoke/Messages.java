@@ -46,26 +46,26 @@ public class Messages
     public final static String FIRE_CHAT_MESSAGE_TYPE = "0040b";
     public final static String FIRE_STATUS_MESSAGE_TYPE = "0040a";
     public final static String IDENTITY_MESSAGE_TYPE = "0095a";
-    public final static byte ARSON_CALL_HALF_AND_HALF_TAGS[] =
+    public final static byte[] ARSON_CALL_HALF_AND_HALF_TAGS =
 	new byte[] {0x02, 0x03}; // Be careful of Steam tags.
-    public final static byte CALL_HALF_AND_HALF_TAGS[] =
+    public final static byte[] CALL_HALF_AND_HALF_TAGS =
 	new byte[] {0x00, 0x01}; // Be careful of Steam tags.
-    public final static byte CHAT_KEY_TYPE[] = new byte[] {0x00};
-    public final static byte CHAT_MESSAGE_RETRIEVAL[] = new byte[] {0x00};
-    public final static byte CHAT_MESSAGE_TYPE[] = new byte[] {0x00};
-    public final static byte CHAT_STATUS_MESSAGE_TYPE[] = new byte[] {0x01};
-    public final static byte JUGGERNAUT_TYPE[] = new byte[] {0x03};
+    public final static byte[] CHAT_KEY_TYPE = new byte[] {0x00};
+    public final static byte[] CHAT_MESSAGE_RETRIEVAL = new byte[] {0x00};
+    public final static byte[] CHAT_MESSAGE_TYPE = new byte[] {0x00};
+    public final static byte[] CHAT_STATUS_MESSAGE_TYPE = new byte[] {0x01};
+    public final static byte[] JUGGERNAUT_TYPE = new byte[] {0x03};
     public final static byte MCELIECE_FUJISAKI_11_50 = 0x01;
     public final static byte MCELIECE_FUJISAKI_12_68 = 0x02;
     public final static byte MCELIECE_FUJISAKI_13_118 = 0x03;
     public final static byte MCELIECE_POINTCHEVAL = 0x04;
-    public final static byte MESSAGE_READ_SMOKESTACK[] = new byte[] {0x04};
-    public final static byte MESSAGE_READ_TYPE[] = new byte[] {0x02};
-    public final static byte PKP_MESSAGE_REQUEST[] = new byte[] {0x01};
-    public final static byte SHARE_SIPHASH_ID[] = new byte[] {0x02};
-    public final static byte STEAM_KEY_EXCHANGE[] =
+    public final static byte[] MESSAGE_READ_SMOKESTACK = new byte[] {0x04};
+    public final static byte[] MESSAGE_READ_TYPE = new byte[] {0x02};
+    public final static byte[] PKP_MESSAGE_REQUEST = new byte[] {0x01};
+    public final static byte[] SHARE_SIPHASH_ID = new byte[] {0x02};
+    public final static byte[] STEAM_KEY_EXCHANGE =
 	new byte[] {0x04, 0x05}; // Be careful of calling tags.
-    public final static byte STEAM_SHARE[] = new byte[] {0x06, 0x07};
+    public final static byte[] STEAM_SHARE = new byte[] {0x06, 0x07};
     public final static int CALL_GROUP_TWO_ELEMENT_COUNT = 6; /*
 							      ** The first
 							      ** byte is not
@@ -88,9 +88,9 @@ public class Messages
 
 	try
 	{
-	    byte random[] = Cryptography.randomBytes
+	    byte[] random = Cryptography.randomBytes
 		(Cryptography.HASH_KEY_LENGTH);
-	    byte signature[] = null;
+	    byte[] signature = null;
 
 	    signature = cryptography.signViaChatSignature
 		(Miscellaneous.
@@ -137,7 +137,7 @@ public class Messages
 	return "";
     }
 
-    public static String bytesToMessageString(byte bytes[])
+    public static String bytesToMessageString(byte[] bytes)
     {
 	if(bytes == null || bytes.length == 0)
 	    return "";
@@ -176,7 +176,7 @@ public class Messages
 	return "";
     }
 
-    public static String bytesToMessageStringNonBase64(byte bytes[])
+    public static String bytesToMessageStringNonBase64(byte[] bytes)
     {
 	if(bytes == null || bytes.length == 0)
 	    return "";
@@ -217,7 +217,7 @@ public class Messages
 	return "";
     }
 
-    public static String identityMessage(byte bytes[])
+    public static String identityMessage(byte[] bytes)
     {
 	if(bytes == null || bytes.length == 0)
 	    return "";
@@ -298,7 +298,7 @@ public class Messages
 
     public static byte[] callMessage(Cryptography cryptography,
 				     String sipHashId,
-				     byte keyStream[],
+				     byte[] keyStream,
 				     byte publicKeyType,
 				     byte tag)
     {
@@ -311,12 +311,12 @@ public class Messages
 	    ** [ Public Key Encryption ]
 	    */
 
-	    byte aesKey[] = Cryptography.aes256KeyBytes();
+	    byte[] aesKey = Cryptography.aes256KeyBytes();
 
 	    if(aesKey == null)
 		return null;
 
-	    byte shaKey[] = Cryptography.sha512KeyBytes();
+	    byte[] shaKey = Cryptography.sha512KeyBytes();
 
 	    if(shaKey == null)
 		return null;
@@ -327,7 +327,7 @@ public class Messages
 	    if(publicKey == null)
 		return null;
 
-	    byte pki[] = Cryptography.pkiEncrypt
+	    byte[] pki = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
@@ -389,7 +389,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature
+	    byte[] signature = cryptography.signViaChatSignature
 		(Miscellaneous.
 		 joinByteArrays(aesKey,
 				shaKey,
@@ -407,7 +407,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(new byte[] {tag},
 				stringBuilder.toString().getBytes()),
@@ -422,7 +422,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext), shaKey);
 
 	    if(hmac == null)
@@ -432,7 +432,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
@@ -450,10 +450,10 @@ public class Messages
     public static byte[] chatMessage(Cryptography cryptography,
 				     String message,
 				     String sipHashId,
-				     byte attachment[],
-				     byte destinationKey[],
-				     byte keyStream[],
-				     byte messageIdentity[],
+				     byte[] attachment,
+				     byte[] destinationKey,
+				     byte[] keyStream,
+				     byte[] messageIdentity,
 				     long sequence,
 				     long timestamp)
     {
@@ -482,7 +482,7 @@ public class Messages
 	    ** [ PKI ]
 	    */
 
-	    byte pki[] = Cryptography.pkiEncrypt
+	    byte[] pki = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
@@ -550,7 +550,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = null;
+	    byte[] signature = null;
 
 	    if(Database.getInstance().readParticipantOptions(cryptography,
 							     sipHashId).
@@ -576,7 +576,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(CHAT_MESSAGE_TYPE,
 				stringBuilder.toString().getBytes()),
@@ -593,7 +593,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -608,7 +608,7 @@ public class Messages
 
 	    if(destinationKey != null)
 	    {
-		byte destination[] = Cryptography.hmac
+		byte[] destination = Cryptography.hmac
 		    (Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		     destinationKey);
 
@@ -647,7 +647,7 @@ public class Messages
 
 	try
 	{
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(
 		 /*
 		 ** [ A Byte ]
@@ -677,7 +677,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature(bytes);
+	    byte[] signature = cryptography.signViaChatSignature(bytes);
 
 	    if(signature == null)
 		return null;
@@ -686,7 +686,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 cryptography.ozoneEncryptionKey());
 
@@ -697,7 +697,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(hmac == null)
@@ -714,7 +714,7 @@ public class Messages
 
     public static byte[] chatStatus(Cryptography cryptography,
 				    String sipHashId,
-				    byte keyStream[])
+				    byte[] keyStream)
     {
 	if(cryptography == null || keyStream == null || keyStream.length == 0)
 	    return null;
@@ -737,7 +737,7 @@ public class Messages
 	    ** [ PKI ]
 	    */
 
-	    byte pki[] = Cryptography.pkiEncrypt
+	    byte[] pki = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
@@ -746,7 +746,7 @@ public class Messages
 	    if(pki == null)
 		return null;
 
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(
 		 /*
 		 ** [ A Byte ]
@@ -770,7 +770,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = null;
+	    byte[] signature = null;
 
 	    if(Database.getInstance().readParticipantOptions(cryptography,
 							     sipHashId).
@@ -792,7 +792,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -805,7 +805,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -818,7 +818,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
@@ -835,8 +835,8 @@ public class Messages
 
     public static byte[] epksMessage(Cryptography cryptography,
 				     String sipHashId,
-				     byte keyStream[],
-				     byte keyType[])
+				     byte[] keyStream,
+				     byte[] keyType)
     {
 	if(cryptography == null ||
 	   keyStream == null ||
@@ -894,7 +894,7 @@ public class Messages
 	    if(encryptionKey == null || signatureKey == null)
 		return null;
 
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    /*
 	    ** [ Encryption Public Key Signature ]
@@ -956,7 +956,7 @@ public class Messages
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -971,7 +971,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -984,7 +984,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
@@ -1000,10 +1000,10 @@ public class Messages
 
     public static byte[] epksMessage(String encryptionAlgorithm,
 				     String sipHashId,
-				     byte encryptionPublicKey[],
-				     byte signaturePublicKey[],
-				     byte keyStream[],
-				     byte keyType[])
+				     byte[] encryptionPublicKey,
+				     byte[] signaturePublicKey,
+				     byte[] keyStream,
+				     byte[] keyType)
     {
 	if(encryptionPublicKey == null ||
 	   encryptionPublicKey.length == 0 ||
@@ -1054,7 +1054,7 @@ public class Messages
 				       Base64.NO_WRAP));
 	    stringBuilder.append("\n");
 
-	    byte bytes[] = new byte[1]; // Artificial signatures.
+	    byte[] bytes = new byte[1]; // Artificial signatures.
 
 	    if(encryptionAlgorithm.startsWith("McEliece-Fujisaki (11"))
 		bytes[0] = MCELIECE_FUJISAKI_11_50;
@@ -1087,7 +1087,7 @@ public class Messages
 	    stringBuilder.append("\n");
 	    stringBuilder.append(Base64.encodeToString(bytes, Base64.NO_WRAP));
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(stringBuilder.toString().getBytes(),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -1102,7 +1102,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -1115,7 +1115,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
@@ -1133,7 +1133,7 @@ public class Messages
 				     String id,
 				     String message,
 				     String name,
-				     byte keyStream[])
+				     byte[] keyStream)
     {
 	if(cryptography == null || keyStream == null || keyStream.length == 0)
 	    return null;
@@ -1187,7 +1187,7 @@ public class Messages
 				getBytes(StandardCharsets.ISO_8859_1),
 				Base64.NO_WRAP));
 
-	    byte ciphertext[] = Cryptography.encryptFire
+	    byte[] ciphertext = Cryptography.encryptFire
 		(stringBuilder.toString().getBytes(StandardCharsets.ISO_8859_1),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -1200,7 +1200,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmacFire
+	    byte[] hmac = Cryptography.hmacFire
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -1214,7 +1214,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							Cryptography.
@@ -1245,7 +1245,7 @@ public class Messages
     public static byte[] fireStatus(Cryptography cryptography,
 				    String id,
 				    String name,
-				    byte keyStream[])
+				    byte[] keyStream)
     {
 	if(cryptography == null || keyStream == null || keyStream.length == 0)
 	    return null;
@@ -1295,7 +1295,7 @@ public class Messages
 				getBytes(StandardCharsets.ISO_8859_1),
 				Base64.NO_WRAP));
 
-	    byte ciphertext[] = Cryptography.encryptFire
+	    byte[] ciphertext = Cryptography.encryptFire
 		(stringBuilder.toString().getBytes(StandardCharsets.ISO_8859_1),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -1308,7 +1308,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmacFire
+	    byte[] hmac = Cryptography.hmacFire
 		(ciphertext,
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -1322,7 +1322,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(ciphertext, hmac),
 		 Cryptography.sha512(Arrays.copyOfRange(keyStream,
 							Cryptography.
@@ -1352,8 +1352,8 @@ public class Messages
 
     public static byte[] juggernautMessage(Cryptography cryptography,
 					   String sipHashId,
-					   byte bytes[],
-					   byte keyStream[])
+					   byte[] bytes,
+					   byte[] keyStream)
     {
 	if(bytes == null ||
 	   bytes.length == 0 ||
@@ -1380,7 +1380,7 @@ public class Messages
 	    ** [ PKI ]
 	    */
 
-	    byte pki[] = Cryptography.pkiEncrypt
+	    byte[] pki = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
@@ -1413,7 +1413,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature
+	    byte[] signature = cryptography.signViaChatSignature
 		(Miscellaneous.
 		 joinByteArrays(cryptography.
 				chatEncryptionPublicKeyDigest(),
@@ -1431,7 +1431,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(JUGGERNAUT_TYPE,
 				stringBuilder.toString().getBytes()),
@@ -1448,7 +1448,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -1461,7 +1461,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
@@ -1478,8 +1478,8 @@ public class Messages
 
     public static byte[] messageRead(Cryptography cryptography,
 				     String sipHashId,
-				     byte keyStream[],
-				     byte messageIdentity[])
+				     byte[] keyStream,
+				     byte[] messageIdentity)
     {
 	if(cryptography == null ||
 	   keyStream == null ||
@@ -1506,7 +1506,7 @@ public class Messages
 	    ** [ PKI ]
 	    */
 
-	    byte pki[] = Cryptography.pkiEncrypt
+	    byte[] pki = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
@@ -1515,7 +1515,7 @@ public class Messages
 	    if(pki == null)
 		return null;
 
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(
 		 /*
 		 ** [ A Byte ]
@@ -1533,7 +1533,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature
+	    byte[] signature = cryptography.signViaChatSignature
 		(Miscellaneous.
 		 joinByteArrays(cryptography.
 				chatEncryptionPublicKeyDigest(),
@@ -1547,7 +1547,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -1560,7 +1560,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -1573,7 +1573,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
@@ -1589,7 +1589,7 @@ public class Messages
     }
 
     public static byte[] messageRead(Cryptography cryptography,
-				     byte messageIdentity[])
+				     byte[] messageIdentity)
     {
 	if(cryptography == null ||
 	   messageIdentity == null ||
@@ -1604,7 +1604,7 @@ public class Messages
 
 	try
 	{
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(
 		 /*
 		 ** [ A Byte ]
@@ -1634,7 +1634,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature(bytes);
+	    byte[] signature = cryptography.signViaChatSignature(bytes);
 
 	    if(signature == null)
 		return null;
@@ -1643,7 +1643,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.joinByteArrays(bytes, signature),
 		 cryptography.ozoneEncryptionKey());
 
@@ -1654,7 +1654,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(hmac == null)
@@ -1677,7 +1677,7 @@ public class Messages
 
 	try
 	{
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(
 		 /*
 		 ** [ A Byte ]
@@ -1707,7 +1707,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(bytes, cryptography.ozoneEncryptionKey());
 
 	    if(ciphertext == null)
@@ -1717,7 +1717,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(hmac == null)
@@ -1741,7 +1741,7 @@ public class Messages
 
 	try
 	{
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(
 		 /*
 		 ** [ A Byte ]
@@ -1771,7 +1771,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(bytes, cryptography.ozoneEncryptionKey());
 
 	    if(ciphertext == null)
@@ -1781,7 +1781,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(ciphertext, cryptography.ozoneMacKey());
 
 	    if(hmac == null)
@@ -1799,9 +1799,9 @@ public class Messages
     public static byte[] steamCall(Cryptography cryptography,
 				   String fileName,
 				   String sipHashId,
-				   byte fileDigest[],
-				   byte fileIdentity[],
-				   byte keyStream[],
+				   byte[] fileDigest,
+				   byte[] fileIdentity,
+				   byte[] keyStream,
 				   byte publicKeyType,
 				   byte tag,
 				   long fileSize)
@@ -1822,12 +1822,12 @@ public class Messages
 	    ** [ Public Key Encryption ]
 	    */
 
-	    byte aesKey[] = Cryptography.aes256KeyBytes();
+	    byte[] aesKey = Cryptography.aes256KeyBytes();
 
 	    if(aesKey == null)
 		return null;
 
-	    byte shaKey[] = Cryptography.sha512KeyBytes();
+	    byte[] shaKey = Cryptography.sha512KeyBytes();
 
 	    if(shaKey == null)
 		return null;
@@ -1838,7 +1838,7 @@ public class Messages
 	    if(publicKey == null)
 		return null;
 
-	    byte pki[] = Cryptography.pkiEncrypt
+	    byte[] pki = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
@@ -1927,7 +1927,7 @@ public class Messages
 	    ** [ Public Key Signature ]
 	    */
 
-	    byte signature[] = cryptography.signViaChatSignature
+	    byte[] signature = cryptography.signViaChatSignature
 		(Miscellaneous.
 		 joinByteArrays(aesKey,
 				shaKey,
@@ -1945,7 +1945,7 @@ public class Messages
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(Miscellaneous.
 		 joinByteArrays(new byte[] {tag},
 				stringBuilder.toString().getBytes()),
@@ -1960,7 +1960,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext), shaKey);
 
 	    if(hmac == null)
@@ -1970,7 +1970,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));
@@ -1987,9 +1987,9 @@ public class Messages
 
     public static byte[] steamShare(Cryptography cryptography,
 				    String sipHashId,
-				    byte fileIdentity[],
-				    byte keyStream[],
-				    byte packet[],
+				    byte[] fileIdentity,
+				    byte[] keyStream,
+				    byte[] packet,
 				    byte tag,
 				    long fileOffset)
     {
@@ -2018,7 +2018,7 @@ public class Messages
 	    if(publicKey == null)
 		return null;
 
-	    byte pki[] = Cryptography.pkiEncrypt
+	    byte[] pki = Cryptography.pkiEncrypt
 		(publicKey,
 		 Database.getInstance().
 		 publicKeyEncryptionAlgorithm(cryptography, sipHashId),
@@ -2027,7 +2027,7 @@ public class Messages
 	    if(pki == null)
 		return null;
 
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(
 		 /*
 		 ** [ A Tag ]
@@ -2051,13 +2051,13 @@ public class Messages
 		 ** [ File Packet ]
 		 */
 
-		 packet != null ? packet : null);
+		 packet);
 
 	    /*
 	    ** [ Ciphertext ]
 	    */
 
-	    byte ciphertext[] = Cryptography.encrypt
+	    byte[] ciphertext = Cryptography.encrypt
 		(bytes,
 		 Arrays.copyOfRange(keyStream,
 				    0,
@@ -2070,7 +2070,7 @@ public class Messages
 	    ** [ HMAC ]
 	    */
 
-	    byte hmac[] = Cryptography.hmac
+	    byte[] hmac = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext),
 		 Arrays.copyOfRange(keyStream,
 				    Cryptography.CIPHER_KEY_LENGTH,
@@ -2083,7 +2083,7 @@ public class Messages
 	    ** [ Destination ]
 	    */
 
-	    byte destination[] = Cryptography.hmac
+	    byte[] destination = Cryptography.hmac
 		(Miscellaneous.joinByteArrays(pki, ciphertext, hmac),
 		 Cryptography.
 		 sha512(sipHashId.getBytes(StandardCharsets.UTF_8)));

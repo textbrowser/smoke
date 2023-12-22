@@ -359,7 +359,7 @@ public abstract class Neighbor
 		    ** Retrieve a database message.
 		    */
 
-		    String array[] = m_database.readOutboundMessage
+		    String[] array = m_database.readOutboundMessage
 			(m_lastMessageOid, m_oid.get());
 
 		    /*
@@ -377,7 +377,7 @@ public abstract class Neighbor
 		    {
 			m_lastMessageOid = Integer.parseInt(array[3]);
 
-			byte bytes[] = m_cryptography.mtd
+			byte[] bytes = m_cryptography.mtd
 			    (Base64.decode(array[1], Base64.DEFAULT));
 
 			if(bytes != null)
@@ -392,7 +392,7 @@ public abstract class Neighbor
 
 			    if(bytes != null)
 			    {
-				byte timestamp[] = Miscellaneous.longToByteArray
+				byte[] timestamp = Miscellaneous.longToByteArray
 				    (TimeUnit.MILLISECONDS.
 				     toMinutes(System.currentTimeMillis()));
 
@@ -478,14 +478,11 @@ public abstract class Neighbor
 
 	try
 	{
-	    StringBuilder message = new StringBuilder();
-
-	    message.append(m_uuid.toString());
-	    message.append("\n");
-	    message.append(LANE_WIDTH);
-	    message.append("\n");
-	    message.append("full"); // Echo Mode
-
+	    String message = m_uuid.toString() +
+                "\n" +
+                LANE_WIDTH +
+                "\n" +
+                "full"; // Echo Mode
 	    StringBuilder results = new StringBuilder();
 
 	    results.append("POST HTTP/1.1\r\n");
@@ -497,7 +494,7 @@ public abstract class Neighbor
 	    results.append("\r\n\r\n");
 
 	    String base64 = Base64.encodeToString
-		(message.toString().getBytes(), Base64.DEFAULT);
+		(message.getBytes(), Base64.DEFAULT);
 	    int indexOf = results.indexOf("%1");
 	    int length = base64.length() +
 		"type=0014&content=\r\n\r\n\r\n".length();
@@ -521,15 +518,13 @@ public abstract class Neighbor
 
 	try
 	{
-	    StringBuilder stringBuilder = new StringBuilder();
+	    String string = Kernel.getInstance().fireIdentities() +
+                Messages.identityMessage
+		(Cryptography.
+		 sha512(m_cryptography.sipHashId().
+			getBytes(StandardCharsets.UTF_8)));
 
-	    stringBuilder.append(Kernel.getInstance().fireIdentities());
-	    stringBuilder.append
-		(Messages.
-		 identityMessage(Cryptography.
-				 sha512(m_cryptography.sipHashId().
-					getBytes(StandardCharsets.UTF_8))));
-	    return stringBuilder.toString();
+	    return string;
 	}
 	catch(Exception exception)
 	{
@@ -546,7 +541,7 @@ public abstract class Neighbor
     protected abstract boolean connected();
     protected abstract int getLocalPort();
     protected abstract int send(String message);
-    protected abstract int send(byte bytes[]);
+    protected abstract int send(byte[] bytes);
     protected abstract void connect();
 
     protected boolean isNetworkConnected()

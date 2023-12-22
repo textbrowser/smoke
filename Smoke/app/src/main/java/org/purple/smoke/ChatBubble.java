@@ -68,7 +68,7 @@ public class ChatBubble extends View
     private int m_oid = -1;
     private final SimpleDateFormat m_simpleDateFormat = new
 	SimpleDateFormat("yyyy-MM-dd h:mm:ss a", Locale.getDefault());
-    public enum Locations {LEFT, RIGHT};
+    public enum Locations {LEFT, RIGHT}
 
     public ChatBubble(Context context,
 		      MemberChat memberChat,
@@ -93,7 +93,7 @@ public class ChatBubble extends View
 	** Prepare widget variables.
 	*/
 
-	m_selected = (Switch) m_view.findViewById(R.id.selected);
+	m_selected = m_view.findViewById(R.id.selected);
 	m_selected_listener = new CompoundButton.OnCheckedChangeListener()
 	{
 	    @Override
@@ -125,7 +125,7 @@ public class ChatBubble extends View
 	m_fromSmokeStack = state;
     }
 
-    public void setImageAttachment(byte bytes[])
+    public void setImageAttachment(byte[] bytes)
     {
 	if(bytes == null || bytes.length == 0)
 	{
@@ -145,7 +145,7 @@ public class ChatBubble extends View
 
 	    Bitmap bitmap = BitmapFactory.decodeStream
 		(byteArrayInputStream, null, options);
-	    ImageView imageView = (ImageView) m_view.findViewById(R.id.image);
+	    ImageView imageView = m_view.findViewById(R.id.image);
 
 	    if(bitmap != null)
 	    {
@@ -210,7 +210,7 @@ public class ChatBubble extends View
 
 	if(location == Locations.LEFT)
 	{
-	    TextView textView = (TextView) m_view.findViewById(R.id.name_left);
+	    TextView textView = m_view.findViewById(R.id.name_left);
 
 	    textView.setText(name.substring(0, 1).toUpperCase());
 
@@ -219,7 +219,7 @@ public class ChatBubble extends View
 	}
 	else
 	{
-	    TextView textView = (TextView) m_view.findViewById(R.id.name_right);
+	    TextView textView = m_view.findViewById(R.id.name_right);
 
 	    textView.setText(name.substring(0, 1).toUpperCase());
 
@@ -314,9 +314,8 @@ public class ChatBubble extends View
 
     public void setText(Locations location, String text)
     {
-	LinearLayout linearLayout = (LinearLayout)
-	    m_view.findViewById(R.id.linear_layout);
-	TextView textView = (TextView) m_view.findViewById(R.id.text);
+	LinearLayout linearLayout = m_view.findViewById(R.id.linear_layout);
+	TextView textView = m_view.findViewById(R.id.text);
 
 	textView.setText("");
 

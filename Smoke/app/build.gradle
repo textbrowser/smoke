@@ -5,11 +5,11 @@ android {
     defaultConfig {
         applicationId "org.purple.smoke"
         buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
-        minSdkVersion 25
+        minSdkVersion 28
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 20230510
-        versionName "2023.05.10"
+        versionCode 20231225
+        versionName "2023.12.25"
     }
     buildTypes {
         android.applicationVariants.all { variant ->

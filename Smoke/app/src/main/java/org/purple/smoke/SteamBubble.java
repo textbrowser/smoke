@@ -136,7 +136,7 @@ public class SteamBubble extends View
 	    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 	m_view = inflater.inflate(R.layout.steam_bubble, viewGroup, false);
-	m_control = (Button) m_view.findViewById(R.id.control);
+	m_control = m_view.findViewById(R.id.control);
 	m_control.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
@@ -170,8 +170,8 @@ public class SteamBubble extends View
 		}
 	    }
         });
-	m_destination = (TextView) m_view.findViewById(R.id.destination);
-	m_details = (Switch) m_view.findViewById(R.id.details);
+	m_destination = m_view.findViewById(R.id.destination);
+	m_details = m_view.findViewById(R.id.details);
 	m_details.setOnCheckedChangeListener
 	    (new CompoundButton.OnCheckedChangeListener()
 	    {
@@ -193,23 +193,22 @@ public class SteamBubble extends View
 		    }
 		}
 	    });
-	m_digest = (TextView) m_view.findViewById(R.id.digest);
+	m_digest = m_view.findViewById(R.id.digest);
 	m_direction = m_view.findViewById(R.id.direction);
-	m_ephemeralKeyType = (TextView) m_view.findViewById
+	m_ephemeralKeyType = m_view.findViewById
 	    (R.id.ephemeral_key_type);
-	m_eta = (TextView) m_view.findViewById(R.id.eta);
-	m_fileIdentity = (TextView) m_view.findViewById(R.id.file_identity);
-	m_fileName = (TextView) m_view.findViewById(R.id.filename);
-	m_fileSize = (TextView) m_view.findViewById(R.id.file_size);
+	m_eta = m_view.findViewById(R.id.eta);
+	m_fileIdentity = m_view.findViewById(R.id.file_identity);
+	m_fileName = m_view.findViewById(R.id.filename);
+	m_fileSize = m_view.findViewById(R.id.file_size);
 	m_keyExchangeStatus = m_view.findViewById(R.id.key_exchange_status);
-	m_keyStreamDigest = (TextView)
-	    m_view.findViewById(R.id.keystream_digest);
-	m_layoutA = (LinearLayout) m_view.findViewById(R.id.layout_a);
+	m_keyStreamDigest = m_view.findViewById(R.id.keystream_digest);
+	m_layoutA = m_view.findViewById(R.id.layout_a);
 	m_layoutA.setVisibility(LinearLayout.GONE);
-	m_layoutB = (LinearLayout) m_view.findViewById(R.id.layout_b);
+	m_layoutB = m_view.findViewById(R.id.layout_b);
 	m_layoutB.setVisibility(LinearLayout.GONE);
-	m_locked = (TextView) m_view.findViewById(R.id.locked);
-	m_menuButton = (ImageButton) m_view.findViewById(R.id.menu);
+	m_locked = m_view.findViewById(R.id.locked);
+	m_menuButton = m_view.findViewById(R.id.menu);
 	m_menuButton.setOnClickListener(new View.OnClickListener()
 	{
 	    public void onClick(View view)
@@ -217,9 +216,9 @@ public class SteamBubble extends View
 		m_steam.showContextMenu(view);
 	    }
         });
-	m_percent = (TextView) m_view.findViewById(R.id.percent_value);
-	m_progress = (ProgressBar) m_view.findViewById(R.id.progress_bar);
-	m_readInterval = (SeekBar) m_view.findViewById(R.id.read_interval);
+	m_percent = m_view.findViewById(R.id.percent_value);
+	m_progress = m_view.findViewById(R.id.progress_bar);
+	m_readInterval = m_view.findViewById(R.id.read_interval);
 	m_readInterval.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 	{
 	    @Override
@@ -285,13 +284,13 @@ public class SteamBubble extends View
 	    {
 	    }
 	});
-	m_readIntervalLabel = (TextView) m_view.findViewById
+	m_readIntervalLabel = m_view.findViewById
 	    (R.id.read_interval_label);
 	m_readIntervalLabel.setText("4 reads / s");
-	m_sent = (TextView) m_view.findViewById(R.id.sent);
+	m_sent = m_view.findViewById(R.id.sent);
 	m_separator = m_view.findViewById(R.id.separator);
-	m_status = (TextView) m_view.findViewById(R.id.status);
-	m_transferRate = (TextView) m_view.findViewById(R.id.transfer_rate);
+	m_status = m_view.findViewById(R.id.status);
+	m_transferRate = m_view.findViewById(R.id.transfer_rate);
 	m_view.setId(-1);
 	s_numberFormat.setGroupingUsed(true);
     }

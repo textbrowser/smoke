@@ -94,9 +94,9 @@ public abstract class Miscellaneous
 
 		try
 		{
-		    byte bytes1[] = InetAddress.getByName(e1.m_ipAddress).
+		    byte[] bytes1 = InetAddress.getByName(e1.m_ipAddress).
 			getAddress();
-		    byte bytes2[] = InetAddress.getByName(e2.m_ipAddress).
+		    byte[] bytes2 = InetAddress.getByName(e2.m_ipAddress).
 			getAddress();
 		    int length = Math.max(bytes1.length, bytes2.length);
 
@@ -124,7 +124,7 @@ public abstract class Miscellaneous
 	    }
 	};
 
-    public static String byteArrayAsHexString(byte bytes[])
+    public static String byteArrayAsHexString(byte[] bytes)
     {
 	if(bytes == null || bytes.length == 0)
 	    return "";
@@ -144,7 +144,7 @@ public abstract class Miscellaneous
 	}
     }
 
-    public static String byteArrayAsHexStringDelimited(byte bytes[],
+    public static String byteArrayAsHexStringDelimited(byte[] bytes,
 						       char delimiter,
 						       int offset)
     {
@@ -259,7 +259,7 @@ public abstract class Miscellaneous
 	    return "False";
     }
 
-    public static String pemFormat(byte bytes[])
+    public static String pemFormat(byte[] bytes)
     {
 	if(bytes == null || bytes.length == 0)
 	    return "";
@@ -303,7 +303,7 @@ public abstract class Miscellaneous
 		(string.replace("-", "").toUpperCase().trim(), '-', 4);
     }
 
-    public static String sipHashIdFromData(byte bytes[])
+    public static String sipHashIdFromData(byte[] bytes)
     {
 	SipHash sipHash = new SipHash();
 
@@ -377,7 +377,7 @@ public abstract class Miscellaneous
 	return null;
     }
 
-    public static byte[] compressed(byte bytes[])
+    public static byte[] compressed(byte[] bytes)
     {
 	if(bytes == null)
 	    return null;
@@ -418,7 +418,7 @@ public abstract class Miscellaneous
 	return null;
     }
 
-    public static byte[] decompressed(byte bytes[])
+    public static byte[] decompressed(byte[] bytes)
     {
 	if(bytes == null)
 	    return null;
@@ -436,7 +436,7 @@ public abstract class Miscellaneous
 		try(GZIPInputStream gzipInputStream =
 		    new GZIPInputStream(byteArrayInputStream))
 		{
-		    byte buffer[] = new byte[4096];
+		    byte[] buffer = new byte[4096];
 		    int rc = 0;
 
 		    while((rc = gzipInputStream.read(buffer)) > 0)
@@ -497,17 +497,17 @@ public abstract class Miscellaneous
 	{
 	    int length = 0;
 
-	    for(byte b[] : data)
+	    for(byte[] b : data)
 		if(b != null && b.length > 0)
 		    length += b.length;
 
 	    if(length == 0)
 		return null;
 
-	    byte bytes[] = new byte[length];
+	    byte[] bytes = new byte[length];
 	    int i = 0;
 
-	    for(byte b[] : data)
+	    for(byte[] b : data)
 		if(b != null && b.length > 0)
 		{
 		    System.arraycopy(b, 0, bytes, i, b.length);
@@ -522,7 +522,7 @@ public abstract class Miscellaneous
 	}
     }
 
-    public static byte[] longArrayToByteArray(long value[])
+    public static byte[] longArrayToByteArray(long[] value)
     {
 	try
 	{
@@ -577,7 +577,7 @@ public abstract class Miscellaneous
 	    return (int) ((100.0 * ((double) upper)) / ((double) length));
     }
 
-    public static long byteArrayToLong(byte bytes[])
+    public static long byteArrayToLong(byte[] bytes)
     {
 	if(bytes == null || bytes.length != LONG_BYTES)
 	    return 0L;
@@ -1018,7 +1018,7 @@ public abstract class Miscellaneous
 	    int i = 0;
 
 	    view = inflater.inflate(R.layout.participants_table, null);
-	    tableLayout = (TableLayout) view.findViewById(R.id.participants);
+	    tableLayout = view.findViewById(R.id.participants);
 
 	    for(String string : arrayList)
 	    {

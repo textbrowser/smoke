@@ -44,10 +44,10 @@ public class SteamKeyExchange
 {
     private static class Pair
     {
-	public byte m_ciphertext[] = null;
-	public byte m_pki[] = null;
+	public byte[] m_ciphertext = null;
+	public byte[] m_pki = null;
 
-	public Pair(byte ciphertext[], byte pki[])
+	public Pair(byte[] ciphertext, byte[] pki)
 	{
 	    m_ciphertext = ciphertext;
 	    m_pki = pki;
@@ -86,7 +86,7 @@ public class SteamKeyExchange
 
 	String sipHashId = Miscellaneous.sipHashIdFromDestination
 	    (steamElement.m_destination);
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	bytes = Messages.steamCall
 	    (s_cryptography,
@@ -109,7 +109,7 @@ public class SteamKeyExchange
 		(Messages.bytesToMessageString(bytes), sipHashId);
     }
 
-    private void steamAorB(byte ciphertext[], byte pki[])
+    private void steamAorB(byte[] ciphertext, byte[] pki)
     {
 	if(ciphertext == null ||
 	   ciphertext.length == 0 ||
@@ -121,7 +121,7 @@ public class SteamKeyExchange
 
 	ciphertext = Arrays.copyOfRange(ciphertext, 1, ciphertext.length);
 
-	String strings[] = new String(ciphertext).split("\\n");
+	String[] strings = new String(ciphertext).split("\\n");
 
 	if(strings.length !=
 	   Messages.STEAM_KEY_EXCHANGE_GROUP_TWO_ELEMENT_COUNT)
@@ -129,12 +129,12 @@ public class SteamKeyExchange
 
 	String displayFileName = "";
 	String fileExtension = "";
-	byte ephemeralPublicKey[] = null;
-	byte ephemeralPublicKeyType[] = null;
-	byte fileDigest[] = null;
-	byte fileIdentity[] = null;
-	byte publicKeySignature[] = null;
-	byte senderPublicEncryptionKeyDigest[] = null;
+	byte[] ephemeralPublicKey = null;
+	byte[] ephemeralPublicKeyType = null;
+	byte[] fileDigest = null;
+	byte[] fileIdentity = null;
+	byte[] publicKeySignature = null;
+	byte[] senderPublicEncryptionKeyDigest = null;
 	int ii = 0;
 	long fileSize = 0;
 
@@ -281,7 +281,7 @@ public class SteamKeyExchange
 	    ** Record the new Steam, if allowed to.
 	    */
 
-	    String array[] = s_databaseHelper.nameSipHashIdFromDigest
+	    String[] array = s_databaseHelper.nameSipHashIdFromDigest
 		(s_cryptography, senderPublicEncryptionKeyDigest);
 
 	    if(s_databaseHelper.readParticipantOptions(s_cryptography,
@@ -346,7 +346,7 @@ public class SteamKeyExchange
 
 		return;
 
-	    byte bytes[] = Cryptography.pkiDecrypt
+	    byte[] bytes = Cryptography.pkiDecrypt
 		(privateKey, ephemeralPublicKey);
 
 	    if(bytes == null)
@@ -530,7 +530,7 @@ public class SteamKeyExchange
 			String sipHashId = Miscellaneous.
 			    sipHashIdFromDestination
 			    (steamElement.m_destination);
-			byte bytes[] = null;
+			byte[] bytes = null;
 
 			bytes = Messages.steamCall
 			    (s_cryptography,
@@ -564,7 +564,7 @@ public class SteamKeyExchange
         }, 1500L, READ_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    public void append(byte ciphertext[], byte pki[])
+    public void append(byte[] ciphertext, byte[] pki)
     {
 	if(ciphertext == null ||
 	   ciphertext.length == 0 ||

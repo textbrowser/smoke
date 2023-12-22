@@ -100,7 +100,7 @@ public class TcpNeighbor extends Neighbor
 	    return send(message.getBytes());
     }
 
-    protected int send(byte bytes[])
+    protected int send(byte[] bytes)
     {
 	int sent = 0;
 
@@ -335,7 +335,7 @@ public class TcpNeighbor extends Neighbor
 			    m_socket.getInputStream() == null)
 			return;
 
-		    byte bytes[] = new byte[BYTES_PER_READ];
+		    byte[] bytes = new byte[BYTES_PER_READ];
 		    int i = 0;
 
 		    try
@@ -351,7 +351,7 @@ public class TcpNeighbor extends Neighbor
 			m_error = true;
 		    }
 
-		    long bytesRead = (long) i;
+		    long bytesRead = i;
 
 		    if(bytesRead < 0L || m_error)
 		    {

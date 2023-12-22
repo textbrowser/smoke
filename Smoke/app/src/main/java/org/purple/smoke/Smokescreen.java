@@ -52,7 +52,7 @@ public class Smokescreen extends AppCompatActivity
 	if(Smokescreen.this.isFinishing())
 	    return;
 
-	byte encryptionSalt[] = Base64.decode
+	byte[] encryptionSalt = Base64.decode
 	    (m_databaseHelper.readSetting(null, "encryptionSalt").getBytes(),
 	     Base64.DEFAULT);
 
@@ -65,7 +65,7 @@ public class Smokescreen extends AppCompatActivity
 	    return;
 	}
 
-	byte macSalt[] = Base64.decode
+	byte[] macSalt = Base64.decode
 	    (m_databaseHelper.readSetting(null, "macSalt").getBytes(),
 	     Base64.DEFAULT);
 
@@ -76,7 +76,7 @@ public class Smokescreen extends AppCompatActivity
 	    return;
 	}
 
-	byte saltedPassword[] = Cryptography.sha512
+	byte[] saltedPassword = Cryptography.sha512
 	    (m_password.getText().toString().getBytes(),
 	     encryptionSalt,
 	     macSalt);

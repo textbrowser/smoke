@@ -36,11 +36,11 @@ public class SteamElement
     public String m_status = "paused";
     public String m_transferRate = "";
     public boolean m_locked = false;
-    public byte m_ephemeralPrivateKey[] = null;
-    public byte m_ephemeralPublicKey[] = null;
-    public byte m_fileDigest[] = null;
-    public byte m_fileIdentity[] = null;
-    public byte m_keyStream[] = null;
+    public byte[] m_ephemeralPrivateKey = null;
+    public byte[] m_ephemeralPublicKey = null;
+    public byte[] m_fileDigest = null;
+    public byte[] m_fileIdentity = null;
+    public byte[] m_keyStream = null;
     public int m_oid = -1;
     public int m_someOid = -1;
     public long m_fileSize = 0L;

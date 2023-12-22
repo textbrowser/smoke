@@ -40,7 +40,6 @@
     <string name="iteration_count">Iteration Count</string>
     <string name="join">Join</string>
     <string name="key_derivation_function">Key Derivation Function</string>
-    <string name="message">Message...</string>
     <string name="message_status">Message Status</string>
     <string name="name">Name</string>
     <string name="neighbor_servers">Neighbor Servers</string>
@@ -68,7 +67,6 @@
     <string name="salt">Salt</string>
     <string name="save">Save</string>
     <string name="scope_id">Scope ID</string>
-    <string name="send">Send</string>
     <string name="share_keys">Share Keys</string>
     <string name="share_smoke_id">Share Smoke ID</string>
     <string name="signature">Signature</string>

@@ -31,7 +31,7 @@ public class ParticipantElement implements Comparable<ParticipantElement>
 {
     public String m_name = "";
     public String m_sipHashId = "";
-    public byte m_keyStream[] = null;
+    public byte[] m_keyStream = null;
     public int m_oid = -1;
     public long m_lastStatusTimestamp = -1L;
 

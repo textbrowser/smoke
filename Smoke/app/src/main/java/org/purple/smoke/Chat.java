@@ -285,7 +285,7 @@ public class Chat extends AppCompatActivity
 	    if(m_databaseHelper.readSetting(null, "show_chat_icons").
 	       equals("true"))
 	    {
-		Switch switch1 = (Switch) findViewById
+		Switch switch1 = findViewById
 		    (R.id.participants).findViewWithTag(sipHashId);
 
 		if(switch1 != null)
@@ -437,10 +437,8 @@ public class Chat extends AppCompatActivity
 	int chatCheckedParticipants = State.getInstance().
 	    chatCheckedParticipants();
 
-	if(Kernel.getInstance().isConnected() && chatCheckedParticipants > 0)
-	    button1.setEnabled(true);
-	else
-	    button1.setEnabled(false);
+	button1.setEnabled
+	    (Kernel.getInstance().isConnected() && chatCheckedParticipants > 0);
 
 	if(Kernel.getInstance().availableNeighbors() > 0 &&
 	   chatCheckedParticipants > 0)
@@ -607,7 +605,7 @@ public class Chat extends AppCompatActivity
 		{
 		    stringBuilder.append("\n");
 
-		    long value[] = s_siphash.
+		    long[] value = s_siphash.
 			hmac(participantElement.m_keyStream,
 			     Cryptography.SIPHASH_OUTPUT_LENGTH);
 
@@ -776,8 +774,7 @@ public class Chat extends AppCompatActivity
 
     private void refreshCheckBox(String sipHashId)
     {
-	Switch switch1 = (Switch)
-	    findViewById(R.id.participants).findViewWithTag(sipHashId);
+	Switch switch1 = findViewById(R.id.participants).findViewWithTag(sipHashId);
 
 	if(switch1 == null)
 	    return;
@@ -823,7 +820,7 @@ public class Chat extends AppCompatActivity
 	    {
 		stringBuilder.append("\n");
 
-		long value[] = s_siphash.hmac
+		long[] value = s_siphash.hmac
 		    (participantElement.m_keyStream,
 		     Cryptography.SIPHASH_OUTPUT_LENGTH);
 
@@ -1052,14 +1049,14 @@ public class Chat extends AppCompatActivity
 
 		if(size > str.length())
 		{
-		    char a[] = new char[size - str.length()];
+		    char[] a = new char[size - str.length()];
 
 		    Arrays.fill(a, ' ');
 		    str += new String(a);
 		}
 		else if(str.length() > 0)
 		{
-		    char a[] = new char[1024 + str.length() % 2];
+		    char[] a = new char[1024 + str.length() % 2];
 
 		    Arrays.fill(a, ' ');
 		    str += new String(a);
@@ -1082,7 +1079,7 @@ public class Chat extends AppCompatActivity
 			continue;
 
 		    String sipHashId = switch1.getTag().toString();
-		    byte keyStream[] = m_databaseHelper.participantKeyStream
+		    byte[] keyStream = m_databaseHelper.participantKeyStream
 			(s_cryptography, sipHashId);
 
 		    if(keyStream == null ||
@@ -1234,7 +1231,7 @@ public class Chat extends AppCompatActivity
 
 				if(!string.isEmpty())
 				{
-				    byte bytes[] = Cryptography.pbkdf2
+				    byte[] bytes = Cryptography.pbkdf2
 					(Cryptography.
 					 sha512(string.
 						getBytes(StandardCharsets.
@@ -1317,7 +1314,7 @@ public class Chat extends AppCompatActivity
 	    case ContextMenuEnumerator.OPTIONAL_SIGNATURES:
 		menuItem.setChecked(!menuItem.isChecked());
 
-		String strings[] = null;
+		String[] strings = null;
 		StringBuilder stringBuilder = new StringBuilder
 		    (m_databaseHelper.
 		     readParticipantOptions(s_cryptography, sipHashId));

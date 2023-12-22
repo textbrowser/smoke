@@ -88,9 +88,9 @@ public class Database extends SQLiteOpenHelper
 
 		try
 		{
-		    byte bytes1[] = InetAddress.getByName(e1.m_remoteIpAddress).
+		    byte[] bytes1 = InetAddress.getByName(e1.m_remoteIpAddress).
 			getAddress();
-		    byte bytes2[] = InetAddress.getByName(e2.m_remoteIpAddress).
+		    byte[] bytes2 = InetAddress.getByName(e2.m_remoteIpAddress).
 			getAddress();
 		    int length = Math.max(bytes1.length, bytes2.length);
 
@@ -165,7 +165,8 @@ public class Database extends SQLiteOpenHelper
     public enum ExceptionLevels
     {
 	EXCEPTION_FATAL, EXCEPTION_NONE, EXCEPTION_PERMISSIBLE
-    };
+    }
+
     public final static int SIPHASH_STREAM_CREATION_ITERATION_COUNT = 4096;
     public final static int MESSAGE_DELIVERY_ATTEMPTS = 10; // Must be > 0!
 
@@ -236,7 +237,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(steamElement.m_fileIdentity == null)
 	    {
-		byte bytes[] = Cryptography.randomBytes
+		byte[] bytes = Cryptography.randomBytes
 		    (Cryptography.STEAM_FILE_IDENTITY_LENGTH);
 
 		values.put
@@ -337,33 +338,27 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = cryptography.mtd
+			byte[] bytes = cryptography.mtd
 			    (Base64.decode(cursor.getString(i).getBytes(),
 					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string = "Database::readFires(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append("Database::readFires(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			}
 
-			switch(i)
+			if(i == 0)
 			{
-			case 0:
 			    if(bytes != null)
 				fireElement.m_name = new String
 				    (bytes, StandardCharsets.ISO_8859_1).trim();
 			    else
 				fireElement.m_name = "error (" + oid + ")";
-
-			    break;
-			default:
-			    break;
 			}
 		    }
 
@@ -425,7 +420,7 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = cryptography.mtd
+			byte[] bytes = cryptography.mtd
 			    (Base64.decode(cursor.getString(i).getBytes(),
 					   Base64.DEFAULT));
 
@@ -433,14 +428,12 @@ public class Database extends SQLiteOpenHelper
 			{
 			    error = true;
 
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string = "Database::readNeighborOids(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append
-				("Database::readNeighborOids(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			    break;
 			}
 
@@ -539,7 +532,7 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = null;
+			byte[] bytes = null;
 
 			if(i != 0)
 			    bytes = cryptography.mtd
@@ -548,13 +541,12 @@ public class Database extends SQLiteOpenHelper
 
 			if(bytes == null && i != 0)
 			{
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string = "Database::readNeighbors(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append("Database::readNeighbors(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			}
 
 			switch(i)
@@ -827,20 +819,18 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = cryptography.mtd
+			byte[] bytes = cryptography.mtd
 			    (Base64.decode(cursor.getString(i).getBytes(),
 					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string = "Database::readParticipants(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append
-				("Database::readParticipants(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			}
 
 			switch(i)
@@ -928,7 +918,7 @@ public class Database extends SQLiteOpenHelper
 
 		    for(int i = 0; i < count; i++)
 		    {
-			byte bytes[] = cryptography.mtd
+			byte[] bytes = cryptography.mtd
 			    (Base64.decode(cursor.getString(i).getBytes(),
 					   Base64.DEFAULT));
 
@@ -936,14 +926,13 @@ public class Database extends SQLiteOpenHelper
 			{
 			    error = true;
 
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string =
+				"Database::readNonSharedSipHashIds(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append
-				("Database::readNonSharedSipHashIds(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			    break;
 			}
 
@@ -1089,20 +1078,18 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = cryptography.mtd
+			byte[] bytes = cryptography.mtd
 			    (Base64.decode(cursor.getString(i).getBytes(),
 					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string = "Database::readSipHashIds(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append
-				("Database::readSipHashIds(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			}
 
 			switch(i)
@@ -1233,7 +1220,7 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = null;
+			byte[] bytes = null;
 
 			if(i == 6) // is_download
 			    bytes = cursor.getString(i).getBytes();
@@ -1244,13 +1231,12 @@ public class Database extends SQLiteOpenHelper
 
 			if(bytes == null)
 			{
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string = "Database::readSteams(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append("Database::readSteams(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			}
 
 			switch(i)
@@ -1401,20 +1387,19 @@ public class Database extends SQLiteOpenHelper
 		{
 		    for(int i = 0; i < count; i++)
 		    {
-			byte bytes[] = cryptography.mtd
+			byte[] bytes = cryptography.mtd
 			    (Base64.decode(cursor.getString(i).getBytes(),
 					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string =
+				"Database::readSipHashIdStrings(): " +
+				"error on column " +
+				cursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append
-				("Database::readSipHashIdStrings(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append(cursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			    break;
 			}
 
@@ -1446,8 +1431,8 @@ public class Database extends SQLiteOpenHelper
 						   String fromSmokeStack,
 						   String message,
 						   String sipHashId,
-						   byte attachment[],
-						   byte messageIdentity[],
+						   byte[] attachment,
+						   byte[] messageIdentity,
 						   long timestamp)
     {
 	if(cryptography == null || m_db == null)
@@ -1624,22 +1609,19 @@ public class Database extends SQLiteOpenHelper
 			    continue;
 			}
 
-			byte bytes[] = cryptography.mtd
+			byte[] bytes = cryptography.mtd
 			    (Base64.decode(m_readMemberChatCursor.
 					   getString(i).getBytes(),
 					   Base64.DEFAULT));
 
 			if(bytes == null)
 			{
-			    StringBuilder stringBuilder = new StringBuilder();
+			    String string = "Database::readMemberChat(): " +
+				"error on column " +
+				m_readMemberChatCursor.getColumnName(i) +
+				".";
 
-			    stringBuilder.append
-				("Database::readMemberChat(): ");
-			    stringBuilder.append("error on column ");
-			    stringBuilder.append
-				(m_readMemberChatCursor.getColumnName(i));
-			    stringBuilder.append(".");
-			    writeLog(stringBuilder.toString());
+			    writeLog(string);
 			}
 
 			switch(i)
@@ -1721,7 +1703,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -1765,7 +1747,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -1787,7 +1769,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public PublicKey signatureKeyForDigest(Cryptography cryptography,
-					   byte digest[])
+					   byte[] digest)
     {
 	if(cryptography == null || digest == null || m_db == null)
 	    return null;
@@ -1804,7 +1786,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -1891,7 +1873,7 @@ public class Database extends SQLiteOpenHelper
 			continue;
 		    }
 
-		    byte bytes[] = cryptography.mtd
+		    byte[] bytes = cryptography.mtd
 			(Base64.decode(cursor.getString(i).getBytes(),
 				       Base64.DEFAULT));
 
@@ -1899,14 +1881,12 @@ public class Database extends SQLiteOpenHelper
 		    {
 			error = true;
 
-			StringBuilder stringBuilder = new StringBuilder();
+			String string = "Database::readSipHashId(): " +
+			    "error on column " +
+			    cursor.getColumnName(i) +
+			    ".";
 
-			stringBuilder.append
-			    ("Database::readSipHashId(): ");
-			stringBuilder.append("error on column ");
-			stringBuilder.append(cursor.getColumnName(i));
-			stringBuilder.append(".");
-			writeLog(stringBuilder.toString());
+			writeLog(string);
 			break;
 		    }
 
@@ -2049,7 +2029,7 @@ public class Database extends SQLiteOpenHelper
 		    continue;
 		}
 
-		byte bytes[] = null;
+		byte[] bytes = null;
 
 		if(i == 8) // is_download
 		    bytes = cursor.getString(i).getBytes();
@@ -2060,13 +2040,12 @@ public class Database extends SQLiteOpenHelper
 
 		if(bytes == null)
 		{
-		    StringBuilder stringBuilder = new StringBuilder();
+		    String string = "Database::readSteam(): " +
+			"error on column " +
+			cursor.getColumnName(i) +
+			".";
 
-		    stringBuilder.append("Database::readSteam(): ");
-		    stringBuilder.append("error on column ");
-		    stringBuilder.append(cursor.getColumnName(i));
-		    stringBuilder.append(".");
-		    writeLog(stringBuilder.toString());
+		    writeLog(string);
 		}
 
 		switch(i)
@@ -2254,7 +2233,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -2296,7 +2275,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -2332,7 +2311,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -2375,7 +2354,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -2412,7 +2391,7 @@ public class Database extends SQLiteOpenHelper
 		     new String[] {name});
 	    else
 	    {
-		byte bytes[] = cryptography.hmac(name.getBytes());
+		byte[] bytes = cryptography.hmac(name.getBytes());
 
 		if(bytes != null)
 		    cursor = m_db.rawQuery
@@ -2428,7 +2407,7 @@ public class Database extends SQLiteOpenHelper
 		    str = cursor.getString(0);
 		else
 		{
-		    byte bytes[] = cryptography.mtd
+		    byte[] bytes = cryptography.mtd
 			(Base64.decode(cursor.getString(0).getBytes(),
 				       Base64.DEFAULT));
 
@@ -2475,7 +2454,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -2496,7 +2475,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public String steamSipHashId(Cryptography cryptography,
-				 byte fileIdentity[])
+				 byte[] fileIdentity)
     {
 	if(cryptography == null || fileIdentity == null || m_db == null)
 	    return "";
@@ -2565,7 +2544,7 @@ public class Database extends SQLiteOpenHelper
 	return status;
     }
 
-    public String writeParticipant(Cryptography cryptography, byte data[])
+    public String writeParticipant(Cryptography cryptography, byte[] data)
     {
 	if(cryptography == null || data == null || m_db == null)
 	    return "";
@@ -2577,7 +2556,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    String strings[] = new String(data).split("\\n");
+	    String[] strings = new String(data).split("\\n");
 
 	    if(strings.length != Messages.EPKS_GROUP_ONE_ELEMENT_COUNT)
 		return "";
@@ -2587,10 +2566,10 @@ public class Database extends SQLiteOpenHelper
 	    String encryptionKeyAlgorithm = "";
 	    boolean encryptionKeySigned = false;
 	    boolean signatureKeySigned = false;
-	    byte keyType[] = null;
-	    byte encryptionKeySignature[] = null;
-	    byte signatureKeySignature[] = null;
-	    byte sipHashIdBytes[] = null;
+	    byte[] keyType = null;
+	    byte[] encryptionKeySignature = null;
+	    byte[] signatureKeySignature = null;
+	    byte[] sipHashIdBytes = null;
 	    int ii = 0;
 
 	    for(String string : strings)
@@ -2795,7 +2774,7 @@ public class Database extends SQLiteOpenHelper
 
 	    for(int i = 0; i < size; i++)
 	    {
-		byte bytes[] = null;
+		byte[] bytes = null;
 
 		switch(sparseArray.get(i))
 		{
@@ -2823,7 +2802,7 @@ public class Database extends SQLiteOpenHelper
 
 		    try
 		    {
-			byte salt[] = null;
+			byte[] salt = null;
 
 			salt = Cryptography.xor
 			    (cryptography.chatEncryptionPublicKey().
@@ -2930,7 +2909,7 @@ public class Database extends SQLiteOpenHelper
 	    return null;
 
 	Cursor cursor = null;
-	String strings[] = null;
+	String[] strings = null;
 
 	try
 	{
@@ -2951,19 +2930,18 @@ public class Database extends SQLiteOpenHelper
 
 		for(int i = 0; i < 2; i++)
 		{
-		    byte bytes[] = cryptography.mtd
+		    byte[] bytes = cryptography.mtd
 			(Base64.decode(cursor.getString(i).getBytes(),
 				       Base64.DEFAULT));
 
 		    if(bytes == null)
 		    {
-			StringBuilder stringBuilder = new StringBuilder();
+			String string = "Database::keysSigned(): " +
+			    "error on column " +
+			    cursor.getColumnName(i) +
+			    ".";
 
-			stringBuilder.append("Database::keysSigned(): ");
-			stringBuilder.append("error on column ");
-			stringBuilder.append(cursor.getColumnName(i));
-			stringBuilder.append(".");
-			writeLog(stringBuilder.toString());
+			writeLog(string);
 		    }
 		    else
 			strings[i] = new String(bytes);
@@ -2984,13 +2962,13 @@ public class Database extends SQLiteOpenHelper
     }
 
     public String[] nameSipHashIdFromDigest(Cryptography cryptography,
-					    byte digest[])
+					    byte[] digest)
     {
 	if(cryptography == null || digest == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
-	String array[] = null;
+	String[] array = null;
 
 	try
 	{
@@ -3003,7 +2981,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cursor != null && cursor.moveToFirst())
 	    {
-		byte bytes[] = cryptography.mtd
+		byte[] bytes = cryptography.mtd
 		    (Base64.decode(cursor.getString(0).getBytes(),
 				   Base64.DEFAULT));
 
@@ -3041,7 +3019,7 @@ public class Database extends SQLiteOpenHelper
 	    return null;
 
 	Cursor cursor = null;
-	String array[] = null;
+	String[] array = null;
 
 	try
 	{
@@ -3172,7 +3150,7 @@ public class Database extends SQLiteOpenHelper
 	return contains;
     }
 
-    public boolean containsSteam(Cryptography cryptography, byte fileIdentity[])
+    public boolean containsSteam(Cryptography cryptography, byte[] fileIdentity)
     {
 	if(cryptography == null || fileIdentity == null || m_db == null)
 	    return false;
@@ -3411,7 +3389,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public boolean setParticipantKeyStream(Cryptography cryptography,
-					   byte keyStream[],
+					   byte[] keyStream,
 					   int oid)
     {
 	if(cryptography == null || m_db == null)
@@ -3455,7 +3433,7 @@ public class Database extends SQLiteOpenHelper
 
     public boolean writeCallKeys(Cryptography cryptography,
 				 String sipHashId,
-				 byte keyStream[])
+				 byte[] keyStream)
     {
 	if(Cryptography.
 	   memcmp(keyStream, participantKeyStream(cryptography, sipHashId)) ||
@@ -3562,8 +3540,8 @@ public class Database extends SQLiteOpenHelper
     }
 
     public boolean writeEphemeralSteamKeys(Cryptography cryptography,
-					   byte privateKey[],
-					   byte publicKey[],
+					   byte[] privateKey,
+					   byte[] publicKey,
 					   int oid)
     {
 	if(cryptography == null || m_db == null)
@@ -3681,7 +3659,7 @@ public class Database extends SQLiteOpenHelper
 
     public boolean writeMessageStatus(Cryptography cryptography,
 				      String sipHashId,
-				      byte messageIdentity[])
+				      byte[] messageIdentity)
     {
 	if(cryptography == null || m_db == null || messageIdentity == null)
 	    return false;
@@ -3787,7 +3765,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    SparseArray<String> sparseArray = new SparseArray<> ();
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    sparseArray.append(0, "bytes_read");
 	    sparseArray.append(1, "bytes_written");
@@ -3929,13 +3907,11 @@ public class Database extends SQLiteOpenHelper
 		{
 		    sparseArray.clear();
 
-		    StringBuilder stringBuilder = new StringBuilder();
+		    String string = "Database::writeNeighbor(): error with " +
+			sparseArray.get(i) +
+			" field.";
 
-		    stringBuilder.append
-			("Database::writeNeighbor(): error with ");
-		    stringBuilder.append(sparseArray.get(i));
-		    stringBuilder.append(" field.");
-		    writeLog(stringBuilder.toString());
+		    writeLog(string);
 		    throw new Exception();
 		}
 
@@ -4038,7 +4014,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    SparseArray<String> sparseArray = new SparseArray<> ();
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    name = name.trim();
 
@@ -4069,9 +4045,9 @@ public class Database extends SQLiteOpenHelper
 			(sipHashId.trim().getBytes(StandardCharsets.UTF_8));
 		    break;
 		default:
-		    byte salt[] = Cryptography.sha512
+		    byte[] salt = Cryptography.sha512
 			(sipHashId.trim().getBytes(StandardCharsets.UTF_8));
-		    byte temporary[] = Cryptography.
+		    byte[] temporary = Cryptography.
 			pbkdf2(salt,
 			       sipHashId.toCharArray(),
 			       SIPHASH_STREAM_CREATION_ITERATION_COUNT,
@@ -4096,13 +4072,12 @@ public class Database extends SQLiteOpenHelper
 		{
 		    sparseArray.clear();
 
-		    StringBuilder stringBuilder = new StringBuilder();
+		    String string =
+			"Database::writeSipHashParticipant(): error with " +
+			sparseArray.get(i) +
+			" field.";
 
-		    stringBuilder.append
-			("Database::writeSipHashParticipant(): error with ");
-		    stringBuilder.append(sparseArray.get(i));
-		    stringBuilder.append(" field.");
-		    writeLog(stringBuilder.toString());
+		    writeLog(string);
 		    throw new Exception();
 		}
 
@@ -4156,7 +4131,7 @@ public class Database extends SQLiteOpenHelper
 
     public boolean writeSteamKeys(Cryptography cryptography,
 				  KeyPair keyPair,
-				  byte keyStream[],
+				  byte[] keyStream,
 				  int oid)
     {
 	return writeSteamKeys
@@ -4168,9 +4143,9 @@ public class Database extends SQLiteOpenHelper
     }
 
     public boolean writeSteamKeys(Cryptography cryptography,
-				  byte keyStream[],
-				  byte privateKey[],
-				  byte publicKey[],
+				  byte[] keyStream,
+				  byte[] privateKey,
+				  byte[] publicKey,
 				  int oid)
     {
 	if(cryptography == null || m_db == null)
@@ -4214,7 +4189,7 @@ public class Database extends SQLiteOpenHelper
 	    return null;
 
 	Cursor cursor = null;
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -4252,7 +4227,7 @@ public class Database extends SQLiteOpenHelper
 	    return null;
 
 	Cursor cursor = null;
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -4285,7 +4260,7 @@ public class Database extends SQLiteOpenHelper
 	    return null;
 
 	Cursor cursor = null;
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -4318,13 +4293,13 @@ public class Database extends SQLiteOpenHelper
     }
 
     public byte[] participantKeyStream(Cryptography cryptography,
-				       byte digest[])
+				       byte[] digest)
     {
 	if(cryptography == null || digest == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
-	byte bytes[] = null;
+	byte[] bytes = null;
 
 	try
 	{
@@ -4352,9 +4327,9 @@ public class Database extends SQLiteOpenHelper
     }
 
     public byte[] participantKeyStream(Cryptography cryptography,
-				       byte digest[],
-				       byte array[],
-				       byte bytes[])
+				       byte[] digest,
+				       byte[] array,
+				       byte[] bytes)
     {
 	if(array == null ||
 	   bytes == null ||
@@ -4364,7 +4339,7 @@ public class Database extends SQLiteOpenHelper
 	    return null;
 
 	Cursor cursor = null;
-	byte keyStream[] = null;
+	byte[] keyStream = null;
 
 	try
 	{
@@ -4385,7 +4360,7 @@ public class Database extends SQLiteOpenHelper
 		    if(keyStream == null)
 			continue;
 
-		    byte hmac[] = Cryptography.hmac
+		    byte[] hmac = Cryptography.hmac
 			(Arrays.copyOfRange(bytes,
 					    0,
 					    bytes.length -
@@ -4414,13 +4389,13 @@ public class Database extends SQLiteOpenHelper
     }
 
     public byte[] steamKeyStream(Cryptography cryptography,
-				 byte fileIdentity[])
+				 byte[] fileIdentity)
     {
 	if(cryptography == null || fileIdentity == null || m_db == null)
 	    return null;
 
 	Cursor cursor = null;
-	byte keyStream[] = null;
+	byte[] keyStream = null;
 
 	try
 	{
@@ -4599,7 +4574,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public int steamOidFromFileIdentity(Cryptography cryptography,
-					byte fileIdentity[])
+					byte[] fileIdentity)
     {
 	if(cryptography == null || fileIdentity == null || m_db == null)
 	    return -1;
@@ -4642,12 +4617,11 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    StringBuilder stringBuilder = new StringBuilder();
+	    String string = "SELECT COUNT(*) FROM participants_messages " +
+		"WHERE siphash_id_digest = ?";
 
-	    stringBuilder.append("SELECT COUNT(*) FROM participants_messages ");
-	    stringBuilder.append("WHERE siphash_id_digest = ?");
 	    cursor = m_db.rawQuery
-		(stringBuilder.toString(),
+		(string,
 		 new String[] {Base64.
 			       encodeToString
 			       (cryptography.
@@ -4956,7 +4930,7 @@ public class Database extends SQLiteOpenHelper
 
     public void enqueueOutboundMessage(Cryptography cryptography,
 				       String message,
-				       byte messageIdentity[],
+				       byte[] messageIdentity,
 				       int attempts,
 				       int oid)
     {
@@ -5062,7 +5036,7 @@ public class Database extends SQLiteOpenHelper
 
     public void neighborRecordCertificate(Cryptography cryptography,
 					  String oid,
-					  byte certificate[])
+					  byte[] certificate)
     {
 	if(cryptography == null || m_db == null)
 	    return;
@@ -5603,7 +5577,7 @@ public class Database extends SQLiteOpenHelper
 
 	try
 	{
-	    String tables[] = new String[]
+	    String[] tables = new String[]
 		{"congestion_control",
 		 "fire",
 		 "log",
@@ -5652,7 +5626,7 @@ public class Database extends SQLiteOpenHelper
 	if(m_db == null)
 	    return;
 
-	String strings[] = new String[]
+	String[] strings = new String[]
 	    {"DROP TABLE IF EXISTS arson_keys",
 	     "DROP TABLE IF EXISTS congestion_control",
 	     "DROP TABLE IF EXISTS fire",
@@ -5776,8 +5750,8 @@ public class Database extends SQLiteOpenHelper
 
     public void saveFireChannel(Cryptography cryptography,
 				String name,
-				byte encryptionKey[],
-				byte keyStream[])
+				byte[] encryptionKey,
+				byte[] keyStream)
     {
 	if(cryptography == null ||
 	   encryptionKey == null ||
@@ -5792,7 +5766,7 @@ public class Database extends SQLiteOpenHelper
 	try
 	{
 	    ContentValues values = new ContentValues();
-	    byte bytes[] = Miscellaneous.joinByteArrays
+	    byte[] bytes = Miscellaneous.joinByteArrays
 		(encryptionKey, keyStream);
 
 	    values.put
@@ -6010,7 +5984,7 @@ public class Database extends SQLiteOpenHelper
     }
 
     public void updateParticipantLastTimestamp(Cryptography cryptography,
-					       byte digest[])
+					       byte[] digest)
     {
 	if(cryptography == null || digest == null || m_db == null)
 	    return;
@@ -6123,7 +6097,7 @@ public class Database extends SQLiteOpenHelper
 
 	    if(cryptography != null)
 	    {
-		byte bytes[] = null;
+		byte[] bytes = null;
 
 		bytes = cryptography.etm(a.getBytes());
 

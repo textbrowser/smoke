@@ -243,7 +243,7 @@ public class Fire extends AppCompatActivity
     private void prepareAutoFill()
     {
 	Spinner spinner = (Spinner) findViewById(R.id.auto_fill);
-        String array[] = new String[]
+        String[] array = new String[]
 	{
 	    "Please Select",
 	    "Spot-On Developer Channel"
@@ -366,8 +366,8 @@ public class Fire extends AppCompatActivity
 
 		    class SingleShot implements Runnable
 		    {
-			private byte m_encryptionKey[] = null;
-			private byte m_keyStream[] = null;
+			private byte[] m_encryptionKey = null;
+			private byte[] m_keyStream = null;
 
 			SingleShot()
 			{

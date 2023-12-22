@@ -73,7 +73,7 @@ public class Authenticate extends AppCompatActivity
 		if(Authenticate.this.isFinishing())
 		    return;
 
-		byte encryptionSalt[] = Base64.decode
+		byte[] encryptionSalt = Base64.decode
 		    (m_database.readSetting(null, "encryptionSalt").getBytes(),
 		     Base64.DEFAULT);
 		final TextView textView1 = (TextView) findViewById
@@ -91,7 +91,7 @@ public class Authenticate extends AppCompatActivity
 		    return;
 		}
 
-		byte macSalt[] = Base64.decode
+		byte[] macSalt = Base64.decode
 		    (m_database.readSetting(null, "macSalt").getBytes(),
 		     Base64.DEFAULT);
 
@@ -105,7 +105,7 @@ public class Authenticate extends AppCompatActivity
 		    return;
 		}
 
-		byte saltedPassword[] = Cryptography.sha512
+		byte[] saltedPassword = Cryptography.sha512
 		    (textView1.getText().toString().getBytes(),
 		     encryptionSalt,
 		     macSalt);
@@ -199,14 +199,14 @@ public class Authenticate extends AppCompatActivity
 		{
 		    private String m_error = "";
 		    private String m_password = "";
-		    private byte m_encryptionSalt[] = null;
-		    private byte m_macSalt[] = null;
+		    private byte[] m_encryptionSalt = null;
+		    private byte[] m_macSalt = null;
 		    private int m_iterationCount = 1000;
 		    private int m_keyDerivationFunction = 1; // PBKDF2
 
 		    SingleShot(String password,
-			       byte encryptionSalt[],
-			       byte macSalt[],
+			       byte[] encryptionSalt,
+			       byte[] macSalt,
 			       int iterationCount,
 			       int keyDerivationFunction)
 		    {
@@ -245,18 +245,18 @@ public class Authenticate extends AppCompatActivity
 				s_cryptography.setMacKey(macKey);
 
 				String algorithm = "";
-				byte ozoneKeyStream[] = Base64.decode
+				byte[] ozoneKeyStream = Base64.decode
 				    (m_database.
 				     readSetting(s_cryptography,
 						 "ozone_address_stream").
 						 getBytes(), Base64.DEFAULT);
-				byte privateBytes[] = Base64.decode
+				byte[] privateBytes = Base64.decode
 				    (m_database.
 				     readSetting(s_cryptography,
 						 "pki_chat_encryption_" +
 						 "private_key").
 				     getBytes(), Base64.DEFAULT);
-				byte publicBytes[] = Base64.decode
+				byte[] publicBytes = Base64.decode
 				    (m_database.
 				     readSetting(s_cryptography,
 						 "pki_chat_encryption_" +

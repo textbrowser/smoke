@@ -91,7 +91,7 @@ public class UdpNeighbor extends Neighbor
 	    return send(message.getBytes());
     }
 
-    protected int send(byte bytes[])
+    protected int send(byte[] bytes)
     {
 	int sent = 0;
 
@@ -111,7 +111,7 @@ public class UdpNeighbor extends Neighbor
 		if(m_disconnected.get())
 		    break;
 
-		byte b[] = new byte
+		byte[] b = new byte
 		    [Math.min(576, byteArrayInputStream.available())];
 
 		byteArrayInputStream.read(b);
@@ -265,7 +265,7 @@ public class UdpNeighbor extends Neighbor
 			return;
 
 		    DatagramPacket datagramPacket = null;
-		    byte bytes[] = new byte[BYTES_PER_READ];
+		    byte[] bytes = new byte[BYTES_PER_READ];
 
 		    datagramPacket = new DatagramPacket(bytes, bytes.length);
 
@@ -307,7 +307,7 @@ public class UdpNeighbor extends Neighbor
 
 		    if(byteArrayOutputStream != null &&
 		       m_stringBuffer.length() < MAXIMUM_BYTES)
-			m_stringBuffer.append(byteArrayOutputStream.toString());
+			m_stringBuffer.append(byteArrayOutputStream);
 
 		    synchronized(m_parsingSchedulerMutex)
 		    {

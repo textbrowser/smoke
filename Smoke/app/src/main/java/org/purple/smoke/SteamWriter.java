@@ -39,7 +39,7 @@ public class SteamWriter
 {
     private static class FileInformation
     {
-	public byte m_fileIdentity[] = null;
+	public byte[] m_fileIdentity = null;
 	public int m_oid = -1;
 	public long m_lastStatusTimestamp = 0L;
 	public long m_offset = 0L;
@@ -48,7 +48,7 @@ public class SteamWriter
 	public long m_time0 = 0L;
 	public short m_stalled = 0;
 
-	public FileInformation(byte fileIdentity[], int oid, long offset)
+	public FileInformation(byte[] fileIdentity, int oid, long offset)
 	{
 	    m_fileIdentity = fileIdentity;
 	    m_lastStatusTimestamp = System.currentTimeMillis();
@@ -178,7 +178,7 @@ public class SteamWriter
 	return m_files.size();
     }
 
-    public long write(byte fileIdentity[], byte packet[], long offset)
+    public long write(byte[] fileIdentity, byte[] packet, long offset)
     {
 	if(fileIdentity == null ||
 	   fileIdentity.length == 0 ||

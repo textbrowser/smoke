@@ -139,11 +139,9 @@ public class MemberChatAdapter extends RecyclerView.Adapter
 	    }
 
 	    StringBuilder stringBuilder = new StringBuilder();
-	    boolean local = false;
-
-	    if(memberChatElement.m_fromSmokeStack.equals("local") ||
-	       memberChatElement.m_fromSmokeStack.equals("local-protocol"))
-		local = true;
+	    boolean local = memberChatElement.m_fromSmokeStack.
+		equals("local") ||
+		memberChatElement.m_fromSmokeStack.equals("local-protocol");
 
 	    stringBuilder.append(memberChatElement.m_message.trim());
 

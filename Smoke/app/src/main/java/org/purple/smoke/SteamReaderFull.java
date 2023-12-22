@@ -43,7 +43,7 @@ public class SteamReaderFull extends SteamReader
     private AtomicLong m_previousOffset = null;
     private AtomicLong m_readResult = null;
     private String m_sipHashId = "";
-    private byte m_fileIdentity[] = null;
+    private byte[] m_fileIdentity = null;
     private final Object m_waitMutex = new Object();
     private final static int PACKET_SIZE = 32768;
     private final static long READ_INTERVAL = 250L; // 250 milliseconds.
@@ -80,7 +80,7 @@ public class SteamReaderFull extends SteamReader
 	    m_reader = Executors.newSingleThreadScheduledExecutor();
 	    m_reader.scheduleAtFixedRate(new Runnable()
 	    {
-		private byte m_keyStream[] = null;
+		private byte[] m_keyStream = null;
 
 		@Override
 		public void run()
@@ -206,7 +206,7 @@ public class SteamReaderFull extends SteamReader
 				m_lastResponse.set(System.currentTimeMillis());
 			}
 
-			byte bytes[] = new byte[PACKET_SIZE];
+			byte[] bytes = new byte[PACKET_SIZE];
 			int offset = -1;
 
 			synchronized(m_fileInputStreamMutex)
@@ -229,7 +229,7 @@ public class SteamReaderFull extends SteamReader
 			    return;
 			}
 			else
-			    m_readResult.set((long) offset);
+			    m_readResult.set(offset);
 
 			m_read.set(false);
 
@@ -304,7 +304,7 @@ public class SteamReaderFull extends SteamReader
 
     public SteamReaderFull(String destination,
 			   String fileName,
-			   byte fileIdentity[],
+			   byte[] fileIdentity,
 			   int oid,
 			   long fileSize,
 			   long readOffset)

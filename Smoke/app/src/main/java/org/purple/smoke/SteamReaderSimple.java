@@ -138,7 +138,7 @@ public class SteamReaderSimple extends SteamReader
 				(m_readOffset.get());
 			}
 
-			byte bytes[] = new byte[PACKET_SIZE];
+			byte[] bytes = new byte[PACKET_SIZE];
 			int offset = -1;
 
 			synchronized(m_fileInputStreamMutex)
@@ -173,7 +173,7 @@ public class SteamReaderSimple extends SteamReader
 			    (true, Arrays.copyOfRange(bytes, 0, offset));
 
 			computeRate(sent);
-			m_readOffset.addAndGet((long) sent);
+			m_readOffset.addAndGet(sent);
 			s_databaseHelper.writeSteamStatus
 			    (s_cryptography,
 			     "",
@@ -182,9 +182,6 @@ public class SteamReaderSimple extends SteamReader
 			     m_readOffset.get());
 		    }
 		    catch(Exception exception)
-		    {
-		    }
-		    finally
 		    {
 		    }
 		}

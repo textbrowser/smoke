@@ -33,13 +33,13 @@ package org.purple.smoke;
 
 public class SipHash
 {
-    private final static int C_ROUNDS[] = {2, 4};
-    private final static int D_ROUNDS[] = {4, 8};
+    private final static int[] C_ROUNDS = {2, 4};
+    private final static int[] D_ROUNDS = {4, 8};
     private final static long C0 = 0x736f6d6570736575L;
     private final static long C1 = 0x646f72616e646f6dL;
     private final static long C2 = 0x6c7967656e657261L;
     private final static long C3 = 0x7465646279746573L;
-    private byte m_key[] = null;
+    private byte[] m_key = null;
     private int m_c_rounds_index = 1;
     private int m_d_rounds_index = 1;
     private long m_v0 = 0L;
@@ -48,7 +48,7 @@ public class SipHash
     private long m_v3 = 0L;
     public final static int KEY_LENGTH = 16; // Bytes.
 
-    private long byteArrayToLong(byte bytes[], int offset)
+    private long byteArrayToLong(byte[] bytes, int offset)
     {
 	if(bytes == null || (bytes.length - offset) < Miscellaneous.LONG_BYTES)
 	    return 0L;
@@ -100,7 +100,7 @@ public class SipHash
     {
     }
 
-    public SipHash(byte key[])
+    public SipHash(byte[] key)
     {
 	if(key == null || key.length != KEY_LENGTH)
 	    return;
@@ -108,7 +108,7 @@ public class SipHash
 	m_key = key;
     }
 
-    public SipHash(byte key[], int c_rounds_index, int d_rounds_index)
+    public SipHash(byte[] key, int c_rounds_index, int d_rounds_index)
     {
 	if(key == null || key.length != KEY_LENGTH)
 	    return;
@@ -122,13 +122,13 @@ public class SipHash
 	m_key = key;
     }
 
-    public long[] hmac(byte data[], int outputLength)
+    public long[] hmac(byte[] data, int outputLength)
     {
 	return hmac(data, m_key, outputLength);
     }
 
     @SuppressWarnings("fallthrough")
-    public synchronized long[] hmac(byte data[], byte key[], int outputLength)
+    public synchronized long[] hmac(byte[] data, byte[] key, int outputLength)
     {
 	if(data == null || key == null || key.length != KEY_LENGTH)
 	    return new long[] {0L, 0L};
@@ -199,7 +199,7 @@ public class SipHash
 	case 2:
 	    b |= ((long) data[offset + 1]) << 8L;
 	case 1:
-	    b |= ((long) data[offset]);
+	    b |= data[offset];
 	    break;
 	case 0:
 	    break;
@@ -258,7 +258,7 @@ public class SipHash
 	    break;
 	}
 
-	long output[] = new long[] {m_v0 ^ m_v1 ^ m_v2 ^ m_v3, 0L};
+	long[] output = new long[] {m_v0 ^ m_v1 ^ m_v2 ^ m_v3, 0L};
 
 	if(outputLength == 8)
 	{
@@ -311,7 +311,7 @@ public class SipHash
 	long result = Miscellaneous.byteArrayToLong
 	    (new byte[] {(byte) 0xa1, (byte) 0x29, (byte) 0xca, (byte) 0x61,
 			 (byte) 0x49, (byte) 0xbe, (byte) 0x45, (byte) 0xe5});
-	long value[] = s.hmac
+	long[] value = s.hmac
 	    (new byte[] {(byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03,
 			 (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07,
 			 (byte) 0x08, (byte) 0x09, (byte) 0x0a, (byte) 0x0b,

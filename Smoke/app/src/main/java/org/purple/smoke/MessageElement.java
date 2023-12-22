@@ -33,9 +33,9 @@ public class MessageElement
     public String m_message = "";
     public String m_name = "";
     public boolean m_purple = false;
-    public byte m_attachment[] = null;
-    public byte m_keyStream[] = null;
-    public byte m_messageIdentity[] = null;
+    public byte[] m_attachment = null;
+    public byte[] m_keyStream = null;
+    public byte[] m_messageIdentity = null;
     public final static int CHAT_MESSAGE_TYPE = 0;
     public final static int FIRE_MESSAGE_TYPE = 1;
     public final static int FIRE_STATUS_MESSAGE_TYPE = 2;

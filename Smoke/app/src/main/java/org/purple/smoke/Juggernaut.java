@@ -107,7 +107,7 @@ public class Juggernaut
 				       Base64.NO_WRAP));
 	    stringBuffer.append("\n");
 
-	    BigInteger array[] = payload.getKnowledgeProofForX1();
+	    BigInteger[] array = payload.getKnowledgeProofForX1();
 
 	    stringBuffer.append
 		(Base64.encodeToString(String.valueOf(array.length).getBytes(),
@@ -159,7 +159,7 @@ public class Juggernaut
 				       Base64.NO_WRAP));
 	    stringBuffer.append("\n");
 
-	    BigInteger array[] = payload.getKnowledgeProofForX2s();
+	    BigInteger[] array = payload.getKnowledgeProofForX2s();
 
 	    stringBuffer.append
 		(Base64.encodeToString(String.valueOf(array.length).getBytes(),
@@ -189,18 +189,16 @@ public class Juggernaut
     {
 	try
 	{
-	    JPAKERound3Payload payload = m_participant.createRound3PayloadToSend
-		(keyingMaterial);
-	    StringBuffer stringBuffer = new StringBuffer();
+	    JPAKERound3Payload payload = m_participant.
+		createRound3PayloadToSend(keyingMaterial);
+	    String string = Base64.
+		encodeToString(payload.getMacTag().toByteArray(),
+			       Base64.NO_WRAP) +
+                "\n" +
+                Base64.encodeToString(payload.getParticipantId().getBytes(),
+				      Base64.NO_WRAP);
 
-	    stringBuffer.append
-		(Base64.encodeToString(payload.getMacTag().toByteArray(),
-				       Base64.NO_WRAP));
-	    stringBuffer.append("\n");
-	    stringBuffer.append
-		(Base64.encodeToString(payload.getParticipantId().getBytes(),
-				       Base64.NO_WRAP));
-	    return stringBuffer.toString();
+	    return string;
 	}
 	catch(Exception exception)
 	{
@@ -209,16 +207,16 @@ public class Juggernaut
 	return "";
     }
 
-    private boolean validatePayload1(String strings[])
+    private boolean validatePayload1(String[] strings)
     {
 	try
 	{
 	    BigInteger gx1 = null;
 	    BigInteger gx2 = null;
-	    BigInteger kpx1[] = null;
-	    BigInteger kpx2[] = null;
+	    BigInteger[] kpx1 = null;
+	    BigInteger[] kpx2 = null;
 	    String participantId = "";
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    /*
 	    ** strings[0]     - gx1
@@ -272,14 +270,14 @@ public class Juggernaut
 	return true;
     }
 
-    private boolean validatePayload2(String strings[])
+    private boolean validatePayload2(String[] strings)
     {
 	try
 	{
 	    BigInteger a = null;
-	    BigInteger kpx2s[] = null;
+	    BigInteger[] kpx2s = null;
 	    String participantId = "";
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    /*
 	    ** strings[0] - a
@@ -318,13 +316,13 @@ public class Juggernaut
     }
 
     private boolean validatePayload3(BigInteger keyingMaterial,
-				     String strings[])
+                                     String[] strings)
     {
 	try
 	{
 	    BigInteger macTag = null;
 	    String participantId = "";
-	    byte bytes[] = null;
+	    byte[] bytes = null;
 
 	    /*
 	    ** strings[0] - mac tag
@@ -395,7 +393,7 @@ public class Juggernaut
 	    {
 		String string = Base64.encodeToString
 		    (m_keyingMaterial.toByteArray(), Base64.NO_WRAP);
-		byte bytes[] = Cryptography.pbkdf2
+		byte[] bytes = Cryptography.pbkdf2
 		    (Cryptography.
 		     sha512(string.getBytes(StandardCharsets.UTF_8)),
 		     string.toCharArray(),
@@ -471,9 +469,9 @@ public class Juggernaut
 	*/
 
 	ok1 = juggernaut1.validatePayload1(payload2.split("\\n"));
-	Log.e("test1: Participant a validated payload1?", ok1 + "");
+	Log.e("test1: Participant a validated payload1?", String.valueOf(ok1));
 	ok2 = juggernaut2.validatePayload1(payload1.split("\\n"));
-	Log.e("test1: Participant b validated payload1?", ok2 + "");
+	Log.e("test1: Participant b validated payload1?", String.valueOf(ok2));
 
 	/*
 	** Payload 2
@@ -482,9 +480,9 @@ public class Juggernaut
 	payload1 = juggernaut1.payload2Stream();
 	payload2 = juggernaut2.payload2Stream();
 	ok1 = juggernaut1.validatePayload2(payload2.split("\\n"));
-	Log.e("test1: Participant a validated payload2?", ok1 + "");
+	Log.e("test1: Participant a validated payload2?", String.valueOf(ok1));
 	ok2 = juggernaut2.validatePayload2(payload1.split("\\n"));
-	Log.e("test1: Participant b validated payload2?", ok2 + "");
+	Log.e("test1: Participant b validated payload2?", String.valueOf(ok2));
 
 	/*
 	** Payload 3
@@ -494,10 +492,10 @@ public class Juggernaut
 	payload2 = juggernaut2.payload3Stream(juggernaut2.keyingMaterial());
 	ok1 = juggernaut1.validatePayload3
 	    (juggernaut1.keyingMaterial(), payload2.split("\\n"));
-	Log.e("test1: Participant a validated payload3?", ok1 + "");
+	Log.e("test1: Participant a validated payload3?", String.valueOf(ok1));
 	ok2 = juggernaut2.validatePayload3
 	    (juggernaut2.keyingMaterial(), payload1.split("\\n"));
-	Log.e("test1: Participant b validated payload3?", ok2 + "");
+	Log.e("test1: Participant b validated payload3?", String.valueOf(ok2));
     }
 
     public static void test2()
@@ -516,9 +514,9 @@ public class Juggernaut
 	*/
 
 	ok1 = juggernaut1.validatePayload1(payload2.split("\\n"));
-	Log.e("test2: Participant a validated payload1?", ok1 + "");
+	Log.e("test2: Participant a validated payload1?", String.valueOf(ok1));
 	ok2 = juggernaut2.validatePayload1(payload1.split("\\n"));
-	Log.e("test2: Participant b validated payload1?", ok2 + "");
+	Log.e("test2: Participant b validated payload1?", String.valueOf(ok2));
 
 	/*
 	** Payload 2
@@ -527,9 +525,9 @@ public class Juggernaut
 	payload1 = juggernaut1.payload2Stream();
 	payload2 = juggernaut2.payload2Stream();
 	ok1 = juggernaut1.validatePayload2(payload2.split("\\n"));
-	Log.e("test2: Participant a validated payload2?", ok1 + "");
+	Log.e("test2: Participant a validated payload2?", String.valueOf(ok1));
 	ok2 = juggernaut2.validatePayload2(payload1.split("\\n"));
-	Log.e("test2: Participant b validated payload2?", ok2 + "");
+	Log.e("test2: Participant b validated payload2?", String.valueOf(ok2));
 
 	/*
 	** Payload 3
@@ -539,10 +537,10 @@ public class Juggernaut
 	payload2 = juggernaut2.payload3Stream(juggernaut2.keyingMaterial());
 	ok1 = juggernaut1.validatePayload3
 	    (juggernaut1.keyingMaterial(), payload2.split("\\n"));
-	Log.e("test2: Participant a validated payload3?", ok1 + "");
+	Log.e("test2: Participant a validated payload3?", String.valueOf(ok1));
 	ok2 = juggernaut2.validatePayload3
 	    (juggernaut2.keyingMaterial(), payload1.split("\\n"));
-	Log.e("test2: Participant b validated payload3?", ok2 + "");
+	Log.e("test2: Participant b validated payload3?", String.valueOf(ok2));
     }
 
     public static void test3()
@@ -584,7 +582,7 @@ public class Juggernaut
 
 	juggernaut1.next(payload2c); // STATE_3_VALIDATED
 	juggernaut2.next(payload1c); // STATE_3_VALIDATED
-	Log.e(juggernaut1.state() + "", "test3: Participant a state?");
-	Log.e(juggernaut2.state() + "", "test3: Participant b state?");
+	Log.e(String.valueOf(juggernaut1.state()), "test3: Participant a state?");
+	Log.e(String.valueOf(juggernaut2.state()), "test3: Participant b state?");
     }
 }

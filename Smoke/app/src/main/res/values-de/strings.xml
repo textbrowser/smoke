@@ -40,7 +40,6 @@
     <string name="iteration_count">Iterationszähler</string>
     <string name="join">Teilnehmen</string>
     <string name="key_derivation_function">Schlüssel-Ableitungs-Funktion</string>
-    <string name="message">Schreibe...</string>
     <string name="message_status">Nachrichten Status</string>
     <string name="name">Name</string>
     <string name="neighbor_servers">Nachbar-Server</string>
@@ -68,7 +67,6 @@
     <string name="salt">Salz</string>
     <string name="save">Speichern</string>
     <string name="scope_id">Scope ID</string>
-    <string name="send">Senden</string>
     <string name="share_keys">Sende Schlüssel</string>
     <string name="share_smoke_id">Teile Smoke ID</string>
     <string name="signature">Signatur</string>

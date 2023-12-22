@@ -34,9 +34,9 @@ public class SipHashIdElement
     public String m_sipHashId = "";
     public boolean m_epksCompleted = false;
     public boolean m_keysSigned = false;
-    public byte m_encryptionPublicKey[] = null;
-    public byte m_signaturePublicKey[] = null;
-    public byte m_stream[] = null;
+    public byte[] m_encryptionPublicKey = null;
+    public byte[] m_signaturePublicKey = null;
+    public byte[] m_stream = null;
     public int m_fiascoKeys = 0;
     public int m_oid = -1;
 

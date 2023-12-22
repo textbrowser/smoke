@@ -225,8 +225,8 @@ public class Settings extends AppCompatActivity
     private boolean generateOzone(String string)
     {
 	boolean ok = true;
-	byte bytes[] = null;
-	byte salt[] = null;
+	byte[] bytes = null;
+	byte[] salt = null;
 
 	try
 	{
@@ -399,16 +399,13 @@ public class Settings extends AppCompatActivity
 	}
 	else
 	{
-	    StringBuilder stringBuilder = new StringBuilder();
-
-	    stringBuilder.append
-		(Miscellaneous.
-		 prepareSipHashId(textView1.getText().toString().
-				  replace(" ", "").
-				  replace("-", "").
-				  replace(":", "").
-				  replace("@", "").trim()));
-	    string = stringBuilder.toString().trim();
+	    string = Miscellaneous.prepareSipHashId
+		(textView1.getText().toString().
+		 replace(" ", "").
+		 replace("-", "").
+		 replace(":", "").
+		 replace("@", "").trim());
+	    string = string.trim();
 
 	    if(string.length() != Cryptography.SIPHASH_IDENTITY_LENGTH)
 	    {
@@ -675,7 +672,7 @@ public class Settings extends AppCompatActivity
 			break;
 		    }
 
-		    byte bytes[] = Messages.epksMessage
+		    byte[] bytes = Messages.epksMessage
 			(s_cryptography,
 			 sipHashIdElement.m_sipHashId,
 			 sipHashIdElement.m_stream,
@@ -927,7 +924,7 @@ public class Settings extends AppCompatActivity
 		spinner = new Spinner(Settings.this);
 
 		ArrayAdapter<String> arrayAdapter = null;
-		String array[] = null;
+		String[] array = null;
 		final String ipAndPort = neighborElement.
 		    m_remoteIpAddress + ":" + neighborElement.m_remotePort;
 
@@ -1320,15 +1317,10 @@ public class Settings extends AppCompatActivity
 
 	try
 	{
-	    switch(spinner2.getSelectedItem().toString())
-	    {
-	    case "Argon2id":
+	    if(spinner2.getSelectedItem().toString().equals("Argon2id"))
 		keyDerivationFunction = 0;
-		break;
-	    default:
+	    else
 		keyDerivationFunction = 1;
-		break;
-	    }
 	}
 	catch(Exception exception)
 	{
@@ -1378,8 +1370,8 @@ public class Settings extends AppCompatActivity
 		KeyPair chatSignatureKeyPair = null;
 		SecretKey encryptionKey = null;
 		SecretKey macKey = null;
-		byte encryptionSalt[] = null;
-		byte macSalt[] = null;
+		byte[] encryptionSalt = null;
+		byte[] macSalt = null;
 
 		encryptionSalt = Cryptography.randomBytes
 		    (Cryptography.CIPHER_KEY_LENGTH);
@@ -1543,7 +1535,7 @@ public class Settings extends AppCompatActivity
 
 		    boolean e1 = s_cryptography.prepareSipHashIds(null);
 		    boolean e2 = s_cryptography.prepareSipHashKeys();
-		    byte saltedPassword[] = Cryptography.
+		    byte[] saltedPassword = Cryptography.
 			sha512(m_password.getBytes(),
 			       encryptionSalt,
 			       macSalt);
@@ -2775,7 +2767,7 @@ public class Settings extends AppCompatActivity
 		    m_error = "readSipHashIdString() failure";
 		else
 		{
-		    byte bytes[] = Messages.pkpRequestMessage
+		    byte[] bytes = Messages.pkpRequestMessage
 			(s_cryptography, sipHashId);
 
 		    if(bytes == null)
@@ -2849,7 +2841,7 @@ public class Settings extends AppCompatActivity
 		    m_error = "readSipHashId() failure";
 		else
 		{
-		    byte bytes[] = Messages.epksMessage
+		    byte[] bytes = Messages.epksMessage
 			(sipHashIdElement.m_encryptionAlgorithm,
 			 sipHashIdElement.m_sipHashId,
 			 sipHashIdElement.m_encryptionPublicKey,
@@ -2947,7 +2939,7 @@ public class Settings extends AppCompatActivity
 	    private String m_sipHashId = "";
 	    private String m_string1 = "";
 	    private String m_string2 = "";
-	    private String m_strings[] = null;
+	    private String[] m_strings = null;
 
 	    SingleShot(String oid)
 	    {
@@ -3323,54 +3315,32 @@ public class Settings extends AppCompatActivity
 	    m_database.writeSetting
 		(null, "automatic_neighbors_refresh", "true");
 	}
-	else if(m_database.
-		readSetting(null, "automatic_neighbors_refresh").equals("true"))
-	    switch1.setChecked(true);
 	else
-	    switch1.setChecked(false);
+	    switch1.setChecked
+		(m_database.
+		 readSetting(null, "automatic_neighbors_refresh").
+		 equals("true"));
 
 	if(switch1.isChecked())
 	    startTimers();
 
 	switch1 = (Switch) findViewById(R.id.echo);
-
-	if(m_database.readSetting(null, "neighbors_echo").equals("true"))
-	    switch1.setChecked(true);
-	else
-	    switch1.setChecked(false);
-
+	switch1.setChecked
+	    (m_database.readSetting(null, "neighbors_echo").equals("true"));
 	switch1 = (Switch) findViewById(R.id.foreground_service);
-
-	if(m_database.
-	   readSetting(null, "foreground_service").equals("false"))
-	    switch1.setChecked(false);
-	else
-	    switch1.setChecked(true);
-
+	switch1.setChecked
+	    (!m_database.readSetting(null, "foreground_service").
+	     equals("false"));
 	switch1 = (Switch) findViewById(R.id.neighbor_details);
-
-	if(m_database.readSetting(null, "neighbors_details").
-	   equals("true"))
-	    switch1.setChecked(true);
-	else
-	    switch1.setChecked(false);
-
+	switch1.setChecked
+	    (m_database.readSetting(null, "neighbors_details").equals("true"));
 	switch1 = (Switch) findViewById(R.id.query_time_server);
-
-	if(m_database.readSetting(null, "query_time_server").
-	   equals("true"))
-	    switch1.setChecked(true);
-	else
-	    switch1.setChecked(false);
-
+	switch1.setChecked
+	    (m_database.readSetting(null, "query_time_server").equals("true"));
 	State.getInstance().setQueryTimerServer(switch1.isChecked());
 	switch1 = (Switch) findViewById(R.id.silent);
-
-	if(m_database.readSetting(null, "silent").equals("true"))
-	    switch1.setChecked(true);
-	else
-	    switch1.setChecked(false);
-
+	switch1.setChecked
+	    (m_database.readSetting(null, "silent").equals("true"));
 	State.getInstance().setSilent(switch1.isChecked());
 	switch1 = (Switch) findViewById(R.id.sleepless);
 
@@ -3379,11 +3349,9 @@ public class Settings extends AppCompatActivity
 	    switch1.setChecked(true);
 	    m_database.writeSetting(null, "always_awake", "true");
 	}
-	else if(m_database.readSetting(null, "always_awake").
-		equals("true"))
-	    switch1.setChecked(true);
 	else
-	    switch1.setChecked(false);
+	    switch1.setChecked(m_database.readSetting(null, "always_awake").
+			       equals("true"));
 
         RadioButton radioButton1 = (RadioButton) findViewById
 	    (R.id.neighbors_ipv4);
@@ -3393,7 +3361,7 @@ public class Settings extends AppCompatActivity
         radioButton1.setEnabled(isAuthenticated);
 
 	Spinner spinner1 = (Spinner) findViewById(R.id.proxy_type);
-        String array[] = new String[]
+        String[] array = new String[]
 	{
 	    "HTTP", "SOCKS"
 	};
@@ -3760,33 +3728,26 @@ public class Settings extends AppCompatActivity
 		    switch(groupId)
 		    {
 		    case ContextMenuEnumerator.DELETE:
-			switch(itemId)
-			{
-			default:
-			    if(State.getInstance().
-			       getString("dialog_accepted").equals("true"))
-				if(m_database.
-				   deleteEntry(String.valueOf(itemId),
-					       "siphash_ids"))
-				{
-				    State.getInstance().
-					removeChatCheckBoxOid(itemId);
-				    State.getInstance().setString
-					("member_chat_oid", "");
-				    State.getInstance().setString
-					("member_chat_siphash_id", "");
-				    invalidateOptionsMenu();
-				    m_database.writeSetting
-					(s_cryptography,
-					 "member_chat_oid", "");
-				    m_database.writeSetting
-					(s_cryptography,
-					 "member_chat_siphash_id", "");
-				    populateParticipants();
-				}
-
-			    break;
-			}
+			if(State.getInstance().getString("dialog_accepted").
+			   equals("true"))
+			    if(m_database.deleteEntry(String.valueOf(itemId),
+						      "siphash_ids"))
+			    {
+				State.getInstance().
+				    removeChatCheckBoxOid(itemId);
+				State.getInstance().setString
+				    ("member_chat_oid", "");
+				State.getInstance().setString
+				    ("member_chat_siphash_id", "");
+				invalidateOptionsMenu();
+				m_database.writeSetting
+				    (s_cryptography, "member_chat_oid", "");
+				m_database.writeSetting
+				    (s_cryptography,
+				     "member_chat_siphash_id",
+				     "");
+				populateParticipants();
+			    }
 
 			break;
 		    case ContextMenuEnumerator.DELETE_FIASCO_KEYS:

@@ -135,10 +135,7 @@ public class MemberChat extends AppCompatActivity
 			catch(Exception exception)
 			{
 			}
-			finally
-			{
 			}
-		    }
 		}
 		else
 		    Miscellaneous.showNotification
@@ -236,8 +233,8 @@ public class MemberChat extends AppCompatActivity
     private String m_sipHashId = m_name;
     private boolean m_messageSelectionStateEnabled = false;
     private boolean m_receiverRegistered = false;
-    private byte m_attachment[] = null;
-    private final int m_lastContextMenuPosition[] = new int[] {0, 0};
+    private byte[] m_attachment = null;
+    private final int[] m_lastContextMenuPosition = new int[] {0, 0};
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static int SELECT_IMAGE_REQUEST = 0;
@@ -359,20 +356,20 @@ public class MemberChat extends AppCompatActivity
 
 		if(size > str.length())
 		{
-		    char a[] = new char[size - str.length()];
+		    char[] a = new char[size - str.length()];
 
 		    Arrays.fill(a, ' ');
 		    str += new String(a);
 		}
 		else if(str.length() > 0)
 		{
-		    char a[] = new char[1024 + str.length() % 2];
+		    char[] a = new char[1024 + str.length() % 2];
 
 		    Arrays.fill(a, ' ');
 		    str += new String(a);
 		}
 
-		byte keyStream[] = m_database.participantKeyStream
+		byte[] keyStream = m_database.participantKeyStream
 		    (s_cryptography, m_sipHashId);
 
 		if(keyStream == null ||
@@ -731,7 +728,7 @@ public class MemberChat extends AppCompatActivity
 		class SingleShot implements Runnable
 		{
 		    private Uri m_uri = null;
-		    private byte m_bytes[] = null;
+		    private byte[] m_bytes = null;
 
 		    SingleShot(Uri uri)
 		    {
@@ -1097,7 +1094,7 @@ public class MemberChat extends AppCompatActivity
 
 			    if(!string.isEmpty())
 			    {
-				byte bytes[] = Cryptography.pbkdf2
+				byte[] bytes = Cryptography.pbkdf2
 				    (Cryptography.
 				     sha512(string.getBytes(StandardCharsets.
 							    UTF_8)),
@@ -1203,7 +1200,7 @@ public class MemberChat extends AppCompatActivity
 
 			    if(!string.isEmpty())
 			    {
-				byte keyStream[] = m_database.
+				byte[] keyStream = m_database.
 				    participantKeyStream
 				    (s_cryptography, m_sipHashId);
 
@@ -1257,7 +1254,7 @@ public class MemberChat extends AppCompatActivity
 
 		if(view != null)
 		{
-		    TextView textView = (TextView) view.findViewById
+		    TextView textView = view.findViewById
 			(R.id.text);
 
 		    if(textView != null)
@@ -1337,7 +1334,7 @@ public class MemberChat extends AppCompatActivity
 		    (s_cryptography, m_sipHashId);
 		PublicKey publicKey2 = m_database.
 		    publicSignatureKeyForSipHashId(s_cryptography, m_sipHashId);
-		byte bytes[] = Cryptography.xor
+		byte[] bytes = Cryptography.xor
 		    (s_cryptography.chatEncryptionPublicKey().getEncoded(),
 		     s_cryptography.chatSignaturePublicKey().getEncoded(),
 		     publicKey1.getEncoded(),
@@ -1373,7 +1370,7 @@ public class MemberChat extends AppCompatActivity
 	{
 	    menuItem.setChecked(!menuItem.isChecked());
 
-	    String strings[] = null;
+	    String[] strings = null;
 	    StringBuilder stringBuilder = new StringBuilder
 		(m_database.
 		 readParticipantOptions(s_cryptography, m_sipHashId));
@@ -1423,7 +1420,7 @@ public class MemberChat extends AppCompatActivity
 	{
 	    menuItem.setChecked(!menuItem.isChecked());
 
-	    String strings[] = null;
+	    String[] strings = null;
 	    StringBuilder stringBuilder = new StringBuilder
 		(m_database.
 		 readParticipantOptions(s_cryptography, m_sipHashId));
@@ -1474,7 +1471,7 @@ public class MemberChat extends AppCompatActivity
 	{
 	    menuItem.setChecked(!menuItem.isChecked());
 
-	    String strings[] = null;
+	    String[] strings = null;
 	    StringBuilder stringBuilder = new StringBuilder
 		(m_database.
 		 readParticipantOptions(s_cryptography, m_sipHashId));
@@ -1542,7 +1539,7 @@ public class MemberChat extends AppCompatActivity
 
 		if(view != null)
 		{
-		    ImageView imageView = (ImageView) view.findViewById
+		    ImageView imageView = view.findViewById
 			(R.id.image);
 
 		    if(imageView != null)

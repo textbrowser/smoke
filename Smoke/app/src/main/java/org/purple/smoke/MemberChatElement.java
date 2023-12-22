@@ -33,7 +33,7 @@ public class MemberChatElement
     public String m_message = "";
     public boolean m_messageRead = false;
     public boolean m_messageSent = false;
-    public byte m_attachment[] = null;
+    public byte[] m_attachment = null;
     public int m_oid = -1;
     public long m_timestamp = -1L;
 
