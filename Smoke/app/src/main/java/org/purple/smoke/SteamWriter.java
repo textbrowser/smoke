@@ -92,7 +92,7 @@ public class SteamWriter
     private final static Cryptography s_cryptography =
 	Cryptography.getInstance();
     private final static Database s_databaseHelper = Database.getInstance();
-    private final static long FILE_INFORMATION_LIFETIME = 15000L; // 15 Seconds
+    private final static long FILE_INFORMATION_LIFETIME = 15000L; // 15 seconds.
     private final static long SCHEDULER_INTERVAL = 1500L;
 
     private void removeFileInformation(int oid)
