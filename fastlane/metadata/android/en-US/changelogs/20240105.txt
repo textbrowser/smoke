@@ -1,3 +1,4 @@
 * Cancel the future.
+* Minimum SDK of 25.
 * Partially-blocked socket reads.
 * Permanent darkness.
