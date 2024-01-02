@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,6 +45,9 @@ public abstract class Neighbor
     private ArrayList<String> m_echoQueue = null;
     private ArrayList<String> m_queue = null;
     private AtomicBoolean m_capabilitiesSent = null;
+    private ScheduledFuture<?> m_parsingSchedulerFuture = null;
+    private ScheduledFuture<?> m_schedulerFuture = null;
+    private ScheduledFuture<?> m_sendOutboundSchedulerFuture = null;
     private UUID m_uuid = null;
     private final Object m_echoQueueMutex = new Object();
     private final Object m_queueMutex = new Object();
@@ -62,6 +66,7 @@ public abstract class Neighbor
     private final static long TIMER_INTERVAL = 3500L; // 3.5 seconds.
     protected AtomicBoolean m_disconnected = null;
     protected AtomicBoolean m_passthrough = null;
+    protected AtomicBoolean m_shutdown = null;
     protected AtomicInteger m_ipPort = null;
     protected AtomicInteger m_oid = null;
     protected AtomicLong m_bytesRead = null;
@@ -71,6 +76,7 @@ public abstract class Neighbor
     protected AtomicLong m_startTime = null;
     protected Cryptography m_cryptography = null;
     protected Database m_database = null;
+    protected ScheduledFuture<?> m_readSocketSchedulerFuture = null;
     protected String m_ipAddress = "";
     protected String m_version = "";
     protected final Object m_errorMutex = new Object();
@@ -84,7 +90,7 @@ public abstract class Neighbor
     protected final static int MAXIMUM_BYTES = LANE_WIDTH;
     protected final static int SO_RCVBUF = 65536;
     protected final static int SO_SNDBUF = 65536;
-    protected final static int SO_TIMEOUT = 0; // 0 seconds, block.
+    protected final static int SO_TIMEOUT = 2500; // 2.5 seconds.
     protected final static long AWAIT_TERMINATION = 5L; // 5 seconds.
     protected final static long READ_SOCKET_INTERVAL =
 	100L; // 100 milliseconds.
@@ -168,6 +174,7 @@ public abstract class Neighbor
 	m_oid = new AtomicInteger(oid);
 	m_passthrough = new AtomicBoolean(passthrough.equals("true"));
 	m_queue = new ArrayList<> ();
+	m_shutdown = new AtomicBoolean(false);
 	m_startTime = new AtomicLong(System.nanoTime());
 	m_uuid = UUID.randomUUID();
 	m_version = version;
@@ -176,13 +183,17 @@ public abstract class Neighbor
 	** Start the schedules.
 	*/
 
-	m_parsingScheduler.scheduleAtFixedRate(new Runnable()
+	m_parsingSchedulerFuture = m_parsingScheduler.scheduleAtFixedRate
+	    (new Runnable()
 	{
 	    @Override
 	    public void run()
 	    {
 		try
 		{
+		    if(m_shutdown.get())
+			return;
+
 		    if(!connected() && !m_disconnected.get())
 			synchronized(m_mutex)
 			{
@@ -276,13 +287,16 @@ public abstract class Neighbor
 		}
 	    }
 	}, 0L, PARSING_INTERVAL, TimeUnit.MILLISECONDS);
-	m_scheduler.scheduleAtFixedRate(new Runnable()
+	m_schedulerFuture = m_scheduler.scheduleAtFixedRate(new Runnable()
 	{
 	    @Override
 	    public void run()
 	    {
 		try
 		{
+		    if(m_shutdown.get())
+			return;
+
 		    String statusControl = m_database.
 			readNeighborStatusControl(m_cryptography, m_oid.get());
 
@@ -312,7 +326,8 @@ public abstract class Neighbor
 		}
 	    }
 	}, 0L, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
-	m_sendOutboundScheduler.scheduleAtFixedRate(new Runnable()
+	m_sendOutboundSchedulerFuture = m_sendOutboundScheduler.
+	    scheduleAtFixedRate(new Runnable()
 	{
 	    private int m_lastMessageOid = -1;
 	    private long m_accumulatedTime = System.nanoTime();
@@ -322,6 +337,9 @@ public abstract class Neighbor
 	    {
 		try
 		{
+		    if(m_shutdown.get())
+			return;
+
 		    if(!connected() && !m_disconnected.get())
 			synchronized(m_mutex)
 			{
@@ -552,11 +570,15 @@ public abstract class Neighbor
     protected void abort()
     {
 	m_disconnected.set(true);
+	m_shutdown.set(true);
 
 	synchronized(m_mutex)
 	{
 	    m_mutex.notifyAll();
 	}
+
+	if(m_parsingSchedulerFuture != null)
+	    m_parsingSchedulerFuture.cancel(true);
 
 	synchronized(m_parsingScheduler)
 	{
@@ -587,6 +609,12 @@ public abstract class Neighbor
 	    }
 	}
 
+	if(m_readSocketSchedulerFuture != null)
+	    m_readSocketSchedulerFuture.cancel(true);
+
+	if(m_schedulerFuture != null)
+	    m_schedulerFuture.cancel(true);
+
 	synchronized(m_scheduler)
 	{
 	    try
@@ -607,6 +635,9 @@ public abstract class Neighbor
 	    {
 	    }
 	}
+
+	if(m_sendOutboundSchedulerFuture != null)
+	    m_sendOutboundSchedulerFuture.cancel(true);
 
 	synchronized(m_sendOutboundScheduler)
 	{

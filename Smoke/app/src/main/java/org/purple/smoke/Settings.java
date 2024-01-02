@@ -78,6 +78,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.crypto.SecretKey;
 
@@ -166,6 +167,7 @@ public class Settings extends AppCompatActivity
 
     private Database m_database = null;
     private ScheduledExecutorService m_scheduler = null;
+    private ScheduledFuture<?> m_schedulerFuture = null;
     private SettingsBroadcastReceiver m_receiver = null;
     private boolean m_receiverRegistered = false;
     private final static Cryptography s_cryptography =
@@ -1013,13 +1015,10 @@ public class Settings extends AppCompatActivity
 	    switch(neighborElement.m_status)
 	    {
             case "connected":
-                textView1.setTextColor(Color.rgb(27, 94, 32)); // Dark Green
-                break;
-            case "connecting":
-                textView1.setTextColor(Color.rgb(255, 111, 0)); // Dark Orange
+                textView1.setTextColor(Color.rgb(0, 230, 118));
                 break;
             default:
-                textView1.setTextColor(Color.rgb(183, 28, 28)); // Dark Red
+                textView1.setTextColor(Color.rgb(255, 82, 82));
                 break;
 	    }
 
@@ -1692,7 +1691,6 @@ public class Settings extends AppCompatActivity
 		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
 		textView1.setPaddingRelative
 		    ((int) (10 * density),
 		     (int) (10 * density),
@@ -1758,7 +1756,6 @@ public class Settings extends AppCompatActivity
 		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
 		textView1.setPaddingRelative
 		    ((int) (10 * density),
 		     (int) (10 * density),
@@ -1793,7 +1790,6 @@ public class Settings extends AppCompatActivity
 		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
 		textView1.setPaddingRelative
 		    ((int) (10 * density),
 		     (int) (10 * density),
@@ -1832,7 +1828,6 @@ public class Settings extends AppCompatActivity
 		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
 		textView1.setPaddingRelative
 		    ((int) (10 * density),
 		     (int) (10 * density),
@@ -2160,7 +2155,6 @@ public class Settings extends AppCompatActivity
 		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
 		textView1.setPaddingRelative
 		    ((int) (10 * density),
 		     (int) (10 * density),
@@ -2196,7 +2190,6 @@ public class Settings extends AppCompatActivity
 		float density = Settings.this.getResources().
 		    getDisplayMetrics().density;
 
-		textView1.setBackgroundColor(Color.rgb(232, 234, 246));
 		textView1.setPaddingRelative
 		    ((int) (10 * density),
 		     (int) (10 * density),
@@ -3085,7 +3078,6 @@ public class Settings extends AppCompatActivity
 			    textView1.append(stringBuilder.toString());
 			}
 
-			textView1.setBackgroundColor(Color.rgb(255, 255, 255));
 			textView1.setPaddingRelative
 			    ((int) (10 * density),
 			     (int) (10 * density),
@@ -3170,7 +3162,7 @@ public class Settings extends AppCompatActivity
 	if(m_scheduler == null)
 	{
 	    m_scheduler = Executors.newSingleThreadScheduledExecutor();
-	    m_scheduler.scheduleAtFixedRate(new Runnable()
+	    m_schedulerFuture = m_scheduler.scheduleAtFixedRate(new Runnable()
 	    {
 		@Override
 		public void run()
@@ -3195,6 +3187,12 @@ public class Settings extends AppCompatActivity
 
     private void stopTimers()
     {
+	if(m_schedulerFuture != null)
+	{
+	    m_schedulerFuture.cancel(true);
+	    m_schedulerFuture = null;
+	}
+
 	if(m_scheduler != null)
 	{
 	    try

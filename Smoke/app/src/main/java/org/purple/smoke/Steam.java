@@ -52,6 +52,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Steam extends AppCompatActivity
@@ -130,6 +131,7 @@ public class Steam extends AppCompatActivity
     private RecyclerView m_recyclerView = null;
     private RecyclerView.Adapter<?> m_adapter = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private ScheduledFuture<?> m_statusSchedulerFuture = null;
     private Spinner m_keysSpinner = null;
     private Spinner m_participantsSpinner = null;
     private SteamBroadcastReceiver m_receiver = null;
@@ -257,7 +259,8 @@ public class Steam extends AppCompatActivity
 	if(m_statusScheduler == null)
 	{
 	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
-	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    m_statusSchedulerFuture = m_statusScheduler.scheduleAtFixedRate
+		(new Runnable()
 	    {
 		@Override
 		public void run()
@@ -322,6 +325,12 @@ public class Steam extends AppCompatActivity
 
     private void releaseResources()
     {
+	if(m_statusSchedulerFuture != null)
+	{
+	    m_statusSchedulerFuture.cancel(true);
+	    m_statusSchedulerFuture = null;
+	}
+
 	if(m_statusScheduler != null)
 	{
 	    try

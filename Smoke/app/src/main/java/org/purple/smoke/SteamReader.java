@@ -31,6 +31,7 @@ import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import java.io.FileInputStream;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,6 +49,7 @@ public abstract class SteamReader
     protected AtomicLong m_time0 = null;
     protected FileInputStream m_fileInputStream = null;
     protected ScheduledExecutorService m_reader = null;
+    protected ScheduledFuture<?> m_readerFuture = null;
     protected final Object m_fileInputStreamMutex = new Object();
     protected final static Cryptography s_cryptography =
 	Cryptography.getInstance();
@@ -61,6 +63,12 @@ public abstract class SteamReader
 
     protected void cancelReader()
     {
+	if(m_readerFuture != null)
+	{
+	    m_readerFuture.cancel(true);
+	    m_readerFuture = null;
+	}
+
 	if(m_reader != null)
 	{
 	    try

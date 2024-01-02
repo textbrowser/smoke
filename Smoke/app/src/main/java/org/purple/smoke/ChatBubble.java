@@ -333,7 +333,7 @@ public class ChatBubble extends View
 			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		else
 		    spannable.setSpan
-			(new ForegroundColorSpan(Color.rgb(117, 117, 117)),
+			(new ForegroundColorSpan(Color.rgb(224, 224, 224)),
 			 0,
 			 spannable.length(),
 			 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -52,6 +52,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class FireChannel extends View
@@ -76,6 +77,7 @@ public class FireChannel extends View
 
     private LayoutInflater m_inflater = null;
     private ScheduledExecutorService m_statusScheduler = null;
+    private ScheduledFuture<?> m_statusSchedulerFuture = null;
     private String m_id = "";
     private String m_name = "";
     private View m_view = null;
@@ -93,7 +95,8 @@ public class FireChannel extends View
 	if(m_statusScheduler == null)
 	{
 	    m_statusScheduler = Executors.newSingleThreadScheduledExecutor();
-	    m_statusScheduler.scheduleAtFixedRate(new Runnable()
+	    m_statusSchedulerFuture = m_statusScheduler.scheduleAtFixedRate
+		(new Runnable()
 	    {
 		@Override
 		public void run()
@@ -116,7 +119,8 @@ public class FireChannel extends View
 				if(m_view == null)
 				    return;
 
-				TableLayout tableLayout = m_view.findViewById(R.id.participants);
+				TableLayout tableLayout = m_view.findViewById
+				    (R.id.participants);
 
 				for(int i = tableLayout.getChildCount() - 1;
 				    i >= 0; i--)
@@ -255,10 +259,7 @@ public class FireChannel extends View
 	    i += 1;
 
 	    if(m_id.equals(participant.m_id))
-	    {
-		textView.setBackgroundColor(Color.rgb(255, 183, 77));
 		textView.setId(-1);
-	    }
 	    else
 		textView.setId(0);
 	}
@@ -291,6 +292,12 @@ public class FireChannel extends View
 	    public void onClick(View view)
 	    {
 		Kernel.getInstance().extinguishFire(m_name);
+
+		if(m_statusSchedulerFuture != null)
+		{
+		    m_statusSchedulerFuture.cancel(true);
+		    m_statusSchedulerFuture = null;
+		}
 
 		if(m_statusScheduler != null)
 	        {
@@ -385,7 +392,8 @@ public class FireChannel extends View
 	if(m_view == null)
 	    return;
 
-	final NestedScrollView nestedScrollView = m_view.findViewById(R.id.chat_scrollview);
+	final NestedScrollView nestedScrollView = m_view.findViewById
+	    (R.id.chat_scrollview);
 
 	nestedScrollView.post(new Runnable()
 	{

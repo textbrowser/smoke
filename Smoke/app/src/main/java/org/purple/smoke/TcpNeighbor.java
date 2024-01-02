@@ -301,7 +301,8 @@ public class TcpNeighbor extends Neighbor
 		m_proxyInetSocketAddress = null;
 	    }
 
-	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
+	m_readSocketSchedulerFuture = m_readSocketScheduler.
+	    scheduleAtFixedRate(new Runnable()
 	{
 	    private boolean m_error = false;
 
@@ -310,6 +311,9 @@ public class TcpNeighbor extends Neighbor
 	    {
 		try
 		{
+		    if(m_shutdown.get())
+			return;
+
 		    if(!connected() && !m_disconnected.get())
 			synchronized(m_mutex)
 			{
@@ -344,7 +348,6 @@ public class TcpNeighbor extends Neighbor
 		    }
 		    catch(java.net.SocketTimeoutException exception)
 		    {
-			i = 0;
 		    }
 		    catch(Exception exception)
 		    {

@@ -222,7 +222,8 @@ public class UdpMulticastNeighbor extends Neighbor
 				int oid)
     {
 	super(passthrough, ipAddress, ipPort, scopeId, "UDP", version, oid);
-	m_readSocketScheduler.scheduleAtFixedRate(new Runnable()
+	m_readSocketSchedulerFuture = m_readSocketScheduler.
+	    scheduleAtFixedRate(new Runnable()
 	{
 	    private boolean m_error = false;
 
@@ -233,6 +234,9 @@ public class UdpMulticastNeighbor extends Neighbor
 
 		try
 		{
+		    if(m_shutdown.get())
+			return;
+
 		    if(!connected() && !m_disconnected.get())
 			synchronized(m_mutex)
 			{
@@ -265,6 +269,9 @@ public class UdpMulticastNeighbor extends Neighbor
 		    try
 		    {
 			m_socket.receive(datagramPacket);
+		    }
+		    catch(java.net.SocketTimeoutException exception)
+		    {
 		    }
 		    catch(Exception exception)
 		    {

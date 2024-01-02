@@ -1,0 +1,3 @@
+* Cancel the future.
+* Partially-blocked socket reads.
+* Permanent darkness.

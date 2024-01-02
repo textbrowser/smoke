@@ -78,7 +78,7 @@ public class SteamReaderFull extends SteamReader
 	if(m_reader == null)
 	{
 	    m_reader = Executors.newSingleThreadScheduledExecutor();
-	    m_reader.scheduleAtFixedRate(new Runnable()
+	    m_readerFuture = m_reader.scheduleAtFixedRate(new Runnable()
 	    {
 		private byte[] m_keyStream = null;
 

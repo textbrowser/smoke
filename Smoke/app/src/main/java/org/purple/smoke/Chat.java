@@ -245,7 +245,7 @@ public class Chat extends AppCompatActivity
 		(stringBuilder.toString());
 
 	    spannable.setSpan
-		(new ForegroundColorSpan(Color.rgb(74, 20, 140)),
+		(new ForegroundColorSpan(Color.rgb(255, 192, 203)),
 		 0, stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    textView1.append(spannable);
 	}
@@ -900,7 +900,7 @@ public class Chat extends AppCompatActivity
 	SpannableStringBuilder spannable = new SpannableStringBuilder("purple");
 
 	spannable.setSpan
-	    (new ForegroundColorSpan(Color.rgb(74, 20, 140)),
+	    (new ForegroundColorSpan(Color.rgb(255, 192, 203)),
 	     0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	textView1.append(spannable);
 	textView1.append(". Please note that recently-received messages ");

@@ -3744,7 +3744,7 @@ public class Database extends SQLiteOpenHelper
 				 String transport,
 				 String version)
     {
-	if(cryptography == null || m_db == null)
+	if(cryptography == null || m_db == null || remoteIpAddress.isEmpty())
 	    return false;
 
 	ContentValues values = null;
