@@ -32,6 +32,7 @@ debug-with-source: all
 	Scripts \
 	Smoke \
 	TO-DO \
+	Tools \
 	fastlane \
 	smoke-download-dependencies.bash \
 	-x *.git* -x *.gradle* -x *.idea* \
