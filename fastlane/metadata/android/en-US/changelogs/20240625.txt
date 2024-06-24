@@ -1,0 +1,2 @@
+* GitHub ticket #48. The oid variable in Fire::deleteFire() may not be
+  defined and referencing a tarnished variable will terminate Smoke.</li>

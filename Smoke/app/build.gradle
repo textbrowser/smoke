@@ -8,8 +8,8 @@ android {
         minSdkVersion 25
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 20240105
-        versionName "2024.01.05"
+        versionCode 20240625
+        versionName "2024.06.25"
     }
     buildTypes {
         android.applicationVariants.all { variant ->

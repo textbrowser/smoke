@@ -135,18 +135,21 @@ public class Fire extends AppCompatActivity
 	** Prepare a response.
 	*/
 
-	final DialogInterface.OnCancelListener listener =
-	    new DialogInterface.OnCancelListener()
+	if(name == null || oid == null)
+	    return;
+
+	final DialogInterface.OnCancelListener listener = new
+	    DialogInterface.OnCancelListener()
+	{
+	    public void onCancel(DialogInterface dialog)
 	    {
-		public void onCancel(DialogInterface dialog)
-		{
-		    if(State.getInstance().
-		       getString("dialog_accepted").equals("true"))
-			if(m_databaseHelper.
-			   deleteEntry(String.valueOf(oid.intValue()), "fire"))
-			    populateFires();
-	        }
-	    };
+		if(State.getInstance().
+		   getString("dialog_accepted").equals("true") &&
+		   m_databaseHelper.
+		   deleteEntry(String.valueOf(oid.intValue()), "fire"))
+		    populateFires();
+	    }
+	};
 
 	Miscellaneous.showPromptDialog
 	    (Fire.this,
