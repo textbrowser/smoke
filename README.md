@@ -1,6 +1,7 @@
 Neither snow nor rain nor heat nor gloom of night stays these violet
-couriers from the swift completion of their appointed rounds. A project
-for the curious.
+couriers from the swift completion of their appointed rounds. As the
+ashes of humanity rise, let Smoke be your guide or destroyer.
+A project for the curious.
 
 ![alt text](https://github.com/textbrowser/smoke/blob/master/Images/smoke.gif)
 
