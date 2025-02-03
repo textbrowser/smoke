@@ -42,6 +42,7 @@ Header-less protocols! Some messages do include type information.</li>
 <li>Original implementation of SipHash.</li>
 <li>Ozone destinations: private and public repositories.</li>
 <li>Post offices for messages of the past.</li>
+<li>Prison Blues and Spot-On.</li>
 <li>Private servers.</li>
 <li>Public and private public-key servers.</li>
 <li>Rainbow digital signature scheme.</li>
