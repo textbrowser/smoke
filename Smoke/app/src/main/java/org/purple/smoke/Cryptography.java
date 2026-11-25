@@ -1856,13 +1856,13 @@ public class Cryptography
 	if(a == null || b == null)
 	    return false;
 
-	int rc = 0;
+	int rc = a.length ^ b.length;
 	int size = Math.max(a.length, b.length);
 
 	for(int i = 0; i < size; i++)
 	    rc |= (a.length > i ? a[i] : 0) ^ (b.length > i ? b[i] : 0);
 
-	return a.length == b.length && rc == 0;
+	return rc == 0;
     }
 
     public static boolean verifySignature(PublicKey publicKey,
